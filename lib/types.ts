@@ -5,6 +5,7 @@ export interface Image {
 
 export interface SocialMedia {
   url: string;
+  alt: string;
   image: Image;
 }
 
@@ -44,5 +45,4 @@ export interface Project {
   description: LocalizedString;
   technologies: string[];
   previewImage: Image;
-  socialMedia: SocialMedia[];
 }
