@@ -19,10 +19,10 @@ export function ContactSection({ about }: ContactSectionProps) {
 
   const socials = useMemo(() => {
     const linkedin = about.socialMedia.find((item) =>
-      item.alt.toLowerCase().includes('linkedin')
+      item.image.alt.toLowerCase().includes('linkedin')
     );
     const github = about.socialMedia.find((item) =>
-      item.alt.toLowerCase().includes('github')
+      item.image.alt.toLowerCase().includes('github')
     );
 
     return { linkedin, github };

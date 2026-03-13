@@ -145,7 +145,7 @@ export function LandingSection({ about, locale }: LandingSectionProps) {
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 {about.socialMedia.map((item) => (
-                  <IconButton key={item.url} href={item.url} label={item.alt}>
+                  <IconButton key={item.url} href={item.url} label={item.image.alt}>
                     <img
                       src={withBasePath(item.image.path)}
                       alt={item.image.alt}

@@ -12,7 +12,16 @@
     "previewImage": {
       "path": "/projects/GRS.svg",
       "alt": "General Reservation System preview"
-    }
+    },
+    "socialMedia": [
+      {
+        "url": "https://github.com/Furlanich/GeneralReservationSystem",
+        "image": {
+          "path": "/icons/github.svg",
+          "alt": "GitHub Repository"
+        }
+      }
+    ]
   },
     {
     "title": {
@@ -27,7 +36,16 @@
     "previewImage": {
       "path": "/projects/AI-Scheduler.svg",
       "alt": "AI Appointment & Operations landing page preview"
-    }
+    },
+    "socialMedia": [
+      {
+        "url": "https://github.com/Furlanich/ChronoApp",
+        "image": {
+          "path": "/icons/github.svg",
+          "alt": "GitHub Repository"
+        }
+      }
+    ]
   },
   {
     "title": {
@@ -42,7 +60,16 @@
     "previewImage": {
       "path": "/projects/Documancer.svg",
       "alt": "Documancer sketches preview"
-    }
+    },
+    "socialMedia": [
+      {
+        "url": "https://github.com/Furlanich/Documancer",
+        "image": {
+          "path": "/icons/github.svg",
+          "alt": "GitHub Repository"
+        }
+      }
+    ]
   },
   {
     "title": {
@@ -57,6 +84,15 @@
     "previewImage": {
       "path": "/projects/MPC-Administracion.svg",
       "alt": "MPC landing page preview"
-    }
+    },
+    "socialMedia": [
+      {
+        "url": "https://github.com/Furlanich/MilkyPantsCheese-Administracion-",
+        "image": {
+          "path": "/icons/github.svg",
+          "alt": "GitHub Repository"
+        }
+      }
+    ]
   }
 ]

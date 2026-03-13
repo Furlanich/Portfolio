@@ -6,19 +6,17 @@
   },
   "phone": "+54 1150 117565",
   "email": "samuelfurlanich@gmail.com",
-  "cvPath": "/cv.pdf",
+  "cvPath": "/Samuel-Furlanich-CV.pdf",
   "socialMedia": [
     {
-      "url": "www.linkedin.com/in/samuel-furlanich",
-      "alt": "LinkedIn",
+      "url": "https://linkedin.com/in/samuel-furlanich",
       "image": {
         "path": "/icons/linkedin.svg",
         "alt": "LinkedIn"
       }
     },
     {
-      "url": "https://github.com/samfurlanich",
-      "alt": "GitHub",
+      "url": "https://github.com/Furlanich",
       "image": {
         "path": "/icons/github.svg",
         "alt": "GitHub"
@@ -26,7 +24,6 @@
     },
     {
       "url": "mailto:samuelfurlanich@gmail.com",
-      "alt": "Email",
       "image": {
         "path": "/icons/email.svg",
         "alt": "Email"

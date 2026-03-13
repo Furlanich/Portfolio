@@ -1,15 +1,19 @@
 'use client';
 
+import type { HTMLMotionProps } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
+interface CardProps extends HTMLMotionProps<'div'> {
   hoverable?: boolean;
 }
 
-export function Card({ children, className, hoverable = true }: CardProps) {
+export function Card({
+  children,
+  className,
+  hoverable = true,
+  ...props
+}: CardProps) {
   return (
     <motion.div
       whileHover={
@@ -24,6 +28,7 @@ export function Card({ children, className, hoverable = true }: CardProps) {
         'rounded-xl border border-paper-200 bg-white/90 shadow-soft transition-shadow duration-200',
         className
       )}
+      {...props}
     >
       {children}
     </motion.div>

@@ -22,13 +22,14 @@ const messagesByLocale = {
 export default function Page() {
   const [locale, setLocale] = useState<Locale>('en');
   const messages = useMemo(() => messagesByLocale[locale], [locale]);
+  const timeZone = 'UTC';
 
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone}>
       <div className="relative">
         <Navbar
           name={aboutData.name}

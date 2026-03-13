@@ -51,7 +51,7 @@ export function Navbar({ name, socialMedia, locale, onLocaleChange }: NavbarProp
           <div className="hidden items-center gap-4 md:flex">
             <div className="flex items-center gap-2">
               {socialMedia.map((item) => (
-                <IconButton key={item.url} href={item.url} label={item.alt}>
+                <IconButton key={item.url} href={item.url} label={item.image.alt}>
                   <img
                     src={withBasePath(item.image.path)}
                     alt={item.image.alt}
@@ -87,7 +87,7 @@ export function Navbar({ name, socialMedia, locale, onLocaleChange }: NavbarProp
             ))}
             <div className="flex items-center gap-3 pt-2">
               {socialMedia.map((item) => (
-                <IconButton key={item.url} href={item.url} label={item.alt}>
+                <IconButton key={item.url} href={item.url} label={item.image.alt}>
                   <img
                     src={withBasePath(item.image.path)}
                     alt={item.image.alt}

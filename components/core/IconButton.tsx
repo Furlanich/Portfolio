@@ -21,7 +21,7 @@ export function IconButton({ href, label, className, children }: IconButtonProps
         className
       )}
       target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'noreferrer' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
     >
       {children}
       <span className="sr-only">{label}</span>
