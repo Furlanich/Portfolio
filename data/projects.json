@@ -1,0 +1,62 @@
+[
+  {
+    "title": {
+      "en": "General Reservation System",
+      "es": "Sistema General de Reserva"
+    },
+    "description": {
+      "en": "Template to accelerate the development of booking websites using a pre-built backend and RESTful API, including all the necessary features for a reservation system.",
+      "es": "Plantilla para agilizar el desarrollo de sitios web de reservas mediante un backend y una RESTful API pre-hechos incluyendo todas las caracteristicas necesarias para un sistema de reservas."
+    },
+    "technologies": ["Blazor", "MudBlazor", "HTML", "CSS", ".NET", "ASP.NET Core", "PostgreSQL", "Docker Compose"],
+    "previewImage": {
+      "path": "/projects/GRS.svg",
+      "alt": "General Reservation System preview"
+    }
+  },
+    {
+    "title": {
+      "en": "AI Appointment & Operations SaaS",
+      "es": "AI Appointment & Operations SaaS"
+    },
+    "description": {
+      "en": "A platform that automates scheduling and business operations for service-based companies. It combines intelligent booking, an AI assistant, and an admin dashboard to manage clients, calendars, and workflows while reducing manual work.",
+      "es": "Una plataforma que automatiza la gestión de turnos y operaciones para empresas de servicios. Combina reservas inteligentes, un asistente con IA y un panel administrativo para gestionar clientes, calendarios y flujos de trabajo, reduciendo tareas manuales."
+    },
+    "technologies": ["React", "Next.js", ".NET", "ASP.NET Core", "PostgreSQL", "Docker Compose"],
+    "previewImage": {
+      "path": "/projects/AI-Scheduler.svg",
+      "alt": "AI Appointment & Operations landing page preview"
+    }
+  },
+  {
+    "title": {
+      "en": "Documancer - GPT Narrator",
+      "es": "Documancer - Narrador GPT"
+    },
+    "description": {
+      "en": "A web application for generating narrative sketches using AI and then storing them asynchronously in a PostgreSQL database.",
+      "es": "Una aplicacion web para generar bocetos de narracion empleando AI y luego almacenarlos en una base de datos PostgreSQL de forma asincrónica."
+    },
+    "technologies": ["Blazor", "Bootstrap", "MudBlazor", ".NET", "ASP.NET Core", "PostgreSQL"],
+    "previewImage": {
+      "path": "/projects/Documancer.svg",
+      "alt": "Documancer sketches preview"
+    }
+  },
+  {
+    "title": {
+      "en": "MPC - Administration",
+      "es": "MPC - Administracion"
+    },
+    "description": {
+      "en": "An administration platform for monitoring and managing the production and human resources of MPC Cheese Factory.",
+      "es": "Una plataforma de administracion para el monitoreo y gestion de produccion y recursos humanos de la fabrica de quesos, MPC."
+    },
+    "technologies": ["Razor Pages", "JavaScript", "HTML", "CSS", "ASP.NET Core", ".NET", "C#", "MySQL"],
+    "previewImage": {
+      "path": "/projects/MPC-Administracion.svg",
+      "alt": "MPC landing page preview"
+    }
+  }
+]

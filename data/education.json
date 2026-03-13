@@ -1,0 +1,24 @@
+[
+  {
+    "title": {
+      "en": "B.S. in Computer Science",
+      "es": "Licenciatura en Ciencias de la Computacion"
+    },
+    "institution": {
+      "en": "University of Buenos Aires, Argentina",
+      "es": "Universidad de Buenos Aires, Argentina"
+    },
+    "date": "2022 - 2024"
+  },
+  {
+    "title": {
+      "en": "IT Technician",
+      "es": "Tecnico Informatico Personal y Profesional"
+    },
+    "institution": {
+      "en": "Technical School No.1, Chivilcoy, Buenos Aires, Argentina",
+      "es": "Escuela Secundaria Tecnica No.1, Chivilcoy, Buenos Aires, Argentina"
+    },
+    "date": "2015 - 2021"
+  }
+]

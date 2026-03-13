@@ -1,0 +1,73 @@
+{
+  "nav": {
+    "open": "Abrir navegacion",
+    "close": "Cerrar navegacion",
+    "items": [
+      { "id": "about", "label": "Sobre mi" },
+      { "id": "skills", "label": "Habilidades" },
+      { "id": "experience", "label": "Experiencia" },
+      { "id": "projects", "label": "Proyectos" },
+      { "id": "contact", "label": "Contacto" }
+    ]
+  },
+  "language": {
+    "en": "EN",
+    "es": "ES",
+    "enLabel": "Cambiar a ingles",
+    "esLabel": "Cambiar a espanol"
+  },
+  "sections": {
+    "about": {
+      "kicker": "Sobre mi",
+      "contactLabel": "Contacto"
+    },
+    "skills": {
+      "title": "Habilidades",
+      "subtitle": "Capacidades completas en ingenieria de producto"
+    },
+    "experience": {
+      "title": "Experiencia",
+      "subtitle": "Roles con impacto medible"
+    },
+    "education": {
+      "title": "Educacion",
+      "subtitle": "Base academica y aprendizaje continuo"
+    },
+    "projects": {
+      "title": "Proyectos",
+      "subtitle": "Trabajo seleccionado entre experiencias profesionales y educativas"
+    },
+    "contact": {
+      "title": "Contacto",
+      "subtitle": "Construyamos la proxima experiencia juntos",
+      "description": "Abierto a roles de liderazgo, trabajo consultivo y colaboraciones de producto. Escribeme cuando quieras."
+    }
+  },
+  "buttons": {
+    "contact": "Contactar",
+    "downloadCv": "Descargar CV",
+    "copyEmail": "Correo",
+    "copied": "Copiado",
+    "email": "Correo",
+    "call": "Llamar"
+  },
+  "contact": {
+    "whatsapp": "WhatsApp",
+    "linkedin": "LinkedIn",
+    "github": "GitHub"
+  },
+  "form": {
+    "name": "Nombre",
+    "email": "Correo",
+    "message": "Mensaje",
+    "submit": "Enviar mensaje",
+    "sending": "Enviando...",
+    "success": "Gracias. Tu mensaje fue enviado.",
+    "error": "Algo salio mal. Intentalo de nuevo.",
+    "errors": {
+      "name": "Por favor ingresa tu nombre.",
+      "email": "Por favor ingresa un correo valido.",
+      "message": "Por favor escribe al menos 10 caracteres."
+    }
+  }
+}

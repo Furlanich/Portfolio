@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Frontend",
+    "icons": [
+      { "path": "/icons/technologies/React-icon.svg", "alt": "React" },
+      { "path": "/icons/technologies/NextJS-icon.svg", "alt": "Next.js" },
+      { "path": "/icons/technologies/Blazor-icon.svg", "alt": "Blazor" },
+      { "path": "/icons/technologies/WPF-icon.svg", "alt": "Windows Presentation Foundation" },
+      { "path": "/icons/technologies/TypeScript-icon.svg", "alt": "TypeScript" },
+      { "path": "/icons/technologies/JavaScript-icon.svg", "alt": "JavaScript" },
+      { "path": "/icons/technologies/HTML-icon.svg", "alt": "HTML" },
+      { "path": "/icons/technologies/CSS-icon.svg", "alt": "CSS" }
+    ]
+  },
+  {
+    "title": "Backend",
+    "icons": [
+      { "path": "/icons/technologies/CSharp-icon.svg", "alt": "CSharp" },
+      { "path": "/icons/technologies/NET-icon.svg", "alt": ".NET" },
+      { "path": "/icons/technologies/ASPNetCore-icon.svg", "alt": "ASP .NET Core" },
+      { "path": "/icons/technologies/EF-icon.svg", "alt": "Entity Framework" },
+      { "path": "/icons/technologies/GPT-icon.svg", "alt": "GPT" }
+    ]
+  },
+  {
+    "title": "DevOps",
+    "icons": [
+      { "path": "/icons/technologies/GitHub-icon.svg", "alt": "GitHub" },
+      { "path": "/icons/technologies/Docker-icon.svg", "alt": "Docker" },
+      { "path": "/icons/cloud.svg", "alt": "CI/CD" },
+      { "path": "/icons/terminal.svg", "alt": "Infrastructure" }
+    ]
+  },
+  {
+    "title": "Databases",
+    "icons": [
+      { "path": "/icons/technologies/PostgreSQL-icon.svg", "alt": "PostgreSQL" },
+      { "path": "/icons/technologies/MySQL-icon.svg", "alt": "MySQL" },
+      { "path": "/icons/technologies/SQLite-icon.svg", "alt": "SQLite" }
+    ]
+  },
+    {
+    "title": "GameDev",
+    "icons": [
+      { "path": "/icons/technologies/Unity-icon.svg", "alt": "Unity" },
+      { "path": "/icons/technologies/CSharp-icon.svg", "alt": "CSharp" },
+      { "path": "/icons/technologies/NET-icon.svg", "alt": "NET" }
+    ]
+  }
+]

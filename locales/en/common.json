@@ -1,0 +1,73 @@
+{
+  "nav": {
+    "open": "Open navigation",
+    "close": "Close navigation",
+    "items": [
+      { "id": "about", "label": "About" },
+      { "id": "skills", "label": "Skills" },
+      { "id": "experience", "label": "Experience" },
+      { "id": "projects", "label": "Projects" },
+      { "id": "contact", "label": "Contact" }
+    ]
+  },
+  "language": {
+    "en": "EN",
+    "es": "ES",
+    "enLabel": "Switch to English",
+    "esLabel": "Switch to Spanish"
+  },
+  "sections": {
+    "about": {
+      "kicker": "About",
+      "contactLabel": "Contact"
+    },
+    "skills": {
+      "title": "Skills",
+      "subtitle": "End-to-end capabilities across product engineering"
+    },
+    "experience": {
+      "title": "Experience",
+      "subtitle": "Roles with measurable impact"
+    },
+    "education": {
+      "title": "Education",
+      "subtitle": "Academic foundation and continuous learning"
+    },
+    "projects": {
+      "title": "Projects",
+      "subtitle": "Selected work from both professional and educational experiences"
+    },
+    "contact": {
+      "title": "Contact",
+      "subtitle": "Let’s build the next experience together",
+      "description": "Open to leadership roles, advisory work, and product collaborations. Reach out anytime."
+    }
+  },
+  "buttons": {
+    "contact": "Contact",
+    "downloadCv": "Download CV",
+    "copyEmail": "Email",
+    "copied": "Copied",
+    "email": "Email",
+    "call": "Call"
+  },
+  "contact": {
+    "whatsapp": "WhatsApp",
+    "linkedin": "LinkedIn",
+    "github": "GitHub"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "submit": "Send Message",
+    "sending": "Sending...",
+    "success": "Thanks! Your message has been delivered.",
+    "error": "Something went wrong. Please try again.",
+    "errors": {
+      "name": "Please enter your name.",
+      "email": "Please enter a valid email address.",
+      "message": "Please enter at least 10 characters."
+    }
+  }
+}

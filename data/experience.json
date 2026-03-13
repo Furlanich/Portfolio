@@ -1,0 +1,24 @@
+[
+  {
+    "title": {
+      "en": "Freelance Software Developer",
+      "es": "Desarrollador Freelance - Software a Medida"
+    },
+    "description": {
+      "en": "Designed and developed web and desktop applications using .NET for backend services, building modern user interfaces with Blazor and React / Next.js. Delivered software solutions focused on administrative management and business process automation, while providing application maintenance, performance optimization, and ongoing technical support.",
+      "es": "Diseño y desarrollo de aplicaciones web y de escritorio utilizando .NET para backend, implementando interfaces modernas con Blazor y React / Next.js para frontend. Desarrollo de soluciones orientadas a gestión administrativa y automatización de procesos empresariales, incluyendo mantenimiento de aplicaciones, optimización de rendimiento y soporte técnico continuo."
+    },
+    "date": "2024 - 2026"
+  },
+  {
+    "title": {
+      "en": "IT Technician – Professional Internship - E.E.S.T. N°1",
+      "es": "Técnico Informático – Pasantía Profesional - E.E.S.T. N°1"
+    },
+    "description": {
+      "en": "Developed management applications using .NET for backend development and ASP .NET Razor Pages with HTML/CSS and JS for frontend interfaces, while supporting development environments and maintaining IT infrastructure. Configured local networks, user accounts, and access permissions across shared systems, and managed organizational data and documentation using Microsoft 365 tools.",
+      "es": "Desarrollo de aplicaciones de gestión utilizando .NET para backend y ASP .NET Razor Pages con HTML/CSS y JS para frontend, participando también en el mantenimiento de infraestructura IT y entornos de desarrollo. Configuración de redes locales, cuentas de usuario y permisos de acceso en sistemas compartidos, junto con la administración y organización de datos mediante herramientas de Microsoft 365."
+    },
+    "date": "2021"
+  }
+]
