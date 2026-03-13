@@ -2,13 +2,13 @@
   "nav": {
     "open": "Open navigation",
     "close": "Close navigation",
-    "items": [
-      { "id": "about", "label": "About" },
-      { "id": "skills", "label": "Skills" },
-      { "id": "experience", "label": "Experience" },
-      { "id": "projects", "label": "Projects" },
-      { "id": "contact", "label": "Contact" }
-    ]
+    "items": {
+      "about": "About",
+      "skills": "Skills",
+      "experience": "Experience",
+      "projects": "Projects",
+      "contact": "Contact"
+    }
   },
   "language": {
     "en": "EN",
@@ -27,7 +27,7 @@
     },
     "experience": {
       "title": "Experience",
-      "subtitle": "Roles with measurable impact"
+      "subtitle": "Roles with measurable product impact"
     },
     "education": {
       "title": "Education",
@@ -35,18 +35,18 @@
     },
     "projects": {
       "title": "Projects",
-      "subtitle": "Selected work from both professional and educational experiences"
+      "subtitle": "Selected work focused on outcomes"
     },
     "contact": {
       "title": "Contact",
-      "subtitle": "Let’s build the next experience together",
+      "subtitle": "Let's build the next experience together",
       "description": "Open to leadership roles, advisory work, and product collaborations. Reach out anytime."
     }
   },
   "buttons": {
     "contact": "Contact",
     "downloadCv": "Download CV",
-    "copyEmail": "Email",
+    "copyEmail": "Copy Email",
     "copied": "Copied",
     "email": "Email",
     "call": "Call"

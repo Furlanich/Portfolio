@@ -24,7 +24,13 @@ interface NavbarProps {
 
 export function Navbar({ name, socialMedia, locale, onLocaleChange }: NavbarProps) {
   const t = useTranslations();
-  const navItems = t.raw('nav.items') as NavItem[];
+  const navItems: NavItem[] = [
+    { id: 'about', label: t('nav.items.about') },
+    { id: 'skills', label: t('nav.items.skills') },
+    { id: 'experience', label: t('nav.items.experience') },
+    { id: 'projects', label: t('nav.items.projects') },
+    { id: 'contact', label: t('nav.items.contact') }
+  ];
   const [open, setOpen] = useState(false);
 
   const handleNavigate = () => setOpen(false);
@@ -51,7 +57,7 @@ export function Navbar({ name, socialMedia, locale, onLocaleChange }: NavbarProp
           <div className="hidden items-center gap-4 md:flex">
             <div className="flex items-center gap-2">
               {socialMedia.map((item) => (
-                <IconButton key={item.url} href={item.url} label={item.image.alt}>
+                <IconButton key={item.url} href={item.url} label={item.alt}>
                   <img
                     src={withBasePath(item.image.path)}
                     alt={item.image.alt}
@@ -87,7 +93,7 @@ export function Navbar({ name, socialMedia, locale, onLocaleChange }: NavbarProp
             ))}
             <div className="flex items-center gap-3 pt-2">
               {socialMedia.map((item) => (
-                <IconButton key={item.url} href={item.url} label={item.image.alt}>
+                <IconButton key={item.url} href={item.url} label={item.alt}>
                   <img
                     src={withBasePath(item.image.path)}
                     alt={item.image.alt}

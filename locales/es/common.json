@@ -2,13 +2,13 @@
   "nav": {
     "open": "Abrir navegacion",
     "close": "Cerrar navegacion",
-    "items": [
-      { "id": "about", "label": "Sobre mi" },
-      { "id": "skills", "label": "Habilidades" },
-      { "id": "experience", "label": "Experiencia" },
-      { "id": "projects", "label": "Proyectos" },
-      { "id": "contact", "label": "Contacto" }
-    ]
+    "items": {
+      "about": "Sobre mi",
+      "skills": "Habilidades",
+      "experience": "Experiencia",
+      "projects": "Proyectos",
+      "contact": "Contacto"
+    }
   },
   "language": {
     "en": "EN",
@@ -27,7 +27,7 @@
     },
     "experience": {
       "title": "Experiencia",
-      "subtitle": "Roles con impacto medible"
+      "subtitle": "Roles con impacto medible en producto"
     },
     "education": {
       "title": "Educacion",
@@ -35,7 +35,7 @@
     },
     "projects": {
       "title": "Proyectos",
-      "subtitle": "Trabajo seleccionado entre experiencias profesionales y educativas"
+      "subtitle": "Trabajo seleccionado con foco en resultados"
     },
     "contact": {
       "title": "Contacto",
@@ -46,7 +46,7 @@
   "buttons": {
     "contact": "Contactar",
     "downloadCv": "Descargar CV",
-    "copyEmail": "Correo",
+    "copyEmail": "Copiar correo",
     "copied": "Copiado",
     "email": "Correo",
     "call": "Llamar"
