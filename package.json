@@ -1,31 +1,31 @@
 {
-    "name":  "portfolio",
-    "private":  true,
-    "version":  "0.1.0",
-    "scripts":  {
-                    "dev":  "next dev",
-                    "build":  "next build",
-                    "start":  "next start",
-                    "lint":  "next lint",
-                    "deploy":  "npm run build \u0026\u0026 npx gh-pages -d out"
-                },
-    "dependencies":  {
-                         "next":  "16.1.6",
-                         "react":  "18.2.0",
-                         "react-dom":  "18.2.0",
-                         "framer-motion":  "11.2.10",
-                         "react-hook-form":  "7.51.4",
-                         "next-intl":  "3.15.2",
-                         "lucide-react":  "0.451.0"
-                     },
-    "devDependencies":  {
-                            "typescript":  "5.5.4",
-                            "@types/react":  "18.2.66",
-                            "@types/node":  "20.11.30",
-                            "tailwindcss":  "3.4.7",
-                            "postcss":  "8.4.39",
-                            "autoprefixer":  "10.4.20",
-                            "eslint":  "9.0.0",
-                            "eslint-config-next":  "16.1.6"
-                        }
+  "name": "portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "deploy": "npm run build && npx gh-pages -d out"
+  },
+  "dependencies": {
+    "framer-motion": "11.2.10",
+    "lucide-react": "0.451.0",
+    "next": "^16.1.6",
+    "next-intl": "^3.26.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "7.51.4"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.30",
+    "@types/react": "18.2.66",
+    "autoprefixer": "10.4.20",
+    "eslint": "8.57.0",
+    "eslint-config-next": "^16.1.6",
+    "postcss": "8.4.39",
+    "tailwindcss": "3.4.7",
+    "typescript": "5.5.4"
+  }
 }
