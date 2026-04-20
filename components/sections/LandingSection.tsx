@@ -37,7 +37,7 @@ export function LandingSection({ about, locale }: LandingSectionProps) {
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
-  let presentationText = getLocalizedString(about.presentation, locale);
+  const presentationText = getLocalizedString(about.presentation, locale);
 
   useEffect(() => {
     return () => {
@@ -55,7 +55,7 @@ export function LandingSection({ about, locale }: LandingSectionProps) {
         await navigator.clipboard.writeText(about.email);
         success = true;
       }
-    } catch (error) {
+    } catch {
       success = false;
     }
 
