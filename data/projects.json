@@ -71,6 +71,30 @@
       }
     ]
   },
+    {
+    "title": {
+      "en": "Busesfy",
+      "es": "Busesfy"
+    },
+    "description": {
+      "en": "A landing page with a modern design for Busesfy, a travel company. It features a clean and responsive layout, showcasing the company's services and offerings to attract potential customers.",
+      "es": "Una página de destino con un diseño moderno para Busesfy, una compañía de viajes. Cuenta con un diseño limpio y responsive, presentando los servicios y ofertas de la empresa para atraer clientes potenciales."
+    },
+    "technologies": ["Blazor", "Bootstrap", "MudBlazor", ".NET", "ASP.NET Core"],
+    "previewImage": {
+      "path": "/projects/Busesfy.svg",
+      "alt": "Busesfy landing page preview"
+    },
+    "socialMedia": [
+      {
+        "url": "https://busesfy.com/",
+        "image": {
+          "path": "/icons/github.svg",
+          "alt": "Website Link"
+        }
+      }
+    ]
+  },
   {
     "title": {
       "en": "MPC - Administration",
