@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     ]
   },
   openGraph: {
-    title: 'Senior Engineer Portfolio',
+    title: 'Software Engineer Portfolio',
     description: 'A modern developer portfolio built with Next.js and TypeScript.',
     type: 'website'
   },
