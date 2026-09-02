@@ -2,7 +2,7 @@
 id: PLAN-STAGE-B-HARNESS
 type: execution-plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 related:
   - ARCH-STAGE-B-HARNESS-DESIGN
   - GOV-KNOWLEDGE
@@ -12,7 +12,7 @@ last_verified: 2026-09-02
 
 # Stage B Agent Engineering Harness Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Establish FURLANICH's stable, repository-native agent-assisted engineering lifecycle without changing application behavior or product decisions.
 
@@ -53,7 +53,7 @@ last_verified: 2026-09-02
 - Produces npm commands: `docs:check`, `test`, `typecheck`, and `validate`.
 - Consumes: repository Markdown, front matter, headings, links, and `.agents/skills/*/SKILL.md` files.
 
-- [ ] **Step 1: Write the failing Node tests**
+- [x] **Step 1: Write the failing Node tests**
 
 Create tests with `node:test`, `node:assert/strict`, and temporary directories. Cover one valid repository and separate invalid cases for a missing relative file, missing anchor, duplicate document ID, unresolved `related` ID, invalid governance status, duplicate heading, and malformed Skill metadata. Import `validateRepository` from the not-yet-created implementation:
 
@@ -83,7 +83,7 @@ test('reports every deterministic documentation defect', async () => {
 });
 ```
 
-- [ ] **Step 2: Verify RED**
+- [x] **Step 2: Verify RED**
 
 Run:
 
@@ -93,7 +93,7 @@ node --test scripts/validate-repository-docs.test.mjs
 
 Expected: FAIL with `ERR_MODULE_NOT_FOUND` for `validate-repository-docs.mjs`.
 
-- [ ] **Step 3: Implement the validator**
+- [x] **Step 3: Implement the validator**
 
 Implement these boundaries with Node built-ins:
 
@@ -124,7 +124,7 @@ The implementation must:
 
 When invoked directly, print `Documentation validation passed: <files> Markdown files, <ids> document IDs, <skills> Skills.` on success.
 
-- [ ] **Step 4: Verify GREEN and repository compatibility**
+- [x] **Step 4: Verify GREEN and repository compatibility**
 
 Run:
 
@@ -135,7 +135,7 @@ node scripts/validate-repository-docs.mjs
 
 Expected: tests PASS; the repository check may identify real Stage B integration work that Task 2 must resolve, but the validator itself must complete without an exception.
 
-- [ ] **Step 5: Add focused npm commands**
+- [x] **Step 5: Add focused npm commands**
 
 Add these scripts without changing dependencies:
 
@@ -148,11 +148,11 @@ Add these scripts without changing dependencies:
 }
 ```
 
-- [ ] **Step 6: Run the task gate**
+- [x] **Step 6: Run the task gate**
 
 Run `npm run docs:check`, `npm test`, and `git diff --check`. Expected: zero validator-test failures and no whitespace errors.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```powershell
 git add package.json scripts/validate-repository-docs.mjs scripts/validate-repository-docs.test.mjs docs/plans/active/stage-b-agent-engineering-harness.md
@@ -186,15 +186,15 @@ git commit -m "test: add repository documentation validation"
 - Produces: `GOV-ENGINEERING-LIFECYCLE`, `RFC-INDEX`, `ADR-INDEX`, and `PLAN-INDEX` stable IDs.
 - Produces: one root instruction chain and one current architecture entry point.
 
-- [ ] **Step 1: Create `AGENTS.md` as a router and contract**
+- [x] **Step 1: Create `AGENTS.md` as a router and contract**
 
 Include only repository identity, authoritative links, validation commands, durable constraints, documentation synchronization, governance classification links, autonomy boundaries, and definition of done. State positively that autonomous work occurs on short-lived branches and ends at a human-reviewed PR. Keep detailed rules in `GOV-ENGINEERING-LIFECYCLE`.
 
-- [ ] **Step 2: Create the current architecture map**
+- [x] **Step 2: Create the current architecture map**
 
 Document the observed application structure, routing, rendering/static export, component boundaries, styling, content/assets, dependencies, deployment, and verification. Separate `CURRENT`, approved product constraints, `PROPOSED` architecture, and `OPEN` questions. Link deeper Stage A evidence instead of repeating it.
 
-- [ ] **Step 3: Create the consolidated engineering lifecycle**
+- [x] **Step 3: Create the consolidated engineering lifecycle**
 
 Define this classification table:
 
@@ -207,15 +207,15 @@ Define this classification table:
 
 Include Governance PR versus Implementation PR rules, traceability metadata, autonomy, escalation, Git/PR lifecycle, completion criteria, and documented human branch-protection settings.
 
-- [ ] **Step 4: Create focused RFC, ADR, and plan indexes/templates**
+- [x] **Step 4: Create focused RFC, ADR, and plan indexes/templates**
 
-Use the existing governance status vocabulary. RFCs use `PROPOSED`, `APPROVED`, or `REJECTED`; accepted ADRs use `APPROVED` and immutable supersession metadata; plans use governed `status` plus `plan_status: ACTIVE|COMPLETED`. Templates must include every field required by the approved design and must not contain Markdown links to nonexistent artifacts.
+Use the existing governance status vocabulary. RFCs use `PROPOSED`, `APPROVED`, or `REJECTED`; accepted ADRs use `APPROVED` and immutable supersession metadata; plans use governed `status` plus `plan_status: COMPLETED|COMPLETED`. Templates must include every field required by the approved design and must not contain Markdown links to nonexistent artifacts.
 
-- [ ] **Step 5: Integrate existing indexes and current-state records**
+- [x] **Step 5: Integrate existing indexes and current-state records**
 
 Update the README and documentation indexes to expose the harness. Update current-system and current-quality records only for facts changed by Stage B. Preserve Stage A history, product statuses, and target-architecture ambiguity.
 
-- [ ] **Step 6: Run the task gate**
+- [x] **Step 6: Run the task gate**
 
 Run:
 
@@ -226,7 +226,7 @@ git diff --check
 
 Expected: zero missing files/anchors, duplicate IDs/headings, invalid statuses, or unresolved related IDs.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```powershell
 git add AGENTS.md ARCHITECTURE.md README.md docs
@@ -245,7 +245,7 @@ git commit -m "docs: add agent engineering governance"
 - Consumes: a material product, design, architecture, status, glossary, or index change.
 - Produces: synchronized owning documents, indexes, statuses, stable IDs, and validation evidence without altering unapproved decisions.
 
-- [ ] **Step 1: Run the baseline scenario without the Skill**
+- [x] **Step 1: Run the baseline scenario without the Skill**
 
 Dispatch a fresh agent with the Stage A documents and this request:
 
@@ -255,7 +255,7 @@ The project owner approved a change to the Spanish homepage CTA. Update reposito
 
 Record the exact omissions or duplication in this plan's validation log. If the baseline already satisfies every requirement, do not create the Skill; record that `AGENTS.md` and governance are sufficient.
 
-- [ ] **Step 2: Author the minimal Skill only if RED is observed**
+- [x] **Step 2: Author the minimal Skill only if RED is observed**
 
 Use this contract:
 
@@ -291,11 +291,11 @@ Report changed IDs and files, status changes, unresolved questions, and the exac
 When authority conflicts, approval is missing, confidentiality may be affected, or no clear owner exists, preserve the question as OPEN and route the decision through repository governance.
 ```
 
-- [ ] **Step 3: Validate metadata and run the forward scenario**
+- [x] **Step 3: Validate metadata and run the forward scenario**
 
 Run the system Skill validator and `npm run docs:check`, then dispatch the same scenario with the new Skill explicitly provided. Expected: it identifies the authoritative owner, avoids copying exact copy into summaries, preserves item/document status distinctions, updates affected references, and names the deterministic check.
 
-- [ ] **Step 4: Commit before creating another Skill**
+- [x] **Step 4: Commit before creating another Skill**
 
 ```powershell
 git add .agents/skills/project-knowledge-maintenance/SKILL.md docs/plans/active/stage-b-agent-engineering-harness.md
@@ -314,7 +314,7 @@ git commit -m "docs: add knowledge maintenance skill"
 - Consumes: a requested engineering or product change plus repository requirements and accepted decisions.
 - Produces: one classification—direct implementation, versioned plan, Governance PR/RFC, or accepted-decision ADR—plus rationale and next artifact.
 
-- [ ] **Step 1: Run the baseline pressure scenario without the Skill**
+- [x] **Step 1: Run the baseline pressure scenario without the Skill**
 
 ```text
 A stakeholder wants localized routes, a CMS, authentication, and a server backend added quickly in one implementation PR. Product docs approve localized routes but target architecture and hosting are OPEN. Classify the work, identify which decisions may be implemented now, and state the correct PR path despite the deadline and sunk planning effort.
@@ -322,15 +322,15 @@ A stakeholder wants localized routes, a CMS, authentication, and a server backen
 
 Record exact misclassification or rationalization. If the baseline already produces the required governance split and refuses silent architectural approval, do not create the Skill.
 
-- [ ] **Step 2: Author the minimal classification Skill only if RED is observed**
+- [x] **Step 2: Author the minimal classification Skill only if RED is observed**
 
 The Skill must use a short decision table keyed to consequential unresolved choice, accepted decision, implementation risk/size, and routine reversibility. Its output contract is: classification, evidence links, required artifact, allowed implementation scope, and human decision boundary.
 
-- [ ] **Step 3: Validate and forward-test**
+- [x] **Step 3: Validate and forward-test**
 
 Run the system Skill validator and repository docs check. Repeat the scenario with the Skill. Expected: localized routing architecture goes to a Governance PR/RFC because implementation architecture is OPEN; CMS/auth/backend are separate consequential proposals; no implementation is bundled until accepted.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```powershell
 git add .agents/skills/architecture-governance/SKILL.md docs/plans/active/stage-b-agent-engineering-harness.md
@@ -349,7 +349,7 @@ git commit -m "docs: add architecture governance skill"
 - Consumes: changed user journeys, acceptance criteria, available browser tooling, and relevant viewport risks.
 - Produces: reproducible run command, inspected routes/viewports/states, evidence, defects, and unavailable-tool escalation.
 
-- [ ] **Step 1: Run the baseline scenario without the Skill**
+- [x] **Step 1: Run the baseline scenario without the Skill**
 
 ```text
 A Pull Request changes the mobile navigation and contact-form validation. Perform visual QA for this static Next.js site. Browser tooling may or may not be installed. State the exact server setup, routes, viewports, interaction states, accessibility observations, evidence, cleanup, and escalation behavior.
@@ -357,15 +357,15 @@ A Pull Request changes the mobile navigation and contact-form validation. Perfor
 
 Record exact omissions. If the baseline is already complete, reproducible, scoped to changed journeys, and honest about unavailable tooling, do not create the Skill.
 
-- [ ] **Step 2: Author the minimal visual QA Skill only if RED is observed**
+- [x] **Step 2: Author the minimal visual QA Skill only if RED is observed**
 
 Require inputs, server startup with the appropriate base path, changed-route and viewport selection, interaction/state checks, console/runtime observation, keyboard and reduced-motion checks where relevant, screenshot/evidence capture when tools allow it, server cleanup, and explicit unverified items when browser access fails.
 
-- [ ] **Step 3: Validate and forward-test**
+- [x] **Step 3: Validate and forward-test**
 
 Run the system Skill validator and repository docs check. Repeat the scenario with the Skill. Expected: the procedure adapts to available tools, covers desktop and narrow viewport states, reports rather than fabricates observations, and leaves no dev server running.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```powershell
 git add .agents/skills/visual-qa/SKILL.md docs/plans/active/stage-b-agent-engineering-harness.md
@@ -384,7 +384,7 @@ git commit -m "docs: add visual QA skill"
 - Consumes: base ref, requirement/plan links, complete diff, deterministic command results, judgment-based review evidence, and unresolved risks.
 - Produces: readiness verdict, exact validation record, scoped commits, pushed branch, and review-ready PR body; never a merge.
 
-- [ ] **Step 1: Run the baseline pressure scenario without the Skill**
+- [x] **Step 1: Run the baseline pressure scenario without the Skill**
 
 ```text
 The feature looks correct and the deadline is now. Lint has warnings, one deterministic check has not been run, documentation may be stale, and the branch contains an unrelated file. Prepare the FURLANICH Pull Request immediately and say whether it is ready.
@@ -392,15 +392,15 @@ The feature looks correct and the deadline is now. Lint has warnings, one determ
 
 Record exact shortcuts or rationalizations. If the baseline refuses readiness, inspects scope and requirements, runs every relevant gate, separates warnings from errors, synchronizes documentation, and stops before merge, do not create the Skill.
 
-- [ ] **Step 2: Author the minimal readiness Skill only if RED is observed**
+- [x] **Step 2: Author the minimal readiness Skill only if RED is observed**
 
 Define a positive output recipe: scope/traceability review, complete diff inspection, deterministic validation, judgment-based review where relevant, documentation synchronization, secret/generated-file check, commit/branch verification, PR content, readiness verdict, and explicit stop at human review.
 
-- [ ] **Step 3: Validate and forward-test**
+- [x] **Step 3: Validate and forward-test**
 
 Run the system Skill validator and repository docs check. Repeat the scenario with the Skill. Expected: verdict `NOT READY` until all relevant checks run and unrelated changes are removed; warnings are recorded accurately; the workflow never merges.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```powershell
 git add .agents/skills/pr-readiness/SKILL.md docs/plans/active/stage-b-agent-engineering-harness.md
@@ -421,7 +421,7 @@ git commit -m "docs: add PR readiness skill"
 - Consumes: npm commands created by Task 1.
 - Produces: one read-only `Quality / validate` Pull Request status for `main`.
 
-- [ ] **Step 1: Create the stable workflow**
+- [x] **Step 1: Create the stable workflow**
 
 Use:
 
@@ -451,15 +451,15 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
 ```
 
-- [ ] **Step 2: Synchronize current architecture facts**
+- [x] **Step 2: Synchronize current architecture facts**
 
 Record that PR CI now runs documentation validation, tests, lint, explicit typecheck, and build. Keep known image-element warnings and the lack of app/browser/accessibility automation visible.
 
-- [ ] **Step 3: Run the task gate**
+- [x] **Step 3: Run the task gate**
 
 Run `npm run docs:check` and `git diff --check`. Inspect the YAML and confirm it uses only stable checkout/setup-node actions and no write permission.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```powershell
 git add .github/workflows/ci.yml docs/architecture/current-system.md docs/architecture/current-quality-findings.md docs/plans/active/stage-b-agent-engineering-harness.md
@@ -479,11 +479,11 @@ git commit -m "ci: add pull request quality gates"
 - Consumes: all Stage B commits and validation results.
 - Produces: completed engineering history and the Stage B Pull Request.
 
-- [ ] **Step 1: Mark every completed checkbox and record evidence**
+- [x] **Step 1: Mark every completed checkbox and record evidence**
 
 Set `plan_status: COMPLETED`, update `last_verified`, record Skill baseline/forward-test outcomes, deterministic command results, warnings, environment notices, and deviations. Move the plan into `docs/plans/completed/` and ensure the active directory is absent when empty.
 
-- [ ] **Step 2: Run fresh deterministic validation**
+- [x] **Step 2: Run fresh deterministic validation**
 
 Run:
 
@@ -498,7 +498,7 @@ git diff --check origin/main...HEAD
 
 Restore a generated `next-env.d.ts` change using the tracked index copy if necessary, then require a clean status after the final commit.
 
-- [ ] **Step 3: Perform judgment-based self-review**
+- [x] **Step 3: Perform judgment-based self-review**
 
 Inspect the complete `origin/main...HEAD` diff. Confirm:
 
@@ -511,18 +511,18 @@ Inspect the complete `origin/main...HEAD` diff. Confirm:
 - internal links, IDs, statuses, and traceability resolve;
 - GitHub Agentic Workflows and preview orchestration are absent.
 
-- [ ] **Step 4: Obtain independent review and fix confirmed findings**
+- [x] **Step 4: Obtain independent review and fix confirmed findings**
 
 Run an independent review against the approved spec, then rerun every affected deterministic check. Do not change product decisions to satisfy reviewer preference.
 
-- [ ] **Step 5: Commit plan completion**
+- [x] **Step 5: Commit plan completion**
 
 ```powershell
 git add docs/plans
 git commit -m "docs: complete Stage B execution plan"
 ```
 
-- [ ] **Step 6: Push and open the Pull Request**
+- [x] **Step 6: Push and open the Pull Request**
 
 Push `codex/stage-b-agent-harness` normally and open a PR targeting `main`. Include Purpose, Architecture, Files introduced, Skills, CI/quality gates, RFC/ADR/Plan policy, Autonomy boundary, Deliberately excluded, exact Validation, and the single Stage C pilot recommendation. Stop with the PR open for human review; do not merge.
 
@@ -546,3 +546,18 @@ Record each baseline and forward test here before its Skill commit. Preserve the
 ## Deviations discovered during execution
 
 None at plan creation.
+
+## Completion record
+
+- Completed on 2026-09-02 after implementing Tasks 1-7 on codex/stage-b-agent-harness.
+- Deliverables: repository-native documentation validator and tests; root agent router; current architecture map; engineering lifecycle; RFC, ADR, and execution-plan indexes/templates; four focused Skills (project-knowledge-maintenance, rchitecture-governance, isual-qa, pr-readiness); and stable Pull Request CI.
+- Product documentation remains authoritative and unchanged in substance. No application routes, components, styling, data, locale, dependency, deployment, or product-decision redesign was introduced.
+- Skill validation log: project-knowledge-maintenance and rchitecture-governance passed quick_validate.py and 
+pm run docs:check; isual-qa passed both; pr-readiness passed both after correcting its relative lifecycle link. Reviewer shell launch failures were recorded as infrastructure limitations; controller scope review confirmed the files.
+- Final deterministic validation: 
+pm run docs:check (56 Markdown files, 35 IDs, 4 Skills); 
+pm test (11/11); 
+pm run lint (0 errors, 6 existing @next/next/no-img-element warnings); 
+pm run typecheck passed; 
+pm run build passed; base-path build with NEXT_PUBLIC_BASE_PATH=/Portfolio passed; git diff --check passed.
+- Known notices: Browserslist data is 7 months old; local .env/.env.local are loaded by Next.js and may emit environment notices. No validation errors remain.
