@@ -214,6 +214,30 @@ function isIgnoredLink(target) {
   return /^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(target);
 }
 
+function maskInlineCode(line) {
+  let result = '';
+  let delimiter = null;
+  let index = 0;
+  while (index < line.length) {
+    if (line[index] !== '`') {
+      result += delimiter ? ' ' : line[index];
+      index += 1;
+      continue;
+    }
+
+    const start = index;
+    while (index < line.length && line[index] === '`') index += 1;
+    const run = line.slice(start, index);
+    if (!delimiter) {
+      delimiter = run;
+    } else if (run === delimiter) {
+      delimiter = null;
+    }
+    result += ' '.repeat(run.length);
+  }
+  return result;
+}
+
 function findMarkdownLinks(document) {
   const links = [];
   let fenced = false;
@@ -224,9 +248,10 @@ function findMarkdownLinks(document) {
       continue;
     }
     if (fenced) continue;
+    const visibleLine = maskInlineCode(line);
     const pattern = /!?\[[^\]]*\]\(\s*(<[^>]*>|[^\s)]+)(?:\s+[^)]*)?\)/g;
     let match;
-    while ((match = pattern.exec(line))) {
+    while ((match = pattern.exec(visibleLine))) {
       if (match[0].startsWith('!')) continue;
       const target = match[1].startsWith('<') ? match[1].slice(1, -1) : match[1];
       links.push(target);
@@ -272,7 +297,9 @@ function validateLinks(documents, rootDir) {
       const queryIndex = targetPath.indexOf('?');
       const rawPath = queryIndex < 0 ? targetPath : targetPath.slice(0, queryIndex);
       const rawAnchor = hashIndex < 0 ? '' : target.slice(hashIndex + 1);
-      const targetDocument = resolveLinkPath(rootDir, document, rawPath, markdownByPath);
+      const targetDocument = rawPath
+        ? resolveLinkPath(rootDir, document, rawPath, markdownByPath)
+        : document;
       if (!targetDocument) {
         const displayPath = rawPath || document.path;
         violations.push(violation(document, `missing file "${displayPath}"`));

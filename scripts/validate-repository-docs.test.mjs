@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { validateRepository } from './validate-repository-docs.mjs';
 
-async function createFixture({ valid = true, defect } = {}) {
+async function createFixture({ valid = true, defect, sameFileAnchor = false, inlineCodeLink = false } = {}) {
   const root = await mkdtemp(path.join(tmpdir(), 'repository-docs-'));
   await mkdir(path.join(root, 'docs'), { recursive: true });
   await mkdir(path.join(root, '.agents', 'skills', 'sample-skill'), { recursive: true });
@@ -22,6 +22,8 @@ related:
 ## Details
 
 The guide links back to the [root](../README.md#root-document).
+${sameFileAnchor ? 'The [details](#details) are in this document.' : ''}
+${inlineCodeLink ? 'The literal `[missing](docs/not-real.md)` is inline code.' : ''}
 `;
   const rootDocument = `---
 id: ROOT
@@ -81,6 +83,24 @@ description: Use when validating a sample repository.
 
 test('accepts coherent documents and repository Skills', async () => {
   const root = await createFixture({ valid: true });
+  try {
+    assert.deepEqual(await validateRepository(root), []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('resolves same-file Markdown anchors', async () => {
+  const root = await createFixture({ valid: true, sameFileAnchor: true });
+  try {
+    assert.deepEqual(await validateRepository(root), []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('ignores Markdown-looking links inside inline code', async () => {
+  const root = await createFixture({ valid: true, inlineCodeLink: true });
   try {
     assert.deepEqual(await validateRepository(root), []);
   } finally {
