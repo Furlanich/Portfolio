@@ -27,9 +27,12 @@ Front matter records the overall governance status of a document. In mixed-statu
 - [Product index](product/index.md): business purpose, audiences, services, information architecture, page specifications, and migration requirements.
 - [Design index](design/index.md): existing visual baseline and unsettled target-design areas.
 - [Architecture index](architecture/index.md): current implementation facts and known quality findings; it is not a target-architecture decision.
+- [Architecture map](../ARCHITECTURE.md): concise current-system entry point, approved product constraints, and proposed/open architecture context.
+- [Engineering lifecycle](governance/engineering-lifecycle.md): change classification, autonomy boundaries, traceability, and PR rules.
+- [RFCs](rfcs/index.md), [ADRs](decisions/index.md), and [execution plans](plans/index.md): consequential proposals, accepted architecture history, and substantial-work records.
 - [Research references](references/market-and-design-references.md): external sources that informed earlier positioning and evidence discussions.
 - [Domain glossary](../CONTEXT.md): canonical project-specific terminology.
 
 ## Current documentation stage
 
-Stage A preserves existing knowledge. It does not define an implementation plan, agent harness, RFC/ADR system, CI redesign, or final target architecture. Those belong to later reviewed stages.
+Stage A preserves product and design knowledge. Stage B adds a lightweight engineering harness around that knowledge; it does not approve a target architecture or redesign the application.

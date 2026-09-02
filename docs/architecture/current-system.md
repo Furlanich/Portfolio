@@ -5,7 +5,7 @@ status: APPROVED
 related:
   - ARCH-FINDINGS
   - IA-SITE
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # Current system
@@ -98,14 +98,18 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - The workflow deploys `out/` with `peaceiris/actions-gh-pages` using content-write permission.
 - Current live location was previously verified as `https://furlanich.github.io/Portfolio/`.
 
-## Validation and documentation before Stage A
+## Validation and documentation
 
-- Package scripts include dev, build, start, lint, and deploy.
-- No dedicated type-check script, formatter, test suite, or browser-test suite exists.
-- CI runs install and build but not explicit lint, type check, tests, accessibility, or link validation.
-- The previous README contained only a two-line personal-portfolio description.
-- No product documentation, `AGENTS.md`, or context glossary existed.
+- Package scripts include documentation validation, Node-based validator tests, explicit TypeScript checking, lint, build, and a composed validation command.
+- The repository now has a root agent router, an architecture map, and governance indexes/templates. These documents do not approve a target migration.
+- No formatter configuration or browser-test suite exists.
+- The deployment workflow remains push-to-`main` only and is unchanged; Pull Request quality gates run through the separate Quality workflow documented below.
+- Stage A added product documentation and a context glossary; the prior README was a two-line personal-portfolio description.
 
 ## Environment
 
 Local `.env` files exist and are intentionally not documented or read into the knowledge base. Public documentation must never reproduce secrets.
+
+## Stage B quality gate update
+
+Pull Requests targeting `main` now run the repository `validate` command through `.github/workflows/ci.yml`. The gate covers documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build with the repository base path. The existing deployment workflow remains push-to-`main` only and is unchanged.
