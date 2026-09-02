@@ -1,3 +1,15 @@
+---
+id: DOMAIN-GLOSSARY
+type: product-glossary
+status: APPROVED
+related:
+  - DOCS-INDEX
+  - BRAND-POSITIONING
+  - AUDIENCES-SERVICES
+  - PROJECT-EVIDENCE
+last_verified: 2026-09-02
+---
+
 # FURLANICH Product Context
 
 This glossary defines the project-specific language used throughout the product documentation. It describes product concepts, not implementation.

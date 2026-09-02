@@ -9,7 +9,7 @@ related:
   - SERVICE-WEB
   - SERVICE-WHATSAPP
   - SERVICE-CONSULTING
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # Project evidence inventory
@@ -18,7 +18,7 @@ last_verified: 2026-09-01
 
 Project evidence exists to help prospective clients evaluate relevance, credibility, and fit. It is not a recruiter-oriented list of technologies or a comprehensive archive of everything Samuel has built.
 
-The inventory design below was researched and presented but did not receive a separate explicit approval before Stage A began. It is therefore **PROPOSED**. Approved confidentiality requirements remain binding regardless of whether this model is adopted.
+The inventory design below is **PROPOSED** because the project owner has not adopted it as an **APPROVED** product decision. Approved confidentiality requirements remain binding regardless of whether this model is adopted.
 
 ## Approved foundations
 

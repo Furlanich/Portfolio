@@ -4,7 +4,7 @@ type: decision-register
 status: APPROVED
 related:
   - GOV-KNOWLEDGE
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # Product knowledge status register
@@ -71,9 +71,9 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - A hybrid evidence ladder combining full approved cases, anonymized summaries, restricted production summaries, laboratory demonstrations, and prototypes.
 - Exact project-by-project classifications and homepage selections in the project evidence inventory.
 - Internal commercial defaults including milestone payment percentages, a 30-day defect warranty, and detailed ownership terms; these require business/legal review.
-- Current architecture recommendation from discovery: modernize this repository incrementally, remain static-first initially, reduce unnecessary client boundaries, and modernize CI later.
+- Incremental/static-first architecture recommendation — **PROPOSED** preserved knowledge owned by [`ARCH-INDEX`](../architecture/index.md); it authorizes no architecture or CI change.
 - Use conceptual or AI-generated imagery only when clearly identified and never as false evidence of an implemented client solution.
-- Do not invent clients, metrics, testimonials, team size, or production outcomes. This integrity rule has been strongly recommended but was not separately recorded as an explicit user approval.
+- Do not invent clients, metrics, testimonials, team size, or production outcomes. This integrity rule remains **PROPOSED** because the project owner has not adopted it as an **APPROVED** policy.
 
 ## OPEN
 
@@ -89,6 +89,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Target hosting after launch; GitHub Pages is the current platform and a proposed launch platform, not an irreversible decision.
 - Detailed target responsive behavior, accessibility conformance level, and performance budgets.
 - Final English copy and translated project evidence.
+- Exact service-section fragment identifiers on `/servicios/`, including whether `#web`, `#whatsapp`, or `#consultoria` are used, and whether fragment-specific CTAs are required.
 
 ## REJECTED
 

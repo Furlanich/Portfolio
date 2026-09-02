@@ -2,7 +2,7 @@
 id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # FURLANICH project knowledge
@@ -18,7 +18,7 @@ When documentation and conversation history disagree, this documentation wins. W
 - **OPEN** — requires a future decision or missing evidence.
 - **REJECTED** — considered and intentionally not selected.
 
-Mixed-status documents label individual requirements. Front matter reflects the least-settled material that materially affects the document.
+Front matter records the overall governance status of a document. In mixed-status documents, explicit item-level **APPROVED**, **PROPOSED**, **OPEN**, and **REJECTED** markers are authoritative.
 
 ## Start here
 

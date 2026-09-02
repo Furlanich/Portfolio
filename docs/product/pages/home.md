@@ -8,7 +8,7 @@ related:
   - IA-SITE
   - PROJECT-EVIDENCE
   - PAGE-CONTACT
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # Spanish homepage
@@ -115,7 +115,9 @@ There is no dedicated AI section.
 
 > Soluciones web para presentar, vender o gestionar servicios: sitios profesionales, catálogos, pedidos, reservas, portales para clientes e integraciones con medios de pago.
 
-**CTA:** `Explorar soluciones web` → `/servicios/#web`
+**CTA:** `Explorar soluciones web` → `/servicios/`
+
+**Fragment target:** **OPEN.** The exact service-section fragment identifier and whether this CTA must target a fragment remain unresolved.
 
 ### SERVICE-WHATSAPP
 
@@ -123,7 +125,9 @@ There is no dedicated AI section.
 
 > Flujos para responder consultas, registrar pedidos, gestionar reservas, enviar confirmaciones y conectar WhatsApp con otras herramientas del negocio.
 
-**CTA:** `Explorar automatizaciones` → `/servicios/#whatsapp`
+**CTA:** `Explorar automatizaciones` → `/servicios/`
+
+**Fragment target:** **OPEN.** The exact service-section fragment identifier and whether this CTA must target a fragment remain unresolved.
 
 ### SERVICE-CONSULTING
 
@@ -131,7 +135,9 @@ There is no dedicated AI section.
 
 > Diagnóstico y mejora de sistemas existentes para resolver problemas, reducir riesgos y definir un camino técnico mantenible.
 
-**CTA:** `Explorar mantenimiento y consultoría` → `/servicios/#consultoria`
+**CTA:** `Explorar mantenimiento y consultoría` → `/servicios/`
+
+**Fragment target:** **OPEN.** The exact service-section fragment identifier and whether this CTA must target a fragment remain unresolved.
 
 **Section CTA:** `Ver todos los servicios` → `/servicios/`
 
@@ -211,9 +217,11 @@ There is no dedicated AI section.
 
 > Responsabilidad técnica directa
 
-**Homepage biography**
+**Homepage biography — PROPOSED**
 
 > FURLANICH es un estudio de software liderado por Samuel Furlanich, desarrollador full-stack con formación completa en Ciencias de la Computación en la Universidad de Buenos Aires. Samuel dirige cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.
+
+The founder facts are **APPROVED**; this exact homepage biography wording remains **PROPOSED**. See [`PAGE-FOUNDER`](studio-and-founder.md) for the founder-profile biography status.
 
 **Primary CTA:** `Hablemos de tu proyecto` → `/contacto/`
 

@@ -6,7 +6,7 @@ related:
   - HOME-PROCESS
   - PAGE-SERVICES
   - PAGE-CONTACT
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # Delivery and commercial boundaries
@@ -91,13 +91,15 @@ A production-ready delivery should have, in proportion to risk:
 
 Public quality copy should describe concrete controls rather than claim certification, perfect security, or zero defects.
 
-## AI and confidential information — PROPOSED internal boundary
+## AI-assisted delivery and confidential information — PROPOSED policy
 
-- Credentials, secrets, and production data are not submitted to general AI tools.
-- Synthetic or redacted information is preferred.
-- Confidential client code or documents require explicit authorization and an appropriate service configuration before third-party AI processing.
-- Generated code and content receive human review.
-- AI-generated changes are not deployed autonomously.
+FURLANICH proposes this business delivery and confidentiality policy for AI-assisted work. It is not an approved operating policy or a public compliance claim.
+
+- FURLANICH does not provide credentials, secrets, or production data to general AI tools.
+- Synthetic or redacted information is preferred for AI-assisted work.
+- Third-party AI processing of confidential client code or documents requires explicit client authorization and an appropriate service configuration.
+- AI-assisted code and content receive human technical review before use.
+- Publication and deployment of AI-assisted changes remain under human control.
 - Client-facing AI functionality is disclosed and scoped separately, including its limitations and human oversight.
 
 No public certification or compliance claim is implied.

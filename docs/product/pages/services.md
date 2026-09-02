@@ -8,7 +8,7 @@ related:
   - SERVICE-WHATSAPP
   - SERVICE-CONSULTING
   - PAGE-CONTACT
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # Services page
@@ -37,6 +37,10 @@ Explain the three launch services in enough detail for a prospective client to r
 - who the service is and is not a fit for;
 - truthful related evidence;
 - CTA to `PAGE-CONTACT`.
+
+## Service-section fragments and CTAs — OPEN
+
+The approved Services route is `/servicios/`. Exact fragment identifiers for the three service sections, including potential `#web`, `#whatsapp`, and `#consultoria` identifiers, are **OPEN**. Whether any homepage or in-page CTA must target a service-specific fragment is also **OPEN**. Until that decision is made, service CTAs route to `/servicios/`.
 
 ## Service-specific requirements
 

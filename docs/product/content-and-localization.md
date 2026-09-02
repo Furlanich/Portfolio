@@ -6,7 +6,7 @@ related:
   - BRAND-POSITIONING
   - IA-SITE
   - PAGE-HOME
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # Content and localization
@@ -79,7 +79,7 @@ The canonical domain is OPEN.
 - Generated visuals require a conceptual disclosure and cannot serve as production evidence.
 - Testimonials and endorsements require permission and attributable source material.
 
-The broader non-fabrication policy remains PROPOSED in the status register because it was recommended rather than explicitly approved as a standalone rule.
+The broader non-fabrication policy remains **PROPOSED** in the status register because the project owner has not adopted it as an **APPROVED** standalone rule.
 
 ## Source-material requirements
 

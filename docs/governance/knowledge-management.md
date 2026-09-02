@@ -5,7 +5,7 @@ status: APPROVED
 related:
   - DOCS-INDEX
   - GOV-STATUS
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # Knowledge-management policy
@@ -24,7 +24,7 @@ Discuss -> Decide -> Persist -> Continue
 
 ## Classification rule
 
-All material knowledge must use the four statuses defined in [the documentation index](../index.md). Polished wording does not imply approval. Existing code does not imply product intent. Research does not imply a requirement.
+All material knowledge must use the four statuses defined in [the documentation index](../index.md). Front matter records the overall governance status of a document; in mixed-status documents, explicit item-level **APPROVED**, **PROPOSED**, **OPEN**, and **REJECTED** markers are authoritative. Polished wording does not imply approval. Existing code does not imply product intent. Research does not imply a requirement.
 
 When a later explicit decision supersedes an earlier one, the current requirement remains in its owning document and a meaningful rejected alternative may be retained in the [status register](status-register.md).
 

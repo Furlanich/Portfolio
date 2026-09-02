@@ -6,7 +6,7 @@ related:
   - AUDIENCES-SERVICES
   - CONTENT-LOCALIZATION
   - PAGE-HOME
-last_verified: 2026-09-01
+last_verified: 2026-09-02
 ---
 
 # Vision and positioning
@@ -35,13 +35,13 @@ The site is not primarily intended to optimize Samuel's presentation to recruite
 
 ## Positioning
 
-### APPROVED direction
+### Market position — APPROVED
 
 FURLANICH addresses concrete business problems through commercial web experiences, WhatsApp automation and integrations, and the diagnosis or improvement of existing software.
 
 The value proposition must lead with business usefulness rather than a technology stack. Technical depth supports credibility but is secondary to the client problem and intended result.
 
-### Approved availability
+### Availability — APPROVED
 
 - Primary market: Argentina, initially Buenos Aires Province and CABA.
 - Other Argentine provinces are in scope.
@@ -49,17 +49,15 @@ The value proposition must lead with business usefulness rather than a technolog
 - Spanish for Argentina is primary; English is secondary.
 - Availability must not be rewritten as an unsupported claim of existing international clients.
 
-### PROPOSED descriptor and headline
+### Durable public descriptor — PROPOSED
 
 > Estudio de desarrollo de software a medida
 
-> Software práctico para vender, atender y operar mejor.
-
-The exact homepage copy was carried forward as the accepted content deck in [`PAGE-HOME`](pages/home.md). The general descriptor remains proposed until it is separately adopted as permanent brand language.
+The approved homepage H1 and its surrounding copy are owned by [`HOME-HERO`](pages/home.md#home-hero). That page-level approval does not adopt the copy as permanent brand language. The general descriptor remains proposed until it is separately adopted as durable brand language.
 
 ## Differentiation
 
-### APPROVED
+### Approved differentiation
 
 - Direct technical responsibility from the founder.
 - Solutions defined around each client's actual process and constraints.
@@ -70,15 +68,15 @@ The exact homepage copy was carried forward as the accepted content deck in [`PA
 
 “Current technology” describes maintainable choices for new work. It does not exclude maintenance or modernization of an existing legacy system; that work is an approved launch service.
 
-### PROPOSED
+### Proposed differentiation language
 
-- “No imponemos una plataforma genérica. Primero entendemos el proceso y después evaluamos si conviene construir, integrar o modernizar.”
+- The approved Spanish service introduction is owned by [`HOME-SERVICES`](pages/home.md#home-services). As durable positioning, an assessment-first approach before choosing to build, integrate, or modernize remains **PROPOSED**.
 - Describe technology as current and maintainable rather than merely new.
 - Describe quality through specific review and validation practices instead of “zero defects” or unsupported assurance claims.
 
 ## Brand tone
 
-### APPROVED
+### Approved tone
 
 - Professional, clear, confident, and business-oriented.
 - Natural Argentine Spanish using restrained professional voseo.
@@ -86,14 +84,14 @@ The exact homepage copy was carried forward as the accepted content deck in [`PA
 - Founder presence without turning the business homepage into a résumé.
 - No unnecessary jargon where plain business language is available.
 
-### PROPOSED integrity guardrails
+### Integrity guardrails — PROPOSED
 
 - Do not invent clients, metrics, testimonials, production outcomes, or team size.
 - Do not present generated visuals as implemented systems.
 - Do not call prototypes client work.
 - Use client logos only with permission.
 
-These guardrails were strongly recommended during positioning work. They remain marked proposed because an explicit standalone approval was not recorded, although narrower confidentiality rules are approved.
+These guardrails remain **PROPOSED** because the project owner has not adopted them as an **APPROVED** policy, although narrower confidentiality rules are approved.
 
 ## AI positioning
 
