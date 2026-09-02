@@ -1,0 +1,50 @@
+---
+id: PORTFOLIO-MIGRATION
+type: content-migration
+status: APPROVED
+related:
+  - IA-SITE
+  - PAGE-FOUNDER
+  - PROJECT-EVIDENCE
+last_verified: 2026-09-01
+---
+
+# Personal portfolio migration
+
+## Goal
+
+Preserve useful professional history while making the business site the primary experience. Migration should happen incrementally; existing content is not removed until its replacement exists and has been verified.
+
+## Content mapping
+
+| Current content | Target owner | Treatment |
+|---|---|---|
+| Personal hero and introduction | `PAGE-FOUNDER` | Rewrite as founder biography and business-relevant professional summary. |
+| CV download | `PAGE-FOUNDER` | Preserve after verifying content and filename. |
+| Full skills catalogue | `PAGE-FOUNDER` | Preserve technical depth here; use outcome-oriented capabilities on business pages. |
+| Experience timeline | `PAGE-FOUNDER` | Fact-check, update, and preserve as secondary content. Clever Soft SA belongs in narrative biography, not in this résumé-style timeline. |
+| Education timeline | `PAGE-FOUNDER` | Correctly state completed UBA studies and technical education. |
+| Current projects | `PAGE-PROJECTS` or Founder/Laboratory | Reclassify by maturity, relevance, and disclosure permission. |
+| Game-development and experimental work | Founder/Laboratory | Keep secondary; do not use as primary commercial proof. |
+| Repeated contact information | `PAGE-CONTACT` and footer | Centralize; keep only contextual links elsewhere. |
+| Social links | Footer, Studio, Founder | GitHub is supporting technical evidence, not the primary business CTA. |
+| Current in-browser locale data | Localized routes | Migrate to page-equivalent Spanish/English content. |
+
+## Migration rules
+
+- Do not delete historical content before a replacement exists.
+- Migrate the founder profile in the same release that makes the business homepage primary, preventing useful history from disappearing.
+- Maintain one authoritative content record for each fact.
+- Verify dates, links, titles, and public permissions before migration.
+- Preserve repository history rather than copying old content into an archive page.
+- Do not automatically promote every personal project into business evidence.
+
+## Facts requiring correction in the current implementation
+
+- Current metadata and hero still describe a personal developer portfolio.
+- Current experience data ends independent work at 2026. The target biography must state independent work since 2024 and include the approved Clever Soft SA narrative without adding it to the experience timeline.
+- Current education wording should reflect that UBA studies were completed.
+- The stored phone lacks the confirmed international mobile `9` used by the intended public contact format.
+- Existing project records do not contain maturity or disclosure classification.
+
+These are migration findings, not authorization to modify application data during Stage A.
