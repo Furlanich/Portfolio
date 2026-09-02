@@ -103,7 +103,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Package scripts include documentation validation, Node-based validator tests, explicit TypeScript checking, lint, build, and a composed validation command.
 - The repository now has a root agent router, an architecture map, and governance indexes/templates. These documents do not approve a target migration.
 - No formatter configuration or browser-test suite exists.
-- CI currently deploys after build and does not yet run Pull Request quality gates; the deployment workflow remains unchanged at this point.
+- The deployment workflow remains push-to-`main` only and is unchanged; Pull Request quality gates run through the separate Quality workflow documented below.
 - Stage A added product documentation and a context glossary; the prior README was a two-line personal-portfolio description.
 
 ## Environment
