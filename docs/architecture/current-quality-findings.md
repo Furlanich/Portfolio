@@ -30,7 +30,6 @@ These findings describe the existing implementation and do not authorize remedia
 
 ## Accessibility and interaction
 
-- Form labels have no `htmlFor`/field ID association.
 - Project cards are focusable even though the card container is not itself an interactive control.
 - Project links are visually hidden until hover or focus-within.
 - Essential sections begin at opacity zero in reveal animation, creating a fail-closed rendering risk.
@@ -62,7 +61,7 @@ These findings describe the existing implementation and do not authorize remedia
 ## Validation and maintenance
 
 - Documentation integrity is checked by a repository-native Node validator, with Node-based validator tests and an explicit TypeScript check available through package scripts.
-- No formatter configuration or browser-test suite exists.
+- No formatter configuration or committed browser-test suite exists. A rendered-component regression test covers contact-form label and inline-validation associations.
 - CI now runs documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build on Pull Requests through the stable Quality workflow. There is still no app/browser accessibility automation, SEO audit, or dedicated browser-test suite; the existing six `@next/next/no-img-element` lint warnings remain visible. Deployment behavior is unchanged.
 - The deployment action and permissions were identified for later review; no Stage A change is authorized.
 - Stage A verification on 2026-09-01 completed against the patched dependency baseline: TypeScript and the production build passed; lint completed with zero errors and six existing `@next/next/no-img-element` warnings.
