@@ -109,3 +109,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 ## Environment
 
 Local `.env` files exist and are intentionally not documented or read into the knowledge base. Public documentation must never reproduce secrets.
+
+## Stage B quality gate update
+
+Pull Requests targeting `main` now run the repository `validate` command through `.github/workflows/ci.yml`. The gate covers documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build with the repository base path. The existing deployment workflow remains push-to-`main` only and is unchanged.

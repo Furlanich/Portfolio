@@ -63,7 +63,7 @@ These findings describe the existing implementation and do not authorize remedia
 
 - Documentation integrity is checked by a repository-native Node validator, with Node-based validator tests and an explicit TypeScript check available through package scripts.
 - No formatter configuration or browser-test suite exists.
-- CI still deploys after build without Pull Request lint, type-check, test, accessibility, SEO, or broken-link gates; a future Stage B task evaluates stable Pull Request checks without changing deployment behavior.
+- CI now runs documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build on Pull Requests through the stable Quality workflow. There is still no app/browser accessibility automation, SEO audit, or dedicated browser-test suite; the existing six `@next/next/no-img-element` lint warnings remain visible. Deployment behavior is unchanged.
 - The deployment action and permissions were identified for later review; no Stage A change is authorized.
 - Stage A verification on 2026-09-01 completed against the patched dependency baseline: TypeScript and the production build passed; lint completed with zero errors and six existing `@next/next/no-img-element` warnings.
 
