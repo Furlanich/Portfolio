@@ -5,6 +5,7 @@ status: APPROVED
 related:
   - DOCS-INDEX
   - GOV-STATUS
+  - GOV-ENGINEERING-LIFECYCLE
 last_verified: 2026-09-02
 ---
 
@@ -36,6 +37,7 @@ When a later explicit decision supersedes an earlier one, the current requiremen
 - Each page specification owns its section order, content, evidence, CTA, and acceptance criteria.
 - Target visual rules are owned by `docs/design/`.
 - Current implementation facts are owned by `docs/architecture/`.
+- Engineering change classification, RFC/ADR/plan rules, and Pull Request boundaries are owned by `engineering-lifecycle.md`.
 - Decision status is summarized, not redefined, in `status-register.md`.
 
 Documents should link to an owning requirement rather than copy it. Exact public copy may be repeated only in the page specification that owns it.
@@ -52,7 +54,7 @@ When discussion materially changes product requirements, page structure, positio
 
 ## Stage boundaries
 
-Stage A documents product knowledge only. It intentionally does not create a large `AGENTS.md`, coding-agent prompts, Skills, implementation plans, RFC/ADR machinery, CI changes, PR automation, or orchestration rules.
+Stage A established product and design knowledge. Stage B adds a lightweight repository engineering harness while preserving product documentation as an independent source of truth. See the [engineering lifecycle](engineering-lifecycle.md) for implementation governance; it does not redefine product decisions.
 
 ## Review standard
 

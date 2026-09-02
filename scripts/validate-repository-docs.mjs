@@ -144,7 +144,18 @@ function validateFrontMatter(documents) {
     }
   }
 
+  // Documents own their front-matter ID. Page specifications also expose a
+  // small number of stable, heading-level IDs (for example `PAGE-PRIVACY` and
+  // `HOME-CTA`) so related metadata can trace a precise responsibility without
+  // requiring a separate document for every page section.
   const ids = new Set(seenIds.keys());
+  for (const document of documents) {
+    for (const heading of findHeadings(document)) {
+      for (const stableId of heading.text.match(/\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b/g) ?? []) {
+        ids.add(stableId);
+      }
+    }
+  }
   for (const document of documents) {
     const related = document.frontMatter.values.related;
     if (related === undefined) continue;

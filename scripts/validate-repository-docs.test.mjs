@@ -5,7 +5,13 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { validateRepository } from './validate-repository-docs.mjs';
 
-async function createFixture({ valid = true, defect, sameFileAnchor = false, inlineCodeLink = false } = {}) {
+async function createFixture({
+  valid = true,
+  defect,
+  sameFileAnchor = false,
+  inlineCodeLink = false,
+  relatedHeadingId = false
+} = {}) {
   const root = await mkdtemp(path.join(tmpdir(), 'repository-docs-'));
   await mkdir(path.join(root, 'docs'), { recursive: true });
   await mkdir(path.join(root, '.agents', 'skills', 'sample-skill'), { recursive: true });
@@ -15,11 +21,13 @@ id: GUIDE
 status: PROPOSED
 related:
   - ROOT
----
+${relatedHeadingId ? '  - SECTION-ID\n' : ''}---
 
 # Guide
 
 ## Details
+
+${relatedHeadingId ? '## SECTION-ID\n' : ''}
 
 The guide links back to the [root](../README.md#root-document).
 ${sameFileAnchor ? 'The [details](#details) are in this document.' : ''}
@@ -101,6 +109,15 @@ test('resolves same-file Markdown anchors', async () => {
 
 test('ignores Markdown-looking links inside inline code', async () => {
   const root = await createFixture({ valid: true, inlineCodeLink: true });
+  try {
+    assert.deepEqual(await validateRepository(root), []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('resolves related IDs declared in stable headings', async () => {
+  const root = await createFixture({ valid: true, relatedHeadingId: true });
   try {
     assert.deepEqual(await validateRepository(root), []);
   } finally {
