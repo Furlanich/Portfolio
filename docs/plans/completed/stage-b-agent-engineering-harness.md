@@ -550,14 +550,8 @@ None at plan creation.
 ## Completion record
 
 - Completed on 2026-09-02 after implementing Tasks 1-7 on codex/stage-b-agent-harness.
-- Deliverables: repository-native documentation validator and tests; root agent router; current architecture map; engineering lifecycle; RFC, ADR, and execution-plan indexes/templates; four focused Skills (project-knowledge-maintenance, rchitecture-governance, isual-qa, pr-readiness); and stable Pull Request CI.
+- Deliverables: repository-native documentation validator and tests; root agent router; current architecture map; engineering lifecycle; RFC, ADR, and execution-plan indexes/templates; four focused Skills (project-knowledge-maintenance, architecture-governance, visual-qa, pr-readiness); and stable Pull Request CI.
 - Product documentation remains authoritative and unchanged in substance. No application routes, components, styling, data, locale, dependency, deployment, or product-decision redesign was introduced.
-- Skill validation log: project-knowledge-maintenance and rchitecture-governance passed quick_validate.py and 
-pm run docs:check; isual-qa passed both; pr-readiness passed both after correcting its relative lifecycle link. Reviewer shell launch failures were recorded as infrastructure limitations; controller scope review confirmed the files.
-- Final deterministic validation: 
-pm run docs:check (56 Markdown files, 35 IDs, 4 Skills); 
-pm test (11/11); 
-pm run lint (0 errors, 6 existing @next/next/no-img-element warnings); 
-pm run typecheck passed; 
-pm run build passed; base-path build with NEXT_PUBLIC_BASE_PATH=/Portfolio passed; git diff --check passed.
+- Skill validation log: project-knowledge-maintenance and architecture-governance passed quick_validate.py and npm run docs:check; visual-qa passed both; pr-readiness passed both after correcting its relative lifecycle link. Reviewer shell launch failures were recorded as infrastructure limitations; controller scope review confirmed the files.
+- Final deterministic validation: npm run docs:check (56 Markdown files, 35 IDs, 4 Skills); npm test (11/11); npm run lint (0 errors, 6 existing @next/next/no-img-element warnings); npm run typecheck passed; npm run build passed; base-path build with NEXT_PUBLIC_BASE_PATH=/Portfolio passed; git diff --check passed.
 - Known notices: Browserslist data is 7 months old; local .env/.env.local are loaded by Next.js and may emit environment notices. No validation errors remain.
