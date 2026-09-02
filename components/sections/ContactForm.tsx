@@ -56,48 +56,69 @@ export function ContactForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div>
-        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-600">
+        <label
+          htmlFor="contact-name"
+          className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-600"
+        >
           {t('form.name')}
         </label>
         <input
+          id="contact-name"
           type="text"
           className="mt-2 w-full rounded-lg border border-paper-200 bg-white/90 px-4 py-3 text-sm text-ink-700 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100"
           aria-invalid={Boolean(errors.name)}
+          aria-describedby={errors.name ? 'contact-name-error' : undefined}
           {...register('name', { required: true, minLength: 2 })}
         />
         {errors.name ? (
-          <p className="mt-2 text-xs text-red-600">{t('form.errors.name')}</p>
+          <p id="contact-name-error" className="mt-2 text-xs text-red-600">
+            {t('form.errors.name')}
+          </p>
         ) : null}
       </div>
       <div>
-        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-600">
+        <label
+          htmlFor="contact-email"
+          className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-600"
+        >
           {t('form.email')}
         </label>
         <input
+          id="contact-email"
           type="email"
           className="mt-2 w-full rounded-lg border border-paper-200 bg-white/90 px-4 py-3 text-sm text-ink-700 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100"
           aria-invalid={Boolean(errors.email)}
+          aria-describedby={errors.email ? 'contact-email-error' : undefined}
           {...register('email', {
             required: true,
             pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
           })}
         />
         {errors.email ? (
-          <p className="mt-2 text-xs text-red-600">{t('form.errors.email')}</p>
+          <p id="contact-email-error" className="mt-2 text-xs text-red-600">
+            {t('form.errors.email')}
+          </p>
         ) : null}
       </div>
       <div>
-        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-600">
+        <label
+          htmlFor="contact-message"
+          className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-600"
+        >
           {t('form.message')}
         </label>
         <textarea
+          id="contact-message"
           rows={5}
           className="mt-2 w-full rounded-lg border border-paper-200 bg-white/90 px-4 py-3 text-sm text-ink-700 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100"
           aria-invalid={Boolean(errors.message)}
+          aria-describedby={errors.message ? 'contact-message-error' : undefined}
           {...register('message', { required: true, minLength: 10 })}
         />
         {errors.message ? (
-          <p className="mt-2 text-xs text-red-600">{t('form.errors.message')}</p>
+          <p id="contact-message-error" className="mt-2 text-xs text-red-600">
+            {t('form.errors.message')}
+          </p>
         ) : null}
       </div>
       <button
