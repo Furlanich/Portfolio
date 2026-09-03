@@ -4,7 +4,7 @@ type: decision-register
 status: APPROVED
 related:
   - GOV-KNOWLEDGE
-last_verified: 2026-09-02
+last_verified: 2026-09-03
 ---
 
 # Product knowledge status register
@@ -47,6 +47,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 ### Homepage and process
 
 - The approved homepage sequence and Spanish copy are owned by [`PAGE-HOME`](../product/pages/home.md).
+- The approved [`RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY`](../rfcs/homepage-hero-implementation-boundary.md) requires the homepage-foundation prerequisites to be resolved and planned before application implementation begins; it does not approve the remaining OPEN product or architecture choices.
 - The public process is Understand/Diagnose, Define Scope, Build/Validate, and Implement/Support.
 - AI is not a standalone homepage marketing section.
 

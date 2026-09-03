@@ -4,11 +4,15 @@ type: rfc-index
 status: APPROVED
 related:
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-09-02
+last_verified: 2026-09-03
 ---
 
 # RFCs
 
 An RFC is a consequential product or architectural proposal that requires agreement before implementation. Keep the RFC in this directory and use [the template](template.md). Give it a stable ID, an explicit `PROPOSED`, `APPROVED`, or `REJECTED` status, and links to the affected requirements.
 
-No RFC has been created yet. Do not create status directories until an RFC needs one.
+## Approved
+
+- [`RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY`](homepage-hero-implementation-boundary.md): approved homepage-foundation delivery boundary for implementing the hero without silently deciding OPEN routing, localization, visual, canonical-domain, hosting, or migration questions.
+
+Do not create status directories until the number of RFCs or their lifecycle makes the additional structure useful.

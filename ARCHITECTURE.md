@@ -6,7 +6,8 @@ related:
   - ARCH-CURRENT
   - ARCH-FINDINGS
   - ARCH-STAGE-B-HARNESS-DESIGN
-last_verified: 2026-09-02
+  - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
+last_verified: 2026-09-03
 ---
 
 # FURLANICH architecture map
@@ -22,6 +23,8 @@ The dependency boundary is Next.js, React, TypeScript, Tailwind, `next-intl`, Fr
 ## APPROVED product constraints
 
 The intended product is a bilingual, commercial-first FURLANICH site with Spanish root routes and English `/en/` routes, as defined by the [information architecture](docs/product/information-architecture.md). The current single-page/client-state localization model is not approval to retain that implementation. Product and design requirements remain authoritative in [project knowledge](docs/index.md).
+
+The approved [homepage hero implementation boundary](docs/rfcs/homepage-hero-implementation-boundary.md) defers application changes until localized routing, English copy, minimum visual direction, canonical-domain and hosting assumptions, real CTA destinations, and founder-content migration are resolved and planned. It approves the delivery boundary, not those still-OPEN product or architecture decisions.
 
 ## PROPOSED architecture
 
