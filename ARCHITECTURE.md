@@ -6,7 +6,8 @@ related:
   - ARCH-CURRENT
   - ARCH-FINDINGS
   - ARCH-STAGE-B-HARNESS-DESIGN
-last_verified: 2026-09-02
+  - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
+last_verified: 2026-09-03
 ---
 
 # FURLANICH architecture map
@@ -26,6 +27,8 @@ The intended product is a bilingual, commercial-first FURLANICH site with Spanis
 ## PROPOSED architecture
 
 The preserved recommendation is incremental, static-first modernization: reduce unnecessary client boundaries and evolve the existing repository rather than perform a greenfield rebuild. It is a recommendation, not implementation authority. See the [architecture index](docs/architecture/index.md).
+
+The proposed [homepage hero implementation boundary](docs/rfcs/homepage-hero-implementation-boundary.md) recommends deferring application changes until localized routing, English copy, minimum visual direction, real CTA destinations, and founder-content migration are approved and planned. It is a proposal, not implementation authority.
 
 ## OPEN questions
 
