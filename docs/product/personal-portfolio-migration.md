@@ -6,7 +6,8 @@ related:
   - IA-SITE
   - PAGE-FOUNDER
   - PROJECT-EVIDENCE
-last_verified: 2026-09-01
+  - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
+last_verified: 2026-09-03
 ---
 
 # Personal portfolio migration
@@ -39,6 +40,19 @@ Preserve useful professional history while making the business site the primary 
 - Preserve repository history rather than copying old content into an archive page.
 - Do not automatically promote every personal project into business evidence.
 
+## Homepage-foundation migration gate — APPROVED
+
+The business `HOME-HERO` may replace the current personal hero only when both localized Founder routes satisfy the [minimum Founder destination](pages/studio-and-founder.md#homepage-foundation-minimum-founder-destination-approved).
+
+For this integration gate:
+
+- the approved biography, concise experience and education, business-relevant capabilities, CV access, LinkedIn, GitHub, and Contact path are required;
+- the current CV asset and professional URLs must be verified before the replacement is integrated;
+- a founder photograph, redesigned CV, complete project catalogue, and final Founder-page visual treatment are not required;
+- legacy content outside this minimum may be migrated in later phases, but it must not be deleted or made unreachable without its documented replacement.
+
+The Founder destination must be available in the same release that makes the business hero primary. A technical execution plan owns route sequencing and rollback; this document owns the preservation requirement.
+
 ## Facts requiring correction in the current implementation
 
 - Current metadata and hero still describe a personal developer portfolio.
@@ -47,4 +61,4 @@ Preserve useful professional history while making the business site the primary 
 - The stored phone lacks the confirmed international mobile `9` used by the intended public contact format.
 - Existing project records do not contain maturity or disclosure classification.
 
-These are migration findings, not authorization to modify application data during Stage A.
+These are migration findings, not standalone authorization to modify application data. Implementation still requires the approved architecture and execution path.

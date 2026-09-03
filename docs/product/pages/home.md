@@ -8,7 +8,10 @@ related:
   - IA-SITE
   - PROJECT-EVIDENCE
   - PAGE-CONTACT
-last_verified: 2026-09-02
+  - DESIGN-VISUAL
+  - DESIGN-IX-A11Y
+  - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
+last_verified: 2026-09-03
 ---
 
 # Spanish homepage
@@ -70,7 +73,44 @@ There is no dedicated AI section.
 
 **Evidence:** Approved service scope, founder accountability, location, languages, and response capability. No unsupported client count or result metric.
 
-**Required source material:** Final logo/wordmark, canonical domain, and final visual direction.
+**Required source material:** The minimum wordmark and visual direction are approved in `DESIGN-VISUAL`. Canonical-domain selection is a release dependency, not a hero implementation dependency. No hero image is required.
+
+### Approved English adaptation
+
+The English hero at `/en/` uses the following adaptation. It preserves the Spanish meaning while favoring natural business English over literal syntax.
+
+**Eyebrow**
+
+> Custom software development for small and medium-sized businesses
+
+**H1**
+
+> Practical software to help you sell, serve customers, and run your business better.
+
+**Description**
+
+> FURLANICH designs and builds business websites and web applications, WhatsApp automations and integrations, and improvements to existing systems for organizations with concrete needs.
+
+**Primary CTA:** `Tell us about your project` → `/en/contact/`
+
+**Secondary CTA:** `View services` → `/en/services/`
+
+**Trust line**
+
+> Direct technical contact · Buenos Aires, Argentina · Projects in Spanish and English
+
+**Availability**
+
+> Available for projects across Argentina and internationally.
+
+The literal H1 “Practical software to sell, serve, and operate better” was rejected because “operate” is unnatural without a business object. A more abstract “digital transformation” headline was rejected because it weakens the concrete commercial promise.
+
+### Homepage-foundation integration boundary
+
+- The hero may be implemented once technical governance approves the localized route structure.
+- It may be integrated only when the localized minimum Services and Contact destinations are usable and the Founder destination preserves the personal-portfolio material required by `PORTFOLIO-MIGRATION`.
+- The canonical domain does not block component or route implementation; it blocks final production metadata and release sign-off.
+- The complete homepage below `HOME-HERO`, project evidence, founder photography, and a custom logo symbol are outside this foundation slice.
 
 ## HOME-PROBLEMS
 

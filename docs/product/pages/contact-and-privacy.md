@@ -6,7 +6,8 @@ related:
   - PAGE-PRIVACY
   - HOME-CTA
   - IA-SITE
-last_verified: 2026-09-01
+  - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
+last_verified: 2026-09-03
 ---
 
 # Contact and privacy pages
@@ -42,6 +43,42 @@ Proposed WhatsApp prefilled message:
 
 This applies to inquiries, not an incident-support SLA.
 
+## Homepage-foundation minimum destination — APPROVED
+
+Before `HOME-HERO` is integrated, `/contacto/` and `/en/contact/` must be usable localized destinations. When the final form provider and privacy flow are not yet approved, the minimum route uses the approved direct contact channels and does not render a nonfunctional or misleading form.
+
+### Spanish minimum
+
+**H1**
+
+> Contanos qué necesitás resolver.
+
+**Introduction**
+
+> Samuel revisará personalmente la consulta para determinar si tiene sentido avanzar con una conversación.
+
+Show the approved response expectation, location, and working actions for WhatsApp, email, and phone.
+
+### English minimum
+
+**H1**
+
+> Tell us what you need to solve.
+
+**Introduction**
+
+> Samuel personally reviews every inquiry to determine whether it makes sense to continue with a conversation.
+
+**Response expectation**
+
+> Usual response time is within the same business day. In exceptional cases, it may take up to two business days.
+
+**Actions:** `Write on WhatsApp`, `Send an email`, and `Call`.
+
+This direct-channel minimum satisfies CTA integrity for foundation integration and an explicitly staged deployment. It does not satisfy the approved final conversion model. The structured form, real provider disclosure, and privacy treatment are **RELEASE BLOCKERS** for declaring `PAGE-CONTACT` or the complete business-site launch finished.
+
+A “coming soon” page was rejected because it abandons the visitor after the hero CTA. Selecting a form provider inside this content decision was rejected because provider, data flow, retention, and consent require their own privacy-ready release decision.
+
 ## Required behavior
 
 - Programmatically associated labels and fields.
@@ -56,7 +93,7 @@ This applies to inquiries, not an incident-support SLA.
 
 Explain in plain language what information is collected, why it is used, who processes it, how long it is retained, and how a person may request access, correction, or deletion.
 
-## Privacy implementation — OPEN
+## Privacy implementation — OPEN, RELEASE BLOCKER FOR THE COMPLETE BUSINESS LAUNCH
 
 - Final form provider. The current implementation references Formspree, but that is not an approved target decision.
 - Responsible legal/business identity.

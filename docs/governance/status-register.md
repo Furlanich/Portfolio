@@ -4,6 +4,7 @@ type: decision-register
 status: APPROVED
 related:
   - GOV-KNOWLEDGE
+  - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
 last_verified: 2026-09-03
 ---
 
@@ -51,6 +52,15 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - The public process is Understand/Diagnose, Define Scope, Build/Validate, and Implement/Support.
 - AI is not a standalone homepage marketing section.
 
+### Homepage foundation decision closure
+
+- The English `HOME-HERO` adaptation is approved in [`PAGE-HOME`](../product/pages/home.md#approved-english-adaptation).
+- The minimum wordmark, launch palette, typography, spacing/grid, CTA, surface, light-theme, and imagery decisions are approved in [`DESIGN-VISUAL`](../design/visual-language.md#homepage-foundation-visual-baseline-approved).
+- The homepage-foundation responsive ranges, WCAG 2.2 AA target, CTA reflow, and no-entrance-motion posture are approved in [`DESIGN-IX-A11Y`](../design/interaction-responsive-accessibility.md#homepage-foundation-interaction-and-responsive-baseline-approved).
+- The first hero is typography-led and does not require imagery.
+- Minimum localized Services and Contact destinations, and the minimum Founder migration destination, are approved in their page specifications.
+- A custom logo symbol, complete design system, founder photograph, service fragments, and English content outside the minimum destination slice do not block homepage-foundation technical planning.
+
 ### Founder facts
 
 - Samuel completed his Computer Science studies at the University of Buenos Aires.
@@ -78,19 +88,20 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 ## OPEN
 
-- Final visual identity, palette, type system, spacing, grid, component treatment, imagery direction, and motion language.
-- Confirmed commercial domain and canonical production URL.
-- Final form provider, privacy wording, consent treatment, data retention period, and third-party disclosures.
+- Static-compatible App Router and localization implementation structure for Spanish root routes and English `/en/` routes. This is a **TECHNICAL ARCHITECTURE DECISION** and **IMPLEMENTATION BLOCKER** owned by the architecture governance process.
+- Extended visual identity and design-system decisions beyond the approved homepage foundation: custom mark, additional semantic colors, full component variants, broader imagery, and later-section motion.
+- Confirmed commercial domain and canonical production URL. This is a **RELEASE BLOCKER**, not an implementation or integration blocker.
+- Final form provider, privacy wording, consent treatment, data retention period, and third-party disclosures. These are **RELEASE BLOCKERS** for the completed inquiry experience, not blockers for hero implementation.
 - Final legal and contractual review of commercial boundaries.
-- Founder photograph and final approved biography wording.
+- Founder photograph and any later CV redesign; both are non-blocking for the homepage foundation.
 - Item-level project inventory, maturity classification, permission scope, metrics, working links, and homepage selection.
 - Public evidence for WhatsApp automation and maintenance/consulting.
 - Whether Busesfy and MPC are client production work, owned products, or prototypes for publication purposes.
 - Whether any individual service pages will be needed after launch performance is observed.
-- Target hosting after launch; GitHub Pages is the current platform and a proposed launch platform, not an irreversible decision.
-- Detailed target responsive behavior, accessibility conformance level, and performance budgets.
-- Final English copy and translated project evidence.
-- Exact service-section fragment identifiers on `/servicios/`, including whether `#web`, `#whatsapp`, or `#consultoria` are used, and whether fragment-specific CTAs are required.
+- Long-term hosting after the current static-export/GitHub Pages migration slice; changing hosting remains a future architecture decision and does not block the foundation.
+- Whole-site responsive behavior, accessibility audit/conformance claims, and performance budgets beyond the approved homepage-foundation baseline.
+- English copy outside the approved hero and minimum Services, Contact, and Founder destinations, plus translated project evidence.
+- Exact service-section fragment identifiers on `/servicios/`, including whether `#web`, `#whatsapp`, or `#consultoria` are used, and whether fragment-specific CTAs are required. This is non-blocking for the foundation.
 
 ## REJECTED
 
