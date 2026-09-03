@@ -6,7 +6,8 @@ related:
   - BRAND-POSITIONING
   - IA-SITE
   - PAGE-HOME
-last_verified: 2026-09-02
+  - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
+last_verified: 2026-09-03
 ---
 
 # Content and localization
@@ -17,6 +18,15 @@ last_verified: 2026-09-02
 - Secondary locale: English under `/en/`.
 - Spanish uses professional, natural voseo: `Contanos`, `Hablemos`, `¿Qué necesitás resolver?`.
 - English copy must be adapted for clarity, not mechanically translated.
+
+## Homepage-foundation English scope — APPROVED
+
+- Exact English `HOME-HERO` copy is owned by [PAGE-HOME](pages/home.md#approved-english-adaptation).
+- The minimum English Services destination is owned by [PAGE-SERVICES](pages/services.md#homepage-foundation-minimum-destination-approved).
+- The minimum English Contact destination is owned by [PAGE-CONTACT](pages/contact-and-privacy.md#homepage-foundation-minimum-destination-approved).
+- The approved English founder biography and minimum Founder destination are owned by [PAGE-FOUNDER](pages/studio-and-founder.md#approved-detailed-biography).
+
+English adaptations outside that minimum slice remain **OPEN** and do not block homepage-foundation technical planning.
 
 ## Voice — APPROVED
 
@@ -68,7 +78,11 @@ Proposed Spanish homepage metadata:
 
 > **Description:** Sitios y aplicaciones web, automatización por WhatsApp, integraciones y mantenimiento de software para pymes de Argentina. Atención técnica directa.
 
-The canonical domain is OPEN.
+## Canonical domain — OPEN, RELEASE BLOCKER
+
+The canonical production domain does not block component implementation, localized route implementation, or integration testing. It blocks final production metadata and release sign-off.
+
+Before the business homepage is declared production-ready, approve either a custom domain or the current deployment URL as canonical, then use that value consistently for canonical URLs, language alternates, sitemap entries, and social metadata. Do not invent a production origin during implementation.
 
 ## Claims and evidence
 
@@ -90,5 +104,5 @@ Before final public content is complete, the repository needs:
 - founder photograph;
 - final approved biography wording;
 - final form/privacy provider details;
-- final English adaptations;
+- final English adaptations outside the approved homepage-foundation slice;
 - verified public URLs and repositories.

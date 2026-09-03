@@ -13,6 +13,6 @@ An RFC is a consequential product or architectural proposal that requires agreem
 
 ## Approved
 
-- [`RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY`](homepage-hero-implementation-boundary.md): approved homepage-foundation delivery boundary for implementing the hero without silently deciding OPEN routing, localization, visual, canonical-domain, hosting, or migration questions.
+- [`RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY`](homepage-hero-implementation-boundary.md): approved homepage-foundation delivery boundary. Its minimum product, content, visual, responsive, destination, and migration prerequisites are resolved; static-compatible localized routing remains implementation-blocking, canonical-domain selection remains release-blocking, and longer-term hosting and broader design work are deferred.
 
 Do not create status directories until the number of RFCs or their lifecycle makes the additional structure useful.

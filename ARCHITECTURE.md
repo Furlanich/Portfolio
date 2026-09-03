@@ -24,7 +24,9 @@ The dependency boundary is Next.js, React, TypeScript, Tailwind, `next-intl`, Fr
 
 The intended product is a bilingual, commercial-first FURLANICH site with Spanish root routes and English `/en/` routes, as defined by the [information architecture](docs/product/information-architecture.md). The current single-page/client-state localization model is not approval to retain that implementation. Product and design requirements remain authoritative in [project knowledge](docs/index.md).
 
-The approved [homepage hero implementation boundary](docs/rfcs/homepage-hero-implementation-boundary.md) defers application changes until localized routing, English copy, minimum visual direction, canonical-domain and hosting assumptions, real CTA destinations, and founder-content migration are resolved and planned. It approves the delivery boundary, not those still-OPEN product or architecture decisions.
+The approved [homepage hero implementation boundary](docs/rfcs/homepage-hero-implementation-boundary.md) governs the first business-homepage slice. Its English copy, minimum visual direction, responsive/motion behavior, CTA destinations, and founder-content preservation scope are now approved in their owning product/design records.
+
+Application implementation remains blocked by one consequential architecture decision: the static-compatible App Router and localization structure for Spanish root routes and English `/en/` routes. Architecture governance must accept that decision, record it in an ADR, and create the required versioned execution plan. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
 
 ## PROPOSED architecture
 
@@ -32,7 +34,7 @@ The preserved recommendation is incremental, static-first modernization: reduce 
 
 ## OPEN questions
 
-Target routing and localization implementation, long-term hosting, final form/provider integration, design-system direction, accessibility conformance level, performance budgets, canonical domain, and target imagery strategy need the governance path before they become architecture decisions.
+The localized routing implementation remains OPEN and blocks homepage-foundation implementation. Long-term hosting, final form/provider integration, the extended design system, whole-site accessibility claims, performance budgets, canonical domain, and imagery outside the typography-led hero remain OPEN with the blocker levels recorded in the RFC decision closure map and their owning documents.
 
 ## Engineering records
 

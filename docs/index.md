@@ -2,7 +2,7 @@
 id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
-last_verified: 2026-09-02
+last_verified: 2026-09-03
 ---
 
 # FURLANICH project knowledge
@@ -25,7 +25,7 @@ Front matter records the overall governance status of a document. In mixed-statu
 - [Knowledge management](governance/knowledge-management.md): authority, status, maintenance, and update rules.
 - [Status register](governance/status-register.md): approved, proposed, open, and rejected decisions in one place.
 - [Product index](product/index.md): business purpose, audiences, services, information architecture, page specifications, and migration requirements.
-- [Design index](design/index.md): existing visual baseline and unsettled target-design areas.
+- [Design index](design/index.md): approved homepage-foundation visual/interaction baseline, existing-system context, and broader unsettled design areas.
 - [Architecture index](architecture/index.md): current implementation facts and known quality findings; it is not a target-architecture decision.
 - [Architecture map](../ARCHITECTURE.md): concise current-system entry point, approved product constraints, and proposed/open architecture context.
 - [Engineering lifecycle](governance/engineering-lifecycle.md): change classification, autonomy boundaries, traceability, and PR rules.

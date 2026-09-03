@@ -8,7 +8,8 @@ related:
   - SERVICE-WHATSAPP
   - SERVICE-CONSULTING
   - PAGE-CONTACT
-last_verified: 2026-09-02
+  - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
+last_verified: 2026-09-03
 ---
 
 # Services page
@@ -38,9 +39,41 @@ Explain the three launch services in enough detail for a prospective client to r
 - truthful related evidence;
 - CTA to `PAGE-CONTACT`.
 
-## Service-section fragments and CTAs — OPEN
+## Homepage-foundation minimum destination — APPROVED
 
-The approved Services route is `/servicios/`. Exact fragment identifiers for the three service sections, including potential `#web`, `#whatsapp`, and `#consultoria` identifiers, are **OPEN**. Whether any homepage or in-page CTA must target a service-specific fragment is also **OPEN**. Until that decision is made, service CTAs route to `/servicios/`.
+Before `HOME-HERO` is integrated, `/servicios/` and `/en/services/` must be real, localized, and useful routes rather than placeholders. They do not need the complete evidence catalogue, FAQ, service-specific detail pages, or final commercial terms.
+
+The minimum Spanish route uses the approved `HOME-SERVICES` heading, introduction, three service titles, and summaries, followed by `Contanos qué necesitás resolver` → `/contacto/`.
+
+The minimum English route uses:
+
+**H1**
+
+> Services for concrete business needs
+
+**Introduction**
+
+> We do not force a generic platform. First we understand the process, then decide whether building, integrating, or modernizing is the right approach.
+
+**Business websites and web applications**
+
+> Web solutions that help businesses present, sell, or manage services: professional websites, catalogues, ordering, bookings, customer portals, and payment integrations.
+
+**WhatsApp automation and integrations**
+
+> Flows for answering common questions, capturing orders, managing bookings, sending confirmations, and connecting WhatsApp with other business tools.
+
+**Software maintenance and IT consulting**
+
+> Diagnosis and improvement of existing systems to solve problems, reduce risk, and define a maintainable technical path.
+
+**CTA:** `Tell us what you need to solve` → `/en/contact/`
+
+A bare “coming soon” destination was rejected because it would make the hero CTA formally valid but commercially useless. Requiring the complete Services specification was rejected because evidence, FAQs, and detailed commercial terms are not needed to explain the three approved services.
+
+## Service-section fragments and CTAs — OPEN, NON-BLOCKING
+
+The approved Services route is `/servicios/`. Exact fragment identifiers for the three service sections, including potential `#web`, `#whatsapp`, and `#consultoria` identifiers, are **OPEN**. Whether any homepage or in-page CTA must target a service-specific fragment is also **OPEN**. This does not block the homepage foundation: all foundation service CTAs route to the page root.
 
 ## Service-specific requirements
 

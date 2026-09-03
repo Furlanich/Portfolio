@@ -1,16 +1,18 @@
 ---
 id: DESIGN-INDEX
 type: design-index
-status: OPEN
-last_verified: 2026-09-01
+status: APPROVED
+related:
+  - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
+last_verified: 2026-09-03
 ---
 
 # Design documentation
 
-No complete target visual system has been approved. These documents distinguish the existing implementation from the principles and unresolved decisions that should guide later design work.
+The minimum homepage-foundation visual, responsive, accessibility, and motion baseline is approved. The complete target visual system remains intentionally unresolved. These documents distinguish approved foundation requirements, the existing implementation, and later OPEN decisions.
 
 - [Visual language](visual-language.md): current palette/type/component baseline, approved communication principles, image constraints, and open design decisions.
-- [Interaction, responsive behavior, and accessibility](interaction-responsive-accessibility.md): existing behaviors, known problems, approved requirements, and open conformance targets.
+- [Interaction, responsive behavior, and accessibility](interaction-responsive-accessibility.md): existing behaviors, known problems, the approved homepage-foundation baseline, and broader open interaction and conformance decisions.
 - [Market and design references](../references/market-and-design-references.md): external examples and research; references are not requirements.
 
-Future visual decisions must be persisted here before they are treated as implementation constraints.
+Future visual decisions must be persisted here before they are treated as implementation constraints. The approved foundation is sufficient for technical planning of `HOME-HERO`; it is not approval of every later page or component treatment.
