@@ -1,7 +1,7 @@
 ---
 id: RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
 type: request-for-comments
-status: PROPOSED
+status: APPROVED
 related:
   - PAGE-HOME
   - IA-SITE
@@ -114,4 +114,6 @@ Approve the governance-first homepage-foundation boundary and do not implement t
 
 ## Status
 
-**PROPOSED.** This RFC records a recommendation for human review. It does not approve architecture, English copy, visual direction, implementation scope, or application changes. If accepted, link the resulting ADR and execution plan here without rewriting this proposal's review history.
+**APPROVED.** The homepage-foundation delivery boundary was approved for final merge in [PR #4](https://github.com/Furlanich/Portfolio/pull/4) on 2026-09-03.
+
+This approval does not resolve the routing architecture, English copy, visual direction, canonical domain, hosting assumptions, destination-page scope, or founder-content migration details listed above. Those items remain **OPEN** and require their owning records, a resulting ADR where architecture is accepted, and a versioned execution plan before application implementation begins.

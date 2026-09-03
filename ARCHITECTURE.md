@@ -24,11 +24,11 @@ The dependency boundary is Next.js, React, TypeScript, Tailwind, `next-intl`, Fr
 
 The intended product is a bilingual, commercial-first FURLANICH site with Spanish root routes and English `/en/` routes, as defined by the [information architecture](docs/product/information-architecture.md). The current single-page/client-state localization model is not approval to retain that implementation. Product and design requirements remain authoritative in [project knowledge](docs/index.md).
 
+The approved [homepage hero implementation boundary](docs/rfcs/homepage-hero-implementation-boundary.md) defers application changes until localized routing, English copy, minimum visual direction, canonical-domain and hosting assumptions, real CTA destinations, and founder-content migration are resolved and planned. It approves the delivery boundary, not those still-OPEN product or architecture decisions.
+
 ## PROPOSED architecture
 
 The preserved recommendation is incremental, static-first modernization: reduce unnecessary client boundaries and evolve the existing repository rather than perform a greenfield rebuild. It is a recommendation, not implementation authority. See the [architecture index](docs/architecture/index.md).
-
-The proposed [homepage hero implementation boundary](docs/rfcs/homepage-hero-implementation-boundary.md) recommends deferring application changes until localized routing, English copy, minimum visual direction, real CTA destinations, and founder-content migration are approved and planned. It is a proposal, not implementation authority.
 
 ## OPEN questions
 
