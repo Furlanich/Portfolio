@@ -1,7 +1,7 @@
 ---
 id: PROJECT-EVIDENCE
 type: product-spec
-status: PROPOSED
+status: APPROVED
 related:
   - PAGE-PROJECTS
   - PAGE-PROJECT-DETAIL
@@ -9,7 +9,7 @@ related:
   - SERVICE-WEB
   - SERVICE-WHATSAPP
   - SERVICE-CONSULTING
-last_verified: 2026-09-02
+last_verified: 2026-09-04
 ---
 
 # Project evidence inventory
@@ -18,7 +18,7 @@ last_verified: 2026-09-02
 
 Project evidence exists to help prospective clients evaluate relevance, credibility, and fit. It is not a recruiter-oriented list of technologies or a comprehensive archive of everything Samuel has built.
 
-The inventory design below is **PROPOSED** because the project owner has not adopted it as an **APPROVED** product decision. Approved confidentiality requirements remain binding regardless of whether this model is adopted.
+The evidence model and publication guardrails below are **APPROVED**. Item-level facts retain their own statuses; adopting the model does not make any provisional project public.
 
 ## Approved foundations
 
@@ -28,15 +28,15 @@ The inventory design below is **PROPOSED** because the project owner has not ado
 - Client logos require permission.
 - Placeholder identities and logos are restricted to development/testing and cannot be deployed publicly.
 
-## Proposed three-axis model
+## Approved three-axis model
 
 Project maturity, disclosure, and evidence strength are separate dimensions.
 
 ### Maturity
 
-- `production` → proposed public label `Solución en producción`
-- `lab` → proposed public label `Laboratorio FURLANICH`
-- `prototype` → proposed public label `Prototipo funcional`
+- `production` → public label remains **PROPOSED**: `Solución en producción`
+- `lab` → public label remains **PROPOSED**: `Laboratorio FURLANICH`
+- `prototype` → public label remains **PROPOSED**: `Prototipo funcional`
 
 ### Disclosure
 
@@ -57,7 +57,7 @@ Internal classification only:
 
 No public score or star rating is shown.
 
-## Proposed internal record
+## Approved internal record
 
 Each project record should eventually contain:
 
@@ -101,7 +101,7 @@ Permission must be tracked independently for client name, logo, industry, descri
 
 Publication fails closed: missing evidence or unclear permission prevents release.
 
-## Proposed public card hierarchy
+## Approved public card hierarchy
 
 1. Maturity/disclosure and industry.
 2. Outcome-oriented title.
@@ -112,7 +112,7 @@ Publication fails closed: missing evidence or unclear permission prevents releas
 
 Technology badges and GitHub links do not lead the card. They answer recruiter or implementation questions, not the prospective client's first questions.
 
-## Proposed detail-page hierarchy
+## Approved detail-page hierarchy
 
 1. Outcome-oriented title.
 2. Evidence and confidentiality statement.
@@ -127,17 +127,101 @@ Technology badges and GitHub links do not lead the card. They answer recruiter o
 
 Restricted summaries do not receive a detail page when no additional useful content may be disclosed.
 
-## Provisional records — OPEN
+## Item-level evidence audit — 2026-09-04
 
-The current application contains five records. Their classifications are not verified.
+The retained application contains five legacy records. A fact marked **APPROVED** below is approved only as an inventory or verification fact. It does not authorize broader publication. Missing permission or maturity evidence fails closed.
 
-| Record | Provisional maturity | Client-facing relevance | Known evidence | Missing decision or risk |
-|---|---|---|---|---|
-| Busesfy | Production candidate | Commercial website for transportation | Public URL is recorded in the current data | Confirm ownership/production status and permission for name, logo, screenshots, description, and URL. |
-| MPC Administración | Production or prototype | Internal production and administration system | Preview and public repository are currently referenced | If it is client work, current public UI/repository may conflict with confidentiality. Hold until classification and permission are resolved. |
-| General Reservation System | Functional prototype candidate | Booking and reservation workflows | Public repository and preview are recorded | Verify repository, runnable behavior, implemented scope, limitations, and demo suitability. |
-| Appointment & Operations SaaS / ChronoApp | Laboratory candidate | Scheduling and operations for service businesses | Preview and repository URL are recorded | Repository link returned 404 during the 2026-08-22 assessment. Verify implementation and separate actual functionality from conceptual copy. |
-| Documancer | Laboratory or prototype candidate | Experimental AI-assisted narrative content | Preview and repository URL are recorded | Verify link and function. Weak alignment with launch services; keep off homepage unless positioning changes. |
+This audit reviewed the retained `data/projects.json` records and `public/projects/` assets, the public repository metadata, trees, and README files linked by those records, and link reachability on 2026-09-04. It did not treat a reachable URL as permission, run remote code, infer client relationships, or accept legacy descriptions as verified outcomes.
+
+### Busesfy
+
+| Required field | Status | Finding |
+| --- | --- | --- |
+| Project identity | **APPROVED** as a recorded identity | The legacy inventory names `Busesfy` and records `https://busesfy.com/`. |
+| Ownership or client relationship | **OPEN** | The repository does not establish whether this was FURLANICH-owned work, independent work for a client, employment work, or another relationship. |
+| Maturity | **OPEN** | A public website does not establish that the recorded implementation is a production solution delivered by FURLANICH. |
+| Current status | **APPROVED** only for URL availability | The recorded URL returned HTTP 200 on 2026-09-04. Current business operation, authorship, and deployed-version relationship remain **OPEN**. |
+| Production, Laboratory, or prototype | **OPEN** | No safe classification is established. |
+| Disclosure permission | **OPEN** | No permission grant, date, grantor, or permitted fields are recorded. |
+| Public description | **OPEN** | The legacy description exists but is not an approved client-facing description. |
+| Screenshots or assets | **OPEN** | `public/projects/Busesfy.svg` exists, but provenance and permission to publish the captured UI are not recorded. |
+| Metrics | **OPEN** | No metric, source, or permission exists. |
+| Links | **APPROVED** as technically reachable; publication permission **OPEN** | Reachability does not authorize using the URL as commercial evidence. |
+| Technologies | **OPEN** for commercial publication | Legacy technology tags exist but are unverified and not necessary to the homepage story. |
+| Client identity permission | **OPEN** | Do not infer permission from the public website or legacy portfolio entry. |
+| Business-homepage eligibility | **REJECTED** for the current initiative | Relationship, maturity, description, imagery, and identity permission are unresolved. |
+
+### MPC Administración
+
+| Required field | Status | Finding |
+| --- | --- | --- |
+| Project identity | **APPROVED** as a recorded identity | The legacy inventory and public repository identify `MilkyPantsCheese-Administracion-`. |
+| Ownership or client relationship | **APPROVED** as non-client source material | The public repository describes it as a 2021 INET/ETP National Olympics assignment for a fictional cheese factory. It must not be presented as client work. |
+| Maturity | **APPROVED** as non-production | The repository's own description rules out client production status. |
+| Current status | **APPROVED** only for repository availability | The public repository resolved on 2026-09-04 and contains implementation files. Runtime behavior was not reproduced. |
+| Production, Laboratory, or prototype | **PROPOSED** functional prototype | It has implementation evidence, but functional behavior and public limitations have not been verified. |
+| Disclosure permission | **APPROVED** only for the public source already exposed; broader reuse **OPEN** | A public repository is available under Samuel's GitHub account. Reusing captured UI or third-party competition material still needs review. |
+| Public description | **PROPOSED** | A truthful description may identify it as a 2021 educational prototype for fictional production and stock workflows. |
+| Screenshots or assets | **OPEN** | `public/projects/MPC-Administracion.svg` exists, but its source and suitability for republication have not been reviewed. |
+| Metrics | **OPEN** | No metric or reproducible result is recorded. |
+| Links | **APPROVED** as a reachable public source repository | The repository resolved on 2026-09-04. |
+| Technologies | **APPROVED** as legacy implementation metadata; homepage relevance **REJECTED** | Technology may support a future technical note, not the commercial card hierarchy. |
+| Client identity permission | Not applicable | The named organization is fictional according to the repository. |
+| Business-homepage eligibility | **REJECTED** | It is educational work from 2021 and is weaker commercial proof than the launch narrative requires. It may remain secondary Founder material after verification. |
+
+### General Reservation System
+
+| Required field | Status | Finding |
+| --- | --- | --- |
+| Project identity | **APPROVED** as a recorded identity | The legacy inventory and public repository identify `GeneralReservationSystem`. |
+| Ownership or client relationship | **APPROVED** only as founder-published source | The repository is public under Samuel's GitHub account. No client relationship is claimed or evidenced. |
+| Maturity | **OPEN** | Production use is not evidenced. |
+| Current status | **APPROVED** for repository availability; demo unavailable | The repository resolved and contains source, tests, and Docker configuration on 2026-09-04. Its README demo URL returned HTTP 404. |
+| Production, Laboratory, or prototype | **PROPOSED** functional prototype | The repository provides `implementation-evidence`; reproducible behavior is still required for `functional-demonstration`. |
+| Disclosure permission | **APPROVED** for linking to the founder-published public source; other fields remain item-specific | Public source availability does not approve unreviewed screenshots or broader outcome claims. |
+| Public description | **PROPOSED** | `Motor de reservas adaptable para negocios de servicios` is a candidate title; implemented scope and limitations require verification. |
+| Screenshots or assets | **OPEN** | `public/projects/GRS.svg` exists, but the represented build, date, and suitability have not been verified. |
+| Metrics | **OPEN** | No public business outcome metric exists. Test presence is not a business result. |
+| Links | Repository **APPROVED** as reachable; demo **REJECTED** while unavailable | Do not publish the broken demo link. |
+| Technologies | **APPROVED** as repository-backed implementation context; secondary only | The stack may appear only where commercially useful and after content review. |
+| Client identity permission | Not applicable on current evidence | No client identity is claimed. |
+| Business-homepage eligibility | **OPEN**, not currently eligible | It is the strongest future prototype candidate but must demonstrate reproducible behavior, accurate scope, limitations, and a usable visual or working demo first. |
+
+### Appointment & Operations SaaS / ChronoApp
+
+| Required field | Status | Finding |
+| --- | --- | --- |
+| Project identity | **APPROVED** only as a legacy record | The retained inventory names the concept and records a ChronoApp repository URL. |
+| Ownership or client relationship | **OPEN** | No item-level ownership record or client relationship is established. |
+| Maturity | **OPEN** | The legacy description is conceptual copy, not evidence of a working system. |
+| Current status | **REJECTED** as a usable public repository link | The recorded GitHub repository returned 404 again on 2026-09-04. |
+| Production, Laboratory, or prototype | **OPEN** | Laboratory is plausible but unverified. |
+| Disclosure permission | **OPEN** | No permission record exists. |
+| Public description | **OPEN** | Separate implemented behavior from aspirational AI and operations claims before publication. |
+| Screenshots or assets | **OPEN** | `public/projects/AI-Scheduler.svg` exists, but it does not prove implementation or permission. |
+| Metrics | **OPEN** | No metric or source exists. |
+| Links | **REJECTED** until repaired or replaced with verified evidence | Do not publish the recorded 404 repository. |
+| Technologies | **OPEN** | Legacy tags are not sufficient evidence of implemented scope. |
+| Client identity permission | Not applicable on current evidence | No client identity is established. |
+| Business-homepage eligibility | **REJECTED** | The primary repository evidence is unavailable and functional scope is unverified. |
+
+### Documancer
+
+| Required field | Status | Finding |
+| --- | --- | --- |
+| Project identity | **APPROVED** as a recorded identity | The legacy inventory and public repository identify `Documancer`. |
+| Ownership or client relationship | **APPROVED** only as founder-published source | The repository is public under Samuel's GitHub account. No client relationship is claimed. |
+| Maturity | **APPROVED** as early-stage, non-production evidence | The public README explicitly calls the application early-stage and describes planned scope. |
+| Current status | **APPROVED** only for repository availability | The public repository resolved on 2026-09-04 and contains implementation files; runnable behavior was not reproduced. |
+| Production, Laboratory, or prototype | **PROPOSED** Laboratory or prototype | The exact maturity label remains open pending functional verification. |
+| Disclosure permission | **APPROVED** for linking to founder-published public source; other fields remain item-specific | The public Apache-2.0 repository does not automatically approve every screenshot or claim. |
+| Public description | **PROPOSED** | Any description must preserve the early-stage limitation and avoid implying a completed commercial AI product. |
+| Screenshots or assets | **OPEN** | `public/projects/Documancer.svg` exists, but its represented state and suitability have not been verified. |
+| Metrics | **OPEN** | No result metric or source exists. |
+| Links | **APPROVED** as a reachable public source repository | The repository resolved on 2026-09-04. |
+| Technologies | **APPROVED** as repository-backed implementation context; secondary only | Technology remains supporting detail. |
+| Client identity permission | Not applicable on current evidence | No client identity is claimed. |
+| Business-homepage eligibility | **REJECTED** | It is early-stage entertainment/experimental work and does not support the launch service narrative strongly enough. It may remain secondary Founder or Laboratory material. |
 
 ## Proposed public titles
 
@@ -149,15 +233,49 @@ The current application contains five records. Their classifications are not ver
 
 These titles are not approved claims.
 
-## Proposed homepage selection
+## Homepage eligibility decision
 
-At most three items:
+### Current project-card selection — APPROVED
+
+No current record is approved for a business-homepage project card:
+
+- Busesfy fails relationship, maturity, description, screenshot, and client-permission gates.
+- MPC Administración is confirmed as educational work for a fictional organization and is not strong enough for the commercial homepage.
+- General Reservation System has public implementation evidence but an unavailable demo and no verified functional demonstration or publication-ready story.
+- Appointment & Operations / ChronoApp has an unavailable repository and unverified functionality.
+- Documancer is explicitly early-stage and weakly aligned with the launch services.
+
+The repository therefore does not support a truthful project-card version of `HOME-PROOF` in Initiative 2. This is an evidence finding, not permission to soften the gates.
+
+### Approved honest fallback
+
+`PAGE-HOME` owns a compact credibility section based on approved founder accountability, verifiable-claims discipline, and confidentiality. It contains no project cards, client identities, logos, screenshots, metrics, testimonials, or Projects-route CTA. This fallback is implementation-ready and may remain until stronger evidence exists.
+
+### Future project-card selection — OPEN
+
+When evidence becomes available, select at most three items:
 
 1. one production solution relevant to a target client;
 2. one Laboratory solution demonstrating a launch service;
 3. one functional prototype with verifiable public evidence.
 
-Provisional candidates are Busesfy or another approved production summary, Appointment & Operations, and General Reservation System. Editorial relevance should control order, not chronology.
+Editorial relevance controls order, not chronology. At least one item must reach the `ready` publication state before any homepage project-card variant is planned. Each selected item still requires complete item-level permission and an accurate Spanish and English public story.
+
+### Prototype homepage eligibility gate — APPROVED
+
+A functional prototype may appear on the business homepage only when all of the following are recorded:
+
+1. identity and founder/FURLANICH ownership;
+2. explicit `prototype` maturity and current lifecycle status;
+3. reproducible working behavior or a working public demo, not source presence alone;
+4. implemented scope and material limitations;
+5. approved natural Spanish and English public descriptions;
+6. verified link destinations and a review date;
+7. screenshot or video provenance plus permission for every visible asset;
+8. commercial relevance to at least one approved launch service or audience;
+9. no client, production, outcome, testimonial, or metric implication without its own evidence and permission.
+
+Meeting this gate makes the item eligible for editorial selection; it does not guarantee homepage inclusion.
 
 ## Evidence gaps
 
@@ -167,7 +285,7 @@ Provisional candidates are Busesfy or another approved production summary, Appoi
 | WhatsApp automation | No clearly inventoried public example | A truthful Laboratory demonstration or approved client summary. |
 | Maintenance and consulting | Experience description only | An approved anonymized real intervention story, or process-only explanation until one exists. |
 
-## Proposed editorial rules
+## Approved editorial rules
 
 - Use `Proyectos seleccionados`, not `Casos de éxito`, until outcomes are verified.
 - Do not publish a metric without an internal source and permission.
@@ -180,8 +298,9 @@ Provisional candidates are Busesfy or another approved production summary, Appoi
 
 ## Remaining decisions
 
-- Approve or revise the three-axis evidence model.
-- Resolve Busesfy and MPC classification first because they affect confidentiality.
-- Build the item-level permission matrix.
+- Obtain and record Busesfy relationship, maturity, and item-level publication permission.
+- Verify General Reservation System behavior, limitations, screenshot provenance, and a working demo before deciding homepage eligibility.
+- Decide whether MPC Administración and Documancer receive secondary Founder/Laboratory presentation after their visuals and public descriptions are reviewed.
+- Locate or formally retire ChronoApp evidence.
+- Complete item-level permission matrices before any client or third-party identity, UI, result, or link becomes business-site evidence.
 - Decide whether Laboratory work appears inside Projects or also receives a dedicated secondary view.
-- Decide what minimum proof makes a prototype eligible for the homepage.

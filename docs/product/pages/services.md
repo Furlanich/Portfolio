@@ -9,7 +9,7 @@ related:
   - SERVICE-CONSULTING
   - PAGE-CONTACT
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-03
+last_verified: 2026-09-04
 ---
 
 # Services page
@@ -74,6 +74,8 @@ A bare “coming soon” destination was rejected because it would make the hero
 ## Service-section fragments and CTAs — OPEN, NON-BLOCKING
 
 The approved Services route is `/servicios/`. Exact fragment identifiers for the three service sections, including potential `#web`, `#whatsapp`, and `#consultoria` identifiers, are **OPEN**. Whether any homepage or in-page CTA must target a service-specific fragment is also **OPEN**. This does not block the homepage foundation: all foundation service CTAs route to the page root.
+
+For the complete commercial homepage, `PAGE-HOME` now **REJECTS** three duplicate service-card CTAs and **APPROVES** one section-level CTA to the Services page root in each language. Future Services-page fragment decisions therefore do not block homepage implementation and must not be introduced into the homepage plan without a later content decision.
 
 ## Service-specific requirements
 

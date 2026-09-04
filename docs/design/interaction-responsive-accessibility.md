@@ -8,7 +8,7 @@ related:
   - PAGE-CONTACT
   - PAGE-PROJECTS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-03
+last_verified: 2026-09-04
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -62,38 +62,76 @@ These requirements close the minimum behavior needed for `HOME-HERO`; they do no
 | Responsive model | Shrink the desktop composition; maintain separate mobile content; one source-order reflow | One source-order reflow. It preserves meaning and accessibility while minimizing duplicate content. |
 | Hero motion | Scroll/entrance reveal; subtle initial fade; no entrance motion | No entrance motion. It removes the current fail-closed risk and lets visual polish be revisited without blocking implementation. |
 
+## Commercial homepage section baseline — APPROVED
+
+These requirements extend the foundation baseline to `HOME-PROBLEMS` through `HOME-CTA`. They preserve the applicable WCAG 2.2 Level AA target without claiming audited conformance.
+
+### Reflow and responsive behavior
+
+- The entire localized homepage remains usable without horizontal scrolling at `320px` CSS viewport width.
+- Every section keeps one DOM/source order at every width. CSS grid placement must not reorder cards, steps, copy, or actions for assistive technology.
+- Problems and Audiences use one column compact and two columns from medium upward.
+- Services uses one column at compact and medium widths and three columns at wide widths.
+- Process uses one column compact, two columns medium, and four columns wide. Decorative connectors disappear whenever the sequence wraps and are never required to understand the order.
+- Proof fallback remains one content panel at every width. A future approved project-card set uses one column compact, two columns medium, and up to three columns wide.
+- Founder uses one column compact/medium and a two-part text-led layout wide. Heading, biography, primary action, then secondary action remain the reading order.
+- Section and final-CTA action groups follow the existing CTA rule: full-width stacking below `480px`, then inline wrapping when space permits. Actions must not overlap or require horizontal scrolling.
+- Cards grow to their content and do not truncate public copy. Equal visual height may be used only when it does not hide content or create a false reading order.
+- Long Spanish and English words, URLs, and translated CTA labels must wrap safely inside their containers.
+
+### Semantics and reading hierarchy
+
+- Keep one `main` landmark and the existing single meaningful H1. Each later homepage section is a labelled `section` with one visible H2 and a stable unique heading ID.
+- Situation, service, audience, proof-commitment, and future project-card groups use list semantics when they are presented as peer items. Card titles are H3 elements where each item needs its own heading.
+- Process is an ordered list. Its visible numerals are not a substitute for `ol` semantics.
+- The approved process anchors are `proceso` in Spanish and `process` in English. Anchor navigation must land on the labelled section without hiding its heading.
+- The final CTA remains a labelled section, not a second `main`, form, or navigation landmark.
+- Non-interactive cards are not links, buttons, or keyboard focus targets. If a future project card has one primary destination, the accessible link name must describe that destination; nested interactive controls must be avoided.
+- Maturity, disclosure, limitations, and evidence state must be present in text. They may not depend on color, iconography, hover, or imagery.
+
+### Keyboard, focus, and targets
+
+- DOM order and visual order match. Keyboard users encounter the same CTA hierarchy described by `PAGE-HOME`.
+- Every interactive target is at least `44px` in both dimensions; primary and secondary CTA controls remain at least `48px` high.
+- Reuse the approved visible focus treatment on Canvas, Surface, and Action-tint backgrounds. Focus must not be clipped by card or section overflow.
+- The final Action-tint section uses the existing Canvas/Surface separation and Action-blue-strong outer focus ring; no dark-background focus variant is needed.
+- Hover styling is supplementary. Link purpose, card meaning, and disclosure remain understandable on touch screens and by keyboard.
+
+### Motion and media
+
+- Later homepage sections have no scroll-triggered entrance reveal, stagger, parallax, autoplay media, or essential content that begins hidden.
+- The approved `160ms ease-out` color/background/border transition may be reused for interactive controls only. Cards do not translate, scale, tilt, or elevate on hover.
+- Under `prefers-reduced-motion: reduce`, nonessential transitions and smooth scrolling are removed.
+- All content and CTA destinations remain available when JavaScript or CSS motion is unavailable.
+- Informative future imagery needs purpose-based alternative text. Decorative icons and connectors are hidden from assistive technology. No image is required to understand any approved launch section.
+
+### Verification boundary
+
+Implementation must verify the new sections at the existing compact, medium, and wide viewport samples, including `320px`, in both languages. Keyboard traversal, visible focus, source order, anchor navigation, touch-target sizing, reduced motion, JavaScript-disabled content, and an automated accessibility scan are required evidence. Passing those checks supports the implementation review but does not by itself establish whole-site WCAG conformance.
+
 ## Existing implementation context — CURRENT, NOT TARGET
 
 The existing navigation, localization, form, motion, and interaction behavior is recorded in [`ARCH-CURRENT`](../architecture/current-system.md). Existing accessibility and quality risks, including dated browser observations, are recorded in [`ARCH-FINDINGS`](../architecture/current-quality-findings.md). These are current-state facts, not implementation authority or target behavior.
 
 ## Proposed target requirements
 
-- Content renders visible by default; motion enhances rather than reveals essential content.
-- Respect `prefers-reduced-motion` across all animation.
-- Keep focus indicators visible and consistent.
-- Ensure controls meet suitable pointer target sizes.
-- Do not place keyboard focus on non-interactive cards.
-- Keep project actions visible or otherwise clearly discoverable on touch and keyboard devices.
-- Use semantic landmarks and a single meaningful H1 per page.
 - Provide descriptive alternative text based on the image's purpose.
-- Validate color contrast after the palette is selected.
 
 ## Responsive principles — PROPOSED
 
 - Start with content priority rather than desktop compression.
 - Preserve CTA visibility without duplicating competing actions.
-- Stack complex grids into a readable single-column sequence.
 - Keep form controls full-width on narrow screens.
 - Avoid horizontal carousels for essential service or project information.
 - Keep line lengths comfortable on wide screens.
 
-## OPEN decisions beyond the homepage foundation
+## OPEN decisions beyond the commercial homepage
 
-- Whole-site conformance claims, audit scope, and any certification remain unresolved; only the homepage-foundation target above is approved.
-- Breakpoints and container behavior for pages and components outside the homepage foundation.
+- Whole-site conformance claims, audit scope, and any certification remain unresolved; only the commercial-homepage target above is approved.
+- Breakpoints and container behavior for pages and components outside the commercial homepage.
 - Header behavior while scrolling.
-- Motion language outside the hero and basic control-state transitions.
-- Project-card interaction model.
-- Touch, tablet, and landscape-specific layouts for later page sections.
+- Motion language outside the commercial homepage and basic control-state transitions.
+- Project-card interaction beyond the approved homepage constraints.
+- Touch, tablet, and landscape-specific layouts outside the commercial homepage.
 - Formal browser/device support matrix.
 - Whole-site automated and manual accessibility validation strategy.

@@ -66,8 +66,9 @@ The findings below are retained pre-cutover evidence. The current foundation and
 - Technology tags dominate project cards.
 - Project records do not distinguish production, Laboratory, or prototype work.
 - No permission or evidence-source data exists.
-- The ChronoApp repository URL returned 404 during the 2026-08-22 assessment and must be reverified before publication.
-- Busesfy and MPC require classification and confidentiality review before migration.
+- The ChronoApp repository URL returned 404 during both the 2026-08-22 and 2026-09-04 assessments and must not be published.
+- Busesfy still requires relationship, maturity, and item-level publication-permission review.
+- The public MPC repository identifies it as a 2021 educational assignment for a fictional organization. It is not client production evidence and is rejected for the business homepage; see `PROJECT-EVIDENCE`.
 
 ## Validation and maintenance
 

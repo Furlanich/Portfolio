@@ -6,7 +6,7 @@ related:
   - PAGE-PROJECT-DETAIL
   - PROJECT-EVIDENCE
   - PAGE-CONTACT
-last_verified: 2026-09-01
+last_verified: 2026-09-04
 ---
 
 # Projects and project-detail pages
@@ -26,7 +26,7 @@ Preferred page language is `Proyectos seleccionados`, not `Casos de éxito`, unt
 5. Confidentiality and publication note.
 6. Inquiry CTA.
 
-Category labels and the exact grouping remain PROPOSED in `PROJECT-EVIDENCE`.
+The evidence model, publication lifecycle, card hierarchy, and editorial integrity rules are approved in `PROJECT-EVIDENCE`. Public category labels, exact grouping, item-level permissions, and project selection remain unresolved.
 
 ## Card requirements
 
@@ -68,11 +68,12 @@ Explain a real project or demonstration deeply enough to establish relevance wit
 
 ## Open decisions
 
-- Approval of the hybrid evidence model.
 - Item-level classifications and permissions.
 - Whether filters are useful at launch; omit them if the inventory remains small.
 - Exact homepage/project-index selection.
 - Which records deserve detail pages.
+
+`HOME-PROOF` does not depend on this page for its approved launch fallback. No Projects-route CTA may appear on the homepage until both localized Projects destinations are implemented with useful, publication-ready evidence.
 
 ## Acceptance criteria
 
