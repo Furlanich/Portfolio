@@ -7,7 +7,8 @@ related:
   - ARCH-FINDINGS
   - ARCH-STAGE-B-HARNESS-DESIGN
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-03
+  - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
+last_verified: 2026-09-04
 ---
 
 # FURLANICH architecture map
@@ -32,9 +33,11 @@ Application implementation remains blocked by one consequential architecture dec
 
 The preserved recommendation is incremental, static-first modernization: reduce unnecessary client boundaries and evolve the existing repository rather than perform a greenfield rebuild. It is a recommendation, not implementation authority. See the [architecture index](docs/architecture/index.md).
 
+The proposed [homepage-foundation static localized routing](docs/rfcs/homepage-foundation-static-localized-routing.md) uses explicit Spanish and English route trees with locale-specific root layouts, route-owned content, shared semantic components, and a typed page-equivalence map. It preserves the current static export, GitHub Pages deployment, and build-time base path without Proxy, rewrites, redirects, or client-only locale state. It is a proposal, not implementation authority.
+
 ## OPEN questions
 
-The localized routing implementation remains OPEN and blocks homepage-foundation implementation. Long-term hosting, final form/provider integration, the extended design system, whole-site accessibility claims, performance budgets, canonical domain, and imagery outside the typography-led hero remain OPEN with the blocker levels recorded in the RFC decision closure map and their owning documents.
+Approval or rejection of the proposed localized routing architecture remains OPEN and blocks homepage-foundation implementation. Long-term hosting, final form/provider integration, the extended design system, whole-site accessibility claims, performance budgets, canonical domain, and imagery outside the typography-led hero remain OPEN with the blocker levels recorded in the RFC decision closure map and their owning documents.
 
 ## Engineering records
 

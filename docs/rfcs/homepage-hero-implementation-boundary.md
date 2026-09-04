@@ -10,7 +10,8 @@ related:
   - DESIGN-IX-A11Y
   - PORTFOLIO-MIGRATION
   - ARCHITECTURE-MAP
-last_verified: 2026-09-03
+  - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
+last_verified: 2026-09-04
 ---
 
 # Homepage hero implementation boundary
@@ -131,6 +132,8 @@ This table classifies the RFC prerequisites and links to their authoritative own
 - Which canonical production origin is approved before final release metadata is emitted?
 
 Long-term hosting may be reconsidered separately. No hosting migration is required to begin the homepage-foundation implementation while the current static-export constraint is preserved.
+
+The first question is now evaluated by [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](homepage-foundation-static-localized-routing.md) and remains **OPEN** until that Governance RFC is approved or rejected.
 
 ## Recommendation
 
