@@ -9,6 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        foundation: {
+          canvas: '#F6F7F9',
+          surface: '#FFFFFF',
+          ink: '#0B1F33',
+          muted: '#4C5D6F',
+          action: '#0B57D0',
+          'action-strong': '#0842A0',
+          tint: '#EAF1FF',
+          border: '#D7DEE7'
+        },
         brand: {
           50: '#EEF3FB',
           100: '#D9E5F7',

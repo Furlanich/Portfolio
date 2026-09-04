@@ -26,7 +26,7 @@ const expectedContactActions = {
 };
 
 const expectedProfessionalLinks = {
-  linkedin: 'https://linkedin.com/in/samuel-furlanich',
+  linkedin: 'https://www.linkedin.com/in/samuel-furlanich/',
   github: 'https://github.com/Furlanich',
 };
 

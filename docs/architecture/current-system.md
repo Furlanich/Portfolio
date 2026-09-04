@@ -5,14 +5,14 @@ status: APPROVED
 related:
   - ARCH-FINDINGS
   - IA-SITE
-last_verified: 2026-09-02
+last_verified: 2026-09-04
 ---
 
 # Current system
 
 ## Scope
 
-This is the existing personal portfolio implementation before the business-site migration. It does not yet implement the documented sitemap or business content model.
+This record includes the retained pre-cutover personal-portfolio implementation and the current Task 3 foundation state. The eight approved foundation routes now implement the documented Spanish-root and English-/en/ route pairs; retained source data and legacy components remain in Git for later migration and cleanup.
 
 ## Application stack
 
@@ -27,7 +27,7 @@ This is the existing personal portfolio implementation before the business-site 
 
 The dependency baseline was patched in commit `f68a022` before Stage A.
 
-## Routes and rendering
+## Pre-cutover routes and rendering
 
 - One App Router route: `/`.
 - `app/page.tsx` is a Client Component.
@@ -38,7 +38,7 @@ The dependency baseline was patched in commit `f68a022` before Stage A.
 
 This conflicts with the approved route-based localization target in `IA-SITE`.
 
-## Page composition
+## Pre-cutover page composition
 
 Current order:
 
@@ -52,7 +52,7 @@ Current order:
 
 Content is oriented toward personal credentials and recruiters rather than the approved commercial hierarchy.
 
-## Component structure
+## Pre-cutover component structure
 
 - `components/core/` contains Badge, Card, Container, IconButton, MotionReveal, Section, and TimelineItem primitives.
 - `components/layout/` contains the navigation and language switch.
@@ -67,7 +67,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Project records currently contain localized title/description, technology tags, preview image, and optional external links.
 - Records do not contain maturity, disclosure permission, evidence source, business problem, result, or publication state.
 
-## Styling and assets
+## Pre-cutover styling and assets
 
 - Tailwind theme defines blue `brand`, dark `ink`, and light `paper` colors.
 - Inter is loaded with `next/font`.
@@ -76,7 +76,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Next image optimization is disabled to support static export.
 - Project previews are SVG files, several containing large embedded raster payloads.
 
-## Contact form
+## Pre-cutover contact form
 
 - Form fields: name, email, and message.
 - The approved optional business field is absent.
@@ -84,7 +84,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Success and error states are announced in an `aria-live` region.
 - The current source references Formspree, but the target provider remains OPEN.
 
-## Metadata
+## Pre-cutover metadata
 
 - Root metadata identifies “Samuel Furlanich - Developer” and a generic developer portfolio.
 - Basic Open Graph title/description and robots indexing are configured.
@@ -98,13 +98,22 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - The workflow deploys `out/` with `peaceiris/actions-gh-pages` using content-write permission.
 - Current live location was previously verified as `https://furlanich.github.io/Portfolio/`.
 
-## Validation and documentation
+## Pre-cutover validation and documentation
 
 - Package scripts include documentation validation, Node-based validator tests, explicit TypeScript checking, lint, build, and a composed validation command.
 - The repository now has a root agent router, an architecture map, and governance indexes/templates. These documents do not approve a target migration.
 - No formatter configuration or browser-test suite exists.
 - The deployment workflow remains push-to-`main` only and is unchanged; Pull Request quality gates run through the separate Quality workflow documented below.
 - Stage A added product documentation and a context glossary; the prior README was a two-line personal-portfolio description.
+
+## Current foundation implementation — Task 3
+
+- Eight static foundation routes are rendered by locale-specific Server Component trees: Spanish at the root routes with document language es-AR, and English below /en/ with document language en.
+- Shared foundation components provide the semantic header, footer, language switch, typography-led hero, useful Services and Contact destinations, and the minimum Founder profile.
+- The public foundation does not use the retained next-intl client provider, locale React state, window.location parsing, or document-language mutation.
+- Foundation styling uses the approved light Canvas, Surface, Ink, Muted ink, Action blue, Action blue strong, Action tint, and Border values, with responsive CTA stacking below 480px and no horizontal overflow at 320px.
+- The retained legacy form, JSON, message catalogs, project assets, and personal-portfolio components remain in Git and are outside this cutover.
+- Both normal and /Portfolio static-export modes are verified by the repository artifact checker. Task 3 browser QA covered all eight routes at 320x800, 375x812, 768x1024, 1024x768, and 1440x900; language switching, keyboard focus, JavaScript-disabled rendering, reduced motion, contact links, Founder links, and CV routing were checked.
 
 ## Environment
 

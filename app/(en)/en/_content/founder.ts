@@ -40,7 +40,7 @@ export const founderContent = {
   },
   linkedin: {
     label: 'LinkedIn',
-    href: 'https://linkedin.com/in/samuel-furlanich',
+    href: 'https://www.linkedin.com/in/samuel-furlanich/',
   },
   github: {
     label: 'GitHub',

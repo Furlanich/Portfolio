@@ -68,7 +68,7 @@ Move from the legacy single-page personal portfolio to the smallest usable busin
 
 ## Affected architecture
 
-The current implementation remains one client-rendered `/` route with page-wide locale state, both message bundles, anchor navigation, personal metadata, and no localized destination routes. The accepted target is [`ADR-STATIC-LOCALIZED-ROUTING`](../../decisions/static-localized-routing.md).
+The pre-cutover implementation was one client-rendered `/` route with page-wide locale state, both message bundles, anchor navigation, personal metadata, and no localized destination routes. The accepted target is [`ADR-STATIC-LOCALIZED-ROUTING`](../../decisions/static-localized-routing.md); Task 3 implements that target atomically while retaining legacy source material.
 
 Preparatory PRs may add tested contracts and content without changing public routes. The integration PR then removes `app/layout.tsx` and `app/page.tsx` while adding both locale root layouts and all eight minimum routes in one change. Legacy source data remains available for later migration even when obsolete runtime components are retired.
 
@@ -535,6 +535,9 @@ This task has complete authority from `IA-SITE` and `ADR-STATIC-LOCALIZED-ROUTIN
 - 2026-09-04: `ADR-STATIC-LOCALIZED-ROUTING` and this execution plan created on `codex/homepage-foundation-execution-plan`.
 - 2026-09-04: Task 1 / PR 1 implemented on `codex/homepage-foundation-execution-plan`; `node --test scripts/site-routes.test.mjs` passed (3/3), `npm test` passed (14/14), `npm run typecheck` passed, `npm run docs:check` passed, and `git diff --check` passed. Node emitted the allowed `MODULE_TYPELESS_PACKAGE_JSON` notice; no module-type change was made. PR #8 is open against `main` and remains pending human review; merge authority is intentionally retained by the project owner.
 - 2026-09-04: Task 2 / PR 2 content modules and contracts implemented on `codex/homepage-foundation-content`; focused content tests passed (5/5), CV verification passed via PDF signature and `pdfinfo`, GitHub returned HTTP 200, and LinkedIn verification was blocked by HTTP 403/999 plus browser cache misses. LinkedIn remains an integration blocker for PR 3; the configured URL was not changed or replaced.
+- 2026-09-04: Project owner supplied the verifiable LinkedIn destination https://www.linkedin.com/in/samuel-furlanich/; both Task 2 Founder modules, the retained legacy about record, and the content contract were synchronized. The desktop browser helper remains unavailable, so interactive browser verification is still unverified pending environment recovery.
+
+- 2026-09-04: Task 3 / PR 3 cutover implemented on codex/homepage-foundation-cutover; normal and /Portfolio static builds and artifact verification passed, the eight-route five-viewport matrix passed with no horizontal overflow, language switching and keyboard focus passed, JavaScript-disabled and reduced-motion checks passed, and axe-core reported zero violations on all eight routes. The supplied LinkedIn URL reached LinkedIn authwall in agent-browser for anonymous sessions; the owner-provided verifiable destination is preserved unchanged. Commit b858d25 is pushed and PR #10 is open against main for human review.
 
 ## Important implementation decisions
 
