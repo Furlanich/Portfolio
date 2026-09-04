@@ -108,7 +108,7 @@ This table classifies the RFC prerequisites and links to their authoritative own
 
 | Decision | Classification | Delivery effect | Owner and outcome |
 | --- | --- | --- | --- |
-| English `HOME-HERO` adaptation | CONTENT DECISION | IMPLEMENTATION BLOCKER — resolved | [`PAGE-HOME`](../product/pages/home.md#approved-english-adaptation), **APPROVED** |
+| English `HOME-HERO` adaptation | CONTENT DECISION | IMPLEMENTATION BLOCKER — resolved | [`PAGE-HOME`](../product/pages/home.md#home-hero-approved-english-adaptation), **APPROVED** |
 | Minimum wordmark | VISUAL/DESIGN DECISION | IMPLEMENTATION BLOCKER — resolved | [`DESIGN-VISUAL`](../design/visual-language.md#homepage-foundation-visual-baseline-approved), **APPROVED** |
 | Launch colors and contrast pairs | VISUAL/DESIGN DECISION | IMPLEMENTATION BLOCKER — resolved | `DESIGN-VISUAL`, **APPROVED** |
 | Typeface and initial hierarchy | VISUAL/DESIGN DECISION | IMPLEMENTATION BLOCKER — resolved | `DESIGN-VISUAL`, **APPROVED** |

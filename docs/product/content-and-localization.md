@@ -7,7 +7,7 @@ related:
   - IA-SITE
   - PAGE-HOME
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-03
+last_verified: 2026-09-04
 ---
 
 # Content and localization
@@ -21,12 +21,19 @@ last_verified: 2026-09-03
 
 ## Homepage-foundation English scope — APPROVED
 
-- Exact English `HOME-HERO` copy is owned by [PAGE-HOME](pages/home.md#approved-english-adaptation).
+- Exact English `HOME-HERO` copy is owned by [PAGE-HOME](pages/home.md#home-hero-approved-english-adaptation).
 - The minimum English Services destination is owned by [PAGE-SERVICES](pages/services.md#homepage-foundation-minimum-destination-approved).
 - The minimum English Contact destination is owned by [PAGE-CONTACT](pages/contact-and-privacy.md#homepage-foundation-minimum-destination-approved).
 - The approved English founder biography and minimum Founder destination are owned by [PAGE-FOUNDER](pages/studio-and-founder.md#approved-detailed-biography).
 
-English adaptations outside that minimum slice remain **OPEN** and do not block homepage-foundation technical planning.
+At the time of the foundation slice, English adaptations outside that minimum were **OPEN**. Initiative 2 closes the complete commercial homepage below; other pages and future project evidence still require separate adaptations.
+
+## Complete commercial homepage English scope — APPROVED
+
+- Exact natural English adaptations for `HOME-PROBLEMS`, `HOME-SERVICES`, `HOME-AUDIENCES`, the `HOME-PROOF` launch fallback, `HOME-PROCESS`, `HOME-FOUNDER`, and `HOME-CTA` are owned by [`PAGE-HOME`](pages/home.md).
+- These adaptations are approved for implementation. They preserve the Spanish commercial meaning without forcing Spanish syntax or literal vocabulary into English.
+- Existing Spanish text is not blanket approval for English publication. Any future project card, page, or claim still needs its own reviewed English adaptation.
+- The project-card variant of `HOME-PROOF` remains **OPEN** because no project is currently publication-ready in `PROJECT-EVIDENCE`.
 
 ## Voice — APPROVED
 
@@ -92,8 +99,11 @@ Before the business homepage is declared production-ready, approve either a cust
 - “Functional” requires a working implementation that can be demonstrated or reproduced.
 - Generated visuals require a conceptual disclosure and cannot serve as production evidence.
 - Testimonials and endorsements require permission and attributable source material.
+- Do not invent clients, metrics, testimonials, team size, production outcomes, ownership, or disclosure permission.
+- Do not convert private/client work into a public case study without explicit item-level permission.
+- Do not present a prototype, repository, screenshot, or generated visual as client or production evidence.
 
-The broader non-fabrication policy remains **PROPOSED** in the status register because the project owner has not adopted it as an **APPROVED** standalone rule.
+These non-fabrication rules are **APPROVED**.
 
 ## Source-material requirements
 
@@ -102,7 +112,8 @@ Before final public content is complete, the repository needs:
 - approved item-level project records;
 - client logo and description permissions;
 - founder photograph;
-- final approved biography wording;
 - final form/privacy provider details;
-- final English adaptations outside the approved homepage-foundation slice;
+- final English adaptations outside the approved complete homepage and minimum destination slice;
 - verified public URLs and repositories.
+
+The founder photograph and unresolved project evidence do not block the approved text-led commercial homepage. They remain dependencies for later visual or project-card variants only.

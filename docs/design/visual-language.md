@@ -7,7 +7,7 @@ related:
   - PROJECT-EVIDENCE
   - PAGE-HOME
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-03
+last_verified: 2026-09-04
 ---
 
 # Visual language
@@ -100,6 +100,52 @@ The first hero is typography-led and left-aligned. It uses the approved eyebrow,
 
 Imagery is therefore **not required** for homepage-foundation implementation. A later approved brand illustration or founder photograph may be added if it supports comprehension and does not displace the core copy or become necessary to understand the offer.
 
+## Commercial homepage section baseline — APPROVED
+
+This section extends the approved foundation only as far as the seven sections below `HOME-HERO`. It does not establish a whole-site component library or reopen the foundation palette, typography family, container, gutters, buttons, focus treatment, or light-theme direction.
+
+### Section rhythm and surfaces
+
+- Standard section padding is `64px` compact, `80px` medium, and `96px` wide.
+- Use the existing `1200px` container and approved horizontal gutters. A section introduction has a comfortable maximum measure of `68ch`; it does not stretch to the full container on wide screens.
+- Within a section, use `16px` between eyebrow or context text and heading, `24px` between heading and introduction, `32px` before the main content, and `32px` before a section CTA. Larger gaps may use the existing `48px` or `64px` tokens when separating distinct internal groups.
+- Alternate only the approved Canvas and Surface backgrounds to clarify the long page: Problems uses Surface; Services uses Canvas; Audiences uses Surface; Proof uses Canvas; Process uses Surface; Founder uses Canvas; and the final CTA uses Action tint.
+- Background changes must not be the only way section boundaries are conveyed. Every section has its own heading, and a Border divider may be added where adjacent light surfaces need more separation.
+- Do not introduce gradients, glass effects, decorative shadows, or additional accent colors for these sections.
+
+### Later-section typography
+
+- Section H2: `32/38px` compact and `40/48px` medium/wide, weight 700, with a preferred maximum measure around `20ch`.
+- Section introduction: `18/28px`, Muted ink, maximum `68ch`.
+- Card or step H3: `20/28px`, weight 700.
+- Card, list, quality, and supporting copy: `16/26px`; use Muted ink for secondary explanation and Ink for the primary statement.
+- Do not reduce later sections to dense label-sized copy or introduce display typography that competes with the H1.
+
+### Shared surface patterns
+
+- A reusable content-card pattern is justified for Problems, Services, and Audiences and for future approved project cards: Surface background, `1px` Border, `16px` radius, no shadow, and `24px` compact or `32px` medium/wide internal padding.
+- Cards in one group should align visually but do not need forced equal heights when that would create excessive empty space. Content remains top-aligned.
+- The card surface itself is not an action. Do not add hover elevation, pointer cursors, or focus styles to non-interactive cards; only an actual link or button receives interaction treatment.
+- A reusable section-shell pattern may provide the approved container, spacing, background, heading measure, and section CTA alignment. This is a design pattern, not a requirement to introduce a new application abstraction.
+- Existing primary and secondary action styles are reused unchanged. Text links may use Action blue with an underline visible on hover and focus, but must not depend on color alone.
+
+### Section-specific presentation
+
+- **Problems:** Four situation cards. Use one column compact, two columns medium and wide. Lead with the situation title; no warning color or problem icon is required.
+- **Services:** Three outcome cards. Use one column through medium widths and three columns wide. Cards contain only title and summary; the single section CTA follows the group.
+- **Audiences:** Four relevance cards in one column compact and two columns medium/wide. The closing line and CTA follow the list instead of becoming a fifth card.
+- **Proof launch fallback:** Use one restrained Surface panel inside the Canvas section. Present the introduction followed by three short credibility commitments. Do not use project screenshots, logos, metrics, maturity badges, or simulated case-study cards in the fallback.
+- **Future proof cards:** If `PROJECT-EVIDENCE` later approves eligible items, use at most three content cards. Maturity/disclosure and business context lead; technology remains secondary. Visuals are optional and must follow the approved permission rules.
+- **Process:** Present the four steps as an ordered sequence with visible two-digit numerals or plain integers. Use one column compact, two columns medium, and four columns wide. Any connecting rule is decorative and disappears when the layout wraps.
+- **Founder:** Use a text-led split at wide sizes, with biography and heading taking the larger share and the action group taking the smaller share. Stack in reading order below wide. No portrait placeholder, skills cloud, employer logo, or résumé timeline appears.
+- **Final CTA:** Use a full-width Action-tint band with a narrow text measure, the standard primary action, and the standard secondary action. Keep it left-aligned and visually distinct through spacing and background rather than a new color or oversized type treatment.
+
+### Icons and imagery
+
+- No icon is required in Problems, Services, Audiences, Process, Founder, or the final CTA.
+- If a later implementation adds a familiar decorative icon, it uses the existing icon dependency, remains secondary to the text label, and is hidden from assistive technology. Do not create a new icon set or use technology logos as service illustrations.
+- A founder photograph remains optional. If later approved, it must have a meaningful editorial purpose, truthful alternative text where informative, and a layout that remains complete without it.
+
 ## Alternatives and trade-offs
 
 | Decision | Alternatives considered | Approved choice and reason |
@@ -130,17 +176,17 @@ The existing visual system, styling, assets, and motion implementation are recor
 - Label generated or conceptual imagery so it cannot be mistaken for a real implementation.
 - Prefer real product evidence for Laboratory/prototype work when available.
 
-## OPEN target decisions beyond the homepage foundation
+## OPEN target decisions beyond the commercial homepage
 
 - Custom logo symbol, monogram, and extended brand-lockup system.
 - Extended semantic colors, including form validation and project-evidence states.
-- Complete type hierarchy beyond the homepage foundation.
-- Page- and component-specific density outside the homepage foundation.
-- Detailed card, navigation, form, and badge variants beyond the approved foundation actions/surfaces.
+- Complete type hierarchy beyond the commercial homepage.
+- Page- and component-specific density outside the commercial homepage.
+- Detailed navigation, form, and evidence-badge variants beyond the approved foundation actions and homepage surfaces.
 - Photography, illustration, screenshot, and abstract-graphic direction.
-- Icon set and custom icon requirements.
+- A broader icon system or custom icon requirements.
 - Whether a dark theme is ever introduced.
-- Motion language beyond the homepage hero and basic control-state transitions.
+- Motion language outside the commercial homepage and basic control-state transitions.
 
 ## Reference posture
 

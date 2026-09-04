@@ -11,7 +11,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-03
+last_verified: 2026-09-04
 ---
 
 # Spanish homepage
@@ -42,6 +42,14 @@ HOME-CTA
 ```
 
 There is no dedicated AI section.
+
+## Initiative 2 decision closure — APPROVED
+
+The sections below `HOME-HERO` are approved as one commercial sequence. Their exact Spanish copy, natural English adaptations, CTA destinations, evidence boundaries, and implementation-readiness status are owned here. The later-section visual, responsive, interaction, and accessibility rules are owned by [`DESIGN-VISUAL`](../../design/visual-language.md#commercial-homepage-section-baseline-approved) and [`DESIGN-IX-A11Y`](../../design/interaction-responsive-accessibility.md#commercial-homepage-section-baseline-approved).
+
+The complete sequence fits the accepted localized App Router architecture: each locale may continue to own its content and pass it to shared, locale-agnostic semantic components. No new routing, localization, hosting, dependency, CMS, backend, or design-system architecture is required. A later implementation plan may decide file boundaries within those accepted constraints; it must not turn the sections into a new frontend framework or generalized content platform.
+
+`HOME-PROOF` has no project card that currently passes the approved evidence and permission gates. Its approved launch treatment is therefore the honest credibility fallback defined in that section. Project cards remain a later evidence-driven enhancement, not an implementation blocker for the commercial homepage.
 
 ## HOME-HERO
 
@@ -75,7 +83,7 @@ There is no dedicated AI section.
 
 **Required source material:** The minimum wordmark and visual direction are approved in `DESIGN-VISUAL`. Canonical-domain selection is a release dependency, not a hero implementation dependency. No hero image is required.
 
-### Approved English adaptation
+### HOME-HERO approved English adaptation
 
 The English hero at `/en/` uses the following adaptation. It preserves the Spanish meaning while favoring natural business English over literal syntax.
 
@@ -114,6 +122,8 @@ The literal H1 “Practical software to sell, serve, and operate better” was r
 
 ## HOME-PROBLEMS
 
+**Status:** **APPROVED** in Spanish and English. No project evidence is required because these are target-problem relevance statements, not claims of prior outcomes or sector specialization.
+
 **Objective:** Let visitors recognize an operational problem before interpreting service categories.
 
 **Heading**
@@ -137,7 +147,30 @@ The literal H1 “Practical software to sell, serve, and operate better” was r
 
 **Required source material:** Ongoing validation that these situations match the inquiries FURLANICH wants to receive.
 
+That validation is a non-blocking post-launch content-learning activity. It does not prevent implementation of the approved section.
+
+### HOME-PROBLEMS approved English adaptation
+
+**Heading**
+
+> When manual work starts holding the business back
+
+**Introduction**
+
+> A digital solution makes sense when it reduces repetitive work, prevents errors, or helps you serve customers better. These are some of the problems FURLANICH can help you solve.
+
+**Situations**
+
+- **Scattered orders and bookings:** Enquiries spread across messages, calls, spreadsheets, and notes that are difficult to keep up to date.
+- **Processes that take too much time:** Administrative or customer-service work that could be connected, simplified, or automated.
+- **A web presence that does not support the business:** Sites that provide information but do not let customers book, buy, place an order, or start a request.
+- **Software that is difficult to maintain:** Unstable or outdated systems without a clear technical direction.
+
+**CTA:** `See how we can help` → `/en/services/`
+
 ## HOME-SERVICES
+
+**Status:** **APPROVED** in Spanish and English. The service scope is supported by [`AUDIENCES-SERVICES`](../audiences-and-services.md); service-specific project proof is not required to describe the offer truthfully.
 
 **Objective:** Explain the three launch services as useful business outcomes.
 
@@ -155,19 +188,11 @@ The literal H1 “Practical software to sell, serve, and operate better” was r
 
 > Soluciones web para presentar, vender o gestionar servicios: sitios profesionales, catálogos, pedidos, reservas, portales para clientes e integraciones con medios de pago.
 
-**CTA:** `Explorar soluciones web` → `/servicios/`
-
-**Fragment target:** **OPEN.** The exact service-section fragment identifier and whether this CTA must target a fragment remain unresolved.
-
 ### SERVICE-WHATSAPP
 
 **Title:** Automatización por WhatsApp e integraciones
 
 > Flujos para responder consultas, registrar pedidos, gestionar reservas, enviar confirmaciones y conectar WhatsApp con otras herramientas del negocio.
-
-**CTA:** `Explorar automatizaciones` → `/servicios/`
-
-**Fragment target:** **OPEN.** The exact service-section fragment identifier and whether this CTA must target a fragment remain unresolved.
 
 ### SERVICE-CONSULTING
 
@@ -175,17 +200,49 @@ The literal H1 “Practical software to sell, serve, and operate better” was r
 
 > Diagnóstico y mejora de sistemas existentes para resolver problemas, reducir riesgos y definir un camino técnico mantenible.
 
-**CTA:** `Explorar mantenimiento y consultoría` → `/servicios/`
-
-**Fragment target:** **OPEN.** The exact service-section fragment identifier and whether this CTA must target a fragment remain unresolved.
-
 **Section CTA:** `Ver todos los servicios` → `/servicios/`
+
+Individual service-card CTAs are **REJECTED** for this homepage version because all three would lead to the same page root and compete with the section action. The cards are informational and the section has one CTA. Service-page fragment identifiers remain **OPEN** for `PAGE-SERVICES`, but they do not block this homepage section.
 
 **Evidence:** Each service should eventually connect to at least one relevant evidence item. Missing evidence remains visible in `PROJECT-EVIDENCE`.
 
 **Required source material:** Included/excluded scope, typical starting point, provider dependencies, and approved evidence for each service.
 
+The homepage summary is implementation-ready without duplicating the detailed boundaries owned by `PAGE-SERVICES`. Missing public evidence for WhatsApp and consulting remains visible in `PROJECT-EVIDENCE` and must not be filled with implied case-study claims.
+
+### HOME-SERVICES approved English adaptation
+
+**Heading**
+
+> Services for concrete business needs
+
+**Introduction**
+
+> We do not force a generic platform. First we understand the process, then decide whether building, integrating, or modernizing is the right approach.
+
+#### HOME-SERVICES English SERVICE-WEB
+
+**Title:** Business websites and web applications
+
+> Web solutions that help businesses present, sell, or manage services: professional websites, catalogues, ordering, bookings, customer portals, and payment integrations.
+
+#### HOME-SERVICES English SERVICE-WHATSAPP
+
+**Title:** WhatsApp automation and integrations
+
+> Flows for answering common questions, capturing orders, managing bookings, sending confirmations, and connecting WhatsApp with other business tools.
+
+#### HOME-SERVICES English SERVICE-CONSULTING
+
+**Title:** Software maintenance and IT consulting
+
+> Diagnosis and improvement of existing systems to solve problems, reduce risk, and define a maintainable technical path.
+
+**Section CTA:** `View all services` → `/en/services/`
+
 ## HOME-AUDIENCES
+
+**Status:** **APPROVED** in Spanish and English. These are target operating contexts. They must not be labeled as sectors in which FURLANICH is a specialist or has proven experience unless future project evidence supports that stronger claim.
 
 **Objective:** Demonstrate relevance without claiming unsupported vertical specialization.
 
@@ -208,23 +265,74 @@ The literal H1 “Practical software to sell, serve, and operate better” was r
 
 **Required source material:** Item-level industry experience and approved sector descriptions.
 
-## HOME-PROOF
+Item-level experience is required only for stronger experience claims or future evidence cards; it does not block the approved relevance framing.
 
-**Objective:** Provide credible, client-oriented proof with transparent maturity and disclosure.
+### HOME-AUDIENCES approved English adaptation
 
 **Heading**
 
-> Soluciones, laboratorio y prototipos
+> Built for businesses with real operations
+
+- **Retailers and shops:** Catalogues, orders, enquiries, payments, and tools for organizing day-to-day operations.
+- **Restaurants and food-service businesses:** Menus, orders, bookings, confirmations, and customer-service channels.
+- **Transport and logistics:** Requests, coordination, tracking, and information for passengers or customers.
+- **Professional services and consultancies:** Portals, automations, integrations, and technical capacity for projects or existing systems.
+
+**Closing line**
+
+> If your sector is not listed, the starting point is still the same: understand the process, the problem, and the outcome you need.
+
+**CTA:** `Tell us how your business works` → `/en/contact/`
+
+## HOME-PROOF
+
+**Status:** **APPROVED** for the honest launch fallback below. The project-card variant is **OPEN** and must not be implemented until at least one candidate reaches `ready` in [`PROJECT-EVIDENCE`](../project-evidence.md).
+
+**Objective:** Explain why the visitor can trust the commercial claims without presenting unverified work as client evidence.
+
+**Heading**
+
+> Credibilidad sin promesas infladas
 
 **Introduction**
 
-> Una selección de trabajos que muestran cómo FURLANICH analiza y construye soluciones. Cada proyecto indica claramente su contexto y estado.
+> FURLANICH solo presenta un trabajo cuando su contexto, estado y permiso de publicación están claros. No convertimos prototipos en historias de clientes ni publicamos métricas sin una fuente verificable.
 
-**CTA:** `Ver todos los proyectos` → `/proyectos/`
+**Credibility commitments**
 
-**Evidence and source material:** Governed by `PROJECT-EVIDENCE`. Exact cards and public category labels remain OPEN/PROPOSED. At most three items should appear; they are ordered by commercial relevance rather than chronology.
+- **Responsabilidad directa:** Samuel mantiene la responsabilidad técnica de cada proyecto de FURLANICH.
+- **Afirmaciones verificables:** El estado, el alcance y las limitaciones de un trabajo se explican antes de usarlo como evidencia.
+- **Confidencialidad respetada:** La identidad, las capturas y los resultados de clientes se publican únicamente con permiso explícito.
+
+**CTA:** `Conocer la trayectoria de Samuel` → `/estudio/samuel-furlanich/`
+
+**Evidence:** Approved founder-accountability facts plus the approved evidence-integrity and confidentiality rules. This section does not imply completed client work, results, metrics, testimonials, or a larger team.
+
+### HOME-PROOF approved English adaptation
+
+**Heading**
+
+> Credibility without inflated claims
+
+**Introduction**
+
+> FURLANICH only presents work when its context, status, and publication permission are clear. We do not turn prototypes into client stories or publish metrics without a verifiable source.
+
+**Credibility commitments**
+
+- **Direct accountability:** Samuel retains technical responsibility for every FURLANICH project.
+- **Verifiable claims:** A project's status, scope, and limitations are explained before it is used as evidence.
+- **Confidentiality respected:** Client identities, screenshots, and results are published only with explicit permission.
+
+**CTA:** `View Samuel's background` → `/en/about/samuel-furlanich/`
+
+### Future project-card variant — OPEN
+
+When at least one project reaches the `ready` publication state, this fallback may be replaced by up to three project cards ordered by commercial relevance. The section may then use the Spanish heading `Proyectos seleccionados` and English heading `Selected work`. Each card must satisfy `PROJECT-EVIDENCE`; the section must not link to `/proyectos/` or `/en/work/` until those localized destinations exist and are useful.
 
 ## HOME-PROCESS
+
+**Status:** **APPROVED** in Spanish and English. Detailed commercial terms remain outside the homepage and do not block this process summary.
 
 **Anchor:** `proceso`
 
@@ -249,7 +357,28 @@ The literal H1 “Practical software to sell, serve, and operate better” was r
 
 **Dependencies:** Detailed commercial terms remain PROPOSED/OPEN in the status register.
 
+### HOME-PROCESS approved English adaptation
+
+**Anchor:** `process`
+
+**Heading**
+
+> From a concrete need to a maintainable solution
+
+1. **Understand and diagnose:** We learn how the business works, what the problem is, who uses the process, and which constraints matter. If it is not yet clear what to build, we first clarify the need.
+2. **Define the scope:** We document objectives, deliverables, boundaries, risks, responsibilities, and a clear proposal for the work.
+3. **Build and validate:** We work through reviewable deliveries, testing, and validation so issues are found before production.
+4. **Launch and support:** We prepare the release, documentation, and agreed follow-up so the solution can be used and maintained.
+
+**Quality statement**
+
+> Before a production release, each delivery goes through technical review, functional testing, and validation of its main user journeys. The exact controls depend on the type of solution and its level of risk.
+
+**CTA:** `Start an inquiry` → `/en/contact/`
+
 ## HOME-FOUNDER
+
+**Status:** **APPROVED** in Spanish and English. A founder photograph remains optional future work and is not an implementation or release dependency for this section.
 
 **Objective:** Establish personal trust and explain founder accountability without simulating a large agency.
 
@@ -257,11 +386,11 @@ The literal H1 “Practical software to sell, serve, and operate better” was r
 
 > Responsabilidad técnica directa
 
-**Homepage biography — PROPOSED**
+**Homepage biography**
 
-> FURLANICH es un estudio de software liderado por Samuel Furlanich, desarrollador full-stack con formación completa en Ciencias de la Computación en la Universidad de Buenos Aires. Samuel dirige cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.
+> FURLANICH está liderado por Samuel Furlanich, desarrollador de software full-stack con estudios completos en Ciencias de la Computación en la Universidad de Buenos Aires. Samuel mantiene la responsabilidad técnica directa en cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.
 
-The founder facts are **APPROVED**; this exact homepage biography wording remains **PROPOSED**. See [`PAGE-FOUNDER`](studio-and-founder.md) for the founder-profile biography status.
+This concise homepage copy is **APPROVED**. The detailed biography remains owned by [`PAGE-FOUNDER`](studio-and-founder.md).
 
 **Primary CTA:** `Hablemos de tu proyecto` → `/contacto/`
 
@@ -269,9 +398,25 @@ The founder facts are **APPROVED**; this exact homepage biography wording remain
 
 **Evidence:** Approved founder facts and professional links.
 
-**Required source material:** Founder photograph and final confirmation of exact biography wording.
+**Required source material:** The approved founder facts and existing localized Founder destinations. No photograph is required.
+
+### HOME-FOUNDER approved English adaptation
+
+**Heading**
+
+> Direct technical responsibility
+
+**Homepage biography**
+
+> FURLANICH is led by Samuel Furlanich, a full-stack software developer who completed his Computer Science studies at the University of Buenos Aires. Samuel retains direct technical responsibility for every project and brings in specialist collaborators when the scope requires them.
+
+**Primary CTA:** `Let's talk about your project` → `/en/contact/`
+
+**Secondary CTA:** `Meet Samuel` → `/en/about/samuel-furlanich/`
 
 ## HOME-CTA
+
+**Status:** **APPROVED** in Spanish and English for the current direct-contact destination. The structured inquiry form and privacy flow remain release blockers for the complete business-site launch, not blockers for this homepage section while the Contact page offers working direct channels.
 
 **Objective:** Give a qualified visitor an immediate, low-ambiguity next step.
 
@@ -293,7 +438,52 @@ The founder facts are **APPROVED**; this exact homepage biography wording remain
 
 **Evidence:** The response statement is an operating commitment and should be reviewed after launch.
 
-**Required source material:** Final working contact routes and privacy-ready inquiry flow.
+**Dependencies:** Working localized Contact routes and the confirmed WhatsApp destination. These exist and are sufficient for this homepage CTA. Enabling the structured form still requires the provider and privacy decisions owned by `PAGE-CONTACT`.
+
+### HOME-CTA approved English adaptation
+
+**Heading**
+
+> Do you have a concrete need or a system that needs attention?
+
+**Copy**
+
+> Tell us briefly what you need to solve. Samuel will personally review your inquiry to determine whether it makes sense to continue with a conversation.
+
+**Response statement**
+
+> Usual response time is within the same business day. In exceptional cases, it may take up to two business days.
+
+**Primary CTA:** `Tell us about your project` → `/en/contact/`
+
+**Secondary CTA:** `Write on WhatsApp` → `https://wa.me/5491150117565`
+
+## Conversion narrative review — APPROVED
+
+- `HOME-HERO` states the offer and keeps the page's strongest primary CTA.
+- `HOME-PROBLEMS` creates recognition before service terminology appears.
+- `HOME-SERVICES` maps those situations to three offers with one section-level CTA; repeated card CTAs are intentionally omitted.
+- `HOME-AUDIENCES` qualifies fit without implying sector specialization.
+- `HOME-PROOF` earns trust through explicit evidence standards until approved project evidence exists; it does not imitate a case-study gallery.
+- `HOME-PROCESS` explains engagement only after relevance and credibility have been established.
+- `HOME-FOUNDER` identifies the accountable person without adding a résumé timeline or technology catalogue.
+- `HOME-CTA` closes with one primary inquiry path and one direct-channel alternative.
+
+Across the page, technology names remain outside the first-pass hierarchy, no result metric or client history is implied, and repeated CTA labels are limited to deliberate conversion points. The page must not add skills grids, employment timelines, recruiter language, or GitHub-first project presentation.
+
+## Implementation readiness matrix
+
+| Section | Product | English | Design | Evidence | Ready? |
+| --- | --- | --- | --- | --- | --- |
+| `HOME-PROBLEMS` | **APPROVED** | **APPROVED** | **APPROVED** | Relevance statements; project evidence not required | **YES** |
+| `HOME-SERVICES` | **APPROVED** | **APPROVED** | **APPROVED** | Offer scope approved; no case-study claim | **YES** |
+| `HOME-AUDIENCES` | **APPROVED** | **APPROVED** | **APPROVED** | Target contexts only; specialization claims forbidden | **YES** |
+| `HOME-PROOF` | **APPROVED** fallback; project cards **OPEN** | **APPROVED** fallback | **APPROVED** fallback | Founder accountability and integrity rules only; no approved project card | **YES — fallback only** |
+| `HOME-PROCESS` | **APPROVED** | **APPROVED** | **APPROVED** | Approved operating process; no certification claim | **YES** |
+| `HOME-FOUNDER` | **APPROVED** | **APPROVED** | **APPROVED** | Approved founder facts and destinations | **YES** |
+| `HOME-CTA` | **APPROVED** | **APPROVED** | **APPROVED** | Approved response commitment and working direct channels | **YES** |
+
+The complete homepage may proceed to implementation planning using the fallback version of `HOME-PROOF`. A plan that requires project cards, the Projects routes, a contact form, new imagery, or new architecture is not authorized by this closure.
 
 ## Page-level acceptance criteria
 

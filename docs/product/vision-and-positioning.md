@@ -6,7 +6,7 @@ related:
   - AUDIENCES-SERVICES
   - CONTENT-LOCALIZATION
   - PAGE-HOME
-last_verified: 2026-09-02
+last_verified: 2026-09-04
 ---
 
 # Vision and positioning
@@ -84,14 +84,14 @@ The approved homepage H1 and its surrounding copy are owned by [`HOME-HERO`](pag
 - Founder presence without turning the business homepage into a résumé.
 - No unnecessary jargon where plain business language is available.
 
-### Integrity guardrails — PROPOSED
+### Integrity guardrails — APPROVED
 
 - Do not invent clients, metrics, testimonials, production outcomes, or team size.
 - Do not present generated visuals as implemented systems.
 - Do not call prototypes client work.
 - Use client logos only with permission.
 
-These guardrails remain **PROPOSED** because the project owner has not adopted them as an **APPROVED** policy, although narrower confidentiality rules are approved.
+Public availability, a legacy portfolio entry, or a source repository does not by itself establish client permission, production maturity, a result, or FURLANICH ownership. The item-level evidence and publication rules are owned by [`PROJECT-EVIDENCE`](project-evidence.md).
 
 ## AI positioning
 

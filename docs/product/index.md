@@ -6,7 +6,7 @@ related:
   - BRAND-POSITIONING
   - IA-SITE
   - PAGE-HOME
-last_verified: 2026-09-01
+last_verified: 2026-09-04
 ---
 
 # Product documentation
@@ -25,7 +25,7 @@ Product documentation defines what the FURLANICH website is, who it serves, why 
 - [Information architecture](information-architecture.md): sitemap, routes, navigation, footer, and page relationships.
 - [Site feature catalogue](site-feature-catalogue.md): approved and unresolved visitor-facing capabilities.
 - [Personal portfolio migration](personal-portfolio-migration.md): what remains, moves, changes, or becomes secondary.
-- [Project evidence inventory](project-evidence.md): evidence taxonomy, disclosure controls, provisional project records, and proof gaps.
+- [Project evidence inventory](project-evidence.md): approved evidence taxonomy and disclosure controls, item-level project audit, homepage eligibility decision, and proof gaps.
 
 ## Page specifications
 
