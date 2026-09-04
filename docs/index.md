@@ -38,4 +38,4 @@ Front matter records the overall governance status of a document. In mixed-statu
 
 ## Current documentation stage
 
-Stage A preserves product and design knowledge, and Stage B adds the lightweight engineering harness. Stage C has accepted the homepage-foundation localized-routing architecture in [`ADR-STATIC-LOCALIZED-ROUTING`](decisions/static-localized-routing.md) and tracks its delivery in [`PLAN-HOMEPAGE-FOUNDATION`](plans/active/homepage-foundation.md). The application remains on the documented legacy implementation until that active plan is executed.
+Stage A preserves product and design knowledge, and Stage B adds the lightweight engineering harness. Stage C accepted the homepage-foundation localized-routing architecture in [`ADR-STATIC-LOCALIZED-ROUTING`](decisions/static-localized-routing.md); [`PLAN-HOMEPAGE-FOUNDATION`](plans/completed/homepage-foundation.md) records its completed four-PR delivery. Deferred product, release, and full-site concerns remain OPEN in their owning records.

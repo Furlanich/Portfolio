@@ -2,7 +2,7 @@
 id: PLAN-HOMEPAGE-FOUNDATION
 type: execution-plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 related:
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
   - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
@@ -352,41 +352,41 @@ Preparatory PRs may add tested contracts and content without changing public rou
 - Route entry points call `getFoundationNavigationPaths`; `SiteHeader`, `SiteFooter`, and `LanguageSwitch` receive localized labels and resolved paths and never parse `window.location`.
 - Each page route supplies its own semantic route ID and one locale's content to shared components.
 
-- [ ] **Step 1: Extend tests for component and artifact contracts**
+- [x] **Step 1: Extend tests for component and artifact contracts**
 
   Add source-level assertions that each of the eight route entry files supplies the correct semantic route ID and imports only its own locale content. Create `scripts/verify-static-export.mjs` to fail unless the eight expected `out/**/index.html` files exist and contain the correct `<html lang>`. When `NEXT_PUBLIC_BASE_PATH` is set, also fail on duplicated base-path prefixes in internal asset/link output.
 
-- [ ] **Step 2: Run focused checks and observe RED**
+- [x] **Step 2: Run focused checks and observe RED**
 
   Run the route/content tests and `node scripts/verify-static-export.mjs`.
 
   Expected: route-entry and artifact checks fail because the localized routes have not been created.
 
-- [ ] **Step 3: Build shared semantic components**
+- [x] **Step 3: Build shared semantic components**
 
   Implement semantic landmarks and links using typed props. The header exposes only working foundation navigation plus the exact `FURLANICH` wordmark and language switch. The minimal footer provides the approved Founder and contact/professional reachability without claiming to finalize future footer grouping. Use `next/link` for internal links and `withBasePath` only for the raw CV/favicon assets.
 
   `HomeHero` renders one H1, approved eyebrow/description/trust/availability copy, and Contact then Services actions in source order. `MinimumDestination` renders useful Services/Contact content rather than placeholders. `FounderProfile` renders every item in the minimum preservation gate and keeps detailed technology secondary.
 
-- [ ] **Step 4: Create both locale layouts and all eight route entries**
+- [x] **Step 4: Create both locale layouts and all eight route entries**
 
   Move the shared Inter/global-style setup into both root layouts, with `lang="es-AR"` and `lang="en"` respectively. Use only approved-safe metadata such as the FURLANICH brand name; remove legacy personal-portfolio metadata and defer unapproved absolute metadata.
 
   Add every route in one commit-ready diff. Do not expose only one locale, a biography-only Founder page, or a Contact/Services placeholder.
 
-- [ ] **Step 5: Apply the approved visual and responsive baseline**
+- [x] **Step 5: Apply the approved visual and responsive baseline**
 
   Replace legacy token use on foundation components with the exact Canvas, Surface, Ink, Muted ink, Action blue, Action blue strong, Action tint, and Border values from `DESIGN-VISUAL`. Implement the approved container, gutters, hero measures/padding, CTA sizing/order, focus ring, compact/medium/wide typography, `480px` CTA stacking rule, and `320px` no-overflow requirement.
 
   Add no entrance reveal, parallax, hidden initial content, or control translation/scale. Restrict optional color/background/border transitions to `160ms ease-out` and remove nonessential transitions under reduced motion.
 
-- [ ] **Step 6: Remove the legacy route behavior atomically**
+- [x] **Step 6: Remove the legacy route behavior atomically**
 
   Delete the top-level legacy `app/layout.tsx` and `app/page.tsx` only after both locale trees compile. Confirm no active route imports both message bundles, holds locale in React state, mutates `document.documentElement.lang`, or wraps the page in the legacy provider.
 
   Keep legacy data/assets needed for later project-history work. Do not delete unclassified project records as part of the foundation cutover.
 
-- [ ] **Step 7: Verify both static-export modes**
+- [x] **Step 7: Verify both static-export modes**
 
   Run:
 
@@ -401,17 +401,17 @@ Preparatory PRs may add tested contracts and content without changing public rou
 
   Expected: all deterministic checks pass; all eight artifacts exist in both builds; each document language is correct; internal links/assets have zero missing or double base-path prefixes.
 
-- [ ] **Step 8: Perform visual and interaction QA**
+- [x] **Step 8: Perform visual and interaction QA**
 
   Use the repository `visual-qa` Skill. Inspect `/`, `/en/`, both Services, both Contact, and both Founder routes at `320×800`, `375×812`, `768×1024`, `1024×768`, and `1440×900` where relevant.
 
   Verify hierarchy, wrapping, overflow, CTA order, target sizes, visible focus, keyboard traversal, language switching on all four semantic route pairs, CV and professional/contact actions, JavaScript-disabled hero completeness, reduced-motion behavior, and browser-console errors. Repeat the matrix under the served `/Portfolio` base path. Capture evidence supported by the tool and record any unavailable checks honestly.
 
-- [ ] **Step 9: Confirm migration and rollback gates**
+- [x] **Step 9: Confirm migration and rollback gates**
 
   Compare every minimum Founder item with `PAGE-FOUNDER` and `PORTFOLIO-MIGRATION`. Confirm current CV and professional links still work, legacy source material remains in Git, both CTA destinations are useful, and reverting this single PR returns the prior personal homepage.
 
-- [ ] **Step 10: Synchronize current-system records and commit**
+- [x] **Step 10: Synchronize current-system records and commit**
 
   Update current architecture facts only after the rendered cutover exists. Record exact validation and visual evidence in this plan. Commit the coherent integration with `feat: launch localized homepage foundation`.
 
@@ -444,23 +444,23 @@ Preparatory PRs may add tested contracts and content without changing public rou
 - Consumes: the deployed source state from PR 3.
 - Produces: no intended UI behavior change; removes only dead locale/runtime paths and records completed execution history.
 
-- [ ] **Step 1: Prove each cleanup target is unused**
+- [x] **Step 1: Prove each cleanup target is unused**
 
   Run `rg -n "next-intl|NextIntlClientProvider|useTranslations|onLocaleChange|document\.documentElement\.lang|messagesByLocale|getLocalizedString" app components lib locales` and trace every result. Delete a file or dependency only when no active route or retained component needs it.
 
-- [ ] **Step 2: Remove obsolete runtime localization**
+- [x] **Step 2: Remove obsolete runtime localization**
 
   Remove the old stateful language switch, combined message catalogs, and `next-intl` dependency only when the search proves the last consumer is gone. Preserve legacy content JSON, project assets, and any component still required for later founder/project migration.
 
-- [ ] **Step 3: Rerun the complete deterministic and visual regression gates**
+- [x] **Step 3: Rerun the complete deterministic and visual regression gates**
 
   Run normal and `/Portfolio` builds, the static-export verifier, route/content tests, full `npm run validate`, and a focused browser regression of every language pair, CTA, Founder link, CV, keyboard path, and `320px` layout.
 
-- [ ] **Step 4: Perform final plan self-review**
+- [x] **Step 4: Perform final plan self-review**
 
   Map each authority in the requirements table to implemented files and evidence. Search for placeholders, stale legacy localization, broken internal links, accidental canonicals, deleted founder/project material, unnecessary dependencies, and OPEN decisions treated as resolved.
 
-- [ ] **Step 5: Complete the plan and commit**
+- [x] **Step 5: Complete the plan and commit**
 
   Record PR numbers, exact validation results, warnings, visual evidence, deviations, and residual release blockers. Set `plan_status: COMPLETED`, move the file to `completed/`, update the plan index, and commit with `docs: complete homepage foundation plan`.
 
@@ -538,6 +538,8 @@ This task has complete authority from `IA-SITE` and `ADR-STATIC-LOCALIZED-ROUTIN
 - 2026-09-04: Project owner supplied the verifiable LinkedIn destination https://www.linkedin.com/in/samuel-furlanich/; both Task 2 Founder modules, the retained legacy about record, and the content contract were synchronized. The desktop browser helper remains unavailable, so interactive browser verification is still unverified pending environment recovery.
 
 - 2026-09-04: Task 3 / PR 3 cutover implemented on codex/homepage-foundation-cutover; normal and /Portfolio static builds and artifact verification passed, the eight-route five-viewport matrix passed with no horizontal overflow, language switching and keyboard focus passed, JavaScript-disabled and reduced-motion checks passed, and axe-core reported zero violations on all eight routes. The supplied LinkedIn URL reached LinkedIn authwall in agent-browser for anonymous sessions; the owner-provided verifiable destination is preserved unchanged. Commit b858d25 is pushed and PR #10 is open against main for human review.
+
+- 2026-09-04: Task 4 / PR 4 cleanup implemented on codex/homepage-foundation-cleanup; the dead-code search proved the final next-intl consumers were unreachable, 12 legacy localization files and the dependency were removed, the cleanup contract passed 2/2, full validation passed 23/23 with zero lint warnings, both static artifact modes passed, and the full eight-route five-viewport browser regression plus focused accessibility/link/no-JS/reduced-motion checks passed. PR #11 is open against main for human review. Remaining product, release, and full-site concerns stay OPEN.
 
 ## Important implementation decisions
 

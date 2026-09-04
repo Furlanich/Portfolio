@@ -20,9 +20,8 @@ This record includes the retained pre-cutover personal-portfolio implementation 
 - React and React DOM `18.2.0`.
 - TypeScript `5.5.4` with strict checking and no emit.
 - Tailwind CSS `3.4.7`.
-- `next-intl` for messages, currently provided entirely on the client.
-- Framer Motion for reveal and hover animation.
-- React Hook Form for the contact form.
+- Framer Motion for retained legacy reveal and hover primitives.
+- React Hook Form remains in the dependency baseline for deferred form work; the approved foundation does not expose a form.
 - Lucide React plus repository SVG assets for icons.
 
 The dependency baseline was patched in commit `f68a022` before Stage A.
@@ -62,7 +61,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 ## Content
 
 - Personal data, skills, education, experience, and projects are JSON files under `data/`.
-- Interface messages are stored under `locales/en/` and `locales/es/`.
+- Foundation content is route-private and typed under the Spanish and English App Router trees; the former legacy message catalogs were retired in Task 4.
 - Data types are defined in `lib/types.ts` and JSON is cast to those types in `lib/data.ts`.
 - Project records currently contain localized title/description, technology tags, preview image, and optional external links.
 - Records do not contain maturity, disclosure permission, evidence source, business problem, result, or publication state.
@@ -110,10 +109,10 @@ Content is oriented toward personal credentials and recruiters rather than the a
 
 - Eight static foundation routes are rendered by locale-specific Server Component trees: Spanish at the root routes with document language es-AR, and English below /en/ with document language en.
 - Shared foundation components provide the semantic header, footer, language switch, typography-led hero, useful Services and Contact destinations, and the minimum Founder profile.
-- The public foundation does not use the retained next-intl client provider, locale React state, window.location parsing, or document-language mutation.
+- The public foundation has no `next-intl` dependency, legacy client provider, locale React state, `window.location` parsing, or document-language mutation.
 - Foundation styling uses the approved light Canvas, Surface, Ink, Muted ink, Action blue, Action blue strong, Action tint, and Border values, with responsive CTA stacking below 480px and no horizontal overflow at 320px.
-- The retained legacy form, JSON, message catalogs, project assets, and personal-portfolio components remain in Git and are outside this cutover.
-- Both normal and /Portfolio static-export modes are verified by the repository artifact checker. Task 3 browser QA covered all eight routes at 320x800, 375x812, 768x1024, 1024x768, and 1440x900; language switching, keyboard focus, JavaScript-disabled rendering, reduced motion, contact links, Founder links, and CV routing were checked.
+- Retained personal data JSON, project assets, and core primitives remain in Git and are outside this cleanup; the obsolete localization shell, sections, helper, and message catalogs are retired.
+- Both normal and /Portfolio static-export modes are verified by the repository artifact checker. Task 4 browser QA repeated all eight routes at 320x800, 375x812, 768x1024, 1024x768, and 1440x900; language switching, keyboard focus, JavaScript-disabled rendering, reduced motion, contact links, Founder links, and CV routing were checked.
 
 ## Environment
 

@@ -47,7 +47,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - The brand links home; navigation does not need a separate Home item.
 - Language switching preserves page context and does not use query-string or client-only locale state.
 - Automatic locale redirection is not used for the static site.
-- Explicit Spanish-root and English-`/en/` static route trees with locale-specific root layouts are approved in [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](../rfcs/homepage-foundation-static-localized-routing.md) and recorded by [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). Delivery is tracked by [`PLAN-HOMEPAGE-FOUNDATION`](../plans/active/homepage-foundation.md).
+- Explicit Spanish-root and English-`/en/` static route trees with locale-specific root layouts are approved in [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](../rfcs/homepage-foundation-static-localized-routing.md) and recorded by [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). Delivery is tracked by [`PLAN-HOMEPAGE-FOUNDATION`](../plans/completed/homepage-foundation.md).
 
 ### Homepage and process
 
