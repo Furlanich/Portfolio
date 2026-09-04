@@ -1,7 +1,7 @@
 ---
 id: RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
 type: request-for-comments
-status: PROPOSED
+status: APPROVED
 related:
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
   - IA-SITE
@@ -12,6 +12,8 @@ related:
   - PAGE-CONTACT
   - PAGE-FOUNDER
   - ARCHITECTURE-MAP
+  - ADR-STATIC-LOCALIZED-ROUTING
+  - PLAN-HOMEPAGE-FOUNDATION
 last_verified: 2026-09-04
 ---
 
@@ -143,7 +145,7 @@ Continue serving one `/` document and switch messages after hydration. This mini
 
 This Governance PR changes documentation only.
 
-If approved, create an ADR recording the explicit dual static route-tree decision and a versioned execution plan. The plan should sequence:
+Approval requires an ADR recording the explicit dual static route-tree decision and a versioned execution plan. The approved plan sequences:
 
 1. typed route equivalence, localized content contracts, and locale-specific root layouts;
 2. minimum Spanish and English Services, Contact, and Founder destinations;
@@ -162,12 +164,11 @@ The implementation plan may divide preparatory shared modules into earlier Imple
 - Coexistence with legacy `next-intl` consumers can become permanent unless the execution plan tracks their retirement.
 - Adding canonical metadata before the production origin is approved can publish incorrect absolute URLs.
 
-## Unresolved questions
+## Approval resolution
 
-- Does human review approve explicit locale route trees and the full-document language switch as the foundation architecture?
-- After approval, which ADR number records the decision and which execution plan owns delivery? These are record identifiers, not additional product or architecture choices.
+Human review approved the explicit locale route trees and full-document language switch when [Governance PR #6](https://github.com/Furlanich/Portfolio/pull/6) was merged by the repository owner on 2026-09-04. [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md) records the accepted architecture, and [`PLAN-HOMEPAGE-FOUNDATION`](../plans/active/homepage-foundation.md) owns delivery.
 
-Localized 404 behavior, project-detail routing, service fragments, runtime locale growth, a hosting migration, and whole-site metadata generation are outside this RFC unless they become necessary to deliver the approved foundation routes.
+Localized 404 behavior, project-detail routing, service fragments, runtime locale growth, a hosting migration, and whole-site metadata generation remain outside this RFC.
 
 ## Recommendation
 
@@ -175,4 +176,4 @@ Approve the explicit dual static route-tree architecture. It satisfies the appro
 
 ## Status
 
-**PROPOSED.** This RFC requests human approval for the homepage-foundation routing/localization architecture. It does not authorize application changes, create an ADR, or resolve the deferred release and future-site questions.
+**APPROVED.** The repository owner approved this architecture by merging [Governance PR #6](https://github.com/Furlanich/Portfolio/pull/6) on 2026-09-04. The original proposal, alternatives, and trade-offs remain above as decision history. Application delivery is governed by `ADR-STATIC-LOCALIZED-ROUTING` and `PLAN-HOMEPAGE-FOUNDATION`; deferred release and future-site questions remain unresolved.

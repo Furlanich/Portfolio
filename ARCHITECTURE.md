@@ -8,6 +8,8 @@ related:
   - ARCH-STAGE-B-HARNESS-DESIGN
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
   - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
+  - ADR-STATIC-LOCALIZED-ROUTING
+  - PLAN-HOMEPAGE-FOUNDATION
 last_verified: 2026-09-04
 ---
 
@@ -27,17 +29,25 @@ The intended product is a bilingual, commercial-first FURLANICH site with Spanis
 
 The approved [homepage hero implementation boundary](docs/rfcs/homepage-hero-implementation-boundary.md) governs the first business-homepage slice. Its English copy, minimum visual direction, responsive/motion behavior, CTA destinations, and founder-content preservation scope are now approved in their owning product/design records.
 
-Application implementation remains blocked by one consequential architecture decision: the static-compatible App Router and localization structure for Spanish root routes and English `/en/` routes. Architecture governance must accept that decision, record it in an ADR, and create the required versioned execution plan. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
+The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/active/homepage-foundation.md) governs implementation sequencing. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
+
+## ACCEPTED target architecture
+
+The homepage foundation uses explicit Spanish root routes and English `/en/` routes under locale-specific root layouts. Localized routes own their content and supply typed view models and resolved links to shared locale-agnostic components. A semantic route-equivalence map owns language-switch destinations. The target has no runtime locale negotiation or client-only locale state and preserves static export, trailing slashes, GitHub Pages, and the build-time base path for this migration.
+
+The accepted route tree, component boundaries, migration rules, trade-offs, and approval provenance are owned by `ADR-STATIC-LOCALIZED-ROUTING`; this map does not duplicate them.
+
+## TEMPORARY migration state
+
+Until the atomic locale-root cutover, the current personal homepage and client-only localization remain the public implementation. Behavior-neutral route contracts and route-private localized content may coexist during preparatory PRs, but incomplete public locale trees must not be exposed. `next-intl` may remain temporarily for legacy consumers and is removed only after repository search proves its final consumer is gone. The active execution plan owns this transition and its rollback gates.
 
 ## PROPOSED architecture
 
 The preserved recommendation is incremental, static-first modernization: reduce unnecessary client boundaries and evolve the existing repository rather than perform a greenfield rebuild. It is a recommendation, not implementation authority. See the [architecture index](docs/architecture/index.md).
 
-The proposed [homepage-foundation static localized routing](docs/rfcs/homepage-foundation-static-localized-routing.md) uses explicit Spanish and English route trees with locale-specific root layouts, route-owned content, shared semantic components, and a typed page-equivalence map. It preserves the current static export, GitHub Pages deployment, and build-time base path without Proxy, rewrites, redirects, or client-only locale state. It is a proposal, not implementation authority.
-
 ## OPEN questions
 
-Approval or rejection of the proposed localized routing architecture remains OPEN and blocks homepage-foundation implementation. Long-term hosting, final form/provider integration, the extended design system, whole-site accessibility claims, performance budgets, canonical domain, and imagery outside the typography-led hero remain OPEN with the blocker levels recorded in the RFC decision closure map and their owning documents.
+Long-term hosting, final form/provider integration, the extended design system, whole-site accessibility claims, performance budgets, canonical domain, and imagery outside the typography-led hero remain OPEN with the blocker levels recorded in the RFC decision closure map and their owning documents. They do not reopen the accepted homepage-foundation routing architecture.
 
 ## Engineering records
 

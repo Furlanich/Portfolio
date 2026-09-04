@@ -11,6 +11,8 @@ related:
   - PORTFOLIO-MIGRATION
   - ARCHITECTURE-MAP
   - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
+  - ADR-STATIC-LOCALIZED-ROUTING
+  - PLAN-HOMEPAGE-FOUNDATION
 last_verified: 2026-09-04
 ---
 
@@ -31,7 +33,7 @@ At the first Stage C pilot, implementing the approved Spanish hero immediately w
 - the logo/wordmark and minimum visual direction were **OPEN**, while the existing portfolio styling was explicitly current evidence rather than target approval;
 - replacing the personal hero without a founder-profile destination would have removed or stranded content contrary to the approved migration sequence.
 
-The decision closure below resolves the product, content, visual, destination, and migration prerequisites in their owning documents. Static-compatible localized routing remains the current implementation blocker.
+The decision closure below resolved the product, content, visual, destination, and migration prerequisites in their owning documents. Static-compatible localized routing remained the implementation blocker until Governance PR #6 approved it.
 
 ## Requirements
 
@@ -90,7 +92,7 @@ Add localized routing, Services, Contact, Founder, navigation, design-system cha
 
 No application, dependency, deployment, or runtime behavior changes in this Governance PR.
 
-Follow-up work still needs a routing/localization architecture decision, an ADR for the accepted consequential architecture, and a versioned execution plan. The plan should define ordering, rollback, redirect/link behavior, static-export validation, and the release point at which the business homepage becomes primary.
+The routing/localization decision is now approved and recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](../plans/active/homepage-foundation.md) defines ordering, rollback, link behavior, static-export validation, and the release point at which the business homepage becomes primary.
 
 ## Risks
 
@@ -118,29 +120,24 @@ This table classifies the RFC prerequisites and links to their authoritative own
 | Minimum Services destination | PRODUCT and CONTENT DECISION | INTEGRATION BLOCKER — resolved | [`PAGE-SERVICES`](../product/pages/services.md#homepage-foundation-minimum-destination-approved), **APPROVED** |
 | Minimum Contact destination | PRODUCT and CONTENT DECISION | INTEGRATION BLOCKER — resolved | [`PAGE-CONTACT`](../product/pages/contact-and-privacy.md#homepage-foundation-minimum-destination-approved), **APPROVED**; final form/privacy remain release blockers |
 | Minimum Founder destination and preservation scope | PRODUCT and CONTENT DECISION | INTEGRATION BLOCKER — resolved; CV/link verification remains an integration check | [`PAGE-FOUNDER`](../product/pages/studio-and-founder.md#homepage-foundation-minimum-founder-destination-approved) and [`PORTFOLIO-MIGRATION`](../product/personal-portfolio-migration.md#homepage-foundation-migration-gate-approved), **APPROVED** |
-| Static-compatible localized App Router structure | TECHNICAL ARCHITECTURE DECISION | IMPLEMENTATION BLOCKER | `ARCHITECTURE-MAP`, **OPEN** for architecture governance and an accepted ADR |
+| Static-compatible localized App Router structure | TECHNICAL ARCHITECTURE DECISION | IMPLEMENTATION BLOCKER — resolved | [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](homepage-foundation-static-localized-routing.md), **APPROVED** in PR #6 and recorded by `ADR-STATIC-LOCALIZED-ROUTING` |
 | Canonical production domain | RELEASE/DEPLOYMENT DECISION | RELEASE BLOCKER only | [`CONTENT-LOCALIZATION`](../product/content-and-localization.md#canonical-domain-open-release-blocker), **OPEN** |
 | Long-term hosting choice | TECHNICAL ARCHITECTURE and RELEASE/DEPLOYMENT DECISION | NON-BLOCKING / MAY BE DEFERRED while current static-export compatibility is preserved | `ARCHITECTURE-MAP`, **OPEN** |
 | English content outside the approved minimum routes | CONTENT DECISION | NON-BLOCKING / MAY BE DEFERRED | `CONTENT-LOCALIZATION`, **OPEN** |
 | Custom logo symbol, founder photograph, service fragments, and complete design system | VISUAL/DESIGN or CONTENT DECISION | NON-BLOCKING / MAY BE DEFERRED | Owning product/design records, **OPEN** |
 
-## Remaining unresolved questions
+## Remaining unresolved question
 
-- Which static-compatible App Router and localization structure owns Spanish root routes and English `/en/` routes?
-- What accepted ADR records that architecture before implementation?
-- What versioned execution plan sequences the localized routes, real destinations, Founder migration, integration checks, and rollback?
 - Which canonical production origin is approved before final release metadata is emitted?
 
 Long-term hosting may be reconsidered separately. No hosting migration is required to begin the homepage-foundation implementation while the current static-export constraint is preserved.
 
-The first question is now evaluated by [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](homepage-foundation-static-localized-routing.md) and remains **OPEN** until that Governance RFC is approved or rejected.
-
 ## Recommendation
 
-Keep the approved governance-first homepage-foundation boundary and do not implement the hero as an isolated change. Route the remaining static-compatible localization structure through architecture governance, record the accepted architecture, and execute a versioned, multi-route plan with the hero as a bounded phase.
+Keep the approved governance-first homepage-foundation boundary and do not implement the hero as an isolated change. Execute the accepted static-compatible localization architecture through its versioned, multi-route plan with the hero as a bounded phase.
 
 ## Status
 
 **APPROVED.** The homepage-foundation delivery boundary was approved for final merge in [PR #4](https://github.com/Furlanich/Portfolio/pull/4) on 2026-09-03.
 
-The product, content, minimum visual, responsive, motion, and destination-page questions are now resolved through the owning records linked in the decision closure map. Static-compatible localized routing remains **OPEN** and blocks implementation until architecture governance accepts it and records the decision in an ADR. Canonical-domain selection remains a release blocker; long-term hosting and the broader design system are explicitly deferred.
+The product, content, minimum visual, responsive, motion, and destination-page questions are resolved through the owning records linked in the decision closure map. Static-compatible localized routing was approved through [PR #6](https://github.com/Furlanich/Portfolio/pull/6) on 2026-09-04 and is recorded in `ADR-STATIC-LOCALIZED-ROUTING`. Canonical-domain selection remains a release blocker; long-term hosting and the broader design system are explicitly deferred.

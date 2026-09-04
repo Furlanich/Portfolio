@@ -2,7 +2,10 @@
 id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
-last_verified: 2026-09-03
+related:
+  - ADR-STATIC-LOCALIZED-ROUTING
+  - PLAN-HOMEPAGE-FOUNDATION
+last_verified: 2026-09-04
 ---
 
 # FURLANICH project knowledge
@@ -35,4 +38,4 @@ Front matter records the overall governance status of a document. In mixed-statu
 
 ## Current documentation stage
 
-Stage A preserves product and design knowledge. Stage B adds a lightweight engineering harness around that knowledge; it does not approve a target architecture or redesign the application.
+Stage A preserves product and design knowledge, and Stage B adds the lightweight engineering harness. Stage C has accepted the homepage-foundation localized-routing architecture in [`ADR-STATIC-LOCALIZED-ROUTING`](decisions/static-localized-routing.md) and tracks its delivery in [`PLAN-HOMEPAGE-FOUNDATION`](plans/active/homepage-foundation.md). The application remains on the documented legacy implementation until that active plan is executed.

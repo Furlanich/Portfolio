@@ -5,7 +5,8 @@ status: APPROVED
 related:
   - GOV-STATUS
   - ARCHITECTURE-MAP
-last_verified: 2026-09-02
+  - ADR-STATIC-LOCALIZED-ROUTING
+last_verified: 2026-09-04
 ---
 
 # Existing-system documentation
@@ -17,7 +18,7 @@ These documents describe the repository as it exists during Stage A. They are ev
 - [Architecture map](../../ARCHITECTURE.md): concise current architecture, approved product constraints, and proposed/open architecture context.
 - [Stage B harness design](stage-b-agent-engineering-harness-design.md): approved scope for repository governance and deterministic validation.
 
-Target architecture remains unapproved. The [engineering lifecycle](../governance/engineering-lifecycle.md) governs consequential architecture decisions.
+The homepage-foundation localized-routing target is approved in [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). The current-system records remain legacy implementation evidence until that architecture is delivered. Broader target architecture remains subject to the [engineering lifecycle](../governance/engineering-lifecycle.md).
 
 ## Preserved discovery recommendation — PROPOSED
 
