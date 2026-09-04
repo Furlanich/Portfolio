@@ -264,31 +264,31 @@ Preparatory PRs may add tested contracts and content without changing public rou
 - Produces: `HomeHeroContent`, `ServicesContent`, `ContactContent`, `FounderContent`, and shared `ActionLink` view-model types.
 - Produces one typed content export per route and locale; PR 3 route entry points import exactly one matching export.
 
-- [ ] **Step 1: Write failing content-contract tests**
+- [x] **Step 1: Write failing content-contract tests**
 
   Assert that every locale module exports the required view-model shape, every internal action references a semantic foundation route ID, Contact modules expose only the approved working WhatsApp/email/phone actions, and Founder modules include biography, concise experience, education, capabilities, CV path, LinkedIn, GitHub, and Contact route ID. Assert that no string contains `coming soon` or an absolute canonical URL.
 
-- [ ] **Step 2: Run the focused content test and observe RED**
+- [x] **Step 2: Run the focused content test and observe RED**
 
   Run `node --test scripts/foundation-content.test.mjs`.
 
   Expected: failure because the typed content modules do not exist.
 
-- [ ] **Step 3: Define narrow view-model contracts**
+- [x] **Step 3: Define narrow view-model contracts**
 
   Define only fields consumed by the approved foundation components. Keep external URLs and the raw CV path distinct from internal semantic route IDs. Do not add project-card, form, image, CMS, or full-site navigation models.
 
-- [ ] **Step 4: Add route-owned Spanish and English modules**
+- [x] **Step 4: Add route-owned Spanish and English modules**
 
   Copy exact public copy from the owning page-spec sections linked in this plan; do not restate or reinterpret it in the plan. Keep Clever Soft SA inside the approved biographies only. Correct the current portfolio's freelance/education facts in the new Founder modules without modifying legacy JSON yet.
 
-- [ ] **Step 5: Verify migration-critical assets and destinations**
+- [x] **Step 5: Verify migration-critical assets and destinations**
 
   Confirm `public/Samuel-Furlanich-CV.pdf` exists and opens as a PDF. Exercise the configured LinkedIn and GitHub URLs in a browser and record whether each resolves to the intended public profile. Verify the approved `mailto:`, `tel:+5491150117565`, and `https://wa.me/5491150117565` values exactly against `PAGE-CONTACT`.
 
   A missing CV or professional profile is an integration blocker for PR 3. Record the failure; do not replace or invent a URL.
 
-- [ ] **Step 6: Verify content and commit**
+- [x] **Step 6: Verify content and commit**
 
   Run:
 
@@ -534,6 +534,7 @@ This task has complete authority from `IA-SITE` and `ADR-STATIC-LOCALIZED-ROUTIN
 - 2026-09-04: Governance PR #6 merged; static localized routing received human approval.
 - 2026-09-04: `ADR-STATIC-LOCALIZED-ROUTING` and this execution plan created on `codex/homepage-foundation-execution-plan`.
 - 2026-09-04: Task 1 / PR 1 implemented on `codex/homepage-foundation-execution-plan`; `node --test scripts/site-routes.test.mjs` passed (3/3), `npm test` passed (14/14), `npm run typecheck` passed, `npm run docs:check` passed, and `git diff --check` passed. Node emitted the allowed `MODULE_TYPELESS_PACKAGE_JSON` notice; no module-type change was made. PR #8 is open against `main` and remains pending human review; merge authority is intentionally retained by the project owner.
+- 2026-09-04: Task 2 / PR 2 content modules and contracts implemented on `codex/homepage-foundation-content`; focused content tests passed (5/5), CV verification passed via PDF signature and `pdfinfo`, GitHub returned HTTP 200, and LinkedIn verification was blocked by HTTP 403/999 plus browser cache misses. LinkedIn remains an integration blocker for PR 3; the configured URL was not changed or replaced.
 
 ## Important implementation decisions
 
