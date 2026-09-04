@@ -156,7 +156,7 @@ Preparatory PRs may add tested contracts and content without changing public rou
 - Produces: `FoundationNavigationPaths` and `getFoundationNavigationPaths(locale, currentRouteId)`, which consume the route map and return resolved Home, Services, Contact, Founder, and equivalent-language hrefs.
 - Produces exact pairs for `home`, `services`, `contact`, and `founder`; later route boundaries consume the adapter and pass its resolved hrefs to shared navigation components.
 
-- [ ] **Step 1: Write the failing route-contract test**
+- [x] **Step 1: Write the failing route-contract test**
 
   Add `scripts/site-routes.test.mjs` using `node:test` and `node:assert/strict`. Dynamically import `../lib/site-routes.ts` for the route contract and `../lib/foundation-navigation.ts` for the adapter, then assert:
 
@@ -168,13 +168,13 @@ Preparatory PRs may add tested contracts and content without changing public rou
   - `getFoundationPath` returns the paired destination for both locales;
   - `getFoundationNavigationPaths` returns the active locale's four working hrefs and the opposite locale's equivalent href for every current route ID.
 
-- [ ] **Step 2: Run the focused test and observe RED**
+- [x] **Step 2: Run the focused test and observe RED**
 
   Run `node --test scripts/site-routes.test.mjs`.
 
   Expected: failure because `lib/site-routes.ts` does not exist.
 
-- [ ] **Step 3: Implement the minimal typed route map**
+- [x] **Step 3: Implement the minimal typed route map**
 
   Create `lib/site-routes.ts` with this public shape:
 
@@ -208,13 +208,13 @@ Preparatory PRs may add tested contracts and content without changing public rou
   }
   ```
 
-- [ ] **Step 4: Add and exercise the route-boundary consumer**
+- [x] **Step 4: Add and exercise the route-boundary consumer**
 
   Create `lib/foundation-navigation.ts`. Its `FoundationNavigationPaths` type contains `home`, `services`, `contact`, `founder`, `alternateLocale`, and `alternateHref`. Implement `getFoundationNavigationPaths(locale, currentRouteId)` exclusively through `getFoundationPath`; it must not parse pathnames or duplicate public route strings.
 
   Extend the focused test across both locales and all four current route IDs. This adapter is the immediate non-public application consumer of the route map and the exact seam that PR 3 route entry points will use. Do not add a generic route builder, arbitrary locale registry, or future-page support.
 
-- [ ] **Step 5: Verify the contract**
+- [x] **Step 5: Verify the contract**
 
   Run:
 
@@ -226,7 +226,7 @@ Preparatory PRs may add tested contracts and content without changing public rou
 
   Expected: the focused route test, TypeScript, and documentation checks pass. A Node module-type notice is acceptable only if it is identified as a notice rather than hidden; do not add a dependency or change the package module type solely to silence it.
 
-- [ ] **Step 6: Update plan progress and commit**
+- [x] **Step 6: Update plan progress and commit**
 
   Record the PR number, validation evidence, and any deviation in this plan, then commit only the four scoped files with `feat: add localized route contract`.
 
@@ -533,6 +533,7 @@ This task has complete authority from `IA-SITE` and `ADR-STATIC-LOCALIZED-ROUTIN
 
 - 2026-09-04: Governance PR #6 merged; static localized routing received human approval.
 - 2026-09-04: `ADR-STATIC-LOCALIZED-ROUTING` and this execution plan created on `codex/homepage-foundation-execution-plan`.
+- 2026-09-04: Task 1 / PR 1 implemented on `codex/homepage-foundation-execution-plan`; `node --test scripts/site-routes.test.mjs` passed (3/3), `npm test` passed (14/14), `npm run typecheck` passed, `npm run docs:check` passed, and `git diff --check` passed. Node emitted the allowed `MODULE_TYPELESS_PACKAGE_JSON` notice; no module-type change was made. PR #8 is open against `main` and remains pending human review; merge authority is intentionally retained by the project owner.
 
 ## Important implementation decisions
 
@@ -544,4 +545,4 @@ This task has complete authority from `IA-SITE` and `ADR-STATIC-LOCALIZED-ROUTIN
 
 ## Deviations discovered during execution
 
-None at plan creation.
+The adapter's runtime import uses the explicit `.ts` extension so Node 24 can execute the focused TypeScript contract test; a local `@ts-expect-error` documents the bundler/typecheck incompatibility without changing compiler configuration or package metadata.
