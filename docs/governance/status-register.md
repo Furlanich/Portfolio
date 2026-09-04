@@ -6,6 +6,8 @@ related:
   - GOV-KNOWLEDGE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
   - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
+  - ADR-STATIC-LOCALIZED-ROUTING
+  - PLAN-HOMEPAGE-FOUNDATION
 last_verified: 2026-09-04
 ---
 
@@ -45,6 +47,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - The brand links home; navigation does not need a separate Home item.
 - Language switching preserves page context and does not use query-string or client-only locale state.
 - Automatic locale redirection is not used for the static site.
+- Explicit Spanish-root and English-`/en/` static route trees with locale-specific root layouts are approved in [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](../rfcs/homepage-foundation-static-localized-routing.md) and recorded by [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). Delivery is tracked by [`PLAN-HOMEPAGE-FOUNDATION`](../plans/active/homepage-foundation.md).
 
 ### Homepage and process
 
@@ -84,13 +87,11 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Exact project-by-project classifications and homepage selections in the project evidence inventory.
 - Internal commercial defaults including milestone payment percentages, a 30-day defect warranty, and detailed ownership terms; these require business/legal review.
 - Incremental/static-first architecture recommendation — **PROPOSED** preserved knowledge owned by [`ARCH-INDEX`](../architecture/index.md); it authorizes no architecture or CI change.
-- Explicit dual static route trees for the homepage foundation — **PROPOSED** in [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](../rfcs/homepage-foundation-static-localized-routing.md); it authorizes no application change before human approval.
 - Use conceptual or AI-generated imagery only when clearly identified and never as false evidence of an implemented client solution.
 - Do not invent clients, metrics, testimonials, team size, or production outcomes. This integrity rule remains **PROPOSED** because the project owner has not adopted it as an **APPROVED** policy.
 
 ## OPEN
 
-- Approval or rejection of the proposed static App Router and localization structure for Spanish root routes and English `/en/` routes. This remains a **TECHNICAL ARCHITECTURE DECISION** and **IMPLEMENTATION BLOCKER** until the Governance RFC is reviewed.
 - Extended visual identity and design-system decisions beyond the approved homepage foundation: custom mark, additional semantic colors, full component variants, broader imagery, and later-section motion.
 - Confirmed commercial domain and canonical production URL. This is a **RELEASE BLOCKER**, not an implementation or integration blocker.
 - Final form provider, privacy wording, consent treatment, data retention period, and third-party disclosures. These are **RELEASE BLOCKERS** for the completed inquiry experience, not blockers for hero implementation.
