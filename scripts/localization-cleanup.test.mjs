@@ -23,7 +23,13 @@ const retiredFiles = [
 ];
 
 async function collectFiles(directory) {
-  const entries = await readdir(directory, { withFileTypes: true });
+  let entries;
+  try {
+    entries = await readdir(directory, { withFileTypes: true });
+  } catch (error) {
+    if (error.code === 'ENOENT') return [];
+    throw error;
+  }
   const files = [];
 
   for (const entry of entries) {
