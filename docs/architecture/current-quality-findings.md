@@ -11,15 +11,15 @@ last_verified: 2026-09-04
 
 # Current quality findings
 
-The findings below are retained pre-cutover evidence. The current Task 3 foundation verification is recorded first; the historical findings remain useful for later cleanup and are not authorization for work outside the active plan.
+The findings below are retained pre-cutover evidence. The current foundation and Task 4 cleanup verification is recorded first; the historical findings remain useful for later migration and are not authorization for work outside approved plans.
 
-## Current foundation verification — 2026-09-04
+## Current foundation and cleanup verification — 2026-09-04
 
 - The eight approved static foundation routes render through locale-specific Server Component trees: Spanish at the root and English under /en/.
 - Normal and /Portfolio base-path production builds passed the static artifact verifier.
 - Agent-browser verification covered all eight routes at 320x800, 375x812, 768x1024, 1024x768, and 1440x900 with no horizontal overflow, one H1 per route, and correct document languages.
 - Language switching, keyboard focus, JavaScript-disabled rendering, reduced-motion behavior, CV routing, direct contact links, and Founder professional destinations passed. Anonymous LinkedIn navigation reached LinkedIn's auth wall; the owner-supplied destination remains unchanged.
-- axe-core reported zero violations and zero incomplete checks on all eight routes. Existing legacy lint warnings remain unchanged.
+- axe-core reported zero violations and zero incomplete checks on all eight routes. The active-source cleanup contract passed, no legacy localization references remain in `app/`, `components/`, `lib/`, or `locales/`, and lint reports zero errors and zero warnings.
 
 ## Pre-cutover findings
 

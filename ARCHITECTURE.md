@@ -17,11 +17,11 @@ last_verified: 2026-09-04
 
 ## CURRENT
 
-The current task branch is a Next.js 16 App Router site with eight static foundation routes: Spanish at the root and English under `/en/`. Locale-specific Server Component trees compose shared semantic foundation components from route-owned content. Retained legacy source remains under `data/`, `locales/`, `components/core`, `components/layout`, and `components/sections` for later migration and cleanup.
+The current application is a Next.js 16 App Router site with eight static foundation routes: Spanish at the root and English under `/en/`. Locale-specific Server Component trees compose shared semantic foundation components from route-owned content. Retained founder/project source and legacy primitives remain under `data/`, `public/`, `lib/`, and `components/core` for later migration and cleanup.
 
 Tailwind CSS provides utility styling and the small component primitives. `next/font` loads Inter; `public/` holds static images, including legacy project previews. The site is statically exported with trailing slashes, optional GitHub Pages base path/asset prefix, and unoptimized images. The deployment workflow builds `main` with Node 24 and publishes `out/` to GitHub Pages.
 
-The dependency boundary is Next.js, React, TypeScript, Tailwind, `next-intl`, Framer Motion, React Hook Form, and Lucide React. Repository checks are documentation integrity, Node-based validator tests, ESLint, TypeScript no-emit checking, and the production static build. See [current system](docs/architecture/current-system.md) and [quality findings](docs/architecture/current-quality-findings.md) for evidence and limits.
+The dependency boundary is Next.js, React, TypeScript, Tailwind, Framer Motion, React Hook Form, and Lucide React. The approved foundation has no runtime localization dependency. Repository checks are documentation integrity, Node-based validator tests, ESLint, TypeScript no-emit checking, and the production static build. See [current system](docs/architecture/current-system.md) and [quality findings](docs/architecture/current-quality-findings.md) for evidence and limits.
 
 Task 3 current state: the atomic cutover is implemented on the task branch with eight static Spanish-root and English-/en/ foundation routes, locale-root layouts, route-owned content, and shared semantic components. The branch preserves the static-export and optional GitHub Pages base-path constraints while retaining legacy source material for the later cleanup phase.
 
@@ -31,7 +31,7 @@ The intended product is a bilingual, commercial-first FURLANICH site with Spanis
 
 The approved [homepage hero implementation boundary](docs/rfcs/homepage-hero-implementation-boundary.md) governs the first business-homepage slice. Its English copy, minimum visual direction, responsive/motion behavior, CTA destinations, and founder-content preservation scope are now approved in their owning product/design records.
 
-The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/active/homepage-foundation.md) governs implementation sequencing. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
+The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) governs implementation sequencing. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
 
 ## ACCEPTED target architecture
 

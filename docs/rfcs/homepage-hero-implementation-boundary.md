@@ -92,7 +92,7 @@ Add localized routing, Services, Contact, Founder, navigation, design-system cha
 
 No application, dependency, deployment, or runtime behavior changes in this Governance PR.
 
-The routing/localization decision is now approved and recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](../plans/active/homepage-foundation.md) defines ordering, rollback, link behavior, static-export validation, and the release point at which the business homepage becomes primary.
+The routing/localization decision is now approved and recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](../plans/completed/homepage-foundation.md) defines ordering, rollback, link behavior, static-export validation, and the release point at which the business homepage becomes primary.
 
 ## Risks
 

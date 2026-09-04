@@ -17,4 +17,8 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [`PLAN-HOMEPAGE-FOUNDATION`](active/homepage-foundation.md): delivers the accepted localized route foundation, minimum destinations, Founder migration, business hero, atomic cutover, and verification in four reviewable implementation PRs.
+No active execution plans.
+
+## Completed
+
+- [`PLAN-HOMEPAGE-FOUNDATION`](completed/homepage-foundation.md): delivered the accepted localized route foundation, minimum destinations, Founder migration, business hero, atomic cutover, and evidence-driven legacy-localization cleanup in four reviewable implementation PRs.

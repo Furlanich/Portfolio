@@ -166,7 +166,7 @@ The implementation plan may divide preparatory shared modules into earlier Imple
 
 ## Approval resolution
 
-Human review approved the explicit locale route trees and full-document language switch when [Governance PR #6](https://github.com/Furlanich/Portfolio/pull/6) was merged by the repository owner on 2026-09-04. [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md) records the accepted architecture, and [`PLAN-HOMEPAGE-FOUNDATION`](../plans/active/homepage-foundation.md) owns delivery.
+Human review approved the explicit locale route trees and full-document language switch when [Governance PR #6](https://github.com/Furlanich/Portfolio/pull/6) was merged by the repository owner on 2026-09-04. [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md) records the accepted architecture, and [`PLAN-HOMEPAGE-FOUNDATION`](../plans/completed/homepage-foundation.md) owns delivery.
 
 Localized 404 behavior, project-detail routing, service fragments, runtime locale growth, a hosting migration, and whole-site metadata generation remain outside this RFC.
 
