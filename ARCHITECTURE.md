@@ -17,11 +17,13 @@ last_verified: 2026-09-04
 
 ## CURRENT
 
-The application is a Next.js 16 App Router site with one client-rendered `/` page. `app/page.tsx` composes a scrolling personal-portfolio experience from `components/core`, `components/layout`, and `components/sections`. Content is JSON under `data/`; interface messages are English and Spanish JSON under `locales/`; `lib/` supplies typed data access.
+The current task branch is a Next.js 16 App Router site with eight static foundation routes: Spanish at the root and English under `/en/`. Locale-specific Server Component trees compose shared semantic foundation components from route-owned content. Retained legacy source remains under `data/`, `locales/`, `components/core`, `components/layout`, and `components/sections` for later migration and cleanup.
 
 Tailwind CSS provides utility styling and the small component primitives. `next/font` loads Inter; `public/` holds static images, including legacy project previews. The site is statically exported with trailing slashes, optional GitHub Pages base path/asset prefix, and unoptimized images. The deployment workflow builds `main` with Node 24 and publishes `out/` to GitHub Pages.
 
 The dependency boundary is Next.js, React, TypeScript, Tailwind, `next-intl`, Framer Motion, React Hook Form, and Lucide React. Repository checks are documentation integrity, Node-based validator tests, ESLint, TypeScript no-emit checking, and the production static build. See [current system](docs/architecture/current-system.md) and [quality findings](docs/architecture/current-quality-findings.md) for evidence and limits.
+
+Task 3 current state: the atomic cutover is implemented on the task branch with eight static Spanish-root and English-/en/ foundation routes, locale-root layouts, route-owned content, and shared semantic components. The branch preserves the static-export and optional GitHub Pages base-path constraints while retaining legacy source material for the later cleanup phase.
 
 ## APPROVED product constraints
 
@@ -37,7 +39,7 @@ The homepage foundation uses explicit Spanish root routes and English `/en/` rou
 
 The accepted route tree, component boundaries, migration rules, trade-offs, and approval provenance are owned by `ADR-STATIC-LOCALIZED-ROUTING`; this map does not duplicate them.
 
-## TEMPORARY migration state
+## TEMPORARY migration state — pre-cutover record
 
 Until the atomic locale-root cutover, the current personal homepage and client-only localization remain the public implementation. Behavior-neutral route contracts and route-private localized content may coexist during preparatory PRs, but incomplete public locale trees must not be exposed. `next-intl` may remain temporarily for legacy consumers and is removed only after repository search proves its final consumer is gone. The active execution plan owns this transition and its rollback gates.
 
