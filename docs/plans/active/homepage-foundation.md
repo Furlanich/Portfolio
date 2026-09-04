@@ -533,7 +533,7 @@ This task has complete authority from `IA-SITE` and `ADR-STATIC-LOCALIZED-ROUTIN
 
 - 2026-09-04: Governance PR #6 merged; static localized routing received human approval.
 - 2026-09-04: `ADR-STATIC-LOCALIZED-ROUTING` and this execution plan created on `codex/homepage-foundation-execution-plan`.
-- 2026-09-04: Task 1 / PR 1 implemented on `codex/homepage-foundation-execution-plan`; `node --test scripts/site-routes.test.mjs` passed (3/3), `npm test` passed (14/14), `npm run typecheck` passed, `npm run docs:check` passed, and `git diff --check` passed. Node emitted the allowed `MODULE_TYPELESS_PACKAGE_JSON` notice; no module-type change was made. PR number is recorded after publication.
+- 2026-09-04: Task 1 / PR 1 implemented on `codex/homepage-foundation-execution-plan`; `node --test scripts/site-routes.test.mjs` passed (3/3), `npm test` passed (14/14), `npm run typecheck` passed, `npm run docs:check` passed, and `git diff --check` passed. Node emitted the allowed `MODULE_TYPELESS_PACKAGE_JSON` notice; no module-type change was made. PR #8 is open against `main` and remains pending human review; merge authority is intentionally retained by the project owner.
 
 ## Important implementation decisions
 
