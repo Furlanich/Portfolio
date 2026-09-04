@@ -5,6 +5,7 @@ status: APPROVED
 related:
   - GOV-ENGINEERING-LIFECYCLE
   - PLAN-HOMEPAGE-FOUNDATION
+  - PLAN-HOMEPAGE-COMPLETION
 last_verified: 2026-09-04
 ---
 
@@ -17,7 +18,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-No active execution plans.
+- [`PLAN-HOMEPAGE-COMPLETION`](active/homepage-completion.md): governs the two-PR delivery of the approved bilingual homepage sections below `HOME-HERO`, using the evidence-safe `HOME-PROOF` fallback within the accepted localized-static architecture.
 
 ## Completed
 
