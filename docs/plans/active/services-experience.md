@@ -236,7 +236,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 - Modify: `scripts/site-routes.test.mjs`
 - Modify: `docs/plans/active/services-experience.md`
 
-- [ ] **Step 1: Write failing bilingual content contracts**
+- [x] **Step 1: Write failing bilingual content contracts**
 
   Create `scripts/services-content.test.mjs` with `node:test` and `node:assert/strict`. Import both route-owned Services modules and assert these runtime invariants:
 
@@ -255,7 +255,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   Extend `scripts/site-routes.test.mjs` to require `serviceSectionIds`, `serviceSectionAnchors`, and `getServiceSectionHref`, while asserting `foundationRouteIds` remains exactly the existing four page routes.
 
-- [ ] **Step 2: Run the focused tests and observe RED**
+- [x] **Step 2: Run the focused tests and observe RED**
 
   Run:
 
@@ -265,23 +265,23 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   Expected: failures because the complete Services model/content and fragment map do not yet exist. Record the failing assertions in this plan before implementation.
 
-- [ ] **Step 3: Add the minimum typed Services model**
+- [x] **Step 3: Add the minimum typed Services model**
 
   Create `components/services/content-types.ts`. Reuse `ActionLink` and existing route semantics. Use named page/service structures that make omissions visible at the content-module boundary; avoid a generic page-builder schema, runtime validation dependency, or empty optional evidence collection.
 
   Keep the current minimal `servicesContent` export source-compatible for the still-rendered `MinimumDestination`. Add the complete model as a separate `servicesPageContent` export in this PR so behavior remains unchanged.
 
-- [ ] **Step 4: Materialize the approved Spanish content**
+- [x] **Step 4: Materialize the approved Spanish content**
 
   Populate `servicesPageContent` in `app/(es)/_content/services.ts` with the exact Spanish copy from `PAGE-SERVICES`, preserving Argentine voseo and punctuation. Represent examples as examples, not product packages. Preserve all exclusions, third-party dependencies, fit/non-fit wording, the limited Web evidence note, the two evidence-absence statements, and the visible `IA solo cuando aporta valor` note.
 
   Review every public string side by side with the owner. Do not copy the page prose into component files or create a third translation source.
 
-- [ ] **Step 5: Materialize the approved English content**
+- [x] **Step 5: Materialize the approved English content**
 
   Populate `servicesPageContent` in `app/(en)/en/_content/services.ts` from the approved English section in `PAGE-SERVICES`. Preserve product meaning rather than mirroring Spanish sentence structure. Confirm provider caveats, non-fit guidance, evidence asymmetry, and the visible `AI only where it adds value` note remain equivalent.
 
-- [ ] **Step 6: Add semantic localized service fragments**
+- [x] **Step 6: Add semantic localized service fragments**
 
   Add the exact `serviceSectionIds`, `serviceSectionAnchors`, and `getServiceSectionHref` contract defined above to `lib/site-routes.ts`. Use the existing base-path-neutral route values; the helper returns logical application hrefs and build-time base-path handling remains owned by Next.js output/link behavior.
 
@@ -290,7 +290,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
   - ES: `/servicios/#web`, `/servicios/#whatsapp`, `/servicios/#consultoria`
   - EN: `/en/services/#web`, `/en/services/#whatsapp`, `/en/services/#consulting`
 
-- [ ] **Step 7: Run focused GREEN and deterministic gates**
+- [x] **Step 7: Run focused GREEN and deterministic gates**
 
   Run:
 
@@ -304,7 +304,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   Expected: all pass. Confirm both current Services output artifacts remain the minimum destinations and no source route/component was changed.
 
-- [ ] **Step 8: Review, record, and open PR 1**
+- [x] **Step 8: Review, record, and open PR 1**
 
   Inspect the diff for exact copy ownership, accidental implementation behavior, evidence leakage, secrets, generated output, and unrelated files. Update this plan's Progress with the branch, PR, focused RED/GREEN result, and full validation result. Use the PR title `feat: add Services content and anchor contracts`. Human review and merge are required before Task 2.
 
@@ -573,6 +573,10 @@ Every PR description records:
 These decisions do not block the approved static text-led Services experience and must not be silently resolved during implementation.
 
 ## Progress
+
+- 2026-09-05: Task 1 implementation completed on codex/services-experience-plan: added the typed bilingual content contract, exact Spanish and English Services content, evidence-safe boundaries, semantic localized service fragments, and focused tests while preserving the existing rendered MinimumDestination routes.
+- 2026-09-05: Focused RED observed the four expected missing-contract failures while existing foundation route tests passed; focused GREEN passed 8/8 tests. Full validation passed: npm run docs:check, npm test (30/30), npm run lint, npm run typecheck, and npm run build. Build emitted only the existing Browserslist freshness notice; no rendered Services integration was performed in this phase.
+- 2026-09-05: Task 1 review-ready Pull Request [#17](https://github.com/Furlanich/Portfolio/pull/17) is open from codex/services-experience-plan to main. Human review and merge are required before Task 2.
 
 - 2026-09-05: Initiative 3 product/content, service, evidence, design, responsive, accessibility, anchor, CTA, and commercial-boundary decisions are approved in their authoritative owners. Web has one limited text-only evidence acknowledgement; WhatsApp and Consulting have no approved public evidence items.
 - 2026-09-05: Governance review classified implementation as a versioned plan under `ADR-STATIC-LOCALIZED-ROUTING`. No consequential unresolved product or architecture decision, RFC, ADR amendment, dependency decision, provider decision, or release-only concern blocks implementation.
