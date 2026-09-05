@@ -530,6 +530,7 @@ Acceptance criteria:
 
 - 2026-09-04: Initiative 2 product/content, evidence, design, responsive, accessibility, and narrative decisions closed in their authoritative owners. All seven later sections are ready; `HOME-PROOF` is ready only as the approved evidence-safe fallback.
 - 2026-09-04: Governance review classified implementation as a versioned plan under `ADR-STATIC-LOCALIZED-ROUTING`. No unresolved consequential architecture, RFC, ADR amendment, dependency decision, or release-only concern blocks implementation.
+- 2026-09-05: Task 1 / PR 1 is implemented on `codex/homepage-completion-content-contracts`; the complete typed bilingual content contract, localized Process anchors, focused tests, and behavior-neutral scope review are complete. Full validation passed: documentation check, 26 Node tests, lint, typecheck, and production build. The initial CI run exposed and the branch corrected one structural-equality test assertion. PR #14 is open against the decision-closure branch for human review and remains unmerged.
 
 ## Important implementation decisions
 
