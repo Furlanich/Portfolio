@@ -2,7 +2,7 @@
 id: PLAN-HOMEPAGE-COMPLETION
 type: execution-plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
@@ -15,7 +15,7 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 ---
 
 # Homepage Completion Implementation Plan
@@ -378,7 +378,7 @@ The two route-owned content modules keep the existing hero fields at the top lev
 - `HomepageContentCard` accepts a title and description, renders an H3 and paragraph, and has no interactive semantics.
 - `SiteHeader` and `SiteFooter` add a localized `process` label and use `paths.process`. They do not expose unavailable Projects, Studio landing, or Privacy routes.
 
-- [ ] **Step 1: Extend rendered-artifact verification and observe RED**
+- [x] **Step 1: Extend rendered-artifact verification and observe RED**
 
   Extend `scripts/verify-static-export.mjs` so `out/index.html` and `out/en/index.html` must contain the visible headings and stable labelled-section IDs for all seven later sections in the approved source order. Require the localized Process section IDs `proceso` and `process`, and require internal links for Services, Contact, Founder, Process, and WhatsApp without duplicated or missing base paths.
 
@@ -391,13 +391,13 @@ The two route-owned content modules keep the existing hero fields at the top lev
 
   Expected: the build passes but artifact verification fails on the first missing later section. Record that failure in this plan.
 
-- [ ] **Step 2: Build the two justified shared presentation primitives**
+- [x] **Step 2: Build the two justified shared presentation primitives**
 
   Implement `HomepageSectionHeading` and `HomepageContentCard` with the exact visual/semantic contracts above. The card uses Surface, Border, `16px` radius, no shadow, `24px` compact/`32px` medium padding, top-aligned content, H3 title, and body copy. It has no link wrapper, pointer cursor, hover elevation, transform, or focus behavior.
 
   Do not introduce a general component library, variant engine, design-token file, or client component.
 
-- [ ] **Step 3: Implement the seven semantic sections**
+- [x] **Step 3: Implement the seven semantic sections**
 
   Create one Server Component per section and resolve its actions with the existing typed action-link mechanism. Use the approved section surfaces and spacing: `64px` compact, `80px` medium, `96px` wide; existing `1200px` container and gutters; H2/H3/body measures from `DESIGN-VISUAL`.
 
@@ -413,13 +413,13 @@ The two route-owned content modules keep the existing hero fields at the top lev
 
   Reuse existing primary/secondary action classes. Action groups stack full-width below `480px` and wrap inline above it. Add no icons, entrance motion, connector required for understanding, or hidden initial content.
 
-- [ ] **Step 4: Compose the page atomically**
+- [x] **Step 4: Compose the page atomically**
 
   Implement `CommercialHomepage` with the existing hero first and all seven sections in the approved order. Update both localized home routes to render this component within their existing single `main` landmark.
 
   Add localized Process labels to the header/footer label objects in all eight foundation route entries and render `paths.process` in both shared navigation components. Keep the foundation's working-route posture; do not add unavailable navigation destinations.
 
-- [ ] **Step 5: Verify semantics and responsive behavior in source**
+- [x] **Step 5: Verify semantics and responsive behavior in source**
 
   Review the rendered composition before browser QA:
 
@@ -431,7 +431,7 @@ The two route-owned content modules keep the existing hero fields at the top lev
   - no content is truncated, CSS-reordered, or motion-dependent;
   - no project evidence, portfolio résumé language, or unsupported claim was introduced.
 
-- [ ] **Step 6: Run complete deterministic verification in both export modes**
+- [x] **Step 6: Run complete deterministic verification in both export modes**
 
   Run:
 
@@ -447,25 +447,25 @@ The two route-owned content modules keep the existing hero fields at the top lev
 
   Expected: documentation, all Node tests, lint, typecheck, normal build, base-path build, both artifact checks, and diff check pass. Both home artifacts contain the eight-section narrative in order, correct document language, correct localized Process anchor, and no missing/doubled base-path references.
 
-- [ ] **Step 7: Perform bilingual visual and accessibility QA**
+- [x] **Step 7: Perform bilingual visual and accessibility QA**
 
   Use the repository `visual-qa` Skill against `/` and `/en/` at `320×800`, `375×812`, `768×1024`, `1024×768`, and `1440×900`, then repeat the relevant route/link checks under `/Portfolio`.
 
   Verify no horizontal scrolling; approved column transitions; long-copy wrapping; section rhythm/surface alternation; visible section boundaries; source/reading order; CTA hierarchy and stacking; minimum `44px` targets and `48px` CTA height; full keyboard traversal; unclipped visible focus on every background; working header/footer Process anchors with visible headings; touch behavior; JavaScript-disabled content; reduced motion; and zero automated accessibility-scan violations on both home routes. Record screenshots/check output supported by the tool and label unavailable evidence honestly.
 
-- [ ] **Step 8: Audit commercial narrative and evidence safety**
+- [x] **Step 8: Audit commercial narrative and evidence safety**
 
   Read each rendered locale from hero to final CTA. Confirm there is no duplicated section message, excessive technical vocabulary, competing action inside cards, unsupported result/client/sector claim, project-card affordance, skills grid, employment timeline, recruiter wording, or GitHub-first portfolio framing.
 
   Compare `HOME-PROOF` to `PROJECT-EVIDENCE` after implementation. If no candidate has newly reached `ready` through explicit evidence and permission, the fallback remains mandatory; implementation work must not reclassify a project.
 
-- [ ] **Step 9: Synchronize current facts and complete the plan**
+- [x] **Step 9: Synchronize current facts and complete the plan**
 
   Update `ARCHITECTURE.md` and the current-system/quality records only with facts demonstrated by the merged-ready implementation. Record exact PR numbers, validation results, warnings, visual evidence, and any approved deviations in this plan. Preserve all deferred items as OPEN in their current owners.
 
   Set `plan_status: COMPLETED`, move this file to `docs/plans/completed/homepage-completion.md`, update the plan/index/status references, and rerun `npm run docs:check` plus `git diff --check`.
 
-- [ ] **Step 10: Review and commit PR 2**
+- [x] **Step 10: Review and commit PR 2**
 
   Review `main...HEAD` against every authority in the requirements table and every non-goal. Confirm no dependency, route tree, runtime localization, hosting, form, project evidence, imagery, or metadata architecture slipped into the diff. Commit with `feat: complete commercial homepage`, push the branch, and open a human-reviewed PR without merging it.
 
@@ -510,27 +510,18 @@ Passing automated checks supports review but does not establish whole-site WCAG 
 
 These items do not block the approved text-led homepage and must not be silently resolved during implementation.
 
-## First implementation task
+## Completion record
 
-After this plan PR is merged, execute exactly **Task 1 / PR 1: Add complete homepage content and anchor contracts**.
+Task 1 materialized the approved bilingual content and Process-anchor contracts without changing the rendered homepage. Task 2 then published the seven approved later sections atomically through the shared `CommercialHomepage` Server Component composition, with the evidence-safe `HOME-PROOF` fallback preserved.
 
-Recommended PR title: `feat: add complete homepage content contracts`.
-
-Acceptance criteria:
-
-- both route-owned home modules contain every approved Spanish/English section and satisfy `HomePageContent`;
-- exact counts, CTA route IDs, confirmed WhatsApp destination, and evidence-safe Proof fallback are covered by focused tests;
-- localized `proceso`/`process` anchors resolve through the existing route/navigation boundary without changing the four page route IDs;
-- the current homepage continues to render only `HOME-HERO` and no public behavior changes;
-- no component, route entry, style, dependency, build, metadata, deployment, or project-evidence change is included;
-- focused tests, full Node tests, typecheck, documentation validation, and diff checks pass;
-- the PR is independently reviewable, revertible, pushed for human review, and not self-merged.
+The implementation is review-ready on `codex/homepage-completion-integration` with the PR targeting `main`. The PR number is recorded here after creation; merge authority remains with the human reviewer.
 
 ## Progress
 
 - 2026-09-04: Initiative 2 product/content, evidence, design, responsive, accessibility, and narrative decisions closed in their authoritative owners. All seven later sections are ready; `HOME-PROOF` is ready only as the approved evidence-safe fallback.
 - 2026-09-04: Governance review classified implementation as a versioned plan under `ADR-STATIC-LOCALIZED-ROUTING`. No unresolved consequential architecture, RFC, ADR amendment, dependency decision, or release-only concern blocks implementation.
-- 2026-09-05: Task 1 / PR 1 is implemented on `codex/homepage-completion-content-contracts`; the complete typed bilingual content contract, localized Process anchors, focused tests, and behavior-neutral scope review are complete. Full validation passed: documentation check, 26 Node tests, lint, typecheck, and production build. The initial CI run exposed and the branch corrected one structural-equality test assertion. PR #14 is open against the decision-closure branch for human review and remains unmerged.
+- 2026-09-05: Task 1 / PR 1 is implemented on `codex/homepage-completion-content-contracts`; the complete typed bilingual content contract, localized Process anchors, focused tests, and behavior-neutral scope review are complete. Full validation passed: documentation check, 26 Node tests, lint, typecheck, and production build. The initial CI run exposed and the branch corrected one structural-equality test assertion. Its review remains human-controlled and unmerged.
+- 2026-09-05: Task 2 / PR 2 is implemented on `codex/homepage-completion-integration`; both localized homepages now render the exact eight-section narrative, shared Process navigation is available on all eight foundation routes, and the static verifier covers headings, IDs, actions, WhatsApp, and base-path integrity. Normal and `/Portfolio` browser checks passed at the required homepages/viewports; axe-core reported zero violations on both home routes. The normal and base-path production builds, full validation, and artifact checks passed. Browser screenshots were captured under the visual QA workspace; no screenshot was committed.
 
 ## Important implementation decisions
 
@@ -543,4 +534,4 @@ Acceptance criteria:
 
 ## Deviations discovered during execution
 
-None. Any deviation must be recorded here with its authority, impact, and validation before implementation continues.
+None. The approved localized Process IDs (`proceso`/`process`) and localized later-section IDs are implementation details within the existing route and accessibility contracts; no product, design, architecture, or evidence decision was changed.

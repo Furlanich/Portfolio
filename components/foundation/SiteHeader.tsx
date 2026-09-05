@@ -9,6 +9,7 @@ interface SiteHeaderProps {
   labels: {
     navigation: string;
     services: string;
+    process: string;
     founder: string;
     contact: string;
     primaryAction: string;
@@ -43,6 +44,12 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
             className="inline-flex min-h-11 items-center transition-colors duration-[160ms] ease-out hover:text-foundation-action"
           >
             {labels.services}
+          </Link>
+          <Link
+            href={paths.process}
+            className="inline-flex min-h-11 items-center transition-colors duration-[160ms] ease-out hover:text-foundation-action"
+          >
+            {labels.process}
           </Link>
           <Link
             href={paths.founder}

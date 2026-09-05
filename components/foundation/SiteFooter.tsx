@@ -8,6 +8,7 @@ interface SiteFooterProps {
   labels: {
     navigation: string;
     services: string;
+    process: string;
     founder: string;
     contact: string;
     directContact: string;
@@ -32,6 +33,7 @@ export function SiteFooter({ contactActions, founderLinks, labels, paths }: Site
           <h2 className="text-sm font-semibold text-foundation-ink">{labels.navigation}</h2>
           <ul className="mt-3 grid gap-2 text-sm font-semibold text-foundation-muted">
             <li><Link href={paths.services} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.services}</Link></li>
+            <li><Link href={paths.process} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.process}</Link></li>
             <li><Link href={paths.founder} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.founder}</Link></li>
             <li><Link href={paths.contact} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.contact}</Link></li>
           </ul>

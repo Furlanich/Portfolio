@@ -1,4 +1,4 @@
-import { HomeHero } from '@/components/foundation/HomeHero';
+import { CommercialHomepage } from '@/components/homepage/CommercialHomepage';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
@@ -18,6 +18,7 @@ export default function Page() {
         labels={{
           navigation: 'Primary navigation',
           services: 'Services',
+          process: 'Process',
           founder: 'About',
           contact: 'Contact',
           primaryAction: homeContent.primaryAction.label,
@@ -25,7 +26,7 @@ export default function Page() {
         }}
       />
       <main>
-        <HomeHero content={homeContent} paths={paths} />
+        <CommercialHomepage content={homeContent} paths={paths} />
       </main>
       <SiteFooter
         paths={paths}
@@ -34,6 +35,7 @@ export default function Page() {
         labels={{
           navigation: 'Navigation',
           services: 'Services',
+          process: 'Process',
           founder: 'About',
           contact: 'Contact',
           directContact: 'Direct contact',

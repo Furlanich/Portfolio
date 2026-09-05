@@ -18,6 +18,7 @@ export default function Page() {
         labels={{
           navigation: 'Primary navigation',
           services: 'Services',
+          process: 'Process',
           founder: 'About',
           contact: 'Contact',
           primaryAction: contactContent.actions[0].label,
@@ -38,6 +39,7 @@ export default function Page() {
         labels={{
           navigation: 'Navigation',
           services: 'Services',
+          process: 'Process',
           founder: 'About',
           contact: 'Contact',
           directContact: 'Direct contact',
