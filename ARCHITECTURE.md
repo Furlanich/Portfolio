@@ -11,6 +11,7 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
+  - PLAN-SERVICES-EXPERIENCE
   - PAGE-HOME
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
@@ -37,7 +38,7 @@ The approved [homepage hero implementation boundary](docs/rfcs/homepage-hero-imp
 
 Initiative 2 approves the seven commercial homepage sections below `HOME-HERO`, including their bilingual content, evidence-safe `HOME-PROOF` fallback, and minimum section visual/interaction rules. They fit the accepted locale-owned content and shared locale-agnostic component boundary. No new routing, localization, hosting, dependency, CMS, backend, or design-system architecture is required; implementation is recorded by [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md).
 
-Initiative 3 approves the complete bilingual Services page within the same boundary: locale-owned typed content, shared locale-agnostic semantic Server Components, the existing Services routes, static semantic fragments, and extensions of the approved homepage presentation primitives. Stable `#web`, `#whatsapp`, `#consultoria`, and `#consulting` fragments do not create routes or require runtime routing state. No new localization, hosting, dependency, CMS, backend, data, or design-system architecture is required. The substantial implementation should be governed by a versioned execution plan under `ADR-STATIC-LOCALIZED-ROUTING`; no RFC or new ADR is required.
+Initiative 3 approves the complete bilingual Services page within the same boundary: locale-owned typed content, shared locale-agnostic semantic Server Components, the existing Services routes, static semantic fragments, and extensions of the approved homepage presentation primitives. Stable `#web`, `#whatsapp`, `#consultoria`, and `#consulting` fragments do not create routes or require runtime routing state. No new localization, hosting, dependency, CMS, backend, data, or design-system architecture is required. The substantial implementation is governed by [`PLAN-SERVICES-EXPERIENCE`](docs/plans/active/services-experience.md) under `ADR-STATIC-LOCALIZED-ROUTING`; no RFC or new ADR is required.
 
 The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
 

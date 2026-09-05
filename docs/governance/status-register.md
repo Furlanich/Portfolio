@@ -9,6 +9,7 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
+  - PLAN-SERVICES-EXPERIENCE
   - PAGE-HOME
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
@@ -84,6 +85,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - The Services page is evidence-ready with honest asymmetric status copy: limited text-only acknowledgement of General Reservation System for Web, and explicit absence of publishable WhatsApp and consulting evidence. No service project card, logo, metric, testimonial, certification, or simulated case study is approved.
 - The Services visual, responsive, semantic, anchor, keyboard, focus, target, motion, and verification extensions are approved in [`DESIGN-VISUAL`](../design/visual-language.md#services-page-visual-baseline-approved) and [`DESIGN-IX-A11Y`](../design/interaction-responsive-accessibility.md#services-page-interaction-and-responsive-baseline-approved).
 - The complete Services experience fits `ADR-STATIC-LOCALIZED-ROUTING`. It requires a versioned execution plan, not an RFC, new ADR, route, dependency, CMS, backend, hosting change, or new design-system architecture.
+- Implementation is governed by the active [`PLAN-SERVICES-EXPERIENCE`](../plans/active/services-experience.md). Its single first implementation PR is the behavior-neutral bilingual content and service-anchor contract.
 
 ### Homepage foundation decision closure
 

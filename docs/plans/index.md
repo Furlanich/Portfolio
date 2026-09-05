@@ -6,6 +6,7 @@ related:
   - GOV-ENGINEERING-LIFECYCLE
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
+  - PLAN-SERVICES-EXPERIENCE
 last_verified: 2026-09-05
 ---
 
@@ -15,6 +16,10 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 - [Plan template](template.md)
 - [Completed Stage B harness plan](completed/stage-b-agent-engineering-harness.md)
+
+## Active
+
+- [`PLAN-SERVICES-EXPERIENCE`](active/services-experience.md): implements the approved bilingual Services experience in three reviewable PRs, beginning with a behavior-neutral content and anchor contract.
 
 ## Completed
 

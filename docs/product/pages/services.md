@@ -14,6 +14,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - ADR-STATIC-LOCALIZED-ROUTING
+  - PLAN-SERVICES-EXPERIENCE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
 last_verified: 2026-09-05
 ---
@@ -368,6 +369,8 @@ The minimum destination copy above remains the current implementation baseline. 
 
 **AI note**
 
+**Heading:** `IA solo cuando aporta valor`
+
 > La IA no es un cuarto servicio ni se incorpora por defecto. Puede formar parte de una automatización o sistema a medida —por ejemplo, para procesar documentos, asistir un flujo interno o interpretar una solicitud acotada— solo cuando aporta valor, puede evaluarse responsablemente y sus proveedores, datos, costos, límites y supervisión quedan explícitos.
 
 ### Spanish final CTA
@@ -649,6 +652,8 @@ The minimum destination copy above remains the current implementation baseline. 
 - Final payment, acceptance, ownership, warranty, and liability terms belong in each proposal or contract and remain subject to commercial and legal review.
 
 **AI note**
+
+**Heading:** `AI only where it adds value`
 
 > AI is not a fourth service and is not included by default. It may be one capability inside a tailored automation or system — for example, document processing, an AI-assisted internal workflow, or interpretation of a bounded request — only when it adds value and its providers, data, costs, limitations, evaluation, and human oversight are explicit.
 

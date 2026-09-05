@@ -6,6 +6,7 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
+  - PLAN-SERVICES-EXPERIENCE
   - PAGE-HOME
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
@@ -46,4 +47,4 @@ Stage A preserves product and design knowledge, and Stage B adds the lightweight
 
 Initiative 2 closes the commercial homepage sections below `HOME-HERO` in [`PAGE-HOME`](product/pages/home.md), including complete Spanish/English copy, minimum later-section design rules, a readiness matrix, and an approved evidence-safe `HOME-PROOF` fallback. [`PROJECT-EVIDENCE`](product/project-evidence.md) records that no current project is eligible for a homepage card. [`PLAN-HOMEPAGE-COMPLETION`](plans/completed/homepage-completion.md) records the completed behavior-neutral content/anchor contract and atomic bilingual rendered integration; project cards and other release/full-site concerns remain OPEN in their owners.
 
-Initiative 3 closes the complete Services experience in [`PAGE-SERVICES`](product/pages/services.md): the retained hierarchy, full Spanish and English content, stable service anchors, contextual inquiry paths, provider and commercial boundaries, AI posture, honest asymmetric evidence treatment, page-specific visual/accessibility extensions, and implementation-readiness matrix are approved. [`AUDIENCES-SERVICES`](product/audiences-and-services.md) owns the service definitions and [`PROJECT-EVIDENCE`](product/project-evidence.md) owns the item-level publication limits. Implementation fits the accepted localized architecture and may proceed to a versioned execution plan; richer evidence and final contractual/legal terms remain deferred in their owners.
+Initiative 3 closes the complete Services experience in [`PAGE-SERVICES`](product/pages/services.md): the retained hierarchy, full Spanish and English content, stable service anchors, contextual inquiry paths, provider and commercial boundaries, AI posture, honest asymmetric evidence treatment, page-specific visual/accessibility extensions, and implementation-readiness matrix are approved. [`AUDIENCES-SERVICES`](product/audiences-and-services.md) owns the service definitions and [`PROJECT-EVIDENCE`](product/project-evidence.md) owns the item-level publication limits. Implementation fits the accepted localized architecture and is governed by [`PLAN-SERVICES-EXPERIENCE`](plans/active/services-experience.md); richer evidence and final contractual/legal terms remain deferred in their owners.
