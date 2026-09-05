@@ -19,9 +19,18 @@ export const foundationRoutes = {
   },
 } as const satisfies Record<FoundationRouteId, Record<Locale, string>>;
 
+export const homeProcessAnchors = {
+  es: 'proceso',
+  en: 'process',
+} as const satisfies Record<Locale, string>;
+
 export function getFoundationPath(
   routeId: FoundationRouteId,
   locale: Locale,
 ): string {
   return foundationRoutes[routeId][locale];
+}
+
+export function getHomeProcessHref(locale: Locale): string {
+  return `${getFoundationPath('home', locale)}#${homeProcessAnchors[locale]}`;
 }

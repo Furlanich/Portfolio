@@ -264,7 +264,7 @@ The two route-owned content modules keep the existing hero fields at the top lev
 
 **Interfaces:** The public shapes and Process helper are defined above. Existing consumers of `HomeHeroContent` and `FoundationNavigationPaths` remain source-compatible; no component reads the added section data in this PR.
 
-- [ ] **Step 1: Write failing complete-content contracts**
+- [x] **Step 1: Write failing complete-content contracts**
 
   Create `scripts/homepage-content.test.mjs` with `node:test` and `node:assert/strict`. Import both route-owned home modules and assert that each satisfies these runtime invariants:
 
@@ -280,7 +280,7 @@ The two route-owned content modules keep the existing hero fields at the top lev
 
   Extend `scripts/site-routes.test.mjs` to require `homeProcessAnchors`, `getHomeProcessHref`, and `FoundationNavigationPaths.process`, while asserting `foundationRouteIds` remains exactly the existing four page routes.
 
-- [ ] **Step 2: Run the focused tests and observe RED**
+- [x] **Step 2: Run the focused tests and observe RED**
 
   Run:
 
@@ -290,25 +290,25 @@ The two route-owned content modules keep the existing hero fields at the top lev
 
   Expected: failures because the later-section model/content, Process anchor map, and `process` navigation path do not yet exist. Record the failing assertions in this plan before implementation.
 
-- [ ] **Step 3: Add the minimum typed content model**
+- [x] **Step 3: Add the minimum typed content model**
 
   Create `components/homepage/content-types.ts` with the exact public interfaces above. Reuse `ActionLink`, `ContactAction`, and `HomeHeroContent`; do not create another route type or generic CMS schema.
 
   Run `npm run typecheck`. Expected: the new type module passes, while the focused content test remains RED because the route-owned modules are incomplete.
 
-- [ ] **Step 4: Materialize the approved bilingual content**
+- [x] **Step 4: Materialize the approved bilingual content**
 
   Expand the Spanish and English home content modules with the exact approved copy from their respective `PAGE-HOME` sections and assert each object `satisfies HomePageContent`. Preserve current hero fields byte-for-byte unless the owning page spec has changed through governance. Perform a side-by-side review against the owner for every public field; do not duplicate every paragraph into the test fixture.
 
   Represent every internal CTA as an `ActionLink` semantic route ID. Represent the final WhatsApp action as a `ContactAction` with `kind: 'whatsapp'`. Do not add optional project data or empty placeholder arrays.
 
-- [ ] **Step 5: Add the localized Process destination**
+- [x] **Step 5: Add the localized Process destination**
 
   Add `homeProcessAnchors` and `getHomeProcessHref(locale)` to `lib/site-routes.ts`. Add `process` to `FoundationNavigationPaths` and resolve it in `getFoundationNavigationPaths`.
 
   Keep `foundationRouteIds` and `foundationRoutes` unchanged because Process is a homepage section, not a page route. Components and route entries must not concatenate these anchor strings themselves.
 
-- [ ] **Step 6: Make focused and repository contracts GREEN**
+- [x] **Step 6: Make focused and repository contracts GREEN**
 
   Run:
 
@@ -322,7 +322,7 @@ The two route-owned content modules keep the existing hero fields at the top lev
 
   Expected: all commands pass. Confirm the existing homepage HTML remains unchanged by reviewing the diff: no `page.tsx`, component, global style, Tailwind, dependency, build, or deployment file belongs in PR 1.
 
-- [ ] **Step 7: Review and commit PR 1**
+- [x] **Step 7: Review and commit PR 1**
 
   Update this plan's Progress section with exact test counts and warnings. Review `main...HEAD` for unapproved claims, duplicated public copy outside route-owned modules, raw internal paths, and accidental rendering changes. Commit the scoped change with `feat: add complete homepage content contracts`, push the branch, and open a human-reviewed PR without merging it.
 
@@ -530,6 +530,7 @@ Acceptance criteria:
 
 - 2026-09-04: Initiative 2 product/content, evidence, design, responsive, accessibility, and narrative decisions closed in their authoritative owners. All seven later sections are ready; `HOME-PROOF` is ready only as the approved evidence-safe fallback.
 - 2026-09-04: Governance review classified implementation as a versioned plan under `ADR-STATIC-LOCALIZED-ROUTING`. No unresolved consequential architecture, RFC, ADR amendment, dependency decision, or release-only concern blocks implementation.
+- 2026-09-05: Task 1 / PR 1 is implemented on `codex/homepage-completion-content-contracts`; the complete typed bilingual content contract, localized Process anchors, focused tests, and behavior-neutral scope review are complete. Full validation passed: documentation check, 26 Node tests, lint, typecheck, and production build. The initial CI run exposed and the branch corrected one structural-equality test assertion. PR #14 is open against the decision-closure branch for human review and remains unmerged.
 
 ## Important implementation decisions
 
