@@ -36,6 +36,7 @@ The findings below are retained pre-cutover evidence. The current foundation and
 - Compact index links measured at least 44px high and the four primary Services CTAs measured 48px high in both locales. Keyboard focus exposed the approved 3px outline with a 2px offset.
 - The browser's axe-core 4.12.1 scan reported zero violations and zero incomplete checks with 35 passes for each locale at the wide viewport. Reduced-motion emulation remained content-complete, and aborting Next static script requests left server-rendered content and anchors available.
 - `/Portfolio/servicios/` at `375x812` and `/Portfolio/en/services/` at `1440x900` retained the base path, localized index links, complete content, and no overflow. Screenshots were captured outside the repository and were not committed. Whole-site accessibility conformance remains OPEN.
+- Repeated Web-level, WhatsApp-scope, and cross-service-principle card groups use equal content-driven grid rows with full-height cards. Browser measurements at `320x800` and `1440x900` in both locales confirmed equal card heights, no card clipping, and no normal-scale horizontal overflow; a card-specific `200%` root-text probe at `320x800` also retained equal heights without clipping.
 
 ## Pre-cutover findings
 

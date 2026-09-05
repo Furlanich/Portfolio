@@ -1,5 +1,6 @@
 import { CommercialContentCard } from '@/components/commercial/CommercialContentCard';
 import { CommercialSectionHeading } from '@/components/commercial/CommercialSectionHeading';
+import { servicesEqualHeightCardGridClassName } from './card-layout';
 import type { ServicesPageContent } from './content-types';
 
 interface ServicesPrinciplesProps {
@@ -13,7 +14,7 @@ export function ServicesPrinciples({ content, commercialBoundaries, aiNote }: Se
     <section id="principles" aria-labelledby="principles-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
         <CommercialSectionHeading headingId="principles-heading" heading={content.heading} intro={content.introduction} />
-        <ul className="mt-8 grid list-none gap-6 md:grid-cols-2">
+        <ul className={`mt-8 ${servicesEqualHeightCardGridClassName} md:grid-cols-2`}>
           {content.items.map((item) => (
             <li key={item.title}>
               <CommercialContentCard title={item.title} description={item.description} />
