@@ -6,7 +6,7 @@ related:
   - ARCH-CURRENT
   - DESIGN-IX-A11Y
   - PORTFOLIO-MIGRATION
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 ---
 
 # Current quality findings
@@ -20,6 +20,14 @@ The findings below are retained pre-cutover evidence. The current foundation and
 - Agent-browser verification covered all eight routes at 320x800, 375x812, 768x1024, 1024x768, and 1440x900 with no horizontal overflow, one H1 per route, and correct document languages.
 - Language switching, keyboard focus, JavaScript-disabled rendering, reduced-motion behavior, CV routing, direct contact links, and Founder professional destinations passed. Anonymous LinkedIn navigation reached LinkedIn's auth wall; the owner-supplied destination remains unchanged.
 - axe-core reported zero violations and zero incomplete checks on all eight routes. The active-source cleanup contract passed, no legacy localization references remain in `app/`, `components/`, `lib/`, or `locales/`, and lint reports zero errors and zero warnings.
+
+## Current commercial homepage verification — 2026-09-05
+
+- The Spanish and English homepages render the approved eight-section narrative with one `main`, one H1, labelled H2 sections, semantic peer lists, and an ordered Process list.
+- Browser checks covered `/` and `/en/` at `320x800`, `375x812`, `768x1024`, `1024x768`, and `1440x900`; no horizontal overflow was observed, and the expected Problems/Audiences, Services, Process, Founder, and CTA responsive transitions were confirmed.
+- `/Portfolio/` and `/Portfolio/en/` were reached in a base-path development preview at `375x812`; localized Process anchors and internal Services paths retained the base path with no overflow. Normal and `/Portfolio` static artifact checks also passed.
+- Keyboard focus exposed the approved 3px visible outline, reduced-motion mode changed smooth scrolling to `auto` and transitions to `0s`, and Process navigation landed on the localized hash. Spanish and English axe-core scans each reported zero violations, zero incomplete checks, and 35 passes; no page errors or console output were observed after clearing the browser logs.
+- Screenshots were captured for the required home-route viewport matrix in the non-repository visual QA workspace and were intentionally not committed. JavaScript-disabled rendering was not separately exercised in this phase; the homepage remains server-rendered and static-exported, while a whole-site accessibility claim remains OPEN.
 
 ## Pre-cutover findings
 

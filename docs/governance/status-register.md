@@ -13,7 +13,7 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 ---
 
 # Product knowledge status register
@@ -66,7 +66,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - `HOME-PROBLEMS`, `HOME-SERVICES`, `HOME-AUDIENCES`, `HOME-PROCESS`, `HOME-FOUNDER`, and `HOME-CTA` are product-, content-, design-, and evidence-ready in Spanish and English.
 - `HOME-SERVICES` uses informational cards and one section-level Services CTA; three duplicate card CTAs are rejected.
 - `HOME-PROOF` uses the approved credibility fallback based on direct founder accountability, verifiable claims, and confidentiality because no current project passes every publication gate.
-- The complete homepage implementation is governed by [`PLAN-HOMEPAGE-COMPLETION`](../plans/active/homepage-completion.md), using that fallback. Project cards, Projects routes, a contact form, new imagery, and new architecture are outside this plan.
+- The complete homepage implementation is recorded by [`PLAN-HOMEPAGE-COMPLETION`](../plans/completed/homepage-completion.md), using that fallback. Project cards, Projects routes, a contact form, new imagery, and new architecture are outside this plan.
 - The later-section spacing, surfaces, type hierarchy, cards, section treatments, icon posture, and final CTA treatment are approved in [`DESIGN-VISUAL`](../design/visual-language.md#commercial-homepage-section-baseline-approved).
 - The later-section reflow, semantics, list structure, targets, focus, keyboard, anchor, reduced-motion, and verification rules are approved in [`DESIGN-IX-A11Y`](../design/interaction-responsive-accessibility.md#commercial-homepage-section-baseline-approved).
 - No new routing, localization, hosting, dependency, CMS, backend, or design-system architecture is required for these sections.

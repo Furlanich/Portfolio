@@ -1,4 +1,4 @@
-import { HomeHero } from '@/components/foundation/HomeHero';
+import { CommercialHomepage } from '@/components/homepage/CommercialHomepage';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
 import { contactContent } from './_content/contact';
@@ -18,6 +18,7 @@ export default function Page() {
         labels={{
           navigation: 'Navegación principal',
           services: 'Servicios',
+          process: 'Proceso',
           founder: 'El estudio',
           contact: 'Contacto',
           primaryAction: homeContent.primaryAction.label,
@@ -25,7 +26,7 @@ export default function Page() {
         }}
       />
       <main>
-        <HomeHero content={homeContent} paths={paths} />
+        <CommercialHomepage content={homeContent} paths={paths} />
       </main>
       <SiteFooter
         paths={paths}
@@ -34,6 +35,7 @@ export default function Page() {
         labels={{
           navigation: 'Navegación',
           services: 'Servicios',
+          process: 'Proceso',
           founder: 'El estudio',
           contact: 'Contacto',
           directContact: 'Contacto directo',
