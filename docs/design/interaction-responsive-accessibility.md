@@ -77,7 +77,7 @@ These requirements extend the foundation baseline to `HOME-PROBLEMS` through `HO
 - Proof fallback remains one content panel at every width. A future approved project-card set uses one column compact, two columns medium, and up to three columns wide.
 - Founder uses one column compact/medium and a two-part text-led layout wide. Heading, biography, primary action, then secondary action remain the reading order.
 - Section and final-CTA action groups follow the existing CTA rule: full-width stacking below `480px`, then inline wrapping when space permits. Actions must not overlap or require horizontal scrolling.
-- Cards grow to their content and do not truncate public copy. Equal visual height may be used only when it does not hide content or create a false reading order.
+- Homepage Problems, Services, and Audiences cards use equal content-driven grid tracks within each repeated group and grow together from the tallest card. Cards do not truncate public copy; no fixed pixel height, line clamping, clipping, or false reading order is introduced.
 - Long Spanish and English words, URLs, and translated CTA labels must wrap safely inside their containers.
 
 ### Semantics and reading hierarchy

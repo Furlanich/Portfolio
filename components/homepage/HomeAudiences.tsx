@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { HomeAudiencesContent } from './content-types';
 import { CommercialContentCard } from '../commercial/CommercialContentCard';
 import { CommercialSectionHeading } from '../commercial/CommercialSectionHeading';
+import { commercialEqualHeightCardGridClassName } from '../commercial/equal-height-card-grid';
 
 interface HomeAudiencesProps {
   content: HomeAudiencesContent;
@@ -13,7 +14,7 @@ export function HomeAudiences({ content, actionHref }: HomeAudiencesProps) {
     <section id="audiences" aria-labelledby="audiences-heading" className="bg-foundation-surface py-16 md:py-20 lg:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
         <CommercialSectionHeading headingId="audiences-heading" heading={content.heading} />
-        <ul className="mt-8 grid list-none gap-6 md:grid-cols-2">
+        <ul className={`mt-8 ${commercialEqualHeightCardGridClassName} md:grid-cols-2`}>
           {content.audiences.map((item) => (
             <li key={item.title}>
               <CommercialContentCard title={item.title} description={item.description} />
