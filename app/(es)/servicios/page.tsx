@@ -17,6 +17,7 @@ export default function Page() {
         paths={paths}
         labels={{
           navigation: 'Navegación principal',
+          menu: 'Abrir navegación principal',
           services: 'Servicios',
           process: 'Proceso',
           founder: 'El estudio',

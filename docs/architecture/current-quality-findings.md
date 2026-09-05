@@ -39,6 +39,12 @@ The findings below are retained pre-cutover evidence. The current foundation and
 - `/Portfolio/servicios/` at `375x812` and `/Portfolio/en/services/` at `1440x900` retained the base path, localized index links, complete content, and no overflow. Screenshots were captured outside the repository and were not committed. Whole-site accessibility conformance remains OPEN.
 - Repeated Web-level, WhatsApp-scope, and cross-service-principle card groups use equal content-driven grid rows with full-height cards. Browser measurements at `320x800` and `1440x900` in both locales confirmed equal card heights, no card clipping, and no normal-scale horizontal overflow; a card-specific `200%` root-text probe at `320x800` also retained equal heights without clipping.
 
+## Current shared header verification — 2026-09-05
+
+- Browser checks on `/`, `/servicios/`, and `/en/services/` confirmed the shared header uses `position: sticky` with `top: 0`, remains visible after scrolling, and introduces no normal-scale horizontal overflow at compact and wide viewports.
+- At `375x812`, the native hamburger disclosure opened from keyboard focus, exposed the localized navigation panel, preserved the existing route links and CTA, and kept the document free of a Next.js error overlay. At `1440x900`, the inline navigation rendered without the compact trigger.
+- The implementation remains server-rendered and static-export compatible; the disclosure uses native HTML rather than client-side state. Whole-site accessibility conformance remains OPEN.
+
 ## Pre-cutover findings
 
 ## Architecture and localization

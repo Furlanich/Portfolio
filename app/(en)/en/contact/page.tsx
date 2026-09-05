@@ -16,6 +16,7 @@ export default function Page() {
         paths={paths}
         labels={{
           navigation: 'Primary navigation',
+          menu: 'Open primary navigation',
           services: 'Services',
           process: 'Process',
           founder: 'About',

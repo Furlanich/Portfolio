@@ -132,6 +132,12 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Service levels use the shared commercial content-card primitive; scope, dependencies, fit/non-fit, evidence, and commercial boundaries remain visible without disclosure interaction.
 - Normal and `/Portfolio` static artifact verification passed for the complete Services requirements. The complete implementation remains within the existing route tree, static export, and base-path architecture.
 
+## Current shared header implementation — Task 4
+
+- The shared `SiteHeader` renders as a sticky app bar at the top of every localized foundation route, remaining in normal document flow while scrolling.
+- Below `1024px`, the primary navigation is exposed through a native `<details>` disclosure with a keyboard-operable hamburger summary and a localized navigation panel; at `1024px` and above, the same links and CTA render inline.
+- The app bar preserves the existing localized route map, language switch, CTA destinations, approved focus treatment, static export, and optional base-path behavior without adding a client-state boundary or dependency.
+
 ## Environment
 
 Local `.env` files exist and are intentionally not documented or read into the knowledge base. Public documentation must never reproduce secrets.

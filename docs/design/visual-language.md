@@ -95,6 +95,13 @@ The Border color is decorative and must not be the sole indicator of a control o
 - Primary precedes secondary visually and in source order.
 - General surfaces use Surface on Canvas, `1px` Border where separation is useful, and no shadow by default. Soft shadow is reserved for overlays or elevation that has a functional reason.
 
+### Global app bar — APPROVED
+
+- The shared header is a sticky app bar with `top: 0`, Surface background, and a `1px` Border separator. It remains in normal document flow and does not hide, translate, or animate based on scroll direction.
+- Below `1024px`, navigation is exposed through a compact hamburger disclosure panel. The panel may use a restrained functional shadow as an overlay, but the bar itself has no decorative elevation.
+- At `1024px` and above, the existing wordmark, language switch, navigation links, and primary action remain inline within the `1200px` container.
+- The app bar reuses the approved spacing, target-size, color, and focus rules. It must not create horizontal scrolling at the minimum `320px` viewport.
+
 ### Hero composition and imagery
 
 The first hero is typography-led and left-aligned. It uses the approved eyebrow, H1, description, CTA group, trust line, and availability statement without a photograph, product screenshot, generated UI, stock illustration, or decorative hero image.
