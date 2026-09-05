@@ -119,7 +119,7 @@ These requirements extend the existing applicable WCAG 2.2 Level AA target to th
 - The page remains usable without horizontal scrolling at `320px` CSS viewport width in both languages. Long headings, provider names, URLs, and CTA labels wrap without clipping.
 - Every service and internal group keeps one DOM/source order at every width. Layout must not move boundaries, dependencies, fit guidance, evidence, or CTAs ahead of the situation and outcome for assistive technology.
 - Web's three level cards reflow from one column compact to two medium and three wide. WhatsApp's four level cards use one column compact and two columns medium/wide. Scope/boundary and fit/non-fit pairs stack compact and may use two columns from medium when content remains readable.
-- Principles use one column compact and two columns medium/wide. Cards and panels grow with content; no fixed height, truncation, horizontal carousel, or essential accordion is used.
+- Principles use one column compact and two columns medium/wide. Within each repeated Services card group, all cards stretch to equal, content-driven grid tracks based on the tallest card in that group. The tracks grow together for translations and text zoom; no fixed pixel height, clipping, line clamping, truncation, horizontal carousel, or essential accordion is used.
 - Every service CTA remains reachable immediately after that service's evidence content. The final CTA remains the last page section.
 
 ### Structure and semantics

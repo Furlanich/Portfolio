@@ -167,6 +167,7 @@ This baseline extends the homepage primitives for the complete `PAGE-SERVICES` e
 
 - Use plain text and semantic lists for situations, outcomes, representative examples, and typical scope. Cards are reserved for groups where visual comparison helps; the page must not become a wall of equal boxes.
 - Web's three work levels use three restrained content cards at wide sizes, two then one when narrower. WhatsApp's four scope levels use a two-by-two layout at medium/wide sizes and one column compact. These are explanatory categories, not purchasable tiers: no price, highlight, popular state, or selection control appears.
+- Within each repeated Services card group, every card uses the same height as the tallest card in that group. Equal-height grid tracks and full-height cards preserve an even composition across rows; the shared group height remains content-driven rather than fixed to a pixel value.
 - Typical scope and `Not automatically included` may use a paired two-panel composition at wide sizes. The boundary panel uses the same neutral palette and clear heading rather than warning red, danger iconography, or fine-print styling.
 - `Good fit` and `When another option may be better` use two adjacent neutral panels at medium/wide sizes and stack in that source order compact.
 - Dependencies use a full-width bordered panel or clearly separated text block. Do not hide provider constraints in a tooltip, accordion, footnote, or low-contrast small print.
@@ -176,6 +177,7 @@ This baseline extends the homepage primitives for the complete `PAGE-SERVICES` e
 ### Cross-service and final CTA composition
 
 - Present the six principles as a simple one-column compact and two-column medium/wide list. Short bold labels lead each item; do not repeat the homepage Process numerals or connector treatment.
+- The six principle cards follow the same equal-height group rule as the Web and WhatsApp level cards.
 - Commercial boundaries and the AI note use readable text blocks with visible headings. The AI note receives no special gradient, illustration, logo, or accent that would imply a fourth service.
 - The final CTA reuses the homepage Action-tint band, narrow copy measure, and standard primary action. It contains no form, secondary WhatsApp action, or new CTA variant.
 

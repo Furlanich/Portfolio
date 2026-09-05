@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { CommercialContentCard } from '@/components/commercial/CommercialContentCard';
 import { CommercialSectionHeading } from '@/components/commercial/CommercialSectionHeading';
+import { servicesEqualHeightCardGridClassName } from './card-layout';
 import type { ServicesSectionContent } from './content-types';
 
 interface ServiceSectionProps {
@@ -44,7 +45,7 @@ export function ServiceSection({ content, anchor, actionHref, surface }: Service
           {content.levels.length > 0 && content.levelsHeading ? (
             <div>
               <h3 className={groupHeadingClassName}>{content.levelsHeading}</h3>
-              <ul className={`mt-6 grid list-none gap-6 ${content.levels.length === 3 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2'}`}>
+              <ul className={`mt-6 ${servicesEqualHeightCardGridClassName} ${content.levels.length === 3 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2'}`}>
                 {content.levels.map((level) => (
                   <li key={level.title}>
                     <CommercialContentCard title={level.title} description={level.description} />

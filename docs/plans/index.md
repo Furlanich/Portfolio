@@ -19,9 +19,10 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [`PLAN-SERVICES-EXPERIENCE`](active/services-experience.md): implements the approved bilingual Services experience in three reviewable PRs, beginning with a behavior-neutral content and anchor contract.
+No versioned execution plan is currently active.
 
 ## Completed
 
 - [`PLAN-HOMEPAGE-FOUNDATION`](completed/homepage-foundation.md): delivered the accepted localized route foundation, minimum destinations, Founder migration, business hero, atomic cutover, and evidence-driven legacy-localization cleanup in four reviewable implementation PRs.
 - [`PLAN-HOMEPAGE-COMPLETION`](completed/homepage-completion.md): delivered the approved bilingual commercial homepage sections below `HOME-HERO`, the evidence-safe `HOME-PROOF` fallback, and localized Process navigation in one atomic rendered integration.
+- [`PLAN-SERVICES-EXPERIENCE`](completed/services-experience.md): delivered the complete approved bilingual Services experience, stable service anchors, honest evidence treatment, and accessible responsive behavior in three reviewable implementation PRs.
