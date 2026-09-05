@@ -1,10 +1,10 @@
-import { MinimumDestination } from '@/components/foundation/MinimumDestination';
+import { ServicesPage } from '@/components/services/ServicesPage';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
 import { contactContent } from '../_content/contact';
 import { founderContent } from '../_content/founder';
-import { servicesContent } from '../_content/services';
+import { servicesPageContent } from '../_content/services';
 
 const route = { locale: 'es' as const, routeId: 'services' as const };
 const paths = getFoundationNavigationPaths(route.locale, route.routeId);
@@ -25,13 +25,7 @@ export default function Page() {
           languageSwitch: 'Ver sitio en inglés',
         }}
       />
-      <MinimumDestination
-        action={servicesContent.action}
-        heading={servicesContent.heading}
-        introduction={servicesContent.introduction}
-        items={servicesContent.services}
-        locale={route.locale}
-      />
+      <ServicesPage content={servicesPageContent} />
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}
