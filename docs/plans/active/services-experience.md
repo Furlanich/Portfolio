@@ -490,7 +490,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   When all three implementation PRs are merged by a human and no plan task remains, set `plan_status: COMPLETED`, move this file to `docs/plans/completed/services-experience.md`, update `docs/plans/index.md` and all links, and retain the complete execution history.
 
-- [ ] **Step 9: Final review and open PR 3**
+- [x] **Step 9: Final review and open PR 3**
 
   Run the full completion gate below, inspect the complete diff, and confirm generated output and unrelated files are absent. Open a human-reviewed PR titled `feat: publish complete Services experience`. Do not merge automatically.
 
@@ -582,6 +582,7 @@ These decisions do not block the approved static text-led Services experience an
 - 2026-09-05: Task 2 focused RED observed the expected missing-module failure, then GREEN passed 1/1. Full validation passed: `npm run validate` (31/31 tests), normal build, and base-path build. Browser smoke passed for `/` at 375x812 and `/en/` at 1440x900: expected headings/cards rendered, overflow was false, adjacent-link focus showed a visible outline, and no runtime errors were reported. Review-ready Pull Request [#18](https://github.com/Furlanich/Portfolio/pull/18) is open against `main` and remains unmerged; human review and merge are required before Task 3.
 - 2026-09-05: Task 3 focused RED observed the expected route-contract failure and, after the verifier control-flow correction, the expected incomplete MinimumDestination artifact failures. Focused GREEN passed the complete content, route, fragment, and migrated ownership suite; normal and `/Portfolio` static artifact verification passed.
 - 2026-09-05: Task 3 implementation now renders both localized Services routes through shared locale-agnostic Server Components, removes the compatibility-only `servicesContent` owner, preserves semantic ActionLink resolution, and records the demonstrated architecture/quality facts. The approved normal visual matrix, base-path spot checks, fragment navigation, focus/target checks, reduced-motion check, no-JavaScript-style server-rendered check, and axe-core scans all passed. The final completion gate passed with `npm run validate` (32/32 tests) and normal static verification; base-path static verification also passed. PR 3 remains to be opened after the final committed diff review.
+- 2026-09-05: Review-ready Pull Request [#19](https://github.com/Furlanich/Portfolio/pull/19) is open from `codex/services-experience-integration` to `main` with the complete Task 3 implementation and verification record. It remains unmerged; human review and merge are required. The plan remains ACTIVE until the human-reviewed PR is merged and the final completion move is performed.
 
 - 2026-09-05: Initiative 3 product/content, service, evidence, design, responsive, accessibility, anchor, CTA, and commercial-boundary decisions are approved in their authoritative owners. Web has one limited text-only evidence acknowledgement; WhatsApp and Consulting have no approved public evidence items.
 - 2026-09-05: Governance review classified implementation as a versioned plan under `ADR-STATIC-LOCALIZED-ROUTING`. No consequential unresolved product or architecture decision, RFC, ADR amendment, dependency decision, provider decision, or release-only concern blocks implementation.
