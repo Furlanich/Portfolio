@@ -1,4 +1,5 @@
 import type { Locale } from './locales';
+import type { ServiceSectionId } from '../components/services/content-types';
 
 export const foundationRouteIds = [
   'home',
@@ -23,6 +24,21 @@ export const homeProcessAnchors = {
   es: 'proceso',
   en: 'process',
 } as const satisfies Record<Locale, string>;
+
+export const serviceSectionIds = ['web', 'whatsapp', 'consulting'] as const satisfies readonly ServiceSectionId[];
+
+export const serviceSectionAnchors = {
+  web: { es: 'web', en: 'web' },
+  whatsapp: { es: 'whatsapp', en: 'whatsapp' },
+  consulting: { es: 'consultoria', en: 'consulting' },
+} as const satisfies Record<ServiceSectionId, Record<Locale, string>>;
+
+export function getServiceSectionHref(
+  locale: Locale,
+  serviceId: ServiceSectionId,
+): string {
+  return getFoundationPath('services', locale) + '#' + serviceSectionAnchors[serviceId][locale];
+}
 
 export function getFoundationPath(
   routeId: FoundationRouteId,

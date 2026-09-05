@@ -7,6 +7,9 @@ const {
   getFoundationPath,
   homeProcessAnchors,
   getHomeProcessHref,
+  serviceSectionIds,
+  serviceSectionAnchors,
+  getServiceSectionHref,
 } = await import('../lib/site-routes.ts');
 const { getFoundationNavigationPaths } = await import('../lib/foundation-navigation.ts');
 
@@ -44,6 +47,22 @@ test('resolves the localized homepage Process anchor without adding a route', ()
   assert.deepEqual(homeProcessAnchors, { es: 'proceso', en: 'process' });
   assert.equal(getHomeProcessHref('es'), '/#proceso');
   assert.equal(getHomeProcessHref('en'), '/en/#process');
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'contact', 'founder']);
+});
+
+test('resolves localized Services fragments without adding routes', () => {
+  assert.deepEqual(serviceSectionIds, ['web', 'whatsapp', 'consulting']);
+  assert.deepEqual(serviceSectionAnchors, {
+    web: { es: 'web', en: 'web' },
+    whatsapp: { es: 'whatsapp', en: 'whatsapp' },
+    consulting: { es: 'consultoria', en: 'consulting' },
+  });
+  assert.equal(getServiceSectionHref('es', 'web'), '/servicios/#web');
+  assert.equal(getServiceSectionHref('es', 'whatsapp'), '/servicios/#whatsapp');
+  assert.equal(getServiceSectionHref('es', 'consulting'), '/servicios/#consultoria');
+  assert.equal(getServiceSectionHref('en', 'web'), '/en/services/#web');
+  assert.equal(getServiceSectionHref('en', 'whatsapp'), '/en/services/#whatsapp');
+  assert.equal(getServiceSectionHref('en', 'consulting'), '/en/services/#consulting');
   assert.deepEqual(foundationRouteIds, ['home', 'services', 'contact', 'founder']);
 });
 
