@@ -25,6 +25,15 @@ last_verified: 2026-09-05
 - The business hierarchy remains clear on narrow screens.
 - Motion must not prevent access to content.
 
+## Global app-bar behavior — APPROVED
+
+- The shared site header remains a sticky app bar at the top of the viewport while scrolling in either direction. It stays in normal document flow, uses the approved Surface and Border treatment, and does not hide or translate on scroll.
+- At compact and medium widths below `1024px`, the primary navigation links and CTA collapse behind a native disclosure control with an accessible name and an associated navigation panel. The disclosure remains keyboard operable and does not require client-side JavaScript.
+- At wide widths of `1024px` and above, the same navigation links and CTA render inline beside the brand and language switch.
+- The disclosure trigger and every navigation action remain at least `44px` in both dimensions; the primary CTA remains at least `48px` high. Focus indication uses the approved visible treatment.
+- The navigation panel is a normal list of links, not a tablist or modal. Opening it must not introduce horizontal overflow, duplicate the page content, or change the source order of the navigation actions.
+- Sticky positioning must not obscure approved fragment destinations; anchored sections retain adequate scroll margin below the app bar.
+
 ## Homepage foundation interaction and responsive baseline — APPROVED
 
 These requirements close the minimum behavior needed for `HOME-HERO`; they do not claim whole-site accessibility conformance.
@@ -169,7 +178,6 @@ The existing navigation, localization, form, motion, and interaction behavior is
 
 - Whole-site conformance claims, audit scope, and any certification remain unresolved; only the commercial-homepage target above is approved.
 - Breakpoints and container behavior for pages and components outside the approved homepage and Services baselines.
-- Header behavior while scrolling.
 - Motion language outside the commercial homepage and basic control-state transitions.
 - Project-card interaction beyond the approved homepage constraints.
 - Touch, tablet, and landscape-specific layouts outside the approved homepage and Services baselines.
