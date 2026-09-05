@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { HomeServicesSectionContent } from './content-types';
 import { CommercialContentCard } from '../commercial/CommercialContentCard';
 import { CommercialSectionHeading } from '../commercial/CommercialSectionHeading';
+import { commercialEqualHeightCardGridClassName } from '../commercial/equal-height-card-grid';
 
 interface HomeServicesProps {
   content: HomeServicesSectionContent;
@@ -13,7 +14,7 @@ export function HomeServices({ content, actionHref }: HomeServicesProps) {
     <section id="services" aria-labelledby="services-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
         <CommercialSectionHeading headingId="services-heading" heading={content.heading} intro={content.introduction} />
-        <ul className="mt-8 grid list-none gap-6 lg:grid-cols-3">
+        <ul className={`mt-8 ${commercialEqualHeightCardGridClassName} lg:grid-cols-3`}>
           {content.services.map((item) => (
             <li key={item.title}>
               <CommercialContentCard title={item.title} description={item.description} />

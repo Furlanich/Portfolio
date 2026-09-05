@@ -125,7 +125,7 @@ This section extends the approved foundation only as far as the seven sections b
 ### Shared surface patterns
 
 - A reusable content-card pattern is justified for Problems, Services, and Audiences and for future approved project cards: Surface background, `1px` Border, `16px` radius, no shadow, and `24px` compact or `32px` medium/wide internal padding.
-- Cards in one group should align visually but do not need forced equal heights when that would create excessive empty space. Content remains top-aligned.
+- Cards in each repeated homepage group use equal, content-driven grid tracks based on the tallest card in that group. The card surfaces fill their tracks so Problems, Services, and Audiences remain visually even while still growing safely for longer translations or text zoom; no fixed pixel height or content clipping is used.
 - The card surface itself is not an action. Do not add hover elevation, pointer cursors, or focus styles to non-interactive cards; only an actual link or button receives interaction treatment.
 - A reusable section-shell pattern may provide the approved container, spacing, background, heading measure, and section CTA alignment. This is a design pattern, not a requirement to introduce a new application abstraction.
 - Existing primary and secondary action styles are reused unchanged. Text links may use Action blue with an underline visible on hover and focus, but must not depend on color alone.
