@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { HomeAudiencesContent } from './content-types';
-import { HomepageContentCard } from './HomepageContentCard';
-import { HomepageSectionHeading } from './HomepageSectionHeading';
+import { CommercialContentCard } from '../commercial/CommercialContentCard';
+import { CommercialSectionHeading } from '../commercial/CommercialSectionHeading';
 
 interface HomeAudiencesProps {
   content: HomeAudiencesContent;
@@ -12,11 +12,11 @@ export function HomeAudiences({ content, actionHref }: HomeAudiencesProps) {
   return (
     <section id="audiences" aria-labelledby="audiences-heading" className="bg-foundation-surface py-16 md:py-20 lg:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <HomepageSectionHeading headingId="audiences-heading" heading={content.heading} />
+        <CommercialSectionHeading headingId="audiences-heading" heading={content.heading} />
         <ul className="mt-8 grid list-none gap-6 md:grid-cols-2">
           {content.audiences.map((item) => (
             <li key={item.title}>
-              <HomepageContentCard title={item.title} description={item.description} />
+              <CommercialContentCard title={item.title} description={item.description} />
             </li>
           ))}
         </ul>

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { HomeServicesSectionContent } from './content-types';
-import { HomepageContentCard } from './HomepageContentCard';
-import { HomepageSectionHeading } from './HomepageSectionHeading';
+import { CommercialContentCard } from '../commercial/CommercialContentCard';
+import { CommercialSectionHeading } from '../commercial/CommercialSectionHeading';
 
 interface HomeServicesProps {
   content: HomeServicesSectionContent;
@@ -12,11 +12,11 @@ export function HomeServices({ content, actionHref }: HomeServicesProps) {
   return (
     <section id="services" aria-labelledby="services-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <HomepageSectionHeading headingId="services-heading" heading={content.heading} intro={content.introduction} />
+        <CommercialSectionHeading headingId="services-heading" heading={content.heading} intro={content.introduction} />
         <ul className="mt-8 grid list-none gap-6 lg:grid-cols-3">
           {content.services.map((item) => (
             <li key={item.title}>
-              <HomepageContentCard title={item.title} description={item.description} />
+              <CommercialContentCard title={item.title} description={item.description} />
             </li>
           ))}
         </ul>

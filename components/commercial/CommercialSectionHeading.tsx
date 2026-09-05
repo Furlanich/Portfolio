@@ -1,14 +1,14 @@
-interface HomepageSectionHeadingProps {
+interface CommercialSectionHeadingProps {
   headingId: string;
   heading: string;
   intro?: string;
 }
 
-export function HomepageSectionHeading({
+export function CommercialSectionHeading({
   headingId,
   heading,
   intro,
-}: HomepageSectionHeadingProps) {
+}: CommercialSectionHeadingProps) {
   return (
     <div className="max-w-[68ch]">
       <h2

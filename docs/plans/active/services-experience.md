@@ -323,19 +323,20 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 - Modify: homepage section components that import the two current primitives
 - Delete: `components/homepage/HomepageSectionHeading.tsx`
 - Delete: `components/homepage/HomepageContentCard.tsx`
+- Create: `scripts/commercial-primitives.test.mjs`
 - Modify: `docs/plans/active/services-experience.md`
 
-- [ ] **Step 1: Capture the behavior-neutral contract**
+- [x] **Step 1: Capture the behavior-neutral contract**
 
   Record the current public props, rendered elements, heading levels, class names, and call sites for `HomepageSectionHeading` and `HomepageContentCard`. Confirm neither contains homepage-specific public prose, state, route behavior, or section identity.
 
-- [ ] **Step 2: Move and rename the two primitives**
+- [x] **Step 2: Move and rename the two primitives**
 
   Create the neutral `components/commercial/` modules with equivalent props, markup, and classes. Update homepage imports and component names. Delete the old modules only after `rg` confirms there are no remaining imports.
 
   Do not introduce an index barrel, polymorphic `as` API, variant engine, class-merging dependency, or general card system. This PR proves reuse through one narrow move; Services begins consuming the primitives only in Task 3.
 
-- [ ] **Step 3: Verify no public behavior changed**
+- [x] **Step 3: Verify no public behavior changed**
 
   Run:
 
@@ -345,9 +346,9 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   Build both normal and base-path exports. Perform a focused browser smoke check on `/` and `/en/` at one narrow and one wide viewport, checking section headings, cards, overflow, focus styling on adjacent links, and console/runtime errors. Record only observations actually made.
 
-- [ ] **Step 4: Review, record, and open PR 2**
+- [x] **Step 4: Review, record, and open PR 2**
 
-  Confirm the diff contains only the two moves, import updates, and plan progress. Compare generated homepage HTML or DOM structure before/after where practical. Update Progress, then open a human-reviewed PR titled `refactor: share commercial presentation primitives`. Do not merge automatically.
+  Confirm the diff contains only the two moves, import updates, the focused contract test, and plan progress. Compare generated homepage HTML or DOM structure before/after where practical. Update Progress, then open a human-reviewed PR titled `refactor: share commercial presentation primitives`. Do not merge automatically.
 
 ### Task 3 / PR 3: Integrate and verify the complete Services experience
 
@@ -576,7 +577,9 @@ These decisions do not block the approved static text-led Services experience an
 
 - 2026-09-05: Task 1 implementation completed on codex/services-experience-plan: added the typed bilingual content contract, exact Spanish and English Services content, evidence-safe boundaries, semantic localized service fragments, and focused tests while preserving the existing rendered MinimumDestination routes.
 - 2026-09-05: Focused RED observed the four expected missing-contract failures while existing foundation route tests passed; focused GREEN passed 8/8 tests. Full validation passed: npm run docs:check, npm test (30/30), npm run lint, npm run typecheck, and npm run build. Build emitted only the existing Browserslist freshness notice; no rendered Services integration was performed in this phase.
-- 2026-09-05: Task 1 review-ready Pull Request [#17](https://github.com/Furlanich/Portfolio/pull/17) is open from codex/services-experience-plan to main. Human review and merge are required before Task 2.
+- 2026-09-05: Task 1 Pull Request [#17](https://github.com/Furlanich/Portfolio/pull/17) merged into `main`; Task 2 started from the merged result on `codex/services-experience-primitives`.
+- 2026-09-05: Task 2 completed on `codex/services-experience-primitives`: promoted the behavior-neutral section-heading and content-card primitives to `components/commercial/`, rewired the six homepage consumers, removed the homepage-specific modules, and added a focused contract test. Services does not consume the primitives until Task 3.
+- 2026-09-05: Task 2 focused RED observed the expected missing-module failure, then GREEN passed 1/1. Full validation passed: `npm run validate` (31/31 tests), normal build, and base-path build. Browser smoke passed for `/` at 375x812 and `/en/` at 1440x900: expected headings/cards rendered, overflow was false, adjacent-link focus showed a visible outline, and no runtime errors were reported. Review-ready Pull Request [#18](https://github.com/Furlanich/Portfolio/pull/18) is open against `main` and remains unmerged; human review and merge are required before Task 3.
 
 - 2026-09-05: Initiative 3 product/content, service, evidence, design, responsive, accessibility, anchor, CTA, and commercial-boundary decisions are approved in their authoritative owners. Web has one limited text-only evidence acknowledgement; WhatsApp and Consulting have no approved public evidence items.
 - 2026-09-05: Governance review classified implementation as a versioned plan under `ADR-STATIC-LOCALIZED-ROUTING`. No consequential unresolved product or architecture decision, RFC, ADR amendment, dependency decision, provider decision, or release-only concern blocks implementation.
