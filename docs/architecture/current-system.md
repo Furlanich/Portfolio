@@ -5,6 +5,7 @@ status: APPROVED
 related:
   - ARCH-FINDINGS
   - IA-SITE
+  - PAGE-SERVICES
 last_verified: 2026-09-05
 ---
 
@@ -122,6 +123,12 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - The existing header and footer expose the localized in-page Process destination (`/#proceso` and `/en/#process`) on all eight foundation routes without adding a route ID.
 - The static artifact verifier checks both homepage narratives, stable labelled sections, visible headings, required internal actions, the confirmed WhatsApp action, document languages, route references, and optional base-path integrity.
 - The implementation uses the existing foundation palette, typography, spacing, borders, responsive grid rules, target sizing, focus treatment, and reduced-motion behavior. No dependencies, routes, hosting settings, metadata architecture, form, imagery, or project evidence changed.
+
+## Current Services implementation before Initiative 3
+
+- `/servicios/` and `/en/services/` still render the shared foundation `MinimumDestination` with the approved introductory sentence, three summary items, and one Contact action.
+- The current routes do not yet render service situations, outcomes, examples, scope, exclusions, dependencies, fit/non-fit guidance, evidence status, contextual service CTAs, cross-service principles, or stable service fragments.
+- This is a deliberate minimum destination from the homepage-foundation cutover, not the intended complete Services experience defined by `PAGE-SERVICES`.
 
 ## Environment
 

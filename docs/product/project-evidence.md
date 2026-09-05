@@ -9,7 +9,7 @@ related:
   - SERVICE-WEB
   - SERVICE-WHATSAPP
   - SERVICE-CONSULTING
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 ---
 
 # Project evidence inventory
@@ -227,7 +227,7 @@ This audit reviewed the retained `data/projects.json` records and `public/projec
 
 - General Reservation System → `Motor de reservas adaptable para negocios de servicios`
 - Appointment & Operations SaaS → `Gestión de turnos y operaciones para empresas de servicios`
-- MPC Administración, if anonymized production → `Sistema interno de gestión para una empresa de producción alimentaria`
+- MPC Administración → `Prototipo educativo para gestionar producción y stock de una organización ficticia`
 - Busesfy, if identity is approved → `Presencia web comercial para una empresa de transporte`
 - Documancer → `Exploración de generación y gestión de contenido asistido`
 
@@ -281,9 +281,39 @@ Meeting this gate makes the item eligible for editorial selection; it does not g
 
 | Launch service | Current provisional evidence | Gap |
 |---|---|---|
-| Commercial websites | Busesfy and reservation-related work | Permissions and functional verification. |
+| Commercial websites | General Reservation System implementation evidence plus an unresolved Busesfy record | Functional verification and publication-ready limitations for the reservation work; relationship, authorship, and permissions for Busesfy. |
 | WhatsApp automation | No clearly inventoried public example | A truthful Laboratory demonstration or approved client summary. |
 | Maintenance and consulting | Experience description only | An approved anonymized real intervention story, or process-only explanation until one exists. |
+
+## Services-page evidence eligibility — APPROVED 2026-09-05
+
+This matrix closes Initiative 3 publication use without changing any item's underlying maturity or permission status. `Suitable for Services` means the item may support the service page now in the exact form stated; it does not make the item a client case, a production solution, or `ready` for a project card.
+
+| Evidence item | Service relevance | Maturity and origin | Restricted/confidential | Publication permission | Suitable for Services page | Suitable for Projects page | Public-use decision |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Busesfy | `SERVICE-WEB` | Production/Laboratory/prototype **OPEN**; ownership or client relationship **OPEN** | Treat as restricted while relationship and permissions are unknown | URL reachability only; identity, description, UI, and commercial-use permission **OPEN** | **No.** Do not name, describe, or link it in public Services content | **No, currently unsuitable.** Reassess only after relationship, maturity, authorship, and item permissions are recorded | Unsuitable for public evidence now |
+| MPC Administración | Weak `SERVICE-WEB`/internal-system relevance | Confirmed 2021 educational founder work for a fictional organization; non-production; functional prototype **PROPOSED**, not verified | Not client-confidential; screenshot and third-party competition-material reuse remain unresolved | Public founder repository may be linked; broader description and visual reuse remain item-specific | **No.** Age, educational context, and unverified behavior make it poor service proof | **Secondary candidate only**, after behavior, limitations, description, and visuals are reviewed | Suitable only for a possible future Founder/Projects context, not Services |
+| General Reservation System | Strongest current `SERVICE-WEB` candidate for bookings | Founder-published source; production use not evidenced; functional prototype **PROPOSED** with implementation evidence only | No client identity; screenshots and represented build remain unresolved | Public source link is permitted; working-demo, visual, and outcome publication are not | **Limited text-only use approved.** Services may acknowledge the repository and its unresolved demonstration/limitations; no card, screenshot, demo link, production label, or outcome | **Deferred.** Eligible for future Projects consideration only after reproducible behavior, limitations, accurate bilingual story, and visuals are ready | Limited Services disclosure; richer public use not ready |
+| Appointment & Operations SaaS / ChronoApp | Possible web/operations and AI relevance | Maturity and ownership **OPEN**; legacy concept text; recorded repository unavailable | No client identity established; other permissions **OPEN** | No usable repository evidence or item-level permission | **No** | **No, currently unsuitable** | Unsuitable for public use until evidence is located or the item is retired |
+| Documancer | Optional tailored AI capability; weak launch-service relevance | Founder-published early-stage non-production work; Laboratory or prototype **PROPOSED** | No client identity; screenshot state and suitability unresolved | Public Apache-2.0 source may be linked; other claims and visuals remain item-specific | **No.** It must not be used to imply a standalone AI service or mature commercial capability | **Secondary Laboratory/Founder candidate only**, after functional verification and an accurate limited story | Suitable only for possible future Projects/Founder context, not Services |
+
+No inventoried item is confirmed production evidence suitable for the Services page. No item supports `SERVICE-WHATSAPP`, and no item documents a maintenance/consulting intervention. Personal or founder work is identified as such; none may be reframed as client work.
+
+### SERVICE-WEB evidence closure
+
+The page may use the General Reservation System only as an explicit evidence-status note: a public founder repository supplies implementation evidence, while working behavior, limitations, imagery, and commercial presentation remain under review. This is useful because it demonstrates that the offer is not supported by an invented client claim while preserving the strongest truthful repository signal. It is not a project card and does not link to the broken demo.
+
+### SERVICE-WHATSAPP evidence closure
+
+No suitable public evidence exists. The Services page must say this plainly and rely on scoped offer language, provider boundaries, and direct accountability rather than a fabricated case, certification, screenshot, metric, or testimonial. A future Laboratory demonstration or approved anonymized client summary must enter the normal publication lifecycle before it can replace this status.
+
+### SERVICE-CONSULTING evidence closure
+
+No suitable public intervention record exists. General experience, source-code maintenance activity, or confidential work is not enough to claim a public outcome. The Services page may explain the diagnostic method and confidentiality posture, but it must not style those statements as project evidence. A future anonymized intervention requires authorized scope, action, result, and disclosure terms.
+
+### Services-page presentation rule
+
+Evidence status appears as concise text within each service section, not as three equal cards. Logos, screenshots, metrics, maturity badges, unavailable links, and project-card affordances are excluded. This honest asymmetry is implementation-ready; richer evidence remains **DEFERRED**, not a blocker for the page.
 
 ## Approved editorial rules
 

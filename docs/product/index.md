@@ -6,7 +6,8 @@ related:
   - BRAND-POSITIONING
   - IA-SITE
   - PAGE-HOME
-last_verified: 2026-09-04
+  - PAGE-SERVICES
+last_verified: 2026-09-05
 ---
 
 # Product documentation
@@ -36,3 +37,5 @@ Product documentation defines what the FURLANICH website is, who it serves, why 
 - [`PAGE-CONTACT` and `PAGE-PRIVACY`](pages/contact-and-privacy.md)
 
 `PAGE-NOT-FOUND` is defined at the responsibility level in the information architecture because no detailed content design has been approved.
+
+Initiative 3 makes `PAGE-SERVICES` implementation-ready in Spanish and English, including stable anchors, service-specific scope and boundaries, truthful evidence status, contextual CTAs, design/accessibility requirements, and an explicit readiness matrix. Future evidence and contractual terms remain governed by their owning records rather than blocking the approved page.

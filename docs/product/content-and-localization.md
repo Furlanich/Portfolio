@@ -6,8 +6,9 @@ related:
   - BRAND-POSITIONING
   - IA-SITE
   - PAGE-HOME
+  - PAGE-SERVICES
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 ---
 
 # Content and localization
@@ -34,6 +35,14 @@ At the time of the foundation slice, English adaptations outside that minimum we
 - These adaptations are approved for implementation. They preserve the Spanish commercial meaning without forcing Spanish syntax or literal vocabulary into English.
 - Existing Spanish text is not blanket approval for English publication. Any future project card, page, or claim still needs its own reviewed English adaptation.
 - The project-card variant of `HOME-PROOF` remains **OPEN** because no project is currently publication-ready in `PROJECT-EVIDENCE`.
+
+## Complete Services English scope — APPROVED
+
+- Exact natural English copy for the `/en/services/` introduction, all three service sections, fit and non-fit guidance, provider and commercial boundaries, evidence status, contextual CTAs, cross-service principles, AI note, and final CTA is owned by [`PAGE-SERVICES`](pages/services.md#english-content-approved).
+- The English adaptation preserves the approved Spanish product meaning while using natural business phrasing such as `enquiry`, `booking`, `handover`, and `existing system` where appropriate. It does not translate voseo mechanically or turn internal stable IDs into visible technical language.
+- Spanish and English use equivalent content order and disclosure meaning. Different sentence structure is acceptable; different promises, inclusions, exclusions, evidence strength, or provider responsibility are not.
+- The stable equivalent fragments are `#web` ↔ `#web`, `#whatsapp` ↔ `#whatsapp`, and `#consultoria` ↔ `#consulting`.
+- English content for other unfinished pages and future project evidence remains subject to separate approval.
 
 ## Voice — APPROVED
 
@@ -113,7 +122,7 @@ Before final public content is complete, the repository needs:
 - client logo and description permissions;
 - founder photograph;
 - final form/privacy provider details;
-- final English adaptations outside the approved complete homepage and minimum destination slice;
+- final English adaptations outside the approved complete homepage, complete Services page, and existing minimum destination slices;
 - verified public URLs and repositories.
 
 The founder photograph and unresolved project evidence do not block the approved text-led commercial homepage. They remain dependencies for later visual or project-card variants only.

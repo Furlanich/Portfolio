@@ -5,10 +5,11 @@ status: APPROVED
 related:
   - IA-SITE
   - PAGE-HOME
+  - PAGE-SERVICES
   - PAGE-CONTACT
   - PAGE-PROJECTS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -105,9 +106,48 @@ These requirements extend the foundation baseline to `HOME-PROBLEMS` through `HO
 - All content and CTA destinations remain available when JavaScript or CSS motion is unavailable.
 - Informative future imagery needs purpose-based alternative text. Decorative icons and connectors are hidden from assistive technology. No image is required to understand any approved launch section.
 
-### Verification boundary
+### Commercial-homepage verification boundary
 
 Implementation must verify the new sections at the existing compact, medium, and wide viewport samples, including `320px`, in both languages. Keyboard traversal, visible focus, source order, anchor navigation, touch-target sizing, reduced motion, JavaScript-disabled content, and an automated accessibility scan are required evidence. Passing those checks supports the implementation review but does not by itself establish whole-site WCAG conformance.
+
+## Services page interaction and responsive baseline — APPROVED
+
+These requirements extend the existing applicable WCAG 2.2 Level AA target to the complete `PAGE-SERVICES` experience without claiming audited whole-site conformance.
+
+### Reflow and reading order
+
+- The page remains usable without horizontal scrolling at `320px` CSS viewport width in both languages. Long headings, provider names, URLs, and CTA labels wrap without clipping.
+- Every service and internal group keeps one DOM/source order at every width. Layout must not move boundaries, dependencies, fit guidance, evidence, or CTAs ahead of the situation and outcome for assistive technology.
+- Web's three level cards reflow from one column compact to two medium and three wide. WhatsApp's four level cards use one column compact and two columns medium/wide. Scope/boundary and fit/non-fit pairs stack compact and may use two columns from medium when content remains readable.
+- Principles use one column compact and two columns medium/wide. Cards and panels grow with content; no fixed height, truncation, horizontal carousel, or essential accordion is used.
+- Every service CTA remains reachable immediately after that service's evidence content. The final CTA remains the last page section.
+
+### Structure and semantics
+
+- Keep one `main` landmark and one meaningful H1. `SERVICE-WEB`, `SERVICE-WHATSAPP`, `SERVICE-CONSULTING`, cross-service principles, and the final CTA are labelled sections with visible H2 elements and stable unique heading IDs. Internal group headings are H3 elements; styling must not skip or flatten the heading hierarchy.
+- Situations, work/scope levels, representative examples, engagement scope, exclusions, principles, and commercial boundaries use list semantics when presented as peer items. Visual cards do not replace `ul` semantics.
+- The service index is a `nav` with a localized accessible name and a `ul` of ordinary fragment links. It is not a tablist, menu, landmark duplicated at every section, or horizontally scrolling control.
+- Fit, non-fit, dependency, limitation, and evidence status remain explicit text. Meaning does not depend on side-by-side position, color, icon, hover, or imagery.
+- Non-interactive cards and panels are not focus targets and do not receive pointer or button semantics.
+
+### Anchors, keyboard, and focus
+
+- Approved fragments are `#web`, `#whatsapp`, and `#consultoria` in Spanish, and `#web`, `#whatsapp`, and `#consulting` in English. IDs are unique within each document.
+- Fragment navigation lands on the corresponding labelled service without hiding its H2 beneath the header. Use adequate scroll margin rather than inserting an empty anchor target.
+- In-page links, language switching, and all CTAs are keyboard operable in logical source order and use the approved visible focus treatment without clipping.
+- Service-index and CTA targets are at least `44px` in both dimensions; primary CTA controls remain at least `48px` high. Wrapped index links keep distinct hit areas and visible focus.
+- Equivalent-language switching should preserve the matching service fragment when the current URL contains an approved service anchor; falling back to the equivalent page root must never produce a broken fragment.
+- `:target` styling, if present, is supplementary and must not flash, animate, or provide the only indication of location.
+
+### Motion and disclosure
+
+- Service content does not use entrance reveals, sticky scroll effects, animated counters, accordions required to access limitations, or motion-dependent anchor cues.
+- Smooth scrolling is optional and disabled under `prefers-reduced-motion: reduce`. Content and fragment destinations remain usable without JavaScript.
+- Provider caveats, commercial boundaries, and evidence status are not collapsed by default or hidden behind hover, tooltips, or `Read more` controls.
+
+### Services-page verification boundary
+
+Implementation must verify `/servicios/` and `/en/services/` at `320x800`, `375x812`, `768x1024`, `1024x768`, and `1440x900`, plus the optional `/Portfolio` base path. Required evidence covers no horizontal overflow, complete content growth, source and heading order, list/landmark semantics, every fragment from direct load and in-page navigation, unobscured anchor headings, language-switch fragment mapping or safe fallback, keyboard traversal, visible focus, target sizing, touch behavior, reduced motion, JavaScript-disabled content, and an automated accessibility scan. Passing these checks supports review but does not establish whole-site conformance.
 
 ## Existing implementation context — CURRENT, NOT TARGET
 
@@ -125,13 +165,13 @@ The existing navigation, localization, form, motion, and interaction behavior is
 - Avoid horizontal carousels for essential service or project information.
 - Keep line lengths comfortable on wide screens.
 
-## OPEN decisions beyond the commercial homepage
+## OPEN decisions beyond the commercial homepage and Services page
 
 - Whole-site conformance claims, audit scope, and any certification remain unresolved; only the commercial-homepage target above is approved.
-- Breakpoints and container behavior for pages and components outside the commercial homepage.
+- Breakpoints and container behavior for pages and components outside the approved homepage and Services baselines.
 - Header behavior while scrolling.
 - Motion language outside the commercial homepage and basic control-state transitions.
 - Project-card interaction beyond the approved homepage constraints.
-- Touch, tablet, and landscape-specific layouts outside the commercial homepage.
+- Touch, tablet, and landscape-specific layouts outside the approved homepage and Services baselines.
 - Formal browser/device support matrix.
 - Whole-site automated and manual accessibility validation strategy.

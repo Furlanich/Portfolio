@@ -6,8 +6,9 @@ related:
   - BRAND-POSITIONING
   - PROJECT-EVIDENCE
   - PAGE-HOME
+  - PAGE-SERVICES
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 ---
 
 # Visual language
@@ -146,6 +147,48 @@ This section extends the approved foundation only as far as the seven sections b
 - If a later implementation adds a familiar decorative icon, it uses the existing icon dependency, remains secondary to the text label, and is hidden from assistive technology. Do not create a new icon set or use technology logos as service illustrations.
 - A founder photograph remains optional. If later approved, it must have a meaningful editorial purpose, truthful alternative text where informative, and a layout that remains complete without it.
 
+## Services page visual baseline — APPROVED
+
+This baseline extends the homepage primitives for the complete `PAGE-SERVICES` experience. It introduces page-specific compositions, not a separate visual system or generalized component library.
+
+### Page rhythm and section surfaces
+
+- Reuse the approved Canvas, Surface, Ink, Muted ink, Action blue, Action blue strong, Action tint, Border, Inter hierarchy, `1200px` container, gutters, button treatments, and `64px`/`80px`/`96px` section rhythm.
+- The introduction uses Canvas; `SERVICE-WEB` uses Surface; `SERVICE-WHATSAPP` uses Canvas; `SERVICE-CONSULTING` uses Surface; cross-service principles use Canvas; and the final CTA uses Action tint.
+- Each service is a full semantic section with its own H2 and opening statement. Do not place an entire long service inside one card or make all content visually equal.
+- Internal groups use the existing `16px`, `24px`, `32px`, `48px`, and `64px` spacing tokens. A service heading and lead remain within a readable measure before structured groups begin.
+
+### Service index
+
+- Present the introduction's service index as a compact, labelled Surface navigation panel with a `1px` Border, `16px` radius, and wrapped text links.
+- The index is non-sticky and does not become a horizontally scrolling rail. Links reuse the standard text-link/focus treatment and do not resemble a pricing selector or tab control.
+
+### Service-section composition
+
+- Use plain text and semantic lists for situations, outcomes, representative examples, and typical scope. Cards are reserved for groups where visual comparison helps; the page must not become a wall of equal boxes.
+- Web's three work levels use three restrained content cards at wide sizes, two then one when narrower. WhatsApp's four scope levels use a two-by-two layout at medium/wide sizes and one column compact. These are explanatory categories, not purchasable tiers: no price, highlight, popular state, or selection control appears.
+- Typical scope and `Not automatically included` may use a paired two-panel composition at wide sizes. The boundary panel uses the same neutral palette and clear heading rather than warning red, danger iconography, or fine-print styling.
+- `Good fit` and `When another option may be better` use two adjacent neutral panels at medium/wide sizes and stack in that source order compact.
+- Dependencies use a full-width bordered panel or clearly separated text block. Do not hide provider constraints in a tooltip, accordion, footnote, or low-contrast small print.
+- Evidence status is a concise muted note within each service. It must not imitate a project card, testimonial, metric panel, certification badge, or client-logo strip. No project image is required.
+- Each service CTA follows its evidence and fit content, reusing the standard primary-action style. The three CTAs are separated by long service sections and do not appear together as a competing action group.
+
+### Cross-service and final CTA composition
+
+- Present the six principles as a simple one-column compact and two-column medium/wide list. Short bold labels lead each item; do not repeat the homepage Process numerals or connector treatment.
+- Commercial boundaries and the AI note use readable text blocks with visible headings. The AI note receives no special gradient, illustration, logo, or accent that would imply a fourth service.
+- The final CTA reuses the homepage Action-tint band, narrow copy measure, and standard primary action. It contains no form, secondary WhatsApp action, or new CTA variant.
+
+### Services-page alternatives and trade-offs
+
+| Decision | Alternatives considered | Approved choice and reason |
+| --- | --- | --- |
+| Long-page navigation | No index; sticky side rail; non-sticky wrapped index | Non-sticky wrapped index. It improves scanning and sharing without persistent layout weight or mobile overflow. |
+| Service composition | One giant card per service; dense all-card layout; text-led sections with selective panels | Text-led sections with selective panels. This preserves hierarchy and keeps important limits visible without making every paragraph look equivalent. |
+| Scope categories | Pricing-style tiers; tabs; explanatory cards | Explanatory cards. They distinguish complexity without implying packages or requiring interaction. |
+| Dependency treatment | Fine print; warning alerts; visible neutral panel | Visible neutral panel. Dependencies are material qualification information, not errors and not optional legal copy. |
+| Evidence treatment | Equal case-study cards; omit evidence; honest text status | Honest text status. The available evidence is asymmetric and must not be visually inflated. |
+
 ## Alternatives and trade-offs
 
 | Decision | Alternatives considered | Approved choice and reason |
@@ -176,13 +219,13 @@ The existing visual system, styling, assets, and motion implementation are recor
 - Label generated or conceptual imagery so it cannot be mistaken for a real implementation.
 - Prefer real product evidence for Laboratory/prototype work when available.
 
-## OPEN target decisions beyond the commercial homepage
+## OPEN target decisions beyond the commercial homepage and Services page
 
 - Custom logo symbol, monogram, and extended brand-lockup system.
 - Extended semantic colors, including form validation and project-evidence states.
-- Complete type hierarchy beyond the commercial homepage.
-- Page- and component-specific density outside the commercial homepage.
-- Detailed navigation, form, and evidence-badge variants beyond the approved foundation actions and homepage surfaces.
+- Complete type hierarchy beyond the commercial homepage and Services page.
+- Page- and component-specific density outside the approved homepage and Services baselines.
+- Detailed global navigation, form, and evidence-badge variants beyond the approved foundation, homepage, and Services patterns.
 - Photography, illustration, screenshot, and abstract-graphic direction.
 - A broader icon system or custom icon requirements.
 - Whether a dark theme is ever introduced.

@@ -10,6 +10,7 @@ related:
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
   - PAGE-HOME
+  - PAGE-SERVICES
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
@@ -71,6 +72,19 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - The later-section reflow, semantics, list structure, targets, focus, keyboard, anchor, reduced-motion, and verification rules are approved in [`DESIGN-IX-A11Y`](../design/interaction-responsive-accessibility.md#commercial-homepage-section-baseline-approved).
 - No new routing, localization, hosting, dependency, CMS, backend, or design-system architecture is required for these sections.
 
+### Services experience decision closure
+
+- The complete bilingual `/servicios/` and `/en/services/` structure, exact copy, contextual service CTAs, final CTA, evidence treatment, conversion review, and readiness matrix are approved in [`PAGE-SERVICES`](../product/pages/services.md).
+- The six-part page hierarchy is retained. A compact non-sticky service index is approved within the introduction; FAQ, pricing, a technology catalogue, testimonials, service subpages, and a fourth AI service are not added.
+- `SERVICE-WEB` distinguishes commercial sites/catalogues, transactional ordering/booking/payment flows, and portals/custom web applications without presenting packages or tiers.
+- `SERVICE-WHATSAPP` distinguishes basic contact, automated flows, bot-assisted interaction, official provider/API integration, and client-system integration. Meta/WhatsApp policy, templates where applicable, providers, fees, client systems, and feasibility remain explicit dependencies.
+- `SERVICE-CONSULTING` is approved as work on an identifiable existing system: diagnosis, defect investigation, stabilization, updates, integrations, performance, technical debt, modernization planning, and continuity by agreement. A new system is a development engagement, and no support SLA is implied.
+- Stable service anchors are approved: Spanish `#web`, `#whatsapp`, and `#consultoria`; English `#web`, `#whatsapp`, and `#consulting`. The homepage keeps its single Services-page-root CTA.
+- Each service section uses one contextual CTA to the localized Contact page; the final CTA remains general. No CTA implies a quote, free diagnosis, package, or guaranteed acceptance.
+- The Services page is evidence-ready with honest asymmetric status copy: limited text-only acknowledgement of General Reservation System for Web, and explicit absence of publishable WhatsApp and consulting evidence. No service project card, logo, metric, testimonial, certification, or simulated case study is approved.
+- The Services visual, responsive, semantic, anchor, keyboard, focus, target, motion, and verification extensions are approved in [`DESIGN-VISUAL`](../design/visual-language.md#services-page-visual-baseline-approved) and [`DESIGN-IX-A11Y`](../design/interaction-responsive-accessibility.md#services-page-interaction-and-responsive-baseline-approved).
+- The complete Services experience fits `ADR-STATIC-LOCALIZED-ROUTING`. It requires a versioned execution plan, not an RFC, new ADR, route, dependency, CMS, backend, hosting change, or new design-system architecture.
+
 ### Homepage foundation decision closure
 
 - The English `HOME-HERO` adaptation is approved in [`PAGE-HOME`](../product/pages/home.md#home-hero-approved-english-adaptation).
@@ -109,21 +123,20 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 ## OPEN
 
-- Extended visual identity and design-system decisions beyond the approved commercial homepage: custom mark, additional semantic colors, full component variants, and broader imagery.
+- Extended visual identity and design-system decisions beyond the approved commercial homepage and Services-page baselines: custom mark, additional semantic colors, full component variants, and broader imagery.
 - Confirmed commercial domain and canonical production URL. This is a **RELEASE BLOCKER**, not an implementation or integration blocker.
 - Final form provider, privacy wording, consent treatment, data retention period, and third-party disclosures. These are **RELEASE BLOCKERS** for the completed inquiry experience, not blockers for hero implementation.
 - Final legal and contractual review of commercial boundaries.
 - Founder photograph and any later CV redesign; both are non-blocking for the commercial homepage.
 - Remaining item-level project maturity, permission scope, metrics, public descriptions, visual provenance, and future project-card selection.
-- Public evidence for WhatsApp automation and maintenance/consulting.
+- Richer public evidence for WhatsApp automation and maintenance/consulting. Its absence is explicit and does not block the approved Services page.
 - Busesfy's ownership/client relationship, maturity, public-description permission, screenshot permission, and client identity permission.
 - General Reservation System functional-demonstration status and future homepage eligibility; its recorded demo currently returns 404.
 - ChronoApp ownership, implementation status, and replacement or retirement of its unavailable repository evidence.
 - Whether any individual service pages will be needed after launch performance is observed.
 - Long-term hosting after the current static-export/GitHub Pages migration slice; changing hosting remains a future architecture decision and does not block the foundation.
 - Whole-site responsive behavior, accessibility audit/conformance claims, and performance budgets beyond the approved commercial-homepage baseline.
-- English copy outside the approved complete homepage and minimum Services, Contact, and Founder destinations, plus future translated project evidence.
-- Exact service-section fragment identifiers on `/servicios/`, including whether `#web`, `#whatsapp`, or `#consultoria` are used, and whether fragment-specific CTAs are required. This is non-blocking for the foundation.
+- English copy outside the approved complete homepage, complete Services page, and minimum Contact and Founder destinations, plus future translated project evidence.
 
 ## REJECTED
 

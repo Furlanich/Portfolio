@@ -8,10 +8,11 @@ related:
   - IA-SITE
   - PROJECT-EVIDENCE
   - PAGE-CONTACT
+  - PAGE-SERVICES
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 ---
 
 # Spanish homepage
@@ -202,7 +203,7 @@ That validation is a non-blocking post-launch content-learning activity. It does
 
 **Section CTA:** `Ver todos los servicios` → `/servicios/`
 
-Individual service-card CTAs are **REJECTED** for this homepage version because all three would lead to the same page root and compete with the section action. The cards are informational and the section has one CTA. Service-page fragment identifiers remain **OPEN** for `PAGE-SERVICES`, but they do not block this homepage section.
+Individual service-card CTAs are **REJECTED** for this homepage version because the cards are informational and three actions would compete with the section action. The section retains one CTA to the Services page root. `PAGE-SERVICES` now approves stable fragments for in-page navigation and other genuinely contextual links; that later decision does not make the homepage cards interactive or change this CTA.
 
 **Evidence:** Each service should eventually connect to at least one relevant evidence item. Missing evidence remains visible in `PROJECT-EVIDENCE`.
 

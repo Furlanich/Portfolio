@@ -6,7 +6,7 @@ related:
   - HOME-PROCESS
   - PAGE-SERVICES
   - PAGE-CONTACT
-last_verified: 2026-09-02
+last_verified: 2026-09-05
 ---
 
 # Delivery and commercial boundaries
@@ -23,6 +23,22 @@ The four public phases are:
 The exact homepage language is owned by [`HOME-PROCESS`](pages/home.md#home-process).
 
 ## Engagement model — PROPOSED
+
+The detailed commercial defaults below remain proposed and are not public contractual commitments.
+
+## Services-page public boundary — APPROVED
+
+`PAGE-SERVICES` may use bounded informational wording that:
+
+- says price and timing follow diagnosis and scope rather than publishing fixed commitments;
+- rejects guaranteed business metrics, fixed delivery dates, uninterrupted availability, and outcomes controlled by adoption or third parties;
+- states that hosting, domains, licences, payment services, messaging, APIs, and subscriptions are separate unless expressly included;
+- identifies client responsibility for authorized content, data, access, accounts, decisions, and validation;
+- treats post-delivery maintenance, scope changes, and ongoing support as separate agreements;
+- distinguishes the commercial inquiry response target from any support SLA;
+- leaves payment, acceptance, ownership, warranty, liability, tax, and contractual terms to a proposal or agreement and appropriate review.
+
+This language makes the page implementation-ready without approving the payment percentages, warranty period, ownership rule, support tiers, liability position, or other proposed terms below.
 
 ### Qualification and discovery
 
