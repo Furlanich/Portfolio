@@ -92,7 +92,7 @@ function assertHomepageContent(content, expected) {
   assert.equal(content.cta.description, expected.cta.description);
   assert.equal(content.cta.responseStatement, expected.cta.responseStatement);
   assertAction(content.cta.primaryAction, 'contact', expected.cta.primaryAction);
-  assert.equal(content.cta.secondaryAction, {
+  assert.deepEqual(content.cta.secondaryAction, {
     label: expected.cta.secondaryAction,
     kind: 'whatsapp',
     href: whatsappHref,
