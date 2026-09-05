@@ -5,6 +5,8 @@ const {
   foundationRouteIds,
   foundationRoutes,
   getFoundationPath,
+  homeProcessAnchors,
+  getHomeProcessHref,
 } = await import('../lib/site-routes.ts');
 const { getFoundationNavigationPaths } = await import('../lib/foundation-navigation.ts');
 
@@ -38,7 +40,14 @@ test('resolves each semantic route id to its locale-specific path', () => {
   }
 });
 
-test('returns working navigation links and the equivalent-language destination', () => {
+test('resolves the localized homepage Process anchor without adding a route', () => {
+  assert.deepEqual(homeProcessAnchors, { es: 'proceso', en: 'process' });
+  assert.equal(getHomeProcessHref('es'), '/#proceso');
+  assert.equal(getHomeProcessHref('en'), '/en/#process');
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'contact', 'founder']);
+});
+
+test('returns working navigation links, Process, and the equivalent-language destination', () => {
   for (const locale of ['es', 'en']) {
     const alternateLocale = locale === 'es' ? 'en' : 'es';
 
@@ -51,12 +60,14 @@ test('returns working navigation links and the equivalent-language destination',
           services: paths.services,
           contact: paths.contact,
           founder: paths.founder,
+          process: paths.process,
         },
         {
           home: expectedRoutes.home[locale],
           services: expectedRoutes.services[locale],
           contact: expectedRoutes.contact[locale],
           founder: expectedRoutes.founder[locale],
+          process: getHomeProcessHref(locale),
         },
       );
       assert.equal(paths.alternateLocale, alternateLocale);

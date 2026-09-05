@@ -5,6 +5,7 @@ status: APPROVED
 related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
+  - PLAN-HOMEPAGE-COMPLETION
   - PAGE-HOME
   - PROJECT-EVIDENCE
 last_verified: 2026-09-04
@@ -42,4 +43,4 @@ Front matter records the overall governance status of a document. In mixed-statu
 
 Stage A preserves product and design knowledge, and Stage B adds the lightweight engineering harness. Stage C accepted the homepage-foundation localized-routing architecture in [`ADR-STATIC-LOCALIZED-ROUTING`](decisions/static-localized-routing.md); [`PLAN-HOMEPAGE-FOUNDATION`](plans/completed/homepage-foundation.md) records its completed four-PR delivery.
 
-Initiative 2 closes the commercial homepage sections below `HOME-HERO` in [`PAGE-HOME`](product/pages/home.md), including complete Spanish/English copy, minimum later-section design rules, a readiness matrix, and an approved evidence-safe `HOME-PROOF` fallback. [`PROJECT-EVIDENCE`](product/project-evidence.md) records that no current project is eligible for a homepage card. The homepage may proceed to implementation planning within the accepted architecture; project cards and other release/full-site concerns remain OPEN in their owners.
+Initiative 2 closes the commercial homepage sections below `HOME-HERO` in [`PAGE-HOME`](product/pages/home.md), including complete Spanish/English copy, minimum later-section design rules, a readiness matrix, and an approved evidence-safe `HOME-PROOF` fallback. [`PROJECT-EVIDENCE`](product/project-evidence.md) records that no current project is eligible for a homepage card. [`PLAN-HOMEPAGE-COMPLETION`](plans/active/homepage-completion.md) now governs a behavior-neutral content/anchor contract PR followed by one atomic bilingual rendered integration; project cards and other release/full-site concerns remain OPEN in their owners.
