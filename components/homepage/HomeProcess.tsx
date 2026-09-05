@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { HomeProcessContent } from './content-types';
-import { HomepageSectionHeading } from './HomepageSectionHeading';
+import { CommercialSectionHeading } from '../commercial/CommercialSectionHeading';
 
 interface HomeProcessProps {
   content: HomeProcessContent;
@@ -12,7 +12,7 @@ export function HomeProcess({ content, anchorId, actionHref }: HomeProcessProps)
   return (
     <section id={anchorId} aria-labelledby={`${anchorId}-heading`} className="bg-foundation-surface py-16 md:py-20 lg:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <HomepageSectionHeading headingId={`${anchorId}-heading`} heading={content.heading} />
+        <CommercialSectionHeading headingId={`${anchorId}-heading`} heading={content.heading} />
         <ol className="mt-8 grid list-none gap-6 md:grid-cols-2 lg:grid-cols-4">
           {content.steps.map((step, index) => (
             <li key={step.title}>

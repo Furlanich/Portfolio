@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { HomeProblemsContent } from './content-types';
-import { HomepageContentCard } from './HomepageContentCard';
-import { HomepageSectionHeading } from './HomepageSectionHeading';
+import { CommercialContentCard } from '../commercial/CommercialContentCard';
+import { CommercialSectionHeading } from '../commercial/CommercialSectionHeading';
 
 interface HomeProblemsProps {
   content: HomeProblemsContent;
@@ -15,11 +15,11 @@ export function HomeProblems({ content, actionHref }: HomeProblemsProps) {
   return (
     <section id="problems" aria-labelledby="problems-heading" className="bg-foundation-surface py-16 md:py-20 lg:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <HomepageSectionHeading headingId="problems-heading" heading={content.heading} intro={content.introduction} />
+        <CommercialSectionHeading headingId="problems-heading" heading={content.heading} intro={content.introduction} />
         <ul className="mt-8 grid list-none gap-6 md:grid-cols-2">
           {content.situations.map((item) => (
             <li key={item.title}>
-              <HomepageContentCard title={item.title} description={item.description} />
+              <CommercialContentCard title={item.title} description={item.description} />
             </li>
           ))}
         </ul>
