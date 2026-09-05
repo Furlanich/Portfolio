@@ -28,7 +28,7 @@ Tailwind CSS provides utility styling and the small component primitives. `next/
 
 The dependency boundary is Next.js, React, TypeScript, Tailwind, Framer Motion, React Hook Form, and Lucide React. The approved foundation has no runtime localization dependency. Repository checks are documentation integrity, Node-based validator tests, ESLint, TypeScript no-emit checking, and the production static build. See [current system](docs/architecture/current-system.md) and [quality findings](docs/architecture/current-quality-findings.md) for evidence and limits.
 
-Task 2 current state: the complete commercial homepage is merged with eight static Spanish-root and English-/en/ foundation routes, route-owned bilingual content, a shared eight-section Server Component composition, and Process navigation on the existing foundation routes. The implementation preserves the static-export and optional GitHub Pages base-path constraints while retaining legacy source material for later migration.
+Task 2 current state: the complete commercial homepage is merged with eight static Spanish-root and English-/en/ foundation routes, route-owned bilingual content, a shared eight-section Server Component composition, and Process navigation on the existing foundation routes. Task 3 current state: the localized Services routes render one shared locale-agnostic Server Component composition with route-owned typed bilingual content, stable localized service fragments, contextual Contact actions, and the approved evidence-safe text-led hierarchy. The implementation preserves the static-export and optional GitHub Pages base-path constraints while retaining legacy source material for later migration.
 
 ## APPROVED product constraints
 

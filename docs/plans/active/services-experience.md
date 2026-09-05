@@ -375,7 +375,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 - Modify: `scripts/verify-static-export.mjs`
 - Modify after facts are demonstrated: `ARCHITECTURE.md`, `docs/architecture/current-system.md`, `docs/architecture/current-quality-findings.md`, `docs/plans/active/services-experience.md`
 
-- [ ] **Step 1: Write failing route and static-artifact contracts**
+- [x] **Step 1: Write failing route and static-artifact contracts**
 
   Create `scripts/services-route.test.mjs` to assert both route entries import the shared `ServicesPage`, pass only their locale-owned `servicesPageContent`, and no longer render `MinimumDestination`.
 
@@ -393,7 +393,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   Run the focused test and artifact verifier against the current build and record RED: routes still use `MinimumDestination`, and complete rendered sections do not exist.
 
-- [ ] **Step 2: Implement the shared semantic composition**
+- [x] **Step 2: Implement the shared semantic composition**
 
   Build `ServicesPage` as a Server Component that returns one `main` in the exact approved order. Resolve every `ActionLink` through the existing route adapter before rendering. Components must not branch on locale, look up translations, inspect `window.location`, or require hydration.
 
@@ -403,7 +403,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   `ServicesPrinciples` renders six principles, bounded commercial copy, and one visible AI-note heading/body. `ServicesFinalCta` renders the general inquiry action and approved response statement. If `ServicesActionLink` does not remove genuine repeated markup without hiding styling semantics, render the four links directly and omit the file.
 
-- [ ] **Step 3: Apply the approved visual composition**
+- [x] **Step 3: Apply the approved visual composition**
 
   Reuse the Canvas, Surface, Ink, Muted, Action, and Border tokens; Inter typography; 1200 px container; existing gutters; button patterns; and established compact/medium/wide section rhythm.
 
@@ -421,13 +421,13 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   Use responsive CSS reflow, not JavaScript viewport branching. Avoid fixed content heights, line clamping, horizontal card scrolling, decorative motion, or controls that imply unavailable interaction.
 
-- [ ] **Step 4: Replace both minimum destinations atomically**
+- [x] **Step 4: Replace both minimum destinations atomically**
 
   Update `/servicios/` and `/en/services/` route entries in the same PR to render `ServicesPage` between the existing header and footer. Remove the compatibility-only minimal `servicesContent` export once all consumers have moved; retain no duplicated summary copy. Update `scripts/foundation-content.test.mjs` to test the new owner rather than an obsolete minimum-destination shape.
 
   Confirm the route modules remain Server Components, metadata and localized alternates remain unchanged, and the existing page-root language switch still reaches the equivalent Services page. Do not add client logic to preserve fragments.
 
-- [ ] **Step 5: Run focused GREEN and static-export verification**
+- [x] **Step 5: Run focused GREEN and static-export verification**
 
   Run:
 
@@ -447,7 +447,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   Use the repository static verifier after each build if `npm run build` does not already invoke it. Confirm the normal artifacts are `/servicios/index.html` and `/en/services/index.html`, and the base-path-served links target `/Portfolio/...` as expected. Restore a normal build if later browser QA requires it. Do not commit `.next`, `out`, screenshots, or generated declarations changed only by the build.
 
-- [ ] **Step 6: Perform the approved visual and accessibility QA matrix**
+- [x] **Step 6: Perform the approved visual and accessibility QA matrix**
 
   Follow the repository `visual-qa` Skill. Start the existing supported server/preview and verify the actual served paths, including the base path rather than assuming `/`.
 
@@ -476,7 +476,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   Run the repository's available automated accessibility scan on both locale routes and both export modes where the environment supports it. Record zero findings only when the tool actually reports zero; otherwise record exact findings or an explicit unverified limitation. Automated scanning supplements rather than proves the project's WCAG 2.2 AA target.
 
-- [ ] **Step 7: Perform conversion, evidence, and source audits**
+- [x] **Step 7: Perform conversion, evidence, and source audits**
 
   Read each rendered locale from H1 to final CTA and confirm the journey remains: problem recognition → service understanding → likely outcome → examples → boundaries/dependencies → fit → truthful evidence → inquiry.
 
@@ -484,7 +484,7 @@ PR 1 is the only authorized first implementation PR. PR 2 and PR 3 must not begi
 
   Verify all external/provider language remains conditional and no wording implies Meta/WhatsApp, payment, hosting, API, or other provider commitments.
 
-- [ ] **Step 8: Synchronize demonstrated implementation facts**
+- [x] **Step 8: Synchronize demonstrated implementation facts**
 
   Update `ARCHITECTURE.md`, `docs/architecture/current-system.md`, and `docs/architecture/current-quality-findings.md` only with facts demonstrated by the completed implementation and verification. Update this plan's checkboxes and Progress with PR links and actual results. Do not change deferred evidence, contact-form, commercial/legal, hosting, or whole-site accessibility statuses.
 
@@ -580,6 +580,8 @@ These decisions do not block the approved static text-led Services experience an
 - 2026-09-05: Task 1 Pull Request [#17](https://github.com/Furlanich/Portfolio/pull/17) merged into `main`; Task 2 started from the merged result on `codex/services-experience-primitives`.
 - 2026-09-05: Task 2 completed on `codex/services-experience-primitives`: promoted the behavior-neutral section-heading and content-card primitives to `components/commercial/`, rewired the six homepage consumers, removed the homepage-specific modules, and added a focused contract test. Services does not consume the primitives until Task 3.
 - 2026-09-05: Task 2 focused RED observed the expected missing-module failure, then GREEN passed 1/1. Full validation passed: `npm run validate` (31/31 tests), normal build, and base-path build. Browser smoke passed for `/` at 375x812 and `/en/` at 1440x900: expected headings/cards rendered, overflow was false, adjacent-link focus showed a visible outline, and no runtime errors were reported. Review-ready Pull Request [#18](https://github.com/Furlanich/Portfolio/pull/18) is open against `main` and remains unmerged; human review and merge are required before Task 3.
+- 2026-09-05: Task 3 focused RED observed the expected route-contract failure and, after the verifier control-flow correction, the expected incomplete MinimumDestination artifact failures. Focused GREEN passed the complete content, route, fragment, and migrated ownership suite; normal and `/Portfolio` static artifact verification passed.
+- 2026-09-05: Task 3 implementation now renders both localized Services routes through shared locale-agnostic Server Components, removes the compatibility-only `servicesContent` owner, preserves semantic ActionLink resolution, and records the demonstrated architecture/quality facts. The approved normal visual matrix, base-path spot checks, fragment navigation, focus/target checks, reduced-motion check, no-JavaScript-style server-rendered check, and axe-core scans all passed. The final completion gate passed with `npm run validate` (32/32 tests) and normal static verification; base-path static verification also passed. PR 3 remains to be opened after the final committed diff review.
 
 - 2026-09-05: Initiative 3 product/content, service, evidence, design, responsive, accessibility, anchor, CTA, and commercial-boundary decisions are approved in their authoritative owners. Web has one limited text-only evidence acknowledgement; WhatsApp and Consulting have no approved public evidence items.
 - 2026-09-05: Governance review classified implementation as a versioned plan under `ADR-STATIC-LOCALIZED-ROUTING`. No consequential unresolved product or architecture decision, RFC, ADR amendment, dependency decision, provider decision, or release-only concern blocks implementation.

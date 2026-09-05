@@ -29,6 +29,14 @@ The findings below are retained pre-cutover evidence. The current foundation and
 - Keyboard focus exposed the approved 3px visible outline, reduced-motion mode changed smooth scrolling to `auto` and transitions to `0s`, and Process navigation landed on the localized hash. Spanish and English axe-core scans each reported zero violations, zero incomplete checks, and 35 passes; no page errors or console output were observed after clearing the browser logs.
 - Screenshots were captured for the required home-route viewport matrix in the non-repository visual QA workspace and were intentionally not committed. JavaScript-disabled rendering was not separately exercised in this phase; the homepage remains server-rendered and static-exported, while a whole-site accessibility claim remains OPEN.
 
+## Current Services verification — 2026-09-05
+
+- `/servicios/` and `/en/services/` were checked at `320x800`, `375x812`, `768x1024`, `1024x768`, and `1440x900`; both locales rendered one `main`, one H1, the approved H2 sequence, unique service IDs, wrapped index links, and no horizontal overflow.
+- Direct Spanish `#whatsapp` and base-path `#consultoria` loads landed with the target section below the header; in-page index navigation reached `#whatsapp`; language switching from an anchored Spanish Services route safely fell back to `/en/services/` without a broken fragment.
+- Compact index links measured at least 44px high and the four primary Services CTAs measured 48px high in both locales. Keyboard focus exposed the approved 3px outline with a 2px offset.
+- The browser's axe-core 4.12.1 scan reported zero violations and zero incomplete checks with 35 passes for each locale at the wide viewport. Reduced-motion emulation remained content-complete, and aborting Next static script requests left server-rendered content and anchors available.
+- `/Portfolio/servicios/` at `375x812` and `/Portfolio/en/services/` at `1440x900` retained the base path, localized index links, complete content, and no overflow. Screenshots were captured outside the repository and were not committed. Whole-site accessibility conformance remains OPEN.
+
 ## Pre-cutover findings
 
 ## Architecture and localization
