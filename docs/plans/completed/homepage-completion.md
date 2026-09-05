@@ -514,14 +514,14 @@ These items do not block the approved text-led homepage and must not be silently
 
 Task 1 materialized the approved bilingual content and Process-anchor contracts without changing the rendered homepage. Task 2 then published the seven approved later sections atomically through the shared `CommercialHomepage` Server Component composition, with the evidence-safe `HOME-PROOF` fallback preserved.
 
-The implementation is review-ready on `codex/homepage-completion-integration` with the PR targeting `main`. The PR number is recorded here after creation; merge authority remains with the human reviewer.
+The implementation is review-ready on `codex/homepage-completion-integration` in [PR #16](https://github.com/Furlanich/Portfolio/pull/16), targeting `main`. Merge authority remains with the human reviewer.
 
 ## Progress
 
 - 2026-09-04: Initiative 2 product/content, evidence, design, responsive, accessibility, and narrative decisions closed in their authoritative owners. All seven later sections are ready; `HOME-PROOF` is ready only as the approved evidence-safe fallback.
 - 2026-09-04: Governance review classified implementation as a versioned plan under `ADR-STATIC-LOCALIZED-ROUTING`. No unresolved consequential architecture, RFC, ADR amendment, dependency decision, or release-only concern blocks implementation.
 - 2026-09-05: Task 1 / PR 1 is implemented on `codex/homepage-completion-content-contracts`; the complete typed bilingual content contract, localized Process anchors, focused tests, and behavior-neutral scope review are complete. Full validation passed: documentation check, 26 Node tests, lint, typecheck, and production build. The initial CI run exposed and the branch corrected one structural-equality test assertion. Its review remains human-controlled and unmerged.
-- 2026-09-05: Task 2 / PR 2 is implemented on `codex/homepage-completion-integration`; both localized homepages now render the exact eight-section narrative, shared Process navigation is available on all eight foundation routes, and the static verifier covers headings, IDs, actions, WhatsApp, and base-path integrity. Normal and `/Portfolio` browser checks passed at the required homepages/viewports; axe-core reported zero violations on both home routes. The normal and base-path production builds, full validation, and artifact checks passed. Browser screenshots were captured under the visual QA workspace; no screenshot was committed.
+- 2026-09-05: Task 2 / PR 2 is implemented on `codex/homepage-completion-integration` in [PR #16](https://github.com/Furlanich/Portfolio/pull/16); both localized homepages now render the exact eight-section narrative, shared Process navigation is available on all eight foundation routes, and the static verifier covers headings, IDs, actions, WhatsApp, and base-path integrity. Normal and `/Portfolio` browser checks passed at the required homepages/viewports; axe-core reported zero violations on both home routes. The normal and base-path production builds, full validation, and artifact checks passed. Browser screenshots were captured under the visual QA workspace; no screenshot was committed. The PR remains open and unmerged for human review.
 
 ## Important implementation decisions
 
