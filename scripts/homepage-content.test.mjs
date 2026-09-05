@@ -131,6 +131,8 @@ test('Spanish home content contains the approved complete homepage contract', ()
     },
     proof: {
       heading: 'Credibilidad sin promesas infladas',
+      introduction:
+        'FURLANICH solo presenta un trabajo cuando su contexto, estado y permiso de publicación están claros. No convertimos prototipos en historias de clientes ni publicamos métricas sin una fuente verificable.',
       action: 'Conocer la trayectoria de Samuel',
     },
     process: {
@@ -183,6 +185,8 @@ test('English home content contains the approved natural adaptation', () => {
     },
     proof: {
       heading: 'Credibility without inflated claims',
+      introduction:
+        'FURLANICH only presents work when its context, status, and publication permission are clear. We do not turn prototypes into client stories or publish metrics without a verifiable source.',
       action: "View Samuel's background",
     },
     process: {
