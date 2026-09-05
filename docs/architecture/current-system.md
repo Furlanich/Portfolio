@@ -124,11 +124,13 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - The static artifact verifier checks both homepage narratives, stable labelled sections, visible headings, required internal actions, the confirmed WhatsApp action, document languages, route references, and optional base-path integrity.
 - The implementation uses the existing foundation palette, typography, spacing, borders, responsive grid rules, target sizing, focus treatment, and reduced-motion behavior. No dependencies, routes, hosting settings, metadata architecture, form, imagery, or project evidence changed.
 
-## Current Services implementation before Initiative 3
+## Current complete Services implementation — Task 3
 
-- `/servicios/` and `/en/services/` still render the shared foundation `MinimumDestination` with the approved introductory sentence, three summary items, and one Contact action.
-- The current routes do not yet render service situations, outcomes, examples, scope, exclusions, dependencies, fit/non-fit guidance, evidence status, contextual service CTAs, cross-service principles, or stable service fragments.
-- This is a deliberate minimum destination from the homepage-foundation cutover, not the intended complete Services experience defined by `PAGE-SERVICES`.
+- `/servicios/` and `/en/services/` render one shared locale-agnostic `ServicesPage` Server Component between the existing localized header and footer.
+- Locale-owned typed content supplies the complete introduction, three services, cross-service principles, commercial boundaries, AI note, and final CTA; the composition contains no public locale copy or client-side locale state.
+- The page exposes stable localized service fragments (`#web`, `#whatsapp`, `#consultoria`, and `#consulting`), semantic index navigation, contextual Contact actions, and the approved text-led evidence treatment.
+- Service levels use the shared commercial content-card primitive; scope, dependencies, fit/non-fit, evidence, and commercial boundaries remain visible without disclosure interaction.
+- Normal and `/Portfolio` static artifact verification passed for the complete Services requirements. The complete implementation remains within the existing route tree, static export, and base-path architecture.
 
 ## Environment
 

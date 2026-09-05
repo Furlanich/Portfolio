@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 
 const modules = [
   { locale: 'es', routeId: 'home', path: '../app/(es)/_content/home.ts', exportName: 'homeContent' },
-  { locale: 'es', routeId: 'services', path: '../app/(es)/_content/services.ts', exportName: 'servicesContent' },
+  { locale: 'es', routeId: 'services', path: '../app/(es)/_content/services.ts', exportName: 'servicesPageContent' },
   { locale: 'es', routeId: 'contact', path: '../app/(es)/_content/contact.ts', exportName: 'contactContent' },
   { locale: 'es', routeId: 'founder', path: '../app/(es)/_content/founder.ts', exportName: 'founderContent' },
   { locale: 'en', routeId: 'home', path: '../app/(en)/en/_content/home.ts', exportName: 'homeContent' },
-  { locale: 'en', routeId: 'services', path: '../app/(en)/en/_content/services.ts', exportName: 'servicesContent' },
+  { locale: 'en', routeId: 'services', path: '../app/(en)/en/_content/services.ts', exportName: 'servicesPageContent' },
   { locale: 'en', routeId: 'contact', path: '../app/(en)/en/_content/contact.ts', exportName: 'contactContent' },
   { locale: 'en', routeId: 'founder', path: '../app/(en)/en/_content/founder.ts', exportName: 'founderContent' },
 ];
@@ -54,6 +54,15 @@ function assertNoUnsafeStrings(content) {
   );
 }
 
+function collectSemanticActions(value, actions = []) {
+  if (Array.isArray(value)) value.forEach((item) => collectSemanticActions(item, actions));
+  else if (value && typeof value === 'object') {
+    if (typeof value.label === 'string' && typeof value.routeId === 'string') actions.push(value);
+    else Object.values(value).forEach((item) => collectSemanticActions(item, actions));
+  }
+  return actions;
+}
+
 test('exports one typed foundation content model for every locale and route', async () => {
   for (const definition of modules) {
     const loaded = await import(definition.path);
@@ -71,12 +80,7 @@ test('uses semantic route ids for every internal action', async () => {
 
   for (const definition of modules) {
     const content = (await import(definition.path))[definition.exportName];
-    const actions = [
-      content.primaryAction,
-      content.secondaryAction,
-      content.action,
-      content.contactAction,
-    ].filter(Boolean);
+    const actions = collectSemanticActions(content);
 
     for (const action of actions) {
       assert.equal(typeof action.routeId, 'string');
@@ -126,8 +130,8 @@ test('preserves the minimum founder migration inputs in both locales', async () 
 test('keeps the approved minimum homepage and services copy', async () => {
   const spanishHome = (await import('../app/(es)/_content/home.ts')).homeContent;
   const englishHome = (await import('../app/(en)/en/_content/home.ts')).homeContent;
-  const spanishServices = (await import('../app/(es)/_content/services.ts')).servicesContent;
-  const englishServices = (await import('../app/(en)/en/_content/services.ts')).servicesContent;
+  const spanishServices = (await import('../app/(es)/_content/services.ts')).servicesPageContent;
+  const englishServices = (await import('../app/(en)/en/_content/services.ts')).servicesPageContent;
 
   assert.equal(spanishHome.eyebrow, 'Desarrollo de software a medida para pymes');
   assert.equal(spanishHome.heading, 'Software práctico para vender, atender y operar mejor.');
@@ -136,10 +140,10 @@ test('keeps the approved minimum homepage and services copy', async () => {
   assert.equal(spanishHome.secondaryAction.routeId, 'services');
   assert.equal(englishHome.primaryAction.routeId, 'contact');
   assert.equal(englishHome.secondaryAction.routeId, 'services');
-  assert.equal(spanishServices.heading, 'Servicios para necesidades concretas');
-  assert.equal(englishServices.heading, 'Services for concrete business needs');
+  assert.equal(spanishServices.introduction.heading, 'Servicios para resolver necesidades concretas del negocio');
+  assert.equal(englishServices.introduction.heading, 'Services for concrete business needs');
   assert.equal(spanishServices.services.length, 3);
   assert.equal(englishServices.services.length, 3);
-  assert.equal(spanishServices.action.routeId, 'contact');
-  assert.equal(englishServices.action.routeId, 'contact');
+  assert.equal(spanishServices.finalCta.action.routeId, 'contact');
+  assert.equal(englishServices.finalCta.action.routeId, 'contact');
 });
