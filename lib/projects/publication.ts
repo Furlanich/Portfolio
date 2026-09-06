@@ -8,7 +8,41 @@ import type {
   ResolvedProjectCard,
 } from '../../components/projects/content-types';
 
-export const publishedProjectManifest: readonly PublicProjectManifestEntry[] = [];
+export const publishedProjectManifest: readonly PublicProjectManifestEntry[] = [
+  {
+    id: 'PROJECT-GRS',
+    slug: 'general-reservation-system',
+    maturity: 'prototype',
+    services: ['web'],
+    publicationScope: 'limited',
+    destination: {
+      kind: 'external',
+      href: 'https://github.com/Furlanich/GeneralReservationSystem',
+    },
+  },
+  {
+    id: 'PROJECT-THE-SYSTEM',
+    slug: 'the-system',
+    maturity: 'lab',
+    services: ['web'],
+    publicationScope: 'limited',
+    destination: {
+      kind: 'external',
+      href: 'https://github.com/Furlanich/The-System',
+    },
+  },
+  {
+    id: 'PROJECT-MPC-ADMIN',
+    slug: 'mpc-administracion',
+    maturity: 'prototype',
+    services: ['web'],
+    publicationScope: 'limited',
+    destination: {
+      kind: 'external',
+      href: 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-',
+    },
+  },
+];
 
 const allowedMaturities = new Set<PublicProjectManifestEntry['maturity']>([
   'production',
@@ -115,6 +149,7 @@ export function getPublishedProjectCards(
       slug: entry.slug,
       maturity: entry.maturity,
       serviceIds: entry.services,
+      publicationScope: entry.publicationScope,
       action: resolveProjectAction(entry, locale),
       visual: entry.visual,
     };

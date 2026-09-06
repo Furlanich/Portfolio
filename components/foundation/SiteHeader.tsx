@@ -10,6 +10,7 @@ interface SiteHeaderProps {
     navigation: string;
     menu: string;
     services: string;
+    projects: string;
     process: string;
     founder: string;
     contact: string;
@@ -56,6 +57,7 @@ function PrimaryNavigationItems({
 export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
   const navigationLinks = [
     { href: paths.services, label: labels.services },
+    { href: paths.projects, label: labels.projects },
     { href: paths.process, label: labels.process },
     { href: paths.founder, label: labels.founder },
     { href: paths.contact, label: labels.contact },

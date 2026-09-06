@@ -11,6 +11,8 @@ test('keeps the shared SiteHeader server-renderable', () => {
   assert.doesNotMatch(source, /\bon[A-Z][A-Za-z]+\s*=\s*\{/);
   assert.doesNotMatch(source, /\bwindow\./);
   assert.doesNotMatch(source, /\bdocument\./);
+  assert.match(source, /paths\.projects/);
+  assert.match(source, /labels\.projects/);
 });
 
 test('anchors the wordmark to a non-sticky top target on the localized home route', () => {

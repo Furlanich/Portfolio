@@ -25,6 +25,37 @@ export const projectPageContent = {
       routeId: 'contact',
     },
   },
-  cards: {},
+  cards: {
+    'PROJECT-GRS': {
+      title: 'Passenger transport reservation management',
+      context: 'Passenger transport',
+      maturityLabel: 'Reservation prototype',
+      summary:
+        'Reference implementation for managing routes, stations, seat availability, reservations, and passenger self-service. It is published as implementation evidence; no production use or measured business outcome is claimed.',
+      capabilities: ['Reservations', 'Seat availability', 'Passenger portal'],
+      evidenceSignal: 'Public source',
+      actionLabel: 'View source',
+    },
+    'PROJECT-THE-SYSTEM': {
+      title: 'Multi-user role-playing campaign management',
+      context: 'FURLANICH Lab · Role-playing operations',
+      maturityLabel: 'FURLANICH Lab',
+      summary:
+        'Web-application lab with identity and access, campaigns, memberships and invitations, and subscription boundaries represented in code. It is published as implementation evidence; planned areas are not presented as delivered.',
+      capabilities: ['Identity and access', 'Multi-user permissions', 'Campaign management'],
+      evidenceSignal: 'Public source',
+      actionLabel: 'View source',
+    },
+    'PROJECT-MPC-ADMIN': {
+      title: 'Educational production and inventory management',
+      context: 'Educational group project · Fictional manufacturing operations',
+      maturityLabel: 'Educational prototype',
+      summary:
+        'A 2021 group project for a fictional organization, with administration workflows for production, inventory, users, logs, and curing data. It is published as educational implementation evidence, not as client work or a production system.',
+      capabilities: ['Production', 'Inventory', 'Administration'],
+      evidenceSignal: 'Public source',
+      actionLabel: 'View source',
+    },
+  },
   details: {},
 } satisfies ProjectsPageContent;

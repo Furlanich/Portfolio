@@ -23,7 +23,7 @@ last_verified: 2026-09-06
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task by task. Use the repository visual-qa Skill for every rendered Projects task. Steps use checkbox (- [ ]) syntax for tracking.
 
-**Goal:** Establish a fail-closed public project-content boundary and, only after authoritative evidence records approve at least one item, publish the complete bilingual Projects index and every eligible project-detail route without exposing internal permission or audit data.
+**Goal:** Use the established fail-closed public project-content boundary to publish the complete bilingual Projects index for the three READY cards and add project-detail routes only when a later item independently passes that gate, without exposing internal permission or audit data.
 
 **Architecture:** Extend the accepted explicit Spanish-root and English-/en/ static App Router trees. Internal evidence and permission records remain Markdown under docs/product/projects/. Application routes consume only an explicit public publication manifest plus route-owned localized public copy; shared locale-agnostic Server Components receive resolved public view models. No runtime data source, locale negotiation, filter state, or backend is introduced.
 
@@ -56,7 +56,7 @@ last_verified: 2026-09-06
 
 ## Objective
 
-Turn the approved Projects product/design decisions into a staged implementation path that is safe with today's zero-item public inventory. The first slice creates a typed, testable publication boundary without changing the site. Later slices publish only the evidence that has separately passed the repository's evidence, permission, bilingual-content, asset, and detail-eligibility gates.
+Turn the approved Projects product/design decisions into a staged implementation path. Task 1 created a typed, testable publication boundary without changing the site. Three records now pass the card-publication gate, so Task 2 may publish their exact approved bilingual content; later detail work remains conditional on separate evidence, permission, content, asset, and eligibility gates.
 
 ## Governance classification
 
@@ -77,9 +77,9 @@ Reclassify and stop if implementation proposes any rejected infrastructure, chan
 | Requirements | PAGE-PROJECTS, PAGE-PROJECT-DETAIL, CONTENT-LOCALIZATION, DESIGN-VISUAL, DESIGN-IX-A11Y, IA-SITE, PAGE-SERVICES, PAGE-HOME, PAGE-CONTACT |
 | Affected architecture | Existing ADR-STATIC-LOCALIZED-ROUTING; no accepted boundary changes |
 | Required artifact | This active plan at docs/plans/active/projects-evidence-experience.md |
-| Current implementation boundary | PR 1 may add only unused public contracts, an empty whitelist, localized page-shell copy, and tests. Public routes/UI/assets remain blocked. |
+| Current implementation boundary | Task 1's empty public contract is merged. Task 2 may add exactly the three READY image-free cards, localized index routes, and navigation; detail routes, project assets, and homepage integration remain blocked. |
 | Validation | npm run docs:check for this plan; npm run validate and PR-specific root/base-path checks during implementation |
-| Unresolved questions | Item permission, relationship, functional verification, approved assets, and detail eligibility in the item owners; canonical origin and broader release concerns remain OPEN |
+| Unresolved questions | Functional verification, approved assets, detail eligibility, and homepage eligibility beyond the three cards' limited scope; remaining candidate permissions; canonical origin and broader release concerns remain OPEN |
 | Approval | Human review of this planning PR and every implementation PR; merge remains human-controlled |
 
 ## Requirements implemented
@@ -100,12 +100,12 @@ Reclassify and stop if implementation proposes any rejected infrastructure, chan
 
 | Count | Current result |
 | --- | ---: |
-| READY public cards | 0 |
+| READY public cards | 3 |
 | READY-SUMMARY-ONLY public cards | 0 |
 | Detail-page-ready projects | 0 |
-| Blocked, private, retired, or founder-only records | 6 |
+| Blocked, private, or retired records | 3 |
 
-Busesfy and The-System are BLOCKED-PERMISSION. General Reservation System is BLOCKED-FUNCTIONAL-VERIFICATION. MPC Administración is FOUNDER-ONLY. ChronoApp is RETIRED. Documancer is PRIVATE. None may appear in application public content during PR 1.
+General Reservation System, The-System, and MPC Administración are READY for limited, image-free, source-backed cards in that editorial order. Their evidence strength remains `implementation-evidence`, and their item records approve no detail route or homepage use. Busesfy is BLOCKED-PERMISSION, ChronoApp is RETIRED, and Documancer is PRIVATE; none may enter application public content.
 
 ## Affected architecture
 
@@ -289,7 +289,7 @@ Evidence items render as a simple semantic list/grid. One screenshot or link doe
 
 - No legacy public/projects asset is approved for reuse.
 - PR 1 references no project asset.
-- A later READY item adds only assets explicitly approved by its item record, under public/projects/[stable-slug]/ with descriptive stable names.
+- No project asset is approved for the current three-card index. A later item-level approval may add an asset under public/projects/[stable-slug]/ with a descriptive stable name.
 - Screenshots start from a documented source capture, normally 1600x900, and provide 800, 1200, and 1600px WebP/AVIF derivatives where the static exporter/browser support permits.
 - Keep the 1600px derivative near 250KB when legibility permits; do not make interface evidence unreadable to hit the target.
 - Eager-load only a verified above-the-fold/LCP image. All below-fold evidence is lazy.
@@ -301,11 +301,11 @@ Evidence items render as a simple semantic list/grid. One screenshot or link doe
 | PR | Objective | Hard gate | Public behavior |
 | --- | --- | --- | --- |
 | **1. Add the fail-closed public Projects contract — the single first implementation task** | Add public types, an empty whitelist, approved localized page-shell copy, resolvers, and publication contract tests | This planning PR is merged | None; no route, navigation item, card, detail, or asset |
-| 2. Publish the bilingual Projects index | Add public manifest/content entries, both index routes, shared card/page composition, navigation, export checks, and index QA | At least one item is READY or READY-SUMMARY-ONLY with complete ES/EN card copy and every referenced asset/link approved | Publishes useful /proyectos/ and /en/work/ routes atomically |
+| 2. Publish the bilingual Projects index | Add the three READY manifest/content entries, both index routes, shared card/page composition, navigation, export checks, and index QA | **SATISFIED 2026-09-06:** three READY item records have complete ES/EN card copy and approved repository links; no assets are referenced | Publishes useful /proyectos/ and /en/work/ routes atomically |
 | 3. Publish eligible project details | Add paired static detail routes, adaptive detail composition, evidence blocks, equivalent-language links, and detail QA | At least one published item independently satisfies the detail eligibility rule in both locales | Publishes only eligible paired detail routes; omit this PR if none qualifies |
 | 4. Retire legacy project delivery paths and close the plan | Remove proven-unused legacy JSON/types/assets/components, run complete regression/export/privacy checks, synchronize current-system docs, and complete the plan | Index is merged and every eligible detail PR is merged or explicitly omitted | No intended presentation change; removes accidental-publication paths and obsolete weight |
 
-PR 1 is the only authorized first implementation task. PR 2 must not begin until its evidence gate is recorded in PROJECT-INVENTORY and the relevant item file. PR 3 is omitted rather than filled with empty routes when no item qualifies. The optional homepage evidence upgrade is not part of this sequence.
+Task 1 / PR 1 is complete. Task 2 / PR 2 is now the single authorized next implementation task and must publish exactly the approved three-card inventory. PR 3 is omitted rather than filled with empty routes when no item qualifies. The optional homepage evidence upgrade is not part of this sequence.
 
 ## Implementation phases
 
@@ -387,6 +387,8 @@ PR 1 is the only authorized first implementation task. PR 2 must not begin until
 
 ### Evidence readiness gate before PR 2
 
+**Status: SATISFIED on 2026-09-06 for card-only publication.** PROJECT-INVENTORY and the three item records approve General Reservation System, The-System, and MPC Administración in that order. Each record supplies relationship boundaries, maturity, lifecycle, service relevance, field-level permission, exact Spanish and English card copy, an approved HTTPS repository destination, an explicit no-image decision, and No decisions for detail-page and homepage eligibility. This gate does not approve functional-demonstration language, production/client claims, imagery, details, or homepage integration.
+
 Before PR 2 begins, update the owning item record and PROJECT-INVENTORY through human review. At least one item must be READY or READY-SUMMARY-ONLY and must have:
 
 - confirmed relationship, maturity, lifecycle/publication state, service relevance, and permitted public disclosure;
@@ -396,19 +398,19 @@ Before PR 2 begins, update the owning item record and PROJECT-INVENTORY through 
 - an explicit card order position using the approved editorial policy;
 - an explicit detail-page Yes/No decision and homepage eligibility decision.
 
-If the count remains zero, stop after PR 1. Do not create the route or alter navigation.
+The count is three, so Task 2 may proceed. Any implementation field beyond the exact item-approved scope fails closed and must stop for owner review.
 
 ### Task 2 / PR 2: Publish the bilingual Projects index
 
-**Objective:** Publish a useful Projects index in both languages using only records that passed the readiness gate.
+**Objective:** Publish a useful Projects index in both languages with General Reservation System, The-System, and MPC Administración, in that editorial order and within their exact limited card scope.
 
-**Dependencies:** Task 1 is merged and the readiness gate records at least one public item.
+**Dependencies:** SATISFIED. Task 1 is merged and all three READY item records passed the card-publication gate on 2026-09-06.
 
 **Files:**
 
 - Create: components/projects/ProjectCard.tsx
 - Create: components/projects/ProjectsPage.tsx
-- Create only if a public visual exists: components/projects/ProjectVisual.tsx
+- Do not create for the current image-free inventory: components/projects/ProjectVisual.tsx
 - Create: app/(es)/proyectos/page.tsx
 - Create: app/(en)/en/work/page.tsx
 - Create: scripts/projects-route.test.mjs
@@ -416,6 +418,8 @@ If the count remains zero, stop after PR 1. Do not create the route or alter nav
 - Modify: components/projects/content-types.ts
 - Modify: app/(es)/_content/projects.ts
 - Modify: app/(en)/en/_content/projects.ts
+- Modify: app/(es)/_content/services.ts
+- Modify: app/(en)/en/_content/services.ts
 - Modify: lib/site-routes.ts
 - Modify: lib/foundation-navigation.ts
 - Modify: components/foundation/SiteHeader.tsx
@@ -424,17 +428,18 @@ If the count remains zero, stop after PR 1. Do not create the route or alter nav
 - Modify: scripts/projects-publication.test.mjs
 - Modify: scripts/site-routes.test.mjs
 - Modify: scripts/site-header.test.mjs
+- Modify: relevant Services content test(s) for the approved evidence-status wording
 - Modify: scripts/verify-static-export.mjs
 - Modify: ARCHITECTURE.md
 - Modify: docs/architecture/current-system.md
 - Modify: docs/plans/active/projects-evidence-experience.md
 - Modify: docs/governance/status-register.md
 
-- [ ] **Step 1: Update evidence authority before application content**
+- [x] **Step 1: Update evidence authority before application content**
 
-  Confirm the merged PROJECT-INVENTORY and item record expose an allowed public state and exact permission boundary. Record the approved item IDs and editorial order in the plan Progress section. If any application field exceeds the item record, stop; the application PR does not approve evidence.
+  Confirm the merged PROJECT-INVENTORY and item records still expose `PROJECT-GRS`, `PROJECT-THE-SYSTEM`, and `PROJECT-MPC-ADMIN` as READY in that editorial order with the exact permission boundary recorded on 2026-09-06. If any application field exceeds an item record, stop; the application PR does not approve evidence.
 
-- [ ] **Step 2: Extend tests and observe RED**
+- [x] **Step 2: Extend tests and observe RED**
 
   Add the approved manifest entries and exact bilingual card content, then extend publication tests for equality between the manifest and both locale maps, route destinations, service relationships, optional publication note, approved visuals, and absence of internal fields. Add route-source tests requiring both index routes to use the shared ProjectsPage and prohibiting legacy imports.
 
@@ -442,29 +447,31 @@ If the count remains zero, stop after PR 1. Do not create the route or alter nav
 
   Run npm test. Expected: RED because routes, composition, navigation, and resolver output are incomplete.
 
-- [ ] **Step 3: Publish the manifest and localized public content**
+- [x] **Step 3: Publish the manifest and localized public content**
 
-  Add exactly the human-approved records to the manifest in editorial order. Populate both locale maps from the item-approved copy. Use no legacy descriptions. Include visual metadata only when the item record approves the exact asset; otherwise omit it.
+  Add exactly `PROJECT-GRS`, `PROJECT-THE-SYSTEM`, and `PROJECT-MPC-ADMIN` to the manifest in that order. Populate both locale maps from the item-approved copy. Use no legacy descriptions and omit visual metadata for all three.
 
-  Resolve every card action before rendering. A detail action points to the paired static path only when the manifest marks detail. Summary-only records use Contact or an approved Services anchor. An external demo CTA uses the verified approved URL and accessible external-link treatment.
+  Resolve every card action before rendering. All three current cards use their item-approved external public-repository URL and `Ver código fuente / View source` treatment. A detail action points to the paired static path only when a future manifest entry marks detail. Contact, Services, demo, and other external destinations remain available only when an item record approves them.
 
-- [ ] **Step 4: Add index route and navigation ownership**
+  Synchronize the implemented Services evidence-status sentence with the newly approved wording in PAGE-SERVICES; it must still describe General Reservation System as implementation evidence without current functional verification, client work, production use, or verified outcome.
+
+- [x] **Step 4: Add index route and navigation ownership**
 
   Add projects to foundationRouteIds/foundationRoutes with /proyectos/ and /en/work/, and extend FoundationNavigationPaths. Add localized Projects/Work labels to SiteHeader and SiteFooter inputs and to every route entry that currently supplies their labels. Insert the destination in the approved navigation order without exposing Studio or Privacy work outside scope.
 
   Add both route files atomically. Each route imports only its own locale content, resolves public cards through the whitelist, computes localized navigation paths, and composes the existing header/footer around ProjectsPage. Do not add metadata origin/canonical work or runtime locale logic.
 
-- [ ] **Step 5: Implement the semantic index and card**
+- [x] **Step 5: Implement the semantic index and card**
 
   Build ProjectsPage and ProjectCard as Server Components. Reuse CommercialSectionHeading where its existing API fits without changing homepage/Services output. Render one main and H1, selected evidence, inventory-sensitive grouping, optional publication note, and final Action-tint CTA.
 
   ProjectCard renders an article/list item, concise text meta, H2 or H3 chosen by its parent section contract, natural summary, semantic non-interactive tags, evidence text, and one destination-specific link. Only the link is interactive. Use one column below 1024px and two at/above 1024px. Do not clamp text, fix card height, or add motion/shadow.
 
-- [ ] **Step 6: Add only approved assets**
+- [x] **Step 6: Add only approved assets**
 
-  Place each approved asset under public/projects/[stable-slug]/, create responsive derivatives, and connect exact dimensions and localized alt text. Verify 16:9 containment and evidence legibility. Do not migrate any legacy SVG by default.
+  Confirm that all three manifest entries omit visual metadata and that no legacy or new project asset is added. If an asset appears necessary, stop and obtain item-level approval rather than expanding this PR.
 
-- [ ] **Step 7: Verify deterministic and static behavior**
+- [x] **Step 7: Verify deterministic and static behavior**
 
   Run:
 
@@ -480,11 +487,11 @@ If the count remains zero, stop after PR 1. Do not create the route or alter nav
 
   Expected: all gates pass and the exported route count increases from eight to ten. Both index routes contain only whitelisted public content and every internal URL has exactly one configured base path.
 
-- [ ] **Step 8: Perform bilingual visual/accessibility QA**
+- [x] **Step 8: Perform bilingual visual/accessibility QA**
 
   Use visual-qa on /proyectos/ and /en/work/ at 320x800, 375x812, 768x1024, 1024x768, and 1440x900, then verify the relevant /Portfolio routes. Check no horizontal overflow, natural card growth, translation expansion, tag wrapping, CTA/evidence order, image containment/legibility, clear interaction affordance, keyboard order, visible focus, 44px targets, heading/list semantics, 200% text zoom, reduced motion, JavaScript-disabled content, console errors, page errors, and automated accessibility results.
 
-- [ ] **Step 9: Synchronize and commit**
+- [x] **Step 9: Synchronize and commit**
 
   Update current-system and status owners with demonstrated merged-ready facts, and record exact validation/visual evidence in this plan. Review the complete diff for over-disclosure, unsupported claims, unintended homepage changes, client code, dependencies, or empty routes. Commit, push, and open a human-reviewed PR without merging.
 
@@ -678,8 +685,8 @@ If no item is detail-eligible after PR 2, record PR 3 as OMITTED in Progress and
 
 ## Deferred concerns
 
-- Every candidate's current item-level evidence/permission gap remains in its owner; this plan does not promote or retire a candidate.
-- Exact public item titles, summaries, capabilities, results, evidence links, visuals, and detail sections are deferred until an item becomes READY.
+- Busesfy, ChronoApp, and Documancer retain their item-level blocked/private/retired decisions and forward requirements.
+- General Reservation System, The-System, and MPC Administración have approved card titles, summaries, capabilities, evidence links, and limitations. Their visuals, richer results, and detail sections remain deferred.
 - Project detail PR 3 is conditional and must be omitted if no item passes the detail gate.
 - Filters remain rejected until the approved inventory threshold is met.
 - HOME-PROOF integration remains a separate optional later initiative even if an item becomes homepage-eligible.
@@ -690,19 +697,25 @@ If no item is detail-eligible after PR 2, record PR 3 as OMITTED in Progress and
 
 - 2026-09-06: Initiative 4 product, evidence, disclosure, localization, card/detail, imagery, accessibility, performance, and ordering decisions were closed in PROJECT-EVIDENCE, PROJECT-INVENTORY, PROJECTS-EXPERIENCE-CLOSURE, PAGE-PROJECTS, DESIGN-VISUAL, and DESIGN-IX-A11Y.
 - 2026-09-06: Architecture classification selected Route B / PLAN. ADR-STATIC-LOCALIZED-ROUTING is sufficient; no RFC or new ADR is required.
-- 2026-09-06: Current inventory contains zero READY, zero READY-SUMMARY-ONLY, and zero detail-eligible items. Public index/detail implementation is therefore gated, while the behavior-neutral fail-closed contract is fully authorized as PR 1.
+- 2026-09-06: At planning approval, the inventory contained zero READY, zero READY-SUMMARY-ONLY, and zero detail-eligible items. Public index/detail implementation was therefore gated, while the behavior-neutral fail-closed contract was fully authorized as PR 1.
 - 2026-09-06: Repository inspection confirmed legacy data/projects.json, lib/data.ts, lib/types.ts, components/core/Card.tsx, and eight unapproved public/projects assets remain unused by the current public route tree.
 - 2026-09-06: Local repository state differs from the task premise: origin/main remains at 6417634 while the decision-closure commit 14ad8e8 exists only on the local base. This branch is based on 14ad8e8. Do not publish a planning PR that combines both initiatives; first ensure decision closure is present on remote main or obtain an explicit human-approved base.
 - 2026-09-06: Planning-branch validation passed: documentation validation covered 71 Markdown files, 50 document IDs, and 4 repository Skills; all 34 Node tests passed; lint, TypeScript no-emit checking, and the production static build passed. Existing Node module-type warnings were informational and unchanged.
 - 2026-09-06: PR 1 implementation added only the typed public contract, empty manifest, pure manifest-driven resolvers/validator, bilingual approved page-shell modules, and focused publication tests. The required RED run failed on the missing publication module; the GREEN run passed 5/5 focused tests. `npm test` passed 39/39, `npm run lint`, `npm run typecheck`, and `git diff --check` passed. Node's existing `MODULE_TYPELESS_PACKAGE_JSON` warning remained informational; no route, navigation, asset, dependency, configuration, candidate, or internal evidence data changed.
 - 2026-09-06: PR 1 final gates passed: `npm run docs:check`, `npm run validate` (39/39 tests, lint, typecheck, and static build), `npm run verify:static-export` in root mode, and the `/Portfolio` base-path build plus verifier (8 routes in both modes). The build emitted only the existing Browserslist freshness notice and Node tests emitted the existing module-type warning; both were informational and unchanged. Playwright was not available locally and no rendered surface changed, so visual/accessibility QA was not applicable to this behavior-neutral contract PR. Evidence-boundary review confirmed the manifest is empty, no candidate/internal audit data is present, and the existing eight-route public artifact remains unchanged.
+- 2026-09-06: The initiative owner promoted General Reservation System, The-System, and MPC Administración to READY for exact, image-free, source-backed bilingual cards. Evidence strength remains `implementation-evidence`; no detail page or homepage eligibility was approved. PROJECT-INVENTORY records the launch order as GRS, The-System, then MPC. Task 2 / PR 2 is unblocked.
+- 2026-09-06: The documentation-only READY promotion synchronized the three item records, evidence and experience owners, PAGE-PROJECTS, PAGE-SERVICES, migration/index summaries, architecture map, status register, and this plan. `npm run docs:check` passed for 71 Markdown files, 50 document IDs, and 4 repository Skills; `npm run validate` passed all 39 tests, lint, typecheck, and the production static build. Existing Node module-type warnings and the Browserslist freshness notice remained informational. No application implementation file or public asset changed, so visual QA was not applicable.
+- 2026-09-06: Task 2 implementation published exactly `PROJECT-GRS`, `PROJECT-THE-SYSTEM`, and `PROJECT-MPC-ADMIN` as limited, image-free, external-source cards in the approved order at `/proyectos/` and `/en/work/`. The shared header/footer now exposes localized Projects/Work navigation, and the Services evidence sentence uses the approved current-verification limitation. No detail route, visual, homepage card, filter, dependency, or legacy-source import was added; blocked, private, retired, and unresolved records remain outside the manifest.
+- 2026-09-06: Task 2 deterministic RED was observed against the stale empty-manifest and four-route contracts before the GREEN implementation. Afterward `npm test` passed 41/41, `npm run lint`, `npm run typecheck`, and `npm run docs:check` passed. Root static export and `/Portfolio` base-path export both built successfully; `npm run verify:static-export` verified 10 routes in each mode, including exact card order, source links, single H1/main semantics, no images/empty taxonomy headings/nested cards, language, and base-path integrity. `git diff --check` remains required before commit.
+- 2026-09-06: Playwright visual QA was attempted with `npx --no-install playwright --version` and the available browser surface was attempted twice; no local Playwright package or browser surface could start in this environment. No visual result is claimed. The deterministic source and generated-HTML checks cover server rendering, semantic cards/lists, keyboard-sized links/focus classes, natural-height/no-clamp/no-shadow structure, JavaScript-independent static content, and external-link treatment; the missing viewport/console/automated-a11y evidence is an explicit PR review limitation.
+- 2026-09-06: Task 2 was committed as `e1a0caa` (`feat: publish bilingual projects index`), pushed to `codex/projects-ready-promotion`, and opened as [PR #28](https://github.com/Furlanich/Portfolio/pull/28) against `main`. The PR is open for human review and has not been merged.
 
 ## Important implementation decisions
 
 - Use documentation as the internal evidence system and application source as an intentionally public projection; do not create a second permission database in TypeScript.
 - Make manifest membership the only publication whitelist and give it no permissive lifecycle default.
-- Establish the empty, behavior-neutral contract before any project becomes public.
-- Do not launch the index until at least one useful card is approved.
+- The empty, behavior-neutral contract was established before any project became public.
+- Publish the index with exactly the three approved useful cards; do not infer additional records or fields.
 - Add Projects navigation only with both useful localized index routes.
 - Require complete locale pairs instead of inventing a language-switch fallback.
 - Generate detail params only from explicit detail destinations.
@@ -712,8 +725,8 @@ If no item is detail-eligible after PR 2, record PR 3 as OMITTED in Progress and
 
 ## Deviations discovered during execution
 
-None. Future deviations must name the affected requirement, evidence, decision owner, reviewer approval, and validation impact before implementation continues.
+The initiative owner explicitly promoted three items to `READY` for limited source-backed cards without upgrading evidence strength. This narrows READY to the exact approved card publication scope and leaves relationship non-claims, runtime gaps, imagery, detail-page eligibility, and homepage eligibility visible. It changes the Task 2 gate from blocked to satisfied but does not change architecture or authorize Task 3.
 
-## Planning PR review contract
+## Historical planning PR review contract
 
-The planning PR contains documentation only. Its objective is to approve this versioned execution plan and the fail-closed first implementation boundary. It must identify Route B / PLAN, explain why Route C / RFC is unnecessary, state the zero/zero/zero/six public inventory, confirm the existing static localized architecture is sufficient, summarize the internal/public content separation and approved visual system, list the four-PR sequence, identify PR 1 as the exact first task, preserve all candidate gaps, report validation, and leave merge authority with the human reviewer.
+The merged planning PR contained documentation only and recorded the then-current zero/zero/zero/six public inventory, Route B / PLAN classification, existing static localized architecture, four-PR sequence, and PR 1 first task. That historical review state is preserved here; the current inventory and next-task authority are recorded above and in Progress.

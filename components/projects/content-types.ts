@@ -37,6 +37,7 @@ export type ResolvedProjectCard = PublicProjectCardContent & {
   slug: string;
   maturity: PublicProjectManifestEntry['maturity'];
   serviceIds: PublicProjectManifestEntry['services'];
+  publicationScope: PublicProjectManifestEntry['publicationScope'];
   action: {
     href: string;
     external: boolean;

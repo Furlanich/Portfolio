@@ -106,7 +106,7 @@ It does not automatically include a full rebuild, a new system, on-call incident
 
 ## Evidence posture — APPROVED
 
-- Commercial web work has a founder-published General Reservation System repository with implementation evidence, but functional demonstration, limitations, imagery, and publication-ready presentation remain unresolved. Busesfy remains unusable as evidence while relationship, authorship, maturity, and permission are unclear.
+- Commercial web work has three READY, source-backed Projects cards related to `SERVICE-WEB`: General Reservation System, The-System, and MPC Administración. Their limitations and bilingual presentation are approved, but they remain implementation evidence without current functional demonstration, production/client claims, approved imagery, detail pages, or homepage eligibility. Busesfy remains unusable as evidence while relationship, authorship, maturity, and permission are unclear.
 - No verified public WhatsApp-automation project is currently inventoried.
 - No approved public maintenance/consulting intervention story is currently inventoried.
 

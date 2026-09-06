@@ -13,7 +13,7 @@ last_verified: 2026-09-05
 
 ## Scope
 
-This record includes the retained pre-cutover personal-portfolio implementation and the current Task 2 commercial homepage state. The eight approved foundation routes implement the documented Spanish-root and English-/en/ route pairs; retained source data and legacy components remain in Git for later migration and cleanup.
+This record includes the retained pre-cutover personal-portfolio implementation and the current Task 2 commercial homepage and Projects index state. The ten approved foundation routes implement the documented Spanish-root and English-/en/ route pairs; retained source data and legacy components remain in Git for later migration and cleanup.
 
 ## Application stack
 
@@ -131,6 +131,13 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - The page exposes stable localized service fragments (`#web`, `#whatsapp`, `#consultoria`, and `#consulting`), semantic index navigation, contextual Contact actions, and the approved text-led evidence treatment.
 - Service levels use the shared commercial content-card primitive; scope, dependencies, fit/non-fit, evidence, and commercial boundaries remain visible without disclosure interaction.
 - Normal and `/Portfolio` static artifact verification passed for the complete Services requirements. The complete implementation remains within the existing route tree, static export, and base-path architecture.
+
+## Current Projects index implementation — Task 2
+
+- `/proyectos/` and `/en/work/` render one shared `ProjectsPage` Server Component with three image-free cards in approved order: General Reservation System, The-System, then MPC Administración.
+- The typed public manifest is the only project enumeration source. All three entries are `limited`, external-source, card-only records with no visual metadata or detail route; localized card copy is route-owned and validated against the manifest.
+- Cards expose maturity, context, evidence signal, natural summaries, two or three non-interactive capability tags, and one explicit source link. The publication-scope note and inquiry CTA remain visible in normal reading order; no filter, group, empty state, whole-card interaction, client boundary, or project asset was added.
+- Shared header/footer navigation now exposes localized Projects/Work links and the language switch maps `/proyectos/` to `/en/work/`. Normal and `/Portfolio` static artifact verification passed for ten routes. Playwright/browser visual QA was attempted but unavailable in this environment because no local Playwright package or browser surface could start; deterministic semantic/export checks remain the recorded evidence for this PR.
 
 ## Current shared header implementation — Task 4
 

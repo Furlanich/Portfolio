@@ -88,7 +88,7 @@ export const servicesPageContent = {
         'If a website builder, online store, booking tool, or existing product solves the need well with less cost and risk, FURLANICH may recommend configuring or integrating it instead of building from scratch. If the main issue is stabilizing an existing system, Software maintenance and IT consulting is the more relevant starting point.',
       evidenceHeading: 'Available evidence',
       evidence:
-        'The repository contains a general reservation system published by Samuel as implementation evidence. Its functional demonstration, limitations, and commercial presentation are still under review, so it is not presented as client work, a production solution, or a verified outcome.',
+        'The repository contains a general reservation system published by Samuel as implementation evidence. Its current functional demonstration is not verified, so it is presented with explicit limitations and not as client work, a production solution, or a verified outcome.',
       action: {
         label: 'Tell us what you need to solve on the web',
         routeId: 'contact',

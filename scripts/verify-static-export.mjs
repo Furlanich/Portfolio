@@ -9,10 +9,12 @@ const configuredBasePath = (process.env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/
 const artifacts = [
   { route: '/', file: 'index.html', lang: 'es-AR' },
   { route: '/servicios/', file: 'servicios/index.html', lang: 'es-AR' },
+  { route: '/proyectos/', file: 'proyectos/index.html', lang: 'es-AR' },
   { route: '/contacto/', file: 'contacto/index.html', lang: 'es-AR' },
   { route: '/estudio/samuel-furlanich/', file: 'estudio/samuel-furlanich/index.html', lang: 'es-AR' },
   { route: '/en/', file: 'en/index.html', lang: 'en' },
   { route: '/en/services/', file: 'en/services/index.html', lang: 'en' },
+  { route: '/en/work/', file: 'en/work/index.html', lang: 'en' },
   { route: '/en/contact/', file: 'en/contact/index.html', lang: 'en' },
   { route: '/en/about/samuel-furlanich/', file: 'en/about/samuel-furlanich/index.html', lang: 'en' },
 ];
@@ -127,6 +129,35 @@ const servicesRequirements = {
   },
 };
 
+const projectsRequirements = {
+  'proyectos/index.html': {
+    heading: 'Proyectos seleccionados',
+    introduction: 'Publicamos trabajo solo cuando podemos explicar con claridad',
+    cards: [
+      ['Gestión de reservas para transporte de pasajeros', 'Ver código fuente', 'https://github.com/Furlanich/GeneralReservationSystem'],
+      ['Gestión multiusuario de campañas de rol', 'Ver código fuente', 'https://github.com/Furlanich/The-System'],
+      ['Gestión educativa de producción y stock', 'Ver código fuente', 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-'],
+    ],
+    scopeHeading: 'Alcance de publicación',
+    finalHeading: '¿Necesitás resolver algo parecido?',
+    finalAction: 'Hablar sobre tu proyecto',
+    forbiddenTaxonomy: ['Soluciones en producción', 'Laboratorio FURLANICH', 'Prototipos funcionales'],
+  },
+  'en/work/index.html': {
+    heading: 'Selected work',
+    introduction: 'We publish work only when we can clearly explain',
+    cards: [
+      ['Passenger transport reservation management', 'View source', 'https://github.com/Furlanich/GeneralReservationSystem'],
+      ['Multi-user role-playing campaign management', 'View source', 'https://github.com/Furlanich/The-System'],
+      ['Educational production and inventory management', 'View source', 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-'],
+    ],
+    scopeHeading: 'Publication scope',
+    finalHeading: 'Need to solve something similar?',
+    finalAction: 'Discuss your project',
+    forbiddenTaxonomy: ['Production solutions', 'FURLANICH Lab', 'Functional prototypes'],
+  },
+};
+
 function countMatches(html, pattern) {
   return [...html.matchAll(pattern)].length;
 }
@@ -192,7 +223,6 @@ function assertServicesArtifact(artifact, html) {
   }
 
   const forbidden = [
-    /href="[^\"]*(?:proyectos|projects|work)(?:\/|\")/i,
     /https?:\/\/[^\"]*(?:general.?reservation|reservation.?system)/i,
     /Busesfy|ChronoApp|MPC Administración|Documancer/i,
     /<img\b/i,
@@ -201,6 +231,40 @@ function assertServicesArtifact(artifact, html) {
   for (const pattern of forbidden) {
     if (pattern.test(html)) failures.push(`${artifact.file}: forbidden public evidence or route content matched ${pattern}`);
   }
+}
+
+function assertProjectsArtifact(artifact, html) {
+  const requirement = projectsRequirements[artifact.file];
+  if (!requirement) return;
+  if (countMatches(html, /<main\b/g) !== 1) failures.push(`${artifact.file}: expected exactly one main landmark`);
+  if (countMatches(html, /<h1\b/g) !== 1 || !html.includes(requirement.heading)) {
+    failures.push(`${artifact.file}: expected one approved visible H1`);
+  }
+  if (!html.includes(requirement.introduction)) failures.push(`${artifact.file}: missing approved introduction`);
+  let previousCardPosition = -1;
+  for (const [title, action, href] of requirement.cards) {
+    const cardPosition = html.indexOf(title);
+    if (cardPosition === -1 || cardPosition <= previousCardPosition) {
+      failures.push(`${artifact.file}: cards are missing or out of approved order`);
+    }
+    previousCardPosition = cardPosition;
+    if (!html.includes(action)) failures.push(`${artifact.file}: missing card action ${action}`);
+    if (!html.includes(`href="${href}"`)) failures.push(`${artifact.file}: missing evidence link ${href}`);
+  }
+  if (countMatches(html, /<article\b/g) !== 3) failures.push(`${artifact.file}: expected exactly three project cards`);
+  if (!hasHeading(html, 'h2', requirement.scopeHeading)) failures.push(`${artifact.file}: missing publication scope heading`);
+  if (!hasHeading(html, 'h2', requirement.finalHeading)) failures.push(`${artifact.file}: missing final CTA heading`);
+  if (!html.includes(requirement.finalAction)) failures.push(`${artifact.file}: missing final CTA action`);
+  for (const taxonomy of requirement.forbiddenTaxonomy) {
+    if (new RegExp(`<h3\\b[^>]*>${escapeRegExp(taxonomy)}</h3>`).test(html)) {
+      failures.push(`${artifact.file}: empty taxonomy group rendered: ${taxonomy}`);
+    }
+  }
+  if (countMatches(html, /<img\b/gi) > 0) failures.push(`${artifact.file}: unexpected image in image-free index`);
+  const firstArticle = html.indexOf('<article');
+  const firstArticleClose = html.indexOf('</article>', firstArticle);
+  const nestedArticle = firstArticle !== -1 && html.indexOf('<article', firstArticle + 1) < firstArticleClose;
+  if (nestedArticle) failures.push(`${artifact.file}: nested project cards`);
 }
 
 function expectedHref(route) {
@@ -246,6 +310,7 @@ const internalReferences = allHtml.flatMap(({ artifact, html }) =>
 
 for (const { artifact, html } of allHtml) {
   assertServicesArtifact(artifact, html);
+  assertProjectsArtifact(artifact, html);
   const requirement = homepageRequirements[artifact.file];
   if (!requirement) continue;
 

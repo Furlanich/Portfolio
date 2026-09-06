@@ -15,7 +15,7 @@ last_verified: 2026-09-06
 
 # Projects and evidence experience
 
-This record closes the product, content, layout, imagery, filtering, detail-page, accessibility, and performance decisions for the Projects experience. It does not authorize a public Projects route while the evidence inventory has no publishable item. The behavior-neutral fail-closed content contract is planned separately and begins with an empty public whitelist.
+This record closes the product, content, layout, imagery, filtering, detail-page, accessibility, and performance decisions for the Projects experience. The inventory now authorizes a public bilingual Projects index with three limited, image-free cards. The fail-closed content contract remains the publication boundary; only item records explicitly marked `READY` or `READY-SUMMARY-ONLY` may enter its public manifest.
 
 ## Buyer questions and content principle
 
@@ -25,7 +25,7 @@ No legacy claim is public merely because it exists in application data. Every re
 
 ## Approved bilingual index copy
 
-This copy is implementation-ready once at least one item passes the publication gate. It must not be used to launch an otherwise empty route.
+This copy is implementation-ready for the three-item launch inventory. It must not be used to launch an otherwise empty route.
 
 **Spanish**
 
@@ -100,7 +100,7 @@ Internal values such as `implementation-evidence` do not appear verbatim. A typi
 
 ### CTA rules
 
-Use `Ver solución / View solution` for an eligible production detail, `Ver proyecto / View project` for a general eligible detail, `Ver demostración / View demo` for a verified direct demonstration, or `Consultar por una solución similar / Ask about a similar solution` when disclosure only supports inquiry. A summary-only card with no meaningful detail must route to Contact or its related Services anchor, not an empty project page.
+Use `Ver solución / View solution` for an eligible production detail, `Ver proyecto / View project` for a general eligible detail, `Ver demostración / View demo` for a verified direct demonstration, `Ver código fuente / View source` for an approved public repository, or `Consultar por una solución similar / Ask about a similar solution` when disclosure only supports inquiry. A summary-only card with no meaningful detail may route to its approved evidence destination, Contact, or its related Services anchor, never an empty project page.
 
 ### Visual and responsive composition
 
@@ -119,7 +119,7 @@ An image is optional. Choose, in priority order: authorized current screenshot, 
 
 - Never fabricate restricted client UI.
 - Existing legacy SVG captures are not approved: their capture date, represented version, sensitive-data review, and publication permission are unknown.
-- Busesfy, MPC, ChronoApp, Documancer, General Reservation System, and The-System use no public image while blocked.
+- General Reservation System, The-System, and MPC Administración launch as READY image-free cards because no project visual is approved. Busesfy, ChronoApp, and Documancer remain non-public and use no public image.
 - A future General Reservation System visual must be a fresh capture from a verified run. A future Documancer or The-System visual must distinguish real implementation from concept.
 - Restricted production work may use a neutral branded capability diagram or permitted summary graphic.
 
@@ -159,7 +159,7 @@ Do not claim an NDA unless an actual agreement is confirmed. Do not use “class
 
 ## Service and homepage relationships
 
-Every public record links to at least one genuinely demonstrated service, normally `SERVICE-WEB`, `SERVICE-WHATSAPP`, or `SERVICE-CONSULTING`. The detail link is restrained and no cross-selling rail is introduced. No current candidate passes the `HOME-PROOF` evidence gate, so the approved homepage fallback remains unchanged.
+Every public record links to at least one genuinely demonstrated service, normally `SERVICE-WEB`, `SERVICE-WHATSAPP`, or `SERVICE-CONSULTING`. The detail link is restrained and no cross-selling rail is introduced. The three READY cards relate to `SERVICE-WEB`, but none passes the separate `HOME-PROOF` evidence gate, so the approved homepage fallback remains unchanged.
 
 ## Accessibility acceptance
 
@@ -187,6 +187,6 @@ Also check keyboard-only traversal, screen-reader heading/link structure, 200% t
 
 ## Architecture boundary
 
-Use a typed static project content model with explicit localized fields, evidence/disclosure data, service relationships, and optional links/assets. Extend the existing static locale route map only when implementation is unblocked. Do not add a CMS, database, dynamic backend, project API, admin panel, search engine, or filter framework for the current inventory.
+Use a typed static project content model with explicit localized fields, evidence/disclosure data, service relationships, and optional links/assets. Task 2 / PR 2 may extend the existing static locale route map for the approved bilingual index; detail-route generation remains deferred. Do not add a CMS, database, dynamic backend, project API, admin panel, search engine, or filter framework for the current inventory.
 
 Internal relationship, permission, evidence-strength, lifecycle, restriction, and homepage-eligibility data remains in `PROJECT-EVIDENCE` and the item records. Public application modules contain only an explicit publication manifest and approved localized public content. The active implementation sequence and its evidence gates are owned by [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../../plans/active/projects-evidence-experience.md).

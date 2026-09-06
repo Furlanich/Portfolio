@@ -1,13 +1,15 @@
-import { ServicesPage } from '@/components/services/ServicesPage';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
+import { ProjectsPage } from '@/components/projects/ProjectsPage';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
+import { getPublishedProjectCards, validateProjectContent } from '@/lib/projects/publication';
 import { contactContent } from '../_content/contact';
 import { founderContent } from '../_content/founder';
-import { servicesPageContent } from '../_content/services';
+import { projectPageContent } from '../_content/projects';
 
-const route = { locale: 'es' as const, routeId: 'services' as const };
+const route = { locale: 'es' as const, routeId: 'projects' as const };
 const paths = getFoundationNavigationPaths(route.locale, route.routeId);
+validateProjectContent(projectPageContent, route.locale);
 
 export default function Page() {
   return (
@@ -27,7 +29,7 @@ export default function Page() {
           languageSwitch: 'Ver sitio en inglés',
         }}
       />
-      <ServicesPage content={servicesPageContent} />
+      <ProjectsPage content={projectPageContent} cards={getPublishedProjectCards(projectPageContent, route.locale)} />
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}

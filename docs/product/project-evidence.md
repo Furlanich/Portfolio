@@ -304,7 +304,7 @@ No inventoried item is confirmed production evidence suitable for the Services p
 
 ### SERVICE-WEB evidence closure
 
-The page may use the General Reservation System only as an explicit evidence-status note: a public founder repository supplies implementation evidence, while working behavior, limitations, imagery, and commercial presentation remain under review. This is useful because it demonstrates that the offer is not supported by an invented client claim while preserving the strongest truthful repository signal. It is not a project card and does not link to the broken demo.
+The Services page may use the General Reservation System only as an explicit evidence-status note: a public founder repository supplies implementation evidence, while current working behavior and imagery remain unverified. Its limitations and Projects-card presentation are now approved, but the Services section remains text-only. This is useful because it demonstrates that the offer is not supported by an invented client claim while preserving the strongest truthful repository signal. It does not link to the broken demo.
 
 ### SERVICE-WHATSAPP evidence closure
 
@@ -336,12 +336,12 @@ The current item-level authority is the [project evidence inventory](projects/in
 ### Publication closure
 
 - Busesfy is `BLOCKED-PERMISSION`.
-- General Reservation System is `BLOCKED-FUNCTIONAL-VERIFICATION` and remains `implementation-evidence`; historical CI and repository structure do not upgrade it to `functional-demonstration`.
-- MPC Administración is `FOUNDER-ONLY` and must remain explicitly educational and fictional.
+- General Reservation System is `READY` for its approved source-backed card and remains `implementation-evidence`; historical CI and repository structure do not upgrade it to `functional-demonstration`.
+- MPC Administración is `READY` for its approved educational source-backed card and must remain explicitly group work for a fictional organization.
 - ChronoApp is `RETIRED` because the repository remains unavailable and no functionality can be established.
 - Documancer is `PRIVATE`; its early-stage characterization is preserved and sensitive-looking development configuration must be remediated before the repository is promoted.
-- The-System is a newly discovered Laboratory candidate and is `BLOCKED-PERMISSION`; its substantial source and tests are implementation evidence, not proof of current runnable behavior.
-- No record is currently `READY` or `READY-SUMMARY-ONLY`.
+- The-System is `READY` for its approved Laboratory source-backed card; its substantial source and tests are implementation evidence, not proof of current runnable behavior.
+- The three READY decisions authorize only the exact image-free bilingual card content, public repository destination, limitations, relationship non-claims, and `SERVICE-WEB` relationship in each item record. No record is detail-page-eligible or homepage-eligible.
 
 ### Public taxonomy
 
@@ -362,8 +362,8 @@ Alternatives rejected for the canonical taxonomy were `Trabajo en producción / 
 - Ordering is editorial using commercial relevance, evidence strength, service coverage, disclosure completeness, visual quality, and capability diversity.
 - A typed static localized content model is sufficient. No CMS, database, project API, admin surface, search system, or filtering framework is approved.
 - `HOME-PROOF` keeps its approved fallback because no project passes the homepage evidence gate.
-- Public Projects index, card, detail-route, navigation, and asset implementation remains blocked until at least one candidate becomes publishable. The behavior-neutral fail-closed public contract may proceed under [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md); it starts with an empty whitelist and exposes no candidate.
+- General Reservation System, The-System, and MPC Administración form the approved launch order for one ungrouped editorial grid. Task 2 / PR 2 of [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md) may publish the bilingual index and navigation using the existing fail-closed manifest. Detail routes and project assets remain deferred.
 
 ### Permission policy
 
-Every candidate now has an explicit permission matrix. Unknown permission continues to fail closed. Public availability, repository ownership, a legacy portfolio entry, and an existing asset do not independently grant permission.
+Every candidate now has an explicit permission matrix. Unknown permission continues to fail closed. Public availability, repository ownership, a legacy portfolio entry, and an existing asset do not independently grant permission. On 2026-09-06 the initiative owner explicitly approved limited publication of the three READY records: their exact bilingual card fields, source-backed capability statements, generic context, public-source label, limitations, and public repository link. Screenshots, videos, metrics, testimonials, production claims, client/employment claims, sole-authorship claims, detail pages, and homepage use remain unapproved unless an item record says otherwise.

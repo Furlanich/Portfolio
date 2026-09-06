@@ -4,6 +4,7 @@ import type { ServiceSectionId } from '../components/services/content-types';
 export const foundationRouteIds = [
   'home',
   'services',
+  'projects',
   'contact',
   'founder',
 ] as const;
@@ -13,6 +14,7 @@ export type FoundationRouteId = (typeof foundationRouteIds)[number];
 export const foundationRoutes = {
   home: { es: '/', en: '/en/' },
   services: { es: '/servicios/', en: '/en/services/' },
+  projects: { es: '/proyectos/', en: '/en/work/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
   founder: {
     es: '/estudio/samuel-furlanich/',
