@@ -7,6 +7,7 @@ related:
   - PAGE-PROJECTS
   - PAGE-PROJECT-DETAIL
   - SERVICE-WEB
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
 last_verified: 2026-09-06
 ---
 
@@ -86,3 +87,5 @@ When records become publishable, ordering is editorial rather than chronological
 | Final CTA | READY | READY | READY | READY | READY | READY |
 
 `Content ES` and `Content EN` are deferred at item level because there are no READY items; the public taxonomy, evidence terms, confidentiality pattern, and CTA language are approved in both languages.
+
+The active [Projects / Evidence execution plan](../../plans/active/projects-evidence-experience.md) may establish an empty fail-closed public contract. It does not change this inventory: public routes, cards, detail pages, navigation, and assets remain blocked until this record and the relevant item owner approve at least one READY or READY-SUMMARY-ONLY item.

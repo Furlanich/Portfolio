@@ -6,6 +6,7 @@ related:
   - PROJECT-EVIDENCE
   - PAGE-PROJECTS
   - PAGE-PROJECT-DETAIL
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - CONTENT-LOCALIZATION
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
@@ -14,7 +15,7 @@ last_verified: 2026-09-06
 
 # Projects and evidence experience
 
-This record closes the product, content, layout, imagery, filtering, detail-page, accessibility, and performance decisions for the Projects experience. It extends the governing page and design specifications without authorizing implementation while the evidence inventory has no publishable item.
+This record closes the product, content, layout, imagery, filtering, detail-page, accessibility, and performance decisions for the Projects experience. It does not authorize a public Projects route while the evidence inventory has no publishable item. The behavior-neutral fail-closed content contract is planned separately and begins with an empty public whitelist.
 
 ## Buyer questions and content principle
 
@@ -187,3 +188,5 @@ Also check keyboard-only traversal, screen-reader heading/link structure, 200% t
 ## Architecture boundary
 
 Use a typed static project content model with explicit localized fields, evidence/disclosure data, service relationships, and optional links/assets. Extend the existing static locale route map only when implementation is unblocked. Do not add a CMS, database, dynamic backend, project API, admin panel, search engine, or filter framework for the current inventory.
+
+Internal relationship, permission, evidence-strength, lifecycle, restriction, and homepage-eligibility data remains in `PROJECT-EVIDENCE` and the item records. Public application modules contain only an explicit publication manifest and approved localized public content. The active implementation sequence and its evidence gates are owned by [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../../plans/active/projects-evidence-experience.md).

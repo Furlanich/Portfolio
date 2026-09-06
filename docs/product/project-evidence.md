@@ -9,6 +9,7 @@ related:
   - SERVICE-WEB
   - SERVICE-WHATSAPP
   - SERVICE-CONSULTING
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
 last_verified: 2026-09-06
 ---
 
@@ -34,9 +35,11 @@ Project maturity, disclosure, and evidence strength are separate dimensions.
 
 ### Maturity
 
-- `production` → public label remains **PROPOSED**: `Solución en producción`
-- `lab` → public label remains **PROPOSED**: `Laboratorio FURLANICH`
-- `prototype` → public label remains **PROPOSED**: `Prototipo funcional`
+- `production` → approved public group label: `Soluciones en producción / Production solutions`
+- `lab` → approved public group label: `Laboratorio FURLANICH / FURLANICH Lab`
+- `prototype` → approved public group label: `Prototipos funcionales / Functional prototypes`
+
+These are public group labels, not quality scores. They render only for populated groups under the inventory thresholds in `PROJECT-INVENTORY`; the prototype label requires verified functional behavior.
 
 ### Disclosure
 
@@ -359,7 +362,7 @@ Alternatives rejected for the canonical taxonomy were `Trabajo en producción / 
 - Ordering is editorial using commercial relevance, evidence strength, service coverage, disclosure completeness, visual quality, and capability diversity.
 - A typed static localized content model is sufficient. No CMS, database, project API, admin surface, search system, or filtering framework is approved.
 - `HOME-PROOF` keeps its approved fallback because no project passes the homepage evidence gate.
-- Projects implementation remains blocked until at least one candidate becomes publishable. The index, cards, and detail-page rules are nevertheless decision-complete.
+- Public Projects index, card, detail-route, navigation, and asset implementation remains blocked until at least one candidate becomes publishable. The behavior-neutral fail-closed public contract may proceed under [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md); it starts with an empty whitelist and exposes no candidate.
 
 ### Permission policy
 

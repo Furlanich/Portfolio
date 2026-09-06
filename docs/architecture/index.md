@@ -7,7 +7,9 @@ related:
   - ARCHITECTURE-MAP
   - ADR-STATIC-LOCALIZED-ROUTING
   - PAGE-SERVICES
-last_verified: 2026-09-05
+  - PAGE-PROJECTS
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
+last_verified: 2026-09-06
 ---
 
 # Existing-system documentation
@@ -19,7 +21,7 @@ These documents describe the repository as it exists during Stage A. They are ev
 - [Architecture map](../../ARCHITECTURE.md): concise current architecture, approved product constraints, and proposed/open architecture context.
 - [Stage B harness design](stage-b-agent-engineering-harness-design.md): approved scope for repository governance and deterministic validation.
 
-The homepage-foundation localized-routing target is approved and delivered under [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). The current-system record separates retained legacy material from the merged localized foundation and commercial homepage. The approved complete Services experience fits that architecture and needs a versioned execution plan rather than a new RFC or ADR. Broader target architecture remains subject to the [engineering lifecycle](../governance/engineering-lifecycle.md).
+The homepage-foundation localized-routing target is approved and delivered under [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). The current-system record separates retained legacy material from the merged localized foundation and commercial homepage. The complete Services implementation and approved Projects/Evidence target fit that architecture. [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md) owns the fail-closed static public-content boundary and conditional route sequence; no RFC or new ADR is required. Broader target architecture remains subject to the [engineering lifecycle](../governance/engineering-lifecycle.md).
 
 ## Preserved discovery recommendation — PROPOSED
 

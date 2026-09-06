@@ -7,7 +7,8 @@ related:
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
   - PLAN-SERVICES-EXPERIENCE
-last_verified: 2026-09-05
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
+last_verified: 2026-09-06
 ---
 
 # Execution plans
@@ -19,7 +20,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-No versioned execution plan is currently active.
+- [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](active/projects-evidence-experience.md): establishes a fail-closed public content boundary first, then gates the bilingual Projects index and eligible detail routes on item-level evidence and permission readiness.
 
 ## Completed
 

@@ -10,6 +10,7 @@ related:
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
   - PLAN-SERVICES-EXPERIENCE
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PAGE-HOME
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
@@ -124,6 +125,8 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - No candidate is `READY` or `READY-SUMMARY-ONLY`. Therefore Projects-route implementation and every project card/detail page are blocked; do not launch an empty route or expose blocked candidates.
 - `HOME-PROOF` keeps its approved fallback. Homepage redesign remains outside this initiative.
 - The experience fits `ADR-STATIC-LOCALIZED-ROUTING`. A future implementation uses typed static localized records and requires a versioned execution plan, not a CMS, database, backend, project API, admin panel, search engine, filtering framework, RFC, or new ADR.
+- [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md) is the active Route B / PLAN implementation record. Its first PR is limited to an empty fail-closed public manifest, typed public contracts, approved page-shell copy, resolvers, and tests with no route or visual change.
+- Public index, navigation, card, detail, and asset work remains gated on at least one item becoming `READY` or `READY-SUMMARY-ONLY` in the item inventory. The plan does not promote any current candidate.
 
 ## PROPOSED
 

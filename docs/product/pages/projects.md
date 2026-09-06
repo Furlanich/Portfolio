@@ -6,6 +6,7 @@ related:
   - PAGE-PROJECT-DETAIL
   - PROJECT-EVIDENCE
   - PROJECTS-EXPERIENCE-CLOSURE
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PAGE-CONTACT
 last_verified: 2026-09-06
 ---
@@ -96,4 +97,4 @@ The wide header uses approximately 7/12 text and 5/12 visual; without a visual, 
 
 ## Current readiness
 
-The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. Implementation is `BLOCKED` because [the item inventory](../projects/index.md) contains no `READY` or `READY-SUMMARY-ONLY` record.
+The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. Public route, navigation, card, detail, and asset implementation is `BLOCKED` because [the item inventory](../projects/index.md) contains no `READY` or `READY-SUMMARY-ONLY` record. A behavior-neutral empty publication contract may proceed under [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../../plans/active/projects-evidence-experience.md); it does not make this page public.

@@ -9,6 +9,7 @@ related:
   - PAGE-SERVICES
   - PAGE-PROJECTS
   - PROJECT-INVENTORY
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
 last_verified: 2026-09-06
 ---
 
@@ -44,4 +45,4 @@ Product documentation defines what the FURLANICH website is, who it serves, why 
 
 Initiative 3 makes `PAGE-SERVICES` implementation-ready in Spanish and English, including stable anchors, service-specific scope and boundaries, truthful evidence status, contextual CTAs, design/accessibility requirements, and an explicit readiness matrix. Future evidence and contractual terms remain governed by their owning records rather than blocking the approved page.
 
-Initiative 4 makes the Projects product and design decisions complete but does not authorize route implementation: every candidate fails at least one evidence or permission gate. The approved inventory-sensitive structure rejects empty groups and launch filters, keeps `HOME-PROOF` unchanged, and requires at least one `READY` or `READY-SUMMARY-ONLY` item before the Projects route launches.
+Initiative 4 makes the Projects product and design decisions complete but does not authorize route implementation: every candidate fails at least one evidence or permission gate. The approved inventory-sensitive structure rejects empty groups and launch filters, keeps `HOME-PROOF` unchanged, and requires at least one `READY` or `READY-SUMMARY-ONLY` item before the Projects route launches. [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md) owns the staged implementation path and permits only a behavior-neutral empty publication contract before that gate.
