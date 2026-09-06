@@ -12,7 +12,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 ---
 
 # Spanish homepage
@@ -288,6 +288,8 @@ Item-level experience is required only for stronger experience claims or future 
 ## HOME-PROOF
 
 **Status:** **APPROVED** for the honest launch fallback below. The project-card variant is **OPEN** and must not be implemented until at least one candidate reaches `ready` in [`PROJECT-EVIDENCE`](../project-evidence.md).
+
+Initiative 4 re-evaluated every current candidate and the newly discovered repository inventory. No item reached `READY` or `READY-SUMMARY-ONLY`; the fallback therefore remains the approved treatment and no homepage project card is added.
 
 **Objective:** Explain why the visitor can trust the commercial claims without presenting unverified work as client evidence.
 

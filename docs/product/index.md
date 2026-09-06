@@ -7,7 +7,10 @@ related:
   - IA-SITE
   - PAGE-HOME
   - PAGE-SERVICES
-last_verified: 2026-09-05
+  - PAGE-PROJECTS
+  - PROJECT-INVENTORY
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
+last_verified: 2026-09-06
 ---
 
 # Product documentation
@@ -26,7 +29,9 @@ Product documentation defines what the FURLANICH website is, who it serves, why 
 - [Information architecture](information-architecture.md): sitemap, routes, navigation, footer, and page relationships.
 - [Site feature catalogue](site-feature-catalogue.md): approved and unresolved visitor-facing capabilities.
 - [Personal portfolio migration](personal-portfolio-migration.md): what remains, moves, changes, or becomes secondary.
-- [Project evidence inventory](project-evidence.md): approved evidence taxonomy and disclosure controls, item-level project audit, homepage eligibility decision, and proof gaps.
+- [Project evidence governance](project-evidence.md): approved three-axis taxonomy, disclosure controls, publication lifecycle, and Initiative 4 closure.
+- [Item-level project inventory](projects/index.md): candidate records, permission matrices, explicit publication states, repository-discovery disposition, ordering policy, and readiness matrices.
+- [Projects and evidence experience](projects/experience.md): accepted index, card, detail, imagery, bilingual-language, accessibility, performance, and visual-QA decisions.
 
 ## Page specifications
 
@@ -39,3 +44,5 @@ Product documentation defines what the FURLANICH website is, who it serves, why 
 `PAGE-NOT-FOUND` is defined at the responsibility level in the information architecture because no detailed content design has been approved.
 
 Initiative 3 makes `PAGE-SERVICES` implementation-ready in Spanish and English, including stable anchors, service-specific scope and boundaries, truthful evidence status, contextual CTAs, design/accessibility requirements, and an explicit readiness matrix. Future evidence and contractual terms remain governed by their owning records rather than blocking the approved page.
+
+Initiative 4 makes the Projects product and design decisions complete but does not authorize route implementation: every candidate fails at least one evidence or permission gate. The approved inventory-sensitive structure rejects empty groups and launch filters, keeps `HOME-PROOF` unchanged, and requires at least one `READY` or `READY-SUMMARY-ONLY` item before the Projects route launches. [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md) owns the staged implementation path and permits only a behavior-neutral empty publication contract before that gate.

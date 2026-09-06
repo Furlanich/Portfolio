@@ -10,12 +10,13 @@ related:
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
   - PLAN-SERVICES-EXPERIENCE
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PAGE-HOME
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 ---
 
 # Product knowledge status register
@@ -114,11 +115,22 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - MPC Administración is a 2021 educational assignment for a fictional organization, not client production evidence.
 - No current project is approved for a business-homepage project card. The current launch uses the approved `HOME-PROOF` credibility fallback.
 
+### Projects / Evidence experience decision closure
+
+- The accepted public taxonomy is “Soluciones en producción / Production solutions,” “Laboratorio FURLANICH / FURLANICH Lab,” and “Prototipos funcionales / Functional prototypes.” Group labels render only for populated categories, and the prototype label requires verified functional behavior.
+- The accepted index structure is hybrid and inventory-sensitive: selected evidence first; maturity groups only with at least four public items across two populated groups; no empty groups.
+- Filters are rejected for launch and may be reconsidered only at eight or more public records with buyer-useful category populations.
+- Card, imagery, confidentiality, detail-page eligibility, detail composition, bilingual system language, accessibility, performance, and visual-QA rules are approved in [Projects and evidence experience](../product/projects/experience.md).
+- The [item-level inventory](../product/projects/index.md) records explicit decisions and permission matrices: Busesfy `BLOCKED-PERMISSION`; General Reservation System `BLOCKED-FUNCTIONAL-VERIFICATION`; MPC Administración `FOUNDER-ONLY`; ChronoApp `RETIRED`; Documancer `PRIVATE`; and newly discovered The-System `BLOCKED-PERMISSION`.
+- No candidate is `READY` or `READY-SUMMARY-ONLY`. Therefore Projects-route implementation and every project card/detail page are blocked; do not launch an empty route or expose blocked candidates.
+- `HOME-PROOF` keeps its approved fallback. Homepage redesign remains outside this initiative.
+- The experience fits `ADR-STATIC-LOCALIZED-ROUTING`. A future implementation uses typed static localized records and requires a versioned execution plan, not a CMS, database, backend, project API, admin panel, search engine, filtering framework, RFC, or new ADR.
+- [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md) is the active Route B / PLAN implementation record. Its first PR is limited to an empty fail-closed public manifest, typed public contracts, approved page-shell copy, resolvers, and tests with no route or visual change.
+- Public index, navigation, card, detail, and asset work remains gated on at least one item becoming `READY` or `READY-SUMMARY-ONLY` in the item inventory. The plan does not promote any current candidate.
+
 ## PROPOSED
 
 - Public descriptor: “Estudio de desarrollo de software a medida.”
-- Public project labels: “Soluciones en producción,” “Laboratorio FURLANICH,” and “Prototipos funcionales.”
-- Remaining project-by-project maturity classifications and future evidence-driven homepage selections.
 - Internal commercial defaults including milestone payment percentages, a 30-day defect warranty, and detailed ownership terms; these require business/legal review.
 - Incremental/static-first architecture recommendation — **PROPOSED** preserved knowledge owned by [`ARCH-INDEX`](../architecture/index.md); it authorizes no architecture or CI change.
 - Use conceptual or AI-generated imagery only when clearly identified and never as false evidence of an implemented client solution.
@@ -130,15 +142,15 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Final form provider, privacy wording, consent treatment, data retention period, and third-party disclosures. These are **RELEASE BLOCKERS** for the completed inquiry experience, not blockers for hero implementation.
 - Final legal and contractual review of commercial boundaries.
 - Founder photograph and any later CV redesign; both are non-blocking for the commercial homepage.
-- Remaining item-level project maturity, permission scope, metrics, public descriptions, visual provenance, and future project-card selection.
+- Permission, functional verification, approved bilingual item copy, and visual provenance required to advance currently blocked project records.
 - Richer public evidence for WhatsApp automation and maintenance/consulting. Its absence is explicit and does not block the approved Services page.
 - Busesfy's ownership/client relationship, maturity, public-description permission, screenshot permission, and client identity permission.
 - General Reservation System functional-demonstration status and future homepage eligibility; its recorded demo currently returns 404.
-- ChronoApp ownership, implementation status, and replacement or retirement of its unavailable repository evidence.
+- The-System relationship/permission record and current clean-checkout functional verification.
 - Whether any individual service pages will be needed after launch performance is observed.
 - Long-term hosting after the current static-export/GitHub Pages migration slice; changing hosting remains a future architecture decision and does not block the foundation.
-- Whole-site responsive behavior, accessibility audit/conformance claims, and performance budgets beyond the approved commercial-homepage baseline.
-- English copy outside the approved complete homepage, complete Services page, and minimum Contact and Founder destinations, plus future translated project evidence.
+- Whole-site responsive behavior, accessibility audit/conformance claims, and performance budgets beyond the approved homepage, Services, and Projects baselines.
+- English copy outside the approved complete homepage, complete Services page, Projects system language, and minimum Contact and Founder destinations, plus item-specific copy for future publication-ready evidence.
 
 ## REJECTED
 
@@ -153,5 +165,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Publishing placeholders as client logos.
 - Publishing forbidden client UI or internal workings.
 - Publishing any current inventory item as a homepage project card before it reaches the approved `ready` state.
+- Launching an empty Projects route, empty maturity group, or empty project-detail page.
+- Adding launch filters for the current small inventory.
 - Presenting MPC Administración as client or production work.
 - Repeating three service-card CTAs that all lead to the Services page root.

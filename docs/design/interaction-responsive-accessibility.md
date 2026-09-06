@@ -8,8 +8,9 @@ related:
   - PAGE-SERVICES
   - PAGE-CONTACT
   - PAGE-PROJECTS
+  - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -159,6 +160,21 @@ These requirements extend the existing applicable WCAG 2.2 Level AA target to th
 
 Implementation must verify `/servicios/` and `/en/services/` at `320x800`, `375x812`, `768x1024`, `1024x768`, and `1440x900`, plus the optional `/Portfolio` base path. Required evidence covers no horizontal overflow, complete content growth, source and heading order, list/landmark semantics, every fragment from direct load and in-page navigation, unobscured anchor headings, language-switch fragment mapping or safe fallback, keyboard traversal, visible focus, target sizing, touch behavior, reduced motion, JavaScript-disabled content, and an automated accessibility scan. Passing these checks supports review but does not establish whole-site conformance.
 
+## Projects interaction and responsive baseline — APPROVED
+
+- Projects cards use two columns wide and at 1024px, two at medium only when bilingual copy remains readable, and one compact. Content growth determines height; no clipping, line clamp, fixed height, horizontal carousel, or layout-dependent reading order is allowed.
+- Use semantic page regions and logical heading levels. Peer card groups use list semantics when useful, and card titles are headings.
+- Do not make the entire card clickable when it contains or competes with another link. Use one explicit title or CTA link with a destination-specific accessible name; never nest interactive controls.
+- Maturity, disclosure, evidence, and limitation meaning is present in text and does not depend on color, icon, side-by-side position, hover, or imagery.
+- Informative screenshots receive workflow-specific alternative text. Decorative or redundant visuals use empty alt text and do not repeat adjacent content.
+- Keyboard focus remains visible, primary action targets meet the approved minimum size, and no essential evidence or limitation is hover-only, tooltip-only, or collapsed by default.
+- Reduced-motion behavior applies to all optional project transitions. Tilt, scaling hover, animated depth, and motion-dependent evidence are not used.
+- The index and eligible details remain usable at 200% text zoom and reflow without horizontal scrolling at 320 CSS px.
+
+### Projects verification boundary
+
+Verify both locales at `320x800`, `375x812`, `768x1024`, `1024x768`, and `1440x900`, plus root and optional `/Portfolio` base paths. Check card alignment, natural-height growth, translated-copy expansion, image containment and legibility, no horizontal overflow, heading/list/link semantics, CTA order, correct card/detail destinations, visible focus, keyboard-only traversal, evidence-label readability, 200% text zoom, reduced motion, JavaScript-independent content, and an automated accessibility scan. Detail pages require compact and wide evidence. Passing these checks does not establish whole-site conformance.
+
 ## Existing implementation context — CURRENT, NOT TARGET
 
 The existing navigation, localization, form, motion, and interaction behavior is recorded in [`ARCH-CURRENT`](../architecture/current-system.md). Existing accessibility and quality risks, including dated browser observations, are recorded in [`ARCH-FINDINGS`](../architecture/current-quality-findings.md). These are current-state facts, not implementation authority or target behavior.
@@ -175,12 +191,11 @@ The existing navigation, localization, form, motion, and interaction behavior is
 - Avoid horizontal carousels for essential service or project information.
 - Keep line lengths comfortable on wide screens.
 
-## OPEN decisions beyond the commercial homepage and Services page
+## OPEN decisions beyond the commercial homepage, Services page, and Projects experience
 
 - Whole-site conformance claims, audit scope, and any certification remain unresolved; only the commercial-homepage target above is approved.
-- Breakpoints and container behavior for pages and components outside the approved homepage and Services baselines.
+- Breakpoints and container behavior for pages and components outside the approved homepage, Services, and Projects baselines.
 - Motion language outside the commercial homepage and basic control-state transitions.
-- Project-card interaction beyond the approved homepage constraints.
-- Touch, tablet, and landscape-specific layouts outside the approved homepage and Services baselines.
+- Touch, tablet, and landscape-specific layouts outside the approved homepage, Services, and Projects baselines.
 - Formal browser/device support matrix.
 - Whole-site automated and manual accessibility validation strategy.

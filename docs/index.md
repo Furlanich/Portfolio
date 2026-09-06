@@ -7,10 +7,11 @@ related:
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
   - PLAN-SERVICES-EXPERIENCE
+  - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PAGE-HOME
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 ---
 
 # FURLANICH project knowledge
@@ -48,3 +49,5 @@ Stage A preserves product and design knowledge, and Stage B adds the lightweight
 Initiative 2 closes the commercial homepage sections below `HOME-HERO` in [`PAGE-HOME`](product/pages/home.md), including complete Spanish/English copy, minimum later-section design rules, a readiness matrix, and an approved evidence-safe `HOME-PROOF` fallback. [`PROJECT-EVIDENCE`](product/project-evidence.md) records that no current project is eligible for a homepage card. [`PLAN-HOMEPAGE-COMPLETION`](plans/completed/homepage-completion.md) records the completed behavior-neutral content/anchor contract and atomic bilingual rendered integration; project cards and other release/full-site concerns remain OPEN in their owners.
 
 Initiative 3 delivered the complete Services experience specified by [`PAGE-SERVICES`](product/pages/services.md): the retained hierarchy, full Spanish and English content, stable service anchors, contextual inquiry paths, provider and commercial boundaries, AI posture, honest asymmetric evidence treatment, and page-specific visual/accessibility extensions. [`AUDIENCES-SERVICES`](product/audiences-and-services.md) owns the service definitions and [`PROJECT-EVIDENCE`](product/project-evidence.md) owns the item-level publication limits. The implementation fits the accepted localized architecture and is recorded by [`PLAN-SERVICES-EXPERIENCE`](plans/completed/services-experience.md); richer evidence and final contractual/legal terms remain deferred in their owners.
+
+Initiative 4 closes the Projects/Evidence product and design decisions in [`PAGE-PROJECTS`](product/pages/projects.md), [`PROJECT-EVIDENCE`](product/project-evidence.md), the [item-level inventory](product/projects/index.md), and the [experience specification](product/projects/experience.md). It approves the public taxonomy, hybrid inventory-sensitive IA, card/detail/imagery rules, bilingual system language, confidentiality treatment, accessibility, performance, and visual-QA criteria. [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](plans/active/projects-evidence-experience.md) classifies the substantial work within the accepted static localized architecture and authorizes an empty fail-closed public contract as the first implementation slice. No candidate is currently publication-ready, so public Projects routes/cards/details remain blocked, launch filters are rejected, empty routes/groups are prohibited, and the approved homepage proof fallback remains unchanged.
