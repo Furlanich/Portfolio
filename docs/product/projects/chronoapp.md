@@ -21,7 +21,7 @@ last_verified: 2026-09-06
 | Lifecycle/publication | `RETIRED` |
 | Disclosure / evidence | Private / concept-only |
 
-The legacy repository link still returns `404`, and no recoverable source, running behavior, deployment, test, screenshot provenance, testimonial, metric, or relationship record was established. The legacy title contains claims about AI and SaaS behavior that cannot be verified. The stored `AI-Scheduler.svg` is not evidence of functionality or permission.
+The legacy repository link still returns `404`, and no recoverable source, running behavior, deployment, test, screenshot provenance, testimonial, metric, or relationship record was established. The legacy title contains claims about AI and SaaS behavior that cannot be verified. The historical `AI-Scheduler.svg`, retired in Task 4, was not evidence of functionality or permission.
 
 ## Permission matrix
 

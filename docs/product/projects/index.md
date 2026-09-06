@@ -51,14 +51,14 @@ Any excluded item must re-enter the same evidence and permission audit before pu
 
 | Asset | Size | Disposition |
 | --- | ---: | --- |
-| `Busesfy.svg` | 9,544,554 bytes | Not approved: permission, capture provenance, represented version, and sensitive-data review are unknown. |
-| `MPC-Administracion.svg` | 4,299,449 bytes | Not approved: the detail page uses the separately generated conceptual WebP; original group-image rights and capture provenance remain unknown. |
-| `AI-Scheduler.svg` | 3,131,444 bytes | Retire with ChronoApp evidence; it cannot prove the unsupported AI/SaaS claims. |
-| `GRS.svg` | 1,693,672 bytes | Not approved: the detail page uses the separately generated conceptual WebP; replace with a fresh capture only after a verified current run. |
-| `Documancer.svg` | 1,261,337 bytes | Not approved: represented functionality and capture provenance are unknown. |
-| `atlas.svg`, `pulse.svg`, `vertex.svg` | 693, 693, 697 bytes | Unreferenced decorative placeholders with invented product identities; never publish as project evidence. |
+| `Busesfy.svg` | 9,544,554 bytes at audit time | Retired in Task 4; permission, capture provenance, represented version, and sensitive-data review were unresolved. |
+| `MPC-Administracion.svg` | 4,299,449 bytes at audit time | Retired in Task 4; the detail page uses the separately approved conceptual WebP, not the unreviewed group image. |
+| `AI-Scheduler.svg` | 3,131,444 bytes at audit time | Retired in Task 4 with ChronoApp evidence; it could not prove unsupported AI/SaaS claims. |
+| `GRS.svg` | 1,693,672 bytes at audit time | Retired in Task 4; the detail page uses the separately approved conceptual WebP, not an unverified capture. |
+| `Documancer.svg` | 1,261,337 bytes at audit time | Retired in Task 4; represented functionality and capture provenance were unresolved. |
+| `atlas.svg`, `pulse.svg`, `vertex.svg` | 693, 693, 697 bytes at audit time | Retired in Task 4; unreferenced placeholders with invented product identities were never publication evidence. |
 
-The multi-megabyte embedded SVG captures also violate the approved delivery direction. A later implementation may remove unused assets only after its migration/rollback boundary verifies that no approved route depends on them.
+The multi-megabyte embedded SVG captures violated the approved delivery direction and were removed after the Task 4 consumer/rollback boundary verified that no approved route depended on them. The three approved conceptual WebPs remain under their stable detail paths.
 
 ## Editorial ordering policy
 
@@ -88,4 +88,4 @@ Ordering is editorial rather than chronological. The launch order is General Res
 
 The three READY item records now contain complete Spanish and English card and detail content, approved repository links, and labeled conceptual visuals. Maturity groups remain deferred because the approved two-or-three-item launch structure is one ungrouped editorial grid, not because evidence is blocked.
 
-The active [Projects / Evidence execution plan](../../plans/active/projects-evidence-experience.md) has completed Task 2 / PR 2 and now satisfies the Task 3 / PR 3 detail gate for these three paired summary-only pages. Homepage integration remains outside that authorization.
+The completed [Projects / Evidence execution plan](../../plans/completed/projects-evidence-experience.md) records Task 2 / PR 2, Task 3 / PR 3, and Task 4 / PR 4 for these three paired summary-only pages and their cleanup boundary. Homepage integration remains outside that authorization.

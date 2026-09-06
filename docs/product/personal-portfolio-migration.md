@@ -65,9 +65,9 @@ The [item-level project inventory](projects/index.md) now governs migration of l
 - ChronoApp is retired from evidence rather than carried forward with a dead repository.
 - Documancer remains private until sensitive-looking configuration is remediated and present behavior is verified.
 
-The READY promotion does not authorize legacy screenshots, a detail page, homepage placement, production/client claims, or sole-authorship claims. The three cards launch without images and link only to their approved public repositories.
+The READY promotion does not authorize legacy screenshots, homepage placement, production/client claims, or sole-authorship claims. The three cards launch without images and the paired detail pages use only their approved public repositories and labeled conceptual visuals.
 
-Legacy `data/projects.json` copy and `public/projects/` imagery remain current-system evidence only. A later implementation plan may migrate a record only after it reaches `READY` or `READY-SUMMARY-ONLY`; it may retire unused legacy assets only after the approved replacement or intentional exclusion is verified.
+Legacy `data/projects.json` copy and unapproved `public/projects/` imagery remain historical audit evidence only; the unused paths were retired in Task 4 after approved replacements and intentional exclusions were verified. Future records may be migrated only after reaching `READY` or `READY-SUMMARY-ONLY` with their own evidence and permission gate.
 
 ## Facts requiring correction in the current implementation
 

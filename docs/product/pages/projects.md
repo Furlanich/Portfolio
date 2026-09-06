@@ -80,7 +80,7 @@ The wide header uses approximately 7/12 text and 5/12 visual; without a visual, 
 - Restricted projects use neutral branded visuals rather than fabricated UI.
 - Laboratory and prototype imagery states whether it is real, conceptual, or generated.
 - Logos require permission and placeholders never ship.
-- Existing legacy project SVGs are not approved evidence because capture date, represented version, sensitive-data review, and publication permission are unknown.
+- Historical legacy project SVGs were not approved evidence because capture date, represented version, sensitive-data review, and publication permission were unknown; Task 4 retired the unused files.
 - Evidence screenshots use a 16:9 contained frame so meaningful interface content is not cropped.
 
 `HOME-PROOF` does not depend on this page for its approved launch fallback. No Projects-route CTA may appear on the homepage until both localized Projects destinations are implemented with useful, publication-ready evidence.
@@ -97,4 +97,4 @@ The wide header uses approximately 7/12 text and 5/12 visual; without a visual, 
 
 ## Current readiness
 
-The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. [The item inventory](../projects/index.md) now contains three `READY` records with complete bilingual card/detail copy, approved public-source destinations, and labeled conceptual detail visuals. Task 2 / PR 2 is merged; Task 3 / PR 3 may publish paired summary-only detail routes for all three records. No item is homepage-eligible, and the launch cards remain image-free.
+The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. [The item inventory](../projects/index.md) now contains three `READY` records with complete bilingual card/detail copy, approved public-source destinations, and labeled conceptual detail visuals. Task 2 / PR 2 and Task 3 / PR 3 are merged; Task 4 / PR 4 retires verified-unused legacy project paths after consumer verification. No item is homepage-eligible, and the launch cards remain image-free.

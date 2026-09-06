@@ -1,6 +1,6 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname, extname, join, relative } from 'node:path';
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 const outputRoot = join(projectRoot, '..', 'out');
@@ -411,6 +411,17 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+async function collectTextFiles(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await collectTextFiles(path));
+    else if (['.html', '.js', '.json', '.map', '.txt', '.css'].includes(extname(entry.name).toLowerCase())) files.push(path);
+  }
+  return files;
+}
+
 const failures = [];
 const allHtml = [];
 
@@ -435,6 +446,18 @@ for (const artifact of artifacts) {
     } else {
       throw error;
     }
+  }
+}
+
+const exportedTextFiles = await collectTextFiles(outputRoot);
+for (const filePath of exportedTextFiles) {
+  const source = await readFile(filePath, 'utf8');
+  const file = relative(outputRoot, filePath);
+  if (/Busesfy|ChronoApp|Documancer|FOUNDER-ONLY|BLOCKED-|PROJECT-(?:GRS|THE-SYSTEM|MPC-ADMIN)/i.test(source)) {
+    failures.push(`${file}: blocked, private, retired, or internal project identity leaked into exported payload`);
+  }
+  if (/(?:Busesfy|MPC-Administracion|AI-Scheduler|GRS|Documancer|atlas|pulse|vertex)\.svg/i.test(source)) {
+    failures.push(`${file}: retired legacy project asset name leaked into exported payload`);
   }
 }
 

@@ -38,11 +38,3 @@ export interface Education {
   institution: LocalizedString;
   date: string;
 }
-
-export interface Project {
-  title: LocalizedString;
-  description: LocalizedString;
-  technologies: string[];
-  previewImage: Image;
-  socialMedia?: SocialMedia[];
-}

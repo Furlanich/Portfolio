@@ -18,11 +18,9 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 - [Plan template](template.md)
 - [Completed Stage B harness plan](completed/stage-b-agent-engineering-harness.md)
 
-## Active
-
-- [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](active/projects-evidence-experience.md): establishes a fail-closed public content boundary first, then gates the bilingual Projects index and eligible detail routes on item-level evidence and permission readiness.
-
 ## Completed
+
+- [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](completed/projects-evidence-experience.md): completed the fail-closed public content boundary, bilingual Projects index, approved paired detail routes, legacy project-path cleanup, and evidence-boundary verification.
 
 - [`PLAN-HOMEPAGE-FOUNDATION`](completed/homepage-foundation.md): delivered the accepted localized route foundation, minimum destinations, Founder migration, business hero, atomic cutover, and evidence-driven legacy-localization cleanup in four reviewable implementation PRs.
 - [`PLAN-HOMEPAGE-COMPLETION`](completed/homepage-completion.md): delivered the approved bilingual commercial homepage sections below `HOME-HERO`, the evidence-safe `HOME-PROOF` fallback, and localized Process navigation in one atomic rendered integration.
