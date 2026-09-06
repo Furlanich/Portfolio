@@ -65,7 +65,6 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
     <header className="sticky top-0 z-50 border-b border-foundation-border bg-foundation-surface">
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-5 py-3 md:px-8 lg:px-12">
         <Link
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           href={paths.home}
           className="text-base font-bold tracking-[0.08em] text-foundation-ink"
         >
