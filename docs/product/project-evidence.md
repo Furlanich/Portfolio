@@ -147,7 +147,7 @@ This audit reviewed the retained `data/projects.json` records and `public/projec
 | Production, Laboratory, or prototype | **OPEN** | No safe classification is established. |
 | Disclosure permission | **OPEN** | No permission grant, date, grantor, or permitted fields are recorded. |
 | Public description | **OPEN** | The legacy description exists but is not an approved client-facing description. |
-| Screenshots or assets | **OPEN** | `public/projects/Busesfy.svg` exists, but provenance and permission to publish the captured UI are not recorded. |
+| Screenshots or assets | **OPEN** | Historical `public/projects/Busesfy.svg` was retired in Task 4; provenance and permission to publish the captured UI were never recorded. |
 | Metrics | **OPEN** | No metric, source, or permission exists. |
 | Links | **APPROVED** as technically reachable; publication permission **OPEN** | Reachability does not authorize using the URL as commercial evidence. |
 | Technologies | **OPEN** for commercial publication | Legacy technology tags exist but are unverified and not necessary to the homepage story. |
@@ -165,7 +165,7 @@ This audit reviewed the retained `data/projects.json` records and `public/projec
 | Production, Laboratory, or prototype | **PROPOSED** functional prototype | It has implementation evidence, but functional behavior and public limitations have not been verified. |
 | Disclosure permission | **APPROVED** only for the public source already exposed; broader reuse **OPEN** | A public repository is available under Samuel's GitHub account. Reusing captured UI or third-party competition material still needs review. |
 | Public description | **PROPOSED** | A truthful description may identify it as a 2021 educational prototype for fictional production and stock workflows. |
-| Screenshots or assets | **OPEN** | `public/projects/MPC-Administracion.svg` exists, but its source and suitability for republication have not been reviewed. |
+| Screenshots or assets | **OPEN** | Historical `public/projects/MPC-Administracion.svg` was retired in Task 4; its source and suitability for republication were never reviewed. |
 | Metrics | **OPEN** | No metric or reproducible result is recorded. |
 | Links | **APPROVED** as a reachable public source repository | The repository resolved on 2026-09-04. |
 | Technologies | **APPROVED** as legacy implementation metadata; homepage relevance **REJECTED** | Technology may support a future technical note, not the commercial card hierarchy. |
@@ -183,7 +183,7 @@ This audit reviewed the retained `data/projects.json` records and `public/projec
 | Production, Laboratory, or prototype | **PROPOSED** functional prototype | The repository provides `implementation-evidence`; reproducible behavior is still required for `functional-demonstration`. |
 | Disclosure permission | **APPROVED** for linking to the founder-published public source; other fields remain item-specific | Public source availability does not approve unreviewed screenshots or broader outcome claims. |
 | Public description | **PROPOSED** | `Motor de reservas adaptable para negocios de servicios` is a candidate title; implemented scope and limitations require verification. |
-| Screenshots or assets | **OPEN** | `public/projects/GRS.svg` exists, but the represented build, date, and suitability have not been verified. |
+| Screenshots or assets | **OPEN** | Historical `public/projects/GRS.svg` was retired in Task 4; the represented build, date, and suitability were never verified. |
 | Metrics | **OPEN** | No public business outcome metric exists. Test presence is not a business result. |
 | Links | Repository **APPROVED** as reachable; demo **REJECTED** while unavailable | Do not publish the broken demo link. |
 | Technologies | **APPROVED** as repository-backed implementation context; secondary only | The stack may appear only where commercially useful and after content review. |
@@ -201,7 +201,7 @@ This audit reviewed the retained `data/projects.json` records and `public/projec
 | Production, Laboratory, or prototype | **OPEN** | Laboratory is plausible but unverified. |
 | Disclosure permission | **OPEN** | No permission record exists. |
 | Public description | **OPEN** | Separate implemented behavior from aspirational AI and operations claims before publication. |
-| Screenshots or assets | **OPEN** | `public/projects/AI-Scheduler.svg` exists, but it does not prove implementation or permission. |
+| Screenshots or assets | **OPEN** | Historical `public/projects/AI-Scheduler.svg` was retired in Task 4; it did not prove implementation or permission. |
 | Metrics | **OPEN** | No metric or source exists. |
 | Links | **REJECTED** until repaired or replaced with verified evidence | Do not publish the recorded 404 repository. |
 | Technologies | **OPEN** | Legacy tags are not sufficient evidence of implemented scope. |
@@ -219,7 +219,7 @@ This audit reviewed the retained `data/projects.json` records and `public/projec
 | Production, Laboratory, or prototype | **PROPOSED** Laboratory or prototype | The exact maturity label remains open pending functional verification. |
 | Disclosure permission | **APPROVED** for linking to founder-published public source; other fields remain item-specific | The public Apache-2.0 repository does not automatically approve every screenshot or claim. |
 | Public description | **PROPOSED** | Any description must preserve the early-stage limitation and avoid implying a completed commercial AI product. |
-| Screenshots or assets | **OPEN** | `public/projects/Documancer.svg` exists, but its represented state and suitability have not been verified. |
+| Screenshots or assets | **OPEN** | Historical `public/projects/Documancer.svg` was retired in Task 4; its represented state and suitability were never verified. |
 | Metrics | **OPEN** | No result metric or source exists. |
 | Links | **APPROVED** as a reachable public source repository | The repository resolved on 2026-09-04. |
 | Technologies | **APPROVED** as repository-backed implementation context; secondary only | Technology remains supporting detail. |

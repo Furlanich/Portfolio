@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { access, readdir, readFile } from 'node:fs/promises';
 
 const { publishedProjectManifest, getPublishedProjectCards, getPublishedProjectDetails, validateProjectContent } =
   await import('../lib/projects/publication.ts');
@@ -37,6 +37,17 @@ function assertPageShell(page, locale) {
   assert.ok(page.confidentiality.description.trim());
   assert.equal(page.finalCta.action.routeId, 'contact');
   assert.ok(page.finalCta.action.label.trim());
+}
+
+async function collectFiles(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const path = `${directory}/${entry.name}`;
+    if (entry.isDirectory()) files.push(...await collectFiles(path));
+    else files.push(path);
+  }
+  return files;
 }
 
 test('publishes exactly the three READY records in approved editorial order', () => {
@@ -106,4 +117,56 @@ test('keeps internal evidence and permission data out of application project sou
   ]) {
     assert.equal(source.includes(forbidden), false, `forbidden source text: ${forbidden}`);
   }
+});
+
+test('removes obsolete project sources and assets after consumer verification', async () => {
+  const legacyPaths = [
+    'data/projects.json',
+    'components/core/Card.tsx',
+    'public/projects/Busesfy.svg',
+    'public/projects/MPC-Administracion.svg',
+    'public/projects/AI-Scheduler.svg',
+    'public/projects/GRS.svg',
+    'public/projects/Documancer.svg',
+    'public/projects/atlas.svg',
+    'public/projects/pulse.svg',
+    'public/projects/vertex.svg',
+  ];
+
+  for (const path of legacyPaths) {
+    await assert.rejects(access(path), { code: 'ENOENT' });
+  }
+
+  assert.deepEqual(
+    (await collectFiles('public/projects')).sort(),
+    [
+      'public/projects/general-reservation-system/conceptual-workflow.webp',
+      'public/projects/mpc-administracion/conceptual-operations-model.webp',
+      'public/projects/the-system/conceptual-access-model.webp',
+    ],
+  );
+});
+
+test('removes legacy project imports and types from active application sources', async () => {
+  const sourceFiles = (await Promise.all(['app', 'components', 'lib'].map((directory) => collectFiles(directory))))
+    .flat()
+    .filter((path) => /\.(mjs|ts|tsx)$/.test(path));
+  const source = (await Promise.all(sourceFiles.map((path) => readFile(path, 'utf8')))).join('\n');
+
+  for (const forbidden of [
+    'data/projects.json',
+    'projectsData',
+    'components/core/Card',
+    'Busesfy.svg',
+    'MPC-Administracion.svg',
+    'AI-Scheduler.svg',
+    'GRS.svg',
+    'Documancer.svg',
+    'atlas.svg',
+    'pulse.svg',
+    'vertex.svg',
+  ]) {
+    assert.equal(source.includes(forbidden), false, `legacy application source: ${forbidden}`);
+  }
+  assert.doesNotMatch(source, /interface Project\s*{/);
 });

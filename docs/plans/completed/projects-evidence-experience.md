@@ -2,7 +2,7 @@
 id: PLAN-PROJECTS-EVIDENCE-EXPERIENCE
 type: execution-plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PROJECT-EVIDENCE
@@ -76,8 +76,8 @@ Reclassify and stop if implementation proposes any rejected infrastructure, chan
 | Evidence | PROJECT-EVIDENCE, PROJECT-INVENTORY and its six item records, PROJECTS-EXPERIENCE-CLOSURE, current legacy data/assets, current route/component/test/export architecture |
 | Requirements | PAGE-PROJECTS, PAGE-PROJECT-DETAIL, CONTENT-LOCALIZATION, DESIGN-VISUAL, DESIGN-IX-A11Y, IA-SITE, PAGE-SERVICES, PAGE-HOME, PAGE-CONTACT |
 | Affected architecture | Existing ADR-STATIC-LOCALIZED-ROUTING; no accepted boundary changes |
-| Required artifact | This active plan at docs/plans/active/projects-evidence-experience.md |
-| Current implementation boundary | Task 2 is merged. Task 3 implements exactly the three READY paired summary-only detail routes and their approved conceptual visuals; homepage integration and functional-evidence upgrades remain blocked. |
+| Required artifact | This completed plan at docs/plans/completed/projects-evidence-experience.md |
+| Current implementation boundary | Tasks 2, 3, and 4 are implemented. The public projection contains exactly the three approved paired summary-only detail routes and their conceptual visuals; obsolete project sources/assets are retired, while homepage integration and functional-evidence upgrades remain blocked. |
 | Validation | npm run docs:check for this plan; npm run validate and PR-specific root/base-path checks during implementation |
 | Unresolved questions | Functional verification and homepage eligibility beyond the three records' summary-only scope; remaining candidate permissions; canonical origin and broader release concerns remain OPEN |
 | Approval | Human review of this planning PR and every implementation PR; merge remains human-controlled |
@@ -109,7 +109,7 @@ General Reservation System, The-System, and MPC Administración are READY for li
 
 ## Affected architecture
 
-The current application has sixteen static artifacts (ten foundation/index routes plus six paired detail routes), four semantic foundation route IDs, route-private Spanish and English content modules, shared semantic Server Components, static route/equivalence helpers, and a static artifact verifier. Legacy project data is isolated in data/projects.json, lib/data.ts, lib/types.ts, components/core/Card.tsx, and legacy public/projects/ assets; no current public route consumes it.
+The current application has sixteen static artifacts (ten foundation/index routes plus six paired detail routes), four semantic foundation route IDs, route-private Spanish and English content modules, shared semantic Server Components, static route/equivalence helpers, and a static artifact verifier. The obsolete project JSON, project-only type/export, animated Card primitive, and eight legacy SVG assets have been removed after consumer verification; the three approved conceptual WebPs are the only project assets under public/projects/.
 
 The accepted extension is:
 
@@ -589,27 +589,27 @@ The three current items are detail-eligible for summary-only pages. If a later r
 - Modify: docs/index.md
 - Modify: docs/governance/status-register.md
 
-- [ ] **Step 1: Prove every legacy target is unused**
+- [x] **Step 1: Prove every legacy target is unused**
 
   Search application, tests, scripts, styles, and documentation references for projectsData, data/projects.json, the legacy Project type, components/core/Card, and every legacy asset path. Resolve legitimate documentation references by preserving historical filenames in prose where necessary; delete only targets with no valid runtime/import use.
 
-- [ ] **Step 2: Remove the obsolete publication paths**
+- [x] **Step 2: Remove the obsolete publication paths**
 
   Remove the legacy JSON import/export/type and the unused animated Card primitive only when repository search proves no other feature uses them. Remove all unapproved legacy project assets after confirming approved public replacements live under stable slug directories. Do not delete unrelated founder data or shared primitives.
 
-- [ ] **Step 3: Strengthen privacy and regression tests**
+- [x] **Step 3: Strengthen privacy and regression tests**
 
   Assert there is no runtime import path to legacy project data, internal docs, or removed assets; every remaining public project asset belongs to a manifest entry; generated HTML and source bundles contain none of the current blocked/private record names unless a later approved item record explicitly authorizes that exact public identity.
 
-- [ ] **Step 4: Run final deterministic and visual regression**
+- [x] **Step 4: Run final deterministic and visual regression**
 
   Run npm run validate, root and /Portfolio static builds plus static verification, git diff --check, and repository searches. Repeat compact/wide smoke checks for both index routes and every detail pair; confirm Services and HOME-PROOF remain unchanged except for the approved Projects navigation link added in PR 2.
 
-- [ ] **Step 5: Complete repository knowledge**
+- [x] **Step 5: Complete repository knowledge**
 
   Update current architecture and quality owners with demonstrated facts. Preserve item evidence records and historical ADRs. Set plan_status to COMPLETED, move this file to completed/, update indexes/status, and record PR links, exact checks, warnings, omitted phases, and deviations.
 
-- [ ] **Step 6: Review and commit**
+- [x] **Step 6: Review and commit**
 
   Inspect main...HEAD for over-broad deletion, missing assets, broken CV/icons/routes, generated output, secrets, and unrelated formatting. Commit, push, and open a human-reviewed PR without merging.
 
@@ -692,7 +692,7 @@ The three current items are detail-eligible for summary-only pages. If a later r
 
 - Busesfy, ChronoApp, and Documancer retain their item-level blocked/private/retired decisions and forward requirements.
 - General Reservation System, The-System, and MPC Administración have approved card/detail titles, summaries, capabilities, evidence links, limitations, and labeled conceptual visuals. Runtime verification, richer results, and homepage eligibility remain deferred.
-- Project detail PR 3 is authorized for exactly the three current eligible slugs; no additional item may enter without the same gate.
+- Project detail PR 3 is merged for exactly the three current eligible slugs; no additional item may enter without the same gate.
 - Filters remain rejected until the approved inventory threshold is met.
 - HOME-PROOF integration remains a separate optional later initiative even if an item becomes homepage-eligible.
 - Canonical production origin, absolute canonical/hreflang/sitemap metadata, broader site navigation destinations, and long-term hosting remain outside this implementation plan.
@@ -720,6 +720,11 @@ The three current items are detail-eligible for summary-only pages. If a later r
 - 2026-09-06: Task 3 implementation adds exactly six static detail artifacts for `general-reservation-system`, `the-system`, and `mpc-administracion`. Root and `/Portfolio` static builds plus `npm run verify:static-export` passed with 16 artifacts in each mode; the verifier checks ordered headings, bilingual language, evidence links, visible limitations, related-service/contact actions, conceptual image labels/alt text, and single base-path application. No blocked, private, retired, unresolved, production-claim, or homepage record is published.
 - 2026-09-06: Playwright and browser-based visual/accessibility QA were attempted with the available local package/browser surfaces, but no Playwright package or browser surface could start in this environment. No viewport, console, or automated-a11y pass is claimed. Deterministic source and exported-HTML checks cover semantic structure, server rendering, focus/target-size classes, natural-height/no-clamp structure, JavaScript-independent content, external-link treatment, and base-path integrity; human review should complete the required viewport/browser matrix.
 - 2026-09-06: Task 3 was committed as `dcdc863` (`feat: publish approved project detail pages`), pushed with the approved visual-assets commit, and opened as [PR #31](https://github.com/Furlanich/Portfolio/pull/31) against `main`. The PR is open for human review and has not been merged.
+- 2026-09-06: PR #31 was subsequently merged by the human reviewer, satisfying the Task 4 dependency. Consumer verification on the merged baseline found no active application, test, script, style, route, or configuration consumer for `data/projects.json`, the project-only `Project` type/export, `components/core/Card.tsx`, or the eight legacy project SVGs. The approved detail WebPs were present under stable slug paths before cleanup.
+- 2026-09-06: Task 4 deterministic RED was observed before deletion: the cleanup contract failed because the legacy JSON, Card primitive, and SVG assets existed and `lib/data.ts` still imported/exported the project dataset. After minimal cleanup, the GREEN cleanup contract passed; `npm test` passed 50/50, lint and typecheck passed, and the strengthened export verifier passed in root and `/Portfolio` modes with 16 routes each and no retired/private/internal project payload matches.
+- 2026-09-06: Task 4 removed `data/projects.json`, the project-only `Project` type/export, `components/core/Card.tsx`, and the eight unapproved legacy SVGs. No unrelated founder data or shared primitives were removed. The remaining public project asset set is exactly the three approved conceptual WebPs; statuses and unresolved evidence questions remain unchanged.
+- 2026-09-06: Task 4 browser/Playwright visual regression was attempted but unavailable because no local Playwright package or browser surface could start. No viewport, console, or automated-a11y pass is claimed. The no-render-change cleanup was covered by deterministic source/export checks, and the existing whole-site accessibility and release questions remain OPEN.
+- 2026-09-06: Task 4 was committed as `e92a0fa` (`chore: retire legacy project paths`), pushed to `codex/projects-cleanup`, and opened as [PR #32](https://github.com/Furlanich/Portfolio/pull/32) against `main`. The PR is open for human review and has not been merged.
 
 ## Important implementation decisions
 
@@ -732,7 +737,7 @@ The three current items are detail-eligible for summary-only pages. If a later r
 - Generate detail params only from explicit detail destinations.
 - Keep conceptual visuals visibly labeled and separate from implementation-evidence claims; do not treat generated media as runtime verification.
 - Implement no filters, carousel, image requirement, client runtime, or generalized content/design framework.
-- Remove legacy project data/assets only after the new public route path is merged and consumer search proves deletion safe.
+- Remove legacy project data/assets only after the new public route path is merged and consumer search proves deletion safe. This Task 4 cleanup gate is now satisfied; future records still require their own evidence and permission review.
 - Keep HOME-PROOF unchanged and treat any upgrade as separate work.
 
 ## Deviations discovered during execution

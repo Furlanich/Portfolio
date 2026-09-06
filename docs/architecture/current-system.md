@@ -6,14 +6,14 @@ related:
   - ARCH-FINDINGS
   - IA-SITE
   - PAGE-SERVICES
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 ---
 
 # Current system
 
 ## Scope
 
-This record includes the retained pre-cutover personal-portfolio implementation and the current Task 2 commercial homepage, Projects index, and Task 3 project-detail state. The ten approved foundation routes implement the documented Spanish-root and English-/en/ route pairs; the current Projects slice adds six paired static detail artifacts for the three approved slugs. Retained source data and legacy components remain in Git for later migration and cleanup.
+This record includes the retained pre-cutover personal-portfolio implementation and the current Task 2 commercial homepage, Projects index, Task 3 project-detail state, and Task 4 project cleanup. The ten approved foundation routes implement the documented Spanish-root and English-/en/ route pairs; the current Projects slice adds six paired static detail artifacts for the three approved slugs. Obsolete project JSON, project-only types/exports, animated Card code, and unapproved legacy SVG assets are retired; unrelated founder data and shared primitives remain available to their consumers.
 
 ## Application stack
 
@@ -135,9 +135,15 @@ Content is oriented toward personal credentials and recruiters rather than the a
 ## Current Projects index implementation — Task 2
 
 - `/proyectos/` and `/en/work/` render one shared `ProjectsPage` Server Component with three image-free cards in approved order: General Reservation System, The-System, then MPC Administración.
-- The typed public manifest is the only project enumeration source. All three entries are `limited`, detail-destination records with approved repository evidence and labeled conceptual visuals; the index remains card-only and image-free.
+- The typed public manifest is the only project enumeration source. All three entries are `limited`, detail-destination records with approved repository evidence and labeled conceptual visuals; the index remains card-only and image-free. The removed legacy project JSON is no longer an application source.
 - Cards expose maturity, context, evidence signal, natural summaries, two or three non-interactive capability tags, and one explicit source link. The publication-scope note and inquiry CTA remain visible in normal reading order; no filter, group, empty state, whole-card interaction, or client boundary was added. Detail assets are labeled conceptual and are not runtime evidence.
 - Shared header/footer navigation now exposes localized Projects/Work links and the language switch maps the index routes while detail pages preserve the stable slug (`/proyectos/[projectSlug]/` ↔ `/en/work/[projectSlug]/`). Normal and `/Portfolio` static artifact verification covers sixteen routes: ten foundation/index artifacts plus six paired detail artifacts. Playwright/browser visual QA was attempted but unavailable in this environment because no local Playwright package or browser surface could start; deterministic semantic/export checks remain the recorded evidence for this PR.
+
+## Current Projects cleanup implementation — Task 4
+
+- Consumer search proved that `data/projects.json`, the project-only `Project` type/export, and `components/core/Card.tsx` had no active consumers. They were removed without deleting the unrelated founder datasets or shared foundation/commercial primitives.
+- The eight unapproved legacy SVGs were removed after confirming the three approved conceptual WebPs were present under stable slug directories. `public/projects/` now contains only those three approved detail visuals.
+- The static verifier scans visible HTML and generated text payloads for blocked/private/retired identities, internal manifest identifiers, and removed asset names. Root and `/Portfolio` verification passed for all sixteen public artifacts.
 
 ## Current shared header implementation — Task 4
 

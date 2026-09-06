@@ -6,12 +6,19 @@ related:
   - ARCH-CURRENT
   - DESIGN-IX-A11Y
   - PORTFOLIO-MIGRATION
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 ---
 
 # Current quality findings
 
 The findings below are retained pre-cutover evidence. The current foundation and Task 4 cleanup verification is recorded first; the historical findings remain useful for later migration and are not authorization for work outside approved plans.
+
+## Current Projects cleanup verification — 2026-09-06
+
+- Consumer search on the merged PR3 baseline found no active application, test, script, style, route, or configuration consumer for `data/projects.json`, the project-only `Project` type/export, `components/core/Card.tsx`, or the eight legacy project SVGs.
+- Task 4 removed those verified-unused paths. `public/projects/` now contains only the three approved conceptual WebPs used by the paired detail pages; unrelated founder JSON and shared foundation/commercial components remain.
+- Root and `/Portfolio` static builds passed the strengthened verifier for all sixteen public artifacts. The verifier scans visible HTML and generated text payloads for blocked/private/retired identities, internal project IDs, deleted asset names, broken internal links, language, and base-path duplication.
+- The deterministic cleanup contract and full repository tests passed 50/50, with lint and typecheck passing. Playwright/browser visual regression was attempted but unavailable in this environment; no viewport, console, or automated accessibility result is claimed. Whole-site accessibility conformance remains OPEN.
 
 ## Current foundation and cleanup verification — 2026-09-04
 
