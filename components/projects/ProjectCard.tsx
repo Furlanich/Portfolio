@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ResolvedProjectCard } from './content-types';
 
 interface ProjectCardProps {
@@ -5,6 +6,8 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ card }: ProjectCardProps) {
+  const actionClassName = 'mt-auto inline-flex min-h-11 items-center pt-8 font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4';
+
   return (
     <article className="flex h-full flex-col rounded-[16px] border border-foundation-border bg-foundation-surface p-6 md:p-8">
       <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-foundation-muted">
@@ -28,14 +31,20 @@ export function ProjectCard({ card }: ProjectCardProps) {
           </li>
         ))}
       </ul>
-      <a
-        href={card.action.href}
-        target={card.action.external ? '_blank' : undefined}
-        rel={card.action.external ? 'noreferrer' : undefined}
-        className="mt-auto inline-flex min-h-11 items-center pt-8 font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
-      >
-        {card.actionLabel}
-      </a>
+      {card.action.external ? (
+        <a
+          href={card.action.href}
+          target="_blank"
+          rel="noreferrer"
+          className={actionClassName}
+        >
+          {card.actionLabel}
+        </a>
+      ) : (
+        <Link href={card.action.href} className={actionClassName}>
+          {card.actionLabel}
+        </Link>
+      )}
     </article>
   );
 }

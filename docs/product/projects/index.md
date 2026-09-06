@@ -22,11 +22,11 @@ The approved page, card, detail, imagery, bilingual-language, accessibility, and
 | Project | Relationship | Maturity | Disclosure | Evidence | Publication state | Public card | Detail page | Homepage eligible |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [Busesfy](busesfy.md) | unknown | unclassified | private | concept-only | `BLOCKED-PERMISSION` | No | No | No |
-| [General Reservation System](general-reservation-system.md) | founder-published; contributor present; no client or production claim | prototype | summary-only | implementation-evidence | `READY` | Yes | No | No |
-| [MPC Administración](mpc-administracion.md) | educational group work | prototype | summary-only | implementation-evidence | `READY` | Yes | No | No |
+| [General Reservation System](general-reservation-system.md) | founder-published; contributor present; no client or production claim | prototype | summary-only | implementation-evidence | `READY` | Yes | Yes | No |
+| [MPC Administración](mpc-administracion.md) | educational group work | prototype | summary-only | implementation-evidence | `READY` | Yes | Yes | No |
 | [ChronoApp / Appointment & Operations](chronoapp.md) | unknown | prototype | private | concept-only | `RETIRED` | No | No | No |
 | [Documancer](documancer.md) | unknown; founder-published source | lab | private | implementation-evidence | `PRIVATE` | No | No | No |
-| [The-System](the-system.md) | founder-published Laboratory work; no client claim | lab | summary-only | implementation-evidence | `READY` | Yes | No | No |
+| [The-System](the-system.md) | founder-published Laboratory work; no client claim | lab | summary-only | implementation-evidence | `READY` | Yes | Yes | No |
 
 `Unclassified` is an internal fail-closed state, not a fourth public maturity label. It is used only when the evidence does not support choosing production, lab, or prototype.
 

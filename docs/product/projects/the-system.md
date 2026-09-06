@@ -27,7 +27,7 @@ last_verified: 2026-09-06
 
 This repository was created after the original project audit and describes a role-playing operations platform. The current source includes authentication and email verification, password recovery, external-auth boundaries, role-playing campaign CRUD, memberships and invitations, subscription/billing abstractions, a Next.js client foundation, tests across backend layers, frontend unit tests, and Docker development dependencies. Many blueprint areas—scene runtime, assets, notes, collaborative behavior, and full product experience—remain scaffolded or planned.
 
-The repository contains tests, but no repository workflow result, current clean-checkout run, deployed demo, production use, business outcome, screenshot, or video was verified in this audit. `READY` authorizes the limited public card below. It does not upgrade evidence strength or approve a detail page, visual, demo, production claim, or homepage use.
+The repository contains tests, but no repository workflow result, current clean-checkout run, deployed demo, production use, business outcome, screenshot, or video was verified in this audit. `READY` authorizes the limited public card and the approved summary-only detail scope recorded below. It does not upgrade evidence strength, establish production or client work, approve a demo, or make the item homepage-eligible.
 
 ## Approved bilingual public card
 
@@ -39,7 +39,7 @@ The repository contains tests, but no repository workflow result, current clean-
 | Summary | Laboratorio de aplicación web con identidad y acceso, campañas, membresías e invitaciones y límites de suscripción modelados en el código. Se publica como evidencia de implementación; las áreas aún planificadas no se presentan como entregadas. | Web-application lab with identity and access, campaigns, memberships and invitations, and subscription boundaries represented in code. It is published as implementation evidence; planned areas are not presented as delivered. |
 | Capabilities | Identidad y acceso; Permisos multiusuario; Gestión de campañas | Identity and access; Multi-user permissions; Campaign management |
 | Evidence signal | Código fuente público | Public source |
-| CTA | Ver código fuente | View source |
+| CTA | Ver proyecto | View project |
 | Limitation | Sin demo público ni verificación actual de ejecución; no se afirma uso en producción. | No public demo or current runtime verification; no production use is claimed. |
 
 Approved destination: <https://github.com/Furlanich/The-System>

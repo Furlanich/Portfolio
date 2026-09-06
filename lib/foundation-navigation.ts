@@ -1,5 +1,5 @@
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { getFoundationPath, getHomeProcessHref } from './site-routes.ts';
+import { getFoundationPath, getHomeProcessHref, getProjectDetailPath } from './site-routes.ts';
 import type { FoundationRouteId } from './site-routes.ts';
 import type { Locale } from './locales';
 
@@ -29,5 +29,16 @@ export function getFoundationNavigationPaths(
     process: getHomeProcessHref(locale),
     alternateLocale,
     alternateHref: getFoundationPath(currentRouteId, alternateLocale),
+  };
+}
+
+export function getProjectDetailNavigationPaths(
+  locale: Locale,
+  slug: string,
+): FoundationNavigationPaths {
+  const paths = getFoundationNavigationPaths(locale, 'projects');
+  return {
+    ...paths,
+    alternateHref: getProjectDetailPath(paths.alternateLocale, slug),
   };
 }

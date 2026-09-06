@@ -56,7 +56,7 @@ last_verified: 2026-09-06
 
 ## Objective
 
-Turn the approved Projects product/design decisions into a staged implementation path. Task 1 created a typed, testable publication boundary without changing the site. Three records now pass the card-publication gate, so Task 2 may publish their exact approved bilingual content; later detail work remains conditional on separate evidence, permission, content, asset, and eligibility gates.
+Turn the approved Projects product/design decisions into a staged implementation path. Task 1 created a typed, testable publication boundary without changing the site. Task 2 published the exact approved bilingual index content, and Task 3 now publishes only the three records that passed the separate detail evidence, permission, content, asset, and eligibility gates.
 
 ## Governance classification
 
@@ -77,7 +77,7 @@ Reclassify and stop if implementation proposes any rejected infrastructure, chan
 | Requirements | PAGE-PROJECTS, PAGE-PROJECT-DETAIL, CONTENT-LOCALIZATION, DESIGN-VISUAL, DESIGN-IX-A11Y, IA-SITE, PAGE-SERVICES, PAGE-HOME, PAGE-CONTACT |
 | Affected architecture | Existing ADR-STATIC-LOCALIZED-ROUTING; no accepted boundary changes |
 | Required artifact | This active plan at docs/plans/active/projects-evidence-experience.md |
-| Current implementation boundary | Task 2 is merged. Task 3 may add exactly the three READY paired summary-only detail routes and their approved conceptual visuals; homepage integration and functional-evidence upgrades remain blocked. |
+| Current implementation boundary | Task 2 is merged. Task 3 implements exactly the three READY paired summary-only detail routes and their approved conceptual visuals; homepage integration and functional-evidence upgrades remain blocked. |
 | Validation | npm run docs:check for this plan; npm run validate and PR-specific root/base-path checks during implementation |
 | Unresolved questions | Functional verification and homepage eligibility beyond the three records' summary-only scope; remaining candidate permissions; canonical origin and broader release concerns remain OPEN |
 | Approval | Human review of this planning PR and every implementation PR; merge remains human-controlled |
@@ -109,7 +109,7 @@ General Reservation System, The-System, and MPC Administración are READY for li
 
 ## Affected architecture
 
-The current application has eight static routes, four semantic foundation route IDs, route-private Spanish and English content modules, shared semantic Server Components, static route/equivalence helpers, and a static artifact verifier. Legacy project data is isolated in data/projects.json, lib/data.ts, lib/types.ts, components/core/Card.tsx, and public/projects/; no current public route consumes it.
+The current application has sixteen static artifacts (ten foundation/index routes plus six paired detail routes), four semantic foundation route IDs, route-private Spanish and English content modules, shared semantic Server Components, static route/equivalence helpers, and a static artifact verifier. Legacy project data is isolated in data/projects.json, lib/data.ts, lib/types.ts, components/core/Card.tsx, and legacy public/projects/ assets; no current public route consumes it.
 
 The accepted extension is:
 
@@ -525,7 +525,7 @@ The count is three, so Task 2 may proceed. Any implementation field beyond the e
 - Modify: docs/plans/active/projects-evidence-experience.md
 - Modify: docs/governance/status-register.md
 
-- [ ] **Step 1: Assert detail eligibility and route pairs**
+- [x] **Step 1: Assert detail eligibility and route pairs**
 
   **Gate status: SATISFIED.** The three item records meet the approved detail rule through context, problem/opportunity, delivered scope, capabilities, implementation-evidence result, evidence links, limitations, and conceptual visual material. The implementation must still enforce the contract and generate only these three paired slugs.
 
@@ -533,19 +533,19 @@ The count is three, so Task 2 may proceed. Any implementation field beyond the e
 
   Run node --test scripts/project-details.test.mjs. Expected: RED until the route/resolver/composition exists.
 
-- [ ] **Step 2: Add exact path and language-equivalence helpers**
+- [x] **Step 2: Add exact path and language-equivalence helpers**
 
   Add getProjectDetailPath and getProjectDetailNavigationPaths. The latter preserves the stable slug across locales and changes only the alternate-language destination. Do not add a missing-locale fallback; the publication contract prevents incomplete pairs.
 
-- [ ] **Step 3: Add statically generated paired routes**
+- [x] **Step 3: Add statically generated paired routes**
 
   Add generateStaticParams to each locale route from the detail-only manifest projection and set dynamicParams to false. Each route imports only its own locale detail content. Do not generate pages for Contact-only, Services-only, external-demo, summary-only, blocked, private, founder-only, or retired records.
 
-- [ ] **Step 4: Implement the adaptive editorial composition**
+- [x] **Step 4: Implement the adaptive editorial composition**
 
   Render the approved section order and omit absent optional sections. Use the text-only header when no visual exists. Render evidence as an ordinary semantic list/grid; do not build a carousel for one or several static items. Keep limitations visible in normal reading flow and technical notes subordinate.
 
-- [ ] **Step 5: Extend artifacts and verify both export modes**
+- [x] **Step 5: Extend artifacts and verify both export modes**
 
   Require every detail pair in scripts/verify-static-export.mjs with correct lang, H1, ordered populated sections, evidence labels/links, limitations, service destination, Contact CTA, language-equivalent href, asset/base-path integrity, and no unsupported empty page. Run the full validation and root/base-path commands from PR 2.
 
@@ -553,7 +553,7 @@ The count is three, so Task 2 may proceed. Any implementation field beyond the e
 
   Check every detail route at 320x800 and 1440x900, plus 375x812, 768x1024, and 1024x768 when content or media reveals breakpoint risk. Verify header composition, source order, readable measures, media containment, evidence/limitation visibility, external-link clarity, related-service/final CTA hierarchy, keyboard/focus, target sizes, 200% zoom, reduced motion, no-JavaScript content, console/page errors, and automated accessibility results in both locales and relevant base-path mode.
 
-- [ ] **Step 7: Synchronize and commit**
+- [x] **Step 7: Synchronize and commit**
 
   Record exact published slugs and evidence in the plan and current-system/status owners. Review every rendered claim and public asset against its item permission matrix. Commit, push, and open a human-reviewed PR without merging.
 
@@ -716,6 +716,9 @@ The three current items are detail-eligible for summary-only pages. If a later r
 - 2026-09-06: Task 2 was committed as `e1a0caa` (`feat: publish bilingual projects index`), pushed to `codex/projects-ready-promotion`, and opened as [PR #28](https://github.com/Furlanich/Portfolio/pull/28) against `main`. The PR is open for human review and has not been merged.
 - 2026-09-06: Initial post-merge gate audit after PR #28 found zero detail-eligible items: all three published records then remained `summary-only`, explicitly marked `Detail page: No`, and lacked approved detail content plus a permitted detail evidence asset or evidence link. At that point PR 3 was recorded as **OMITTED** and Task 4 was next; the subsequent owner-approved conceptual assets and detail content below supersede that interim gate state without changing the plan sequence.
 - 2026-09-06: The initiative owner approved one labeled conceptual WebP detail visual and complete bilingual summary-only detail content for each of the three READY records. The visual assets contain no product UI, client identity, customer data, metrics, or functional claim; each is explicitly labeled as conceptual in the detail copy and alt intent. The Task 3 / PR 3 gate is reopened and satisfied for exactly the three paired slugs; the existing index remains image-free.
+- 2026-09-06: Task 3 deterministic RED was observed before implementation: the focused detail contract failed on the stale external destinations, missing detail content, and missing paired route sources. The GREEN focused route/publication/detail suite then passed, including exact three-slug membership, complete bilingual content, approved conceptual assets, same-slug language switching, unknown-slug rejection, static closed routes, and Server Component accessibility boundaries.
+- 2026-09-06: Task 3 implementation adds exactly six static detail artifacts for `general-reservation-system`, `the-system`, and `mpc-administracion`. Root and `/Portfolio` static builds plus `npm run verify:static-export` passed with 16 artifacts in each mode; the verifier checks ordered headings, bilingual language, evidence links, visible limitations, related-service/contact actions, conceptual image labels/alt text, and single base-path application. No blocked, private, retired, unresolved, production-claim, or homepage record is published.
+- 2026-09-06: Playwright and browser-based visual/accessibility QA were attempted with the available local package/browser surfaces, but no Playwright package or browser surface could start in this environment. No viewport, console, or automated-a11y pass is claimed. Deterministic source and exported-HTML checks cover semantic structure, server rendering, focus/target-size classes, natural-height/no-clamp structure, JavaScript-independent content, external-link treatment, and base-path integrity; human review should complete the required viewport/browser matrix.
 
 ## Important implementation decisions
 
