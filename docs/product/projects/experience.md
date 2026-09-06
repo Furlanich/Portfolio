@@ -15,7 +15,7 @@ last_verified: 2026-09-06
 
 # Projects and evidence experience
 
-This record closes the product, content, layout, imagery, filtering, detail-page, accessibility, and performance decisions for the Projects experience. The inventory now authorizes a public bilingual Projects index with three limited, image-free cards. The fail-closed content contract remains the publication boundary; only item records explicitly marked `READY` or `READY-SUMMARY-ONLY` may enter its public manifest.
+This record closes the product, content, layout, imagery, filtering, detail-page, accessibility, and performance decisions for the Projects experience. The inventory authorizes a public bilingual Projects index with three limited, image-free cards and three paired summary-only detail pages. The fail-closed content contract remains the publication boundary; only item records explicitly marked `READY` or `READY-SUMMARY-ONLY` may enter its public manifest.
 
 ## Buyer questions and content principle
 
@@ -119,8 +119,8 @@ An image is optional. Choose, in priority order: authorized current screenshot, 
 
 - Never fabricate restricted client UI.
 - Existing legacy SVG captures are not approved: their capture date, represented version, sensitive-data review, and publication permission are unknown.
-- General Reservation System, The-System, and MPC Administración launch as READY image-free cards because no project visual is approved. Busesfy, ChronoApp, and Documancer remain non-public and use no public image.
-- A future General Reservation System visual must be a fresh capture from a verified run. A future Documancer or The-System visual must distinguish real implementation from concept.
+- General Reservation System, The-System, and MPC Administración launch as READY image-free cards. Their paired detail pages may use the newly generated, labeled conceptual WebP diagrams recorded in the item records; these are not screenshots or functional evidence. Busesfy, ChronoApp, and Documancer remain non-public and use no public image.
+- A future General Reservation System screenshot must be a fresh capture from a verified run. The approved The-System and MPC visuals distinguish real implementation from concept, and any future Documancer visual must do the same.
 - Restricted production work may use a neutral branded capability diagram or permitted summary graphic.
 
 Evidence screenshots use a 16:9 frame, neutral border/background, and `object-fit: contain` so interface evidence is not cropped. Decorative illustrations may use `cover` when the meaningful subject remains visible. On compact layouts the visual becomes full card width above text. Avoid mock-browser chrome unless it explains the evidence.
@@ -187,6 +187,6 @@ Also check keyboard-only traversal, screen-reader heading/link structure, 200% t
 
 ## Architecture boundary
 
-Use a typed static project content model with explicit localized fields, evidence/disclosure data, service relationships, and optional links/assets. Task 2 / PR 2 may extend the existing static locale route map for the approved bilingual index; detail-route generation remains deferred. Do not add a CMS, database, dynamic backend, project API, admin panel, search engine, or filter framework for the current inventory.
+Use a typed static project content model with explicit localized fields, evidence/disclosure data, service relationships, and optional links/assets. Task 3 / PR 3 may extend the existing static locale route map for the three paired summary-only detail pages. Do not add a CMS, database, dynamic backend, project API, admin panel, search engine, or filter framework for the current inventory.
 
 Internal relationship, permission, evidence-strength, lifecycle, restriction, and homepage-eligibility data remains in `PROJECT-EVIDENCE` and the item records. Public application modules contain only an explicit publication manifest and approved localized public content. The active implementation sequence and its evidence gates are owned by [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../../plans/active/projects-evidence-experience.md).
