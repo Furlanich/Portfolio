@@ -62,10 +62,12 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-foundation-border bg-foundation-surface">
+    <>
+      <div id="site-top" aria-hidden="true" />
+      <header className="sticky top-0 z-50 border-b border-foundation-border bg-foundation-surface">
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-5 py-3 md:px-8 lg:px-12">
         <Link
-          href={paths.home}
+          href={`${paths.home}#site-top`}
           className="text-base font-bold tracking-[0.08em] text-foundation-ink"
         >
           FURLANICH
@@ -117,6 +119,7 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
 
         <span className="sr-only">{locale === 'es' ? 'Español' : 'English'}</span>
       </div>
-    </header>
+      </header>
+    </>
   );
 }
