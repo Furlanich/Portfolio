@@ -491,7 +491,7 @@ The count is three, so Task 2 may proceed. Any implementation field beyond the e
 
   Use visual-qa on /proyectos/ and /en/work/ at 320x800, 375x812, 768x1024, 1024x768, and 1440x900, then verify the relevant /Portfolio routes. Check no horizontal overflow, natural card growth, translation expansion, tag wrapping, CTA/evidence order, image containment/legibility, clear interaction affordance, keyboard order, visible focus, 44px targets, heading/list semantics, 200% text zoom, reduced motion, JavaScript-disabled content, console errors, page errors, and automated accessibility results.
 
-- [ ] **Step 9: Synchronize and commit**
+- [x] **Step 9: Synchronize and commit**
 
   Update current-system and status owners with demonstrated merged-ready facts, and record exact validation/visual evidence in this plan. Review the complete diff for over-disclosure, unsupported claims, unintended homepage changes, client code, dependencies, or empty routes. Commit, push, and open a human-reviewed PR without merging.
 
@@ -708,6 +708,7 @@ If no item is detail-eligible after PR 2, record PR 3 as OMITTED in Progress and
 - 2026-09-06: Task 2 implementation published exactly `PROJECT-GRS`, `PROJECT-THE-SYSTEM`, and `PROJECT-MPC-ADMIN` as limited, image-free, external-source cards in the approved order at `/proyectos/` and `/en/work/`. The shared header/footer now exposes localized Projects/Work navigation, and the Services evidence sentence uses the approved current-verification limitation. No detail route, visual, homepage card, filter, dependency, or legacy-source import was added; blocked, private, retired, and unresolved records remain outside the manifest.
 - 2026-09-06: Task 2 deterministic RED was observed against the stale empty-manifest and four-route contracts before the GREEN implementation. Afterward `npm test` passed 41/41, `npm run lint`, `npm run typecheck`, and `npm run docs:check` passed. Root static export and `/Portfolio` base-path export both built successfully; `npm run verify:static-export` verified 10 routes in each mode, including exact card order, source links, single H1/main semantics, no images/empty taxonomy headings/nested cards, language, and base-path integrity. `git diff --check` remains required before commit.
 - 2026-09-06: Playwright visual QA was attempted with `npx --no-install playwright --version` and the available browser surface was attempted twice; no local Playwright package or browser surface could start in this environment. No visual result is claimed. The deterministic source and generated-HTML checks cover server rendering, semantic cards/lists, keyboard-sized links/focus classes, natural-height/no-clamp/no-shadow structure, JavaScript-independent static content, and external-link treatment; the missing viewport/console/automated-a11y evidence is an explicit PR review limitation.
+- 2026-09-06: Task 2 was committed as `e1a0caa` (`feat: publish bilingual projects index`), pushed to `codex/projects-ready-promotion`, and opened as [PR #28](https://github.com/Furlanich/Portfolio/pull/28) against `main`. The PR is open for human review and has not been merged.
 
 ## Important implementation decisions
 
