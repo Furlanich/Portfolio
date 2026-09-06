@@ -56,13 +56,16 @@ The Founder destination must be available in the same release that makes the bus
 
 ## Initiative 4 project disposition — APPROVED
 
-The [item-level project inventory](projects/index.md) now governs migration of legacy project records. None is approved for the business Projects experience:
+The [item-level project inventory](projects/index.md) now governs migration of legacy project records. Three are approved for limited business Projects cards:
 
-- Busesfy and The-System remain blocked on relationship/publication permission.
-- General Reservation System remains blocked on current functional verification.
-- MPC Administración remains Founder-only educational history and must identify the organization as fictional.
+- General Reservation System is READY for a source-backed prototype card with explicit lack of current functional verification.
+- The-System is READY for a source-backed FURLANICH Laboratory card that excludes planned features.
+- MPC Administración is READY for a source-backed educational group-work card and must identify the organization as fictional.
+- Busesfy remains blocked on relationship/publication permission.
 - ChronoApp is retired from evidence rather than carried forward with a dead repository.
 - Documancer remains private until sensitive-looking configuration is remediated and present behavior is verified.
+
+The READY promotion does not authorize legacy screenshots, a detail page, homepage placement, production/client claims, or sole-authorship claims. The three cards launch without images and link only to their approved public repositories.
 
 Legacy `data/projects.json` copy and `public/projects/` imagery remain current-system evidence only. A later implementation plan may migrate a record only after it reaches `READY` or `READY-SUMMARY-ONLY`; it may retire unused legacy assets only after the approved replacement or intentional exclusion is verified.
 

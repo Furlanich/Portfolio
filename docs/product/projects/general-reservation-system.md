@@ -16,11 +16,14 @@ last_verified: 2026-09-06
 | --- | --- |
 | Internal ID / slug | `PROJECT-GRS` / `general-reservation-system` |
 | Internal/original name | General Reservation System |
-| Public name ES / EN | Not approved while blocked |
-| Relationship | Unknown; the public repository is founder-published and shows another contributor, but ownership/delivery context is not recorded |
+| Public name ES / EN | `Gestión de reservas para transporte de pasajeros` / `Passenger transport reservation management` |
+| Relationship | Founder-published repository with another contributor; no client, employment, sole-ownership, or production-delivery claim |
 | Maturity | Prototype |
-| Lifecycle/publication | `BLOCKED-FUNCTIONAL-VERIFICATION` |
+| Lifecycle/publication | `READY` |
 | Disclosure / evidence | Summary-only / implementation-evidence |
+| Primary service | `SERVICE-WEB` |
+| Public card / detail / homepage | Yes / No / No |
+| Editorial order | 1 |
 
 ## Commercial relevance
 
@@ -28,32 +31,47 @@ The implementation addresses reservation operations for passenger transport. The
 
 The verified claim is limited to implementation evidence: source, automated test projects, Docker configuration, and a historical successful GitHub Actions run on 2025-12-02 that built, tested, published images, migrated staging, and deployed staging. The exact test count is unavailable because the job logs have expired. This does not establish current runnable behavior, a working public demo, production use, payments, uptime, adoption, support levels, or business outcomes.
 
+`READY` authorizes the limited public card below. It does not upgrade the record to `functional-demonstration` or approve a detail page, visual, demo, production claim, or homepage use.
+
+## Approved bilingual public card
+
+| Field | Spanish | English |
+| --- | --- | --- |
+| Title | Gestión de reservas para transporte de pasajeros | Passenger transport reservation management |
+| Context | Transporte de pasajeros | Passenger transport |
+| Maturity label | Prototipo de reservas | Reservation prototype |
+| Summary | Implementación de referencia para gestionar recorridos, estaciones, disponibilidad de asientos, reservas y autogestión de pasajeros. Se publica como evidencia de implementación; no se afirma uso en producción ni un resultado comercial medido. | Reference implementation for managing routes, stations, seat availability, reservations, and passenger self-service. It is published as implementation evidence; no production use or measured business outcome is claimed. |
+| Capabilities | Reservas; Disponibilidad de asientos; Portal de pasajeros | Reservations; Seat availability; Passenger portal |
+| Evidence signal | Código fuente público | Public source |
+| CTA | Ver código fuente | View source |
+| Limitation | Demostración pública no disponible; el comportamiento actual no fue revalidado. | No current public demo; current behavior has not been revalidated. |
+
+Approved destination: <https://github.com/Furlanich/GeneralReservationSystem>
+
 ## Current condition and limitations
 
-- The documented demo previously returned `404`; it was not restored or reverified in this audit.
+- The documented demo previously returned `404`; it was not restored or reverified in this audit and must not be linked.
 - Local startup requires environment configuration, certificates for the HTTPS path, database services, and compose overlays. The documented setup was inspected but not executed successfully in the current audit environment.
 - The repository contains unit and integration coverage for authentication, users, trips, stations, reservations, services, and health behavior, but source presence is not a current passing test result.
 - Payment UI is commented out; do not claim online payments.
 - Seeded/demo credentials and marketing statements in the repository must not be copied into public evidence.
 - The stored portfolio SVG has unknown capture date, represented version, and publication provenance. It is not approved.
 
-The broken demo should either be restored and verified end to end or removed from public-facing repository documentation. FURLANICH must not link it while broken.
-
 ## Permission matrix
 
 | Publication field | Status | Grantor/date | Restriction |
 | --- | --- | --- | --- |
-| Project name; public description | UNKNOWN | Unknown | Public repository does not itself grant portfolio publication permission. |
-| Client/company name; logo; client identity | NOT APPLICABLE/UNKNOWN | Unknown | No client relationship is established; do not imply one. |
-| Industry | PENDING | Unknown | May be described generically only after relationship/copy approval. |
-| Screenshots; video | UNKNOWN | Unknown | Fresh sanitized capture and provenance required. |
-| Workflow/features | PENDING | Unknown | Limit to behavior reverified at the audited commit. |
-| Architecture details; technology stack | PENDING | Unknown | May support a detail page later; technology remains secondary. |
+| Approved public title and description | APPROVED | Initiative owner / 2026-09-06 | Exact card scope above; no client, employment, ownership, delivery, or production inference. |
+| Client/company name; logo; client identity | NOT APPLICABLE | — | No client relationship is established; do not imply one. |
+| Generic industry | APPROVED | Initiative owner / 2026-09-06 | `Passenger transport` only. |
+| Screenshots; video | NOT APPROVED | — | Fresh sanitized capture and provenance required. |
+| Approved workflow/features | APPROVED | Initiative owner / 2026-09-06 | Limited to the source-backed capability labels and summary above; not current functional verification. |
+| Architecture details; technology stack | NOT APPROVED | — | Not needed for the card. |
 | Metrics; testimonial | NOT AVAILABLE | — | Do not publish. |
 | Live URL | BLOCKED | — | Broken/unverified; do not link. |
-| Repository | UNKNOWN | Unknown | Public visibility is not publication permission; no license is recorded. |
-| Employee/employer relationship | UNKNOWN | Unknown | Do not state or imply. |
+| Repository | APPROVED | Initiative owner / 2026-09-06 | Link to the public repository only; no repository-license or ownership inference. |
+| Employee/employer relationship | NOT APPROVED | — | Do not state or imply. |
 
-## Required to advance
+## Approved READY scope and remaining limitations
 
-Record authorship and project relationship; run the documented stack from a clean checkout; run and record tests; verify reservation creation, availability changes, cancellation, self-service, and administration; restore or intentionally remove the demo; capture a fresh sanitized screenshot or video; and approve the permission matrix and bilingual copy. Only then may evidence be upgraded to `functional-demonstration`. A detail page additionally requires enough permitted context beyond the repository summary.
+Publish only the image-free bilingual card above, linking to the public source. A detail page, homepage placement, screenshot, demo, and `functional-demonstration` label remain unapproved. Reconsider those uses only after a clean current run, recorded tests, verified workflows, and authorized current media.

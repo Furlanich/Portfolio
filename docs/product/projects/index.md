@@ -22,15 +22,15 @@ The approved page, card, detail, imagery, bilingual-language, accessibility, and
 | Project | Relationship | Maturity | Disclosure | Evidence | Publication state | Public card | Detail page | Homepage eligible |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [Busesfy](busesfy.md) | unknown | unclassified | private | concept-only | `BLOCKED-PERMISSION` | No | No | No |
-| [General Reservation System](general-reservation-system.md) | unknown | prototype | summary-only | implementation-evidence | `BLOCKED-FUNCTIONAL-VERIFICATION` | No | No | No |
-| [MPC Administración](mpc-administracion.md) | educational | prototype | summary-only | implementation-evidence | `FOUNDER-ONLY` | No | No | No |
+| [General Reservation System](general-reservation-system.md) | founder-published; contributor present; no client or production claim | prototype | summary-only | implementation-evidence | `READY` | Yes | No | No |
+| [MPC Administración](mpc-administracion.md) | educational group work | prototype | summary-only | implementation-evidence | `READY` | Yes | No | No |
 | [ChronoApp / Appointment & Operations](chronoapp.md) | unknown | prototype | private | concept-only | `RETIRED` | No | No | No |
 | [Documancer](documancer.md) | unknown; founder-published source | lab | private | implementation-evidence | `PRIVATE` | No | No | No |
-| [The-System](the-system.md) | unknown | lab | private | implementation-evidence | `BLOCKED-PERMISSION` | No | No | No |
+| [The-System](the-system.md) | founder-published Laboratory work; no client claim | lab | summary-only | implementation-evidence | `READY` | Yes | No | No |
 
 `Unclassified` is an internal fail-closed state, not a fourth public maturity label. It is used only when the evidence does not support choosing production, lab, or prototype.
 
-No project is `READY` or `READY-SUMMARY-ONLY` at this audit date. Therefore no project card, detail page, or homepage proof claim is approved for launch. `HOME-PROOF` keeps its approved service-and-process fallback.
+Three projects are `READY` for limited, image-free bilingual cards: General Reservation System, The-System, and MPC Administración, in that editorial order. Their public scope is restricted to the exact item-level copy and public repository link approved on 2026-09-06. `READY` does not upgrade their `implementation-evidence`, approve a detail page, establish production or client work, or make them homepage-eligible. `HOME-PROOF` keeps its approved service-and-process fallback.
 
 ## Repository discovery disposition
 
@@ -52,9 +52,9 @@ Any excluded item must re-enter the same evidence and permission audit before pu
 | Asset | Size | Disposition |
 | --- | ---: | --- |
 | `Busesfy.svg` | 9,544,554 bytes | Not approved: permission, capture provenance, represented version, and sensitive-data review are unknown. |
-| `MPC-Administracion.svg` | 4,299,449 bytes | Not approved: educational/group rights and capture provenance are unknown. |
+| `MPC-Administracion.svg` | 4,299,449 bytes | Not approved: the READY card is image-free; group-image rights and capture provenance remain unknown. |
 | `AI-Scheduler.svg` | 3,131,444 bytes | Retire with ChronoApp evidence; it cannot prove the unsupported AI/SaaS claims. |
-| `GRS.svg` | 1,693,672 bytes | Not approved: replace only with a fresh capture from a verified current run. |
+| `GRS.svg` | 1,693,672 bytes | Not approved: the READY card is image-free; replace only with a fresh capture from a verified current run. |
 | `Documancer.svg` | 1,261,337 bytes | Not approved: represented functionality and capture provenance are unknown. |
 | `atlas.svg`, `pulse.svg`, `vertex.svg` | 693, 693, 697 bytes | Unreferenced decorative placeholders with invented product identities; never publish as project evidence. |
 
@@ -62,7 +62,7 @@ The multi-megabyte embedded SVG captures also violate the approved delivery dire
 
 ## Editorial ordering policy
 
-When records become publishable, ordering is editorial rather than chronological. Rank by commercial relevance, evidence strength, service coverage, disclosure completeness, visual quality, and diversity of demonstrated capability, in that order. Do not rank by repository age, stack size, code volume, technical complexity, or personal preference.
+Ordering is editorial rather than chronological. The launch order is General Reservation System, The-System, then MPC Administración. Rank future additions by commercial relevance, evidence strength, service coverage, disclosure completeness, visual quality, and diversity of demonstrated capability, in that order. Do not rank by repository age, stack size, code volume, technical complexity, or personal preference.
 
 ## Launch threshold
 
@@ -77,15 +77,15 @@ When records become publishable, ordering is editorial rather than chronological
 
 | Area | Product | Content ES | Content EN | Design | Evidence | Ready |
 | --- | --- | --- | --- | --- | --- | --- |
-| Projects index | READY | READY | READY | READY | BLOCKED | BLOCKED |
-| Project cards | READY | READY | READY | READY | BLOCKED | BLOCKED |
-| Production group | READY | DEFERRED | DEFERRED | READY | BLOCKED | DEFERRED |
-| Laboratory group | READY | DEFERRED | DEFERRED | READY | BLOCKED | DEFERRED |
-| Prototype group | READY | DEFERRED | DEFERRED | READY | BLOCKED | DEFERRED |
+| Projects index | READY | READY | READY | READY | READY | READY |
+| Project cards | READY | READY | READY | READY | READY | READY |
+| Production group | READY | DEFERRED | DEFERRED | READY | READY | DEFERRED |
+| Laboratory group | READY | DEFERRED | DEFERRED | READY | READY | DEFERRED |
+| Prototype group | READY | DEFERRED | DEFERRED | READY | READY | DEFERRED |
 | Detail pages | READY | DEFERRED | DEFERRED | READY | BLOCKED | DEFERRED |
-| Confidential summaries | READY | READY | READY | READY | BLOCKED | BLOCKED |
+| Confidential summaries | READY | READY | READY | READY | READY | READY |
 | Final CTA | READY | READY | READY | READY | READY | READY |
 
-`Content ES` and `Content EN` are deferred at item level because there are no READY items; the public taxonomy, evidence terms, confidentiality pattern, and CTA language are approved in both languages.
+The three READY item records contain complete Spanish and English card copy. Maturity groups remain deferred because the approved two-or-three-item launch structure is one ungrouped editorial grid, not because card evidence is blocked. Detail content and routes remain deferred.
 
-The active [Projects / Evidence execution plan](../../plans/active/projects-evidence-experience.md) may establish an empty fail-closed public contract. It does not change this inventory: public routes, cards, detail pages, navigation, and assets remain blocked until this record and the relevant item owner approve at least one READY or READY-SUMMARY-ONLY item.
+The active [Projects / Evidence execution plan](../../plans/active/projects-evidence-experience.md) has completed its empty fail-closed public contract. Its Task 2 / PR 2 gate is now satisfied for the three approved image-free cards and bilingual index routes. Detail routes, homepage integration, and project imagery remain outside that authorization.

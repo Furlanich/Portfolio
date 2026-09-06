@@ -194,7 +194,7 @@ The minimum destination copy above remains the current implementation baseline. 
 
 **Heading:** `Evidencia disponible`
 
-> El repositorio conserva un sistema general de reservas publicado por Samuel como evidencia de implementación. Su demostración funcional, sus limitaciones y su presentación comercial todavía están en revisión, por lo que no se presenta como caso de cliente, solución en producción ni resultado verificado.
+> El repositorio conserva un sistema general de reservas publicado por Samuel como evidencia de implementación. Su demostración funcional actual no está verificada, por lo que se presenta con limitaciones explícitas y no como caso de cliente, solución en producción ni resultado verificado.
 
 **CTA:** `Contanos qué necesitás resolver en la web` → `/contacto/`
 
@@ -478,7 +478,7 @@ The minimum destination copy above remains the current implementation baseline. 
 
 **Heading:** `Available evidence`
 
-> The repository contains a general reservation system published by Samuel as implementation evidence. Its functional demonstration, limitations, and commercial presentation are still under review, so it is not presented as client work, a production solution, or a verified outcome.
+> The repository contains a general reservation system published by Samuel as implementation evidence. Its current functional behavior is not verified, so it is presented with explicit limitations and not as client work, a production solution, or a verified outcome.
 
 **CTA:** `Tell us what you need to solve on the web` → `/en/contact/`
 
@@ -679,10 +679,10 @@ Every service uses one contextual CTA because the wording confirms what the visi
 
 ## Evidence policy for this page — APPROVED
 
-- `SERVICE-WEB` may state the existence and current limits of the founder-published General Reservation System repository, but it must not display it as a project card, client engagement, production system, working demo, or verified outcome. Busesfy remains internal to `PROJECT-EVIDENCE` and is not named or linked in public Services content while relationship and identity permission are open.
+- `SERVICE-WEB` may state the existence and current limits of the founder-published General Reservation System repository. The Projects inventory separately approves an image-free source-backed card, but this Services section remains a text-only evidence note and must not present the project as a client engagement, production system, working demo, or verified outcome. Busesfy remains internal to `PROJECT-EVIDENCE` and is not named or linked in public Services content while relationship and identity permission are open.
 - `SERVICE-WHATSAPP` has no publishable project evidence. The page says so directly and shows no logo, screenshot, metric, testimonial, certification, or simulated case study.
 - `SERVICE-CONSULTING` has no publishable intervention story. General founder experience is not converted into a project claim. Confidentiality and a clear engagement method are supporting trust signals, not substitutes presented as outcomes.
-- The page does not link to unavailable Projects routes. Evidence enhancements remain gated by `PROJECT-EVIDENCE` publication readiness and item-level permission.
+- Task 2 / PR 2 may add the global Projects navigation destination once both localized index routes exist. This Services evidence note remains text-only unless a later approved change adds a contextual Projects link.
 
 This treatment is intentionally asymmetric. The launch offer may be described truthfully even when public proof is still developing; lack of evidence must not be disguised by equal-looking project cards.
 

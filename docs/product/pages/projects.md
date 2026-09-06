@@ -47,7 +47,7 @@ Filters are rejected for launch. Reconsider only at eight or more public records
 
 Cards use the approved Surface, 1px Border, 16px-radius, no-shadow language. Substantial cards use two columns at wide/1024px sizes, two at medium only where bilingual content remains readable, and one at compact sizes. Height is content-driven; translated copy is not clamped. Images are optional and follow the provenance rules in the experience record.
 
-Cards with no permitted detail content link to `PAGE-CONTACT` or the related Services anchor, not an empty project page. The whole card is not one competing interactive target.
+Cards with no permitted detail content link to an explicitly approved evidence destination, `PAGE-CONTACT`, or the related Services anchor, not an empty project page. The whole card is not one competing interactive target.
 
 ## PAGE-PROJECT-DETAIL responsibility — APPROVED
 
@@ -97,4 +97,4 @@ The wide header uses approximately 7/12 text and 5/12 visual; without a visual, 
 
 ## Current readiness
 
-The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. Public route, navigation, card, detail, and asset implementation is `BLOCKED` because [the item inventory](../projects/index.md) contains no `READY` or `READY-SUMMARY-ONLY` record. A behavior-neutral empty publication contract may proceed under [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../../plans/active/projects-evidence-experience.md); it does not make this page public.
+The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. [The item inventory](../projects/index.md) now contains three `READY` records with complete bilingual card copy and approved public-source destinations. Task 2 / PR 2 of [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../../plans/active/projects-evidence-experience.md) may publish the image-free, ungrouped bilingual index and navigation atomically. No item is detail-page-eligible or homepage-eligible, and no project visual is approved.
