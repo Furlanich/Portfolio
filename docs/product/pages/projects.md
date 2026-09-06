@@ -97,4 +97,4 @@ The wide header uses approximately 7/12 text and 5/12 visual; without a visual, 
 
 ## Current readiness
 
-The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. [The item inventory](../projects/index.md) now contains three `READY` records with complete bilingual card copy and approved public-source destinations. Task 2 / PR 2 of [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../../plans/active/projects-evidence-experience.md) may publish the image-free, ungrouped bilingual index and navigation atomically. No item is detail-page-eligible or homepage-eligible, and no project visual is approved.
+The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. [The item inventory](../projects/index.md) now contains three `READY` records with complete bilingual card/detail copy, approved public-source destinations, and labeled conceptual detail visuals. Task 2 / PR 2 is merged; Task 3 / PR 3 may publish paired summary-only detail routes for all three records. No item is homepage-eligible, and the launch cards remain image-free.

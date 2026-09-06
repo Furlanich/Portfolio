@@ -135,8 +135,8 @@ Content is oriented toward personal credentials and recruiters rather than the a
 ## Current Projects index implementation — Task 2
 
 - `/proyectos/` and `/en/work/` render one shared `ProjectsPage` Server Component with three image-free cards in approved order: General Reservation System, The-System, then MPC Administración.
-- The typed public manifest is the only project enumeration source. All three entries are `limited`, external-source, card-only records with no visual metadata or detail route; localized card copy is route-owned and validated against the manifest.
-- Cards expose maturity, context, evidence signal, natural summaries, two or three non-interactive capability tags, and one explicit source link. The publication-scope note and inquiry CTA remain visible in normal reading order; no filter, group, empty state, whole-card interaction, client boundary, or project asset was added.
+- The typed public manifest is the only project enumeration source. All three entries are `limited`, external-source records; the current index remains card-only and image-free, while the next approved detail slice may add paired detail destinations and the three staged conceptual visuals.
+- Cards expose maturity, context, evidence signal, natural summaries, two or three non-interactive capability tags, and one explicit source link. The publication-scope note and inquiry CTA remain visible in normal reading order; no filter, group, empty state, whole-card interaction, or client boundary was added. Detail assets are labeled conceptual and are not runtime evidence.
 - Shared header/footer navigation now exposes localized Projects/Work links and the language switch maps `/proyectos/` to `/en/work/`. Normal and `/Portfolio` static artifact verification passed for ten routes. Playwright/browser visual QA was attempted but unavailable in this environment because no local Playwright package or browser surface could start; deterministic semantic/export checks remain the recorded evidence for this PR.
 
 ## Current shared header implementation — Task 4

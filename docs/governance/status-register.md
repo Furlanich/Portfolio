@@ -122,11 +122,11 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Filters are rejected for launch and may be reconsidered only at eight or more public records with buyer-useful category populations.
 - Card, imagery, confidentiality, detail-page eligibility, detail composition, bilingual system language, accessibility, performance, and visual-QA rules are approved in [Projects and evidence experience](../product/projects/experience.md).
 - The [item-level inventory](../product/projects/index.md) records explicit decisions and permission matrices: General Reservation System, The-System, and MPC Administración are `READY` for limited image-free source-backed cards; Busesfy is `BLOCKED-PERMISSION`; ChronoApp is `RETIRED`; and Documancer is `PRIVATE`.
-- The approved launch inventory is an ungrouped editorial grid ordered General Reservation System, The-System, then MPC Administración. Task 2 / PR 2 is merged and publishes both localized index routes and navigation. No item is approved for a detail page, project visual, production/client claim, or homepage card.
+- The approved launch inventory is an ungrouped editorial grid ordered General Reservation System, The-System, then MPC Administración. Task 2 / PR 2 is merged and publishes both localized index routes and navigation. Task 3 / PR 3 is authorized for paired summary-only detail pages using labeled conceptual visuals; no item is approved for a production/client claim or homepage card.
 - `HOME-PROOF` keeps its approved fallback. Homepage redesign remains outside this initiative.
 - The experience fits `ADR-STATIC-LOCALIZED-ROUTING`. A future implementation uses typed static localized records and requires a versioned execution plan, not a CMS, database, backend, project API, admin panel, search engine, filtering framework, RFC, or new ADR.
 - [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md) is the active Route B / PLAN implementation record. Task 1 / PR 1 established the empty fail-closed public manifest, typed public contracts, approved page-shell copy, resolvers, and tests with no route or visual change.
-- The Task 2 / PR 2 publication gate is satisfied by the three READY item records, and the merged implementation publishes only their approved image-free source-backed cards in both localized index routes. Detail-page, asset, and homepage gates remain unsatisfied; no blocked, private, retired, or unresolved records are published.
+- The Task 2 / PR 2 publication gate is satisfied by the three READY item records, and the merged implementation publishes only their approved image-free source-backed cards in both localized index routes. The Task 3 / PR 3 detail gate is now satisfied by complete bilingual detail content, approved repository evidence links, and one labeled conceptual visual per item. No blocked, private, retired, or unresolved records are published.
 
 ## PROPOSED
 
@@ -142,11 +142,11 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Final form provider, privacy wording, consent treatment, data retention period, and third-party disclosures. These are **RELEASE BLOCKERS** for the completed inquiry experience, not blockers for hero implementation.
 - Final legal and contractual review of commercial boundaries.
 - Founder photograph and any later CV redesign; both are non-blocking for the commercial homepage.
-- Permission, functional verification, approved bilingual item copy, and visual provenance required to advance the remaining blocked/private project records or broaden the three READY records beyond their limited card scope.
+- Permission, functional verification, and approved bilingual item copy required to advance the remaining blocked/private project records or broaden the three READY records beyond their current summary-only detail scope.
 - Richer public evidence for WhatsApp automation and maintenance/consulting. Its absence is explicit and does not block the approved Services page.
 - Busesfy's ownership/client relationship, maturity, public-description permission, screenshot permission, and client identity permission.
-- General Reservation System functional-demonstration status, visual/detail eligibility, and future homepage eligibility; its recorded demo currently returns 404.
-- The-System current clean-checkout functional verification, visual/detail eligibility, and future homepage eligibility.
+- General Reservation System functional-demonstration status and future homepage eligibility; its recorded demo currently returns 404. Its conceptual detail visual does not change that evidence state.
+- The-System current clean-checkout functional verification and future homepage eligibility. Its conceptual detail visual does not change that evidence state.
 - Whether any individual service pages will be needed after launch performance is observed.
 - Long-term hosting after the current static-export/GitHub Pages migration slice; changing hosting remains a future architecture decision and does not block the foundation.
 - Whole-site responsive behavior, accessibility audit/conformance claims, and performance budgets beyond the approved homepage, Services, and Projects baselines.
