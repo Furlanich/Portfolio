@@ -324,7 +324,7 @@ PR 1 is the only authorized first implementation task. PR 2 must not begin until
 - Create: scripts/projects-publication.test.mjs
 - Modify: docs/plans/active/projects-evidence-experience.md
 
-- [ ] **Step 1: Write the failing publication contract tests**
+- [x] **Step 1: Write the failing publication contract tests**
 
   Add Node tests that import the manifest, resolver, and both locale modules. Assert the manifest initially contains zero records; IDs and slugs are unique; maturity, service, publication-scope, destination, visual, and external-link values belong to the allowed sets; every manifest ID exists exactly once in both locale card maps; every detail destination has exactly one Spanish and English detail entry; extra localized entries outside the manifest fail; every card has non-empty title/context/maturity label/summary/evidence/action and exactly two or three non-empty capability labels; every visual path exists with positive dimensions and matching localized alt intent; every CTA resolves to a known detail, Contact, Services anchor, or explicit external URL.
 
@@ -338,7 +338,7 @@ PR 1 is the only authorized first implementation task. PR 2 must not begin until
 
   Expected: RED because the public contract modules do not exist.
 
-- [ ] **Step 2: Define the minimal public types**
+- [x] **Step 2: Define the minimal public types**
 
   Create components/projects/content-types.ts with PublicProjectManifestEntry, PublicProjectCardContent, ResolvedProjectCard, the localized page-shell type, and optional visual metadata. Reuse Locale, ServiceSectionId, and ActionLink rather than duplicating route/service vocabularies. Do not add detail types in PR 1 because no approved project uses them.
 
@@ -346,19 +346,19 @@ PR 1 is the only authorized first implementation task. PR 2 must not begin until
 
   Run npm run typecheck. Expected: RED until the manifest and localized modules satisfy the new contracts.
 
-- [ ] **Step 3: Add the empty whitelist and resolvers**
+- [x] **Step 3: Add the empty whitelist and resolvers**
 
   Create lib/projects/publication.ts with the explicit empty publishedProjectManifest and pure resolver functions. Resolve only entries enumerated by the manifest, preserve manifest order, reject missing localized content, reject an external destination without an https URL, and expose detail params only for detail destinations.
 
   Do not read files at runtime, import JSON, parse Markdown, glob project assets, or infer readiness from the existence of content.
 
-- [ ] **Step 4: Materialize only approved page-shell language**
+- [x] **Step 4: Materialize only approved page-shell language**
 
   Add app/(es)/_content/projects.ts and app/(en)/en/_content/projects.ts with the exact H1, introduction, taxonomy labels, confidentiality system language, final CTA copy, and Contact semantic action approved by PROJECTS-EXPERIENCE-CLOSURE. Export empty card and detail maps.
 
   These modules are intentionally not imported by a route in PR 1. Do not add a Projects page directory, navigation label, image, candidate name, repository URL, demo URL, or public service claim.
 
-- [ ] **Step 5: Make the focused and repository contracts GREEN**
+- [x] **Step 5: Make the focused and repository contracts GREEN**
 
   Run:
 
@@ -372,7 +372,7 @@ PR 1 is the only authorized first implementation task. PR 2 must not begin until
 
   Expected: all pass. Inspect the diff and a production build manifest to confirm no route file, generated route, navigation change, public project asset, dependency, configuration, or public page behavior was added.
 
-- [ ] **Step 6: Review and commit PR 1**
+- [x] **Step 6: Review and commit PR 1**
 
   Update this plan's Progress section with exact checks and warnings. Review main...HEAD for candidate names, private notes, permission data, legacy imports, broad abstractions, and accidental route exposure. Commit with feat: add fail-closed project publication contract, push the task branch, and open a human-reviewed implementation PR without merging it.
 
@@ -694,6 +694,8 @@ If no item is detail-eligible after PR 2, record PR 3 as OMITTED in Progress and
 - 2026-09-06: Repository inspection confirmed legacy data/projects.json, lib/data.ts, lib/types.ts, components/core/Card.tsx, and eight unapproved public/projects assets remain unused by the current public route tree.
 - 2026-09-06: Local repository state differs from the task premise: origin/main remains at 6417634 while the decision-closure commit 14ad8e8 exists only on the local base. This branch is based on 14ad8e8. Do not publish a planning PR that combines both initiatives; first ensure decision closure is present on remote main or obtain an explicit human-approved base.
 - 2026-09-06: Planning-branch validation passed: documentation validation covered 71 Markdown files, 50 document IDs, and 4 repository Skills; all 34 Node tests passed; lint, TypeScript no-emit checking, and the production static build passed. Existing Node module-type warnings were informational and unchanged.
+- 2026-09-06: PR 1 implementation added only the typed public contract, empty manifest, pure manifest-driven resolvers/validator, bilingual approved page-shell modules, and focused publication tests. The required RED run failed on the missing publication module; the GREEN run passed 5/5 focused tests. `npm test` passed 39/39, `npm run lint`, `npm run typecheck`, and `git diff --check` passed. Node's existing `MODULE_TYPELESS_PACKAGE_JSON` warning remained informational; no route, navigation, asset, dependency, configuration, candidate, or internal evidence data changed.
+- 2026-09-06: PR 1 final gates passed: `npm run docs:check`, `npm run validate` (39/39 tests, lint, typecheck, and static build), `npm run verify:static-export` in root mode, and the `/Portfolio` base-path build plus verifier (8 routes in both modes). The build emitted only the existing Browserslist freshness notice and Node tests emitted the existing module-type warning; both were informational and unchanged. Playwright was not available locally and no rendered surface changed, so visual/accessibility QA was not applicable to this behavior-neutral contract PR. Evidence-boundary review confirmed the manifest is empty, no candidate/internal audit data is present, and the existing eight-route public artifact remains unchanged.
 
 ## Important implementation decisions
 
