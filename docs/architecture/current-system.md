@@ -136,7 +136,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 
 - The shared `SiteHeader` renders as a sticky app bar at the top of every localized foundation route, remaining in normal document flow while scrolling.
 - Below `1024px`, the primary navigation is exposed through a native `<details>` disclosure with a keyboard-operable hamburger summary and a localized navigation panel; at `1024px` and above, the same links and CTA render inline.
-- The app bar preserves the existing localized route map, language switch, CTA destinations, approved focus treatment, static export, and optional base-path behavior without adding a client-state boundary or dependency. Keep browser event handlers and browser globals out of this shared Server Component; navigation uses native links and disclosure semantics.
+- The app bar preserves the existing localized route map, language switch, CTA destinations, approved focus treatment, static export, and optional base-path behavior without adding a client-state boundary or dependency. Keep browser event handlers and browser globals out of this shared Server Component; navigation uses native links and disclosure semantics. The FURLANICH wordmark links to the localized home route’s `#site-top` anchor so it resets the view from any scroll position without client-side event handling.
 
 ## Environment
 
