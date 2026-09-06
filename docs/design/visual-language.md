@@ -99,6 +99,7 @@ The Border color is decorative and must not be the sole indicator of a control o
 
 - The shared header is a sticky app bar with `top: 0`, Surface background, and a `1px` Border separator. It remains in normal document flow and does not hide, translate, or animate based on scroll direction.
 - Below `1024px`, navigation is exposed through a compact hamburger disclosure panel. The panel may use a restrained functional shadow as an overlay, but the bar itself has no decorative elevation.
+- The compact panel is centered to the viewport at every supported width and keeps at least `20px` of horizontal breathing room; it is not aligned only to the trigger or content-container edge.
 - At `1024px` and above, the existing wordmark, language switch, navigation links, and primary action remain inline within the `1200px` container.
 - The app bar reuses the approved spacing, target-size, color, and focus rules. It must not create horizontal scrolling at the minimum `320px` viewport.
 

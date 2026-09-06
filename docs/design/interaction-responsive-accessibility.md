@@ -32,6 +32,7 @@ last_verified: 2026-09-05
 - At wide widths of `1024px` and above, the same navigation links and CTA render inline beside the brand and language switch.
 - The disclosure trigger and every navigation action remain at least `44px` in both dimensions; the primary CTA remains at least `48px` high. Focus indication uses the approved visible treatment.
 - The navigation panel is a normal list of links, not a tablist or modal. Opening it must not introduce horizontal overflow, duplicate the page content, or change the source order of the navigation actions.
+- The compact navigation panel is centered against the viewport rather than the hamburger trigger or an inner content column, while retaining a minimum `20px` gutter on each side.
 - Sticky positioning must not obscure approved fragment destinations; anchored sections retain adequate scroll margin below the app bar.
 
 ## Homepage foundation interaction and responsive baseline — APPROVED
