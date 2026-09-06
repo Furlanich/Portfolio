@@ -43,6 +43,7 @@ The findings below are retained pre-cutover evidence. The current foundation and
 
 - Browser checks on `/`, `/servicios/`, and `/en/services/` confirmed the shared header uses `position: sticky` with `top: 0`, remains visible after scrolling, and introduces no normal-scale horizontal overflow at compact and wide viewports.
 - At `375x812`, the native hamburger disclosure opened from keyboard focus, exposed the localized navigation panel, preserved the existing route links and CTA, and kept the document free of a Next.js error overlay. At `1440x900`, the inline navigation rendered without the compact trigger.
+- A follow-up browser reproduction found the merged desktop navigation had a zero-width rendered box on first load and the compact panel was offset from the viewport at `768px`. The fix gives desktop navigation its own wide-layout landmark and centers the compact panel against the viewport; GREEN checks measured five desktop links at `1440x900` and matching panel/viewport centers at `320x800`, `375x812`, and `768x1024`.
 - The implementation remains server-rendered and static-export compatible; the disclosure uses native HTML rather than client-side state. Whole-site accessibility conformance remains OPEN.
 
 ## Pre-cutover findings

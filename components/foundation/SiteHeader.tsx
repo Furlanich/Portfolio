@@ -18,6 +18,41 @@ interface SiteHeaderProps {
   };
 }
 
+type SiteNavigationLink = {
+  href: string;
+  label: string;
+};
+
+interface PrimaryNavigationItemsProps {
+  links: SiteNavigationLink[];
+  primaryAction: SiteNavigationLink;
+}
+
+function PrimaryNavigationItems({
+  links,
+  primaryAction,
+}: PrimaryNavigationItemsProps) {
+  return (
+    <>
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className="inline-flex min-h-11 items-center rounded-[8px] px-3 transition-colors duration-[160ms] ease-out hover:bg-foundation-tint hover:text-foundation-action focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-surface focus-visible:ring-offset-[3px] focus-visible:ring-offset-foundation-action-strong lg:px-0 lg:hover:bg-transparent"
+        >
+          {link.label}
+        </Link>
+      ))}
+      <Link
+        href={primaryAction.href}
+        className="inline-flex min-h-12 items-center justify-center rounded-[10px] bg-foundation-action px-6 text-base font-semibold text-white transition-colors duration-[160ms] ease-out hover:bg-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-surface focus-visible:ring-offset-[3px] focus-visible:ring-offset-foundation-action-strong"
+      >
+        {primaryAction.label}
+      </Link>
+    </>
+  );
+}
+
 export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
   const navigationLinks = [
     { href: paths.services, label: labels.services },
@@ -43,7 +78,17 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
             label={labels.languageSwitch}
           />
 
-          <details className="group relative lg:static">
+          <nav
+            aria-label={labels.navigation}
+            className="hidden items-center gap-x-5 gap-y-2 text-sm font-semibold text-foundation-muted lg:flex"
+          >
+            <PrimaryNavigationItems
+              links={navigationLinks}
+              primaryAction={{ href: paths.contact, label: labels.primaryAction }}
+            />
+          </nav>
+
+          <details className="group lg:hidden">
             <summary
               aria-label={labels.menu}
               aria-controls="primary-navigation-panel"
@@ -60,23 +105,12 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
             <nav
               id="primary-navigation-panel"
               aria-label={labels.navigation}
-              className="absolute right-0 top-[calc(100%+13px)] hidden w-[min(calc(100vw-40px),24rem)] flex-col gap-1 rounded-[12px] border border-foundation-border bg-foundation-surface p-2 text-sm font-semibold text-foundation-muted shadow-[0_12px_32px_rgba(11,31,51,0.12)] group-open:flex lg:static lg:flex lg:w-auto lg:flex-row lg:items-center lg:gap-x-5 lg:gap-y-2 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
+              className="absolute left-1/2 top-full hidden w-[min(calc(100vw-40px),24rem)] -translate-x-1/2 flex-col gap-1 rounded-[12px] border border-foundation-border bg-foundation-surface p-2 text-sm font-semibold text-foundation-muted shadow-[0_12px_32px_rgba(11,31,51,0.12)] group-open:flex"
             >
-              {navigationLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="inline-flex min-h-11 items-center rounded-[8px] px-3 transition-colors duration-[160ms] ease-out hover:bg-foundation-tint hover:text-foundation-action focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-surface focus-visible:ring-offset-[3px] focus-visible:ring-offset-foundation-action-strong lg:px-0 lg:hover:bg-transparent"
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Link
-                href={paths.contact}
-                className="inline-flex min-h-12 items-center justify-center rounded-[10px] bg-foundation-action px-6 text-base font-semibold text-white transition-colors duration-[160ms] ease-out hover:bg-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-surface focus-visible:ring-offset-[3px] focus-visible:ring-offset-foundation-action-strong"
-              >
-                {labels.primaryAction}
-              </Link>
+              <PrimaryNavigationItems
+                links={navigationLinks}
+                primaryAction={{ href: paths.contact, label: labels.primaryAction }}
+              />
             </nav>
           </details>
         </div>
