@@ -31,7 +31,7 @@ export function ProjectsPage({ content, cards }: ProjectsPageProps) {
             {content.heading}
           </h2>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {cards.map((card) => <ProjectCard key={card.id} card={card} />)}
+            {cards.map((card) => <ProjectCard key={card.slug} card={card} />)}
           </div>
         </div>
       </section>

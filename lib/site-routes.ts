@@ -52,3 +52,7 @@ export function getFoundationPath(
 export function getHomeProcessHref(locale: Locale): string {
   return `${getFoundationPath('home', locale)}#${homeProcessAnchors[locale]}`;
 }
+
+export function getProjectDetailPath(locale: Locale, slug: string): string {
+  return locale === 'es' ? `/proyectos/${slug}/` : `/en/work/${slug}/`;
+}

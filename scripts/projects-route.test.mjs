@@ -35,8 +35,10 @@ test('keeps the Projects components server-renderable and structurally accessibl
   assert.match(page, /hasLimitedPublication/);
   assert.match(card, /<article/);
   assert.match(card, /<ul/);
-  assert.match(card, /target={card\.action\.external \? '_blank' : undefined}/);
+  assert.match(card, /target="_blank"/);
+  assert.match(card, /rel="noreferrer"/);
   assert.match(card, /min-h-11/);
-  assert.doesNotMatch(card, /<Link/);
+  assert.match(card, /<Link/);
+  assert.match(page, /key={card\.slug}/);
   assert.doesNotMatch(card, /line-clamp|shadow-|h-\[/);
 });

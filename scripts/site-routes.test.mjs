@@ -7,11 +7,12 @@ const {
   getFoundationPath,
   homeProcessAnchors,
   getHomeProcessHref,
+  getProjectDetailPath,
   serviceSectionIds,
   serviceSectionAnchors,
   getServiceSectionHref,
 } = await import('../lib/site-routes.ts');
-const { getFoundationNavigationPaths } = await import('../lib/foundation-navigation.ts');
+const { getFoundationNavigationPaths, getProjectDetailNavigationPaths } = await import('../lib/foundation-navigation.ts');
 
 const expectedRoutes = {
   home: { es: '/', en: '/en/' },
@@ -67,6 +68,12 @@ test('resolves localized Services fragments without adding routes', () => {
   assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'founder']);
 });
 
+test('resolves paired project-detail paths without changing the foundation route map', () => {
+  assert.equal(getProjectDetailPath('es', 'the-system'), '/proyectos/the-system/');
+  assert.equal(getProjectDetailPath('en', 'the-system'), '/en/work/the-system/');
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'founder']);
+});
+
 test('returns working navigation links, Projects, Process, and the equivalent-language destination', () => {
   for (const locale of ['es', 'en']) {
     const alternateLocale = locale === 'es' ? 'en' : 'es';
@@ -95,5 +102,16 @@ test('returns working navigation links, Projects, Process, and the equivalent-la
       assert.equal(paths.alternateLocale, alternateLocale);
       assert.equal(paths.alternateHref, expectedRoutes[currentRouteId][alternateLocale]);
     }
+  }
+});
+
+test('maps a project detail to the same stable slug in the alternate locale', () => {
+  for (const locale of ['es', 'en']) {
+    const paths = getProjectDetailNavigationPaths(locale, 'the-system');
+    const alternateLocale = locale === 'es' ? 'en' : 'es';
+
+    assert.equal(paths.projects, expectedRoutes.projects[locale]);
+    assert.equal(paths.alternateLocale, alternateLocale);
+    assert.equal(paths.alternateHref, getProjectDetailPath(alternateLocale, 'the-system'));
   }
 });

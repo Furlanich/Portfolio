@@ -8,9 +8,9 @@ const { projectPageContent: spanish } = await import('../app/(es)/_content/proje
 const { projectPageContent: english } = await import('../app/(en)/en/_content/projects.ts');
 
 const expectedEntries = [
-  ['PROJECT-GRS', 'general-reservation-system', 'prototype', 'https://github.com/Furlanich/GeneralReservationSystem'],
-  ['PROJECT-THE-SYSTEM', 'the-system', 'lab', 'https://github.com/Furlanich/The-System'],
-  ['PROJECT-MPC-ADMIN', 'mpc-administracion', 'prototype', 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-'],
+  ['PROJECT-GRS', 'general-reservation-system', 'prototype'],
+  ['PROJECT-THE-SYSTEM', 'the-system', 'lab'],
+  ['PROJECT-MPC-ADMIN', 'mpc-administracion', 'prototype'],
 ];
 
 function assertUnique(values, label) {
@@ -44,13 +44,13 @@ test('publishes exactly the three READY records in approved editorial order', ()
   assertUnique(publishedProjectManifest.map((entry) => entry.id), 'manifest IDs');
   assertUnique(publishedProjectManifest.map((entry) => entry.slug), 'manifest slugs');
   assert.deepEqual(
-    publishedProjectManifest.map((entry) => [entry.id, entry.slug, entry.maturity, entry.destination.href]),
+    publishedProjectManifest.map((entry) => [entry.id, entry.slug, entry.maturity]),
     expectedEntries,
   );
   assert.ok(publishedProjectManifest.every((entry) => entry.publicationScope === 'limited'));
   assert.ok(publishedProjectManifest.every((entry) => entry.services.length === 1 && entry.services[0] === 'web'));
-  assert.ok(publishedProjectManifest.every((entry) => entry.destination.kind === 'external'));
-  assert.ok(publishedProjectManifest.every((entry) => entry.visual === undefined));
+  assert.ok(publishedProjectManifest.every((entry) => entry.destination.kind === 'detail'));
+  assert.ok(publishedProjectManifest.every((entry) => entry.visual?.kind === 'illustration'));
 });
 
 test('keeps Spanish and English public content maps exactly aligned to the manifest', () => {
@@ -62,23 +62,25 @@ test('keeps Spanish and English public content maps exactly aligned to the manif
   const manifestIds = publishedProjectManifest.map((entry) => entry.id).sort();
   assert.deepEqual(Object.keys(spanish.cards).sort(), manifestIds);
   assert.deepEqual(Object.keys(english.cards).sort(), manifestIds);
-  assert.deepEqual(Object.keys(spanish.details), []);
-  assert.deepEqual(Object.keys(english.details), []);
+  assert.deepEqual(Object.keys(spanish.details).sort(), manifestIds);
+  assert.deepEqual(Object.keys(english.details).sort(), manifestIds);
   for (const entry of publishedProjectManifest) {
     assertPublicCard(spanish.cards[entry.id], 'es', entry.id);
     assertPublicCard(english.cards[entry.id], 'en', entry.id);
   }
 });
 
-test('resolves only manifest cards to explicit external source links and no details', () => {
+test('resolves only manifest cards to paired detail links and complete details', () => {
   const spanishCards = getPublishedProjectCards(spanish, 'es');
   const englishCards = getPublishedProjectCards(english, 'en');
   assert.deepEqual(spanishCards.map((card) => card.id), ['PROJECT-GRS', 'PROJECT-THE-SYSTEM', 'PROJECT-MPC-ADMIN']);
   assert.deepEqual(englishCards.map((card) => card.id), ['PROJECT-GRS', 'PROJECT-THE-SYSTEM', 'PROJECT-MPC-ADMIN']);
-  assert.deepEqual(spanishCards.map((card) => card.action.href), expectedEntries.map((entry) => entry[3]));
-  assert.deepEqual(englishCards.map((card) => card.action.href), expectedEntries.map((entry) => entry[3]));
-  assert.deepEqual(getPublishedProjectDetails(spanish, 'es'), []);
-  assert.deepEqual(getPublishedProjectDetails(english, 'en'), []);
+  assert.deepEqual(spanishCards.map((card) => card.action.href), expectedEntries.map((entry) => `/proyectos/${entry[1]}/`));
+  assert.deepEqual(englishCards.map((card) => card.action.href), expectedEntries.map((entry) => `/en/work/${entry[1]}/`));
+  assert.deepEqual(spanishCards.map((card) => card.actionLabel), ['Ver proyecto', 'Ver proyecto', 'Ver proyecto']);
+  assert.deepEqual(englishCards.map((card) => card.actionLabel), ['View project', 'View project', 'View project']);
+  assert.deepEqual(getPublishedProjectDetails(spanish, 'es').map((entry) => entry.slug), expectedEntries.map((entry) => entry[1]));
+  assert.deepEqual(getPublishedProjectDetails(english, 'en').map((entry) => entry.slug), expectedEntries.map((entry) => entry[1]));
 });
 
 test('rejects extra localized content outside the publication manifest', () => {

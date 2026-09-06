@@ -27,7 +27,7 @@ last_verified: 2026-09-06
 
 The repository identifies this as a 2021 Argentine technical-education competition assignment for a fictional cheese factory. It is not a client, production deployment, or FURLANICH studio engagement. Source indicates administrative workflows around production, stock, users, logs, and curing data, but no current runtime verification, automated test suite, deployment, business result, metric, or testimonial was established.
 
-`READY` authorizes the limited public card below. It does not upgrade evidence strength, establish sole authorship, or approve a detail page, visual, production claim, or homepage use.
+`READY` authorizes the limited public card and the approved summary-only detail scope recorded below. It does not upgrade evidence strength, establish sole authorship, production or client work, or make the item homepage-eligible.
 
 ## Approved bilingual public card
 
@@ -39,7 +39,7 @@ The repository identifies this as a 2021 Argentine technical-education competiti
 | Summary | Trabajo grupal de 2021 para una organización ficticia, con flujos de administración de producción, stock, usuarios, registros y datos de maduración. Se publica como evidencia educativa de implementación, no como trabajo de cliente ni sistema en producción. | A 2021 group project for a fictional organization, with administration workflows for production, inventory, users, logs, and curing data. It is published as educational implementation evidence, not as client work or a production system. |
 | Capabilities | Producción; Inventario; Administración | Production; Inventory; Administration |
 | Evidence signal | Código fuente público | Public source |
-| CTA | Ver código fuente | View source |
+| CTA | Ver proyecto | View project |
 | Limitation | Sin verificación actual de ejecución; no se afirma autoría individual, uso real ni resultado comercial. | No current runtime verification; no claim of sole authorship, real-world use, or business outcome. |
 
 Approved destination: <https://github.com/Furlanich/MilkyPantsCheese-Administracion->

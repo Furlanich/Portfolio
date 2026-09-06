@@ -1,10 +1,11 @@
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { getFoundationPath, getServiceSectionHref, serviceSectionIds } from '../site-routes.ts';
+import { getFoundationPath, getProjectDetailPath, getServiceSectionHref, serviceSectionIds } from '../site-routes.ts';
 import type { Locale } from '../locales';
 import type {
   PublicProjectCardContent,
   PublicProjectLocaleContent,
   PublicProjectManifestEntry,
+  ResolvedProjectDetail,
   ResolvedProjectCard,
 } from '../../components/projects/content-types';
 
@@ -16,8 +17,13 @@ export const publishedProjectManifest: readonly PublicProjectManifestEntry[] = [
     services: ['web'],
     publicationScope: 'limited',
     destination: {
-      kind: 'external',
-      href: 'https://github.com/Furlanich/GeneralReservationSystem',
+      kind: 'detail',
+    },
+    visual: {
+      kind: 'illustration',
+      src: '/projects/general-reservation-system/conceptual-workflow.webp',
+      width: 1599,
+      height: 900,
     },
   },
   {
@@ -27,8 +33,13 @@ export const publishedProjectManifest: readonly PublicProjectManifestEntry[] = [
     services: ['web'],
     publicationScope: 'limited',
     destination: {
-      kind: 'external',
-      href: 'https://github.com/Furlanich/The-System',
+      kind: 'detail',
+    },
+    visual: {
+      kind: 'illustration',
+      src: '/projects/the-system/conceptual-access-model.webp',
+      width: 1599,
+      height: 900,
     },
   },
   {
@@ -38,8 +49,13 @@ export const publishedProjectManifest: readonly PublicProjectManifestEntry[] = [
     services: ['web'],
     publicationScope: 'limited',
     destination: {
-      kind: 'external',
-      href: 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-',
+      kind: 'detail',
+    },
+    visual: {
+      kind: 'illustration',
+      src: '/projects/mpc-administracion/conceptual-operations-model.webp',
+      width: 1599,
+      height: 900,
     },
   },
 ];
@@ -58,10 +74,6 @@ const allowedVisualKinds = new Set<NonNullable<PublicProjectManifestEntry['visua
   'diagram',
   'illustration',
 ]);
-
-function getProjectDetailPath(locale: Locale, slug: string): string {
-  return locale === 'es' ? `/proyectos/${slug}/` : `/en/work/${slug}/`;
-}
 
 function resolveProjectAction(
   entry: PublicProjectManifestEntry,
@@ -100,8 +112,32 @@ function assertCardContent(card: PublicProjectCardContent, entry: PublicProjectM
   if (card.capabilities.some((capability) => typeof capability !== 'string' || !capability.trim())) {
     throw new Error(`${locale} ${entry.id} capabilities must not be empty`);
   }
-  if (entry.visual && !card.visualAlt?.trim()) {
-    throw new Error(`${locale} ${entry.id} visual alt intent is required`);
+}
+
+function assertDetailContent(
+  detail: import('../../components/projects/content-types').PublicProjectDetailContent,
+  entry: PublicProjectManifestEntry,
+  locale: Locale,
+): void {
+  for (const field of ['headerSummary', 'evidenceStatement', 'context', 'problem', 'result', 'limitations', 'publicationScope'] as const) {
+    if (typeof detail[field] !== 'string' || !detail[field].trim()) {
+      throw new Error(`${locale} ${entry.id} ${field} must not be empty`);
+    }
+  }
+  if (!detail.deliveredScope.length || detail.deliveredScope.some((item) => !item.trim())) {
+    throw new Error(`${locale} ${entry.id} delivered scope must not be empty`);
+  }
+  if (detail.capabilities.length < 2 || detail.capabilities.length > 3 || detail.capabilities.some((item) => !item.trim())) {
+    throw new Error(`${locale} ${entry.id} detail capabilities must contain two or three labels`);
+  }
+  if (!detail.evidence.links.length || detail.evidence.links.some((link) => !link.label.trim() || !/^https:\/\//.test(link.href))) {
+    throw new Error(`${locale} ${entry.id} detail evidence links must be approved https links`);
+  }
+  if (!entry.services.includes(detail.relatedService.serviceId) || !detail.relatedService.label.trim()) {
+    throw new Error(`${locale} ${entry.id} related service is not approved`);
+  }
+  if (!detail.visual.label.trim() || !detail.visual.alt.trim()) {
+    throw new Error(`${locale} ${entry.id} conceptual visual label and alt text are required`);
   }
 }
 
@@ -199,5 +235,34 @@ export function validateProjectContent(
     if (entry.destination.kind !== 'detail' && content.details[entry.id]) {
       throw new Error(`${locale} detail content is not eligible for ${entry.id}`);
     }
+    if (entry.destination.kind === 'detail') {
+      assertDetailContent(content.details[entry.id], entry, locale);
+    }
   }
+}
+
+export function getPublishedProjectDetail(
+  content: PublicProjectLocaleContent,
+  slug: string,
+  locale: Locale,
+): ResolvedProjectDetail | undefined {
+  validateProjectContent(content, locale);
+  const entry = publishedProjectManifest.find(
+    (candidate) => candidate.slug === slug && candidate.destination.kind === 'detail',
+  );
+  if (!entry || !entry.visual) return undefined;
+  const detail = content.details[entry.id];
+  if (!detail) return undefined;
+  return {
+    ...detail,
+    id: entry.id,
+    slug: entry.slug,
+    title: content.cards[entry.id].title,
+    maturityLabel: content.cards[entry.id].maturityLabel,
+    maturity: entry.maturity,
+    serviceIds: entry.services,
+    publicationScope: entry.publicationScope,
+    visual: { ...entry.visual, ...detail.visual },
+    relatedServiceHref: getServiceSectionHref(locale, detail.relatedService.serviceId),
+  };
 }

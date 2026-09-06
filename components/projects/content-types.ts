@@ -32,6 +32,35 @@ export type PublicProjectCardContent = {
   visualAlt?: string;
 };
 
+export type PublicProjectEvidenceLink = {
+  label: string;
+  href: string;
+  kind: 'repository' | 'conceptual-visual';
+};
+
+export type PublicProjectDetailContent = {
+  headerSummary: string;
+  evidenceStatement: string;
+  context: string;
+  problem: string;
+  deliveredScope: readonly string[];
+  capabilities: readonly [string, string] | readonly [string, string, string];
+  result: string;
+  evidence: {
+    links: readonly [PublicProjectEvidenceLink, ...PublicProjectEvidenceLink[]];
+  };
+  limitations: string;
+  relatedService: {
+    label: string;
+    serviceId: ServiceSectionId;
+  };
+  publicationScope: string;
+  visual: {
+    label: string;
+    alt: string;
+  };
+};
+
 export type ResolvedProjectCard = PublicProjectCardContent & {
   id: string;
   slug: string;
@@ -65,7 +94,19 @@ export type ProjectsPageContent = {
     action: ActionLink;
   };
   cards: Readonly<Record<string, PublicProjectCardContent>>;
-  details: Readonly<Record<string, never>>;
+  details: Readonly<Record<string, PublicProjectDetailContent>>;
+};
+
+export type ResolvedProjectDetail = PublicProjectDetailContent & {
+  id: string;
+  slug: string;
+  title: string;
+  maturityLabel: string;
+  maturity: PublicProjectManifestEntry['maturity'];
+  serviceIds: PublicProjectManifestEntry['services'];
+  publicationScope: PublicProjectManifestEntry['publicationScope'];
+  visual: NonNullable<PublicProjectManifestEntry['visual']> & PublicProjectDetailContent['visual'];
+  relatedServiceHref: string;
 };
 
 export type PublicProjectLocaleContent = Pick<ProjectsPageContent, 'cards' | 'details'>;

@@ -31,7 +31,7 @@ The implementation addresses reservation operations for passenger transport. The
 
 The verified claim is limited to implementation evidence: source, automated test projects, Docker configuration, and a historical successful GitHub Actions run on 2025-12-02 that built, tested, published images, migrated staging, and deployed staging. The exact test count is unavailable because the job logs have expired. This does not establish current runnable behavior, a working public demo, production use, payments, uptime, adoption, support levels, or business outcomes.
 
-`READY` authorizes the limited public card below. It does not upgrade the record to `functional-demonstration` or approve a detail page, visual, demo, production claim, or homepage use.
+`READY` authorizes the limited public card and the approved summary-only detail scope recorded below. It does not upgrade the record to `functional-demonstration`, establish production or client work, approve a demo, or make the item homepage-eligible.
 
 ## Approved bilingual public card
 
@@ -43,7 +43,7 @@ The verified claim is limited to implementation evidence: source, automated test
 | Summary | Implementación de referencia para gestionar recorridos, estaciones, disponibilidad de asientos, reservas y autogestión de pasajeros. Se publica como evidencia de implementación; no se afirma uso en producción ni un resultado comercial medido. | Reference implementation for managing routes, stations, seat availability, reservations, and passenger self-service. It is published as implementation evidence; no production use or measured business outcome is claimed. |
 | Capabilities | Reservas; Disponibilidad de asientos; Portal de pasajeros | Reservations; Seat availability; Passenger portal |
 | Evidence signal | Código fuente público | Public source |
-| CTA | Ver código fuente | View source |
+| CTA | Ver proyecto | View project |
 | Limitation | Demostración pública no disponible; el comportamiento actual no fue revalidado. | No current public demo; current behavior has not been revalidated. |
 
 Approved destination: <https://github.com/Furlanich/GeneralReservationSystem>
