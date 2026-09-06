@@ -435,11 +435,11 @@ The count is three, so Task 2 may proceed. Any implementation field beyond the e
 - Modify: docs/plans/active/projects-evidence-experience.md
 - Modify: docs/governance/status-register.md
 
-- [ ] **Step 1: Update evidence authority before application content**
+- [x] **Step 1: Update evidence authority before application content**
 
   Confirm the merged PROJECT-INVENTORY and item records still expose `PROJECT-GRS`, `PROJECT-THE-SYSTEM`, and `PROJECT-MPC-ADMIN` as READY in that editorial order with the exact permission boundary recorded on 2026-09-06. If any application field exceeds an item record, stop; the application PR does not approve evidence.
 
-- [ ] **Step 2: Extend tests and observe RED**
+- [x] **Step 2: Extend tests and observe RED**
 
   Add the approved manifest entries and exact bilingual card content, then extend publication tests for equality between the manifest and both locale maps, route destinations, service relationships, optional publication note, approved visuals, and absence of internal fields. Add route-source tests requiring both index routes to use the shared ProjectsPage and prohibiting legacy imports.
 
@@ -447,7 +447,7 @@ The count is three, so Task 2 may proceed. Any implementation field beyond the e
 
   Run npm test. Expected: RED because routes, composition, navigation, and resolver output are incomplete.
 
-- [ ] **Step 3: Publish the manifest and localized public content**
+- [x] **Step 3: Publish the manifest and localized public content**
 
   Add exactly `PROJECT-GRS`, `PROJECT-THE-SYSTEM`, and `PROJECT-MPC-ADMIN` to the manifest in that order. Populate both locale maps from the item-approved copy. Use no legacy descriptions and omit visual metadata for all three.
 
@@ -455,23 +455,23 @@ The count is three, so Task 2 may proceed. Any implementation field beyond the e
 
   Synchronize the implemented Services evidence-status sentence with the newly approved wording in PAGE-SERVICES; it must still describe General Reservation System as implementation evidence without current functional verification, client work, production use, or verified outcome.
 
-- [ ] **Step 4: Add index route and navigation ownership**
+- [x] **Step 4: Add index route and navigation ownership**
 
   Add projects to foundationRouteIds/foundationRoutes with /proyectos/ and /en/work/, and extend FoundationNavigationPaths. Add localized Projects/Work labels to SiteHeader and SiteFooter inputs and to every route entry that currently supplies their labels. Insert the destination in the approved navigation order without exposing Studio or Privacy work outside scope.
 
   Add both route files atomically. Each route imports only its own locale content, resolves public cards through the whitelist, computes localized navigation paths, and composes the existing header/footer around ProjectsPage. Do not add metadata origin/canonical work or runtime locale logic.
 
-- [ ] **Step 5: Implement the semantic index and card**
+- [x] **Step 5: Implement the semantic index and card**
 
   Build ProjectsPage and ProjectCard as Server Components. Reuse CommercialSectionHeading where its existing API fits without changing homepage/Services output. Render one main and H1, selected evidence, inventory-sensitive grouping, optional publication note, and final Action-tint CTA.
 
   ProjectCard renders an article/list item, concise text meta, H2 or H3 chosen by its parent section contract, natural summary, semantic non-interactive tags, evidence text, and one destination-specific link. Only the link is interactive. Use one column below 1024px and two at/above 1024px. Do not clamp text, fix card height, or add motion/shadow.
 
-- [ ] **Step 6: Add only approved assets**
+- [x] **Step 6: Add only approved assets**
 
   Confirm that all three manifest entries omit visual metadata and that no legacy or new project asset is added. If an asset appears necessary, stop and obtain item-level approval rather than expanding this PR.
 
-- [ ] **Step 7: Verify deterministic and static behavior**
+- [x] **Step 7: Verify deterministic and static behavior**
 
   Run:
 
@@ -487,7 +487,7 @@ The count is three, so Task 2 may proceed. Any implementation field beyond the e
 
   Expected: all gates pass and the exported route count increases from eight to ten. Both index routes contain only whitelisted public content and every internal URL has exactly one configured base path.
 
-- [ ] **Step 8: Perform bilingual visual/accessibility QA**
+- [x] **Step 8: Perform bilingual visual/accessibility QA**
 
   Use visual-qa on /proyectos/ and /en/work/ at 320x800, 375x812, 768x1024, 1024x768, and 1440x900, then verify the relevant /Portfolio routes. Check no horizontal overflow, natural card growth, translation expansion, tag wrapping, CTA/evidence order, image containment/legibility, clear interaction affordance, keyboard order, visible focus, 44px targets, heading/list semantics, 200% text zoom, reduced motion, JavaScript-disabled content, console errors, page errors, and automated accessibility results.
 
@@ -705,6 +705,9 @@ If no item is detail-eligible after PR 2, record PR 3 as OMITTED in Progress and
 - 2026-09-06: PR 1 final gates passed: `npm run docs:check`, `npm run validate` (39/39 tests, lint, typecheck, and static build), `npm run verify:static-export` in root mode, and the `/Portfolio` base-path build plus verifier (8 routes in both modes). The build emitted only the existing Browserslist freshness notice and Node tests emitted the existing module-type warning; both were informational and unchanged. Playwright was not available locally and no rendered surface changed, so visual/accessibility QA was not applicable to this behavior-neutral contract PR. Evidence-boundary review confirmed the manifest is empty, no candidate/internal audit data is present, and the existing eight-route public artifact remains unchanged.
 - 2026-09-06: The initiative owner promoted General Reservation System, The-System, and MPC Administración to READY for exact, image-free, source-backed bilingual cards. Evidence strength remains `implementation-evidence`; no detail page or homepage eligibility was approved. PROJECT-INVENTORY records the launch order as GRS, The-System, then MPC. Task 2 / PR 2 is unblocked.
 - 2026-09-06: The documentation-only READY promotion synchronized the three item records, evidence and experience owners, PAGE-PROJECTS, PAGE-SERVICES, migration/index summaries, architecture map, status register, and this plan. `npm run docs:check` passed for 71 Markdown files, 50 document IDs, and 4 repository Skills; `npm run validate` passed all 39 tests, lint, typecheck, and the production static build. Existing Node module-type warnings and the Browserslist freshness notice remained informational. No application implementation file or public asset changed, so visual QA was not applicable.
+- 2026-09-06: Task 2 implementation published exactly `PROJECT-GRS`, `PROJECT-THE-SYSTEM`, and `PROJECT-MPC-ADMIN` as limited, image-free, external-source cards in the approved order at `/proyectos/` and `/en/work/`. The shared header/footer now exposes localized Projects/Work navigation, and the Services evidence sentence uses the approved current-verification limitation. No detail route, visual, homepage card, filter, dependency, or legacy-source import was added; blocked, private, retired, and unresolved records remain outside the manifest.
+- 2026-09-06: Task 2 deterministic RED was observed against the stale empty-manifest and four-route contracts before the GREEN implementation. Afterward `npm test` passed 41/41, `npm run lint`, `npm run typecheck`, and `npm run docs:check` passed. Root static export and `/Portfolio` base-path export both built successfully; `npm run verify:static-export` verified 10 routes in each mode, including exact card order, source links, single H1/main semantics, no images/empty taxonomy headings/nested cards, language, and base-path integrity. `git diff --check` remains required before commit.
+- 2026-09-06: Playwright visual QA was attempted with `npx --no-install playwright --version` and the available browser surface was attempted twice; no local Playwright package or browser surface could start in this environment. No visual result is claimed. The deterministic source and generated-HTML checks cover server rendering, semantic cards/lists, keyboard-sized links/focus classes, natural-height/no-clamp/no-shadow structure, JavaScript-independent static content, and external-link treatment; the missing viewport/console/automated-a11y evidence is an explicit PR review limitation.
 
 ## Important implementation decisions
 

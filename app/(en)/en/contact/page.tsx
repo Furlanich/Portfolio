@@ -18,6 +18,7 @@ export default function Page() {
           navigation: 'Primary navigation',
           menu: 'Open primary navigation',
           services: 'Services',
+          projects: 'Work',
           process: 'Process',
           founder: 'About',
           contact: 'Contact',
@@ -40,6 +41,7 @@ export default function Page() {
         labels={{
           navigation: 'Navigation',
           services: 'Services',
+          projects: 'Work',
           process: 'Process',
           founder: 'About',
           contact: 'Contact',

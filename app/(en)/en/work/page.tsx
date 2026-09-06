@@ -1,12 +1,15 @@
-import { FounderProfile } from '@/components/foundation/FounderProfile';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
+import { ProjectsPage } from '@/components/projects/ProjectsPage';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
-import { contactContent } from '../../_content/contact';
-import { founderContent } from '../../_content/founder';
+import { getPublishedProjectCards, validateProjectContent } from '@/lib/projects/publication';
+import { contactContent } from '../_content/contact';
+import { founderContent } from '../_content/founder';
+import { projectPageContent } from '../_content/projects';
 
-const route = { locale: 'en' as const, routeId: 'founder' as const };
+const route = { locale: 'en' as const, routeId: 'projects' as const };
 const paths = getFoundationNavigationPaths(route.locale, route.routeId);
+validateProjectContent(projectPageContent, route.locale);
 
 export default function Page() {
   return (
@@ -22,11 +25,11 @@ export default function Page() {
           process: 'Process',
           founder: 'About',
           contact: 'Contact',
-          primaryAction: founderContent.contactAction.label,
+          primaryAction: contactContent.actions[0].label,
           languageSwitch: 'View site in Spanish',
         }}
       />
-      <FounderProfile content={founderContent} paths={paths} />
+      <ProjectsPage content={projectPageContent} cards={getPublishedProjectCards(projectPageContent, route.locale)} />
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}

@@ -100,7 +100,7 @@ test('preserves evidence-safe and commercial-boundary decisions', () => {
   for (const page of [spanish, english]) {
     const [web, whatsapp, consulting] = page.services;
     assert.match(web.evidence, /reservas|reservation system/i);
-    assert.match(web.evidence, /no se presenta como caso de cliente|not presented as client work/i);
+    assert.match(web.evidence, /no se presenta como caso de cliente|no como caso de cliente|not presented as client work|not as client work/i);
     assert.match(whatsapp.evidence, /no hay un proyecto público|no public WhatsApp automation project/i);
     assert.match(consulting.evidence, /no hay una intervención pública|no public maintenance or consulting intervention/i);
     assert.match(whatsapp.boundaries.join(' '), /Meta|provider/);

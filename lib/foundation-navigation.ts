@@ -6,6 +6,7 @@ import type { Locale } from './locales';
 export type FoundationNavigationPaths = {
   home: string;
   services: string;
+  projects: string;
   contact: string;
   founder: string;
   process: string;
@@ -22,6 +23,7 @@ export function getFoundationNavigationPaths(
   return {
     home: getFoundationPath('home', locale),
     services: getFoundationPath('services', locale),
+    projects: getFoundationPath('projects', locale),
     contact: getFoundationPath('contact', locale),
     founder: getFoundationPath('founder', locale),
     process: getHomeProcessHref(locale),

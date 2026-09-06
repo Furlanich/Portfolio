@@ -25,6 +25,37 @@ export const projectPageContent = {
       routeId: 'contact',
     },
   },
-  cards: {},
+  cards: {
+    'PROJECT-GRS': {
+      title: 'Gestión de reservas para transporte de pasajeros',
+      context: 'Transporte de pasajeros',
+      maturityLabel: 'Prototipo de reservas',
+      summary:
+        'Implementación de referencia para gestionar recorridos, estaciones, disponibilidad de asientos, reservas y autogestión de pasajeros. Se publica como evidencia de implementación; no se afirma uso en producción ni un resultado comercial medido.',
+      capabilities: ['Reservas', 'Disponibilidad de asientos', 'Portal de pasajeros'],
+      evidenceSignal: 'Código fuente público',
+      actionLabel: 'Ver código fuente',
+    },
+    'PROJECT-THE-SYSTEM': {
+      title: 'Gestión multiusuario de campañas de rol',
+      context: 'Laboratorio FURLANICH · Operaciones para juegos de rol',
+      maturityLabel: 'Laboratorio FURLANICH',
+      summary:
+        'Laboratorio de aplicación web con identidad y acceso, campañas, membresías e invitaciones y límites de suscripción modelados en el código. Se publica como evidencia de implementación; las áreas aún planificadas no se presentan como entregadas.',
+      capabilities: ['Identidad y acceso', 'Permisos multiusuario', 'Gestión de campañas'],
+      evidenceSignal: 'Código fuente público',
+      actionLabel: 'Ver código fuente',
+    },
+    'PROJECT-MPC-ADMIN': {
+      title: 'Gestión educativa de producción y stock',
+      context: 'Proyecto educativo grupal · Operaciones de manufactura ficticias',
+      maturityLabel: 'Prototipo educativo',
+      summary:
+        'Trabajo grupal de 2021 para una organización ficticia, con flujos de administración de producción, stock, usuarios, registros y datos de maduración. Se publica como evidencia educativa de implementación, no como trabajo de cliente ni sistema en producción.',
+      capabilities: ['Producción', 'Inventario', 'Administración'],
+      evidenceSignal: 'Código fuente público',
+      actionLabel: 'Ver código fuente',
+    },
+  },
   details: {},
 } satisfies ProjectsPageContent;

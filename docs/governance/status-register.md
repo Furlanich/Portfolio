@@ -126,7 +126,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - `HOME-PROOF` keeps its approved fallback. Homepage redesign remains outside this initiative.
 - The experience fits `ADR-STATIC-LOCALIZED-ROUTING`. A future implementation uses typed static localized records and requires a versioned execution plan, not a CMS, database, backend, project API, admin panel, search engine, filtering framework, RFC, or new ADR.
 - [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/active/projects-evidence-experience.md) is the active Route B / PLAN implementation record. Task 1 / PR 1 established the empty fail-closed public manifest, typed public contracts, approved page-shell copy, resolvers, and tests with no route or visual change.
-- The Task 2 / PR 2 publication gate is satisfied by the three READY item records. Detail-page, asset, and homepage gates remain unsatisfied.
+- The Task 2 / PR 2 publication gate is satisfied by the three READY item records, and the implementation now publishes only their approved image-free source-backed cards in both localized index routes. Detail-page, asset, and homepage gates remain unsatisfied; the current PR does not publish blocked, private, retired, or unresolved records.
 
 ## PROPOSED
 

@@ -88,7 +88,7 @@ export const servicesPageContent = {
         'Si un constructor de sitios, una tienda, una agenda o un software existente resuelve bien la necesidad con menor costo y riesgo, FURLANICH puede recomendar configurarlo o integrarlo en lugar de desarrollar desde cero. Si el problema principal es estabilizar un sistema que ya existe, corresponde evaluar Mantenimiento y consultoría de software.',
       evidenceHeading: 'Evidencia disponible',
       evidence:
-        'El repositorio conserva un sistema general de reservas publicado por Samuel como evidencia de implementación. Su demostración funcional, sus limitaciones y su presentación comercial todavía están en revisión, por lo que no se presenta como caso de cliente, solución en producción ni resultado verificado.',
+        'El repositorio conserva un sistema general de reservas publicado por Samuel como evidencia de implementación. Su demostración funcional actual no está verificada, por lo que se presenta con limitaciones explícitas y no como caso de cliente, solución en producción ni resultado verificado.',
       action: {
         label: 'Contanos qué necesitás resolver en la web',
         routeId: 'contact',
