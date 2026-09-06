@@ -9,7 +9,7 @@ related:
   - SERVICE-WEB
   - SERVICE-WHATSAPP
   - SERVICE-CONSULTING
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 ---
 
 # Project evidence inventory
@@ -127,7 +127,7 @@ Technology badges and GitHub links do not lead the card. They answer recruiter o
 
 Restricted summaries do not receive a detail page when no additional useful content may be disclosed.
 
-## Item-level evidence audit — 2026-09-04
+## Historical item-level evidence audit — 2026-09-04
 
 The retained application contains five legacy records. A fact marked **APPROVED** below is approved only as an inventory or verification fact. It does not authorize broader publication. Missing permission or maturity evidence fails closed.
 
@@ -223,7 +223,7 @@ This audit reviewed the retained `data/projects.json` records and `public/projec
 | Client identity permission | Not applicable on current evidence | No client identity is claimed. |
 | Business-homepage eligibility | **REJECTED** | It is early-stage entertainment/experimental work and does not support the launch service narrative strongly enough. It may remain secondary Founder or Laboratory material. |
 
-## Proposed public titles
+## Historical proposed public titles — superseded
 
 - General Reservation System → `Motor de reservas adaptable para negocios de servicios`
 - Appointment & Operations SaaS → `Gestión de turnos y operaciones para empresas de servicios`
@@ -326,11 +326,41 @@ Evidence status appears as concise text within each service section, not as thre
 - Review links, claims, and permissions periodically.
 - Prefer a small set of strong, relevant evidence over a large gallery.
 
-## Remaining decisions
+## Initiative 4 decision closure — 2026-09-06
 
-- Obtain and record Busesfy relationship, maturity, and item-level publication permission.
-- Verify General Reservation System behavior, limitations, screenshot provenance, and a working demo before deciding homepage eligibility.
-- Decide whether MPC Administración and Documancer receive secondary Founder/Laboratory presentation after their visuals and public descriptions are reviewed.
-- Locate or formally retire ChronoApp evidence.
-- Complete item-level permission matrices before any client or third-party identity, UI, result, or link becomes business-site evidence.
-- Decide whether Laboratory work appears inside Projects or also receives a dedicated secondary view.
+The current item-level authority is the [project evidence inventory](projects/index.md) and its linked records. Those records supersede the historical candidate findings and proposed titles above where they differ. The [Projects and evidence experience](projects/experience.md) owns the accepted page, card, detail, imagery, content, accessibility, and performance decisions.
+
+### Publication closure
+
+- Busesfy is `BLOCKED-PERMISSION`.
+- General Reservation System is `BLOCKED-FUNCTIONAL-VERIFICATION` and remains `implementation-evidence`; historical CI and repository structure do not upgrade it to `functional-demonstration`.
+- MPC Administración is `FOUNDER-ONLY` and must remain explicitly educational and fictional.
+- ChronoApp is `RETIRED` because the repository remains unavailable and no functionality can be established.
+- Documancer is `PRIVATE`; its early-stage characterization is preserved and sensitive-looking development configuration must be remediated before the repository is promoted.
+- The-System is a newly discovered Laboratory candidate and is `BLOCKED-PERMISSION`; its substantial source and tests are implementation evidence, not proof of current runnable behavior.
+- No record is currently `READY` or `READY-SUMMARY-ONLY`.
+
+### Public taxonomy
+
+| Internal maturity | Spanish | English |
+| --- | --- | --- |
+| `production` | Soluciones en producción | Production solutions |
+| `lab` | Laboratorio FURLANICH | FURLANICH Lab |
+| `prototype` | Prototipos funcionales | Functional prototypes |
+
+These labels are rendered only when a populated public group exists. `Functional prototype` is not applied to a record until functional behavior has actually been verified. Internal disclosure and evidence-strength values remain in the evidence record; the public UI uses restrained plain-language evidence and limitation statements.
+
+Alternatives rejected for the canonical taxonomy were `Trabajo en producción / Production work` plus `Exploraciones aplicadas / Applied explorations`, which obscure the solution and maturity distinction, and `Sistemas en uso / Systems in use` plus `Prototipos verificados / Verified prototypes`, which overstate usage or verification.
+
+### Experience closure
+
+- The approved index strategy is hybrid: strongest selected evidence first, then maturity groups only when inventory size justifies them. Do not render empty groups.
+- Filters are rejected for launch and may be reconsidered only under the threshold recorded in the inventory.
+- Ordering is editorial using commercial relevance, evidence strength, service coverage, disclosure completeness, visual quality, and capability diversity.
+- A typed static localized content model is sufficient. No CMS, database, project API, admin surface, search system, or filtering framework is approved.
+- `HOME-PROOF` keeps its approved fallback because no project passes the homepage evidence gate.
+- Projects implementation remains blocked until at least one candidate becomes publishable. The index, cards, and detail-page rules are nevertheless decision-complete.
+
+### Permission policy
+
+Every candidate now has an explicit permission matrix. Unknown permission continues to fail closed. Public availability, repository ownership, a legacy portfolio entry, and an existing asset do not independently grant permission.

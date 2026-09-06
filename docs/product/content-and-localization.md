@@ -8,7 +8,7 @@ related:
   - PAGE-HOME
   - PAGE-SERVICES
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 ---
 
 # Content and localization
@@ -27,7 +27,7 @@ last_verified: 2026-09-05
 - The minimum English Contact destination is owned by [PAGE-CONTACT](pages/contact-and-privacy.md#homepage-foundation-minimum-destination-approved).
 - The approved English founder biography and minimum Founder destination are owned by [PAGE-FOUNDER](pages/studio-and-founder.md#approved-detailed-biography).
 
-At the time of the foundation slice, English adaptations outside that minimum were **OPEN**. Initiative 2 closes the complete commercial homepage below; other pages and future project evidence still require separate adaptations.
+At the time of the foundation slice, English adaptations outside that minimum were **OPEN**. Initiative 2 closes the complete commercial homepage, Initiative 3 closes Services, and Initiative 4 closes Projects system language. Item-specific project copy remains deferred until a record becomes publication-ready.
 
 ## Complete commercial homepage English scope — APPROVED
 
@@ -42,7 +42,7 @@ At the time of the foundation slice, English adaptations outside that minimum we
 - The English adaptation preserves the approved Spanish product meaning while using natural business phrasing such as `enquiry`, `booking`, `handover`, and `existing system` where appropriate. It does not translate voseo mechanically or turn internal stable IDs into visible technical language.
 - Spanish and English use equivalent content order and disclosure meaning. Different sentence structure is acceptable; different promises, inclusions, exclusions, evidence strength, or provider responsibility are not.
 - The stable equivalent fragments are `#web` ↔ `#web`, `#whatsapp` ↔ `#whatsapp`, and `#consultoria` ↔ `#consulting`.
-- English content for other unfinished pages and future project evidence remains subject to separate approval.
+- English content for other unfinished pages and item-specific project evidence remains subject to separate approval.
 
 ## Voice — APPROVED
 
@@ -68,13 +68,15 @@ Technology stacks do not lead homepage or project cards. They may appear lower i
 
 Canonical product terminology is defined in [`CONTEXT.md`](../../CONTEXT.md).
 
-Public project labels are **PROPOSED**:
+Public project labels are **APPROVED**:
 
-- `Solución en producción`
-- `Laboratorio FURLANICH`
-- `Prototipo funcional`
+- `Soluciones en producción / Production solutions`
+- `Laboratorio FURLANICH / FURLANICH Lab`
+- `Prototipos funcionales / Functional prototypes`
 
-Avoid “Productive Solutions” in English; it can imply productivity software. The proposed English label is `Production solution`.
+The singular card forms are `Solución en producción / Production solution`, `Laboratorio FURLANICH / FURLANICH Lab`, and `Prototipo funcional / Functional prototype`. Avoid “Productive Solutions” in English; it can imply productivity software. Do not use the functional-prototype label until behavior is actually verified.
+
+Approved public evidence terms, capability-label guidance, confidentiality language, and CTA equivalents are owned by [Projects and evidence experience](projects/experience.md). English must be adapted for an international business buyer rather than mechanically translated. Proper project names may remain unchanged.
 
 ## Metadata and discoverability — PROPOSED
 
@@ -118,7 +120,7 @@ These non-fabrication rules are **APPROVED**.
 
 Before final public content is complete, the repository needs:
 
-- approved item-level project records;
+- publication-ready item-level project records;
 - client logo and description permissions;
 - founder photograph;
 - final form/privacy provider details;

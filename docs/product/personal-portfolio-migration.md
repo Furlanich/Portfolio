@@ -6,8 +6,9 @@ related:
   - IA-SITE
   - PAGE-FOUNDER
   - PROJECT-EVIDENCE
+  - PROJECT-INVENTORY
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-03
+last_verified: 2026-09-06
 ---
 
 # Personal portfolio migration
@@ -52,6 +53,18 @@ For this integration gate:
 - legacy content outside this minimum may be migrated in later phases, but it must not be deleted or made unreachable without its documented replacement.
 
 The Founder destination must be available in the same release that makes the business hero primary. A technical execution plan owns route sequencing and rollback; this document owns the preservation requirement.
+
+## Initiative 4 project disposition — APPROVED
+
+The [item-level project inventory](projects/index.md) now governs migration of legacy project records. None is approved for the business Projects experience:
+
+- Busesfy and The-System remain blocked on relationship/publication permission.
+- General Reservation System remains blocked on current functional verification.
+- MPC Administración remains Founder-only educational history and must identify the organization as fictional.
+- ChronoApp is retired from evidence rather than carried forward with a dead repository.
+- Documancer remains private until sensitive-looking configuration is remediated and present behavior is verified.
+
+Legacy `data/projects.json` copy and `public/projects/` imagery remain current-system evidence only. A later implementation plan may migrate a record only after it reaches `READY` or `READY-SUMMARY-ONLY`; it may retire unused legacy assets only after the approved replacement or intentional exclusion is verified.
 
 ## Facts requiring correction in the current implementation
 

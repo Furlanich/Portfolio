@@ -7,8 +7,10 @@ related:
   - PROJECT-EVIDENCE
   - PAGE-HOME
   - PAGE-SERVICES
+  - PAGE-PROJECTS
+  - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 ---
 
 # Visual language
@@ -215,28 +217,31 @@ This baseline extends the homepage primitives for the complete `PAGE-SERVICES` e
 
 The existing visual system, styling, assets, and motion implementation are recorded in [`ARCH-CURRENT`](../architecture/current-system.md); associated quality risks are recorded in [`ARCH-FINDINGS`](../architecture/current-quality-findings.md). They describe the legacy personal portfolio and do not approve any token, treatment, or redesign direction.
 
-## Project imagery rules
-
-### APPROVED
+## Projects visual baseline — APPROVED
 
 - Client logos require permission.
 - Restricted client UI and internal workings must not be shown.
 - Placeholder logos may exist only in development/testing and must not ship.
-
-### PROPOSED
-
 - Use neutral FURLANICH-branded graphics for restricted production summaries.
 - Label generated or conceptual imagery so it cannot be mistaken for a real implementation.
 - Prefer real product evidence for Laboratory/prototype work when available.
+- Project cards reuse Surface, a 1px Border, 16px radius, no decorative shadow, and content-driven height. Substantial cards use two columns wide and at 1024px, two at medium only when content remains readable, and one compact. A shorter three-column variant requires readable content.
+- The meta row, outcome title, summary, two or three capability tags, evidence statement, and CTA form one quiet hierarchy; technology never dominates.
+- Images are optional. Evidence screenshots use a 16:9 contained frame with a neutral border/background so meaningful UI is not cropped. Compact cards place the visual above text.
+- The existing project SVGs are not approved for publication: capture date, represented version, sensitive-data review, and permission are unknown. Fresh verified captures are required.
+- Restricted work may use a neutral capability diagram; fabricated client UI, gradients, glass, decorative 3D, animated tilt, and scaling hover are rejected.
+- Project details use an approximately 7/12 text and 5/12 visual header where a visual exists, or an eight-column reading measure without one. Context/problem and evidence use Surface, delivered scope uses Canvas, limitations use a neutral bordered panel, and the final CTA reuses Action tint.
 
-## OPEN target decisions beyond the commercial homepage and Services page
+Complete composition, imagery, responsive, and performance rules are owned by [Projects and evidence experience](../product/projects/experience.md).
+
+## OPEN target decisions beyond the commercial homepage, Services page, and Projects experience
 
 - Custom logo symbol, monogram, and extended brand-lockup system.
-- Extended semantic colors, including form validation and project-evidence states.
-- Complete type hierarchy beyond the commercial homepage and Services page.
-- Page- and component-specific density outside the approved homepage and Services baselines.
-- Detailed global navigation, form, and evidence-badge variants beyond the approved foundation, homepage, and Services patterns.
-- Photography, illustration, screenshot, and abstract-graphic direction.
+- Extended semantic colors, including form validation beyond the approved neutral Projects evidence treatment.
+- Complete type hierarchy beyond the commercial homepage, Services, and Projects page specifications.
+- Page- and component-specific density outside the approved homepage, Services, and Projects baselines.
+- Detailed global navigation, form, and broader badge variants beyond the approved foundation and page baselines.
+- Broader photography, illustration, screenshot, and abstract-graphic direction beyond the approved Projects evidence rules.
 - A broader icon system or custom icon requirements.
 - Whether a dark theme is ever introduced.
 - Motion language outside the commercial homepage and basic control-state transitions.
