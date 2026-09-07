@@ -10,8 +10,10 @@ related:
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PAGE-HOME
   - PAGE-SERVICES
+  - PAGE-STUDIO
+  - PAGE-FOUNDER
   - PROJECT-EVIDENCE
-last_verified: 2026-09-06
+last_verified: 2026-09-07
 ---
 
 # FURLANICH project knowledge
@@ -51,3 +53,6 @@ Initiative 2 closes the commercial homepage sections below `HOME-HERO` in [`PAGE
 Initiative 3 delivered the complete Services experience specified by [`PAGE-SERVICES`](product/pages/services.md): the retained hierarchy, full Spanish and English content, stable service anchors, contextual inquiry paths, provider and commercial boundaries, AI posture, honest asymmetric evidence treatment, and page-specific visual/accessibility extensions. [`AUDIENCES-SERVICES`](product/audiences-and-services.md) owns the service definitions and [`PROJECT-EVIDENCE`](product/project-evidence.md) owns the item-level publication limits. The implementation fits the accepted localized architecture and is recorded by [`PLAN-SERVICES-EXPERIENCE`](plans/completed/services-experience.md); richer evidence and final contractual/legal terms remain deferred in their owners.
 
 Initiative 4 closes the Projects/Evidence product and design decisions in [`PAGE-PROJECTS`](product/pages/projects.md), [`PROJECT-EVIDENCE`](product/project-evidence.md), the [item-level inventory](product/projects/index.md), and the [experience specification](product/projects/experience.md). It approves the public taxonomy, hybrid inventory-sensitive IA, card/detail/imagery rules, bilingual system language, confidentiality treatment, accessibility, performance, and visual-QA criteria. [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](plans/completed/projects-evidence-experience.md) records the completed work within the accepted static localized architecture: Task 2 publishes the index, Task 3 publishes exactly three paired summary-only detail pages with labeled conceptual visuals, and Task 4 retires the verified-unused legacy project paths. Homepage eligibility remains deferred; launch filters and empty groups remain rejected, and the approved homepage proof fallback is unchanged.
+
+
+Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO / PAGE-FOUNDER](product/pages/studio-and-founder.md): exact Spanish and English content, route/navigation responsibilities, direct-accountability and collaborator language, operating principles, location/availability, professional history, education, grouped capabilities, Projects and Contact bridges, CV/professional-link treatment, portrait deferral, duplication boundaries, visual compositions, responsive behavior, accessibility, and implementation readiness. The corresponding page extensions are approved in [DESIGN-VISUAL](design/visual-language.md#studio-and-founder-visual-baseline-approved) and [DESIGN-IX-A11Y](design/interaction-responsive-accessibility.md#studio-and-founder-interaction-and-responsive-baseline-approved). Implementation remains a future versioned plan within ADR-STATIC-LOCALIZED-ROUTING; no RFC or new ADR is required.

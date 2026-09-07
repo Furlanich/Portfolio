@@ -7,8 +7,10 @@ related:
   - IA-SITE
   - PAGE-HOME
   - PAGE-SERVICES
+  - PAGE-STUDIO
+  - PAGE-FOUNDER
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-06
+last_verified: 2026-09-07
 ---
 
 # Content and localization
@@ -122,9 +124,26 @@ Before final public content is complete, the repository needs:
 
 - publication-ready item-level project records;
 - client logo and description permissions;
-- founder photograph;
+- optional founder photograph if a future approved portrait treatment is pursued;
 - final form/privacy provider details;
 - final English adaptations outside the approved complete homepage, complete Services page, and existing minimum destination slices;
 - verified public URLs and repositories.
 
-The founder photograph and unresolved project evidence do not block the approved text-led commercial homepage. They remain dependencies for later visual or project-card variants only.
+The founder photograph and unresolved project evidence do not block the approved text-led commercial homepage, Studio, or Founder completion. Photography remains an optional future visual dependency; project evidence remains governed by its item-level owner.
+
+
+## Studio and Founder bilingual scope — APPROVED
+
+Initiative 5 closes the complete natural Spanish and English content for PAGE-STUDIO and PAGE-FOUNDER. Exact public copy remains owned by [Studio and founder pages](pages/studio-and-founder.md#initiative-5-decision-closure-approved); this document does not duplicate it.
+
+The approved scope includes:
+
+- Studio intro, accountability, collaborator model, principles, location/availability, Founder bridge, and final CTA;
+- Founder context line, approved detailed biography, professional-link labels, experience, education, capability-group labels and items, Projects bridge, and final CTA;
+- route-equivalent labels and meaningful contextual links between Studio, Founder, Projects, Contact, and the footer.
+
+English uses native business phrasing such as “direct technical accountability,” “core delivery scope,” “professional background,” and “Start an enquiry.” It preserves the Spanish meaning without reproducing Spanish sentence order. Both locales make the same promises and preserve the same limits.
+
+Studio's four principles are criteria for decision-making, not a translation or restatement of the Homepage Process. Founder capability language groups technologies by the business and engineering work they support; it does not revive the legacy recruiter-oriented skills wall.
+
+English outside the complete homepage, Services, Projects system/content already approved for current public records, Studio, Founder, and minimum Contact destinations remains subject to separate item/page approval.

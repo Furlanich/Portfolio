@@ -7,8 +7,9 @@ related:
   - PAGE-SERVICES
   - PAGE-PROJECTS
   - PAGE-STUDIO
+  - PAGE-FOUNDER
   - PAGE-CONTACT
-last_verified: 2026-09-01
+last_verified: 2026-09-07
 ---
 
 # Information architecture
@@ -128,3 +129,16 @@ PAGE-FOUNDER
 - Root is the Spanish and `x-default` experience.
 - No automatic locale redirect.
 - URLs use trailing slashes to remain compatible with static export.
+
+
+## Studio and Founder route closure — APPROVED
+
+Initiative 5 confirms that the existing sitemap is implementation-ready without changing its architecture:
+
+- /estudio/ ↔ /en/about/ is the Studio/About business page pair and the “El estudio / About” primary-navigation target.
+- /estudio/samuel-furlanich/ ↔ /en/about/samuel-furlanich/ is the nested Founder-profile pair.
+- The Founder pair remains outside primary navigation and is reached from Studio, the footer professional group, and restrained Contact/project contexts defined by PAGE-STUDIO/PAGE-FOUNDER.
+- Language switching preserves Studio-to-Studio and Founder-to-Founder context.
+- The footer exposes Studio under site navigation and “Samuel Furlanich” under professional links; LinkedIn and GitHub do not substitute for the internal Founder destination.
+
+The current route contract's use of the Founder pair as the “El estudio / About” link is an implementation gap, not an approved IA change.

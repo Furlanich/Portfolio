@@ -8,9 +8,11 @@ related:
   - PAGE-HOME
   - PAGE-SERVICES
   - PAGE-PROJECTS
+  - PAGE-STUDIO
+  - PAGE-FOUNDER
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-06
+last_verified: 2026-09-07
 ---
 
 # Visual language
@@ -234,18 +236,84 @@ The existing visual system, styling, assets, and motion implementation are recor
 
 Complete composition, imagery, responsive, and performance rules are owned by [Projects and evidence experience](../product/projects/experience.md).
 
-## OPEN target decisions beyond the commercial homepage, Services page, and Projects experience
+## OPEN target decisions beyond the commercial homepage, Services page, Projects experience, Studio, and Founder
 
 - Custom logo symbol, monogram, and extended brand-lockup system.
 - Extended semantic colors, including form validation beyond the approved neutral Projects evidence treatment.
-- Complete type hierarchy beyond the commercial homepage, Services, and Projects page specifications.
-- Page- and component-specific density outside the approved homepage, Services, and Projects baselines.
+- Complete type hierarchy beyond the commercial homepage, Services, Projects, Studio, and Founder page specifications.
+- Page- and component-specific density outside the approved homepage, Services, Projects, Studio, and Founder baselines.
 - Detailed global navigation, form, and broader badge variants beyond the approved foundation and page baselines.
 - Broader photography, illustration, screenshot, and abstract-graphic direction beyond the approved Projects evidence rules.
 - A broader icon system or custom icon requirements.
 - Whether a dark theme is ever introduced.
-- Motion language outside the commercial homepage and basic control-state transitions.
+- Motion language outside the commercial homepage, Services, Projects, Studio, Founder, and basic control-state transitions.
 
 ## Reference posture
 
 Global Fan, Simple Solutions, and WAPP were named as confidence/professionalism references. Their exact reusable qualities have not been defined, and no reference should be copied wholesale. See the research document for available links and unresolved identity.
+
+
+## Studio and Founder visual baseline — APPROVED
+
+This baseline extends the existing FURLANICH visual language for PAGE-STUDIO and PAGE-FOUNDER. It adds page compositions, not a new theme, token set, component library, or motion language.
+
+### Shared rules
+
+- Reuse Inter, the 1200px container, approved gutters, the 64px/80px/96px section rhythm, Canvas, Surface, Ink, Muted ink, Action blue, Action blue strong, Action tint, Border, existing buttons, focus treatment, and restrained card pattern.
+- Keep a calm editorial hierarchy with readable measures. Premium character comes from proportion, spacing, typography, and factual content rather than decoration.
+- Do not introduce gradients, glass effects, neon accents, oversized decorative type, dramatic dark sections, parallax, animated blobs, stock team imagery, employer/institution logos, technology-logo walls, or decorative résumé timelines.
+- Standard controls keep the existing 10px radius and 48px minimum CTA height. Informational panels remain non-interactive and receive no hover elevation.
+- Section headings use the approved homepage H2 hierarchy. Internal entry/group headings use H3. Body and supporting copy reuse the approved 16/26px and 18/28px scales.
+
+### Studio composition
+
+The approved surface rhythm is:
+
+1. Intro — Canvas
+2. Accountability — Surface
+3. Principles — Canvas
+4. Location — Surface or a restrained Surface band
+5. Founder bridge — Canvas
+6. Final CTA — Action tint
+
+At 1024px and above, STUDIO-INTRO uses a 12-column grid: copy and actions occupy approximately seven columns, and the operating-model panel occupies approximately five. The panel uses Surface, a 1px Border, 16px radius, and content-driven padding. It is a factual definition/list panel, not a dashboard; there are no large numerals, icons, charts, or statistics.
+
+STUDIO-ACCOUNTABILITY is text-led. Use a wider main explanation and a narrower collaborator block at wide sizes, or one editorial column when that produces a better reading measure. The collaborator block may use a neutral bordered panel but must not look like a team card or staffing offer.
+
+STUDIO-PRINCIPLES uses four restrained bordered editorial blocks in a two-by-two layout at medium and wide widths and one column compact. Blocks are unnumbered, use no icons, and have no timeline connectors. Equal content-driven tracks are permitted; no fixed height or clipping is used.
+
+STUDIO-LOCATION is a short band with heading and copy, not a map, office photograph, flag wall, availability dashboard, or client-footprint graphic.
+
+STUDIO-FOUNDER-BRIDGE uses an editorial split at wide sizes: the role excerpt occupies the larger share and the single Founder action occupies the smaller share. Below wide it stacks in reading order. No portrait, experience timeline, education list, capability catalogue, or CV action appears in the bridge.
+
+STUDIO-FINAL-CTA reuses the established Action-tint band with one narrow copy measure and one primary Contact action. It contains no form and no competing secondary action.
+
+### Founder composition
+
+The approved surface rhythm is:
+
+1. Header — Canvas
+2. Professional links — a compact Surface panel within the header transition
+3. Experience — Surface
+4. Education — Canvas
+5. Capabilities — Surface
+6. Projects bridge — Canvas
+7. Final CTA — Action tint
+
+FOUNDER-HEADER is text-led and occupies approximately eight columns at wide sizes. No approved portrait exists, so there is no media column, reserved gap, placeholder silhouette, generated portrait, or decorative avatar. A future approved photograph may add a four-column editorial image without changing source order or making the text depend on it.
+
+FOUNDER-PROFESSIONAL-LINKS presents Download CV as the single strong action. LinkedIn and GitHub use the existing secondary-action treatment. The three actions wrap rather than compress; they are not five equal buttons and Contact remains outside this group.
+
+FOUNDER-EXPERIENCE is an editorial history, not a card wall or decorative line timeline. At wide sizes each entry uses a narrow period column and a wide role/context/summary column, separated with restrained horizontal rules. At compact and medium sizes the period sits immediately above its role. Entries remain natural height.
+
+FOUNDER-EDUCATION uses a quiet two-item editorial list. It may use two columns when space permits, but it does not visually outweigh Experience and uses no university or school logos.
+
+FOUNDER-CAPABILITIES uses four semantic groups in a two-by-two layout at medium/wide sizes and one column compact. Each group may use the approved bordered Surface pattern. Exact technologies remain text within capability groups; there are no icon grids, proficiency bars, percentages, stars, animated marquees, or separate technology wall.
+
+FOUNDER-PROJECTS-BRIDGE is one concise text-led bridge with one Projects action. It does not repeat project cards, maturity group layouts, conceptual visuals, evidence badges, or the complete index.
+
+FOUNDER-FINAL-CTA reuses the Action-tint commercial CTA pattern. GitHub, LinkedIn, and CV do not compete with the final Contact action.
+
+### Motion
+
+Studio and Founder have no section entrance sequences, scroll-triggered reveals, animated timeline drawing, parallax portraits, floating technology icons, text scrambling, or motion-dependent meaning. Reuse only the approved 160ms ease-out color/background/border control transition, and remove nonessential transitions under reduced motion.

@@ -6,8 +6,9 @@ related:
   - PAGE-PRIVACY
   - HOME-CTA
   - IA-SITE
+  - PAGE-FOUNDER
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-03
+last_verified: 2026-09-07
 ---
 
 # Contact and privacy pages
@@ -113,3 +114,13 @@ The contact form must not be publicly enabled without resolving the privacy noti
 - Response copy is visible but not misrepresented as support coverage.
 - Privacy content describes the real deployed data flow and providers.
 - Consent is informed and not bundled with marketing.
+
+
+## Founder-context link — APPROVED
+
+After the primary direct-contact choices and response expectation, Contact may include one subdued internal text link where the copy explains that Samuel personally reviews the inquiry:
+
+- Spanish: “Conocer la trayectoria de Samuel” → /estudio/samuel-furlanich/
+- English: “View Samuel's background” → /en/about/samuel-furlanich/
+
+This link provides relevant professional context. It is not a primary or secondary contact button, does not precede the inquiry/direct-channel actions, and does not duplicate the Studio or Founder narrative.
