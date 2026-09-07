@@ -98,7 +98,7 @@ The wide header uses approximately 7/12 text and 5/12 visual; without a visual, 
 
 ## Current readiness
 
-The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. [The item inventory](../projects/index.md) now contains three `READY` records with complete bilingual card/detail copy, approved public-source destinations, and labeled conceptual detail visuals. Task 2 / PR 2 and Task 3 / PR 3 are merged; Task 4 / PR 4 retires verified-unused legacy project paths after consumer verification. No item is homepage-eligible, and the launch cards remain image-free.
+The product, bilingual system language, layout, card, detail, accessibility, and performance decisions are approved. [The item inventory](../projects/index.md) now contains three `READY` records with complete bilingual card/detail copy, approved public-source destinations, and labeled conceptual detail visuals. Task 2 / PR 2, Task 3 / PR 3, and Task 4 / PR 4 are merged; the verified-unused legacy project paths have been retired after consumer verification. No item is homepage-eligible, and the launch cards remain image-free.
 
 
 ## Founder-context link — APPROVED

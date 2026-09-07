@@ -193,12 +193,12 @@ The existing navigation, localization, form, motion, and interaction behavior is
 - Avoid horizontal carousels for essential service or project information.
 - Keep line lengths comfortable on wide screens.
 
-## OPEN decisions beyond the commercial homepage, Services page, and Projects experience
+## OPEN decisions beyond the commercial homepage, Services page, Projects experience, Studio, and Founder
 
 - Whole-site conformance claims, audit scope, and any certification remain unresolved; only the commercial-homepage target above is approved.
-- Breakpoints and container behavior for pages and components outside the approved homepage, Services, and Projects baselines.
-- Motion language outside the commercial homepage and basic control-state transitions.
-- Touch, tablet, and landscape-specific layouts outside the approved homepage, Services, and Projects baselines.
+- Breakpoints and container behavior for pages and components outside the approved homepage, Services, Projects, Studio, and Founder baselines.
+- Motion language outside the commercial homepage, Services, Projects, Studio, Founder, and basic control-state transitions.
+- Touch, tablet, and landscape-specific layouts outside the approved homepage, Services, Projects, Studio, and Founder baselines.
 - Formal browser/device support matrix.
 - Whole-site automated and manual accessibility validation strategy.
 

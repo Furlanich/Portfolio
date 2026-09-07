@@ -236,17 +236,17 @@ The existing visual system, styling, assets, and motion implementation are recor
 
 Complete composition, imagery, responsive, and performance rules are owned by [Projects and evidence experience](../product/projects/experience.md).
 
-## OPEN target decisions beyond the commercial homepage, Services page, and Projects experience
+## OPEN target decisions beyond the commercial homepage, Services page, Projects experience, Studio, and Founder
 
 - Custom logo symbol, monogram, and extended brand-lockup system.
 - Extended semantic colors, including form validation beyond the approved neutral Projects evidence treatment.
-- Complete type hierarchy beyond the commercial homepage, Services, and Projects page specifications.
-- Page- and component-specific density outside the approved homepage, Services, and Projects baselines.
+- Complete type hierarchy beyond the commercial homepage, Services, Projects, Studio, and Founder page specifications.
+- Page- and component-specific density outside the approved homepage, Services, Projects, Studio, and Founder baselines.
 - Detailed global navigation, form, and broader badge variants beyond the approved foundation and page baselines.
 - Broader photography, illustration, screenshot, and abstract-graphic direction beyond the approved Projects evidence rules.
 - A broader icon system or custom icon requirements.
 - Whether a dark theme is ever introduced.
-- Motion language outside the commercial homepage and basic control-state transitions.
+- Motion language outside the commercial homepage, Services, Projects, Studio, Founder, and basic control-state transitions.
 
 ## Reference posture
 
