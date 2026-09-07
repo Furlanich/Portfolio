@@ -8,9 +8,11 @@ related:
   - PAGE-SERVICES
   - PAGE-CONTACT
   - PAGE-PROJECTS
+  - PAGE-STUDIO
+  - PAGE-FOUNDER
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-06
+last_verified: 2026-09-07
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -199,3 +201,53 @@ The existing navigation, localization, form, motion, and interaction behavior is
 - Touch, tablet, and landscape-specific layouts outside the approved homepage, Services, and Projects baselines.
 - Formal browser/device support matrix.
 - Whole-site automated and manual accessibility validation strategy.
+
+
+## Studio and Founder interaction and responsive baseline — APPROVED
+
+These requirements extend the applicable WCAG 2.2 Level AA target to PAGE-STUDIO and PAGE-FOUNDER without claiming audited whole-site conformance.
+
+### Required viewport matrix
+
+Verify both localized page pairs at:
+
+- 320x800;
+- approximately 390x844;
+- 768x1024 tablet;
+- 1024x768;
+- 1440x900;
+- the same relevant routes under the optional /Portfolio base path.
+
+At every size, verify no horizontal overflow, complete content growth, correct source/reading order, heading and list semantics, CTA wrapping, visible focus, keyboard traversal, target sizing, 200% text zoom, reduced motion, JavaScript-independent content, and an automated accessibility scan.
+
+### Studio reflow
+
+- Below 768px, every section is one column. In STUDIO-INTRO, text and actions precede the operating-model panel. Accountability copy precedes collaborator wording. Founder copy precedes its action.
+- From 768px, the four principles use a two-by-two grid while all copy remains natural height. Location remains a normal text band.
+- At 1024px and above, the intro uses the approved approximately 7/12 and 5/12 split. Other editorial splits may align to the 12-column grid without changing DOM order.
+- At 1440px the content remains inside the 1200px container; line length does not expand to fill the viewport.
+- CTA groups stack full-width below 480px and wrap inline from 480px when space permits. The operating-model list and location copy never become horizontal rails.
+- Long Spanish and English words and labels wrap safely. No panel, heading, or action uses clipping, line clamping, or fixed height.
+
+### Founder reflow
+
+- The text-led header keeps one source order and uses the available content width below 1024px. At wide sizes it remains near an eight-column reading measure; no absent portrait column reserves space.
+- Professional actions stack full-width below 480px and wrap from 480px. Download CV remains first. LinkedIn and GitHub remain distinct reachable targets.
+- Experience entries keep period, role, context, and summary in the same list item. Below 1024px the period appears immediately above the role; at 1024px and above a narrow period column may sit beside the wide content column.
+- Education uses one column compact and may use two from 768px when both entries remain clearly associated.
+- Capability groups use one column below 768px and two columns from 768px. Technology names, URLs, and English compound words wrap without overflow.
+- The Projects bridge and final CTA remain one-column reading blocks at compact sizes. A portrait, if approved later, can never displace the H1, biography, or professional actions.
+
+### Semantics and accessibility
+
+- Each localized page has one main landmark and exactly one meaningful H1.
+- Every major page section is a labelled section with one visible H2 and a stable unique heading ID. Collaborator wording and capability-group labels may use H3 beneath their owning H2.
+- Principle, experience, education, capability-group, and capability-item peers use list semantics where presented as groups. Visual cards or columns do not replace list structure.
+- Heading levels do not skip for styling. DOM order and visual order match at every breakpoint.
+- Link labels describe their destination: “Conocer a Samuel / Meet Samuel,” “Ver proyectos seleccionados / View selected work,” and the approved Contact labels remain explicit.
+- The CV is a same-origin file action and must work at root and configured base path. LinkedIn and GitHub use consistent accessible external-link behavior. If implementation opens them in a new tab, visible or assistive text communicates that behavior and rel attributes prevent opener access; opening in the same tab is also acceptable.
+- An informative future portrait requires concise purpose-based alt text. A decorative portrait uses empty alt. No image is required to understand either page.
+- All controls are keyboard reachable, targets are at least 44px in both dimensions, CTA controls are at least 48px high, and focus uses the approved visible treatment without clipping on Canvas, Surface, or Action tint.
+- No accountability, collaborator, evidence, location, experience, education, capability, or link meaning is hidden behind hover, a tooltip, animation, icon, or color.
+- Text remains readable and operable at 200% zoom. Layouts reflow rather than introducing two-dimensional scrolling.
+- Section entrance motion, parallax, animated timeline drawing, and floating icons are absent. Under prefers-reduced-motion: reduce, nonessential control transitions and optional smooth scrolling are removed.

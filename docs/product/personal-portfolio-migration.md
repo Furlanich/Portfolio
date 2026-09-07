@@ -8,7 +8,7 @@ related:
   - PROJECT-EVIDENCE
   - PROJECT-INVENTORY
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-06
+last_verified: 2026-09-07
 ---
 
 # Personal portfolio migration
@@ -69,12 +69,27 @@ The READY promotion does not authorize legacy screenshots, homepage placement, p
 
 Legacy `data/projects.json` copy and unapproved `public/projects/` imagery remain historical audit evidence only; the unused paths were retired in Task 4 after approved replacements and intentional exclusions were verified. Future records may be migrated only after reaching `READY` or `READY-SUMMARY-ONLY` with their own evidence and permission gate.
 
-## Facts requiring correction in the current implementation
+## Current retained-source and completion gaps — VERIFIED 2026-09-07
 
-- Current metadata and hero still describe a personal developer portfolio.
-- Current experience data ends independent work at 2026. The target biography must state independent work since 2024 and include the approved Clever Soft SA narrative without adding it to the experience timeline.
-- Current education wording should reflect that UBA studies were completed.
-- The stored phone lacks the confirmed international mobile `9` used by the intended public contact format.
-- Existing project records do not contain maturity or disclosure classification.
+The business homepage and minimum bilingual Founder destinations are implemented. Retained legacy source still requires deliberate migration treatment rather than automatic deletion:
 
-These are migration findings, not standalone authorization to modify application data. Implementation still requires the approved architecture and execution path.
+- data/experience.json still ends independent work at 2026; the completed Founder requirement uses “Desde 2024 / Since 2024.”
+- The minimum Founder implementation currently exposes only the independent-work entry. Initiative 5 approves the retained 2021 IT Technician internship as the second editorial experience entry.
+- data/education.json uses legacy degree/date wording; public Founder content continues to use the approved factual “studies completed” and technical-education language.
+- data/skills.json is a recruiter-oriented icon catalogue. Initiative 5 replaces its presentation with four business-relevant capability groups and rejects a technology-logo wall.
+- data/about.json retains the superseded personal introduction and an outdated phone format. It remains historical migration input, not target public copy.
+- The shared navigation currently labels and links the Founder route as “El estudio / About.” The approved Studio routes are absent and must be added before navigation can reflect IA-SITE.
+- The current Founder page has no Projects bridge or final commercial CTA and places Contact alongside professional links. Initiative 5 separates professional identity actions from the final Contact bridge.
+
+These are migration findings, not authorization to edit application code in the decision-closure task.
+
+## Initiative 5 migration closure — APPROVED
+
+- Studio becomes the primary “El estudio / About” navigation destination. Founder remains a nested professional destination.
+- Studio owns the operating model, accountability, collaborator wording, principles, availability, short Founder bridge, and commercial CTA.
+- Founder owns the approved detailed biography, the independent-practice and 2021 internship entries, factual education, grouped applied capabilities, CV/LinkedIn/GitHub, one Projects bridge, and the final Contact bridge.
+- Clever Soft SA remains in narrative biography only. It is not added to the experience timeline or presented as an endorsement.
+- The complete Projects index is not copied into Founder; one localized bridge preserves evidence authority.
+- No approved portrait exists. The implementation remains complete without imagery, and photography is deferred.
+- public/Samuel-Furlanich-CV.pdf remains the preserved asset. Its technical download path and professional links must be reverified in root and /Portfolio modes during implementation. CV content review/redesign remains separate deferred work and must not be performed silently.
+- Legacy source may be removed only after repository search proves that the completed Founder content and any other consumer no longer require it.

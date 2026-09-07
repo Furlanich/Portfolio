@@ -16,8 +16,10 @@ related:
   - PAGE-HOME
   - PAGE-SERVICES
   - PAGE-PROJECTS
+  - PAGE-STUDIO
+  - PAGE-FOUNDER
   - PROJECT-EVIDENCE
-last_verified: 2026-09-06
+last_verified: 2026-09-07
 ---
 
 # FURLANICH architecture map
@@ -27,6 +29,8 @@ last_verified: 2026-09-06
 The current application is a Next.js 16 App Router site with ten static foundation routes: Spanish at the root and English under `/en/`, plus six paired static project-detail artifacts. Locale-specific Server Component trees compose shared semantic foundation components from route-owned content. Retained founder source remains under `data/`; the obsolete project JSON, project-only types/exports, animated Card primitive, and unapproved legacy project SVGs were retired after Task 4 consumer verification.
 
 Tailwind CSS provides utility styling and the small component primitives. `next/font` loads Inter; `public/` holds static images, including legacy project previews. The site is statically exported with trailing slashes, optional GitHub Pages base path/asset prefix, and unoptimized images. The deployment workflow builds `main` with Node 24 and publishes `out/` to GitHub Pages.
+
+The approved Studio route pair is not yet materialized: the shared route/navigation contract currently uses the nested Founder pair as the “El estudio / About” destination. Both Founder pages render the minimum preserved profile, but the completed Studio page and completed Founder sections remain implementation work.
 
 The dependency boundary is Next.js, React, TypeScript, Tailwind, Framer Motion, React Hook Form, and Lucide React. The approved foundation has no runtime localization dependency. Repository checks are documentation integrity, Node-based validator tests, ESLint, TypeScript no-emit checking, and the production static build. See [current system](docs/architecture/current-system.md) and [quality findings](docs/architecture/current-quality-findings.md) for evidence and limits.
 
@@ -43,6 +47,8 @@ Initiative 2 approves the seven commercial homepage sections below `HOME-HERO`, 
 Initiative 3 delivered the complete bilingual Services page within the same boundary: locale-owned typed content, shared locale-agnostic semantic Server Components, the existing Services routes, static semantic fragments, and extensions of the approved homepage presentation primitives. Stable `#web`, `#whatsapp`, `#consultoria`, and `#consulting` fragments do not create routes or require runtime routing state. No new localization, hosting, dependency, CMS, backend, data, or design-system architecture was required. The implementation history is recorded by [`PLAN-SERVICES-EXPERIENCE`](docs/plans/completed/services-experience.md) under `ADR-STATIC-LOCALIZED-ROUTING`; no RFC or new ADR was required.
 
 Initiative 4's Projects/Evidence decisions also fit the accepted boundary. [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](docs/plans/completed/projects-evidence-experience.md) selects a typed static public manifest, route-owned localized public copy, shared locale-agnostic Server Components, conditional static detail generation, and post-migration cleanup. Internal permission and evidence audits remain Markdown in `docs/product/projects/` and are never parsed or mirrored into public application data. Task 1 established the empty fail-closed contract without public behavior. Task 2 populates that manifest and adds the static bilingual index/navigation. Task 3 adds only the three item-approved paired summary-only detail routes. Task 4 removes the obsolete project publication paths after consumer verification; no blocked, private, retired, unresolved, production-claim, or homepage record enters the public projection. No CMS, backend, project API, database, filter/search subsystem, media service, hosting change, RFC, or new ADR is required.
+
+Initiative 5 closes Studio and Founder product/design decisions within the same accepted boundary. The approved implementation adds the existing sitemap's /estudio/ and /en/about/ pair as semantic Studio routes, retains the nested Founder pair, routes primary navigation to Studio, and uses route-owned localized content with shared locale-agnostic semantic components. It reuses existing tokens, primitives, static export, trailing slashes, and optional base-path behavior. The work requires a versioned execution plan because it is substantial, but it requires no RFC, new ADR, CMS, backend, runtime localization, dependency, hosting change, or new design-system architecture.
 
 The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
 
@@ -62,7 +68,7 @@ The preserved recommendation is incremental, static-first modernization: reduce 
 
 ## OPEN questions
 
-Long-term hosting, final form/provider integration, the extended design system beyond the approved homepage, Services, and Projects baselines, whole-site accessibility claims, global performance budgets, canonical domain, and optional imagery outside approved project evidence remain OPEN with the blocker levels recorded in their owning documents. They do not reopen the accepted localized-routing architecture or block the behavior-neutral Projects publication contract.
+Long-term hosting, final form/provider integration, the extended design system beyond the approved homepage, Services, Projects, Studio, and Founder baselines, whole-site accessibility claims, global performance budgets, canonical domain, and optional imagery outside approved project evidence remain OPEN with the blocker levels recorded in their owning documents. They do not reopen the accepted localized-routing architecture or block the behavior-neutral Projects publication contract.
 
 ## Engineering records
 

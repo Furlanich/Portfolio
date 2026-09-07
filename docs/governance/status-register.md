@@ -13,10 +13,12 @@ related:
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PAGE-HOME
   - PAGE-SERVICES
+  - PAGE-STUDIO
+  - PAGE-FOUNDER
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-06
+last_verified: 2026-09-07
 ---
 
 # Product knowledge status register
@@ -97,6 +99,22 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Minimum localized Services and Contact destinations, and the minimum Founder migration destination, are approved in their page specifications.
 - A custom logo symbol, complete design system, founder photograph, service fragments, and English content outside the minimum destination slice do not block homepage-foundation technical planning.
 
+### Studio and Founder completion decision closure
+
+- PAGE-STUDIO and PAGE-FOUNDER are content-, design-, localization-, responsive-, accessibility-, and evidence-ready in Spanish and English.
+- The approved route pairs remain /estudio/ ↔ /en/about/ for Studio and /estudio/samuel-furlanich/ ↔ /en/about/samuel-furlanich/ for Founder.
+- “El estudio / About” targets Studio in primary navigation. Founder is nested and reached from Studio, the footer professional group, and restrained relevant Contact/project contexts.
+- Studio uses six sections: intro, accountability/collaborator model, four unnumbered principles, location/availability, Founder bridge, and final Contact CTA.
+- Studio approves “Software a medida con responsabilidad técnica directa. / Custom software with direct technical accountability.” as its H1 and rejects the two recorded alternatives for that role.
+- Studio uses no metrics panel, team-size claim, stock team imagery, second process timeline, service catalogue, project cards, or full biography.
+- Founder preserves the approved detailed biography and adds a second source-backed 2021 internship entry, factual education, four applied capability groups, a compact CV/LinkedIn/GitHub group, one Projects bridge, and a final Contact CTA.
+- Clever Soft SA remains narrative biography only and is not an experience-timeline entry, logo, endorsement, or FURLANICH evidence claim.
+- A separate technology wall and duplicated selected-project summaries are rejected. Exact technologies live inside capability groups; Projects remains the evidence owner.
+- No approved portrait exists. The text-led layout is complete without one; photography is deferred.
+- The CV asset/path and professional URLs are approved for preservation. Root and /Portfolio downloads and intended external destinations require re-verification during implementation; CV content refresh/redesign is separate deferred work.
+- The visual and interaction baselines reuse the existing system and define exact layouts at 320px, approximately 390px, tablet, 1024px, and 1440px. No new visual theme or motion language is approved.
+- The initiative fits ADR-STATIC-LOCALIZED-ROUTING and requires a versioned execution plan for implementation. No RFC or new ADR is required.
+
 ### Founder facts
 
 - Samuel completed his Computer Science studies at the University of Buenos Aires.
@@ -141,7 +159,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Confirmed commercial domain and canonical production URL. This is a **RELEASE BLOCKER**, not an implementation or integration blocker.
 - Final form provider, privacy wording, consent treatment, data retention period, and third-party disclosures. These are **RELEASE BLOCKERS** for the completed inquiry experience, not blockers for hero implementation.
 - Final legal and contractual review of commercial boundaries.
-- Founder photograph and any later CV redesign; both are non-blocking for the commercial homepage.
+- Founder photograph and any later CV content refresh/redesign are **DEFERRED** and non-blocking for the text-led Studio/Founder experience.
 - Permission, functional verification, and approved bilingual item copy required to advance the remaining blocked/private project records or broaden the three READY records beyond their current summary-only detail scope.
 - Richer public evidence for WhatsApp automation and maintenance/consulting. Its absence is explicit and does not block the approved Services page.
 - Busesfy's ownership/client relationship, maturity, public-description permission, screenshot permission, and client identity permission.
@@ -149,8 +167,8 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - The-System current clean-checkout functional verification and future homepage eligibility. Its conceptual detail visual does not change that evidence state.
 - Whether any individual service pages will be needed after launch performance is observed.
 - Long-term hosting after the current static-export/GitHub Pages migration slice; changing hosting remains a future architecture decision and does not block the foundation.
-- Whole-site responsive behavior, accessibility audit/conformance claims, and performance budgets beyond the approved homepage, Services, and Projects baselines.
-- English copy outside the approved complete homepage, complete Services page, three READY Projects cards, Projects system language, and minimum Contact and Founder destinations, plus item-specific copy for future publication-ready evidence.
+- Whole-site responsive behavior, accessibility audit/conformance claims, and performance budgets beyond the approved homepage, Services, Projects, Studio, and Founder baselines.
+- English copy outside the approved complete homepage, Services, current Projects records/system language, Studio, Founder, and minimum Contact destination, plus item-specific copy for future publication-ready evidence.
 
 ## REJECTED
 
