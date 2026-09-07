@@ -134,7 +134,7 @@ The founder photograph and unresolved project evidence do not block the approved
 
 ## Studio and Founder bilingual scope — APPROVED
 
-Initiative 5 closes the complete natural Spanish and English content for PAGE-STUDIO and PAGE-FOUNDER. Exact public copy remains owned by [Studio and founder pages](pages/studio-and-founder.md#initiative-5-decision-closure--approved); this document does not duplicate it.
+Initiative 5 closes the complete natural Spanish and English content for PAGE-STUDIO and PAGE-FOUNDER. Exact public copy remains owned by [Studio and founder pages](pages/studio-and-founder.md#initiative-5-decision-closure-approved); this document does not duplicate it.
 
 The approved scope includes:
 
