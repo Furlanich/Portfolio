@@ -348,19 +348,19 @@ Run `npm run docs:check`, `npm run skills:check`, quick validation for every new
 - Consumes: locked dependencies, named Playwright projects, `NEXT_PUBLIC_BASE_PATH`, and generated failure artifacts.
 - Produces: separate `Quality / browser` Pull Request status while preserving `Quality / validate`.
 
-- [ ] **Step 1: Record RED against current CI**
+- [x] **Step 1: Record RED against current CI**
 
 Inspect the current workflow and record that it has only the deterministic `validate` job, installs no browser engines, runs no E2E/a11y tests, and uploads no failure evidence.
 
-- [ ] **Step 2: Add the browser job**
+- [x] **Step 2: Add the browser job**
 
 Use Node 24, `npm ci`, `npx playwright install --with-deps chromium firefox webkit`, and `npm run test:e2e` with `NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}`. Upload `playwright-report/` and `test-results/` using `actions/upload-artifact@v4` only on failure, with short retention and read-only permissions.
 
-- [ ] **Step 3: Validate workflow and base-path behavior**
+- [x] **Step 3: Validate workflow and base-path behavior**
 
 Run the browser suite locally with `NEXT_PUBLIC_BASE_PATH=/Portfolio`, run `npm run docs:check`, inspect the YAML for automatic snapshot updates or write permissions, and run `git diff --check`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 Commit as `ci: add browser quality checks`.
 

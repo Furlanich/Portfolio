@@ -116,7 +116,7 @@ The findings below are retained pre-cutover evidence. The current foundation and
 
 - Documentation and vendored-Skill integrity are checked by repository-native Node validators, with Node-based validator tests and an explicit TypeScript check available through package scripts.
 - No formatter configuration exists. The Playwright browser suite and axe baseline are now dedicated, reproducible layers; visual judgment and whole-site manual accessibility remain outside automation.
-- CI runs documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build on Pull Requests through the stable Quality workflow. A separate dedicated browser job is the next hardening step; no automatic visual-baseline update is permitted. SEO audit remains absent and deployment behavior is unchanged.
+- CI keeps documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build in the deterministic `validate` job. A separate `browser` job installs Chromium, Firefox, and WebKit, runs the full Playwright/axe matrix under the repository base path, and uploads reports/results only after failure. No automatic visual-baseline update is permitted. SEO audit remains absent and deployment behavior is unchanged.
 - The deployment action and permissions were identified for later review; no Stage A change is authorized.
 - Stage A verification on 2026-09-01 completed against the patched dependency baseline: TypeScript and the production build passed; lint completed with zero errors and six existing `@next/next/no-img-element` warnings.
 

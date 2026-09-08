@@ -160,6 +160,6 @@ Local `.env` files exist and are intentionally not documented or read into the k
 
 ## Stage B quality gate update
 
-Pull Requests targeting `main` now run the repository `validate` command through `.github/workflows/ci.yml`. The gate covers documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build with the repository base path. The existing deployment workflow remains push-to-`main` only and is unchanged.
+Pull Requests targeting `main` run separate `validate` and `browser` jobs through `.github/workflows/ci.yml`. The deterministic gate covers documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build with the repository base path. The browser gate installs the pinned Chromium, Firefox, and WebKit revisions, runs the Playwright/axe matrix under that base path, and retains reports/results only on failure. The existing deployment workflow remains push-to-`main` only and is unchanged.
 
 The local browser layer is independently runnable through `test:e2e` and `test:a11y`, with screenshots, video, traces, and HTML reports retained only as ignored or CI failure evidence. Browser QA does not replace generated static-route and base-path validation.
