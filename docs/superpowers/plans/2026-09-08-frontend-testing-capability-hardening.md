@@ -157,11 +157,11 @@ Commit as `docs: vendor pinned frontend process skills`.
 - Consumes: approved product requirements, `DESIGN-VISUAL`, `DESIGN-IX-A11Y`, applicable architecture/ADR, Taste, TDD, Playwright QA, visual QA, and `pr-readiness`.
 - Produces: one concise public-UI implementation router with an explicit authority boundary.
 
-- [ ] **Step 1: Record RED from the pre-Skill capability audit**
+- [x] **Step 1: Record RED from the pre-Skill capability audit**
 
 Document a scenario requesting a substantial public homepage change. Record that existing Skills separately cover governance, visual QA, and PR readiness but do not require the complete design-authority → Taste preflight → test-first → browser/a11y → Taste post-audit workflow. This is the observable baseline failure; independent subagent pressure testing is unavailable in the current execution environment and must not be fabricated.
 
-- [ ] **Step 2: Write the minimal Skill**
+- [x] **Step 2: Write the minimal Skill**
 
 Use this discovery boundary:
 
@@ -174,15 +174,15 @@ description: Use when implementing or substantially modifying public FURLANICH u
 
 Require the 14 approved workflow stages, but reference `design-taste-frontend-v1`, `test-driven-development`, `playwright-qa`, `visual-qa`, `verification-before-completion`, and `pr-readiness` instead of duplicating their procedures. State the repository authority precedence exactly.
 
-- [ ] **Step 3: Review discovery and overlap scenarios**
+- [x] **Step 3: Review discovery and overlap scenarios**
 
 Record expected discovery for a new public route, substantial component redesign, and responsive navigation behavior. Record non-triggers for pure product documentation, Node-only utilities, dependency maintenance with no public UI, and visual audit without implementation. Confirm boundaries against `architecture-governance`, `project-knowledge-maintenance`, `playwright-qa`, `visual-qa`, and `pr-readiness`.
 
-- [ ] **Step 4: Validate GREEN**
+- [x] **Step 4: Validate GREEN**
 
 Run the bundled `quick_validate.py`, `npm run docs:check`, and `git diff --check`. Manually follow the Skill against the original scenario and record that it discovers both approved design documents, invokes Taste within the authority boundary, selects tests before code, and ends at `pr-readiness`.
 
-- [ ] **Step 5: Commit before modifying another Skill**
+- [x] **Step 5: Commit before modifying another Skill**
 
 Commit as `docs: add frontend implementation skill`.
 
@@ -420,6 +420,8 @@ Push `codex/frontend-testing-capability-hardening` and open a PR targeting `main
 - Task 2 provenance: Taste was installed with `skills@1.5.24` from exact commit `ccbc15639c97057cbfcf32ecebc38ef716e4bb37`; Superpowers `v6.3.0` resolves from annotated tag object `86babb696875227929e85420f287d6309374b93f` to source commit `b36e0829c6d0140e93cfef2ca599b1b07d4a7797`.
 - Task 2 integration RED: repository docs validation rejected an intentional duplicate heading in an integrity-locked upstream reference file. GREEN: locked vendor files are excluded only from repository-authored Markdown conventions; unlocked malformed Skill metadata and duplicate headings remain rejected.
 - Task 2 validation: `skills:check` passed for 4 Skills and 8 files; all four folders passed `quick_validate.py` in UTF-8 mode; `docs:check` passed with 66 Markdown files, 52 document IDs, and 8 Skills.
+- Task 3 RED: the checked-in pre-Skill capability audit found no single public-UI workflow joining repository authority, Taste, TDD, browser/a11y evidence, post-implementation visual judgment, complete verification, and `pr-readiness`; independent subagent pressure testing was unavailable and is not claimed.
+- Task 3 GREEN: the 416-word `frontend-implementation` Skill follows the approved 14-stage workflow, passed `quick_validate.py`, and `docs:check` passed with 68 Markdown files, 53 document IDs, and 9 Skills. Scenario review confirmed implementation triggers and audit/documentation/Node/dependency non-triggers without duplicating sibling procedures.
 
 ## Deviations
 
