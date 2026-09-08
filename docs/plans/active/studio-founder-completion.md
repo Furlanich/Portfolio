@@ -511,7 +511,7 @@ Modify as needed and only with the exact approved copy:
 - tests/e2e/smoke.spec.ts
 - tests/e2e/studio-founder.spec.ts
 - tests/e2e/accessibility.spec.ts
-- docs/product/status.md
+- docs/governance/status-register.md
 - ARCHITECTURE.md
 - docs/index.md
 - docs/plans/index.md
