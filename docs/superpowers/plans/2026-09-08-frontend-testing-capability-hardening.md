@@ -273,23 +273,23 @@ Evidence: the missing-script and missing-project runs established RED; the first
 - Consumes: repository Playwright scripts, changed routes, approved requirements, base-path context, and available browser evidence.
 - Produces: repeatable browser QA instructions and a separate evidence-based visual judgment procedure.
 
-- [ ] **Step 1: Record RED scenarios**
+- [x] **Step 1: Record RED scenarios**
 
 For `playwright-qa`, record that no project Skill currently routes server startup, browser matrix, base paths, axe, trace, and cleanup. For `visual-qa`, record that the current generic browser step does not prefer Playwright or explicitly divide automated behavior from visual judgment.
 
-- [ ] **Step 2: Create `playwright-qa` minimally**
+- [x] **Step 2: Create `playwright-qa` minimally**
 
 Use a trigger-only description for frontend changes needing browser-level validation. Reference package scripts and testing docs. Cover route selection, base path, named projects, keyboard and console checks, responsive checks, axe policy, failure evidence, trace inspection, and cleanup without copying API documentation.
 
-- [ ] **Step 3: Upgrade `visual-qa` minimally**
+- [x] **Step 3: Upgrade `visual-qa` minimally**
 
 Prefer the repository Playwright harness for repeatable setup and state reproduction where available. Keep visual comparison against approved design, typography/layout inspection, screenshot evidence, honest tool limitations, and the explicit statement that neither Skill replaces the other.
 
-- [ ] **Step 4: Validate each Skill separately**
+- [x] **Step 4: Validate each Skill separately**
 
 After `playwright-qa`, run quick validation, docs validation, and its forward scenario before touching `visual-qa`. Then repeat for `visual-qa`. Record trigger, non-trigger, and overlap outcomes in `docs/testing/skill-validation.md`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 Commit as `docs: add Playwright and visual QA skills`.
 
