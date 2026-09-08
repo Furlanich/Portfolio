@@ -6,6 +6,7 @@ export const foundationRouteIds = [
   'services',
   'projects',
   'contact',
+  'studio',
   'founder',
 ] as const;
 
@@ -16,6 +17,7 @@ export const foundationRoutes = {
   services: { es: '/servicios/', en: '/en/services/' },
   projects: { es: '/proyectos/', en: '/en/work/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
+  studio: { es: '/estudio/', en: '/en/about/' },
   founder: {
     es: '/estudio/samuel-furlanich/',
     en: '/en/about/samuel-furlanich/',
