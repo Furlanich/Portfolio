@@ -294,12 +294,13 @@ function resolveLinkPath(rootDir, document, rawPath, markdownByPath) {
   return null;
 }
 
-function validateLinks(documents, rootDir) {
+function validateLinks(documents, rootDir, ignoredSourcePaths = new Set()) {
   const violations = [];
   const markdownByPath = new Map(documents.map((document) => [document.path, document]));
   const anchorsByDocument = new Map(documents.map((document) => [document, new Set(findHeadings(document).map(({ anchor }) => anchor))]));
 
   for (const document of documents) {
+    if (ignoredSourcePaths.has(document.path)) continue;
     for (const rawTarget of findMarkdownLinks(document)) {
       if (isIgnoredLink(rawTarget)) continue;
       const target = decode(rawTarget);
@@ -338,7 +339,22 @@ async function findSkillDirectories(rootDir) {
   }
 }
 
-function validateSkills(documents, rootDir, skillDirectories) {
+async function findVendoredSkillMetadata(rootDir) {
+  const vendorLockPath = path.join(rootDir, '.agents', 'skills', 'vendor-lock.json');
+  try {
+    const lock = JSON.parse(await readFile(vendorLockPath, 'utf8'));
+    if (!Array.isArray(lock.skills)) return { names: new Set(), paths: new Set() };
+    return {
+      names: new Set(lock.skills.map((skill) => skill?.name).filter((name) => typeof name === 'string')),
+      paths: new Set(lock.skills.flatMap((skill) => skill?.files ?? []).map((file) => file?.path).filter((filePath) => typeof filePath === 'string')),
+    };
+  } catch (error) {
+    if (error.code === 'ENOENT' || error instanceof SyntaxError) return { names: new Set(), paths: new Set() };
+    throw error;
+  }
+}
+
+function validateSkills(documents, rootDir, skillDirectories, vendoredSkillNames) {
   const violations = [];
   const documentsByPath = new Map(documents.map((document) => [document.path, document]));
   for (const directory of skillDirectories) {
@@ -355,7 +371,7 @@ function validateSkills(documents, rootDir, skillDirectories) {
       violations.push(violation(skill, `Skill name must match lowercase-hyphenated directory "${skillName}"`));
     }
     const description = typeof values.description === 'string' ? values.description.trim() : '';
-    if (!description || !description.startsWith('Use when')) {
+    if (!vendoredSkillNames.has(skillName) && (!description || !description.startsWith('Use when'))) {
       violations.push(violation(skill, 'Skill description must be non-empty and begin with "Use when"'));
     }
   }
@@ -367,11 +383,13 @@ export async function validateRepository(rootDir) {
   const markdownFiles = await collectMarkdownFiles(resolvedRoot);
   const documents = await Promise.all(markdownFiles.map((filePath) => readMarkdownDocument(resolvedRoot, filePath)));
   const skillDirectories = await findSkillDirectories(resolvedRoot);
+  const vendoredSkills = await findVendoredSkillMetadata(resolvedRoot);
+  const repositoryDocuments = documents.filter((document) => !vendoredSkills.paths.has(document.path));
   return [
-    ...validateFrontMatter(documents),
-    ...validateHeadings(documents),
-    ...validateLinks(documents, resolvedRoot),
-    ...validateSkills(documents, resolvedRoot, skillDirectories)
+    ...validateFrontMatter(repositoryDocuments),
+    ...validateHeadings(repositoryDocuments),
+    ...validateLinks(documents, resolvedRoot, vendoredSkills.paths),
+    ...validateSkills(documents, resolvedRoot, skillDirectories, vendoredSkills.names)
   ].sort();
 }
 

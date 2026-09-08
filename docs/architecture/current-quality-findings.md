@@ -6,12 +6,21 @@ related:
   - ARCH-CURRENT
   - DESIGN-IX-A11Y
   - PORTFOLIO-MIGRATION
-last_verified: 2026-09-06
+  - TEST-STRATEGY
+  - TEST-PLAYWRIGHT
+last_verified: 2026-09-08
 ---
 
 # Current quality findings
 
 The findings below are retained pre-cutover evidence. The current foundation and Task 4 cleanup verification is recorded first; the historical findings remain useful for later migration and are not authorization for work outside approved plans.
+
+## Frontend capability baseline — 2026-09-08
+
+- The repository now has separate Node/contract, Playwright browser, axe automation, visual-review, production-build, and static-artifact layers. `npm test` remains the fast deterministic contract suite.
+- Playwright 1.63.0 passed 44 baseline cases: desktop Chromium, Firefox, and WebKit functional smoke; 390px mobile Chromium, Mobile Safari/WebKit, 1024px, and 1440px responsive checks; and representative Chromium accessibility checks.
+- Axe found no automatically detectable critical or serious violations on the Spanish and English homepages and representative Services, Projects, and nested Founder routes. This does not establish whole-site WCAG conformance; manual semantic, keyboard, focus, contrast, zoom, reduced-motion, and assistive-technology assessment remains required.
+- Taste v1 audit screenshots at 390px, 1024px, and 1440px found no blocking visual defect on the existing Spanish homepage. The evidence was intentionally not committed, and repository design overrode conflicting Taste defaults.
 
 ## Current Projects cleanup verification — 2026-09-06
 
@@ -105,9 +114,9 @@ The findings below are retained pre-cutover evidence. The current foundation and
 
 ## Validation and maintenance
 
-- Documentation integrity is checked by a repository-native Node validator, with Node-based validator tests and an explicit TypeScript check available through package scripts.
-- No formatter configuration or browser-test suite exists.
-- CI now runs documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build on Pull Requests through the stable Quality workflow. There is still no app/browser accessibility automation, SEO audit, or dedicated browser-test suite; the existing six `@next/next/no-img-element` lint warnings remain visible. Deployment behavior is unchanged.
+- Documentation and vendored-Skill integrity are checked by repository-native Node validators, with Node-based validator tests and an explicit TypeScript check available through package scripts.
+- No formatter configuration exists. The Playwright browser suite and axe baseline are now dedicated, reproducible layers; visual judgment and whole-site manual accessibility remain outside automation.
+- CI keeps documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build in the deterministic `validate` job. A separate `browser` job installs Chromium, Firefox, and WebKit, runs the full Playwright/axe matrix under the repository base path, and uploads reports/results only after failure. No automatic visual-baseline update is permitted. SEO audit remains absent and deployment behavior is unchanged.
 - The deployment action and permissions were identified for later review; no Stage A change is authorized.
 - Stage A verification on 2026-09-01 completed against the patched dependency baseline: TypeScript and the production build passed; lint completed with zero errors and six existing `@next/next/no-img-element` warnings.
 

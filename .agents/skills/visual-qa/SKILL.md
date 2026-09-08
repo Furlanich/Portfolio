@@ -21,11 +21,20 @@ Provide a repeatable, evidence-based visual check for the FURLANICH Next.js site
 1. Read `AGENTS.md`, the relevant product/design records, and `ARCHITECTURE.md`. Identify the requirement IDs and route(s) under review; preserve any OPEN requirement as OPEN.
 2. Inspect the changed files and determine the smallest useful visual test matrix: affected route, normal and boundary content states, keyboard/focus behavior where applicable, and at least one narrow and one wide viewport.
 3. Start the existing development server or use an existing preview only when the repository commands and environment support it. For this static-export Next.js application, account for `NEXT_PUBLIC_BASE_PATH` and verify the served path rather than assuming `/`.
-4. Use the reliably available browser/visual tool to load the intended route. Exercise only the interactions in scope: navigation, form fields, validation, menus, responsive transitions, and links as applicable.
+4. Prefer the repository Playwright harness and `playwright-qa` for reliable server ownership, route reproduction, browser state, and screenshots where available. Use another browser/visual tool only when it supplies evidence Playwright cannot. Exercise only the interactions in scope: navigation, form fields, validation, menus, responsive transitions, and links as applicable.
 5. Inspect each selected viewport for layout integrity, readable hierarchy, clipping/overflow, image and asset loading, visible focus, contrast-impacting states, and console/runtime errors that the tool exposes.
 6. Compare observations with the authoritative requirements and design guidance. Record deviations as findings; do not silently reinterpret product decisions or invent missing design behavior.
 7. Capture screenshots or other evidence only when the tool actually provides it. Never claim that a screenshot, viewport, browser, or interaction was checked if it was unavailable or failed.
 8. Stop the local server or clean up temporary resources when the environment requires it. Do not commit generated output, screenshots, secrets, or local environment files unless the task explicitly scopes them.
+
+## Boundary with Playwright QA
+
+```text
+Playwright QA = repeatable browser behavior and automated checks
+Visual QA     = human or agent visual judgment against approved design
+```
+
+Neither replaces the other. A passing Playwright run does not approve composition, hierarchy, typography, or brand fit. A favorable visual review does not prove navigation, keyboard behavior, console health, accessibility automation, or cross-browser operation.
 
 ## Expected outputs
 

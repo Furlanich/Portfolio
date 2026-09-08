@@ -98,6 +98,49 @@ test('accepts coherent documents and repository Skills', async () => {
   }
 });
 
+test('preserves upstream descriptions for integrity-locked vendored Skills', async () => {
+  const root = await createFixture({ valid: true });
+  try {
+    await writeFile(
+      path.join(root, '.agents', 'skills', 'sample-skill', 'SKILL.md'),
+      `---
+name: sample-skill
+description: Upstream metadata preserved byte-for-byte.
+---
+
+# Sample skill
+`,
+    );
+    await writeFile(
+      path.join(root, '.agents', 'skills', 'sample-skill', 'REFERENCE.md'),
+      '# Upstream reference\n\n## Repeated section\n\nFirst.\n\n## Repeated section\n\nSecond.\n',
+    );
+    await writeFile(
+      path.join(root, '.agents', 'skills', 'vendor-lock.json'),
+      `${JSON.stringify({
+        schemaVersion: 1,
+        skills: [{
+          name: 'sample-skill',
+          source: 'https://github.com/example/skills',
+          revision: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+          license: 'MIT',
+          files: [{
+            path: '.agents/skills/sample-skill/SKILL.md',
+            sha256: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+          }, {
+            path: '.agents/skills/sample-skill/REFERENCE.md',
+            sha256: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
+          }],
+        }],
+      }, null, 2)}\n`,
+    );
+
+    assert.deepEqual(await validateRepository(root), []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test('resolves same-file Markdown anchors', async () => {
   const root = await createFixture({ valid: true, sameFileAnchor: true });
   try {

@@ -21,3 +21,28 @@ jobs:
       - run: npm run validate
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run test:e2e
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+      - name: Upload Playwright failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-${{ github.run_attempt }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
