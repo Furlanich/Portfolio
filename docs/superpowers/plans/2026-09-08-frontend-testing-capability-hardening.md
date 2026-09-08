@@ -313,27 +313,27 @@ Commit as `docs: add Playwright and visual QA skills`.
 - Consumes: the implemented scripts/configuration, pinned Skill lock, authoritative design records, and current architecture.
 - Produces: concise human testing guidance, provenance, current-system synchronization, and a short root router.
 
-- [ ] **Step 1: Write the concise testing documents**
+- [x] **Step 1: Write the concise testing documents**
 
 Document layer selection, RED-GREEN-REFACTOR policy and exceptions, commands, CI projects, artifacts, base-path usage, accessibility limits, keyboard/manual review, and intentional snapshot policy. Do not repeat the Playwright API.
 
-- [ ] **Step 2: Document Superpowers and provenance**
+- [x] **Step 2: Document Superpowers and provenance**
 
 List local paths, repositories, exact revisions, licenses, purposes, unchanged-content policy, and the decision not to vendor generic review Skills. Explain that actual Superpowers specs and plans live under `docs/superpowers/specs/` and `docs/superpowers/plans/`.
 
-- [ ] **Step 3: Exercise Taste as an audit only**
+- [x] **Step 3: Exercise Taste as an audit only**
 
 Start the current site and inspect the existing Spanish homepage at 390px, 1024px, and 1440px. Read `DESIGN-VISUAL` and `DESIGN-IX-A11Y`, then apply Taste v1 as critique. Record useful observations and every conflict where repository design overrides Taste defaults, including v1's high variance/motion defaults. Do not edit UI code.
 
-- [ ] **Step 4: Synchronize current architecture and indexes**
+- [x] **Step 4: Synchronize current architecture and indexes**
 
 Record Playwright/axe dependencies, test layers, browser CI, and Skill inventory as current facts. Remove only findings that the new harness actually resolves; retain whole-site accessibility, manual testing, and nondeterministic visual limits.
 
-- [ ] **Step 5: Update `AGENTS.md` only as a router**
+- [x] **Step 5: Update `AGENTS.md` only as a router**
 
 Add short links to `frontend-implementation`, TDD, `playwright-qa`, `visual-qa`, testing docs, design authority, verification, and `pr-readiness`. Do not embed procedures.
 
-- [ ] **Step 6: Validate documentation and commit**
+- [x] **Step 6: Validate documentation and commit**
 
 Run `npm run docs:check`, `npm run skills:check`, quick validation for every new/modified project Skill, and `git diff --check`. Commit as `docs: document frontend testing workflow`.
 

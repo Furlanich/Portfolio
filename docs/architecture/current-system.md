@@ -6,7 +6,9 @@ related:
   - ARCH-FINDINGS
   - IA-SITE
   - PAGE-SERVICES
-last_verified: 2026-09-06
+  - TEST-STRATEGY
+  - TEST-PLAYWRIGHT
+last_verified: 2026-09-08
 ---
 
 # Current system
@@ -24,6 +26,7 @@ This record includes the retained pre-cutover personal-portfolio implementation 
 - Framer Motion for retained legacy reveal and hover primitives.
 - React Hook Form remains in the dependency baseline for deferred form work; the approved foundation does not expose a form.
 - Lucide React plus repository SVG assets for icons.
+- Playwright Test `1.63.0` and `@axe-core/playwright` `4.13.0` are development-only browser and accessibility dependencies.
 
 The dependency baseline was patched in commit `f68a022` before Stage A.
 
@@ -100,9 +103,9 @@ Content is oriented toward personal credentials and recruiters rather than the a
 
 ## Pre-cutover validation and documentation
 
-- Package scripts include documentation validation, Node-based validator tests, explicit TypeScript checking, lint, build, and a composed validation command.
+- Package scripts keep documentation/Skill validation, Node contract tests, Playwright browser tests, axe scans, explicit TypeScript checking, lint, build, static-export verification, and composed validation commands distinguishable.
 - The repository now has a root agent router, an architecture map, and governance indexes/templates. These documents do not approve a target migration.
-- No formatter configuration or browser-test suite exists.
+- No formatter configuration exists. The browser harness owns three-engine functional smoke, 390px mobile Chromium, a Mobile Safari/WebKit profile, 1024px and 1440px Chromium responsive checks, and representative Chromium axe checks.
 - The deployment workflow remains push-to-`main` only and is unchanged; Pull Request quality gates run through the separate Quality workflow documented below.
 - Stage A added product documentation and a context glossary; the prior README was a two-line personal-portfolio description.
 
@@ -137,7 +140,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - `/proyectos/` and `/en/work/` render one shared `ProjectsPage` Server Component with three image-free cards in approved order: General Reservation System, The-System, then MPC Administración.
 - The typed public manifest is the only project enumeration source. All three entries are `limited`, detail-destination records with approved repository evidence and labeled conceptual visuals; the index remains card-only and image-free. The removed legacy project JSON is no longer an application source.
 - Cards expose maturity, context, evidence signal, natural summaries, two or three non-interactive capability tags, and one explicit source link. The publication-scope note and inquiry CTA remain visible in normal reading order; no filter, group, empty state, whole-card interaction, or client boundary was added. Detail assets are labeled conceptual and are not runtime evidence.
-- Shared header/footer navigation now exposes localized Projects/Work links and the language switch maps the index routes while detail pages preserve the stable slug (`/proyectos/[projectSlug]/` ↔ `/en/work/[projectSlug]/`). Normal and `/Portfolio` static artifact verification covers sixteen routes: ten foundation/index artifacts plus six paired detail artifacts. Playwright/browser visual QA was attempted but unavailable in this environment because no local Playwright package or browser surface could start; deterministic semantic/export checks remain the recorded evidence for this PR.
+- Shared header/footer navigation now exposes localized Projects/Work links and the language switch maps the index routes while detail pages preserve the stable slug (`/proyectos/[projectSlug]/` ↔ `/en/work/[projectSlug]/`). Normal and `/Portfolio` static artifact verification covers sixteen routes: ten foundation/index artifacts plus six paired detail artifacts. The current Playwright baseline now exercises the public foundation, Services, Projects, and nested Founder routes without changing their product behavior.
 
 ## Current Projects cleanup implementation — Task 4
 
@@ -158,3 +161,5 @@ Local `.env` files exist and are intentionally not documented or read into the k
 ## Stage B quality gate update
 
 Pull Requests targeting `main` now run the repository `validate` command through `.github/workflows/ci.yml`. The gate covers documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build with the repository base path. The existing deployment workflow remains push-to-`main` only and is unchanged.
+
+The local browser layer is independently runnable through `test:e2e` and `test:a11y`, with screenshots, video, traces, and HTML reports retained only as ignored or CI failure evidence. Browser QA does not replace generated static-route and base-path validation.

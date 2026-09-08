@@ -19,7 +19,9 @@ related:
   - PAGE-STUDIO
   - PAGE-FOUNDER
   - PROJECT-EVIDENCE
-last_verified: 2026-09-07
+  - TEST-STRATEGY
+  - TEST-PLAYWRIGHT
+last_verified: 2026-09-08
 ---
 
 # FURLANICH architecture map
@@ -32,7 +34,7 @@ Tailwind CSS provides utility styling and the small component primitives. `next/
 
 The approved Studio route pair is not yet materialized: the shared route/navigation contract currently uses the nested Founder pair as the “El estudio / About” destination. Both Founder pages render the minimum preserved profile, but the completed Studio page and completed Founder sections remain implementation work.
 
-The dependency boundary is Next.js, React, TypeScript, Tailwind, Framer Motion, React Hook Form, and Lucide React. The approved foundation has no runtime localization dependency. Repository checks are documentation integrity, Node-based validator tests, ESLint, TypeScript no-emit checking, and the production static build. See [current system](docs/architecture/current-system.md) and [quality findings](docs/architecture/current-quality-findings.md) for evidence and limits.
+The runtime dependency boundary is Next.js, React, TypeScript, Tailwind, Framer Motion, React Hook Form, and Lucide React. The approved foundation has no runtime localization dependency. Development verification adds pinned Playwright Test and axe integration. Repository checks are documentation/Skill integrity, Node contract tests, ESLint, TypeScript no-emit checking, production static build and artifact verification, a three-engine browser smoke suite, responsive profiles, and representative automated accessibility scans. See [current system](docs/architecture/current-system.md), [testing strategy](docs/testing/strategy.md), and [quality findings](docs/architecture/current-quality-findings.md) for evidence and limits.
 
 Task 2 current state: the complete commercial homepage is merged with ten static Spanish-root and English-/en/ foundation routes, including the bilingual image-free Projects index, route-owned public project content, the typed fail-closed project manifest, shared Server Component cards, and Projects navigation. Task 3/4 current state: the three approved detail-destination entries generate exactly six paired static detail artifacts, and the former legacy project publication paths are removed. The implementation preserves the static-export and optional GitHub Pages base-path constraints while retaining only approved project WebP visuals and unrelated founder source material.
 
