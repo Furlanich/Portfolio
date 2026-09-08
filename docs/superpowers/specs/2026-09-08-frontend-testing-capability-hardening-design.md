@@ -70,7 +70,7 @@ Vendor the authoritative Superpowers v6.3.0 forms of:
 - `systematic-debugging`, including its directly referenced investigation techniques;
 - `verification-before-completion`.
 
-Source: `obra/superpowers`, tag `v6.3.0`, commit `86babb696875227929e85420f287d6309374b93f`, MIT license. Preserve upstream content and record file hashes so local drift is detectable.
+Source: `obra/superpowers`, annotated tag `v6.3.0` (`86babb696875227929e85420f287d6309374b93f`), peeled content commit `b36e0829c6d0140e93cfef2ca599b1b07d4a7797`, MIT license. Preserve upstream content and record file hashes so local drift is detectable.
 
 `requesting-code-review` and `receiving-code-review` are evaluated but not vendored in this change. They are useful generic collaboration procedures, but the repository already owns final acceptance, complete-diff review, and human-review boundaries in `pr-readiness`; adding more review Skills is not necessary to establish the requested frontend baseline. Future work may add them if repeated review failures demonstrate a distinct need.
 

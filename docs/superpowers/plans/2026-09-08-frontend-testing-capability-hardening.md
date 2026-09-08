@@ -117,30 +117,30 @@ Run `npm test`, `npm run docs:check`, and `git diff --check`; record RED/GREEN e
 
 **Interfaces:**
 
-- Consumes: Taste commit `ccbc15639c97057cbfcf32ecebc38ef716e4bb37` and Superpowers v6.3.0 commit `86babb696875227929e85420f287d6309374b93f`.
+- Consumes: Taste commit `ccbc15639c97057cbfcf32ecebc38ef716e4bb37` and Superpowers v6.3.0 peeled content commit `b36e0829c6d0140e93cfef2ca599b1b07d4a7797` (annotated tag object `86babb696875227929e85420f287d6309374b93f`).
 - Produces: unchanged repository-local Skill sources plus deterministic provenance/hashes.
 
-- [ ] **Step 1: Verify source and installer behavior**
+- [x] **Step 1: Verify source and installer behavior**
 
 Confirm Taste's authoritative v1 path and MIT license at the pinned revision. Inspect `npx skills add --help` and use its documented repository-local destination when it can install the pinned v1 into `.agents/skills`; otherwise mechanically copy the exact pinned file and record why.
 
-- [ ] **Step 2: Install Taste v1 project-locally**
+- [x] **Step 2: Install Taste v1 project-locally**
 
 Install only `design-taste-frontend-v1`. Verify the installed frontmatter name and compare the complete file with `skills/taste-skill-v1/SKILL.md` at the pinned revision. Do not install or alias experimental v2.
 
-- [ ] **Step 3: Export the minimum Superpowers set**
+- [x] **Step 3: Export the minimum Superpowers set**
 
 Mechanically copy the three upstream v6.3.0 Skills and only their directly referenced guidance files from the installed OpenAI Superpowers source. Do not alter upstream wording.
 
-- [ ] **Step 4: Lock provenance and file hashes**
+- [x] **Step 4: Lock provenance and file hashes**
 
 Populate `vendor-lock.json` with exact repositories, commits, MIT license, local paths, and SHA-256 values for every vendored file.
 
-- [ ] **Step 5: Validate unchanged vendoring**
+- [x] **Step 5: Validate unchanged vendoring**
 
 Run `npm run skills:check`, the bundled `quick_validate.py` against each Skill folder, `npm run docs:check`, and `git diff --check`.
 
-- [ ] **Step 6: Commit vendored Skills**
+- [x] **Step 6: Commit vendored Skills**
 
 Commit as `docs: vendor pinned frontend process skills`.
 
@@ -417,6 +417,9 @@ Push `codex/frontend-testing-capability-hardening` and open a PR targeting `main
 - Design: approved in chat and committed as `469bcff`.
 - Task 1 RED: `node --test scripts/validate-vendored-skills.test.mjs` failed with `ERR_MODULE_NOT_FOUND` for the not-yet-created validator.
 - Task 1 GREEN: the focused validator suite passed 2/2; the complete Node suite passed 52/52; `docs:check`, `skills:check`, and `git diff --check` passed.
+- Task 2 provenance: Taste was installed with `skills@1.5.24` from exact commit `ccbc15639c97057cbfcf32ecebc38ef716e4bb37`; Superpowers `v6.3.0` resolves from annotated tag object `86babb696875227929e85420f287d6309374b93f` to source commit `b36e0829c6d0140e93cfef2ca599b1b07d4a7797`.
+- Task 2 integration RED: repository docs validation rejected an intentional duplicate heading in an integrity-locked upstream reference file. GREEN: locked vendor files are excluded only from repository-authored Markdown conventions; unlocked malformed Skill metadata and duplicate headings remain rejected.
+- Task 2 validation: `skills:check` passed for 4 Skills and 8 files; all four folders passed `quick_validate.py` in UTF-8 mode; `docs:check` passed with 66 Markdown files, 52 document IDs, and 8 Skills.
 
 ## Deviations
 
