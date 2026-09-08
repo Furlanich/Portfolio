@@ -53,7 +53,7 @@ last_verified: 2026-09-08
 - Consumes: repository root and `.agents/skills/vendor-lock.json` entries containing `name`, `source`, `revision`, `license`, `path`, and `sha256`.
 - Produces: `validateVendoredSkills(rootDir): Promise<string[]>` and the `npm run skills:check` command.
 
-- [ ] **Step 1: Write the failing validator tests**
+- [x] **Step 1: Write the failing validator tests**
 
 Create temporary fixtures with Node built-ins. Import the not-yet-created validator and assert that a matching file passes while missing files, malformed SHA-256 values, content drift, non-commit revisions, and non-project-local paths fail:
 
@@ -81,23 +81,23 @@ test('reports missing files and provenance or integrity drift', async () => {
 });
 ```
 
-- [ ] **Step 2: Verify RED**
+- [x] **Step 2: Verify RED**
 
 Run `node --test scripts/validate-vendored-skills.test.mjs` and require failure with `ERR_MODULE_NOT_FOUND` for `validate-vendored-skills.mjs`.
 
-- [ ] **Step 3: Implement the minimum validator**
+- [x] **Step 3: Implement the minimum validator**
 
 Use `node:fs/promises`, `node:path`, and `node:crypto`. Read the lock, validate required fields, require a 40-character lowercase Git commit, require `.agents/skills/` paths, hash each declared file, and return sorted human-readable failures. When invoked directly, print the number of verified files and exit nonzero on any failure.
 
-- [ ] **Step 4: Verify GREEN**
+- [x] **Step 4: Verify GREEN**
 
 Run `node --test scripts/validate-vendored-skills.test.mjs` and require all focused tests to pass.
 
-- [ ] **Step 5: Add the package command**
+- [x] **Step 5: Add the package command**
 
 Add `"skills:check": "node scripts/validate-vendored-skills.mjs"` without changing `npm test`.
 
-- [ ] **Step 6: Commit the validator cycle**
+- [x] **Step 6: Commit the validator cycle**
 
 Run `npm test`, `npm run docs:check`, and `git diff --check`; record RED/GREEN evidence in this plan and commit as `test: add vendored skill integrity check`.
 
@@ -415,6 +415,8 @@ Push `codex/frontend-testing-capability-hardening` and open a PR targeting `main
 - Baseline: `npm test` passed 50/50 on `31a88dd`; existing Node emitted only known `MODULE_TYPELESS_PACKAGE_JSON` warnings.
 - Baseline: `npm run docs:check` passed with 56 Markdown files, 50 document IDs, and 4 Skills.
 - Design: approved in chat and committed as `469bcff`.
+- Task 1 RED: `node --test scripts/validate-vendored-skills.test.mjs` failed with `ERR_MODULE_NOT_FOUND` for the not-yet-created validator.
+- Task 1 GREEN: the focused validator suite passed 2/2; the complete Node suite passed 52/52; `docs:check`, `skills:check`, and `git diff --check` passed.
 
 ## Deviations
 
