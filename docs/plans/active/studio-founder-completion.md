@@ -208,11 +208,8 @@ Modify:
 - lib/site-routes.ts
 - lib/foundation-navigation.ts
 - components/foundation/content-types.ts only where shared semantic action types require Studio
-- app/(es)/_content/index.ts if it exports route content
-- app/(en)/en/_content/index.ts if it exports route content
 - scripts/site-routes.test.mjs
 - scripts/foundation-content.test.mjs
-- package.json if the new test file is not already included by the npm test glob
 
 Create:
 
@@ -235,8 +232,8 @@ Do not create Studio page route files in this PR.
    - the panel contains factual labels and no metrics fields;
    - all required collections are non-empty and the four-principle tuple is exact in length.
 4. Run:
-   - npm test -- scripts/site-routes.test.mjs
-   - npm test -- scripts/studio-content.test.mjs
+   - node --test scripts/site-routes.test.mjs
+   - node --test scripts/studio-content.test.mjs
 5. Record failures caused by the missing Studio route and content.
 
 #### GREEN
@@ -493,7 +490,7 @@ Modify as needed and only with the exact approved copy:
 - app/(es)/_content/projects.ts
 - app/(en)/en/_content/projects.ts
 - scripts/foundation-content.test.mjs
-- scripts/project-publication.test.mjs
+- scripts/projects-publication.test.mjs
 - tests/e2e/smoke.spec.ts
 - tests/e2e/studio-founder.spec.ts
 - tests/e2e/accessibility.spec.ts
