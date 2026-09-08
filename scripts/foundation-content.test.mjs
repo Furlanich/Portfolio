@@ -76,7 +76,7 @@ test('exports one typed foundation content model for every locale and route', as
 });
 
 test('uses semantic route ids for every internal action', async () => {
-  const validRouteIds = new Set(['home', 'services', 'contact', 'founder']);
+  const validRouteIds = new Set(['home', 'services', 'contact', 'studio', 'founder']);
 
   for (const definition of modules) {
     const content = (await import(definition.path))[definition.exportName];

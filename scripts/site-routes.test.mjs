@@ -19,6 +19,7 @@ const expectedRoutes = {
   services: { es: '/servicios/', en: '/en/services/' },
   projects: { es: '/proyectos/', en: '/en/work/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
+  studio: { es: '/estudio/', en: '/en/about/' },
   founder: {
     es: '/estudio/samuel-furlanich/',
     en: '/en/about/samuel-furlanich/',
@@ -26,7 +27,7 @@ const expectedRoutes = {
 };
 
 test('defines the exact foundation route ids and localized paths', () => {
-  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'founder']);
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'studio', 'founder']);
   assert.deepEqual(foundationRoutes, expectedRoutes);
 
   const paths = foundationRouteIds.flatMap((routeId) => [
@@ -34,7 +35,7 @@ test('defines the exact foundation route ids and localized paths', () => {
     foundationRoutes[routeId].en,
   ]);
 
-  assert.equal(new Set(paths).size, 10);
+  assert.equal(new Set(paths).size, 12);
   assert.ok(paths.filter((path) => path !== '/').every((path) => path.endsWith('/')));
 });
 
@@ -49,7 +50,7 @@ test('resolves the localized homepage Process anchor without adding a route', ()
   assert.deepEqual(homeProcessAnchors, { es: 'proceso', en: 'process' });
   assert.equal(getHomeProcessHref('es'), '/#proceso');
   assert.equal(getHomeProcessHref('en'), '/en/#process');
-  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'founder']);
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'studio', 'founder']);
 });
 
 test('resolves localized Services fragments without adding routes', () => {
@@ -65,13 +66,13 @@ test('resolves localized Services fragments without adding routes', () => {
   assert.equal(getServiceSectionHref('en', 'web'), '/en/services/#web');
   assert.equal(getServiceSectionHref('en', 'whatsapp'), '/en/services/#whatsapp');
   assert.equal(getServiceSectionHref('en', 'consulting'), '/en/services/#consulting');
-  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'founder']);
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'studio', 'founder']);
 });
 
 test('resolves paired project-detail paths without changing the foundation route map', () => {
   assert.equal(getProjectDetailPath('es', 'the-system'), '/proyectos/the-system/');
   assert.equal(getProjectDetailPath('en', 'the-system'), '/en/work/the-system/');
-  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'founder']);
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'studio', 'founder']);
 });
 
 test('returns working navigation links, Projects, Process, and the equivalent-language destination', () => {
@@ -87,6 +88,7 @@ test('returns working navigation links, Projects, Process, and the equivalent-la
           services: paths.services,
           projects: paths.projects,
           contact: paths.contact,
+          studio: paths.studio,
           founder: paths.founder,
           process: paths.process,
         },
@@ -95,6 +97,7 @@ test('returns working navigation links, Projects, Process, and the equivalent-la
           services: expectedRoutes.services[locale],
           projects: expectedRoutes.projects[locale],
           contact: expectedRoutes.contact[locale],
+          studio: expectedRoutes.studio[locale],
           founder: expectedRoutes.founder[locale],
           process: getHomeProcessHref(locale),
         },

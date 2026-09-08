@@ -8,6 +8,7 @@ export type FoundationNavigationPaths = {
   services: string;
   projects: string;
   contact: string;
+  studio: string;
   founder: string;
   process: string;
   alternateLocale: Locale;
@@ -25,6 +26,7 @@ export function getFoundationNavigationPaths(
     services: getFoundationPath('services', locale),
     projects: getFoundationPath('projects', locale),
     contact: getFoundationPath('contact', locale),
+    studio: getFoundationPath('studio', locale),
     founder: getFoundationPath('founder', locale),
     process: getHomeProcessHref(locale),
     alternateLocale,
