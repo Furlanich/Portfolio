@@ -9,6 +9,9 @@ export default defineConfig([
     '.next/**',
     'out/**',
     'build/**',
+    'playwright-report/**',
+    'test-results/**',
+    '.playwright/**',
     'next-env.d.ts'
   ])
 ]);
