@@ -1,7 +1,9 @@
 ---
 id: PLAN-STUDIO-FOUNDER-COMPLETION
+type: execution-plan
 title: Studio + Founder Completion implementation plan
-status: ACTIVE
+status: APPROVED
+plan_status: ACTIVE
 owners:
   - product
   - design
@@ -216,7 +218,7 @@ Implementation must proceed in order. Each PR branches from current main after i
 
 This PR has complete authority, does not depend on imagery, begins with failing contract tests, is behaviorally narrow, and materially establishes the Studio/Founder distinction. It intentionally does not publish the Studio route or change visible navigation.
 
-#### Files
+#### PR 1 file set
 
 Modify:
 
@@ -235,7 +237,7 @@ Create:
 
 Do not create Studio page route files in this PR.
 
-#### RED
+#### PR 1 RED
 
 1. Extend the route contract test to require semantic route id studio, the exact pair /estudio/ and /en/about/, and independent Studio and Founder alternates.
 2. Extend the foundation-navigation contract to expose both paths.studio and paths.founder.
@@ -251,7 +253,7 @@ Do not create Studio page route files in this PR.
    - node --test scripts/studio-content.test.mjs
 5. Record failures caused by the missing Studio route and content.
 
-#### GREEN
+#### PR 1 GREEN
 
 1. Add studio to the semantic bilingual route map without changing the existing Founder pair.
 2. Extend foundation navigation paths with studio while retaining founder.
@@ -260,7 +262,7 @@ Do not create Studio page route files in this PR.
 5. Keep action destinations semantic and typed.
 6. Run the focused tests, then npm test, npm run typecheck, npm run lint, npm run docs:check, and npm run build.
 
-#### Acceptance
+#### PR 1 acceptance
 
 - Studio and Founder resolve as separate semantic route pairs.
 - Both localized Studio content modules satisfy one typed public contract.
@@ -272,7 +274,7 @@ Do not create Studio page route files in this PR.
 
 **Title:** <code>feat: publish the bilingual Studio experience</code>
 
-#### Files
+#### PR 2 file set
 
 Create:
 
@@ -313,7 +315,7 @@ Modify:
 
 Do not create a shared route-shell abstraction merely to reduce this explicit prop update.
 
-#### Taste preflight
+#### PR 2 Taste preflight
 
 Record a short preflight in the PR description before production code:
 
@@ -323,7 +325,7 @@ Record a short preflight in the PR description before production code:
 - principle blocks do not repeat the Services process timeline;
 - no generic agency hero, fake team, or decorative media is introduced.
 
-#### RED
+#### PR 2 RED
 
 Add browser and artifact tests first:
 
@@ -337,7 +339,7 @@ Add browser and artifact tests first:
 8. Axe has no critical or serious findings on both Studio routes.
 9. Record expected missing-route/navigation/artifact failures.
 
-#### GREEN
+#### PR 2 GREEN
 
 1. Build StudioPage as a Server Component using the route-owned content.
 2. Compose coherent sections. Keep Location/Availability within StudioPage unless extraction adds actual layout responsibility; do not create a component merely for its heading.
@@ -351,7 +353,7 @@ Add browser and artifact tests first:
 10. Update static-export artifact verification for 18 generated pages.
 11. Add reviewed Studio wide and compact snapshots.
 
-#### Verification
+#### PR 2 verification
 
 Focused:
 
@@ -378,7 +380,7 @@ Manual:
 - screenshots compared with PAGE-STUDIO and DESIGN records;
 - Taste audit.
 
-#### Acceptance
+#### PR 2 acceptance
 
 - Studio is public in both locales and is the primary About navigation target.
 - Founder remains reachable and semantically distinct.
@@ -389,7 +391,7 @@ Manual:
 
 **Title:** <code>feat: complete the bilingual Founder profile</code>
 
-#### Files
+#### PR 3 file set
 
 Create:
 
@@ -420,7 +422,7 @@ Modify:
 
 Retain the existing public CV file unchanged.
 
-#### Taste preflight
+#### PR 3 Taste preflight
 
 Record risks before code:
 
@@ -431,7 +433,7 @@ Record risks before code:
 - capability logo wall;
 - GitHub ending the page as the dominant action.
 
-#### RED
+#### PR 3 RED
 
 1. Extend content tests to require:
    - approved detailed localized biography;
@@ -453,7 +455,7 @@ Record risks before code:
 3. Extend axe coverage to both Founder locales.
 4. Record expected failures against the current minimum profile.
 
-#### GREEN
+#### PR 3 GREEN
 
 1. Replace the minimum foundation Founder model with a dedicated narrow FounderPageContent contract.
 2. Preserve the approved biography verbatim and keep Clever Soft SA only in that narrative.
@@ -466,7 +468,7 @@ Record risks before code:
 9. Keep CV content unchanged. Preserve the approved exact professional URLs.
 10. Add Founder wide and compact reviewed snapshots.
 
-#### Verification
+#### PR 3 verification
 
 - npm test
 - npx playwright test tests/e2e/studio-founder.spec.ts
@@ -480,7 +482,7 @@ Record risks before code:
 - manually inspect both locales at all five viewports, 200% text zoom, keyboard focus, and reduced motion
 - run Taste audit and inspect both new visual baselines
 
-#### Acceptance
+#### PR 3 acceptance
 
 - Founder has the approved professional depth without becoming a legacy portfolio homepage.
 - Portrait absence is intentional and produces no empty layout.
@@ -492,7 +494,7 @@ Record risks before code:
 
 **Title:** <code>feat: integrate Studio and Founder journeys</code>
 
-#### Files
+#### PR 4 file set
 
 Modify as needed and only with the exact approved copy:
 
@@ -525,7 +527,7 @@ Audit, but do not delete without verified zero consumers:
 - lib/data.ts
 - lib/types.ts
 
-#### RED
+#### PR 4 RED
 
 1. Add a Contact behavior test requiring the subdued localized Founder context link after direct contact choices and response expectations.
 2. Add publication-contract tests requiring the approved Founder context action only for GRS and The-System in both locales.
@@ -533,7 +535,7 @@ Audit, but do not delete without verified zero consumers:
 4. Add browser tests for the Contact and eligible-project Founder journeys in both locales.
 5. Record expected missing-link failures.
 
-#### GREEN
+#### PR 4 GREEN
 
 1. Add the Contact Founder context action after the direct contact content without competing with the commercial actions.
 2. Extend the public project-detail content with one optional semantic Founder action.
@@ -575,7 +577,7 @@ Review:
 
 Move the plan to completed and synchronize the indexes/status only after all preceding PRs are merged and this final branch contains the full evidence. Open the PR and stop at human review.
 
-#### Acceptance
+#### PR 4 acceptance
 
 - Studio, Founder, Projects, Contact, navigation, footer, and language switching form one coherent bilingual journey.
 - Only evidence-authorized project records gain Founder context.
