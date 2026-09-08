@@ -11,6 +11,11 @@
     "docs:check": "node scripts/validate-repository-docs.mjs",
     "skills:check": "node scripts/validate-vendored-skills.mjs",
     "test": "node --test scripts/*.test.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:a11y": "playwright test --project=accessibility-chromium",
+    "test:frontend": "npm test && npm run test:e2e && npm run build && npm run verify:static-export",
     "verify:static-export": "node scripts/verify-static-export.mjs",
     "typecheck": "tsc --noEmit --incremental false",
     "validate": "npm run docs:check && npm test && npm run lint && npm run typecheck && npm run build"
@@ -24,6 +29,8 @@
     "react-hook-form": "7.51.4"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0",
     "@types/node": "20.11.30",
     "@types/react": "18.2.66",
     "autoprefixer": "10.4.20",

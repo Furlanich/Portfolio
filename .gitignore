@@ -26,3 +26,8 @@ logs
 .vercel/
 .swc/
 .tsbuildinfo
+
+# Browser test output
+playwright-report/
+test-results/
+.playwright/

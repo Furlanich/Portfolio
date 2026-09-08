@@ -20,7 +20,7 @@ last_verified: 2026-09-08
 
 **Architecture:** Preserve the existing Node contract-test and static-export layers, add Playwright as a separate browser layer, and keep human visual judgment distinct from automated behavior and accessibility checks. Vendor only pinned process Skills that establish the required workflow, then route FURLANICH-specific UI work through concise project Skills and documentation.
 
-**Tech Stack:** Next.js 16 static export, React 18, TypeScript, Node test runner, Playwright Test 1.62.1, `@axe-core/playwright` 4.13.0, GitHub Actions, repository-local Agent Skills.
+**Tech Stack:** Next.js 16 static export, React 18, TypeScript, Node test runner, Playwright Test 1.63.0, `@axe-core/playwright` 4.13.0, GitHub Actions, repository-local Agent Skills.
 
 **Spec:** `docs/superpowers/specs/2026-09-08-frontend-testing-capability-hardening-design.md`
 
@@ -205,13 +205,13 @@ Commit as `docs: add frontend implementation skill`.
 - Consumes: `NEXT_PUBLIC_BASE_PATH`, optional `PLAYWRIGHT_BASE_URL`, existing `npm run dev`, and current stable routes only.
 - Produces: `test:e2e`, `test:e2e:ui`, `test:e2e:headed`, `test:a11y`, and `test:frontend` commands plus named Playwright projects.
 
-- [ ] **Step 1: Establish RED for the absent harness**
+- [x] **Step 1: Establish RED for the absent harness**
 
 Run `npm run test:e2e` before adding dependencies or scripts. Require the expected missing-script failure and record it.
 
-- [ ] **Step 2: Add pinned dependencies and scripts**
+- [x] **Step 2: Add pinned dependencies and scripts**
 
-Install exact dev dependencies `@playwright/test@1.62.1` and `@axe-core/playwright@4.13.0`. Add:
+Install exact dev dependencies `@playwright/test@1.63.0` and `@axe-core/playwright@4.13.0`. Add:
 
 ```json
 {
@@ -223,7 +223,7 @@ Install exact dev dependencies `@playwright/test@1.62.1` and `@axe-core/playwrig
 }
 ```
 
-- [ ] **Step 3: Write focused browser tests before configuration**
+- [x] **Step 3: Write focused browser tests before configuration**
 
 Write tests that describe current approved behavior:
 
@@ -238,7 +238,7 @@ Write tests that describe current approved behavior:
 
 Run `npx playwright test` before creating the configuration and require failure because no supported web server/project setup exists.
 
-- [ ] **Step 4: Implement the minimum Playwright configuration**
+- [x] **Step 4: Implement the minimum Playwright configuration**
 
 Configure a local origin, normalized base path, `webServer` command on a fixed overridable port, HTML reporter, failure artifacts, CI-only retries, CI `forbidOnly`, and conservative workers. Define:
 
@@ -246,17 +246,19 @@ Configure a local origin, normalized base path, `webServer` command on a fixed o
 - `mobile-chromium` at 390px, `mobile-webkit` using an iPhone/Safari profile, `tablet-chromium` at 1024px, and `wide-chromium` at 1440px for `responsive.spec.ts`;
 - `accessibility-chromium` for `accessibility.spec.ts`.
 
-- [ ] **Step 5: Ignore generated evidence**
+- [x] **Step 5: Ignore generated evidence**
 
 Ignore `playwright-report/`, `test-results/`, `.playwright/`, and local screenshot/trace output without ignoring committed test sources or future intentional snapshot baselines.
 
-- [ ] **Step 6: Install browsers and verify GREEN**
+- [x] **Step 6: Install browsers and verify GREEN**
 
 Install Chromium, Firefox, and WebKit. Run focused smoke, responsive, and accessibility projects, then `npm run test:e2e`. If any test fails, apply `systematic-debugging` and change only infrastructure/test assumptions unless the user explicitly expands product scope.
 
-- [ ] **Step 7: Re-run deterministic layers and commit**
+- [x] **Step 7: Re-run deterministic layers and commit**
 
 Run `npm test`, `npm run lint`, `npm run typecheck`, and `git diff --check`. Commit as `test: add Playwright and accessibility baselines`.
+
+Evidence: the missing-script and missing-project runs established RED; the first configured run exposed the canonical `es-AR` contract, ambiguous locators, Mobile Safari focus semantics, and a corrupt shared Firefox cache. Focused reruns passed, then the exact Playwright 1.63.0 matrix passed 44/44 tests using clean repository-local browser binaries.
 
 ### Task 5: Add Playwright QA and upgrade visual QA
 
