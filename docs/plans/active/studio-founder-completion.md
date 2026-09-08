@@ -112,6 +112,21 @@ No approved portrait exists. Do not render a media column, placeholder, generate
 - Preserve reduced-motion behavior; add no entrance, scroll-reveal, parallax, marquee, timeline-drawing, scrambling, or floating-icon motion.
 - Do not rewrite the CV or approved facts.
 
+## Mandatory implementation Skills
+
+| Skill | Required use |
+| --- | --- |
+| frontend-implementation | Own the authority check and full frontend delivery path for every implementation PR. |
+| test-driven-development | Enforce observed RED before behavior-changing production code in PRs 1–4. |
+| design-taste-frontend-v1 | Run documented preflight and post-implementation audits for rendered UI in PRs 2–4; repository design remains authoritative. |
+| playwright-qa | Design and run route, interaction, browser, basePath, and axe coverage in PRs 2–4. |
+| visual-qa | Inspect both locales and the exact viewport matrix in PRs 2–4. |
+| architecture-governance | Confirm plan-class scope at each PR boundary and classify any consequential discovery before work expands. |
+| pr-readiness | Perform traceability, complete-diff review, focused validation, and human-review handoff for every PR. |
+| verification-before-completion | Require fresh command output and rendered evidence before any passing or complete claim. |
+
+Use systematic-debugging only when a test, build, route, browser behavior, or rendered result is unexpectedly defective. Do not invoke it as ceremony for ordinary RED tests.
+
 ## Testing and review contract
 
 ### TDD
@@ -351,7 +366,7 @@ Cross-browser and basePath:
 
 - npx playwright test tests/e2e/smoke.spec.ts --project=chromium-desktop --project=firefox-desktop --project=webkit-desktop
 - npm run test:e2e
-- PowerShell: set NEXT_PUBLIC_BASE_PATH=/Portfolio for npm run build, then run npm run verify:static-export with the same value
+- PowerShell: run <code>$env:NEXT_PUBLIC_BASE_PATH = '/Portfolio'; npm run build; npm run verify:static-export</code>
 - Run the basePath-aware Studio browser cases with NEXT_PUBLIC_BASE_PATH=/Portfolio
 
 Manual:
