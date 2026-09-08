@@ -8,7 +8,8 @@ related:
   - PLAN-HOMEPAGE-COMPLETION
   - PLAN-SERVICES-EXPERIENCE
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-last_verified: 2026-09-06
+  - PLAN-STUDIO-FOUNDER-COMPLETION
+last_verified: 2026-09-08
 ---
 
 # Execution plans
@@ -17,6 +18,10 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 - [Plan template](template.md)
 - [Completed Stage B harness plan](completed/stage-b-agent-engineering-harness.md)
+
+## Active
+
+- [`PLAN-STUDIO-FOUNDER-COMPLETION`](active/studio-founder-completion.md): classifies Initiative 5 as substantial approved work and defines the four-PR, test-first delivery sequence for the bilingual Studio experience, completed Founder profile, and cross-page integration.
 
 ## Completed
 
