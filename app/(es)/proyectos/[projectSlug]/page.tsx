@@ -64,7 +64,7 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}
-        founderLinks={[founderContent.linkedin, founderContent.github]}
+        founderLinks={[founderContent.professionalLinks.linkedin, founderContent.professionalLinks.github]}
         labels={{
           navigation: 'Navegación',
           services: 'Servicios',

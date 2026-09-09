@@ -73,30 +73,3 @@ export type ContactContent = {
   location: string;
   actions: ContactAction[];
 };
-
-export type FounderExperience = {
-  title: string;
-  period: string;
-  summary: string;
-};
-
-export type FounderEducation = {
-  title: string;
-  institution: string;
-  status: string;
-};
-
-export type FounderContent = {
-  locale: Locale;
-  routeId: 'founder';
-  name: string;
-  role: string;
-  biography: string;
-  experience: FounderExperience[];
-  education: FounderEducation[];
-  capabilities: string[];
-  cv: DocumentLink;
-  linkedin: ExternalLink;
-  github: ExternalLink;
-  contactAction: ActionLink;
-};

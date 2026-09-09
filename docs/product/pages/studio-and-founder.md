@@ -69,7 +69,7 @@ The minimum localized profile contains:
 1. Samuel's name and role as founder and full-stack software developer.
 2. The approved biography in the active language.
 3. Concise, fact-checked experience and education content migrated from the current portfolio; Clever Soft SA remains inside the biography only.
-4. Business-relevant technical capabilities, with detailed technology kept secondary.
+4. Outcome-oriented system capabilities, with detailed technology kept secondary.
 5. Downloadable CV access plus LinkedIn and GitHub links.
 6. A path to the localized Contact destination.
 7. A link to preserved project material when its target route is available; project cards do not need to be duplicated on the Founder page.
@@ -450,80 +450,79 @@ Education is factual and secondary to experience. No institutional logos or deco
 
 **H2**
 
-> Capacidades técnicas aplicadas
+> Sistemas que podemos construir
 
 **Introduction**
 
-> La tecnología se presenta según el tipo de problema que permite resolver, no como una colección de logos o niveles de dominio.
+> El foco está en lo que el sistema permite ordenar, automatizar y hacer evolucionar, no en acumular nombres de herramientas.
 
-**Backend y sistemas de negocio**
+**Sistemas de gestión y operación**
 
-- Backend con .NET y ASP.NET
-- APIs, lógica de negocio e integraciones
-- Acceso a datos y sistemas de gestión
+- Sistemas para administrar usuarios, permisos, roles y circuitos internos
+- Paneles para registrar, consultar y auditar operaciones
+- Flujos de trabajo con estados, reglas y validaciones
+- Modelos de datos preparados para crecer con el negocio
+
+**Portales y aplicaciones web**
+
+- Sitios comerciales orientados a consultas, reservas o ventas
+- Portales con recorridos diferenciados por tipo de usuario
+- Interfaces adaptables para tareas comerciales y operativas
+- Experiencias accesibles, claras y mantenibles
+
+**Automatizaciones e integraciones**
+
+- Conexiones entre sistemas existentes y servicios externos
+- Sincronización de datos, calendarios, pagos y mensajería
+- Automatizaciones para reducir carga manual y errores
+- Procesos con trazabilidad, reintentos y manejo de excepciones
+
+**Sistemas existentes que necesitan evolucionar**
+
 - Aplicaciones de escritorio cuando el contexto lo requiere
-
-**Interfaces web**
-
-- React y Next.js
-- Blazor
-- Interfaces accesibles y adaptables
-- Flujos comerciales y operativos
-
-**Integraciones y automatización**
-
-- APIs de terceros
-- Integraciones con pagos, calendarios y mensajería
-- Automatización de procesos
-- Conexión con sistemas existentes
-
-**Ingeniería y entrega**
-
-- Pruebas automatizadas y validación funcional
-- Docker y CI/CD
-- Diagnóstico, depuración y rendimiento
-- Publicación, documentación y mantenibilidad
+- Mantenimiento y mejora de sistemas existentes
+- Diagnóstico de rendimiento, fallas y deuda técnica
+- Pruebas, documentación y publicación para sostener el sistema
 
 ### FOUNDER-CAPABILITIES English — APPROVED
 
 **H2**
 
-> Applied technical capabilities
+> Systems we can engineer
 
 **Introduction**
 
-> Technology is organized by the problems it helps solve, not as a collection of logos or proficiency scores.
+> The focus is what the system enables the business to organize, automate, and evolve—not a catalogue of tools.
 
-**Backend and business systems**
+**Management and operational systems**
 
-- .NET and ASP.NET backends
-- APIs, business logic, and integrations
-- Data access and management systems
+- Systems for users, permissions, roles, and internal workflows
+- Dashboards to record, query, and audit operations
+- Workflows with states, rules, and validation
+- Data models prepared to grow with the business
+
+**Websites and web applications**
+
+- Commercial sites oriented to enquiries, reservations, or sales
+- Portals with journeys tailored to different user types
+- Responsive interfaces for commercial and operational work
+- Accessible, clear, maintainable experiences
+
+**Automation and integrations**
+
+- Connections between existing systems and external services
+- Data synchronization across calendars, payments, and messaging
+- Automations that reduce manual work and errors
+- Traceable processes with retries and exception handling
+
+**Existing systems that need to evolve**
+
 - Desktop applications when the context calls for them
+- Maintenance and improvement of existing systems
+- Diagnosis of performance issues, failures, and technical debt
+- Testing, documentation, and deployment to sustain the system
 
-**Web interfaces**
-
-- React and Next.js
-- Blazor
-- Accessible, responsive interfaces
-- Commercial and operational workflows
-
-**Integrations and automation**
-
-- Third-party APIs
-- Payment, calendar, and messaging integrations
-- Business-process automation
-- Connections to existing systems
-
-**Engineering and delivery**
-
-- Automated testing and functional validation
-- Docker and CI/CD
-- Diagnosis, debugging, and performance
-- Deployment, documentation, and maintainability
-
-A separate technology-detail section is **REJECTED** for this completion scope. These groups already preserve useful exact technology names; a second catalogue would duplicate them and drift toward the legacy skills wall. Proficiency percentages, star ratings, self-assigned levels, marquees, and technology-logo walls are rejected.
-
+A separate technology-detail section is **REJECTED** for this completion scope. The Founder page explains the systems and outcomes FURLANICH can deliver; specific technologies remain secondary and are preserved in the biography and experience context. Proficiency percentages, star ratings, self-assigned levels, marquees, and technology-logo walls are rejected.
 ### FOUNDER-PROJECTS-BRIDGE Spanish — APPROVED
 
 **H2**

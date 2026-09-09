@@ -76,7 +76,7 @@ test('exports one typed foundation content model for every locale and route', as
 });
 
 test('uses semantic route ids for every internal action', async () => {
-  const validRouteIds = new Set(['home', 'services', 'contact', 'studio', 'founder']);
+  const validRouteIds = new Set(['home', 'services', 'projects', 'contact', 'studio', 'founder']);
 
   for (const definition of modules) {
     const content = (await import(definition.path))[definition.exportName];
@@ -106,27 +106,44 @@ test('exposes only the approved direct contact channels', async () => {
   }
 });
 
-test('preserves the minimum founder migration inputs in both locales', async () => {
+test('exports the complete approved Founder profile in both locales', async () => {
   for (const locale of ['es', 'en']) {
     const definition = modules.find((item) => item.locale === locale && item.routeId === 'founder');
     const content = (await import(definition.path))[definition.exportName];
 
-    assert.match(content.name, /Samuel Furlanich/);
-    assert.match(content.role, /founder|fundador/i);
-    assert.match(content.biography, /2024/);
-    assert.match(content.biography, /Clever Soft SA/);
-    assert.ok(content.experience.length > 0);
-    assert.ok(content.education.length > 0);
-    assert.ok(content.capabilities.length > 0);
-    assert.equal(content.cv.path, '/Samuel-Furlanich-CV.pdf');
-    assert.equal(content.linkedin.href, expectedProfessionalLinks.linkedin);
-    assert.equal(content.github.href, expectedProfessionalLinks.github);
-    assert.equal(content.contactAction.routeId, 'contact');
+    assert.equal(content.header.name, 'Samuel Furlanich');
+    assert.match(content.header.context, /founder|fundador/i);
+    assert.match(content.header.biography, /2024/);
+    assert.match(content.header.biography, /Clever Soft SA/);
+    assert.equal(content.professionalLinks.cv.path, '/Samuel-Furlanich-CV.pdf');
+    assert.equal(content.professionalLinks.linkedin.href, expectedProfessionalLinks.linkedin);
+    assert.equal(content.professionalLinks.github.href, expectedProfessionalLinks.github);
 
-    assert.equal(content.experience.some(({ title }) => /Clever Soft/i.test(title)), false);
+    assert.equal(content.experience.entries.length, 2);
+    for (const entry of content.experience.entries) {
+      assert.ok(entry.period);
+      assert.ok(entry.role);
+      assert.ok(entry.context);
+      assert.ok(entry.summary);
+    }
+    assert.equal(content.experience.entries.some(({ role }) => /Clever Soft/i.test(role)), false);
+
+    assert.equal(content.education.entries.length, 2);
+    assert.equal(content.capabilities.groups.length, 4);
+    assert.match(content.capabilities.heading, /systems|sistemas/i);
+    assert.match(content.capabilities.introduction, /problem|problema|system|sistema/i);
+    assert.equal(
+        content.capabilities.groups.some(({ items }) =>
+            items.some((item) => /\.NET|ASP\.NET|React|Next\.js|Blazor|Docker|CI\/CD|API/i.test(item)),
+        ),
+        false,
+    );
+    assert.ok(content.projectsBridge.description);
+    assert.equal(content.projectsBridge.action.routeId, 'projects');
+    assert.equal(content.finalCta.action.routeId, 'contact');
+    assert.equal('portrait' in content, false);
   }
 });
-
 test('keeps the approved minimum homepage and services copy', async () => {
   const spanishHome = (await import('../app/(es)/_content/home.ts')).homeContent;
   const englishHome = (await import('../app/(en)/en/_content/home.ts')).homeContent;
