@@ -59,3 +59,17 @@ test('visible Spanish primary-navigation destinations resolve without browser er
   }
   assertNoBrowserErrors();
 });
+
+test('language switching preserves Contact, Founder, and Projects context', async ({ page }) => {
+  await page.goto(appUrl('/contacto/'));
+  await page.locator('a[hreflang="en"]').click();
+  await expect(page).toHaveURL((url) => url.pathname === appPathname('/en/contact/'));
+
+  await page.goto(appUrl(stableRoutes.founder.en));
+  await page.locator('a[hreflang="es-AR"]').click();
+  await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.founder.es));
+
+  await page.goto(appUrl(stableRoutes.projects.es));
+  await page.locator('a[hreflang="en"]').click();
+  await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.projects.en));
+});

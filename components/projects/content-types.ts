@@ -59,6 +59,7 @@ export type PublicProjectDetailContent = {
     label: string;
     alt: string;
   };
+  founderAction?: ActionLink;
 };
 
 export type ResolvedProjectCard = PublicProjectCardContent & {
@@ -107,6 +108,7 @@ export type ResolvedProjectDetail = PublicProjectDetailContent & {
   publicationScope: PublicProjectManifestEntry['publicationScope'];
   visual: NonNullable<PublicProjectManifestEntry['visual']> & PublicProjectDetailContent['visual'];
   relatedServiceHref: string;
+  founderAction?: ActionLink & { href: string };
 };
 
 export type PublicProjectLocaleContent = Pick<ProjectsPageContent, 'cards' | 'details'>;

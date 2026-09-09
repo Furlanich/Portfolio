@@ -59,6 +59,10 @@ export const projectPageContent = {
   },
   details: {
     'PROJECT-GRS': {
+      founderAction: {
+        label: 'Meet Samuel',
+        routeId: 'founder',
+      },
       headerSummary: 'Reference implementation for coordinating passenger transport reservations. This page documents scope and implementation, not production use.',
       evidenceStatement: 'Implementation evidence based on the public repository and its available technical history. Current behavior has not been revalidated.',
       context: 'The project explores route, station, seat, and self-service operations for passenger transport.',
@@ -78,6 +82,10 @@ export const projectPageContent = {
       },
     },
     'PROJECT-THE-SYSTEM': {
+      founderAction: {
+        label: 'Meet Samuel',
+        routeId: 'founder',
+      },
       headerSummary: 'Web-application laboratory for organizing role-playing campaigns with identity, memberships, and multi-user permissions. This page distinguishes existing code from planned areas.',
       evidenceStatement: 'Implementation evidence based on the public repository, its tests, and development configuration. A current runtime was not verified.',
       context: 'The laboratory explores role-playing campaign operations and the access boundaries needed when several people participate.',

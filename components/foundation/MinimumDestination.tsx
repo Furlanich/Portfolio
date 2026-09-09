@@ -10,6 +10,7 @@ import { resolveActionLink } from '@/components/foundation/content-types';
 interface MinimumDestinationProps {
   action?: ActionLink;
   contactActions?: ContactAction[];
+  founderContextAction?: ActionLink;
   heading: string;
   introduction: string;
   items?: ServiceSummary[];
@@ -21,6 +22,7 @@ interface MinimumDestinationProps {
 export function MinimumDestination({
   action,
   contactActions,
+  founderContextAction,
   heading,
   introduction,
   items,
@@ -29,6 +31,7 @@ export function MinimumDestination({
   responseExpectation,
 }: MinimumDestinationProps) {
   const resolvedAction = action ? resolveActionLink(action, locale) : undefined;
+  const resolvedFounderContextAction = founderContextAction ? resolveActionLink(founderContextAction, locale) : undefined;
 
   return (
     <main className="bg-foundation-canvas py-16 md:py-24 lg:py-32">
@@ -80,6 +83,17 @@ export function MinimumDestination({
                 </li>
               ))}
             </ul>
+          </div>
+        ) : null}
+
+        {resolvedFounderContextAction ? (
+          <div className="mt-8 border-t border-foundation-border pt-6">
+            <Link
+              href={resolvedFounderContextAction.href}
+              className="inline-flex min-h-11 items-center text-base font-semibold text-foundation-muted underline decoration-foundation-border underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
+            >
+              {resolvedFounderContextAction.label}
+            </Link>
           </div>
         ) : null}
 

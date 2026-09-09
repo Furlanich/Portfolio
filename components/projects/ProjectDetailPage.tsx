@@ -132,6 +132,17 @@ export function ProjectDetailPage({ detail, locale, labels, contactHref }: Proje
                 </li>
               ))}
             </ul>
+
+            {detail.founderAction ? (
+              <div className="mt-8 border-t border-foundation-border pt-6">
+                <Link
+                  href={detail.founderAction.href}
+                  className="inline-flex min-h-11 items-center font-semibold text-foundation-muted underline decoration-foundation-border underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
+                >
+                  {detail.founderAction.label}
+                </Link>
+              </div>
+            ) : null}
           </div>
         </div>
       </section>

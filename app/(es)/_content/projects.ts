@@ -59,6 +59,10 @@ export const projectPageContent = {
   },
   details: {
     'PROJECT-GRS': {
+      founderAction: {
+        label: 'Conocer a Samuel',
+        routeId: 'founder',
+      },
       headerSummary: 'Implementación de referencia para coordinar reservas de transporte de pasajeros. La página documenta alcance e implementación, no uso en producción.',
       evidenceStatement: 'Evidencia de implementación basada en el repositorio público y su historial técnico disponible. La demostración actual no fue revalidada.',
       context: 'El proyecto explora operaciones de recorridos, estaciones, asientos y autogestión para transporte de pasajeros.',
@@ -78,6 +82,10 @@ export const projectPageContent = {
       },
     },
     'PROJECT-THE-SYSTEM': {
+      founderAction: {
+        label: 'Conocer a Samuel',
+        routeId: 'founder',
+      },
       headerSummary: 'Laboratorio de aplicación web para organizar campañas de rol con identidad, membresías y permisos multiusuario. La página distingue el código existente de las áreas planificadas.',
       evidenceStatement: 'Evidencia de implementación basada en el repositorio público, sus pruebas y su configuración de desarrollo. No se verificó una ejecución actual.',
       context: 'El laboratorio explora operaciones de campañas de rol y los límites de acceso necesarios cuando participan varias personas.',

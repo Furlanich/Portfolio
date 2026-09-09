@@ -2,7 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { access, readdir, readFile } from 'node:fs/promises';
 
-const { publishedProjectManifest, getPublishedProjectCards, getPublishedProjectDetails, validateProjectContent } =
+const {
+  publishedProjectManifest,
+  getPublishedProjectCards,
+  getPublishedProjectDetail,
+  getPublishedProjectDetails,
+  validateProjectContent,
+} =
   await import('../lib/projects/publication.ts');
 const { projectPageContent: spanish } = await import('../app/(es)/_content/projects.ts');
 const { projectPageContent: english } = await import('../app/(en)/en/_content/projects.ts');
@@ -169,4 +175,31 @@ test('removes legacy project imports and types from active application sources',
     assert.equal(source.includes(forbidden), false, `legacy application source: ${forbidden}`);
   }
   assert.doesNotMatch(source, /interface Project\s*{/);
+});
+
+test('exposes Founder context only for evidence-authorized founder-published projects', () => {
+  const eligibleIds = new Set(['PROJECT-GRS', 'PROJECT-THE-SYSTEM']);
+  const expectedLabels = { es: 'Conocer a Samuel', en: 'Meet Samuel' };
+  const expectedHrefs = {
+    es: '/estudio/samuel-furlanich/',
+    en: '/en/about/samuel-furlanich/',
+  };
+
+  for (const [locale, content] of [['es', spanish], ['en', english]]) {
+    validateProjectContent(content, locale);
+
+    for (const entry of publishedProjectManifest) {
+      const founderAction = content.details[entry.id].founderAction;
+      if (eligibleIds.has(entry.id)) {
+        assert.deepEqual(founderAction, { label: expectedLabels[locale], routeId: 'founder' });
+        assert.deepEqual(
+          getPublishedProjectDetail(content, entry.slug, locale).founderAction,
+          { ...founderAction, href: expectedHrefs[locale] },
+        );
+      } else {
+        assert.equal(founderAction, undefined);
+        assert.equal(getPublishedProjectDetail(content, entry.slug, locale).founderAction, undefined);
+      }
+    }
+  }
 });
