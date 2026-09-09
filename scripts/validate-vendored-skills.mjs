@@ -66,7 +66,7 @@ export async function validateVendoredSkills(rootDir) {
       try {
         const source = await readFile(absolutePath);
         if (sha256Pattern.test(file?.sha256 ?? '')) {
-          const actualHash = createHash('sha256').update(source).digest('hex');
+          const actualHash = createHash('sha256').update(Buffer.from(source.toString('utf8').replace(/\r\n?/g, '\n'))).digest('hex');
           if (actualHash !== file.sha256) {
             failures.push(`${name}: hash mismatch for ${filePath}`);
           }
