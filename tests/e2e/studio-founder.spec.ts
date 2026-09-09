@@ -98,3 +98,114 @@ for (const studioCase of studioCases) {
     }
   });
 }
+
+const founderCases = [
+  {
+    locale: 'Spanish',
+    route: stableRoutes.founder.es,
+    alternateLocale: 'en',
+    alternateRoute: stableRoutes.founder.en,
+    professionalHeading: 'Perfil profesional',
+    experienceHeading: 'Experiencia profesional',
+    educationHeading: 'Formación',
+    capabilitiesHeading: 'Sistemas que podemos construir',
+    projectsHeading: 'Trabajo y evidencia técnica',
+    finalHeading: '¿Querés conversar sobre una necesidad de tu negocio?',
+    cvLabel: 'Descargar CV',
+    projectsLabel: 'Ver proyectos seleccionados',
+    contactLabel: 'Iniciar una consulta',
+    contactRoute: '/contacto/',
+    projectsRoute: '/proyectos/',
+  },
+  {
+    locale: 'English',
+    route: stableRoutes.founder.en,
+    alternateLocale: 'es-AR',
+    alternateRoute: stableRoutes.founder.es,
+    professionalHeading: 'Professional profile',
+    experienceHeading: 'Professional experience',
+    educationHeading: 'Education',
+    capabilitiesHeading: 'Systems we can engineer',
+    projectsHeading: 'Work and technical evidence',
+    finalHeading: 'Want to discuss a business need?',
+    cvLabel: 'Download CV',
+    projectsLabel: 'View selected work',
+    contactLabel: 'Start an enquiry',
+    contactRoute: '/en/contact/',
+    projectsRoute: '/en/work/',
+  },
+] as const;
+
+for (const founderCase of founderCases) {
+  test(founderCase.locale + ' Founder renders the approved hierarchy and links', async ({ page }) => {
+    const response = await page.goto(appUrl(founderCase.route));
+
+    expect(response?.ok()).toBe(true);
+    await expect(page.locator('main h1:visible')).toHaveCount(1);
+    for (const heading of [
+      founderCase.professionalHeading,
+      founderCase.experienceHeading,
+      founderCase.educationHeading,
+      founderCase.capabilitiesHeading,
+      founderCase.projectsHeading,
+      founderCase.finalHeading,
+    ]) {
+      await expect(page.getByRole('heading', { name: heading })).toBeVisible();
+    }
+
+    await expect(page.getByRole('main').getByRole('link', { name: founderCase.projectsLabel })).toHaveAttribute(
+      'href',
+      appPathname(founderCase.projectsRoute),
+    );
+    await expect(page.getByRole('main').getByRole('link', { name: founderCase.contactLabel })).toHaveAttribute(
+      'href',
+      appPathname(founderCase.contactRoute),
+    );
+    await expect(page.getByRole('main').getByRole('link', { name: founderCase.cvLabel })).toHaveAttribute(
+      'href',
+      appPathname('/Samuel-Furlanich-CV.pdf').replace(/\/$/, ''),
+    );
+    await expect(page.getByRole('main').getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/in/samuel-furlanich/',
+    );
+    await expect(page.getByRole('main').getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/Furlanich',
+    );
+  });
+
+  test(founderCase.locale + ' Founder preserves language switching and professional keyboard order', async ({ page }) => {
+    await page.goto(appUrl(founderCase.route));
+
+    const profile = page.getByRole('region', { name: founderCase.professionalHeading });
+    const actions = profile.getByRole('link');
+    await expect(actions).toHaveCount(3);
+    await actions.nth(0).focus();
+    await expect(actions.nth(0)).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(actions.nth(1)).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(actions.nth(2)).toBeFocused();
+
+    await page.locator('a[hreflang="' + founderCase.alternateLocale + '"]').click();
+    await expect(page).toHaveURL((url) => url.pathname === appPathname(founderCase.alternateRoute));
+  });
+
+  test(founderCase.locale + ' Founder keeps periods attached to their experience entries on compact layout', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto(appUrl(founderCase.route));
+
+    const entries = page.getByRole('region', { name: founderCase.experienceHeading }).getByRole('listitem');
+    await expect(entries).toHaveCount(2);
+    for (const entry of await entries.all()) {
+      const period = entry.locator('[data-founder-period]');
+      const role = entry.getByRole('heading', { level: 3 });
+      const periodBox = await period.boundingBox();
+      const roleBox = await role.boundingBox();
+      expect(periodBox).not.toBeNull();
+      expect(roleBox).not.toBeNull();
+      expect(roleBox!.y).toBeGreaterThanOrEqual(periodBox!.y);
+    }
+  });
+}

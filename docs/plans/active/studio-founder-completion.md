@@ -95,7 +95,7 @@ The operating-model panel is informational, not statistical. No image, stock tea
 2. Professional links: CV primary, LinkedIn and GitHub secondary.
 3. Editorial experience history with a narrow period column at wide widths.
 4. Restrained factual education.
-5. Four capability groups, with technologies subordinate to capability.
+5. Four outcome-oriented system groups, with specific technologies kept secondary.
 6. One Projects bridge, not a duplicate project index.
 7. Established commercial Contact CTA.
 

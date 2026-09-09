@@ -33,7 +33,7 @@ export default function Page() {
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}
-        founderLinks={[founderContent.linkedin, founderContent.github]}
+        founderLinks={[founderContent.professionalLinks.linkedin, founderContent.professionalLinks.github]}
         labels={{
           navigation: 'Navigation',
           services: 'Services',

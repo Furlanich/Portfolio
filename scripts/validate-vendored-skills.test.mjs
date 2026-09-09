@@ -41,7 +41,7 @@ function validSkill(overrides = {}) {
 test('accepts pinned project-local vendored skills with matching hashes', async (t) => {
   const root = await createRoot(t);
   await mkdir(path.join(root, '.agents', 'skills', 'example-skill'), { recursive: true });
-  await writeFile(path.join(root, '.agents', 'skills', 'example-skill', 'SKILL.md'), 'skill\n');
+  await writeFile(path.join(root, '.agents', 'skills', 'example-skill', 'SKILL.md'), 'skill\r\n');
   await writeLock(root, [validSkill()]);
 
   assert.deepEqual(await validateVendoredSkills(root), []);
@@ -80,4 +80,8 @@ test('reports missing files and provenance or integrity drift', async (t) => {
   assert.match(output, /hash mismatch/i);
   assert.match(output, /sha-256/i);
   assert.match(output, /project-local/i);
+});
+
+test('keeps the checked-in vendored skill lock synchronized with its files', async () => {
+  assert.deepEqual(await validateVendoredSkills(process.cwd()), []);
 });

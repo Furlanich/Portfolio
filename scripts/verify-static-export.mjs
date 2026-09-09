@@ -52,6 +52,22 @@ const studioRequirements = {
   },
 };
 
+const founderRequirements = {
+  'estudio/samuel-furlanich/index.html': {
+    heading: 'Samuel Furlanich',
+    sections: ['Perfil profesional', 'Experiencia profesional', 'Formación', 'Sistemas que podemos construir', 'Trabajo y evidencia técnica', '¿Querés conversar sobre una necesidad de tu negocio?'],
+    projects: '/proyectos/',
+    contact: '/contacto/',
+    cv: '/Samuel-Furlanich-CV.pdf',
+  },
+  'en/about/samuel-furlanich/index.html': {
+    heading: 'Samuel Furlanich',
+    sections: ['Professional profile', 'Professional experience', 'Education', 'Systems we can engineer', 'Work and technical evidence', 'Want to discuss a business need?'],
+    projects: '/en/work/',
+    contact: '/en/contact/',
+    cv: '/Samuel-Furlanich-CV.pdf',
+  },
+};
 const homepageRequirements = {
   'index.html': {
     sections: [
@@ -420,6 +436,52 @@ function assertStudioArtifact(artifact, html) {
   }
 }
 
+function assertFounderArtifact(artifact, html) {
+  const requirement = founderRequirements[artifact.file];
+  if (!requirement) return;
+
+  if (countMatches(html, /<main\b/g) !== 1) {
+    failures.push(artifact.file + ': expected exactly one main landmark');
+  }
+  if (countMatches(html, /<h1\b/g) !== 1 || !html.includes(requirement.heading)) {
+    failures.push(artifact.file + ': expected one approved Founder H1');
+  }
+
+  let previousHeadingPosition = -1;
+  for (const heading of requirement.sections) {
+    const position = html.indexOf(heading);
+    if (position === -1 || position <= previousHeadingPosition) {
+      failures.push(artifact.file + ': Founder sections are missing or out of approved order');
+    }
+    previousHeadingPosition = position;
+  }
+
+  for (const route of [requirement.projects, requirement.contact, requirement.cv]) {
+    const expected = expectedHref(route);
+    if (!html.includes('href="' + expected + '"')) {
+      failures.push(artifact.file + ': missing Founder reference ' + expected);
+    }
+  }
+
+  for (const link of ['https://www.linkedin.com/in/samuel-furlanich/', 'https://github.com/Furlanich']) {
+    if (!html.includes('href="' + link + '"')) {
+      failures.push(artifact.file + ': missing professional link ' + link);
+    }
+  }
+
+  if (countMatches(html, /<li\b[^>]*data-founder-experience-entry/g) !== 2) {
+    failures.push(artifact.file + ': expected exactly two Founder experience entries');
+  }
+  if (countMatches(html, /<section\b[^>]*data-founder-capability-group/g) !== 4) {
+    failures.push(artifact.file + ': expected exactly four Founder capability groups');
+  }
+  if (!html.includes('Clever Soft SA') || /<h[1-6]\b[^>]*>[^<]*Clever Soft SA/i.test(html)) {
+    failures.push(artifact.file + ': Clever Soft SA must remain narrative-only');
+  }
+  if (countMatches(html, /<img\b/gi) > 0) {
+    failures.push(artifact.file + ': unexpected Founder portrait or media');
+  }
+}
 function assertProjectDetailArtifact(artifact, html) {
   const requirement = detailRequirements[artifact.file];
   if (!requirement) return;
@@ -528,6 +590,7 @@ for (const { artifact, html } of allHtml) {
   assertServicesArtifact(artifact, html);
   assertProjectsArtifact(artifact, html);
   assertStudioArtifact(artifact, html);
+  assertFounderArtifact(artifact, html);
   assertProjectDetailArtifact(artifact, html);
   const requirement = homepageRequirements[artifact.file];
   if (!requirement) continue;

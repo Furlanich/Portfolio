@@ -1,4 +1,4 @@
-import { FounderProfile } from '@/components/foundation/FounderProfile';
+import { FounderPage } from '@/components/founder/FounderPage';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
@@ -22,15 +22,15 @@ export default function Page() {
           process: 'Process',
           studio: 'About',
           contact: 'Contact',
-          primaryAction: founderContent.contactAction.label,
+          primaryAction: founderContent.finalCta.action.label,
           languageSwitch: 'View site in Spanish',
         }}
       />
-      <FounderProfile content={founderContent} paths={paths} />
+      <FounderPage content={founderContent} />
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}
-        founderLinks={[founderContent.linkedin, founderContent.github]}
+        founderLinks={[founderContent.professionalLinks.linkedin, founderContent.professionalLinks.github]}
         labels={{
           navigation: 'Navigation',
           services: 'Services',
