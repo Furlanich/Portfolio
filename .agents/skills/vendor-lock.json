@@ -21,11 +21,11 @@
       "files": [
         {
           "path": ".agents/skills/test-driven-development/SKILL.md",
-          "sha256": "bf1b8216e523851a411e91d429a7c1c2a173e79d88957bc78e348218d50edd54"
+          "sha256": "fad42344223013a560fb3f2a9ad40509c5ea569595bab7f064dbf13149e9c53f"
         },
         {
           "path": ".agents/skills/test-driven-development/writing-good-tests.md",
-          "sha256": "51471c853306ff92ca8bb41dcaea05f31c0e46b03651f8f3c99754b7172f4ae1"
+          "sha256": "87f56d0a4236f804165149ec038787d20062afc9b37aa240a167c394b39d2065"
         }
       ]
     },
@@ -37,19 +37,19 @@
       "files": [
         {
           "path": ".agents/skills/systematic-debugging/SKILL.md",
-          "sha256": "808fc5717aa88ad65efff312b11c186294d3e6ee301afb584e2f86599b137787"
+          "sha256": "23f249e47a3a4b06c3a5030e37aaf3ced12a54f406782766b384ed127d21eca4"
         },
         {
           "path": ".agents/skills/systematic-debugging/root-cause-tracing.md",
-          "sha256": "6b0622269e098ca1399e123e553fd385f0b6412d88ef0e9c4f5a8ea9cf1cec7b"
+          "sha256": "cb00878f1b5b79442dc474f0e0d67b44f8175e741ba90abbf5e9778b67ba4854"
         },
         {
           "path": ".agents/skills/systematic-debugging/defense-in-depth.md",
-          "sha256": "1e175fb86fc357e58c6aebf5441e481e1b7868b4380c0456b63a17eefbd18ba7"
+          "sha256": "9407efcbd028a5ec45edfdf6692b988716c0a7b34d1fb5e05d60146171d8041e"
         },
         {
           "path": ".agents/skills/systematic-debugging/condition-based-waiting.md",
-          "sha256": "e89fec8400d6cd50f43407cec9fab50976ba4d55d0ec2eb51c0bd68036b54c26"
+          "sha256": "02aa854bd9e761f275e1450d7136ba60f1a4d103fe94b552fdce822dd3c99506"
         }
       ]
     },
@@ -61,7 +61,7 @@
       "files": [
         {
           "path": ".agents/skills/verification-before-completion/SKILL.md",
-          "sha256": "2befe7fc55bcadaa3d97dd9e8efeb633d2561c0ebe74c5a8b17c4d9e7e4520b3"
+          "sha256": "8f15b9f67e566f286d531b7da77052f4009b5065fd8edfcb659c9f837eebb4a4"
         }
       ]
     }

@@ -2,7 +2,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const EXCLUDED_DIRECTORIES = new Set(['.git', '.next', 'node_modules', 'out']);
+const EXCLUDED_DIRECTORIES = new Set(['.git', '.next', '.worktrees', 'node_modules', 'out']);
 const ALLOWED_STATUSES = new Set(['APPROVED', 'PROPOSED', 'OPEN', 'REJECTED']);
 
 function relativePath(rootDir, filePath) {

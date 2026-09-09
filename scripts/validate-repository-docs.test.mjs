@@ -98,6 +98,21 @@ test('accepts coherent documents and repository Skills', async () => {
   }
 });
 
+test('ignores Git worktree checkouts during repository document discovery', async () => {
+  const root = await createFixture({ valid: true });
+  try {
+    await mkdir(path.join(root, '.worktrees', 'linked-checkout'), { recursive: true });
+    await writeFile(
+      path.join(root, '.worktrees', 'linked-checkout', 'duplicate.md'),
+      `---\nid: ROOT\nstatus: APPROVED\n---\n\n# Root document\n`,
+    );
+
+    assert.deepEqual(await validateRepository(root), []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test('preserves upstream descriptions for integrity-locked vendored Skills', async () => {
   const root = await createFixture({ valid: true });
   try {

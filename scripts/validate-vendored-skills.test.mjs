@@ -81,3 +81,7 @@ test('reports missing files and provenance or integrity drift', async (t) => {
   assert.match(output, /sha-256/i);
   assert.match(output, /project-local/i);
 });
+
+test('keeps the checked-in vendored skill lock synchronized with its files', async () => {
+  assert.deepEqual(await validateVendoredSkills(process.cwd()), []);
+});
