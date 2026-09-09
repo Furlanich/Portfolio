@@ -14,6 +14,7 @@ const artifacts = [
   { route: '/proyectos/the-system/', file: 'proyectos/the-system/index.html', lang: 'es-AR' },
   { route: '/proyectos/mpc-administracion/', file: 'proyectos/mpc-administracion/index.html', lang: 'es-AR' },
   { route: '/contacto/', file: 'contacto/index.html', lang: 'es-AR' },
+  { route: '/estudio/', file: 'estudio/index.html', lang: 'es-AR' },
   { route: '/estudio/samuel-furlanich/', file: 'estudio/samuel-furlanich/index.html', lang: 'es-AR' },
   { route: '/en/', file: 'en/index.html', lang: 'en' },
   { route: '/en/services/', file: 'en/services/index.html', lang: 'en' },
@@ -22,8 +23,34 @@ const artifacts = [
   { route: '/en/work/the-system/', file: 'en/work/the-system/index.html', lang: 'en' },
   { route: '/en/work/mpc-administracion/', file: 'en/work/mpc-administracion/index.html', lang: 'en' },
   { route: '/en/contact/', file: 'en/contact/index.html', lang: 'en' },
+  { route: '/en/about/', file: 'en/about/index.html', lang: 'en' },
   { route: '/en/about/samuel-furlanich/', file: 'en/about/samuel-furlanich/index.html', lang: 'en' },
 ];
+
+const studioRequirements = {
+  'estudio/index.html': {
+    heading: 'Software a medida con responsabilidad técnica directa.',
+    sections: [
+      'Dirección técnica de principio a fin',
+      'Principios para trabajar con claridad',
+      'Base en Buenos Aires, disponibilidad nacional e internacional',
+      'La persona detrás de la dirección técnica',
+      'Conversemos sobre lo que hoy frena a tu negocio',
+    ],
+    references: ['/contacto/', '/estudio/samuel-furlanich/', '/en/about/'],
+  },
+  'en/about/index.html': {
+    heading: 'Custom software with direct technical accountability.',
+    sections: [
+      'Technical direction from start to finish',
+      'Principles for clear delivery',
+      'Based in Buenos Aires, available nationally and internationally',
+      'The person behind the technical direction',
+      "Let's talk about what's holding your business back",
+    ],
+    references: ['/en/contact/', '/en/about/samuel-furlanich/', '/estudio/'],
+  },
+};
 
 const homepageRequirements = {
   'index.html': {
@@ -361,6 +388,38 @@ function assertProjectsArtifact(artifact, html) {
   if (nestedArticle) failures.push(`${artifact.file}: nested project cards`);
 }
 
+function assertStudioArtifact(artifact, html) {
+  const requirement = studioRequirements[artifact.file];
+  if (!requirement) return;
+
+  if (countMatches(html, /<main\b/g) !== 1) {
+    failures.push(`${artifact.file}: expected exactly one main landmark`);
+  }
+  if (countMatches(html, /<h1\b/g) !== 1 || !html.includes(requirement.heading)) {
+    failures.push(`${artifact.file}: expected one approved visible H1`);
+  }
+
+  let previousHeadingPosition = -1;
+  for (const heading of requirement.sections) {
+    const position = html.indexOf(heading);
+    if (position === -1 || position <= previousHeadingPosition) {
+      failures.push(`${artifact.file}: Studio sections are missing or out of approved order`);
+    }
+    previousHeadingPosition = position;
+  }
+
+  for (const route of requirement.references) {
+    const expected = expectedHref(route);
+    if (!html.includes(`href="${expected}"`)) {
+      failures.push(`${artifact.file}: missing Studio reference ${expected}`);
+    }
+  }
+
+  if (countMatches(html, /<img\b/gi) > 0) {
+    failures.push(`${artifact.file}: unexpected Studio image`);
+  }
+}
+
 function assertProjectDetailArtifact(artifact, html) {
   const requirement = detailRequirements[artifact.file];
   if (!requirement) return;
@@ -468,6 +527,7 @@ const internalReferences = allHtml.flatMap(({ artifact, html }) =>
 for (const { artifact, html } of allHtml) {
   assertServicesArtifact(artifact, html);
   assertProjectsArtifact(artifact, html);
+  assertStudioArtifact(artifact, html);
   assertProjectDetailArtifact(artifact, html);
   const requirement = homepageRequirements[artifact.file];
   if (!requirement) continue;

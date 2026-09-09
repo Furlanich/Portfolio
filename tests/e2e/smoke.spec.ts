@@ -9,6 +9,8 @@ const routeCases = [
   ['English Services', stableRoutes.services.en, 'en'],
   ['Spanish Projects', stableRoutes.projects.es, 'es-AR'],
   ['English Projects', stableRoutes.projects.en, 'en'],
+  ['Spanish Studio', stableRoutes.studio.es, 'es-AR'],
+  ['English Studio', stableRoutes.studio.en, 'en'],
   ['Spanish Founder', stableRoutes.founder.es, 'es-AR'],
   ['English Founder', stableRoutes.founder.en, 'en'],
 ] as const;
@@ -25,7 +27,7 @@ for (const [name, route, language] of routeCases) {
   });
 }
 
-test('language switching preserves equivalent homepage and Services context', async ({ page }) => {
+test('language switching preserves equivalent homepage, Services, and Studio context', async ({ page }) => {
   await page.goto(appUrl(stableRoutes.home.es));
   await page.locator('a[hreflang="en"]').click();
   await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.home.en));
@@ -33,6 +35,10 @@ test('language switching preserves equivalent homepage and Services context', as
   await page.goto(appUrl(stableRoutes.services.en));
   await page.locator('a[hreflang="es-AR"]').click();
   await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.services.es));
+
+  await page.goto(appUrl(stableRoutes.studio.es));
+  await page.locator('a[hreflang="en"]').click();
+  await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.studio.en));
 });
 
 test('visible Spanish primary-navigation destinations resolve without browser errors', async ({ page }) => {

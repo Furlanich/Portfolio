@@ -10,6 +10,7 @@ interface SiteFooterProps {
     services: string;
     projects: string;
     process: string;
+    studio: string;
     founder: string;
     contact: string;
     directContact: string;
@@ -36,7 +37,7 @@ export function SiteFooter({ contactActions, founderLinks, labels, paths }: Site
             <li><Link href={paths.services} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.services}</Link></li>
             <li><Link href={paths.projects} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.projects}</Link></li>
             <li><Link href={paths.process} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.process}</Link></li>
-            <li><Link href={paths.founder} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.founder}</Link></li>
+            <li><Link href={paths.studio} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.studio}</Link></li>
             <li><Link href={paths.contact} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.contact}</Link></li>
           </ul>
         </nav>
@@ -52,9 +53,14 @@ export function SiteFooter({ contactActions, founderLinks, labels, paths }: Site
           </ul>
           <h2 className="mt-6 text-sm font-semibold text-foundation-ink">{labels.professional}</h2>
           <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-foundation-muted">
+            <li>
+              <Link href={paths.founder} className="inline-flex min-h-11 items-center hover:text-foundation-action">
+                {labels.founder}
+              </Link>
+            </li>
             {founderLinks.map((link) => (
               <li key={link.href}>
-                <a href={link.href} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center hover:text-foundation-action">{link.label}</a>
+                <a href={link.href} className="inline-flex min-h-11 items-center hover:text-foundation-action">{link.label}</a>
               </li>
             ))}
           </ul>

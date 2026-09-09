@@ -1,12 +1,19 @@
-import { FounderProfile } from '@/components/foundation/FounderProfile';
+import type { Metadata } from 'next';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
+import { StudioPage } from '@/components/studio/StudioPage';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
-import { contactContent } from '../../_content/contact';
-import { founderContent } from '../../_content/founder';
+import { contactContent } from '../_content/contact';
+import { founderContent } from '../_content/founder';
+import { studioPageContent } from '../_content/studio';
 
-const route = { locale: 'en' as const, routeId: 'founder' as const };
+const route = { locale: 'en' as const, routeId: 'studio' as const };
 const paths = getFoundationNavigationPaths(route.locale, route.routeId);
+
+export const metadata: Metadata = {
+  title: 'About | FURLANICH',
+  description: studioPageContent.intro.positioning,
+};
 
 export default function Page() {
   return (
@@ -22,11 +29,11 @@ export default function Page() {
           process: 'Process',
           studio: 'About',
           contact: 'Contact',
-          primaryAction: founderContent.contactAction.label,
+          primaryAction: studioPageContent.intro.primaryAction.label,
           languageSwitch: 'View site in Spanish',
         }}
       />
-      <FounderProfile content={founderContent} paths={paths} />
+      <StudioPage content={studioPageContent} />
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}

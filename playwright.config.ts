@@ -38,7 +38,10 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium-desktop',
-      testMatch: /smoke\.spec\.ts/,
+      testMatch: [
+        /smoke\.spec\.ts/,
+        /studio-founder\.spec\.ts/,
+      ],
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
@@ -77,9 +80,32 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
+      name: 'compact-320-chromium',
+      testMatch: /studio-founder-responsive\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'], viewport: { width: 320, height: 800 } },
+    },
+    {
+      name: 'tablet-portrait-chromium',
+      testMatch: /studio-founder-responsive\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'], viewport: { width: 768, height: 1024 } },
+    },
+    {
       name: 'accessibility-chromium',
       testMatch: /accessibility\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
+    },
+    {
+      name: 'visual-chromium',
+      testMatch: /visual\/.*\.visual\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        colorScheme: 'light',
+        deviceScaleFactor: 1,
+        locale: 'es-AR',
+        reducedMotion: 'reduce',
+        timezoneId: 'UTC',
+        viewport: { width: 1440, height: 900 },
+      },
     },
   ],
 });

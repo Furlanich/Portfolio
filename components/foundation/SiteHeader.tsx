@@ -12,7 +12,7 @@ interface SiteHeaderProps {
     services: string;
     projects: string;
     process: string;
-    founder: string;
+    studio: string;
     contact: string;
     primaryAction: string;
     languageSwitch: string;
@@ -59,7 +59,7 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
     { href: paths.services, label: labels.services },
     { href: paths.projects, label: labels.projects },
     { href: paths.process, label: labels.process },
-    { href: paths.founder, label: labels.founder },
+    { href: paths.studio, label: labels.studio },
     { href: paths.contact, label: labels.contact },
   ];
 

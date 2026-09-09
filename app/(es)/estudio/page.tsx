@@ -1,13 +1,19 @@
-import { ServicesPage } from '@/components/services/ServicesPage';
+import type { Metadata } from 'next';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
+import { StudioPage } from '@/components/studio/StudioPage';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
 import { contactContent } from '../_content/contact';
 import { founderContent } from '../_content/founder';
-import { servicesPageContent } from '../_content/services';
+import { studioPageContent } from '../_content/studio';
 
-const route = { locale: 'es' as const, routeId: 'services' as const };
+const route = { locale: 'es' as const, routeId: 'studio' as const };
 const paths = getFoundationNavigationPaths(route.locale, route.routeId);
+
+export const metadata: Metadata = {
+  title: 'El estudio | FURLANICH',
+  description: studioPageContent.intro.positioning,
+};
 
 export default function Page() {
   return (
@@ -23,11 +29,11 @@ export default function Page() {
           process: 'Proceso',
           studio: 'El estudio',
           contact: 'Contacto',
-          primaryAction: contactContent.actions[0].label,
+          primaryAction: studioPageContent.intro.primaryAction.label,
           languageSwitch: 'Ver sitio en inglés',
         }}
       />
-      <ServicesPage content={servicesPageContent} />
+      <StudioPage content={studioPageContent} />
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}
