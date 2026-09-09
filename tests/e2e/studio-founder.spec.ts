@@ -209,3 +209,58 @@ for (const founderCase of founderCases) {
     }
   });
 }
+const integrationCases = [
+  {
+    locale: 'Spanish',
+    contactRoute: '/contacto/',
+    contactActionLabels: ['Escribir por WhatsApp', 'Enviar un correo', 'Llamar'],
+    founderLabel: 'Conocer a Samuel',
+    founderRoute: stableRoutes.founder.es,
+    projectRoutes: {
+      'general-reservation-system': '/proyectos/general-reservation-system/',
+      'the-system': '/proyectos/the-system/',
+      'mpc-administracion': '/proyectos/mpc-administracion/',
+    },
+  },
+  {
+    locale: 'English',
+    contactRoute: '/en/contact/',
+    contactActionLabels: ['Write on WhatsApp', 'Send an email', 'Call'],
+    founderLabel: 'Meet Samuel',
+    founderRoute: stableRoutes.founder.en,
+    projectRoutes: {
+      'general-reservation-system': '/en/work/general-reservation-system/',
+      'the-system': '/en/work/the-system/',
+      'mpc-administracion': '/en/work/mpc-administracion/',
+    },
+  },
+] as const;
+
+for (const integrationCase of integrationCases) {
+  test(`${integrationCase.locale} Contact exposes Founder context after direct contact choices`, async ({ page }) => {
+    await page.goto(appUrl(integrationCase.contactRoute));
+
+    const main = page.getByRole('main');
+    const founderLink = main.getByRole('link', { name: integrationCase.founderLabel });
+    await expect(founderLink).toHaveAttribute('href', appPathname(integrationCase.founderRoute));
+
+    const linkOrder = await main.getByRole('link').evaluateAll((links) =>
+      links.map((link) => (link as HTMLAnchorElement).textContent?.trim()),
+    );
+    expect(linkOrder.slice(-1)[0]).toBe(integrationCase.founderLabel);
+    expect(linkOrder.slice(0, 3)).toEqual(integrationCase.contactActionLabels);
+  });
+
+  test(`${integrationCase.locale} project details expose Founder context only when evidence authorizes it`, async ({ page }) => {
+    for (const slug of ['general-reservation-system', 'the-system'] as const) {
+      await page.goto(appUrl(integrationCase.projectRoutes[slug]));
+      await expect(page.getByRole('main').getByRole('link', { name: integrationCase.founderLabel })).toHaveAttribute(
+        'href',
+        appPathname(integrationCase.founderRoute),
+      );
+    }
+
+    await page.goto(appUrl(integrationCase.projectRoutes['mpc-administracion']));
+    await expect(page.getByRole('main').getByRole('link', { name: integrationCase.founderLabel })).toHaveCount(0);
+  });
+}

@@ -136,6 +136,9 @@ function assertDetailContent(
   if (!entry.services.includes(detail.relatedService.serviceId) || !detail.relatedService.label.trim()) {
     throw new Error(`${locale} ${entry.id} related service is not approved`);
   }
+  if (detail.founderAction && detail.founderAction.routeId !== 'founder') {
+    throw new Error(`${locale} ${entry.id} Founder action must target the Founder route`);
+  }
   if (!detail.visual.label.trim() || !detail.visual.alt.trim()) {
     throw new Error(`${locale} ${entry.id} conceptual visual label and alt text are required`);
   }
@@ -264,5 +267,8 @@ export function getPublishedProjectDetail(
     publicationScope: entry.publicationScope,
     visual: { ...entry.visual, ...detail.visual },
     relatedServiceHref: getServiceSectionHref(locale, detail.relatedService.serviceId),
+    founderAction: detail.founderAction
+      ? { ...detail.founderAction, href: getFoundationPath(detail.founderAction.routeId, locale) }
+      : undefined,
   };
 }

@@ -26,4 +26,8 @@ export const contactContent = {
       href: 'tel:+5491150117565',
     },
   ],
+  founderContextAction: {
+    label: 'Meet Samuel',
+    routeId: 'founder',
+  },
 } satisfies ContactContent;

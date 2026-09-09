@@ -72,4 +72,5 @@ export type ContactContent = {
   responseExpectation: string;
   location: string;
   actions: ContactAction[];
+  founderContextAction: ActionLink;
 };

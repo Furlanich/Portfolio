@@ -28,6 +28,7 @@ export default function Page() {
       />
       <MinimumDestination
         contactActions={contactContent.actions}
+        founderContextAction={contactContent.founderContextAction}
         heading={contactContent.heading}
         introduction={contactContent.introduction}
         locale={route.locale}

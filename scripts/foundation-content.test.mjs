@@ -164,3 +164,15 @@ test('keeps the approved minimum homepage and services copy', async () => {
   assert.equal(spanishServices.finalCta.action.routeId, 'contact');
   assert.equal(englishServices.finalCta.action.routeId, 'contact');
 });
+
+test('exposes the subdued Founder context action after direct contact channels', async () => {
+  for (const locale of ['es', 'en']) {
+    const definition = modules.find((item) => item.locale === locale && item.routeId === 'contact');
+    const content = (await import(definition.path))[definition.exportName];
+
+    assert.deepEqual(content.founderContextAction, {
+      label: locale === 'es' ? 'Conocer a Samuel' : 'Meet Samuel',
+      routeId: 'founder',
+    });
+  }
+});
