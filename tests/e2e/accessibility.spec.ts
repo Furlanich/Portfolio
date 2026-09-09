@@ -7,6 +7,8 @@ const representativeRoutes = [
   ['English homepage', stableRoutes.home.en],
   ['Spanish Services', stableRoutes.services.es],
   ['Spanish Projects', stableRoutes.projects.es],
+  ['Spanish Studio', stableRoutes.studio.es],
+  ['English Studio', stableRoutes.studio.en],
   ['Spanish Founder', stableRoutes.founder.es],
 ] as const;
 

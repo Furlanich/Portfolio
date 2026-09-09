@@ -4,6 +4,7 @@ export const stableRoutes = {
   home: { es: '/', en: '/en/' },
   services: { es: '/servicios/', en: '/en/services/' },
   projects: { es: '/proyectos/', en: '/en/work/' },
+  studio: { es: '/estudio/', en: '/en/about/' },
   founder: {
     es: '/estudio/samuel-furlanich/',
     en: '/en/about/samuel-furlanich/',
