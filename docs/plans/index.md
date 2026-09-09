@@ -9,7 +9,7 @@ related:
   - PLAN-SERVICES-EXPERIENCE
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-STUDIO-FOUNDER-COMPLETION
-last_verified: 2026-09-08
+last_verified: 2026-09-09
 ---
 
 # Execution plans
@@ -21,10 +21,9 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [`PLAN-STUDIO-FOUNDER-COMPLETION`](active/studio-founder-completion.md): classifies Initiative 5 as substantial approved work and defines the four-PR, test-first delivery sequence for the bilingual Studio experience, completed Founder profile, and cross-page integration.
-
 ## Completed
 
+- [`PLAN-STUDIO-FOUNDER-COMPLETION`](completed/studio-founder-completion.md): completed the four-PR bilingual Studio experience, Founder profile, cross-page integration, evidence links, and verification sequence.
 - [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](completed/projects-evidence-experience.md): completed the fail-closed public content boundary, bilingual Projects index, approved paired detail routes, legacy project-path cleanup, and evidence-boundary verification.
 
 - [`PLAN-HOMEPAGE-FOUNDATION`](completed/homepage-foundation.md): delivered the accepted localized route foundation, minimum destinations, Founder migration, business hero, atomic cutover, and evidence-driven legacy-localization cleanup in four reviewable implementation PRs.

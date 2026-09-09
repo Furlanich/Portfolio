@@ -19,7 +19,7 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-08
+last_verified: 2026-09-09
 ---
 
 # Product knowledge status register
@@ -114,7 +114,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - No approved portrait exists. The text-led layout is complete without one; photography is deferred.
 - The CV asset/path and professional URLs are approved for preservation. Root and /Portfolio downloads and intended external destinations require re-verification during implementation; CV content refresh/redesign is separate deferred work.
 - The visual and interaction baselines reuse the existing system and define exact layouts at 320px, approximately 390px, tablet, 1024px, and 1440px. No new visual theme or motion language is approved.
-- The initiative fits ADR-STATIC-LOCALIZED-ROUTING and is governed by the active [`PLAN-STUDIO-FOUNDER-COMPLETION`](../plans/active/studio-founder-completion.md). The four-PR sequence begins with behavior-neutral Studio route/content contracts; no RFC or new ADR is required.
+- The initiative fits ADR-STATIC-LOCALIZED-ROUTING and its completed delivery is recorded by [`PLAN-STUDIO-FOUNDER-COMPLETION`](../plans/completed/studio-founder-completion.md). The four-PR sequence begins with behavior-neutral Studio route/content contracts; no RFC or new ADR is required.
 
 ### Founder facts
 

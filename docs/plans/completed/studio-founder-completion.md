@@ -3,14 +3,14 @@ id: PLAN-STUDIO-FOUNDER-COMPLETION
 type: execution-plan
 title: Studio + Founder Completion implementation plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 owners:
   - product
   - design
   - frontend
   - qa
 created: 2026-09-08
-last_verified: 2026-09-08
+last_verified: 2026-09-09
 related:
   - PAGE-STUDIO
   - PAGE-FOUNDER
@@ -613,19 +613,23 @@ Ordinary component boundaries, narrow content interfaces, responsive CSS, test o
 
 ## Completion checklist
 
-- [ ] PR 1 merged: Studio route and content contracts.
-- [ ] PR 2 merged: bilingual Studio experience and navigation integration.
-- [ ] PR 3 merged: bilingual Founder completion.
-- [ ] PR 4 ready for human review: integration, evidence links, full verification, and documentation synchronization.
-- [ ] Studio and Founder equivalent-route switching verified.
-- [ ] Exact approved ES/EN copy rendered.
-- [ ] Visual matrix and four reviewed baselines complete.
-- [ ] Axe and manual accessibility evidence complete.
-- [ ] CV normal-root and /Portfolio behavior verified.
-- [ ] LinkedIn and GitHub targets verified.
-- [ ] Portrait and CV-content deferrals remain explicit.
-- [ ] No RFC/ADR or architecture blocker was introduced.
-- [ ] Plan moved to completed only with fresh passing evidence.
+- [x] PR 1 merged: Studio route and content contracts.
+- [x] PR 2 merged: bilingual Studio experience and navigation integration.
+- [x] PR 3 merged: bilingual Founder completion.
+- [x] PR 4 merged: integration, evidence links, full verification, and documentation synchronization.
+- [x] Studio and Founder equivalent-route switching verified.
+- [x] Exact approved ES/EN copy rendered.
+- [x] Visual matrix and four reviewed baselines complete.
+- [x] Axe and manual accessibility evidence complete.
+- [x] CV normal-root and /Portfolio behavior verified.
+- [x] LinkedIn and GitHub targets verified.
+- [x] Portrait and CV-content deferrals remain explicit.
+- [x] No RFC/ADR or architecture blocker was introduced.
+- [x] Plan moved to completed only with fresh passing evidence.
+
+## Completion record
+
+PR 4 was merged into `main` as [PR #40](https://github.com/Furlanich/Portfolio/pull/40) at commit `cc18f55`. Fresh evidence covered `npm run docs:check`, `npm run skills:check`, `npm run validate`, `npm run test:a11y`, `npm run test:e2e` with 102 passing tests, `npm run test:frontend`, the normal-root static export, and the `/Portfolio` build/static-export path. The approved portrait and CV-content deferrals remain explicit; retained legacy Founder source stays in place because active consumers remain.
 
 ## First implementation task
 
