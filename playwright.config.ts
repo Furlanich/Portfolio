@@ -96,7 +96,7 @@ export default defineConfig({
     },
     {
       name: 'visual-chromium',
-      snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}{ext}',
+      snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}-{platform}{ext}',
       testMatch: /visual\/.*\.visual\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
