@@ -7,6 +7,7 @@ related:
   - PAGE-CONTACT
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
+  - RFC-CONTACT-INQUIRY-PIPELINE
 last_verified: 2026-09-10
 ---
 
@@ -34,7 +35,7 @@ This concise catalogue traces visitor-facing capabilities to their authoritative
 
 ## OPEN capabilities and dependencies
 
-- Contact processor and exact deployed data architecture: Formspree is the recommended **PROPOSED** launch candidate, but provider selection, storage configuration, international-transfer treatment, retention enforcement, and legally reviewed notice/consent wording require a Governance RFC. The in-page four-field experience, state model, fallback order, field limits, provider filtering, honeypot, duplicate prevention, and no-default-CAPTCHA policy are **APPROVED** in [`PAGE-CONTACT`](pages/contact-and-privacy.md).
+- Contact processor and exact deployed data architecture: [`RFC-CONTACT-INQUIRY-PIPELINE`](../rfcs/contact-inquiry-pipeline.md) proposes Formspree for the static-site release behind a narrow `submitInquiry()` adapter. Human RFC acceptance, verified provider configuration/content retention, international-transfer treatment, and legally reviewed notice/consent wording remain implementation and release blockers. The in-page four-field experience, state model, fallback order, field limits, provider filtering, honeypot, duplicate prevention, and no-default-CAPTCHA policy are **APPROVED** in [`PAGE-CONTACT`](pages/contact-and-privacy.md).
 - Final project search/filter behavior and public project demos or video walkthroughs. See [`PROJECT-EVIDENCE`](project-evidence.md).
 - Analytics and conversion measurement.
 - Custom domain. See [`IA-SITE`](information-architecture.md).

@@ -11,6 +11,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - ARCHITECTURE-MAP
+  - RFC-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
 last_verified: 2026-09-10
 ---
@@ -23,7 +24,7 @@ The completed Contact experience is the primary conversion destination for FURLA
 
 This Work closure approves the form purpose, fields, page hierarchy, bilingual copy, state model, validation behavior, visual composition, accessibility behavior, spam requirements, notification content, privacy requirements, and testing boundary below. It does not select or approve a form processor, server-side runtime, email provider, secret-management design, or hosting change.
 
-The provider boundary is consequential because it processes personal information, controls delivery and storage, and may create an international transfer. Under `GOV-ENGINEERING-LIFECYCLE`, Codex must create a Governance RFC before implementation. The RFC must compare the candidates and decide the provider, exact deployed data path, storage mode, retention enforcement, abuse controls, configuration ownership, and rollback/migration path. Implementation must not begin and the form must not be publicly enabled until that RFC is human-approved and the Privacy page describes the selected configuration accurately.
+The provider boundary is consequential because it processes personal information, controls delivery and storage, and may create an international transfer. Under `GOV-ENGINEERING-LIFECYCLE`, implementation requires a human-approved Governance RFC. [`RFC-CONTACT-INQUIRY-PIPELINE`](../../rfcs/contact-inquiry-pipeline.md) is now the **PROPOSED** decision: it compares the candidates and recommends Formspree for the static release while defining the deployed data path, storage/retention gate, abuse controls, configuration ownership, failure behavior, testing, and rollback/migration path. Implementation must not begin and the form must not be publicly enabled until that RFC is human-approved and the Privacy page describes the verified configuration accurately.
 
 ## Completed Contact hierarchy — APPROVED
 

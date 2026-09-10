@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
@@ -68,4 +69,4 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 
 [`PAGE-CONTACT / PAGE-PRIVACY`](product/pages/contact-and-privacy.md) now owns the approved in-site, four-field primary inquiry experience, bilingual copy, state model, failure fallbacks, notification contract, abuse baseline, factual privacy scope, retention target, and verification boundary. [`DESIGN-VISUAL`](design/visual-language.md) and [`DESIGN-IX-A11Y`](design/interaction-responsive-accessibility.md) own the approved Contact-specific visual, responsive, semantic, focus, and status behavior.
 
-Formspree is a **PROPOSED** launch recommendation behind a narrow submission adapter, not an approved provider. The exact processor, storage, delivery, international-transfer, and retention architecture remains **OPEN** and requires a human-approved Governance RFC before implementation. The Contact form must not be enabled until that RFC is accepted, the selected configuration passes a labeled inbox-delivery smoke test, and the Privacy page accurately describes the deployed data path. A `mailto:` action remains a fallback and is rejected as the primary form implementation.
+[`RFC-CONTACT-INQUIRY-PIPELINE`](rfcs/contact-inquiry-pipeline.md) now proposes Formspree behind a narrow `submitInquiry()` adapter for the static-site release after comparing Cloudflare Worker + Resend and EmailJS. It defines the exact payload, security, stored-copy disclosure, retention gate, abuse model, failure behavior, tests, operations, and migration path. The proposal is not provider approval or implementation authority: the Contact form remains blocked until human acceptance, verified provisioning and retention behavior, the professional legal/privacy review, a deployed-reality Privacy page, and a labeled inbox-delivery/deletion smoke test. A `mailto:` action remains a fallback and is rejected as the primary form implementation.
