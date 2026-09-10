@@ -16,10 +16,13 @@ related:
   - PAGE-SERVICES
   - PAGE-STUDIO
   - PAGE-FOUNDER
+  - PAGE-CONTACT
+  - PAGE-PRIVACY
+  - CONTENT-LOCALIZATION
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-09
+last_verified: 2026-09-10
 ---
 
 # Product knowledge status register
@@ -44,7 +47,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 ### Conversion and contact
 
 - The primary conversion is a structured inquiry containing name, email, optional business name, and message/problem description.
-- Email, WhatsApp, and phone are secondary channels.
+- WhatsApp, email, and phone are secondary channels in that order.
 - The usual response target is the same business day; exceptional delay is up to two business days.
 - Public contact facts are `samuelfurlanich@gmail.com` and mobile/WhatsApp `+54 9 11 5011-7565`.
 
@@ -147,18 +150,31 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/completed/projects-evidence-experience.md) is the completed Route B / PLAN implementation record. Task 1 / PR 1 established the empty fail-closed public manifest, Task 2 / PR 2 published the bilingual index, Task 3 / PR 3 published the approved detail pairs, and Task 4 / PR 4 retired the verified-unused legacy project paths.
 - The Task 2 / PR 2 publication gate is satisfied by the three READY item records, and the merged implementation publishes only their approved image-free source-backed cards in both localized index routes. The Task 3 / PR 3 detail gate is satisfied by complete bilingual detail content, approved repository evidence links, and one labeled conceptual visual per item. Task 4 / PR 4 removes the obsolete project sources and assets after consumer verification; no blocked, private, retired, or unresolved record is published.
 
+### Contact and inquiry decision closure
+
+- A prospective client completes and submits the primary inquiry form inside the localized FURLANICH Contact route. A local email application is neither opened nor required; `mailto:` is rejected as the form implementation.
+- The approved fields remain name, email, optional company, and the problem to solve. Phone, budget, deadline, project type, service selection, marketing checkbox, and file upload remain excluded.
+- The approved page hierarchy is intro, response expectation, visually dominant form, WhatsApp/email/phone alternatives, and subdued Founder context. Fields remain single-column.
+- The approved state model is `IDLE -> VALIDATING -> SUBMITTING -> SUCCESS | ERROR`. Validation and submission failure preserve all values; duplicate submission is prevented; success waits for documented provider acceptance and resets only then; failure states that delivery was not confirmed and exposes retry plus direct alternatives.
+- Notification requirements are visitor name/email, optional company, message, trustworthy submission time where supported, and useful source/language, with visitor email as `Reply-To` where supported. Target inbox configuration and all private credentials remain outside browser code, public environment values, repository files, fixtures, logs, URLs, and analytics.
+- Launch abuse controls are provider filtering, supported origin restriction, a hidden non-focusable honeypot, duplicate prevention, provider-boundary validation, the approved field limits, and safe malformed/rate/quota/timeout failure handling. Interactive CAPTCHA is not a default launch requirement.
+- The factual privacy scope and operational target are approved: single-purpose inquiry evaluation/response, no marketing or content-bearing analytics, actual processor/storage/metadata disclosure, provider copies disabled when practical or deleted within 30 days of receipt/triage, and non-converted mailbox inquiries deleted within 12 months of last substantive contact unless moved into another governed business/legal record. Professional legal review may change those targets before release.
+- The product does not require a separate checkbox for a single-purpose inquiry and rejects a marketing checkbox. Whether Argentine law, the responsible-party configuration, or the selected international-transfer mechanism requires explicit consent, other wording, registration, contracts, safeguards, or a checkbox remains OPEN for professional legal review.
+- The form cannot be implemented or enabled until a Governance RFC accepts the provider and exact deployed data path; PAGE-PRIVACY must then name the real processors, storage, retention, request route, and transfer treatment before launch.
+
 ## PROPOSED
 
 - Public descriptor: “Estudio de desarrollo de software a medida.”
 - Internal commercial defaults including milestone payment percentages, a 30-day defect warranty, and detailed ownership terms; these require business/legal review.
 - Incremental/static-first architecture recommendation — **PROPOSED** preserved knowledge owned by [`ARCH-INDEX`](../architecture/index.md); it authorizes no architecture or CI change.
+- Formspree behind a narrow `InquirySubmissionPort / submitInquiry()` adapter is the **PROPOSED** Contact launch recommendation. First-party/serverless + Resend and EmailJS remain evaluated alternatives. This is not provider approval.
 - Use conceptual or AI-generated imagery only when clearly identified and never as false evidence of an implemented client solution.
 
 ## OPEN
 
 - Extended visual identity and design-system decisions beyond the approved commercial homepage and Services-page baselines: custom mark, additional semantic colors, full component variants, and broader imagery.
 - Confirmed commercial domain and canonical production URL. This is a **RELEASE BLOCKER**, not an implementation or integration blocker.
-- Final form provider, privacy wording, consent treatment, data retention period, and third-party disclosures. These are **RELEASE BLOCKERS** for the completed inquiry experience, not blockers for hero implementation.
+- Contact processor and exact deployed data architecture: provider/account, storage mode, delivery path, international-transfer safeguards, retention enforcement, abuse configuration, operational ownership, rollback/migration, and professionally reviewed privacy/legal wording. These are **IMPLEMENTATION AND RELEASE BLOCKERS** for the form and require a Governance RFC; the form experience and factual disclosure requirements are already approved.
 - Final legal and contractual review of commercial boundaries.
 - Founder photograph and any later CV content refresh/redesign are **DEFERRED** and non-blocking for the text-led Studio/Founder experience.
 - Permission, functional verification, and approved bilingual item copy required to advance the remaining blocked/private project records or broaden the three READY records beyond their current summary-only detail scope.
@@ -169,7 +185,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Whether any individual service pages will be needed after launch performance is observed.
 - Long-term hosting after the current static-export/GitHub Pages migration slice; changing hosting remains a future architecture decision and does not block the foundation.
 - Whole-site responsive behavior, accessibility audit/conformance claims, and performance budgets beyond the approved homepage, Services, Projects, Studio, and Founder baselines.
-- English copy outside the approved complete homepage, Services, current Projects records/system language, Studio, Founder, and minimum Contact destination, plus item-specific copy for future publication-ready evidence.
+- English copy outside the approved complete homepage, Services, current Projects records/system language, Studio, Founder, and complete Contact experience, plus item-specific copy for future publication-ready evidence.
 
 ## REJECTED
 

@@ -19,10 +19,12 @@ related:
   - PAGE-PROJECTS
   - PAGE-STUDIO
   - PAGE-FOUNDER
+  - PAGE-CONTACT
+  - PAGE-PRIVACY
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-09
+last_verified: 2026-09-10
 ---
 
 # FURLANICH architecture map
@@ -53,6 +55,8 @@ Initiative 4's Projects/Evidence decisions also fit the accepted boundary. [`PLA
 
 Initiative 5 closes Studio and Founder product/design decisions within the same accepted boundary. The approved implementation adds the existing sitemap's /estudio/ and /en/about/ pair as semantic Studio routes, retains the nested Founder pair, routes primary navigation to Studio, and uses route-owned localized content with shared locale-agnostic semantic components. It reuses existing tokens, primitives, static export, trailing slashes, and optional base-path behavior. The completed work is recorded by [`PLAN-STUDIO-FOUNDER-COMPLETION`](docs/plans/completed/studio-founder-completion.md), which sequences route/content contracts, Studio publication, Founder completion, and cross-page verification in four reviewable implementation PRs. It requires no RFC, new ADR, CMS, backend, runtime localization, dependency, hosting change, or new design-system architecture.
 
+Initiative 6 approves the Contact product, content, visual, accessibility, state, validation, fallback, notification, abuse, privacy-fact, and verification requirements in [`PAGE-CONTACT`](docs/product/pages/contact-and-privacy.md). It also creates a non-negotiable architectural constraint: the primary inquiry form submits in-page and delivers to the configured business inbox without a local email client or browser-shipped private credential. Those requirements do not approve a processor. Formspree behind a narrow `InquirySubmissionPort / submitInquiry()` adapter is the **PROPOSED** launch recommendation because it can preserve static export and GitHub Pages; first-party serverless + Resend and EmailJS remain evaluated alternatives. The processor, exact data path, storage, retention enforcement, transfer safeguards, abuse configuration, and operational ownership are consequential privacy/data decisions and require a human-approved Governance RFC before implementation.
+
 The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
 
 ## ACCEPTED target architecture
@@ -69,9 +73,11 @@ Until the atomic locale-root cutover, the current personal homepage and client-o
 
 The preserved recommendation is incremental, static-first modernization: reduce unnecessary client boundaries and evolve the existing repository rather than perform a greenfield rebuild. It is a recommendation, not implementation authority. See the [architecture index](docs/architecture/index.md).
 
+For Contact, the proposed launch boundary is `ContactForm -> InquirySubmissionPort / submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured FURLANICH target email`. Only the form boundary and adapter know provider response details. This proposal explicitly avoids a generic integration framework and preserves a future provider swap. It is not implementation authority; the required Governance RFC must approve or reject it.
+
 ## OPEN questions
 
-Long-term hosting, final form/provider integration, the extended design system beyond the approved homepage, Services, Projects, Studio, and Founder baselines, whole-site accessibility claims, global performance budgets, canonical domain, and optional imagery outside approved project evidence remain OPEN with the blocker levels recorded in their owning documents. They do not reopen the accepted localized-routing architecture or block the behavior-neutral Projects publication contract.
+Long-term hosting, the Contact processor and deployed privacy/data architecture, the extended design system beyond the approved homepage, Services, Projects, Studio, Founder, and Contact baselines, whole-site accessibility claims, global performance budgets, canonical domain, and optional imagery outside approved project evidence remain OPEN with the blocker levels recorded in their owning documents. The Contact provider decision is a release and implementation blocker for the form and requires a Governance RFC; it does not reopen the accepted localized-routing architecture.
 
 ## Engineering records
 

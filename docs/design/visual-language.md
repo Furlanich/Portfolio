@@ -10,9 +10,11 @@ related:
   - PAGE-PROJECTS
   - PAGE-STUDIO
   - PAGE-FOUNDER
+  - PAGE-CONTACT
+  - PAGE-PRIVACY
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-07
+last_verified: 2026-09-10
 ---
 
 # Visual language
@@ -236,17 +238,17 @@ The existing visual system, styling, assets, and motion implementation are recor
 
 Complete composition, imagery, responsive, and performance rules are owned by [Projects and evidence experience](../product/projects/experience.md).
 
-## OPEN target decisions beyond the commercial homepage, Services page, Projects experience, Studio, and Founder
+## OPEN target decisions beyond the commercial homepage, Services page, Projects experience, Studio, Founder, and Contact
 
 - Custom logo symbol, monogram, and extended brand-lockup system.
-- Extended semantic colors, including form validation beyond the approved neutral Projects evidence treatment.
-- Complete type hierarchy beyond the commercial homepage, Services, Projects, Studio, and Founder page specifications.
-- Page- and component-specific density outside the approved homepage, Services, Projects, Studio, and Founder baselines.
-- Detailed global navigation, form, and broader badge variants beyond the approved foundation and page baselines.
+- Extended semantic colors beyond the approved Contact error/success roles and neutral Projects evidence treatment.
+- Complete type hierarchy beyond the commercial homepage, Services, Projects, Studio, Founder, and Contact page specifications.
+- Page- and component-specific density outside the approved homepage, Services, Projects, Studio, Founder, and Contact baselines.
+- Detailed global navigation, form variants beyond the approved Contact fields/states, and broader badge variants beyond the approved page baselines.
 - Broader photography, illustration, screenshot, and abstract-graphic direction beyond the approved Projects evidence rules.
 - A broader icon system or custom icon requirements.
 - Whether a dark theme is ever introduced.
-- Motion language outside the commercial homepage, Services, Projects, Studio, Founder, and basic control-state transitions.
+- Motion language outside the commercial homepage, Services, Projects, Studio, Founder, Contact, and basic control-state transitions.
 
 ## Reference posture
 
@@ -317,3 +319,27 @@ FOUNDER-FINAL-CTA reuses the Action-tint commercial CTA pattern. GitHub, LinkedI
 ### Motion
 
 Studio and Founder have no section entrance sequences, scroll-triggered reveals, animated timeline drawing, parallax portraits, floating technology icons, text scrambling, or motion-dependent meaning. Reuse only the approved 160ms ease-out color/background/border control transition, and remove nonessential transitions under reduced motion.
+
+## Contact visual baseline — APPROVED
+
+This baseline extends the existing FURLANICH system for `PAGE-CONTACT`; it adds no new theme, component framework, decorative language, or general-purpose form library.
+
+### Hierarchy and composition
+
+The DOM and visual hierarchy is intro, response expectation, inquiry form, alternative channels, then Founder context. The form is the dominant conversion surface. WhatsApp, email, and phone never appear above it, and their visual strength follows that same order.
+
+At 1024px and above, use the 12-column container. The form occupies approximately eight columns on the left; response context, alternatives, and location occupy approximately four on the right while retaining source order and an understandable reading path. Intro and response expectation may span a comfortable reading measure above the split. Below 1024px, stack intro, form, response expectation/alternatives, and Founder context in that order. The four form fields remain one column at every width.
+
+The form uses Surface, a 1px Border, 16px radius, 24px compact padding and up to 32px wide padding. It may use restrained internal spacing, not nested cards. Alternatives and location are quieter content blocks. Founder context is a subdued text link after the contact choices.
+
+### Fields and states
+
+- Every control has a persistent 16/24px semibold visible label and adjacent localized required/optional text. Placeholder-only and floating labels are rejected.
+- Inputs have at least 48px height, the established 10px control radius, Surface background, Border outline, Ink text, and the approved two-ring blue focus treatment. The message textarea is at least 180px high and resizes vertically.
+- Helper and required/optional text use the approved 14/22px supporting scale and Muted ink. Inline errors use 14/22px text and an explicit message; color is never the only identifier.
+- Contact error text/border may use `#B42318`; confirmed success text/icon may use `#067647`. Implementations must verify contrast against the actual background. The blue focus ring remains visible on invalid controls and is not replaced by red alone.
+- The primary submit action reuses the existing primary button and minimum 48px height. Loading and disabled states remain legible, keep their label, and never rely only on opacity, a spinner, or motion.
+- Success and failure use a restrained bordered status surface with a visible heading and explanation. The failure action is retry, followed by the still-visible WhatsApp, email, and phone alternatives. Neither state becomes a celebratory illustration or modal.
+- No default CAPTCHA badge, challenge, floating widget, or provider-branded redirect is part of the approved launch composition. A later challenge requires its own privacy/accessibility review.
+
+Long translated labels, helper text, errors, and status copy grow naturally. Controls, messages, and actions use no fixed content height, line clamp, clipping, or horizontal scrolling.

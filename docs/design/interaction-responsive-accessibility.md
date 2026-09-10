@@ -7,12 +7,13 @@ related:
   - PAGE-HOME
   - PAGE-SERVICES
   - PAGE-CONTACT
+  - PAGE-PRIVACY
   - PAGE-PROJECTS
   - PAGE-STUDIO
   - PAGE-FOUNDER
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-07
+last_verified: 2026-09-10
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -193,12 +194,12 @@ The existing navigation, localization, form, motion, and interaction behavior is
 - Avoid horizontal carousels for essential service or project information.
 - Keep line lengths comfortable on wide screens.
 
-## OPEN decisions beyond the commercial homepage, Services page, Projects experience, Studio, and Founder
+## OPEN decisions beyond the commercial homepage, Services page, Projects experience, Studio, Founder, and Contact
 
 - Whole-site conformance claims, audit scope, and any certification remain unresolved; only the commercial-homepage target above is approved.
-- Breakpoints and container behavior for pages and components outside the approved homepage, Services, Projects, Studio, and Founder baselines.
-- Motion language outside the commercial homepage, Services, Projects, Studio, Founder, and basic control-state transitions.
-- Touch, tablet, and landscape-specific layouts outside the approved homepage, Services, Projects, Studio, and Founder baselines.
+- Breakpoints and container behavior for pages and components outside the approved homepage, Services, Projects, Studio, Founder, and Contact baselines.
+- Motion language outside the commercial homepage, Services, Projects, Studio, Founder, Contact, and basic control-state transitions.
+- Touch, tablet, and landscape-specific layouts outside the approved homepage, Services, Projects, Studio, Founder, and Contact baselines.
 - Formal browser/device support matrix.
 - Whole-site automated and manual accessibility validation strategy.
 
@@ -251,3 +252,33 @@ At every size, verify no horizontal overflow, complete content growth, correct s
 - No accountability, collaborator, evidence, location, experience, education, capability, or link meaning is hidden behind hover, a tooltip, animation, icon, or color.
 - Text remains readable and operable at 200% zoom. Layouts reflow rather than introducing two-dimensional scrolling.
 - Section entrance motion, parallax, animated timeline drawing, and floating icons are absent. Under prefers-reduced-motion: reduce, nonessential control transitions and optional smooth scrolling are removed.
+
+## Contact interaction, responsive, and accessibility baseline — APPROVED
+
+These requirements implement the `PAGE-CONTACT` state model without claiming audited whole-site conformance.
+
+### Form semantics and validation
+
+- Use one semantic form with an accessible name, one visible label per control, stable control/error IDs, native `required` where applicable, and localized visible required/optional text.
+- Associate helper and error text through `aria-describedby`; set `aria-invalid="true"` only while a control is invalid. Do not remove a helper when an error appears if both remain relevant.
+- Name, email, and company use appropriate `autocomplete` tokens (`name`, `email`, and `organization`); email uses the email input type and mobile keyboard hint. The message remains a normal multiline text control.
+- On validation failure, show every relevant inline error, preserve every value, and focus the first invalid control. Four fields do not require an error summary when this focus and association contract is met.
+- Errors include explicit text and are not communicated by color, border, icon, placeholder, tooltip, or motion alone.
+
+### Submission states and focus
+
+- `SUBMITTING` sets the form busy, disables the field group and submit control for the active request, preserves visible labels and values, exposes localized progress through a polite live region, and prevents duplicate click, Enter, or programmatic submission.
+- Enter submits from single-line controls according to native form behavior. The textarea keeps newline behavior. Every action remains keyboard operable with a visible unclipped focus indicator and at least 44px target dimensions; primary controls remain at least 48px high.
+- `SUCCESS` occurs only after the adapter receives the selected provider's documented acceptance response. Announce and programmatically focus a `role="status"` message with `tabindex="-1"`, then reset the fields. Keep direct alternatives reachable.
+- `ERROR` covers validation-safe provider rejection, rate/quota failure, timeout/network failure, and malformed or unknown responses. Restore controls, preserve every entered value, announce and focus an alert/error status, offer retry, and keep WhatsApp strongest, then email and phone. Never expose raw provider errors.
+- No automatic retry is approved. Reduced-motion preferences remove nonessential transitions; no state meaning depends on animation or a spinner.
+
+### Reflow and progressive availability
+
+- Below 1024px, source and visual order is intro, form, response expectation/alternatives, Founder context. At 1024px and above, the form may occupy approximately eight columns and the supporting block four without CSS ordering that changes reading or focus order.
+- All fields are full width and single column. At 320px, approximately 390px, 768px, 1024px, and 1440px, verify translated-copy/error expansion, textarea resizing, 200% zoom, landscape/tablet use, and no clipping or horizontal overflow.
+- If client-side JavaScript fails, the localized Contact content and WhatsApp, email, and phone alternatives remain usable. Do not replace the primary in-page form with a `mailto:` action, provider-hosted success page, or false success state.
+
+### Verification boundary
+
+Verify both locale routes at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900`, including root and optional `/Portfolio` base paths. Cover keyboard-only completion and retry; focus/error association; all state announcements; duplicate prevention; preserved values; reset-after-confirmation only; textarea resize; translated copy; 200% zoom; reduced motion; no raw provider response; fallback order; representative axe scans; and manual contrast, semantics, reading-order, and assistive-technology checks. Provider/network outcomes are deterministic adapter mocks; the labeled live delivery smoke test is separate and never runs automatically in public CI.
