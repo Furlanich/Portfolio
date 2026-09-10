@@ -13,10 +13,12 @@ related:
   - PAGE-SERVICES
   - PAGE-STUDIO
   - PAGE-FOUNDER
+  - PAGE-CONTACT
+  - PAGE-PRIVACY
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-09
+last_verified: 2026-09-10
 ---
 
 # FURLANICH project knowledge
@@ -61,3 +63,9 @@ Initiative 4 closes the Projects/Evidence product and design decisions in [`PAGE
 
 
 Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO / PAGE-FOUNDER](product/pages/studio-and-founder.md): exact Spanish and English content, route/navigation responsibilities, direct-accountability and collaborator language, operating principles, location/availability, professional history, education, grouped capabilities, Projects and Contact bridges, CV/professional-link treatment, portrait deferral, duplication boundaries, visual compositions, responsive behavior, accessibility, and implementation readiness. The corresponding page extensions are approved in [DESIGN-VISUAL](design/visual-language.md#studio-and-founder-visual-baseline-approved) and [DESIGN-IX-A11Y](design/interaction-responsive-accessibility.md#studio-and-founder-interaction-and-responsive-baseline-approved). Implementation is classified as substantial approved work and is recorded by [`PLAN-STUDIO-FOUNDER-COMPLETION`](plans/completed/studio-founder-completion.md), a completed four-PR, test-first sequence within ADR-STATIC-LOCALIZED-ROUTING. No RFC or new ADR is required.
+
+## Initiative 6 — Contact and inquiry decision closure
+
+[`PAGE-CONTACT / PAGE-PRIVACY`](product/pages/contact-and-privacy.md) now owns the approved in-site, four-field primary inquiry experience, bilingual copy, state model, failure fallbacks, notification contract, abuse baseline, factual privacy scope, retention target, and verification boundary. [`DESIGN-VISUAL`](design/visual-language.md) and [`DESIGN-IX-A11Y`](design/interaction-responsive-accessibility.md) own the approved Contact-specific visual, responsive, semantic, focus, and status behavior.
+
+Formspree is a **PROPOSED** launch recommendation behind a narrow submission adapter, not an approved provider. The exact processor, storage, delivery, international-transfer, and retention architecture remains **OPEN** and requires a human-approved Governance RFC before implementation. The Contact form must not be enabled until that RFC is accepted, the selected configuration passes a labeled inbox-delivery smoke test, and the Privacy page accurately describes the deployed data path. A `mailto:` action remains a fallback and is rejected as the primary form implementation.

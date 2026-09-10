@@ -8,8 +8,10 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PAGE-SERVICES
   - PAGE-PROJECTS
+  - PAGE-CONTACT
+  - PAGE-PRIVACY
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-last_verified: 2026-09-06
+last_verified: 2026-09-10
 ---
 
 # Existing-system documentation
@@ -26,3 +28,9 @@ The homepage-foundation localized-routing target is approved and delivered under
 ## Preserved discovery recommendation — PROPOSED
 
 Incrementally modernize this repository, remain static-first initially, reduce unnecessary client boundaries, and modernize CI later rather than adopt a greenfield rebuild. This is preserved discovery knowledge, not a target-architecture decision. It authorizes no architecture or CI change until a later architecture stage resolves it.
+
+## Contact inquiry architecture — PROPOSED, RFC REQUIRED
+
+Initiative 6 approves an in-page form that delivers to the configured business inbox while preserving the current static-export/GitHub Pages architecture unless a stronger reason is accepted. The recommended proposal is `ContactForm -> InquirySubmissionPort / submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured FURLANICH target email`. It keeps provider details at one narrow boundary and avoids a bespoke backend or generic integration framework.
+
+Formspree is not an accepted architecture decision. The processor, account/configuration ownership, storage, retention enforcement, international transfer, abuse controls, delivery behavior, rollback, and migration path require a human-approved Governance RFC before implementation. A first-party/serverless endpoint with Resend and EmailJS remain explicit alternatives. The accepted outcome may later require an ADR if it establishes durable architecture; an ADR must not be written before the RFC is accepted.

@@ -9,8 +9,10 @@ related:
   - PAGE-SERVICES
   - PAGE-STUDIO
   - PAGE-FOUNDER
+  - PAGE-CONTACT
+  - PAGE-PRIVACY
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-07
+last_verified: 2026-09-10
 ---
 
 # Content and localization
@@ -125,8 +127,8 @@ Before final public content is complete, the repository needs:
 - publication-ready item-level project records;
 - client logo and description permissions;
 - optional founder photograph if a future approved portrait treatment is pursued;
-- final form/privacy provider details;
-- final English adaptations outside the approved complete homepage, complete Services page, and existing minimum destination slices;
+- accepted Contact provider/configuration facts and professionally reviewed Privacy wording;
+- final English adaptations outside the approved complete homepage, complete Services page, Projects records, Studio, Founder, and Contact experience;
 - verified public URLs and repositories.
 
 The founder photograph and unresolved project evidence do not block the approved text-led commercial homepage, Studio, or Founder completion. Photography remains an optional future visual dependency; project evidence remains governed by its item-level owner.
@@ -147,3 +149,11 @@ English uses native business phrasing such as “direct technical accountability
 Studio's four principles are criteria for decision-making, not a translation or restatement of the Homepage Process. Founder capability language groups technologies by the business and engineering work they support; it does not revive the legacy recruiter-oriented skills wall.
 
 English outside the complete homepage, Services, Projects system/content already approved for current public records, Studio, Founder, and minimum Contact destinations remains subject to separate item/page approval.
+
+## Contact inquiry bilingual scope — APPROVED
+
+[`PAGE-CONTACT`](pages/contact-and-privacy.md#approved-bilingual-contact-copy) owns the complete Spanish and English Contact copy. Spanish keeps natural professional voseo; English is a direct adaptation, not a literal translation. Both locales preserve the same hierarchy and meaning: intro, response expectation, primary inquiry form, alternatives in WhatsApp/email/phone order, and subdued Founder context.
+
+Labels remain visible and persistent. Required/optional wording, helper text, field errors, submitting, success, failure, retry, privacy context, and alternative-channel labels are localized; raw provider messages never appear. The copy confirms provider acceptance rather than claiming the inbox was read, states clearly when delivery was not confirmed, and warns visitors not to include passwords, credentials, or sensitive information.
+
+The exact processor name, storage behavior, international-transfer disclosure, responsible legal/business identity, retention wording, and request/legal notice must be inserted from the accepted Governance RFC and professional legal review. No translation may guess or generalize those deployed facts.
