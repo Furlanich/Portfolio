@@ -5,6 +5,7 @@ status: APPROVED
 related:
   - GOV-KNOWLEDGE
   - RFC-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
   - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
   - ADR-STATIC-LOCALIZED-ROUTING
@@ -13,6 +14,7 @@ related:
   - PLAN-SERVICES-EXPERIENCE
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-STUDIO-FOUNDER-COMPLETION
+  - PLAN-CONTACT-INQUIRY-PIPELINE
   - PAGE-HOME
   - PAGE-SERVICES
   - PAGE-STUDIO
@@ -23,7 +25,7 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-10
+last_verified: 2026-09-11
 ---
 
 # Product knowledge status register
@@ -161,21 +163,21 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Launch abuse controls are provider filtering, supported origin restriction, a hidden non-focusable honeypot, duplicate prevention, provider-boundary validation, the approved field limits, and safe malformed/rate/quota/timeout failure handling. Interactive CAPTCHA is not a default launch requirement.
 - The factual privacy scope and operational target are approved: single-purpose inquiry evaluation/response, no marketing or content-bearing analytics, actual processor/storage/metadata disclosure, provider copies disabled when practical or deleted within 30 days of receipt/triage, and non-converted mailbox inquiries deleted within 12 months of last substantive contact unless moved into another governed business/legal record. Professional legal review may change those targets before release.
 - The product does not require a separate checkbox for a single-purpose inquiry and rejects a marketing checkbox. Whether Argentine law, the responsible-party configuration, or the selected international-transfer mechanism requires explicit consent, other wording, registration, contracts, safeguards, or a checkbox remains OPEN for professional legal review.
-- The form cannot be implemented or enabled until [`RFC-CONTACT-INQUIRY-PIPELINE`](../rfcs/contact-inquiry-pipeline.md) is human-approved; PAGE-PRIVACY must then name the verified processors, storage, retention, request route, and transfer treatment before launch.
+- [`RFC-CONTACT-INQUIRY-PIPELINE`](../rfcs/contact-inquiry-pipeline.md) was accepted in Governance PR #43 and is recorded by [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md). Formspree is the approved launch processor behind the narrow provider-neutral `submitInquiry()` adapter; Cloudflare Worker + Resend and EmailJS remain rejected launch alternatives.
+- [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) owns the five-PR implementation and evidence sequence. The form cannot be enabled until PAGE-PRIVACY names the verified deployed processors, storage, retention, request route, and transfer treatment and the provisioning, legal, deterministic, rendered, inbox-delivery, and deletion gates pass.
 
 ## PROPOSED
 
 - Public descriptor: “Estudio de desarrollo de software a medida.”
 - Internal commercial defaults including milestone payment percentages, a 30-day defect warranty, and detailed ownership terms; these require business/legal review.
 - Incremental/static-first architecture recommendation — **PROPOSED** preserved knowledge owned by [`ARCH-INDEX`](../architecture/index.md); it authorizes no architecture or CI change.
-- [`RFC-CONTACT-INQUIRY-PIPELINE`](../rfcs/contact-inquiry-pipeline.md) proposes Formspree behind a narrow `submitInquiry()` adapter for the static-site release. It defines the six-field payload, stored-copy disclosure, abuse and failure models, provider-isolated tests, operations, and migration path after comparing Cloudflare Worker + Resend and EmailJS. This remains **PROPOSED**, not provider approval or implementation authority.
 - Use conceptual or AI-generated imagery only when clearly identified and never as false evidence of an implemented client solution.
 
 ## OPEN
 
 - Extended visual identity and design-system decisions beyond the approved commercial homepage and Services-page baselines: custom mark, additional semantic colors, full component variants, and broader imagery.
 - Confirmed commercial domain and canonical production URL. This is a **RELEASE BLOCKER**, not an implementation or integration blocker.
-- Contact processor and exact deployed data architecture: human acceptance of `RFC-CONTACT-INQUIRY-PIPELINE`, provisioned account/schema/delivery behavior, content-deletion evidence, complete processor chain, international-transfer safeguards, final domain restriction, operational ownership, and professionally reviewed privacy/legal wording. These remain **IMPLEMENTATION AND RELEASE BLOCKERS**; the form experience and factual disclosure requirements are already approved.
+- Contact deployment and privacy facts: provisioned account/schema/delivery behavior, content-deletion evidence, complete processor chain, international-transfer safeguards, final domain restriction, operational ownership, and professionally reviewed privacy/legal wording. These remain **IMPLEMENTATION OR RELEASE BLOCKERS** under `PLAN-CONTACT-INQUIRY-PIPELINE`; the provider architecture, form experience, and factual disclosure requirements are approved.
 - Final legal and contractual review of commercial boundaries.
 - Founder photograph and any later CV content refresh/redesign are **DEFERRED** and non-blocking for the text-led Studio/Founder experience.
 - Permission, functional verification, and approved bilingual item copy required to advance the remaining blocked/private project records or broaden the three READY records beyond their current summary-only detail scope.

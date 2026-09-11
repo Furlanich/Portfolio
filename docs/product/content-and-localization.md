@@ -11,8 +11,10 @@ related:
   - PAGE-FOUNDER
   - PAGE-CONTACT
   - PAGE-PRIVACY
+  - ADR-CONTACT-INQUIRY-PIPELINE
+  - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-10
+last_verified: 2026-09-11
 ---
 
 # Content and localization
@@ -127,7 +129,7 @@ Before final public content is complete, the repository needs:
 - publication-ready item-level project records;
 - client logo and description permissions;
 - optional founder photograph if a future approved portrait treatment is pursued;
-- accepted Contact provider/configuration facts and professionally reviewed Privacy wording;
+- accepted Contact provider architecture, verified deployed configuration facts, and professionally reviewed Privacy wording;
 - final English adaptations outside the approved complete homepage, complete Services page, Projects records, Studio, Founder, and Contact experience;
 - verified public URLs and repositories.
 
@@ -156,4 +158,4 @@ English outside the complete homepage, Services, Projects system/content already
 
 Labels remain visible and persistent. Required/optional wording, helper text, field errors, submitting, success, failure, retry, privacy context, and alternative-channel labels are localized; raw provider messages never appear. The copy confirms provider acceptance rather than claiming the inbox was read, states clearly when delivery was not confirmed, and warns visitors not to include passwords, credentials, or sensitive information.
 
-The exact processor name, storage behavior, international-transfer disclosure, responsible legal/business identity, retention wording, and request/legal notice must be inserted from the accepted Governance RFC and professional legal review. No translation may guess or generalize those deployed facts.
+The accepted processor name and boundary come from `ADR-CONTACT-INQUIRY-PIPELINE`. Exact storage behavior, material subprocessors, international-transfer disclosure, responsible legal/business identity, retention wording, and request/legal notice must come from verified provisioning and professional legal review. No translation may guess or generalize those deployed facts.

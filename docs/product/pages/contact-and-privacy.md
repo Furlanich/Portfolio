@@ -12,19 +12,21 @@ related:
   - DESIGN-IX-A11Y
   - ARCHITECTURE-MAP
   - RFC-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-PIPELINE
+  - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-10
+last_verified: 2026-09-11
 ---
 
 # Contact and privacy pages
 
-## Initiative 6 decision closure — APPROVED product, content, and design; provider architecture OPEN
+## Initiative 6 decision closure — APPROVED product, content, design, and provider architecture; deployment gates OPEN
 
 The completed Contact experience is the primary conversion destination for FURLANICH. A prospective client must be able to complete and submit the inquiry inside `/contacto/` or `/en/contact/`; the primary flow must not open or require a local email application. A `mailto:` action remains an alternative direct channel and is **REJECTED** as the form implementation.
 
-This Work closure approves the form purpose, fields, page hierarchy, bilingual copy, state model, validation behavior, visual composition, accessibility behavior, spam requirements, notification content, privacy requirements, and testing boundary below. It does not select or approve a form processor, server-side runtime, email provider, secret-management design, or hosting change.
+This Work closure approves the form purpose, fields, page hierarchy, bilingual copy, state model, validation behavior, visual composition, accessibility behavior, spam requirements, notification content, privacy requirements, and testing boundary below. Provider architecture was subsequently accepted through the Contact RFC and ADR; the page specification still does not approve a server-side runtime, private browser credential, hosting change, or unverified deployment fact.
 
-The provider boundary is consequential because it processes personal information, controls delivery and storage, and may create an international transfer. Under `GOV-ENGINEERING-LIFECYCLE`, implementation requires a human-approved Governance RFC. [`RFC-CONTACT-INQUIRY-PIPELINE`](../../rfcs/contact-inquiry-pipeline.md) is now the **PROPOSED** decision: it compares the candidates and recommends Formspree for the static release while defining the deployed data path, storage/retention gate, abuse controls, configuration ownership, failure behavior, testing, and rollback/migration path. Implementation must not begin and the form must not be publicly enabled until that RFC is human-approved and the Privacy page describes the verified configuration accurately.
+The provider boundary is consequential because it processes personal information, controls delivery and storage, and may create an international transfer. The repository owner accepted [`RFC-CONTACT-INQUIRY-PIPELINE`](../../rfcs/contact-inquiry-pipeline.md) in Governance PR #43, and [`ADR-CONTACT-INQUIRY-PIPELINE`](../../decisions/contact-inquiry-pipeline.md) records Formspree behind the narrow provider-neutral adapter for the static release. [`PLAN-CONTACT-INQUIRY-PIPELINE`](../../plans/active/contact-inquiry-pipeline.md) owns implementation. The form must not be publicly enabled until the verified provider configuration, Privacy page, professional legal review, deterministic and rendered checks, and labeled delivery/deletion evidence are complete.
 
 ## Completed Contact hierarchy — APPROVED
 
@@ -272,7 +274,7 @@ Before release, a labeled production smoke inquiry must be accepted by the provi
 - Do not enable an interactive CAPTCHA by default when provider filtering, domain restriction, honeypot, and reasonable limits are sufficient.
 - If observed abuse makes an additional challenge necessary, compare privacy, accessibility, keyboard, localization, script, and failure-mode effects before adoption. A later CAPTCHA/Turnstile/hCaptcha/reCAPTCHA choice must update `PAGE-PRIVACY` with the additional processor and data flow and must not ship as an unreviewed implementation detail.
 
-## Provider requirements and candidate evaluation — OPEN architecture
+## Provider requirements and candidate evaluation — APPROVED architecture; deployment facts OPEN
 
 The provider decision uses these ordered criteria:
 
@@ -289,7 +291,7 @@ The provider decision uses these ordered criteria:
 
 | Candidate | Fit and trade-offs | Current status |
 | --- | --- | --- |
-| Formspree | Preserves the current static host; accepts in-page JavaScript submissions through a public form ID; sends target-email notifications; supports `Reply-To`, server-side validation, provider spam filtering, honeypot, domain restriction, and optional challenge controls; and exposes custom success/failure handling. It also processes and normally stores submissions outside the site, so storage mode, plan limits, retention enforcement, subprocessors, international transfer, and notification delivery must be verified and disclosed. | **PROPOSED — recommended launch candidate**, subject to the Governance RFC and legal/privacy review. |
+| Formspree | Preserves the current static host; accepts in-page JavaScript submissions through a public form ID; sends target-email notifications; supports `Reply-To`, server-side validation, provider spam filtering, honeypot, domain restriction, and optional challenge controls; and exposes custom success/failure handling. It also processes and normally stores submissions outside the site, so storage mode, plan limits, retention enforcement, subprocessors, international transfer, and notification delivery must be verified and disclosed. | **APPROVED launch processor** under `ADR-CONTACT-INQUIRY-PIPELINE`; verified provisioning and legal/privacy review remain release gates. |
 | First-party/serverless endpoint + Resend | Keeps the Resend API key server-side and offers the strongest control over validation, rate limiting, message construction, storage minimization, idempotency, and observability. It requires a separately hosted serverless boundary or a hosting change, verified sending-domain/DNS work, custom abuse/security handling, monitoring, and greater operational/test burden. | Considered alternative; not recommended solely for a four-field launch form. Adoption would require explicit backend/deployment architecture approval. |
 | EmailJS or an equivalent browser-oriented email service | Can preserve static hosting and trigger predefined templates through intentionally public browser identifiers. Origin allowlisting, rate limiting, and optional CAPTCHA reduce abuse, but the browser remains more directly coupled to the email template/service configuration and public quota surface, and the same processor/privacy review remains necessary. | Considered alternative; lower preference than Formspree for the narrow, replaceable launch boundary. |
 
@@ -347,7 +349,7 @@ Professional Argentine legal review is a **RELEASE BLOCKER** and must address th
 
 ## Implementation and verification boundary — APPROVED requirements
 
-Implementation follows `frontend-implementation`, test-first behavior, `playwright-qa`, `visual-qa`, `verification-before-completion`, and `pr-readiness` after the provider RFC is accepted. At minimum, future tests and review must cover:
+Implementation follows `PLAN-CONTACT-INQUIRY-PIPELINE`, `frontend-implementation`, test-first behavior, `playwright-qa`, `visual-qa`, `verification-before-completion`, and `pr-readiness` under the accepted provider ADR. At minimum, future tests and review must cover:
 
 - pure validation and state transitions, including trimming and every field limit;
 - the narrow submission port and provider adapter mapping for accepted, field-error, rejected, timeout/network, invalid-response, and duplicate-submit cases;
@@ -443,9 +445,9 @@ Explain in plain language what information is collected, why it is used, who pro
 
 ## Privacy implementation closure — APPROVED factual requirements; architecture and legal wording OPEN
 
-The factual notice scope, purpose limits, processor/storage/retention disclosures, request method, and operational retention target are approved above. The selected provider and exact configuration, responsible legal/business identity, international-transfer mechanism, legally sufficient notice/consent wording, and professional Argentine legal review remain OPEN release blockers.
+The factual notice scope, purpose limits, processor/storage/retention disclosures, request method, and operational retention target are approved above. Formspree is the accepted launch provider; its exact configuration and material subprocessor chain, the responsible legal/business identity, international-transfer mechanism, legally sufficient notice/consent wording, and professional Argentine legal review remain OPEN release blockers.
 
-The Contact form must not be publicly enabled until the Governance RFC is accepted and PAGE-PRIVACY names the real deployed processors, storage behavior, retention operations, request route, and transfer treatment.
+The Contact form must not be publicly enabled until PAGE-PRIVACY names the real deployed processors, storage behavior, retention operations, request route, and transfer treatment and every release gate in `PLAN-CONTACT-INQUIRY-PIPELINE` has passed.
 
 ## Acceptance criteria
 

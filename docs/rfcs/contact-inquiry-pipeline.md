@@ -1,16 +1,18 @@
 ---
 id: RFC-CONTACT-INQUIRY-PIPELINE
 type: request-for-comments
-status: PROPOSED
+status: APPROVED
 related:
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - ARCHITECTURE-MAP
   - ARCH-CURRENT
   - ADR-STATIC-LOCALIZED-ROUTING
+  - ADR-CONTACT-INQUIRY-PIPELINE
+  - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-10
+last_verified: 2026-09-11
 ---
 
 # Contact inquiry submission pipeline
@@ -76,9 +78,9 @@ The browser and adapter must not attach analytics identifiers, cookies, advertis
 - Routine CI must never send real inquiry email.
 - `PAGE-PRIVACY` must name the deployed processors, stored copies, relevant automatically collected metadata, retention, request route, and international-transfer treatment before the form is enabled.
 
-## Proposed approach
+## Accepted approach
 
-Select **Formspree for the current static-site release**, subject to human approval of this RFC and the provisioning/release gates below.
+Select **Formspree for the current static-site release**, subject to the provisioning/release gates below.
 
 ```text
 ContactForm
@@ -243,7 +245,7 @@ Compared with a Worker, FURLANICH has less control over CORS semantics, request-
 
 ## Migration and implementation impact
 
-Approval of this RFC should be recorded in an ADR before application implementation. A subsequent versioned execution plan should:
+This accepted RFC is recorded by [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md). [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) sequences the following work before release:
 
 1. provision and verify the dedicated Formspree form without committing secrets or real data;
 2. configure and staging-test the exact field schema, max lengths, file/unknown-field rejection, recipient, subject, `Reply-To`, Formshield, honeypot, domain restriction, CAPTCHA-off posture, and 30-day retention behavior;
@@ -297,9 +299,15 @@ Approve Formspree for the current static-site release behind the narrow `submitI
 
 Do not approve a full-site hosting migration, browser-side SMTP/Gmail/Resend secret, generic integration framework, production form implementation, or real-email CI as part of this decision.
 
+## Approval resolution
+
+The repository owner accepted Formspree behind the narrow `submitInquiry()` boundary when [Governance PR #43](https://github.com/Furlanich/Portfolio/pull/43) was merged on 2026-09-10. [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) records the durable decision, and [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) owns its execution.
+
+The merge resolves provider architecture, not the release gates. Verified account/schema/delivery/deletion behavior, the final production hostname, complete processor chain and transfer treatment, professional privacy/legal review, accurate deployed Privacy pages, deterministic checks, and labeled staging/production smoke evidence remain required.
+
 ## Status
 
-**PROPOSED.** This document is a review-ready Governance proposal and grants no implementation authority until human approval. If accepted, create an ADR that records Formspree as the launch processor and a versioned implementation plan. Keep the Contact form disabled until the configuration, Privacy page, legal review, deterministic tests, and labeled delivery/deletion smoke gates are complete.
+**APPROVED.** The repository owner approved this architecture by merging [Governance PR #43](https://github.com/Furlanich/Portfolio/pull/43) on 2026-09-10. The original comparison, alternatives, and trade-offs remain above as decision history. Application delivery is governed by `ADR-CONTACT-INQUIRY-PIPELINE` and `PLAN-CONTACT-INQUIRY-PIPELINE`; keep the Contact form disabled until the configuration, Privacy page, legal review, deterministic tests, and labeled delivery/deletion smoke gates are complete.
 
 ## Official references checked
 
