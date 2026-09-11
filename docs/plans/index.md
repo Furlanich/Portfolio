@@ -9,7 +9,9 @@ related:
   - PLAN-SERVICES-EXPERIENCE
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-STUDIO-FOUNDER-COMPLETION
-last_verified: 2026-09-09
+  - PLAN-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-PIPELINE
+last_verified: 2026-09-11
 ---
 
 # Execution plans
@@ -20,6 +22,8 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 - [Completed Stage B harness plan](completed/stage-b-agent-engineering-harness.md)
 
 ## Active
+
+- [`PLAN-CONTACT-INQUIRY-PIPELINE`](active/contact-inquiry-pipeline.md): active five-PR sequence for verified Formspree provisioning/privacy closure, the tested provider-neutral adapter, paired Privacy routes, atomic accessible Contact-form launch, and production evidence/plan closure.
 
 ## Completed
 

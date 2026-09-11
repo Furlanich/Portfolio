@@ -7,6 +7,7 @@ related:
   - ARCH-FINDINGS
   - ARCH-STAGE-B-HARNESS-DESIGN
   - RFC-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
   - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
   - ADR-STATIC-LOCALIZED-ROUTING
@@ -15,6 +16,7 @@ related:
   - PLAN-SERVICES-EXPERIENCE
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-STUDIO-FOUNDER-COMPLETION
+  - PLAN-CONTACT-INQUIRY-PIPELINE
   - PAGE-HOME
   - PAGE-SERVICES
   - PAGE-PROJECTS
@@ -25,7 +27,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-10
+last_verified: 2026-09-11
 ---
 
 # FURLANICH architecture map
@@ -56,7 +58,7 @@ Initiative 4's Projects/Evidence decisions also fit the accepted boundary. [`PLA
 
 Initiative 5 closes Studio and Founder product/design decisions within the same accepted boundary. The approved implementation adds the existing sitemap's /estudio/ and /en/about/ pair as semantic Studio routes, retains the nested Founder pair, routes primary navigation to Studio, and uses route-owned localized content with shared locale-agnostic semantic components. It reuses existing tokens, primitives, static export, trailing slashes, and optional base-path behavior. The completed work is recorded by [`PLAN-STUDIO-FOUNDER-COMPLETION`](docs/plans/completed/studio-founder-completion.md), which sequences route/content contracts, Studio publication, Founder completion, and cross-page verification in four reviewable implementation PRs. It requires no RFC, new ADR, CMS, backend, runtime localization, dependency, hosting change, or new design-system architecture.
 
-Initiative 6 approves the Contact product, content, visual, accessibility, state, validation, fallback, notification, abuse, privacy-fact, and verification requirements in [`PAGE-CONTACT`](docs/product/pages/contact-and-privacy.md). It also creates a non-negotiable architectural constraint: the primary inquiry form submits in-page and delivers to the configured business inbox without a local email client or browser-shipped private credential. [`RFC-CONTACT-INQUIRY-PIPELINE`](docs/rfcs/contact-inquiry-pipeline.md) now proposes Formspree behind a narrow `submitInquiry()` adapter for the static release after comparing Cloudflare Worker + Resend and EmailJS. The proposal preserves GitHub Pages and defines the data path, stored copies, abuse model, failure semantics, testing boundary, operations, and migration triggers. It remains **PROPOSED** and grants no implementation authority until human approval and the recorded privacy/legal/provisioning gates are complete.
+Initiative 6 approves the Contact product, content, visual, accessibility, state, validation, fallback, notification, abuse, privacy-fact, and verification requirements in [`PAGE-CONTACT`](docs/product/pages/contact-and-privacy.md). It also creates a non-negotiable architectural constraint: the primary inquiry form submits in-page and delivers to the configured business inbox without a local email client or browser-shipped private credential. [`RFC-CONTACT-INQUIRY-PIPELINE`](docs/rfcs/contact-inquiry-pipeline.md) was accepted in Governance PR #43 and is recorded by [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md). The accepted Formspree boundary preserves GitHub Pages and defines the data path, stored copies, abuse model, failure semantics, testing boundary, operations, and migration triggers. [`PLAN-CONTACT-INQUIRY-PIPELINE`](docs/plans/active/contact-inquiry-pipeline.md) owns execution; privacy/legal/provisioning and live-evidence gates remain unresolved release constraints rather than architecture questions.
 
 The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
 
@@ -74,11 +76,11 @@ Until the atomic locale-root cutover, the current personal homepage and client-o
 
 The preserved recommendation is incremental, static-first modernization: reduce unnecessary client boundaries and evolve the existing repository rather than perform a greenfield rebuild. It is a recommendation, not implementation authority. See the [architecture index](docs/architecture/index.md).
 
-For Contact, [`RFC-CONTACT-INQUIRY-PIPELINE`](docs/rfcs/contact-inquiry-pipeline.md) proposes `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured FURLANICH target email`. Only the form/client boundary and one provider adapter know Formspree response details. The RFC explicitly avoids a generic integration framework, preserves a future provider swap, and keeps the production form disabled pending human review.
+For Contact, [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md) accepts `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured FURLANICH target email`. Only the form/client boundary and one provider adapter know Formspree response details. The decision explicitly avoids a generic integration framework, preserves a future provider swap, and keeps the production form disabled until provisioning, Privacy, legal, deterministic, staged-delivery, and deletion gates pass.
 
 ## OPEN questions
 
-Long-term hosting, human acceptance and provisioning of the proposed Contact processor/data architecture, the extended design system beyond the approved homepage, Services, Projects, Studio, Founder, and Contact baselines, whole-site accessibility claims, global performance budgets, canonical domain, and optional imagery outside approved project evidence remain OPEN with the blocker levels recorded in their owning documents. The Contact decision remains an implementation and release blocker until `RFC-CONTACT-INQUIRY-PIPELINE` is approved; it does not reopen the accepted localized-routing architecture.
+Long-term hosting, verified Contact account/schema/delivery/deletion behavior, the complete processor/transfer facts and professional privacy/legal wording, the extended design system beyond the approved homepage, Services, Projects, Studio, Founder, and Contact baselines, whole-site accessibility claims, global performance budgets, canonical domain, and optional imagery outside approved project evidence remain OPEN with the blocker levels recorded in their owning documents. The accepted Contact provider architecture does not reopen the localized-routing architecture or waive its implementation and release gates.
 
 ## Engineering records
 

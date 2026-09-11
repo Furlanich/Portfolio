@@ -6,12 +6,14 @@ related:
   - GOV-STATUS
   - ARCHITECTURE-MAP
   - ADR-STATIC-LOCALIZED-ROUTING
+  - ADR-CONTACT-INQUIRY-PIPELINE
   - PAGE-SERVICES
   - PAGE-PROJECTS
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-last_verified: 2026-09-10
+  - PLAN-CONTACT-INQUIRY-PIPELINE
+last_verified: 2026-09-11
 ---
 
 # Existing-system documentation
@@ -29,8 +31,8 @@ The homepage-foundation localized-routing target is approved and delivered under
 
 Incrementally modernize this repository, remain static-first initially, reduce unnecessary client boundaries, and modernize CI later rather than adopt a greenfield rebuild. This is preserved discovery knowledge, not a target-architecture decision. It authorizes no architecture or CI change until a later architecture stage resolves it.
 
-## Contact inquiry architecture — PROPOSED, RFC REQUIRED
+## Contact inquiry architecture — ACCEPTED, EXECUTION PLANNED
 
-Initiative 6 approves an in-page form that delivers to the configured business inbox while preserving the current static-export/GitHub Pages architecture unless a stronger reason is accepted. The recommended proposal is `ContactForm -> InquirySubmissionPort / submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured FURLANICH target email`. It keeps provider details at one narrow boundary and avoids a bespoke backend or generic integration framework.
+Initiative 6 approves an in-page form that delivers to the configured business inbox while preserving the current static-export/GitHub Pages architecture. Governance PR #43 accepted `ContactForm -> InquirySubmissionPort / submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured FURLANICH target email`. It keeps provider details at one narrow boundary and avoids a bespoke backend or generic integration framework.
 
-Formspree is not an accepted architecture decision. The processor, account/configuration ownership, storage, retention enforcement, international transfer, abuse controls, delivery behavior, rollback, and migration path require a human-approved Governance RFC before implementation. A first-party/serverless endpoint with Resend and EmailJS remain explicit alternatives. The accepted outcome may later require an ADR if it establishes durable architecture; an ADR must not be written before the RFC is accepted.
+[`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) records the accepted architecture and [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) owns delivery. Verified account/configuration, storage, retention enforcement, processor and transfer facts, professional legal/privacy review, staged inbox delivery, deletion, and production smoke evidence remain explicit gates. A first-party/serverless endpoint with Resend and EmailJS remain rejected launch alternatives and migration candidates only through new governance.

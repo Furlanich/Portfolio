@@ -6,9 +6,11 @@ related:
   - ARCH-FINDINGS
   - IA-SITE
   - PAGE-SERVICES
+  - ADR-CONTACT-INQUIRY-PIPELINE
+  - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-08
+last_verified: 2026-09-11
 ---
 
 # Current system
@@ -85,7 +87,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - The approved optional business field is absent.
 - Submission posts JSON to `NEXT_PUBLIC_FORMSPREE_ENDPOINT`.
 - Success and error states are announced in an `aria-live` region.
-- The current source references Formspree, but the target provider remains OPEN.
+- The current source and deployment workflow reference a public Formspree endpoint, but no current Contact route consumes it. Formspree is the accepted target provider under `ADR-CONTACT-INQUIRY-PIPELINE`; provisioning, Privacy, implementation, and live delivery/deletion remain future plan work rather than current-system behavior.
 
 ## Pre-cutover metadata
 
