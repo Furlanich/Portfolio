@@ -13,7 +13,7 @@ related:
   - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
-last_verified: 2026-09-04
+last_verified: 2026-09-12
 ---
 
 # Homepage hero implementation boundary
@@ -121,7 +121,7 @@ This table classifies the RFC prerequisites and links to their authoritative own
 | Minimum Contact destination | PRODUCT and CONTENT DECISION | INTEGRATION BLOCKER — resolved | [`PAGE-CONTACT`](../product/pages/contact-and-privacy.md#homepage-foundation-minimum-destination-approved), **APPROVED**; final form/privacy remain release blockers |
 | Minimum Founder destination and preservation scope | PRODUCT and CONTENT DECISION | INTEGRATION BLOCKER — resolved; CV/link verification remains an integration check | [`PAGE-FOUNDER`](../product/pages/studio-and-founder.md#homepage-foundation-minimum-founder-destination-approved) and [`PORTFOLIO-MIGRATION`](../product/personal-portfolio-migration.md#homepage-foundation-migration-gate-approved), **APPROVED** |
 | Static-compatible localized App Router structure | TECHNICAL ARCHITECTURE DECISION | IMPLEMENTATION BLOCKER — resolved | [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](homepage-foundation-static-localized-routing.md), **APPROVED** in PR #6 and recorded by `ADR-STATIC-LOCALIZED-ROUTING` |
-| Canonical production domain | RELEASE/DEPLOYMENT DECISION | RELEASE BLOCKER only | [`CONTENT-LOCALIZATION`](../product/content-and-localization.md#canonical-domain-open-release-blocker), **OPEN** |
+| Canonical deployment URL | RELEASE/DEPLOYMENT DECISION | RESOLVED for the non-commercial demonstration | [`CONTENT-LOCALIZATION`](../product/content-and-localization.md#canonical-deployment-url-approved), **APPROVED** — `https://furlanich.github.io/Portfolio/` |
 | Long-term hosting choice | TECHNICAL ARCHITECTURE and RELEASE/DEPLOYMENT DECISION | NON-BLOCKING / MAY BE DEFERRED while current static-export compatibility is preserved | `ARCHITECTURE-MAP`, **OPEN** |
 | English content outside the approved minimum routes | CONTENT DECISION | NON-BLOCKING / MAY BE DEFERRED | `CONTENT-LOCALIZATION`, **OPEN** |
 | Custom logo symbol, founder photograph, service fragments, and complete design system | VISUAL/DESIGN or CONTENT DECISION | NON-BLOCKING / MAY BE DEFERRED | Owning product/design records, **OPEN** |

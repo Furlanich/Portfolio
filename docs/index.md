@@ -5,7 +5,9 @@ status: APPROVED
 related:
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
+  - REF-CONTACT-DEMO-KIT
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
@@ -21,7 +23,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-11
+last_verified: 2026-09-12
 ---
 
 # FURLANICH project knowledge
@@ -69,6 +71,8 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 
 ## Initiative 6 — Contact and inquiry decision closure
 
-[`PAGE-CONTACT / PAGE-PRIVACY`](product/pages/contact-and-privacy.md) now owns the approved in-site, four-field primary inquiry experience, bilingual copy, state model, failure fallbacks, notification contract, abuse baseline, factual privacy scope, retention target, and verification boundary. [`DESIGN-VISUAL`](design/visual-language.md) and [`DESIGN-IX-A11Y`](design/interaction-responsive-accessibility.md) own the approved Contact-specific visual, responsive, semantic, focus, and status behavior.
+[`PAGE-CONTACT / PAGE-PRIVACY`](product/pages/contact-and-privacy.md) owns the four-field experience, bilingual demonstration and dormant commercial copy, state model, fallbacks, factual privacy scope, and verification boundaries. [`DESIGN-VISUAL`](design/visual-language.md) and [`DESIGN-IX-A11Y`](design/interaction-responsive-accessibility.md) own the Contact-specific visual, responsive, semantic, focus, status, and zero-transmission behavior.
 
-[`RFC-CONTACT-INQUIRY-PIPELINE`](rfcs/contact-inquiry-pipeline.md) was accepted in Governance PR #43 and is recorded by [`ADR-CONTACT-INQUIRY-PIPELINE`](decisions/contact-inquiry-pipeline.md). It selects Formspree behind a narrow `submitInquiry()` adapter for the static-site release after comparing Cloudflare Worker + Resend and EmailJS. [`PLAN-CONTACT-INQUIRY-PIPELINE`](plans/active/contact-inquiry-pipeline.md) is the active five-PR delivery record. The Contact form remains blocked from release until verified provisioning and retention behavior, professional legal/privacy review, deployed-reality Privacy pages, deterministic and rendered QA, and labeled inbox-delivery/deletion smoke evidence are complete. A `mailto:` action remains a fallback and is rejected as the primary form implementation.
+[`RFC-CONTACT-INQUIRY-PIPELINE`](rfcs/contact-inquiry-pipeline.md) and [`ADR-CONTACT-INQUIRY-PIPELINE`](decisions/contact-inquiry-pipeline.md) preserve Formspree behind `submitInquiry()` for a future commercial activation. The provider-neutral types, validator, and adapter are merged but dormant.
+
+[`ADR-CONTACT-INQUIRY-DEMO-MODE`](decisions/contact-inquiry-demonstration-mode.md) records the current deployment decision: `https://furlanich.github.io/Portfolio/` remains a non-commercial portfolio/technical demonstration, and its public form simulates outcomes locally without sending or storing values. [`REF-CONTACT-DEMO-KIT`](references/contact-inquiry-demonstration/index.md) provides the approved synthetic resources. [`PLAN-CONTACT-INQUIRY-PIPELINE`](plans/active/contact-inquiry-pipeline.md) now sequences the demonstration Privacy routes, accessible form, and deployed zero-transmission proof. Real processor/legal/inbox/deletion gates remain OPEN for a separately reviewed commercial activation.

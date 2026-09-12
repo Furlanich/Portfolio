@@ -8,6 +8,7 @@ related:
   - ARCH-STAGE-B-HARNESS-DESIGN
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
   - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
   - ADR-STATIC-LOCALIZED-ROUTING
@@ -27,7 +28,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-11
+last_verified: 2026-09-12
 ---
 
 # FURLANICH architecture map
@@ -58,9 +59,9 @@ Initiative 4's Projects/Evidence decisions also fit the accepted boundary. [`PLA
 
 Initiative 5 closes Studio and Founder product/design decisions within the same accepted boundary. The approved implementation adds the existing sitemap's /estudio/ and /en/about/ pair as semantic Studio routes, retains the nested Founder pair, routes primary navigation to Studio, and uses route-owned localized content with shared locale-agnostic semantic components. It reuses existing tokens, primitives, static export, trailing slashes, and optional base-path behavior. The completed work is recorded by [`PLAN-STUDIO-FOUNDER-COMPLETION`](docs/plans/completed/studio-founder-completion.md), which sequences route/content contracts, Studio publication, Founder completion, and cross-page verification in four reviewable implementation PRs. It requires no RFC, new ADR, CMS, backend, runtime localization, dependency, hosting change, or new design-system architecture.
 
-Initiative 6 approves the Contact product, content, visual, accessibility, state, validation, fallback, notification, abuse, privacy-fact, and verification requirements in [`PAGE-CONTACT`](docs/product/pages/contact-and-privacy.md). It also creates a non-negotiable architectural constraint: the primary inquiry form submits in-page and delivers to the configured business inbox without a local email client or browser-shipped private credential. [`RFC-CONTACT-INQUIRY-PIPELINE`](docs/rfcs/contact-inquiry-pipeline.md) was accepted in Governance PR #43 and is recorded by [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md). The accepted Formspree boundary preserves GitHub Pages and defines the data path, stored copies, abuse model, failure semantics, testing boundary, operations, and migration triggers. [`PLAN-CONTACT-INQUIRY-PIPELINE`](docs/plans/active/contact-inquiry-pipeline.md) owns execution; privacy/legal/provisioning and live-evidence gates remain unresolved release constraints rather than architecture questions.
+Initiative 6 has two accepted modes. [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) governs the current public portfolio/technical demonstration at `https://furlanich.github.io/Portfolio/`: the complete four-field Contact UI uses a local adapter, simulates success/failure, and sends or stores nothing. [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md) retains Formspree behind the same provider-neutral port for a later commercial activation. [`PLAN-CONTACT-INQUIRY-PIPELINE`](docs/plans/active/contact-inquiry-pipeline.md) delivers demonstration Privacy/Contact and deployed zero-transmission proof while preserving real privacy/legal/provider/inbox/deletion gates for separate activation.
 
-The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. Canonical-domain selection is a release blocker rather than an implementation blocker. Long-term hosting may be deferred while the current static-export and base-path compatibility constraints are preserved.
+The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. The default GitHub Pages project URL is the approved canonical deployment URL; no custom domain is planned. Long-term hosting may still be reconsidered only through a future architecture decision while current static-export and `/Portfolio` base-path constraints remain.
 
 ## ACCEPTED target architecture
 
@@ -76,11 +77,11 @@ Until the atomic locale-root cutover, the current personal homepage and client-o
 
 The preserved recommendation is incremental, static-first modernization: reduce unnecessary client boundaries and evolve the existing repository rather than perform a greenfield rebuild. It is a recommendation, not implementation authority. See the [architecture index](docs/architecture/index.md).
 
-For Contact, [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md) accepts `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured FURLANICH target email`. Only the form/client boundary and one provider adapter know Formspree response details. The decision explicitly avoids a generic integration framework, preserves a future provider swap, and keeps the production form disabled until provisioning, Privacy, legal, deterministic, staged-delivery, and deletion gates pass.
+For the current deployment, [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) accepts `ContactForm -> submitInquiry() -> demo adapter -> local simulated outcome`, with no network, storage, mail, logging, or analytics. The GitHub Pages build must not receive the Formspree endpoint. The existing `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured inbox` boundary remains dormant under `ADR-CONTACT-INQUIRY-PIPELINE` until a separately reviewed commercial activation passes every real gate.
 
 ## OPEN questions
 
-Long-term hosting, verified Contact account/schema/delivery/deletion behavior, the complete processor/transfer facts and professional privacy/legal wording, the extended design system beyond the approved homepage, Services, Projects, Studio, Founder, and Contact baselines, whole-site accessibility claims, global performance budgets, canonical domain, and optional imagery outside approved project evidence remain OPEN with the blocker levels recorded in their owning documents. The accepted Contact provider architecture does not reopen the localized-routing architecture or waive its implementation and release gates.
+Commercial Contact account/delivery/deletion behavior, complete processor/transfer facts, professional privacy/legal wording, long-term hosting beyond the approved default GitHub Pages site, the extended design system, whole-site accessibility claims, global performance budgets, and optional imagery outside approved evidence remain OPEN in their owners. These items do not block the zero-transmission demonstration and are not satisfied by mock resources.
 
 ## Engineering records
 

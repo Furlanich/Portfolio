@@ -21,7 +21,9 @@ related:
   - DESIGN-IX-A11Y
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - ADR-STATIC-LOCALIZED-ROUTING
+  - REF-CONTACT-DEMO-KIT
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
 ---
@@ -30,120 +32,109 @@ related:
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:executing-plans` to execute this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Deliver the complete bilingual Contact and Privacy experience, including a four-field in-site inquiry form that uses the approved Formspree boundary, reaches Samuel's configured inbox, fails accessibly and recoverably, and remains compatible with the static GitHub Pages deployment.
+**Goal:** Deliver the complete bilingual Contact and Privacy experience as an explicitly labeled, local-only demonstration on the default GitHub Pages project site while preserving the tested Formspree boundary for a separately gated commercial activation.
 
-**Architecture:** Locale-owned Spanish and English content feeds shared locale-agnostic Server Components. A deliberately small Client Component owns the approved form state and calls a provider-neutral `SubmitInquiry` port; a single direct-`fetch` Formspree adapter owns the public endpoint and provider response mapping. Provider configuration, privacy/legal closure, staged inbox proof, and post-deploy verification are hard gates around the code sequence.
+**Architecture:** Locale-owned Spanish and English content feeds shared locale-agnostic components. The public demonstration form uses the existing pure validator and state contract with a new `createDemoSubmitInquiry()` adapter that simulates bounded success or failure entirely in browser memory and performs no network, mail, storage, logging, or analytics operation. The existing Formspree adapter remains dormant and tested; a later commercial activation requires a new plan and the real legal, processor, inbox, deletion, and domain-restriction evidence recorded by the earlier ADR.
 
-**Tech Stack:** Next.js 16 App Router static export, React 18, TypeScript 5.5, existing React Hook Form 7.51 for field registration/values/errors, a pure reducer for submission phases, Tailwind CSS 3.4, Node test runner, Playwright 1.63, axe-core, Formspree, GitHub Pages.
+**Tech Stack:** Next.js 16 App Router static export, React 18, TypeScript 5.5, existing React Hook Form 7.51, a pure reducer for submission phases, Tailwind CSS 3.4, Node test runner, Playwright 1.63, axe-core, GitHub Pages, and the provider-neutral inquiry boundary merged in PR #45.
 
-**Spec:** [`PAGE-CONTACT` and `PAGE-PRIVACY`](../../product/pages/contact-and-privacy.md), constrained by [`ADR-CONTACT-INQUIRY-PIPELINE`](../../decisions/contact-inquiry-pipeline.md), [`DESIGN-VISUAL`](../../design/visual-language.md#contact-visual-baseline-approved), and [`DESIGN-IX-A11Y`](../../design/interaction-responsive-accessibility.md#contact-interaction-responsive-and-accessibility-baseline-approved).
+**Spec:** [`PAGE-CONTACT` and `PAGE-PRIVACY`](../../product/pages/contact-and-privacy.md), constrained by [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../../decisions/contact-inquiry-demonstration-mode.md), the retained [`ADR-CONTACT-INQUIRY-PIPELINE`](../../decisions/contact-inquiry-pipeline.md), [`DESIGN-VISUAL`](../../design/visual-language.md#contact-visual-baseline-approved), [`DESIGN-IX-A11Y`](../../design/interaction-responsive-accessibility.md#contact-interaction-responsive-and-accessibility-baseline-approved), and [`REF-CONTACT-DEMO-KIT`](../../references/contact-inquiry-demonstration/index.md).
 
 ## Global constraints
 
+- Deploy at `https://furlanich.github.io/Portfolio/`; retain `/Portfolio` as the GitHub Pages base path and preserve normal root builds for local verification.
 - Keep Spanish at `/contacto/` and `/privacidad/`, English at `/en/contact/` and `/en/privacy/`, with trailing slashes and page-equivalent language switching.
-- Preserve `output: 'export'`, GitHub Pages, the optional `/Portfolio` base path, and Server Components outside the narrow interactive form island.
-- Use Formspree only through `submitInquiry()`; do not add a provider SDK, backend, API route, Server Action, CMS, CRM, analytics event, generic integration framework, or hosting migration.
-- Ship only name, email, optional company, message, `es-AR | en`, canonical localized source, and the empty provider honeypot. Do not ship recipient routing, mail headers, private credentials, files, sensitive-data helpers, analytics IDs, referrer chains, or client timestamps.
-- Normalize surrounding whitespace only in the validated payload. Preserve the visitor's entered form values through validation and every non-acceptance result.
-- Maximums are name 100, email 254, company 120, and message 4,000 characters; the serialized UTF-8 request must remain at or below 24 KiB.
-- `SUCCESS` means documented provider acceptance, not inbox receipt or reading. Only the labeled live smoke proves delivery.
-- Do not automatically retry. Prevent clicks, Enter, or programmatic submission from creating a second request while one is active.
-- Keep WhatsApp, email, and phone available in that order. Missing or invalid public endpoint configuration fails closed to the working direct-channel experience.
-- Keep interactive CAPTCHA disabled. Any later challenge requires separate privacy, accessibility, localization, and governance review.
-- Never place inquiry content, raw provider responses, real prospect data, the production form ID when a placeholder suffices, or private configuration in tests, logs, screenshots, URLs, analytics, commits, or Pull Request text.
-- Treat professional Argentine legal review, exact processor/subprocessor facts, transfer treatment, final production hostname, domain restriction, retention/deletion evidence, and live inbox delivery as release gates. Do not infer legal conclusions.
-- Every implementation PR starts from current `main` after its predecessor is human-merged, uses a short-lived `codex/` branch, records meaningful RED/GREEN evidence, runs the applicable deterministic and rendered gates, opens for human review, and stops before merge.
-
----
+- The deployed site is a portfolio and technical demonstration. It does not accept or process commercial inquiries through the form.
+- Keep exactly four visible fields: required name, required email, optional company, and required problem/message. Do not add phone, budget, deadline, service selection, marketing consent, or file upload.
+- Keep the full `IDLE -> VALIDATING -> SUBMITTING -> SUCCESS | ERROR` behavior, accessible validation, duplicate prevention, failure preservation, success reset, retry, and WhatsApp/email/phone fallback order.
+- Demo success means only that the local scenario completed. Success and failure copy must state that no data was sent and no inquiry was created.
+- The demonstration route imports `createDemoSubmitInquiry()` and never imports or calls `createFormspreeSubmitInquiry()`.
+- Remove `NEXT_PUBLIC_FORMSPREE_ENDPOINT` from the GitHub Pages deployment environment. Local values must not change demonstration behavior.
+- Do not add a backend, API route, Server Action, provider SDK, runtime localization library, CMS, CRM, analytics event, browser persistence, generic integration framework, CAPTCHA, or hosting migration.
+- Tests and fixtures use `.invalid` addresses and synthetic prose. Never commit a real inquiry, provider endpoint/form ID, inbox evidence, cookie, credential, or private legal material.
+- The dormant Formspree adapter stays provider-isolated. Automated tests never contact Formspree.
+- Treat real processor facts, professional legal review, operational retention, inbox delivery, deletion, and Formspree domain restriction as future commercial-activation gates. Demonstration QA never marks them PASS.
 
 ## Classification and implementation boundary
 
-Route: **PLAN plus ADR**. The architecture was accepted in Governance PR #43 and is recorded by `ADR-CONTACT-INQUIRY-PIPELINE`; the remaining delivery is substantial, multi-phase, privacy-sensitive work requiring this active versioned plan.
+Route: **ADR plus updated PLAN**. On 2026-09-12 the owner accepted a consequential deployment-mode change: the public site remains a non-commercial demonstration and may ship synthetic Contact resources only while the form transmits nothing. `ADR-CONTACT-INQUIRY-DEMO-MODE` records that decision without rewriting `ADR-CONTACT-INQUIRY-PIPELINE`.
 
-This planning PR may create the ADR, mark the accepted RFC, synchronize status/index summaries, and add this plan. It must not change `app/`, `components/`, `lib/`, `scripts/`, `tests/`, package manifests, build configuration, workflows, provider accounts, deployment variables, or public behavior.
-
-Implementation may use the accepted public Formspree endpoint, static localized routes, existing React/React Hook Form/Tailwind stack, and existing test harness. Reclassify and stop if execution proposes a different processor, backend, route/hosting model, private browser credential, interactive challenge, analytics/CRM use, new runtime dependency, materially different retention, or any unresolved legal/product/design decision.
+Implementation may publish the demonstration Privacy disclosure and local-only form on `main`. It may reuse the accepted field/state/accessibility design and provider-neutral port. Reclassify and stop if work proposes real provider traffic, storage, inbox delivery, user tracking, a commercial-intake claim, a different host, private browser credentials, or copy that implies professional legal approval.
 
 ## Authoritative inputs
 
-- `PAGE-CONTACT` owns exact Spanish and English labels, helper text, validation messages, loading, success, failure, retry, response expectation, fallback order, contact facts, and Founder-context links.
-- `PAGE-PRIVACY` owns the factual notice scope and receives professionally reviewed exact bilingual wording based on verified deployment facts.
-- `CONTENT-LOCALIZATION` owns Spanish `es-AR`, natural English adaptation, and the prohibition on guessed processor/legal wording.
-- `DESIGN-VISUAL` owns the source/visual hierarchy, 8/4 wide split, single-column fields, control dimensions, colors, status surfaces, and no-CAPTCHA composition.
-- `DESIGN-IX-A11Y` owns form semantics, associated descriptions/errors, busy state, focus, live announcements, keyboard behavior, progressive availability, and the exact viewport/base-path/manual review matrix.
-- `ADR-CONTACT-INQUIRY-PIPELINE` owns Formspree, the typed boundary, public configuration posture, security/abuse model, acceptance semantics, operations, and migration boundary.
-- `ADR-STATIC-LOCALIZED-ROUTING` owns locale route trees, locale-owned content, shared locale-agnostic components, static export, trailing slashes, and base-path compatibility.
-- `TEST-STRATEGY`, `TEST-PLAYWRIGHT`, and `TEST-VISUAL-REGRESSION` own deterministic, browser, axe, manual, snapshot, and static-artifact evidence.
+- `PAGE-CONTACT` owns the field contract, exact Spanish/English Contact copy for demonstration and dormant commercial modes, state behavior, fallback order, and acceptance criteria.
+- `PAGE-PRIVACY` owns the exact deployed demonstration disclosure and the still-OPEN commercial disclosure requirements.
+- `ADR-CONTACT-INQUIRY-DEMO-MODE` owns the local-only data flow, canonical GitHub Pages host, demonstration outcome semantics, and commercial reactivation boundary.
+- `ADR-CONTACT-INQUIRY-PIPELINE` remains the accepted future Formspree transport architecture; it is not deployed by this plan.
+- `REF-CONTACT-DEMO-KIT` owns the synthetic provider profile, safe QA controls, mock review record, and evidence sheets.
+- `DESIGN-VISUAL` owns Contact composition and state surfaces. `DESIGN-IX-A11Y` owns semantics, focus, announcements, keyboard behavior, reflow, zoom, and the viewport matrix.
+- `CONTENT-LOCALIZATION` owns Spanish `es-AR`, natural English adaptation, and the approved GitHub Pages canonical deployment URL.
+- `TEST-STRATEGY` and `TEST-PLAYWRIGHT` own deterministic, browser, accessibility, visual, failure-artifact, and base-path procedures.
 
-If this plan conflicts with an owner, the owner wins and this plan must be synchronized before production work continues.
+If this plan conflicts with an owner, the owner wins and this plan must be synchronized before implementation continues.
 
 ## Current-main baseline
 
-At plan creation, `/contacto/` and `/en/contact/` render `MinimumDestination` with response copy plus working WhatsApp, email, and phone links. They have no form. `contactContent` is also the shared owner for direct-channel facts used by other pages and the footer. Privacy routes do not exist, Privacy is absent from the semantic route map and footer, and the deployed workflow already passes `NEXT_PUBLIC_FORMSPREE_ENDPOINT` as a public build-time value without a current consumer. `react-hook-form` is installed but unused. The Node, Playwright, axe, visual, and static-export harnesses are present.
+Current `main` at `335822f` contains the provider-neutral inquiry types, pure validator, and direct-fetch Formspree adapter merged through [PR #45](https://github.com/Furlanich/Portfolio/pull/45). Focused adapter and validator tests pass without live network access. No public route imports this boundary.
+
+`/contacto/` and `/en/contact/` still render the direct-channel `MinimumDestination`; Privacy routes and footer links do not exist. The deployment workflow passes `NEXT_PUBLIC_FORMSPREE_ENDPOINT`, but no current route consumes it. The application exports with `NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}`, producing `https://furlanich.github.io/Portfolio/`.
 
 ## Reviewable Pull Request sequence
 
 | Order | Pull Request | Public behavior | Merge gate |
 | --- | --- | --- | --- |
-| Planning | `docs: plan Contact inquiry delivery` | None | ADR/RFC/status synchronization, active plan, docs check, complete docs-only diff review |
-| 1 | `docs: close Contact provider and privacy gates` | None | Development-only documentation checkpoint: supplied provider evidence is recorded without public behavior; final hostname/domain restriction, account-specific privacy facts, professional legal review, and exact bilingual Privacy copy remain OPEN and block release work |
-| 2 | `feat: add the inquiry submission boundary` | None | Provider-neutral contract, pure validation, Formspree adapter, fail-closed configuration, deterministic RED/GREEN tests, no live network; may proceed after the Task 1 docs checkpoint is reviewed and merged |
-| 3 | `feat: publish the bilingual Privacy experience` | Adds accurate Privacy routes/footer links; Contact remains direct-channel only | Exact Task 1 facts/copy, paired routes, footer coverage, static/base-path/browser/axe validation |
-| 4 | `feat: launch the accessible Contact inquiry form` | Atomically replaces both minimum Contact routes with the complete form | Unit/state/adapter tests, Playwright success/failure, accessibility and visual QA, normal/base-path exports, real staged inbox/Reply-To/deletion proof before merge |
-| 5 | `docs: record Contact inquiry release verification` | None | Production-host smoke, final domain restriction, cleanup/deletion evidence, architecture synchronization, completed-plan move |
+| Governance | `docs: approve Contact demonstration deployment` | None | New ADR, mock kit, exact bilingual demonstration copy, synchronized plan/status/indexes, docs-only diff |
+| 2 — complete | [PR #45](https://github.com/Furlanich/Portfolio/pull/45), `feat: add the inquiry submission boundary` | None | Provider-neutral types/validator/Formspree adapter and deterministic tests merged into `main` |
+| 3 | `feat: publish the demonstration Privacy experience` | Adds paired, accurately labeled demonstration Privacy routes and footer links | Exact owner copy, locale/route/static/base-path tests, browser/axe/manual/visual QA |
+| 4 | `feat: publish the accessible Contact demonstration` | Replaces both minimum Contact pages with the four-field local simulation and retains fallbacks | Demo adapter/state/UI RED-GREEN evidence, success/failure Playwright, zero-transmission proof, accessibility/visual QA, endpoint removed from deploy workflow |
+| 5 | `docs: record deployed Contact demonstration` | None | Live GitHub Pages verification, zero-transmission evidence, architecture synchronization, completed-plan move |
 
-No Pull Request combines two rows. No implementation PR is stacked on an unmerged predecessor. PR 4 is the only release cutover; its branch may exercise a real staging submission, but automated CI remains provider-isolated.
+No Pull Request combines two rows. No implementation PR is stacked on an unmerged predecessor. Human review and merge remain mandatory.
 
-## Development-only continuation authorization — APPROVED 2026-09-12
+## Exactly one next implementation task
 
-The repository owner authorizes completion of the Task 1 / PR 1 documentation checkpoint and continuation into Task 2 / PR 2 using the currently configured Formspree resources, despite unresolved final-host and professional legal/privacy gates. This is a sequencing authorization for development and does not approve public release, legal wording, or production processing.
+After the governance amendment containing this plan is reviewed and merged, the **only authorized next implementation task** is **Task 3 / PR 3: publish the paired bilingual demonstration Privacy experience and footer links using the exact `PAGE-PRIVACY` copy**.
 
-- Task 1 / PR 1 may be reviewed and merged as a documentation-only checkpoint with the supplied sanitized provider evidence and the unresolved items explicitly marked OPEN.
-- After the Task 1 docs-only checkpoint is reviewed and merged, Task 2 / PR 2 may implement the provider-neutral contract, pure validator, direct-fetch adapter, fail-closed endpoint configuration, and deterministic provider-isolated tests.
-- Task 2 must not contact the real endpoint in automated tests, commit the endpoint or form ID, expose private configuration, add a provider SDK, or enable public form behavior. Any local or staging configuration uses synthetic test coverage unless a later task explicitly authorizes labeled manual smoke work.
-- Task 3 / PR 3, Task 4 / PR 4, and Task 5 / PR 5 remain gated by the exact reviewed Privacy copy, complete processor/storage/retention/transfer facts, final host/domain restriction, professional legal review, and the required rendered, delivery, deletion, and production evidence.
+Task 4 must not begin until Task 3 is human-merged. Task 5 must not begin until Task 4 is human-merged and GitHub Pages finishes deploying it.
 
-This deviation changes only the serial development gate between Tasks 1 and 2. It does not supersede ADR-CONTACT-INQUIRY-PIPELINE, change the payload or state model, authorize a release, or close any OPEN item.
+## Preserved commercial activation gates — not part of this delivery
 
-## Exactly one first implementation task
+The original commercial objective is deferred, not weakened. Before the form sends a real inquiry, a new or reactivated versioned plan must:
 
-After the planning PR is human-reviewed and merged, the **only authorized first implementation task** is **Task 1 / PR 1: provision and verify the dedicated Formspree form, complete professional privacy/legal review, and record the exact non-secret deployment facts and bilingual Privacy copy in a docs-only PR**.
+1. recheck current Formspree API, plan, schema, spam, limit, privacy, security, DPA, subprocessor, retention, and status materials;
+2. configure Samuel's form, recipient, subject, `Reply-To`, schema, honeypot, filtering, and restriction to `furlanich.github.io`;
+3. obtain complete processor, storage, log/backup, deletion, location, and international-transfer facts;
+4. obtain professional Argentine privacy/legal review and exact bilingual commercial Privacy copy;
+5. restore the endpoint only in approved deployment configuration and inject `createFormspreeSubmitInquiry()` only into the commercial mode;
+6. run deterministic/rendered regression plus labeled staging acceptance, inbox, `Reply-To`, spam, and deletion proof before release;
+7. run a production smoke/deletion check after human-reviewed cutover; and
+8. remove every demonstration claim from the live form while retaining honest fallback/failure behavior.
 
-The Task 1 docs-only checkpoint must be reviewed and merged before Task 2 begins. Under the development-only continuation authorization above, unresolved final-host, processor-chain, retention/deletion, or legally sufficient-notice items keep Tasks 1, 3, 4, and 5 open and block public release, but do not block Task 2's provider-isolated implementation. Architecture approval is not permission to guess those release facts.
+Demonstration evidence marks these items **NOT APPLICABLE**, never PASS.
 
 ## Mandatory execution skills
 
 | Skill | Required use |
 | --- | --- |
-| `architecture-governance` | Reconfirm accepted scope at every PR boundary and route any newly consequential decision before implementation expands. |
-| `project-knowledge-maintenance` | Update the authoritative owner once, preserve item statuses, and keep plan/status/index summaries coherent. |
-| `frontend-implementation` | Govern public Privacy and Contact routes in PRs 3 and 4. |
-| `test-driven-development` | Require observed RED before every testable behavior change in PRs 2–4. |
-| `design-taste-frontend-v1` | Constrained preflight and post-implementation critique for PRs 3 and 4; repository design remains authoritative. |
-| `playwright-qa` | Repeatable route, interaction, keyboard, browser, responsive, base-path, and axe evidence in PRs 3 and 4. |
-| `visual-qa` | Human/agent rendered judgment for all approved Contact states and both Privacy routes in PRs 3 and 4. |
-| `verification-before-completion` | Fresh command and evidence review before commits, PR claims, and task transitions. |
-| `pr-readiness` | Full `main...HEAD` review, traceability, validation report, and human-review handoff for every PR. |
+| `architecture-governance` | Reconfirm demonstration scope and stop real-processing expansion. |
+| `project-knowledge-maintenance` | Keep dual demonstration/commercial statuses and owners synchronized. |
+| `frontend-implementation` | Govern public Privacy and Contact route work. |
+| `test-driven-development` | Require observed RED before every testable change. |
+| `design-taste-frontend-v1` | Apply repository-constrained preflight and critique. |
+| `playwright-qa` | Supply repeatable route, keyboard, state, responsive, base-path, and axe evidence. |
+| `visual-qa` | Judge every Contact state and both Privacy routes at required viewports. |
+| `verification-before-completion` | Re-run fresh commands before commits and PR claims. |
+| `pr-readiness` | Review `main...HEAD`, traceability, evidence, scope, secrets, and handoff. |
 
-Use `systematic-debugging` only for an unexpected failure or defect, not for an intended TDD RED.
+Use `systematic-debugging` only for unexpected behavior or failing tests, not intended TDD RED.
 
-## File structure and interfaces
+## Shared interfaces
 
-### Provider-neutral inquiry boundary
-
-| File | Responsibility |
-| --- | --- |
-| `lib/inquiry/contracts.ts` | Raw values, approved fields, normalized payload, internal validation codes, provider-neutral result, and `SubmitInquiry` type. |
-| `lib/inquiry/validation.ts` | Pure trimming, required/email/length validation, locale/source binding, and 24 KiB ceiling with no browser or provider dependency. |
-| `lib/inquiry/formspree.ts` | One direct-`fetch` adapter, endpoint validation, exact request serialization, timeout/abort, and documented response mapping. |
-| `scripts/inquiry-validation.test.mjs` | Literal table-driven validation and payload tests. |
-| `scripts/formspree-adapter.test.mjs` | Injected-fetch contract tests for request shape and every accepted failure category without network access. |
-
-The shared interface is:
+The merged provider-neutral boundary remains:
 
 ```ts
 export type InquiryField = 'name' | 'email' | 'company' | 'message';
-
 export type InquiryValues = Record<InquiryField, string>;
 
 export type InquiryPayload = {
@@ -155,168 +146,43 @@ export type InquiryPayload = {
   source: '/contacto/' | '/en/contact/';
 };
 
-export type InquiryValidationCode =
-  | 'required'
-  | 'invalid-email'
-  | 'max-length'
-  | 'request-too-large';
-
 export type InquirySubmissionResult =
   | { status: 'accepted' }
-  | {
-      status: 'invalid';
-      fieldErrors: Partial<Record<InquiryField, InquiryValidationCode>>;
-    }
-  | {
-      status: 'failed';
-      reason: 'rate-limited' | 'misconfigured' | 'unavailable' | 'unknown';
-    };
+  | { status: 'invalid'; fieldErrors: Partial<Record<InquiryField, InquiryValidationCode>> }
+  | { status: 'failed'; reason: 'rate-limited' | 'misconfigured' | 'unavailable' | 'unknown' };
 
-export type SubmitInquiry = (
-  payload: InquiryPayload,
-) => Promise<InquirySubmissionResult>;
+export type SubmitInquiry = (payload: InquiryPayload) => Promise<InquirySubmissionResult>;
 ```
 
-`createFormspreeSubmitInquiry({ endpoint, fetchImpl, timeoutMs })` produces `SubmitInquiry`. Its default timeout is 10,000 ms. Tests inject `fetchImpl`; production uses browser `fetch`. The adapter sends `POST` JSON with `Accept: application/json` and `Content-Type: application/json`, the six allowlisted payload properties, and `_gotcha: ''`. It requires a recognized JSON object with `ok: true` on a 2xx response for `accepted`; allowlisted Formspree field errors map to internal validation codes, never provider prose. HTTP 429 maps to `rate-limited`; missing/malformed endpoint and documented inactive/missing-form conditions map to `misconfigured`; abort, network, and 5xx map to `unavailable`; every other status, malformed JSON, unknown field error, and unexpected shape maps to `unknown`.
+Task 4 adds:
 
-### Contact presentation boundary
+```ts
+export type DemoSubmissionOptions = {
+  delayMs?: number;
+  wait?: (milliseconds: number) => Promise<void>;
+};
 
-| File | Responsibility |
-| --- | --- |
-| `components/contact/content-types.ts` | Complete localized Contact content model, including field/state/accessibility copy and direct alternatives. |
-| `components/contact/state.ts` | Pure form-state reducer and synchronous in-flight guard transitions independent of React rendering and provider transport. |
-| `components/contact/ContactPage.tsx` | Locale-agnostic Server Component for intro, response expectation, form/supporting grid, alternatives/location, and Founder context. |
-| `components/contact/ContactForm.tsx` | Narrow Client Component for form values, validation, `IDLE/VALIDATING/SUBMITTING/SUCCESS/ERROR`, focus, announcements, retry, and `SubmitInquiry`. |
-| `app/(es)/_content/contact.ts` | Exact `PAGE-CONTACT` Spanish content plus the existing shared direct-channel facts. |
-| `app/(en)/en/_content/contact.ts` | Exact `PAGE-CONTACT` English content plus the existing shared direct-channel facts. |
+export function createDemoSubmitInquiry(
+  options?: DemoSubmissionOptions,
+): SubmitInquiry;
+```
 
-The route entry passes locale, localized content, resolved Privacy/Founder links, and the build-time public endpoint. When the endpoint is absent or invalid, it retains the current usable direct-channel destination and does not render a submit control that cannot work. When configured, both localized routes render the same shared form behavior with locale-owned copy and payload source.
-
-### Privacy presentation boundary
-
-| File | Responsibility |
-| --- | --- |
-| `components/privacy/content-types.ts` | Typed, locale-owned Privacy sections without provider lookup or runtime translation. |
-| `components/privacy/PrivacyPage.tsx` | Shared locale-agnostic semantic Privacy composition. |
-| `app/(es)/_content/privacy.ts` | Professionally reviewed Spanish disclosure from Task 1. |
-| `app/(en)/en/_content/privacy.ts` | Professionally reviewed English disclosure from Task 1. |
-| `app/(es)/privacidad/page.tsx` | Spanish route shell using the existing header/footer. |
-| `app/(en)/en/privacy/page.tsx` | English route shell using the existing header/footer. |
-
-`privacy` becomes a semantic route ID in `lib/site-routes.ts`, a page-equivalent route in `lib/foundation-navigation.ts`, and a visible footer destination on every current public route. Privacy content names verified facts; it does not parse the endpoint or infer the Formspree plan at runtime.
+The default delay is `650` ms. `failure@example.invalid` returns `failed/unavailable`; any other validated payload returns `accepted`. `ContactForm` receives `mode="demonstration"`, so `accepted` produces only simulated-success copy.
 
 ---
 
-### Task 1 / PR 1: Close provider, privacy, and legal gates
+### Task 2 / PR 2: Provider-neutral boundary — COMPLETE
 
-**Files:**
+**Files delivered:** `lib/inquiry/contracts.ts`, `lib/inquiry/validation.ts`, `lib/inquiry/formspree.ts`, `scripts/inquiry-validation.test.mjs`, and `scripts/formspree-adapter.test.mjs`.
 
-- Modify: `docs/product/pages/contact-and-privacy.md`
-- Modify: `docs/product/content-and-localization.md`
-- Modify: `docs/governance/status-register.md`
-- Modify: `docs/plans/active/contact-inquiry-pipeline.md`
-- No application, test, dependency, workflow, environment, or provider identifier file is committed.
+- [x] **Step 1: Observe literal validator and adapter RED assertions**
+- [x] **Step 2: Implement the minimal contracts, pure validation, and direct-fetch adapter**
+- [x] **Step 3: Pass focused tests, repository validation, and static export without a live request**
+- [x] **Step 4: Human-review and merge PR #45 into `main`**
 
-**Interfaces:**
+Evidence recorded 2026-09-12: focused suites passed 19/19; repository validation passed 78 tests, lint, typecheck, and build; static export passed for 18 routes at base path `/`; no live provider request occurred.
 
-- Consumes: `ADR-CONTACT-INQUIRY-PIPELINE`, the provisioned Samuel-controlled Formspree account, final production hostname, provider agreements/materials, and professional Argentine legal review.
-- Produces: exact approved Spanish and English Privacy copy; verified processor/subprocessor, storage, metadata, transfer, retention, request, quota, delivery, domain, schema, and deletion facts that Tasks 2–5 may implement and test.
-
-- [ ] **Step 1: Re-verify current first-party provider facts**
-
-  Recheck the official Formspree AJAX, Workflow validation, allowed-field schema, `Reply-To`, subject, honeypot, spam, domain restriction, system/account limits, privacy, terms, security, DPA, subprocessor, and status materials already linked by the RFC. Record the check date and any change against the ADR in the PR body. If a change invalidates the accepted architecture, stop and open governance work rather than editing the ADR.
-
-  Public Formspree materials were rechecked 2026-09-12. No architecture-invalidating change was identified in the reviewed AJAX, Workflow, Reply-To, honeypot, domain, limit, privacy, and security materials. The current AJAX documentation foregrounds the optional Formspree AJAX package, but this plan's accepted direct-fetch boundary remains unchanged and no provider SDK is approved. Account-specific DPA, subprocessor, retention, transfer, and final-host evidence remain OPEN.
-
-- [ ] **Step 2: Provision the dedicated form and account controls**
-
-  Samuel provisions or verifies a Samuel-controlled account with MFA and a dedicated FURLANICH form. Configure the exact six business fields, required/type/max-length rules, undeclared-field and file rejection, `_gotcha`, Formshield, CAPTCHA-off posture, final hostname restriction, verified recipient, fixed `[FURLANICH] Website inquiry` subject, visitor `email` as `Reply-To`, labeled body, provider receipt time, and quota notifications. Recipient and mail credentials remain provider-side; the public endpoint is stored only in approved deployment/staging configuration.
-
-- [x] **Step 3: Exercise provider controls with labeled synthetic probes**
-
-  From an approved staging origin, submit synthetic boundary cases for missing required fields, malformed email, every maximum plus one, undeclared field, file content, filled honeypot, allowed origin, disallowed origin, and quota/rate behavior that can be tested without abuse. Verify the provider result against the accepted mapping. Record sanitized PASS/FAIL facts and timestamps; do not commit response bodies, real addresses beyond the already-public business contact, cookies, account screenshots, form IDs, or submission content.
-
-  Owner-reported sanitized result on 2026-09-12: allowed/disallowed-origin probes and synthetic delivery probes PASS. Detailed probe timestamps and private provider response evidence remain outside the repository.
-
-- [ ] **Step 4: Verify storage, deletion, delivery-chain, and transfer facts**
-
-  Confirm the applicable plan, stored-history duration, deletion procedure, backup/log exceptions, DPA, current material infrastructure and email-delivery subprocessors, processing locations, safeguards, account access, Gmail copy, request-handling procedure, and quota owner. Perform and delete a labeled synthetic submission to prove the procedure. If provider content cannot be demonstrably removed within the approved target or accurately disclosed, stop this plan and escalate.
-
-- [ ] **Step 5: Complete professional privacy/legal review**
-
-  Obtain review of the responsible identity, Ley 25.326 Article 6 notice, lawful basis/consent presentation, database obligations, processor agreement, Article 12/international-transfer safeguards, access/correction/deletion handling, and retention wording. Record only the approved outcome and public wording. Keep any unresolved legal issue `OPEN`; do not let implementation copy make the legal conclusion.
-
-- [ ] **Step 6: Write the exact bilingual Privacy owner text**
-
-  Update `PAGE-PRIVACY` with final Spanish and natural English public copy that names the verified responsible party, GitHub Pages/GitHub, Formspree, confirmed material subprocessors, Google/Gmail, submitted fields, ordinary metadata, purpose, no-marketing boundary, international processing/safeguards, provider and mailbox retention, sensitive-data warning, and access/correction/deletion request route. Update statuses only to the level actually supported by provider evidence and professional review.
-
-- [ ] **Step 7: Validate and open PR 1**
-
-  Run `npm run docs:check`, inspect `main...HEAD` for documentation-only scope, secrets, provider IDs, prospect data, screenshots, and accidental status upgrades, then open `docs: close Contact provider and privacy gates` as the development-only Task 1 checkpoint. Human review and merge are required before Task 2 begins; unresolved release gates remain OPEN.
-
-### Task 2 / PR 2: Add the provider-neutral contract and Formspree adapter
-
-**Files:**
-
-- Create: `lib/inquiry/contracts.ts`
-- Create: `lib/inquiry/validation.ts`
-- Create: `lib/inquiry/formspree.ts`
-- Create: `scripts/inquiry-validation.test.mjs`
-- Create: `scripts/formspree-adapter.test.mjs`
-- Modify: `docs/plans/active/contact-inquiry-pipeline.md` only for actual evidence/progress
-
-**Interfaces:**
-
-- Consumes: the `InquiryValues`, `InquiryPayload`, `InquirySubmissionResult`, and `SubmitInquiry` signatures defined above plus Task 1's verified Formspree response/control facts.
-- Produces: `validateInquiry(values, locale)` and `createFormspreeSubmitInquiry(options): SubmitInquiry` for the future form. No route imports them yet.
-
-- [x] **Step 1: Write literal validation RED tests**
-
-  Add table-driven tests for surrounding trim, required name/email/message, email syntax, all exact maximums and maximum-plus-one cases, optional company omission, `es-AR`/`/contacto/` and `en`/`/en/contact/` binding, unsupported field exclusion, Unicode byte counting, and the 24 KiB ceiling. Hand-derive expectations; do not call production helpers to build them.
-
-- [x] **Step 2: Run the focused validation RED**
-
-  Run `node --test scripts/inquiry-validation.test.mjs`. The test uses a guarded dynamic import that converts the absent implementation into an explicit assertion failure. Expected: FAIL with `validateInquiry has not been implemented`, while existing tests remain untouched; do not accept a syntax, resolution, or harness error as RED.
-
-- [x] **Step 3: Implement the minimal pure contract and validator**
-
-  Add only the types and pure behavior required by the tests. Return every field error at once, preserve raw `InquiryValues` outside the function, and create the normalized payload only when valid. Do not add localized prose, browser state, Formspree fields, logging, retries, or a general schema framework.
-
-- [x] **Step 4: Run validation GREEN and refactor while green**
-
-  Run `node --test scripts/inquiry-validation.test.mjs`, confirm all cases pass, then remove duplication without changing the public signatures and rerun the same command.
-
-- [x] **Step 5: Write adapter RED tests with an injected fetch double**
-
-  Prove the exact method, headers, allowlisted JSON, empty-company omission, `_gotcha`, locale/source, request ceiling, one request, 10-second abort, and zero automatic retry. Add provider fixtures for recognized `{ ok: true }` acceptance; approved field errors; unknown/provider-only fields; 400/403/404/422; 429; 5xx; inactive/missing form; network rejection; abort; malformed JSON; empty body; and unexpected JSON. Assert only provider-neutral results and ensure raw messages never appear.
-
-- [x] **Step 6: Run the adapter RED**
-
-  Run `node --test scripts/formspree-adapter.test.mjs`. The guarded dynamic import converts the absent export into an explicit assertion failure. Expected: FAIL with `createFormspreeSubmitInquiry has not been implemented` while validation tests remain green; fix any syntax, resolution, or harness error before proceeding.
-
-- [x] **Step 7: Implement the minimal Formspree adapter**
-
-  Validate an HTTPS `formspree.io` form endpoint, serialize the exact transport, call injected/browser fetch once with an `AbortController`, clear its timer, and map only the verified response shapes to the accepted union. Do not import React, read DOM state, translate messages, log payloads, contact the real provider, or add a dependency.
-
-- [x] **Step 8: Run focused and complete GREEN**
-
-  Run:
-
-  ```powershell
-  node --test scripts/inquiry-validation.test.mjs scripts/formspree-adapter.test.mjs
-  npm run validate
-  npm run verify:static-export
-  ```
-
-  `verify:static-export` uses the build produced by `npm run validate`. Confirm Contact artifacts remain the existing direct-channel pages and no live request occurred.
-
-- [x] **Step 9: Review and open PR 2**
-
-  Inspect `main...HEAD` for route/UI changes, inquiry data, provider IDs, network-capable tests, new dependencies, logging, or generalized abstractions. Open `feat: add the inquiry submission boundary` with RED/GREEN evidence and stop before merge.
-
-  Implementation and deterministic evidence were reviewed in [PR #45](https://github.com/Furlanich/Portfolio/pull/45), which was human-merged into `main` on 2026-09-12.
-
-### Task 3 / PR 3: Publish the bilingual Privacy experience
+### Task 3 / PR 3: Publish the bilingual demonstration Privacy experience
 
 **Files:**
 
@@ -332,312 +198,178 @@ The route entry passes locale, localized content, resolved Privacy/Founder links
 - Modify: `lib/site-routes.ts`
 - Modify: `lib/foundation-navigation.ts`
 - Modify: `components/foundation/SiteFooter.tsx`
-- Modify: `app/(es)/page.tsx`
-- Modify: `app/(es)/servicios/page.tsx`
-- Modify: `app/(es)/proyectos/page.tsx`
-- Modify: `app/(es)/proyectos/[projectSlug]/page.tsx`
-- Modify: `app/(es)/estudio/page.tsx`
-- Modify: `app/(es)/estudio/samuel-furlanich/page.tsx`
-- Modify: `app/(es)/contacto/page.tsx`
-- Modify: `app/(en)/en/page.tsx`
-- Modify: `app/(en)/en/services/page.tsx`
-- Modify: `app/(en)/en/work/page.tsx`
-- Modify: `app/(en)/en/work/[projectSlug]/page.tsx`
-- Modify: `app/(en)/en/about/page.tsx`
-- Modify: `app/(en)/en/about/samuel-furlanich/page.tsx`
-- Modify: `app/(en)/en/contact/page.tsx`
-- Modify: `scripts/site-routes.test.mjs`
+- Modify: `app/(es)/page.tsx`, `app/(es)/servicios/page.tsx`, `app/(es)/proyectos/page.tsx`, `app/(es)/proyectos/[projectSlug]/page.tsx`, `app/(es)/estudio/page.tsx`, `app/(es)/estudio/samuel-furlanich/page.tsx`, `app/(es)/contacto/page.tsx`, `app/(en)/en/page.tsx`, `app/(en)/en/services/page.tsx`, `app/(en)/en/work/page.tsx`, `app/(en)/en/work/[projectSlug]/page.tsx`, `app/(en)/en/about/page.tsx`, `app/(en)/en/about/samuel-furlanich/page.tsx`, and `app/(en)/en/contact/page.tsx`
 - Modify: `scripts/verify-static-export.mjs`
-- Modify: `tests/e2e/support/paths.ts`
-- Modify: `tests/e2e/accessibility.spec.ts`
-- Modify: `playwright.config.ts` only to route the focused Privacy specification through the existing appropriate projects
-- Modify: current architecture and active-plan records only after behavior is demonstrated
+- Modify: this plan only for actual evidence
 
 **Interfaces:**
 
-- Consumes: Task 1's exact bilingual public copy and Task 2-independent semantic route conventions.
-- Produces: `privacy` route equivalence, shared semantic `PrivacyPage`, both static Privacy routes, and base-path-safe Privacy links from the site footer and Contact context.
+- Consumes: exact demonstration Privacy copy in `PAGE-PRIVACY`, `REF-CONTACT-DEMO-PROVIDER`, and existing localized route/footer conventions.
+- Produces: `privacy` route equivalence, shared semantic `PrivacyPage`, paired static routes, and footer destinations. It creates no form, provider call, client state, or commercial legal claim.
 
-- [ ] **Step 1: Write content, route, navigation, footer, and artifact RED tests**
+- [ ] **Step 1: Read Next.js 16 references and required Skills**
 
-  Assert one locale per module, all required verified disclosure sections, no guessed/placeholder copy, `/privacidad/` ↔ `/en/privacy/`, page-equivalent language switching, exactly one H1/main, ordered headings, request email, and Privacy footer links across every exported route. Extend the static verifier to require both new artifacts and base-path-safe internal references.
+  Read `node_modules/next/dist/docs/01-app/01-getting-started/05-server-and-client-components.md`, `node_modules/next/dist/docs/01-app/02-guides/static-exports.md`, `frontend-implementation`, `test-driven-development`, `playwright-qa`, and the owning product/design/testing records.
 
-- [ ] **Step 2: Run focused RED**
+- [ ] **Step 2: Write literal Privacy content and route RED tests**
 
-  Run `node --test scripts/privacy-content.test.mjs scripts/privacy-route.test.mjs scripts/site-routes.test.mjs`. Tests inspect the current typed route/content boundary through guarded imports and explicit existence/behavior assertions. Expected: FAIL assertions for the absent Privacy route/content behavior, not import or syntax errors. Run the current built static verifier and record the missing Privacy artifacts separately.
+  Assert one locale per module; exact demonstration heading/lead and required facts; no Formspree, inbox-delivery, DPA, legal-approval, consent-sufficiency, or commercial-processing claim; `/privacidad/` ↔ `/en/privacy/`; correct language switching; one H1/main; ordered headings; footer links on every route; and root/base-path-safe links.
 
-- [ ] **Step 3: Implement the typed content and shared Server Component**
+- [ ] **Step 3: Run focused RED**
 
-  Add exact Task 1 copy in locale-owned modules and one locale-agnostic semantic composition. Use headings, paragraphs, and lists appropriate to meaning; keep policy prose readable and avoid cards that make legal sections look like products. Do not parse provider configuration, duplicate the ADR, add acceptance checkboxes, or add client code.
+  Run `node --test scripts/privacy-content.test.mjs scripts/privacy-route.test.mjs scripts/site-routes.test.mjs`. Expected: explicit missing route/content assertions. Import, syntax, or harness errors do not count as RED.
 
-- [ ] **Step 4: Add paired routes and semantic route equivalence**
+- [ ] **Step 4: Implement locale-owned content and shared composition**
 
-  Add `privacy` to the typed route map/navigation path, create both route shells with the existing header/footer, and preserve correct root-layout language, trailing slashes, and language switching. Do not change primary navigation.
+  Use only exact `PAGE-PRIVACY` text. Render semantic headings, paragraphs, and lists with readable measure. Identify GitHub Pages hosting metadata, local-only form memory, no submission/inbox/storage, external fallback boundaries, absence of inquiry analytics, value lifetime, questions route, and future commercial re-review. Add no fake lawyer, controller address, DPA, safeguard, provider chain, or legal conclusion.
 
-- [ ] **Step 5: Add Privacy to every footer**
+- [ ] **Step 5: Add paired routes, equivalence, and footer destinations**
 
-  Extend the existing footer labels and path contract, then update every current Spanish and English route entry atomically. Privacy is a normal site-navigation link with at least the existing 44 px target treatment; it does not displace Contact or appear as a primary action.
+  Add `privacy` to the typed route/equivalence maps. Render existing localized shells without changing primary navigation. Add localized footer links across every current route shell, preserving trailing slashes and base-path resolution.
 
-- [ ] **Step 6: Run focused GREEN and export gates**
+- [ ] **Step 6: Reach deterministic GREEN and verify both exports**
 
-  Run:
+  Run the focused Node suite, `npm run validate`, and `npm run verify:static-export`, then rebuild with `$env:NEXT_PUBLIC_BASE_PATH='/Portfolio'` and repeat static verification before removing the environment variable.
 
-  ```powershell
-  node --test scripts/privacy-content.test.mjs scripts/privacy-route.test.mjs scripts/site-routes.test.mjs
-  npm run validate
-  npm run verify:static-export
-  $env:NEXT_PUBLIC_BASE_PATH = '/Portfolio'
-  npm run build
-  npm run verify:static-export
-  Remove-Item Env:NEXT_PUBLIC_BASE_PATH
-  ```
+- [ ] **Step 7: Run Playwright, accessibility, and visual QA**
 
-  Confirm 20 static routes after adding the paired Privacy routes, correct `lang`, trailing-slash links, and no duplicated/missing base path. Restore a normal build before ordinary browser QA if needed.
-
-- [ ] **Step 7: Run Playwright, axe, manual accessibility, and visual QA**
-
-  Use the Playwright-owned server. Exercise both routes in desktop Chromium, Firefox, and WebKit; run the approved representative axe scan; verify keyboard order, headings, landmarks, equivalent-language links, footer links, 200% zoom, long-copy reflow, no horizontal overflow, visible focus, and no console/page errors. Visually inspect `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900` in both locales plus root/base-path spot checks. Record actual evidence and limitations; no snapshot baseline is required unless human visual review approves one.
+  Run the focused Privacy spec under existing projects and representative axe coverage. Manually inspect both locales at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900`, plus 200% zoom, keyboard focus, reduced motion, wrapping, and JavaScript-disabled semantics.
 
 - [ ] **Step 8: Review and open PR 3**
 
-  Run PR-readiness, inspect the complete diff for invented legal claims, duplicated normative text, locale drift, unrelated shell changes, or generated artifacts, and open `feat: publish the bilingual Privacy experience`. Stop before merge.
+  Inspect `main...HEAD` for invented facts, commercial claims, duplicate public copy, unrelated shell changes, generated artifacts, secrets, or form behavior. Commit `feat: publish the demonstration Privacy experience`, open the evidence-backed PR, and stop before merge.
 
-### Task 4 / PR 4: Launch the accessible Contact inquiry form
+### Task 4 / PR 4: Publish the accessible Contact demonstration
 
 **Files:**
 
-- Create: `components/contact/content-types.ts`
+- Create: `lib/inquiry/demo.ts`
+- Create: `scripts/demo-inquiry-adapter.test.mjs`
 - Create: `components/contact/state.ts`
-- Create: `components/contact/ContactPage.tsx`
-- Create: `components/contact/ContactForm.tsx`
-- Create: `scripts/contact-content.test.mjs`
 - Create: `scripts/contact-state.test.mjs`
+- Create: `components/contact/content-types.ts`
+- Create: `components/contact/ContactForm.tsx`
+- Create: `components/contact/ContactPage.tsx`
+- Create: `app/(es)/_content/contact.ts`
+- Create: `app/(en)/en/_content/contact.ts`
+- Create: `scripts/contact-content.test.mjs`
 - Create: `scripts/contact-route.test.mjs`
 - Create: `tests/e2e/contact.spec.ts`
-- Create: `tests/e2e/contact-responsive.spec.ts`
-- Modify: `app/(es)/_content/contact.ts`
-- Modify: `app/(en)/en/_content/contact.ts`
 - Modify: `app/(es)/contacto/page.tsx`
 - Modify: `app/(en)/en/contact/page.tsx`
-- Modify: `components/foundation/content-types.ts` only to retire Contact-specific types after every existing consumer is migrated safely
-- Modify: `components/foundation/MinimumDestination.tsx` only if Contact-only compatibility props become unused; preserve Services or other remaining consumers
-- Modify: `scripts/foundation-content.test.mjs`
+- Modify: `.github/workflows/deploy.yml`
+- Modify: `playwright.config.ts` only if focused project selection changes
 - Modify: `scripts/verify-static-export.mjs`
-- Modify: `tests/e2e/support/paths.ts`
-- Modify: `tests/e2e/accessibility.spec.ts`
-- Modify: `playwright.config.ts` to inject the fixed synthetic Formspree endpoint into the Playwright-owned server when no explicit endpoint is supplied and to route focused Contact coverage through the existing projects
-- Modify: current architecture, quality findings, and active-plan progress only after verification demonstrates facts
+- Modify: this plan only for actual evidence
 
 **Interfaces:**
 
-- Consumes: Task 2's validator and `SubmitInquiry`, Task 3's Privacy route, exact `PAGE-CONTACT` copy, existing direct-channel facts, and build-time `NEXT_PUBLIC_FORMSPREE_ENDPOINT`.
-- Produces: complete paired Contact routes and the approved `IDLE -> VALIDATING -> SUBMITTING -> SUCCESS | ERROR` user experience. No other route knows Formspree response details.
+- Consumes: merged `validateInquiry()` and contracts, exact `PAGE-CONTACT` demonstration copy, `REF-CONTACT-DEMO-PROVIDER`, Task 3 Privacy routes, and current fallback facts.
+- Produces: complete paired Contact routes with local-only simulation. It does not import the Formspree adapter or receive an endpoint.
 
-- [ ] **Step 1: Run the constrained design preflight**
+- [ ] **Step 1: Read Next.js form/client/environment references and required Skills**
 
-  Apply `frontend-implementation` and `design-taste-frontend-v1` beneath repository authority. Record the approved hierarchy, 8/4 wide split, below-1024 source order, single-column fields, persistent labels, status surfaces, fallback hierarchy, and explicit exclusions. Resolve no new aesthetic or content decision.
+  Read `node_modules/next/dist/docs/01-app/01-getting-started/05-server-and-client-components.md`, `node_modules/next/dist/docs/01-app/02-guides/forms.md`, `node_modules/next/dist/docs/01-app/02-guides/environment-variables.md`, `node_modules/next/dist/docs/01-app/02-guides/static-exports.md`, plus `frontend-implementation`, `test-driven-development`, `playwright-qa`, and owning records.
 
-- [ ] **Step 2: Write content, route, state, and Playwright RED tests before form code**
+- [ ] **Step 2: Write adapter RED, implement, and reach GREEN**
 
-  Assert exact localized content and limits, route ownership, configured-versus-missing endpoint behavior, state transitions, all-field validation, first-invalid focus, error associations, busy state, visible values/labels, duplicate click/Enter/programmatic prevention, success focus/reset, failure focus/preservation/retry, direct-channel order, Privacy/Founder links, no raw provider response, and no page navigation or mail-client launch. Use Playwright route interception for provider acceptance, field errors, 429, 5xx, delayed response/timeout, malformed JSON, and lost response. No test contacts the real endpoint.
+  Assert default/injected delay, accepted path, case-insensitive reserved failure, no mutation, one wait, no retry, no global `fetch`, no endpoint, and no storage/logging dependency. Run `node --test scripts/demo-inquiry-adapter.test.mjs`; require the explicit missing-export RED, implement the exact factory, and rerun GREEN.
 
-- [ ] **Step 3: Run the narrow RED commands**
+- [ ] **Step 3: Write state RED, implement, and reach GREEN**
 
-  Run the new Node files directly and run `tests/e2e/contact.spec.ts` under `chromium-desktop` with a synthetic `https://formspree.io/f/test-contact` endpoint. Guard new-module imports so the Node tests report explicit missing-behavior assertion failures. Expected: Node FAIL assertions for absent content/state behavior and a Playwright assertion that the current `MinimumDestination` has no named form; do not accept import, syntax, server-start, or browser-launch errors as RED. Preserve the RED output in the PR evidence.
+  Assert legal transitions, every invalid field, first-invalid focus, one active submission, ignored duplicate, failure preservation, success reset, retry, stale-result protection, and safe reason handling. Keep strings, DOM refs, React Hook Form, timers, and adapters outside the reducer.
 
-- [ ] **Step 4: Implement locale-owned Contact content and shared semantic structure**
+- [ ] **Step 4: Write content, route, and rendered RED tests**
 
-  Expand both Contact content owners with exact `PAGE-CONTACT` copy while preserving the existing direct-channel data consumed elsewhere. Build `ContactPage` as the single main landmark in approved source order. Resolve Privacy and Founder links through the typed route map. At 1024 px and above, use the existing 12-column container with the form at approximately eight columns and support at four; below it, reflow without CSS/source-order divergence.
+  Assert field order/limits, required/optional labels, demo notice, submit/progress/success/failure text, fallback note/order, Privacy/Founder links, both locale/source values, no delivery wording, missing Formspree route import, and the full association/focus/status contract. Playwright covers `success@example.invalid`, `failure@example.invalid`, multi-field validation, duplicate activation, retry, preservation/reset, JavaScript fallback, and a network guard that fails on XHR, fetch, beacon, navigation, or requests containing values.
 
-- [ ] **Step 5: Implement the minimal accessible Client Component**
+- [ ] **Step 5: Implement the shared page and small Client form**
 
-  Use one named semantic form and persistent visible labels. Apply native `required`, `type="email"`, `inputMode="email"`, `autocomplete="name|email|organization"`, stable IDs, helper plus error `aria-describedby`, and `aria-invalid` only when invalid. The honeypot is non-focusable and absent from the accessibility tree. The message textarea is at least 180 px and vertically resizable.
+  Keep route shells/page composition as Server Components. `ContactForm` is the smallest Client Component and receives locale, exact content, `mode="demonstration"`, and the demo `SubmitInquiry`. Use React Hook Form for values/errors and the pure reducer for phase. Never read an endpoint, use Formspree copy, write storage, log values, or auto-retry.
 
-  On submit, prevent reentry synchronously, validate all fields, focus the first invalid control, then set `aria-busy`, disable the fieldset and submit control, preserve visible labels/values, and announce the localized progress text. On `accepted`, reset only after acceptance and focus the `role="status" tabindex="-1"` success surface. On every other result, restore controls, preserve all values, focus an alert/error surface, keep retry and alternatives reachable, and never show raw provider data. Editing a field clears only that field's stale validation error; no automatic retry runs.
+- [ ] **Step 6: Remove the endpoint from deployment**
 
-- [ ] **Step 6: Replace both Contact minimum routes atomically**
+  Delete only `NEXT_PUBLIC_FORMSPREE_ENDPOINT` from `.github/workflows/deploy.yml`. Add a deterministic assertion that deployed Contact imports `lib/inquiry/demo.ts`, not `lib/inquiry/formspree.ts`, and the deploy workflow supplies no endpoint.
 
-  Pass locale, content, resolved links, and the build-time endpoint into the shared composition. A missing or invalid endpoint keeps the current direct-channel route usable and omits the nonfunctional primary form. A configured endpoint renders the complete form in both locales. Do not alter other pages' shared contact facts or make direct email the form action.
+- [ ] **Step 7: Reach deterministic and browser GREEN**
 
-- [ ] **Step 7: Run focused GREEN and provider-isolated browser coverage**
+  Run all inquiry/demo/state/content/route Node suites, the focused Contact Playwright spec, `npm run validate`, root static verification, and `/Portfolio` build/static verification. Confirm no provider request and that dormant Formspree tests remain green.
 
-  Run the new Node tests, then the Contact Playwright tests with the fixed synthetic endpoint. `playwright.config.ts` supplies `https://formspree.io/f/test-contact` only to its owned local server when the caller has not provided an endpoint; every Contact test installs a route interception or an explicit fail-on-network guard before submission. Chromium covers all success/failure/state details. Desktop Firefox and WebKit cover the configured happy path and critical fallback. Compact Chromium/WebKit and tablet/wide Chromium cover responsive behavior. Confirm provider interception received exactly one allowed request with correct locale/source and that no unmocked Formspree request occurred.
+- [ ] **Step 8: Complete accessibility and visual QA**
 
-- [ ] **Step 8: Run the full deterministic/static matrix**
+  Exercise idle, validation, submitting, simulated success, and simulated failure in both locales at every approved viewport. Verify keyboard-only completion/retry, focus and live announcements, 200% zoom, textarea resize, targets, reduced motion, no overflow, fallback hierarchy, axe, and zero inquiry-value network traffic.
 
-  Run:
+- [ ] **Step 9: Review and open PR 4**
 
-  ```powershell
-  npm run validate
-  npm run verify:static-export
-  $env:NEXT_PUBLIC_FORMSPREE_ENDPOINT = 'https://formspree.io/f/test-contact'
-  npm run build
-  npm run verify:static-export
-  $env:NEXT_PUBLIC_BASE_PATH = '/Portfolio'
-  npm run build
-  npm run verify:static-export
-  Remove-Item Env:NEXT_PUBLIC_BASE_PATH
-  Remove-Item Env:NEXT_PUBLIC_FORMSPREE_ENDPOINT
-  npm run test:e2e
-  npm run test:a11y
-  ```
+  Inspect `main...HEAD` for endpoint leakage, Formspree route imports, inquiry data, storage/logging, false delivery copy, unguarded network behavior, new dependencies, unrelated refactors, or generated QA artifacts. Commit `feat: publish the accessible Contact demonstration`, open the PR, and stop before merge.
 
-  The default no-endpoint build proves fail-closed direct alternatives. The configured normal and `/Portfolio` builds prove the form, both Privacy routes, exact internal links, and no server-only feature. Generated output remains uncommitted.
-
-- [ ] **Step 9: Perform the exact accessibility and visual QA matrix**
-
-  Verify `/contacto/` and `/en/contact/` at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900` with root and relevant `/Portfolio` repetitions. Exercise idle, every validation error, submitting, success, generic failure, timeout, and retry; keyboard-only completion; Enter and textarea newline behavior; first-invalid and status focus; visible focus; error association; duplicate prevention; preserved values; reset only after acceptance; translated expansion; textarea resize; 200% zoom; reduced motion; direct-channel and Founder order; no raw provider response; no horizontal overflow; and no console/page errors.
-
-  Run representative axe scans for both Contact and Privacy locales. Manually review semantics, landmark/heading/source order, required indication, focus visibility, target sizes, contrast for `#B42318` and `#067647` on actual surfaces, error identification, reflow, and at least one available assistive-technology announcement pass. Automated checks do not establish WCAG conformance. This plan requires recorded visual QA but no new pixel baseline; any future baseline needs a separately inspected and human-approved image under `TEST-VISUAL-REGRESSION`.
-
-- [ ] **Step 10: Perform the real pre-release staging smoke**
-
-  Before PR 4 may be approved or merged, build/serve the branch with the real public endpoint from approved local or staging configuration and an allowed staging origin. Submit one clearly labeled synthetic inquiry in each locale, including one optional-company omission and one supplied-company case. Confirm Formspree acceptance, target-inbox arrival, fixed subject, authenticated sender, intact labeled fields, provider receipt time, correct `Reply-To`, locale/source, no unexpected payload, spam/honeypot behavior, and deletion from provider history and Gmail under the approved procedure. Record date, environment, PASS/FAIL checklist, and deletion completion in the PR and plan without copying inquiry content or the endpoint.
-
-- [ ] **Step 11: Final review and open PR 4**
-
-  Re-run fresh applicable gates after the live smoke, inspect `main...HEAD`, confirm the production deployment variable is provisioned and domain restriction includes the final host, and verify no IDs, secrets, real data, reports, traces, videos, or screenshots are committed. Open `feat: launch the accessible Contact inquiry form` with the staging evidence and explicit human merge authority. Stop before merge.
-
-### Task 5 / PR 5: Verify production and close the plan
+### Task 5 / PR 5: Verify the deployed demonstration and close the plan
 
 **Files:**
 
-- Move after all implementation PRs are human-merged: `docs/plans/active/contact-inquiry-pipeline.md` -> `docs/plans/completed/contact-inquiry-pipeline.md`
-- Modify: `docs/plans/index.md`
-- Modify: `docs/index.md`
 - Modify: `ARCHITECTURE.md`
 - Modify: `docs/architecture/current-system.md`
-- Modify: `docs/architecture/current-quality-findings.md`
+- Modify: `docs/architecture/index.md`
 - Modify: `docs/governance/status-register.md`
+- Modify: `docs/index.md`
 - Modify: `docs/product/site-feature-catalogue.md`
+- Move: this plan to `docs/plans/completed/contact-inquiry-pipeline.md`
+- Modify: `docs/plans/index.md`
 
-**Interfaces:**
+- [ ] **Step 1: Verify the final GitHub Pages routes**
 
-- Consumes: human-merged PRs 1–4, successful GitHub Pages deployment, final production hostname, and retained sanitized evidence.
-- Produces: verified production behavior, completed plan history, and synchronized current-system/status records.
+  Verify `/Portfolio/contacto/`, `/Portfolio/en/contact/`, `/Portfolio/privacidad/`, and `/Portfolio/en/privacy/`; switching, assets, footer, fallbacks, and console health at `https://furlanich.github.io/Portfolio/`.
 
-- [ ] **Step 1: Verify the deployed final host without changing it**
+- [ ] **Step 2: Prove deployed success, failure, and zero transmission**
 
-  Confirm both locale Contact and Privacy routes, static assets/base path, form presence, language switching, direct fallbacks, and browser console health on the deployed hostname. Verify the provider's exact-domain restriction accepts the final host and rejects a controlled disallowed origin.
+  Submit labeled `.invalid` values in both locales. Confirm loading, duplicate prevention, focused status/alert, failure preservation, retry, success reset, exact no-send copy, and no form value, Formspree request, mail action, beacon, navigation, or storage write during submission.
 
-- [ ] **Step 2: Submit and delete one labeled production smoke**
+- [ ] **Step 3: Repeat deployed accessibility and visual checks**
 
-  Use synthetic non-prospect data. Confirm provider acceptance, inbox arrival, fixed subject, authenticated sender, intact fields, `Reply-To`, locale/source, and the approved deletion procedure. Delete the provider and Gmail copies after evidence is recorded. If delivery or deletion fails, disable submission by removing the public deployment endpoint and redeploy the fallback-only experience; keep the plan ACTIVE.
+  Run the proportionate browser, viewport, keyboard, zoom, reduced-motion, axe, and manual matrix against the deployed site. Record evidence using `REF-CONTACT-DEMO-REVIEW`; do not claim whole-site WCAG conformance.
 
-- [ ] **Step 3: Synchronize demonstrated implementation facts**
+- [ ] **Step 4: Synchronize current state and close the plan**
 
-  Update architecture, quality, catalogue, and status records with only observed facts. Do not claim whole-site WCAG conformance, guaranteed delivery, legal advice, exactly-once submission, zero spam, or provider permanence.
+  Record only observed facts. Mark demonstration Contact/Privacy complete; keep commercial Formspree activation, legal review, processor facts, inbox delivery, deletion, and restriction OPEN. Run docs validation, move this plan to `completed/`, open `docs: record deployed Contact demonstration`, and stop before merge.
 
-- [ ] **Step 4: Complete and move the plan**
+## Verification contract
 
-  Record every PR URL, RED/GREEN command, deterministic result, browser/axe/visual/manual scope, staging and production smoke date/result, deletion result, limitation, and deviation. Check every task, set `plan_status: COMPLETED`, move the file to `docs/plans/completed/`, and update every link/index atomically.
+Every implementation PR runs fresh `npm run docs:check`, `npm test`, `npm run lint`, `npm run typecheck`, `npm run build`, `npm run verify:static-export`, and `git diff --check`. Tasks 3 and 4 also run focused Node/Playwright suites, both export modes, representative axe coverage, and manual/visual checks.
 
-- [ ] **Step 5: Validate and open PR 5**
+Automated checks do not replace manual semantics, announcement, contrast, reading order, zoom, keyboard, reduced motion, and rendered hierarchy review. Screenshots remain ignored transient evidence unless a separate human-approved baseline change authorizes them.
 
-  Run `npm run docs:check` and the production-relevant smoke/static checks, inspect the docs-only diff, and open `docs: record Contact inquiry release verification`. Stop before merge.
-
-## Deterministic testing contract
-
-### Node/unit/contract
-
-- Exact validation boundaries, trim/omission, locale/source binding, UTF-8 size, and unsupported-field exclusion.
-- Adapter request method/headers/body, one-call behavior, abort cleanup, accepted response, provider field errors, rate/quota/misconfiguration, 5xx, timeout/network, malformed JSON, unexpected fields/shapes, and no raw error leakage.
-- Pure reducer transitions: `IDLE -> VALIDATING -> SUBMITTING -> SUCCESS | ERROR`, validation fallback, retry, duplicate prevention, value preservation, and reset only after acceptance.
-- Content and route contracts for both Contact and Privacy locales.
-- Static artifacts for normal, missing-endpoint, configured-endpoint, and `/Portfolio` builds.
-
-### Playwright
-
-- Success and failure coverage uses request interception; public CI never sends real email.
-- Both locales cover exact labels/helpers/errors/statuses, source/locale payloads, Privacy/Founder links, fallback order, value preservation, reset, retry, and no navigation away.
-- Chromium covers all state and failure branches; Firefox/WebKit cover critical configured submission; compact/mobile/tablet/wide projects cover approved reflow.
-- Axe covers both Contact and Privacy locale routes; console/page-error gating remains active.
-
-### Manual accessibility and visual review
-
-- Exact Contact viewport matrix in both languages and representative Privacy checks.
-- Keyboard-only flow, Enter/newline behavior, focus order/movement/visibility, announcement behavior, associated help/errors, 200% zoom, resize, contrast, target size, reduced motion, source order, and no overflow.
-- Visual judgment compares hierarchy, typography, spacing, field/status surfaces, alternative emphasis, and long-copy growth with `DESIGN-VISUAL`; snapshots are change detection, not approval.
-
-### Live evidence boundary
-
-- Live staging and production smoke tests are named manual actions, never CI.
-- Use only labeled synthetic non-prospect data and delete all copies after verification.
-- `accepted` proves the provider response; inbox inspection proves delivery; deletion inspection proves the configured removal procedure. Do not collapse these into one claim.
-
-## Per-PR validation baseline
-
-Every implementation PR runs its focused RED/GREEN commands plus, when applicable:
-
-```powershell
-npm run docs:check
-npm test
-npm run lint
-npm run typecheck
-npm run build
-npm run verify:static-export
-```
-
-`npm run validate` may compose the first five gates when its script remains equivalent. UI PRs additionally run the focused Playwright projects, `npm run test:e2e`, `npm run test:a11y`, configured normal/base-path exports, and the recorded manual matrix. A live smoke never substitutes for deterministic tests, and automated tests never substitute for inbox or deletion inspection.
-
-## Pull Request evidence contract
-
-Every PR description records:
-
-- plan task, upstream requirements, ADR, and predecessor PR;
-- behavior changed or explicitly unchanged;
-- exact RED failure and GREEN/full commands with counts and exit status;
-- routes, browsers, viewports, states, keyboard interactions, axe scope, and visual/manual checks actually exercised;
-- provider/legal/manual evidence only when actually obtained and sanitized;
-- privacy/documentation synchronization;
-- risks, rollback, OPEN items, and unverified limitations; and
-- explicit human merge authority.
-
-## Risks and mitigations
-
-- **Provider documentation or configuration drift:** re-verify first-party sources in Task 1 and at release; stop if the accepted response, storage, deletion, or processor facts change materially.
-- **An HTTP success is mistaken for delivery:** keep UI copy at provider acceptance and require separate staged and production inbox proof.
-- **Ambiguous timeout creates a duplicate after manual retry:** no automatic retry, preserve values, use non-committal failure copy, and deduplicate during Samuel's triage.
-- **Public endpoint abuse consumes quota:** exact provider schema, no files, domain restriction, honeypot, Formshield, one active request, 24 KiB ceiling, provider rate limit, and quota monitoring.
-- **Domain restriction blocks privacy-hardened clients:** treat referer-based restriction as defense in depth, test allowed/disallowed origins, keep direct fallbacks visible, and do not describe it as authentication.
-- **Public deployment happens immediately after merge to `main`:** PR 4 cannot merge until real staging delivery/deletion proof passes and the deployment endpoint/final domain are configured. Missing endpoint remains fail-closed.
-- **Privacy copy outruns deployed reality:** Task 1 owns verified facts and legal review; Privacy code consumes exact approved content and never guesses from an endpoint or plan name.
-- **Long Spanish/English states break layout:** intrinsic sizing, no fixed content height or line clamp, exact viewport/zoom matrix, and visual review in every state.
-- **Client state harms static/no-JavaScript access:** keep the interactive island limited to the form; intro, response expectation, fallbacks, Privacy, and Founder context remain server-rendered links/content.
-- **Tests accidentally email Samuel:** all deterministic tests inject fetch or intercept browser requests; a real endpoint is permitted only in explicitly labeled manual staging/production steps.
-- **Sensitive evidence leaks into git:** record sanitized outcomes and dates, never provider dashboards, response bodies, form IDs, prospect content, cookies, or credentials.
+Every PR body records upstream IDs, scope/non-goals, RED/GREEN evidence, commands, browser/axe/manual/visual results, base-path evidence, mock usage, zero-transmission proof, OPEN commercial gates, rollback, and human merge authority.
 
 ## Rollback
 
-If the pre-release smoke fails, do not merge PR 4. If the deployed form fails after release, remove or invalidate the approved `NEXT_PUBLIC_FORMSPREE_ENDPOINT` deployment value and redeploy the same commit so the route fails closed to WhatsApp, email, and phone. If that path is unavailable, revert PR 4 through a human-reviewed PR. Preserve the Privacy page while its facts remain accurate; update it before any processor change. Never roll back to `mailto:` as the primary form or expose mail credentials.
+If Task 3 fails, revert it and retain the site without Privacy routes. If Task 4 fails, restore the direct-channel `MinimumDestination`; do not switch to Formspree. The dormant adapter may remain because no public route imports it. A human-reviewed revert and redeploy restores the previous static site.
 
-## Deferred and OPEN items
+## Out of scope
 
-- A processor other than Formspree, serverless backend, hosting migration, provider SDK, generic integration layer, CRM, marketing subscription, analytics event, file upload, service/budget/deadline fields, or automatic retry.
-- Interactive CAPTCHA/Turnstile unless observed abuse and a separate governance/privacy/accessibility review approve it.
-- Whole-site accessibility conformance, a broader form system, a new design system, canonical metadata beyond the final-host gate, or provider-independent delivery guarantees.
-- Any legal/privacy issue left unresolved by professional review. Such an item remains release-blocking and cannot be closed by code or agent judgment.
+- Real inquiry processing, email notification, inbox delivery, provider acceptance/storage, or deletion operations.
+- Claims that the site accepts clients, quotes work, forms a commercial relationship, or has professional legal approval.
+- Another provider, backend, hosting migration, SDK, generic integration, CRM, marketing, analytics, file upload, or extra intake fields.
+- CAPTCHA, browser persistence, offline queue, automatic retry, exactly-once claims, or synthetic data resembling a real person.
+- Whole-site conformance, broader metadata work beyond the approved GitHub Pages URL, or redesign of unrelated showcase pages.
 
 ## Progress
 
-- 2026-09-10: the repository owner merged Governance PR #43, accepting Formspree behind the narrow provider-neutral inquiry boundary for the current static release.
-- 2026-09-11: `ADR-CONTACT-INQUIRY-PIPELINE` and this ACTIVE five-PR execution plan were prepared on `codex/contact-inquiry-execution-plan`. The planning PR changes documentation only.
-- 2026-09-12: Sanitized Task 1 evidence was supplied: a Samuel-controlled Formspree endpoint exists outside the repository; the Formspree plan and schema/settings were reported confirmed/PASS; allowed/disallowed-origin probes, synthetic delivery, Formspree deletion, and Gmail deletion were reported PASS; the reported staging host is furlanich.github.io. No final production host has been selected, and professional legal review remains OPEN. The endpoint value, form ID, submission content, inbox evidence, and private legal materials are intentionally not recorded here.
-- 2026-09-12: Task 1 remains OPEN. The reported provider evidence is partial progress, not release approval: final-host/domain restriction, complete storage/retention/subprocessor/transfer facts, professional legal review, and the exact bilingual Privacy owner text still need closure. Under the owner-authorized development-only deviation, Task 2's provider-isolated implementation may proceed while those release gates remain open; Tasks 3–5 remain blocked until the release gates close.
-- First implementation task selected: Task 1 / PR 1, `docs: close Contact provider and privacy gates`. Task 2 / PR 2 is authorized as development-only continuation; no public form behavior or release processing is authorized.
-- 2026-09-12: Task 2 implementation evidence recorded: literal validator and adapter RED assertions were observed before implementation; the focused suites pass 19/19; `npm run validate` passes documentation checks, 78 repository tests, lint, typecheck, and build; `npm run verify:static-export` passes for 18 routes at base path `/`. The adapter tests use only the synthetic `https://formspree.io/f/test-contact` endpoint and injected fetch doubles; no live provider request occurred.
-- 2026-09-12: [PR #45](https://github.com/Furlanich/Portfolio/pull/45) was verified through GitHub as merged into `main` with merge commit `335822fc7461717383ce6e524f89f9dc674a8096`. Task 2 / PR 2 is complete; Task 3 / PR 3 and Task 4 / PR 4 remain gated by the exact reviewed Privacy copy, complete processor/storage/retention/transfer facts, final host/domain restriction, and professional legal review.
+- 2026-09-10: Governance PR #43 accepted Formspree behind the narrow provider-neutral boundary for a future commercial release.
+- 2026-09-11: Planning PR #44 recorded the original commercial delivery sequence.
+- 2026-09-12: Sanitized provider probes were reported, but processor/transfer facts and professional legal review remained unavailable.
+- 2026-09-12: PR #45 merged the provider-neutral contracts, validator, and Formspree adapter. No public route or live request was added.
+- 2026-09-12: The owner selected `https://furlanich.github.io/Portfolio/` as the lasting host, classified the site as a non-commercial showcase, authorized mock resources on `main`, and approved a local-only Contact simulation. `ADR-CONTACT-INQUIRY-DEMO-MODE` records the decision.
+- 2026-09-12: The active sequence now targets demonstrative Privacy and Contact publication followed by live zero-transmission verification. Commercial activation is a separately gated later initiative.
 
 ## Important implementation decisions
 
-- Use five serial review boundaries after the planning PR: operational/privacy closure; deterministic adapter; Privacy publication; atomic Contact launch; production evidence/plan closure.
-- Keep the current Contact destination public until the complete form is ready; do not publish a nonfunctional intermediate form.
-- Use direct `fetch` and the accepted `SubmitInquiry` interface; do not add the newly documented Formspree AJAX/React SDK without new evidence and review.
-- Treat the existing deployment variable as public build-time configuration and validate it before rendering the form. The target inbox stays exclusively in provider configuration.
-- Publish Privacy before the form so the release cutover can link to an already reviewed, accurate notice.
-- Make PR 4 atomic across both locales and all automated/manual evidence because partial locale or state publication would create a misleading conversion path.
-- Require real staged inbox/`Reply-To`/deletion proof before PR 4 merge and a production-host verification before plan completion.
+- Keep every four-field UI, accessibility, and state feature; change only submission meaning/transport in the deployed demonstration.
+- Use a local adapter behind the merged port so a later reviewed Formspree activation changes injection/copy rather than rebuilding the form.
+- Publish truthful demonstration Privacy copy instead of invented controller, DPA, subprocessor, retention, transfer, or lawyer facts.
+- Remove the endpoint from deployment and prove zero transmission at unit, browser, static, and deployed layers.
+- Keep real fallback links for behavioral demonstration but state that they invoke external services and do not constitute form delivery or accepted commercial intake.
+- Treat the default GitHub Pages project URL as final; no custom domain is required.
 
 ## Deviations discovered during execution
 
-2026-09-12 owner-authorized deviation: the development-only continuation authorization above permits the Task 1 docs checkpoint to be reviewed/merged and Task 2 provider-neutral implementation to proceed before final-host selection and professional legal/privacy closure. The accepted processor, data contract, state model, route/hosting model, and release evidence requirements are unchanged; all unresolved legal, privacy, retention, transfer, and production-host items remain OPEN and release-blocking.
+- 2026-09-12 owner-approved scope change: the project remains a non-commercial demonstration on the default GitHub Pages URL. Tasks 3–5 no longer wait for commercial legal/provider evidence because they deploy a zero-transmission simulation and truthful disclosure. The earlier Formspree ADR remains dormant future architecture; none of its commercial gates are recorded as passed.

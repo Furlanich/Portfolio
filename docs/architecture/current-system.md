@@ -7,10 +7,11 @@ related:
   - IA-SITE
   - PAGE-SERVICES
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-11
+last_verified: 2026-09-12
 ---
 
 # Current system
@@ -89,6 +90,14 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Success and error states are announced in an `aria-live` region.
 - The current source and deployment workflow reference a public Formspree endpoint, but no current Contact route consumes it. Formspree is the accepted target provider under `ADR-CONTACT-INQUIRY-PIPELINE`; provisioning, Privacy, implementation, and live delivery/deletion remain future plan work rather than current-system behavior.
 
+## Current inquiry boundary — PR #45
+
+- `lib/inquiry/contracts.ts` defines the provider-neutral values, payload, validation-code, result, and `SubmitInquiry` interfaces.
+- `lib/inquiry/validation.ts` implements pure allowlisted normalization and field/request limits for both localized Contact sources.
+- `lib/inquiry/formspree.ts` implements the accepted direct-fetch Formspree adapter behind injected fetch/time behavior; its deterministic tests use only synthetic fixtures and never contact the provider.
+- No current public route imports these modules, so the merged boundary changes no visitor behavior and sends no inquiry.
+- `ADR-CONTACT-INQUIRY-DEMO-MODE` now governs the next public integration: a new local-only adapter will use the same port for demonstrative outcomes while the Formspree adapter remains dormant.
+
 ## Pre-cutover metadata
 
 - Root metadata identifies “Samuel Furlanich - Developer” and a generic developer portfolio.
@@ -101,7 +110,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - GitHub Actions builds pushes to `main` with Node 24.
 - `NEXT_PUBLIC_BASE_PATH` is set to the repository name for GitHub Pages.
 - The workflow deploys `out/` with `peaceiris/actions-gh-pages` using content-write permission.
-- Current live location was previously verified as `https://furlanich.github.io/Portfolio/`.
+- Current and approved lasting demonstration location is `https://furlanich.github.io/Portfolio/`; no custom domain is planned.
 
 ## Pre-cutover validation and documentation
 

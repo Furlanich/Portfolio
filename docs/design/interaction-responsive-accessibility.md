@@ -8,12 +8,13 @@ related:
   - PAGE-SERVICES
   - PAGE-CONTACT
   - PAGE-PRIVACY
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PAGE-PROJECTS
   - PAGE-STUDIO
   - PAGE-FOUNDER
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-10
+last_verified: 2026-09-12
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -269,8 +270,8 @@ These requirements implement the `PAGE-CONTACT` state model without claiming aud
 
 - `SUBMITTING` sets the form busy, disables the field group and submit control for the active request, preserves visible labels and values, exposes localized progress through a polite live region, and prevents duplicate click, Enter, or programmatic submission.
 - Enter submits from single-line controls according to native form behavior. The textarea keeps newline behavior. Every action remains keyboard operable with a visible unclipped focus indicator and at least 44px target dimensions; primary controls remain at least 48px high.
-- `SUCCESS` occurs only after the adapter receives the selected provider's documented acceptance response. Announce and programmatically focus a `role="status"` message with `tabindex="-1"`, then reset the fields. Keep direct alternatives reachable.
-- `ERROR` covers validation-safe provider rejection, rate/quota failure, timeout/network failure, and malformed or unknown responses. Restore controls, preserve every entered value, announce and focus an alert/error status, offer retry, and keep WhatsApp strongest, then email and phone. Never expose raw provider errors.
+- In demonstration mode, `SUCCESS` occurs only after the injected local adapter completes the simulated accepted scenario. Announce and programmatically focus a `role="status"` message with `tabindex="-1"`, reset the fields, and state explicitly that no data was sent or inquiry created. In a future commercial mode, `SUCCESS` retains the stricter provider-acceptance meaning.
+- `ERROR` covers the deterministic demonstration failure and, in a future commercial mode, validation-safe provider rejection, rate/quota failure, timeout/network failure, and malformed or unknown responses. Restore controls, preserve every entered value, announce and focus an alert/error status, offer retry, and keep WhatsApp strongest, then email and phone. Never expose raw adapter/provider errors.
 - No automatic retry is approved. Reduced-motion preferences remove nonessential transitions; no state meaning depends on animation or a spinner.
 
 ### Reflow and progressive availability
@@ -278,7 +279,8 @@ These requirements implement the `PAGE-CONTACT` state model without claiming aud
 - Below 1024px, source and visual order is intro, form, response expectation/alternatives, Founder context. At 1024px and above, the form may occupy approximately eight columns and the supporting block four without CSS ordering that changes reading or focus order.
 - All fields are full width and single column. At 320px, approximately 390px, 768px, 1024px, and 1440px, verify translated-copy/error expansion, textarea resizing, 200% zoom, landscape/tablet use, and no clipping or horizontal overflow.
 - If client-side JavaScript fails, the localized Contact content and WhatsApp, email, and phone alternatives remain usable. Do not replace the primary in-page form with a `mailto:` action, provider-hosted success page, or false success state.
+- The demonstration notice remains visible without JavaScript. Submission in demonstration mode must not initiate `fetch`, XHR, beacon, document navigation, mail activation, storage, logging, or analytics; external fallback links act only after the visitor activates them.
 
 ### Verification boundary
 
-Verify both locale routes at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900`, including root and optional `/Portfolio` base paths. Cover keyboard-only completion and retry; focus/error association; all state announcements; duplicate prevention; preserved values; reset-after-confirmation only; textarea resize; translated copy; 200% zoom; reduced motion; no raw provider response; fallback order; representative axe scans; and manual contrast, semantics, reading-order, and assistive-technology checks. Provider/network outcomes are deterministic adapter mocks; the labeled live delivery smoke test is separate and never runs automatically in public CI.
+Verify both locale routes at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900`, including root and optional `/Portfolio` base paths. Cover keyboard-only completion and retry; focus/error association; all state announcements; duplicate prevention; preserved values; reset after simulated success only; textarea resize; translated copy; 200% zoom; reduced motion; no raw adapter response; fallback order; representative axe scans; manual contrast, semantics, reading-order, and assistive-technology checks; and zero inquiry-value network traffic. A labeled live delivery smoke is required only by a later commercial activation and never runs automatically in public CI.
