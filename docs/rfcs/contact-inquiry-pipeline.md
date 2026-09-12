@@ -9,10 +9,11 @@ related:
   - ARCH-CURRENT
   - ADR-STATIC-LOCALIZED-ROUTING
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-11
+last_verified: 2026-09-12
 ---
 
 # Contact inquiry submission pipeline
@@ -308,6 +309,10 @@ The merge resolves provider architecture, not the release gates. Verified accoun
 ## Status
 
 **APPROVED.** The repository owner approved this architecture by merging [Governance PR #43](https://github.com/Furlanich/Portfolio/pull/43) on 2026-09-10. The original comparison, alternatives, and trade-offs remain above as decision history. Application delivery is governed by `ADR-CONTACT-INQUIRY-PIPELINE` and `PLAN-CONTACT-INQUIRY-PIPELINE`; keep the Contact form disabled until the configuration, Privacy page, legal review, deterministic tests, and labeled delivery/deletion smoke gates are complete.
+
+## Subsequent demonstration-mode decision — 2026-09-12
+
+[`ADR-CONTACT-INQUIRY-DEMO-MODE`](../decisions/contact-inquiry-demonstration-mode.md) scopes the current public site to a non-commercial demonstration at `https://furlanich.github.io/Portfolio/`. The deployed Contact form may use the same approved fields, state model, and provider-neutral port only through a local adapter that sends and stores nothing. This later decision does not alter the Formspree comparison or mark any provider/legal/delivery gate above as passed; it defers real processing to a separately reviewed commercial activation.
 
 ## Official references checked
 

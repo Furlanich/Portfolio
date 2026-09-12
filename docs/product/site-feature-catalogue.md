@@ -9,8 +9,9 @@ related:
   - PROJECT-EVIDENCE
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
-last_verified: 2026-09-11
+last_verified: 2026-09-12
 ---
 
 # Site feature catalogue
@@ -25,7 +26,7 @@ This concise catalogue traces visitor-facing capabilities to their authoritative
 | Business communication | [`PAGE-HOME`](pages/home.md), [`PAGE-SERVICES`](pages/services.md), [`PAGE-CONTACT`](pages/contact-and-privacy.md) |
 | Project evidence | [`PROJECT-EVIDENCE`](project-evidence.md), [`PAGE-PROJECTS`](pages/projects.md) |
 | Founder profile | [`PAGE-FOUNDER`](pages/studio-and-founder.md) |
-| Inquiry | [`PAGE-CONTACT`](pages/contact-and-privacy.md) |
+| Inquiry demonstration | [`PAGE-CONTACT`](pages/contact-and-privacy.md) and [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../decisions/contact-inquiry-demonstration-mode.md): four fields, validation, loading, simulated success/failure, failure preservation, retry, and fallbacks with zero submission transmission |
 | Services in-page navigation | Stable localized fragments and non-sticky service index in [`PAGE-SERVICES`](pages/services.md#stable-service-anchors-approved) |
 
 ## PROPOSED launch capabilities
@@ -37,10 +38,9 @@ This concise catalogue traces visitor-facing capabilities to their authoritative
 
 ## OPEN capabilities and dependencies
 
-- Contact delivery: [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) accepts Formspree for the static-site release behind a narrow `submitInquiry()` adapter, and [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) owns implementation. Verified provider configuration/content retention, complete processor and international-transfer facts, legally reviewed notice/consent wording, and live delivery/deletion evidence remain implementation or release gates. The in-page four-field experience, state model, fallback order, field limits, provider filtering, honeypot, duplicate prevention, and no-default-CAPTCHA policy are **APPROVED** in [`PAGE-CONTACT`](pages/contact-and-privacy.md).
+- Commercial Contact delivery: [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) retains Formspree behind `submitInquiry()` for a later activation. Provider configuration/retention, processor/transfer facts, professionally reviewed notice/consent wording, and live delivery/deletion evidence remain OPEN. They do not block the zero-transmission demonstration owned by the active plan.
 - Final project search/filter behavior and public project demos or video walkthroughs. See [`PROJECT-EVIDENCE`](project-evidence.md).
 - Analytics and conversion measurement.
-- Custom domain. See [`IA-SITE`](information-architecture.md).
 - Blog or resources after launch. They are excluded from the initial sitemap by [`IA-SITE`](information-architecture.md#launch-exclusions).
 
 ## Explicit non-features at launch

@@ -6,7 +6,9 @@ related:
   - AUDIENCES-SERVICES
   - CONTENT-LOCALIZATION
   - PAGE-HOME
-last_verified: 2026-09-04
+  - PAGE-CONTACT
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
+last_verified: 2026-09-12
 ---
 
 # Vision and positioning
@@ -24,6 +26,14 @@ The site must help a prospective client understand:
 5. how to start an inquiry.
 
 The site is not primarily intended to optimize Samuel's presentation to recruiters.
+
+## Current deployment posture — APPROVED
+
+The intended long-term product remains the founder-led commercial website described above, but the current public deployment is a **portfolio and technical demonstration only**. It does not offer, accept, quote, or operate commercial services through site capabilities while development remains incomplete.
+
+The canonical demonstration URL is `https://furlanich.github.io/Portfolio/`. Commercially oriented copy and service structures demonstrate the intended product direction; they are not evidence that the corresponding commercial operation is active. Contact and Privacy must make this boundary explicit. The public Contact form may demonstrate fields, validation, loading, success, failure, preservation, retry, and fallbacks only through the zero-transmission mode accepted by [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../decisions/contact-inquiry-demonstration-mode.md).
+
+Changing from demonstration to commercial operation is a future product, legal, privacy, operational, and release decision. It requires repository synchronization and a human-reviewed activation plan rather than an environment-only switch.
 
 ## Commercial identity
 

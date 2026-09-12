@@ -12,9 +12,10 @@ related:
   - PAGE-FOUNDER
   - PAGE-CONTACT
   - PAGE-PRIVACY
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-10
+last_verified: 2026-09-12
 ---
 
 # Visual language
@@ -332,6 +333,8 @@ At 1024px and above, use the 12-column container. The form occupies approximatel
 
 The form uses Surface, a 1px Border, 16px radius, 24px compact padding and up to 32px wide padding. It may use restrained internal spacing, not nested cards. Alternatives and location are quieter content blocks. Founder context is a subdued text link after the contact choices.
 
+In demonstration mode, the approved notice sits at the start of the form surface before the fields. It uses a visible heading, body text, and the established Action-tint/Border treatment without looking like an error alert. The notice is at least as prominent as the submit action so simulated behavior cannot be mistaken for live delivery. The external-alternatives note remains adjacent to those links.
+
 ### Fields and states
 
 - Every control has a persistent 16/24px semibold visible label and adjacent localized required/optional text. Placeholder-only and floating labels are rejected.
@@ -340,6 +343,7 @@ The form uses Surface, a 1px Border, 16px radius, 24px compact padding and up to
 - Contact error text/border may use `#B42318`; confirmed success text/icon may use `#067647`. Implementations must verify contrast against the actual background. The blue focus ring remains visible on invalid controls and is not replaced by red alone.
 - The primary submit action reuses the existing primary button and minimum 48px height. Loading and disabled states remain legible, keep their label, and never rely only on opacity, a spinner, or motion.
 - Success and failure use a restrained bordered status surface with a visible heading and explanation. The failure action is retry, followed by the still-visible WhatsApp, email, and phone alternatives. Neither state becomes a celebratory illustration or modal.
+- Demonstration success uses the same restrained state surface but never a delivery, inbox, sent-message, or commercial-confirmation symbol. Its text explicitly says that the simulation completed locally and nothing was sent.
 - No default CAPTCHA badge, challenge, floating widget, or provider-branded redirect is part of the approved launch composition. A later challenge requires its own privacy/accessibility review.
 
 Long translated labels, helper text, errors, and status copy grow naturally. Controls, messages, and actions use no fixed content height, line clamp, clipping, or horizontal scrolling.

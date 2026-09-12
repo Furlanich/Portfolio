@@ -13,20 +13,94 @@ related:
   - ARCHITECTURE-MAP
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
+  - REF-CONTACT-DEMO-KIT
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
 last_verified: 2026-09-12
 ---
 
 # Contact and privacy pages
 
-## Initiative 6 decision closure — APPROVED product, content, design, and provider architecture; deployment gates OPEN
+## Initiative 6 decision closure — APPROVED dual demonstration/commercial posture
 
-The completed Contact experience is the primary conversion destination for FURLANICH. A prospective client must be able to complete and submit the inquiry inside `/contacto/` or `/en/contact/`; the primary flow must not open or require a local email application. A `mailto:` action remains an alternative direct channel and is **REJECTED** as the form implementation.
+The complete commercial Contact experience remains the future conversion destination for FURLANICH. A prospective client must eventually be able to complete and submit an inquiry inside `/contacto/` or `/en/contact/`; that future primary flow must not open or require a local email application. A `mailto:` action remains an alternative direct channel and is **REJECTED** as the form implementation.
 
-This Work closure approves the form purpose, fields, page hierarchy, bilingual copy, state model, validation behavior, visual composition, accessibility behavior, spam requirements, notification content, privacy requirements, and testing boundary below. Provider architecture was subsequently accepted through the Contact RFC and ADR; the page specification still does not approve a server-side runtime, private browser credential, hosting change, or unverified deployment fact.
+For the current public site, [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../../decisions/contact-inquiry-demonstration-mode.md) approves a visibly labeled, local-only simulation on `https://furlanich.github.io/Portfolio/`. It keeps the same four fields, state model, validation, visual composition, accessibility behavior, bilingual experience, and direct alternatives, but it sends nothing and creates no commercial inquiry. The Formspree pipeline remains dormant future architecture.
 
-The provider boundary is consequential because it processes personal information, controls delivery and storage, and may create an international transfer. The repository owner accepted [`RFC-CONTACT-INQUIRY-PIPELINE`](../../rfcs/contact-inquiry-pipeline.md) in Governance PR #43, and [`ADR-CONTACT-INQUIRY-PIPELINE`](../../decisions/contact-inquiry-pipeline.md) records Formspree behind the narrow provider-neutral adapter for the static release. [`PLAN-CONTACT-INQUIRY-PIPELINE`](../../plans/active/contact-inquiry-pipeline.md) owns implementation. The form must not be publicly enabled until the verified provider configuration, Privacy page, professional legal review, deterministic and rendered checks, and labeled delivery/deletion evidence are complete.
+The provider boundary is consequential because it processes personal information, controls delivery and storage, and may create an international transfer. The repository owner accepted [`RFC-CONTACT-INQUIRY-PIPELINE`](../../rfcs/contact-inquiry-pipeline.md) in Governance PR #43, and [`ADR-CONTACT-INQUIRY-PIPELINE`](../../decisions/contact-inquiry-pipeline.md) records Formspree behind the narrow provider-neutral adapter for a future commercial release. [`PLAN-CONTACT-INQUIRY-PIPELINE`](../../plans/active/contact-inquiry-pipeline.md) owns implementation. Real transmission must not be enabled until the verified provider configuration, commercial Privacy page, professional legal review, deterministic and rendered checks, and labeled delivery/deletion evidence are complete.
+
+The demonstration form may be publicly enabled because it uses [`REF-CONTACT-DEMO-PROVIDER`](../../references/contact-inquiry-demonstration/provider-profile.md), makes no request, does not use Formspree or an inbox, and tells the visitor exactly that.
+
+## Current public demonstration mode — APPROVED
+
+- The canonical public site is `https://furlanich.github.io/Portfolio/`; no custom domain is planned.
+- The site is a portfolio and technical demonstration, not an operational commercial-intake system.
+- Contact fields remain only in page memory. Simulated success resets them; validation or simulated failure preserves them; navigation or reload discards them.
+- The deployed form does not use `fetch`, Formspree, email delivery, browser storage, logs, analytics, or an email application.
+- `failure@example.invalid` is the reserved public QA value that demonstrates failure. Other valid addresses demonstrate success locally.
+- WhatsApp, email, and phone remain working external examples in the approved order. Selecting them leaves the local simulation and invokes a visitor-selected third-party service.
+- The dormant commercial copy and adapter remain source material for a separately reviewed activation. Demonstration evidence cannot close a commercial legal, processor, delivery, retention, transfer, or deletion gate.
+
+### Spanish demonstration Contact copy — APPROVED
+
+**Notice heading**
+
+> Demostración interactiva
+
+**Notice**
+
+> Este sitio es una muestra técnica. El formulario simula el envío en este navegador: no envía datos, no crea una consulta comercial y no llega a ninguna bandeja de entrada.
+
+**Failure-control helper**
+
+> Para probar el estado de error, usá `failure@example.invalid` como correo electrónico.
+
+**Submit:** `Simular envío`
+
+**Submitting:** `Simulando…`
+
+**Success**
+
+> Demostración completada. No se enviaron datos ni se creó una consulta comercial.
+
+**Failure**
+
+> La simulación no pudo completarse. No se enviaron datos. Tus valores siguen disponibles en esta página para que puedas corregirlos o volver a probar.
+
+**External alternatives note**
+
+> WhatsApp, email y teléfono se muestran como alternativas funcionales. Al usarlas, salís de esta simulación y abrís un servicio externo; los valores del formulario no se copian allí.
+
+### English demonstration Contact copy — APPROVED
+
+**Notice heading**
+
+> Interactive demonstration
+
+**Notice**
+
+> This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.
+
+**Failure-control helper**
+
+> To try the failure state, use `failure@example.invalid` as the email address.
+
+**Submit:** `Simulate submission`
+
+**Submitting:** `Simulating…`
+
+**Success**
+
+> Demonstration complete. No data was sent and no commercial inquiry was created.
+
+**Failure**
+
+> The simulation could not be completed. No data was sent. Your values remain available on this page so you can correct them or try again.
+
+**External alternatives note**
+
+> WhatsApp, email, and phone are shown as functional alternatives. Using one leaves this simulation and opens an external service; the form values are not copied there.
 
 ## Completed Contact hierarchy — APPROVED
 
@@ -44,9 +118,9 @@ The form is the visually dominant action. WhatsApp, email, and phone remain avai
 
 At wide sizes, the introduction and response expectation span the readable page measure before a 12-column content area. The single-column form occupies approximately eight columns on the left; alternatives and location occupy approximately four columns on the right. The response expectation is not duplicated in the side column. Below the wide range, everything stacks in the source order above: intro, response expectation, form, alternatives/location, then Founder context.
 
-## Approved bilingual Contact copy
+## Future commercial bilingual Contact copy — APPROVED but dormant
 
-Exact form and state copy is owned here. `CONTENT-LOCALIZATION` summarizes its approval without duplicating it.
+Exact real-submission form and state copy is retained here for the separately gated commercial mode. It is not rendered by the current demonstration. `CONTENT-LOCALIZATION` summarizes its approval without duplicating it.
 
 ### Spanish — APPROVED
 
@@ -309,13 +383,97 @@ Only the form/client boundary and one provider adapter should know Formspree res
 
 The existing deployment reference to `NEXT_PUBLIC_FORMSPREE_ENDPOINT` and the retired pre-cutover Formspree form are **CURRENT/LEGACY evidence only**. They do not approve the provider or prove the current account configuration, recipient, storage, retention, spam, privacy, or delivery behavior.
 
-On 2026-09-12, a current Formspree endpoint and account configuration were reported outside the repository, with the plan, schema/settings, origin probes, synthetic delivery, and deletion checks reported as PASS. This is sanitized progress evidence only: no endpoint or form identifier is stored here, no final production host has been selected, and professional legal/privacy review remains OPEN.
+On 2026-09-12, a current Formspree endpoint and account configuration were reported outside the repository, with the plan, schema/settings, origin probes, synthetic delivery, and deletion checks reported as PASS. This is sanitized historical progress only: no endpoint or form identifier is stored here, the approved demonstration build does not use it, and professional legal/privacy review remains OPEN for commercial activation.
 
 Provider capabilities and terms were rechecked against first-party [Formspree AJAX](https://help.formspree.io/articles/building-your-form/submit-forms-with-javascript-ajax), [Formspree spam](https://help.formspree.io/articles/troubleshooting/how-to-prevent-spam), [Formspree privacy](https://formspree.io/legal/privacy-policy/), [Resend email API](https://resend.com/docs/api-reference/emails/send-email), and [EmailJS security](https://www.emailjs.com/docs/faq/does-emailjs-expose-my-account-to-spam/) documentation on 2026-09-10. The RFC and release review must recheck them because plans, privacy terms, retention controls, and APIs may change.
 
-## Privacy and deployed data-path requirements — APPROVED requirements; legal wording OPEN
+## Exact public demonstration Privacy copy — APPROVED
 
-The Privacy page must describe the real deployed path before the form is enabled. For the proposed Formspree path, the expected flow to verify and disclose is:
+The following copy describes the current deployed behavior and may be published while the site remains in demonstration mode. It is product disclosure, not a professional legal opinion and not reusable for real inquiry processing.
+
+### Spanish demonstration Privacy page
+
+**H1**
+
+> Privacidad de esta demostración
+
+**Introduction**
+
+> Este sitio funciona como portfolio y demostración técnica. No acepta consultas comerciales mediante el formulario y no presenta esta página como una política revisada por un profesional legal.
+
+**H2: Qué ocurre con los datos del formulario**
+
+> Los valores que escribís en nombre, correo electrónico, empresa y mensaje permanecen temporalmente en la memoria de esta página. La simulación los valida y muestra estados de carga, éxito o error, pero no los envía a FURLANICH, Formspree, Gmail ni a ninguna bandeja de entrada.
+
+> Después de un éxito simulado, los campos se limpian. Si hay un error de validación o una falla simulada, los valores permanecen visibles para que puedas corregirlos o volver a probar. Al recargar la página o salir de ella, la implementación de Contacto no los conserva.
+
+**H2: Alojamiento y datos técnicos**
+
+> GitHub Pages publica los archivos estáticos del sitio en `https://furlanich.github.io/Portfolio/`. GitHub informa que registra la dirección IP de quienes visitan sitios de GitHub Pages por motivos de seguridad. Ese tratamiento técnico se rige por la documentación y la declaración de privacidad de GitHub.
+
+> FURLANICH no agrega analítica, publicidad, perfiles, CRM, almacenamiento del formulario ni eventos de conversión para esta demostración.
+
+**H2: Alternativas externas**
+
+> Los enlaces de WhatsApp, email y teléfono son ejemplos funcionales separados del formulario. Si elegís uno, tu dispositivo abre un servicio externo y cualquier dato que decidas comunicar queda sujeto a ese servicio. Los valores escritos en el formulario no se copian automáticamente.
+
+**H2: Información sensible**
+
+> No ingreses contraseñas, credenciales, datos de producción de clientes, información sensible ni archivos. El formulario no solicita ni necesita esos datos para demostrar su funcionamiento.
+
+**H2: Conservación y consultas**
+
+> La simulación no crea copias en un proveedor, una base de datos o una bandeja de entrada. Solo mantiene los valores en la página durante la interacción descrita arriba. Para preguntas sobre esta demostración, podés escribir a `samuelfurlanich@gmail.com` sin copiar datos sensibles.
+
+**H2: Activación comercial futura**
+
+> Antes de habilitar un envío real, FURLANICH deberá reemplazar esta explicación por información verificada sobre responsables, proveedores, finalidades, conservación, transferencias y derechos; completar una revisión profesional; y demostrar la entrega y eliminación de una consulta de prueba. Nada de eso se considera aprobado por esta demostración.
+
+**GitHub link label:** `Ver la declaración de privacidad de GitHub`
+
+### English demonstration Privacy page
+
+**H1**
+
+> Privacy in this demonstration
+
+**Introduction**
+
+> This site operates as a portfolio and technical showcase. It does not accept commercial inquiries through the form and does not present this page as a professionally reviewed legal policy.
+
+**H2: What happens to form data**
+
+> Values entered in the name, email, company, and message fields remain temporarily in this page's memory. The simulation validates them and shows loading, success, or failure states, but does not send them to FURLANICH, Formspree, Gmail, or any inbox.
+
+> After simulated success, the fields are cleared. After a validation error or simulated failure, the values remain visible so you can correct them or try again. Reloading or leaving the page causes the Contact implementation to discard them.
+
+**H2: Hosting and technical data**
+
+> GitHub Pages publishes the site's static files at `https://furlanich.github.io/Portfolio/`. GitHub states that it logs the IP addresses of visitors to GitHub Pages sites for security purposes. That technical processing is governed by GitHub's documentation and privacy statement.
+
+> FURLANICH adds no analytics, advertising, profiling, CRM, form storage, or conversion events to this demonstration.
+
+**H2: External alternatives**
+
+> The WhatsApp, email, and phone links are functional examples separate from the form. Selecting one opens an external service on your device, and any information you choose to communicate is governed by that service. Values entered in the form are not copied automatically.
+
+**H2: Sensitive information**
+
+> Do not enter passwords, credentials, client production data, sensitive information, or files. The form neither requests nor needs that information to demonstrate its behavior.
+
+**H2: Retention and questions**
+
+> The simulation creates no provider, database, or inbox copy. It keeps values only on the page for the interaction described above. For questions about this demonstration, you may email `samuelfurlanich@gmail.com` without including sensitive information.
+
+**H2: Future commercial activation**
+
+> Before enabling real submission, FURLANICH must replace this explanation with verified information about responsible parties, providers, purposes, retention, transfers, and rights; complete professional review; and prove delivery and deletion of a test inquiry. This demonstration does not approve any of those items.
+
+**GitHub link label:** `View GitHub's privacy statement`
+
+## Commercial privacy and deployed data-path requirements — APPROVED requirements; legal wording OPEN
+
+The Privacy page must describe the real deployed path before real transmission is enabled. For the future Formspree path, the expected flow to verify and disclose is:
 
 ```text
 Visitor browser
@@ -360,22 +518,25 @@ Implementation follows `PLAN-CONTACT-INQUIRY-PIPELINE`, `frontend-implementation
 - form semantics, label/control association, required indication, `aria-describedby`, `aria-invalid`, busy state, live announcements, focus movement, keyboard-only completion, Enter submission, and duplicate prevention;
 - responsive and visual states at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900`, including 200% text zoom, textarea resizing, error expansion, no clipping/overflow, and optional `/Portfolio` base path;
 - representative axe scans plus manual semantics, keyboard, focus, contrast, error-identification, reflow, and assistive-technology checks;
-- a production-configured, labeled live smoke submission confirming provider acceptance, inbox delivery, field integrity, `Reply-To`, source/language, spam behavior, and deletion/retention operations.
+- for demonstration mode, a deployed GitHub Pages smoke proving simulated success/failure, preserved/reset values, exact disclosure, and zero form-value transmission;
+- for any later commercial mode, a production-configured labeled smoke confirming provider acceptance, inbox delivery, field integrity, `Reply-To`, source/language, spam behavior, and deletion/retention operations.
 
-Provider/network behavior is mocked in deterministic tests. Live production smoke inquiries must be clearly labeled, must not contain real prospect information, and must not run automatically in public CI.
+Provider/network behavior is mocked in deterministic tests. The demonstration form itself uses the approved local adapter and must initiate no submission request. A later live commercial smoke must be clearly labeled, contain no real prospect information, and never run automatically in public CI.
 
-## PAGE-CONTACT responsibility — APPROVED
+## PAGE-CONTACT responsibility — APPROVED dual-mode responsibility
 
-Collect enough information to evaluate an inquiry while offering direct alternatives. Samuel decides whether and how to continue after reviewing the inquiry and, where appropriate, meeting the prospective client.
+In the current deployment, demonstrate how a four-field inquiry would be validated and handled without sending or collecting the values. Preserve direct alternatives as explicitly external examples.
 
-## Inquiry form — APPROVED
+In a future commercial activation, collect enough information to evaluate an inquiry while offering direct alternatives. Samuel decides whether and how to continue after reviewing the inquiry and, where appropriate, meeting the prospective client.
+
+## Inquiry form fields — APPROVED for demonstration and future commercial modes
 
 - `Nombre` — required.
 - `Correo electrónico` — required.
 - `Empresa` — optional.
 - `¿Qué necesitás resolver?` — required message.
 
-The form is the primary action. WhatsApp is secondary, followed by email and phone.
+The form is the primary interactive demonstration. WhatsApp is secondary, followed by email and phone. In commercial mode, the same hierarchy applies to real inquiry intake after all activation gates pass.
 
 ## Contact facts — APPROVED
 
@@ -427,7 +588,7 @@ Show the approved response expectation, location, and working actions for WhatsA
 
 **Actions:** `Write on WhatsApp`, `Send an email`, and `Call`.
 
-This direct-channel minimum satisfies CTA integrity for foundation integration and an explicitly staged deployment. It does not satisfy the approved final conversion model. The structured form, real provider disclosure, and privacy treatment are **RELEASE BLOCKERS** for declaring `PAGE-CONTACT` or the complete business-site launch finished.
+This direct-channel minimum satisfies CTA integrity for foundation integration. The structured local-only form plus exact demonstration disclosure supersedes it for the public showcase once Tasks 3 and 4 pass. Real provider disclosure and professional review remain blockers only for a later commercial activation.
 
 A “coming soon” page was rejected because it abandons the visitor after the hero CTA. Selecting a form provider inside this content decision was rejected because provider, data flow, retention, and consent require their own privacy-ready release decision.
 
@@ -441,15 +602,19 @@ A “coming soon” page was rejected because it abandons the visitor after the 
 - Alternative contact route available when form submission fails.
 - No marketing subscription implied by an inquiry.
 
-## PAGE-PRIVACY responsibility — APPROVED
+## PAGE-PRIVACY responsibility — APPROVED dual-mode responsibility
 
-Explain in plain language what information is collected, why it is used, who processes it, how long it is retained, and how a person may request access, correction, or deletion.
+For demonstration mode, explain in plain language that form values are not transmitted, where they exist temporarily, how the simulation clears or preserves them, what ordinary hosting metadata GitHub Pages handles, and when external fallback services take over.
 
-## Privacy implementation closure — APPROVED factual requirements; architecture and legal wording OPEN
+For future commercial mode, explain what information is collected, why it is used, who processes it, how long it is retained, and how a person may request access, correction, or deletion.
 
-The factual notice scope, purpose limits, processor/storage/retention disclosures, request method, and operational retention target are approved above. Formspree is the accepted launch provider; its exact configuration and material subprocessor chain, the responsible legal/business identity, international-transfer mechanism, legally sufficient notice/consent wording, and professional Argentine legal review remain OPEN release blockers.
+## Privacy implementation closure — demonstration approved; commercial wording OPEN
 
-The Contact form must not be publicly enabled until PAGE-PRIVACY names the real deployed processors, storage behavior, retention operations, request route, and transfer treatment and every release gate in `PLAN-CONTACT-INQUIRY-PIPELINE` has passed.
+The exact bilingual demonstration disclosure above is approved for publication because it describes the zero-transmission deployment. It does not claim legal review, commercial processing, or Formspree use.
+
+For future commercial activation, the factual notice scope, purpose limits, processor/storage/retention disclosures, request method, and operational retention target remain approved requirements. Formspree is the accepted provider; its exact configuration and material subprocessor chain, responsible legal/business identity, international-transfer mechanism, legally sufficient notice/consent wording, and professional Argentine legal review remain OPEN gates.
+
+The Contact form must not transmit a real inquiry until `PAGE-PRIVACY` names the real deployed processors, storage behavior, retention operations, request route, and transfer treatment and every commercial activation gate has passed. The local-only demonstration form may be publicly enabled with the exact demonstration copy.
 
 ## Acceptance criteria
 
@@ -457,8 +622,10 @@ The Contact form must not be publicly enabled until PAGE-PRIVACY names the real 
 - Primary and secondary channel hierarchy is clear.
 - Email and phone/WhatsApp values are consistent throughout the site.
 - Response copy is visible but not misrepresented as support coverage.
-- Privacy content describes the real deployed data flow and providers.
-- Consent is informed and not bundled with marketing.
+- Demonstration success and failure explicitly state that no information was sent or commercial inquiry created.
+- Demonstration submission initiates no network request, email, storage, log, or analytics operation and preserves/reset values according to the approved state.
+- Demonstration Privacy content describes GitHub Pages hosting metadata, temporary local form state, external fallback boundaries, and absence of form processors accurately.
+- Commercial Privacy content and informed-consent treatment remain required before real processing and are not inferred from the demonstration copy.
 
 
 ## Founder-context link — APPROVED

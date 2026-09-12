@@ -6,6 +6,7 @@ related:
   - GOV-KNOWLEDGE
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
   - RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING
   - ADR-STATIC-LOCALIZED-ROUTING
@@ -15,6 +16,7 @@ related:
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-STUDIO-FOUNDER-COMPLETION
   - PLAN-CONTACT-INQUIRY-PIPELINE
+  - REF-CONTACT-DEMO-KIT
   - PAGE-HOME
   - PAGE-SERVICES
   - PAGE-STUDIO
@@ -155,16 +157,16 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 ### Contact and inquiry decision closure
 
-- A prospective client completes and submits the primary inquiry form inside the localized FURLANICH Contact route. A local email application is neither opened nor required; `mailto:` is rejected as the form implementation.
+- The current public deployment is a non-commercial portfolio/technical demonstration at `https://furlanich.github.io/Portfolio/`; no custom domain is planned. Commercially oriented pages demonstrate intended capabilities rather than operating them.
+- The public Contact form may render the complete interaction only through the local-only mode recorded by [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../decisions/contact-inquiry-demonstration-mode.md). It sends no values, creates no inquiry, reaches no inbox, and uses no Formspree endpoint.
 - The approved fields remain name, email, optional company, and the problem to solve. Phone, budget, deadline, project type, service selection, marketing checkbox, and file upload remain excluded.
 - The approved page hierarchy is intro, response expectation, visually dominant form, WhatsApp/email/phone alternatives, and subdued Founder context. Fields remain single-column.
-- The approved state model is `IDLE -> VALIDATING -> SUBMITTING -> SUCCESS | ERROR`. Validation and submission failure preserve all values; duplicate submission is prevented; success waits for documented provider acceptance and resets only then; failure states that delivery was not confirmed and exposes retry plus direct alternatives.
-- Notification requirements are visitor name/email, optional company, message, trustworthy submission time where supported, and useful source/language, with visitor email as `Reply-To` where supported. Target inbox configuration and all private credentials remain outside browser code, public environment values, repository files, fixtures, logs, URLs, and analytics.
-- Launch abuse controls are provider filtering, supported origin restriction, a hidden non-focusable honeypot, duplicate prevention, provider-boundary validation, the approved field limits, and safe malformed/rate/quota/timeout failure handling. Interactive CAPTCHA is not a default launch requirement.
-- The factual privacy scope and operational target are approved: single-purpose inquiry evaluation/response, no marketing or content-bearing analytics, actual processor/storage/metadata disclosure, provider copies disabled when practical or deleted within 30 days of receipt/triage, and non-converted mailbox inquiries deleted within 12 months of last substantive contact unless moved into another governed business/legal record. Professional legal review may change those targets before release.
-- The product does not require a separate checkbox for a single-purpose inquiry and rejects a marketing checkbox. Whether Argentine law, the responsible-party configuration, or the selected international-transfer mechanism requires explicit consent, other wording, registration, contracts, safeguards, or a checkbox remains OPEN for professional legal review.
-- [`RFC-CONTACT-INQUIRY-PIPELINE`](../rfcs/contact-inquiry-pipeline.md) was accepted in Governance PR #43 and is recorded by [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md). Formspree is the approved launch processor behind the narrow provider-neutral `submitInquiry()` adapter; Cloudflare Worker + Resend and EmailJS remain rejected launch alternatives.
-- [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) owns the five-PR implementation and evidence sequence. The form cannot be enabled until PAGE-PRIVACY names the verified deployed processors, storage, retention, request route, and transfer treatment and the provisioning, legal, deterministic, rendered, inbox-delivery, and deletion gates pass.
+- The shared state model remains `IDLE -> VALIDATING -> SUBMITTING -> SUCCESS | ERROR`. In demonstration mode, duplicate submission is prevented, validation/failure preserves values, simulated success resets them, and every outcome states that nothing was sent.
+- `failure@example.invalid` is the approved deterministic public failure control. Every other valid payload simulates success after the bounded local delay. No submitted value enters fetch/XHR, navigation, storage, logs, analytics, or an email application.
+- Exact demonstration Privacy copy describes temporary page memory, GitHub Pages hosting metadata, external fallback services, no form processor/inbox copy, no inquiry analytics, value lifetime, and future commercial gates. It is approved product copy, not professional legal review.
+- WhatsApp, email, and phone remain functional external fallback demonstrations in that order. Their copy explains that they leave the local form simulation and do not receive its values automatically.
+- [`RFC-CONTACT-INQUIRY-PIPELINE`](../rfcs/contact-inquiry-pipeline.md) and [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) preserve Formspree behind `submitInquiry()` for a later commercial activation. The merged adapter remains dormant.
+- [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) now sequences paired demonstration Privacy routes, the complete accessible local-only form, and deployed zero-transmission proof. Its only next implementation task is Task 3 / PR 3.
 
 ## PROPOSED
 
@@ -176,8 +178,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 ## OPEN
 
 - Extended visual identity and design-system decisions beyond the approved commercial homepage and Services-page baselines: custom mark, additional semantic colors, full component variants, and broader imagery.
-- Confirmed commercial domain and canonical production URL. This is a **RELEASE BLOCKER**, not an implementation or integration blocker.
-- Contact deployment and privacy facts: a Formspree endpoint, plan, schema/settings, origin probes, synthetic delivery, and provider/Gmail deletion checks were reported PASS on 2026-09-12. The final production host/domain restriction, complete storage/retention/subprocessor/transfer facts, operational ownership, exact bilingual Privacy owner text, and professional privacy/legal review remain OPEN IMPLEMENTATION OR RELEASE BLOCKERS under `PLAN-CONTACT-INQUIRY-PIPELINE`; the provider architecture, form experience, and factual disclosure requirements remain approved.
+- Commercial Contact activation: complete Formspree storage/retention/subprocessor/transfer facts, operational ownership, restriction to `furlanich.github.io`, exact bilingual commercial Privacy owner text, professional privacy/legal review, and real staging/production delivery and deletion evidence remain OPEN. They do not block the approved zero-transmission demonstration and are not marked PASS by mock evidence.
 - Final legal and contractual review of commercial boundaries.
 - Founder photograph and any later CV content refresh/redesign are **DEFERRED** and non-blocking for the text-led Studio/Founder experience.
 - Permission, functional verification, and approved bilingual item copy required to advance the remaining blocked/private project records or broaden the three READY records beyond their current summary-only detail scope.

@@ -9,7 +9,10 @@ related:
   - PAGE-STUDIO
   - PAGE-FOUNDER
   - PAGE-CONTACT
-last_verified: 2026-09-07
+  - PAGE-PRIVACY
+  - CONTENT-LOCALIZATION
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
+last_verified: 2026-09-12
 ---
 
 # Information architecture
@@ -129,6 +132,15 @@ PAGE-FOUNDER
 - Root is the Spanish and `x-default` experience.
 - No automatic locale redirect.
 - URLs use trailing slashes to remain compatible with static export.
+
+## Deployment host and mode — APPROVED
+
+- Canonical public URL: `https://furlanich.github.io/Portfolio/`.
+- Origin: `https://furlanich.github.io`.
+- GitHub Pages project base path: `/Portfolio`.
+- No custom domain or alternate production host is planned.
+- The sitemap remains the bilingual product demonstration IA. Public presence of Home, Services, Projects, Studio, Founder, Contact, and Privacy does not mean their depicted commercial capabilities are operational.
+- Contact may publish the full four-field interaction only in the zero-transmission demonstration mode recorded by `ADR-CONTACT-INQUIRY-DEMO-MODE`. A later real-processing activation changes product/deployment state and requires separate review.
 
 
 ## Studio and Founder route closure — APPROVED

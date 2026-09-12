@@ -11,7 +11,8 @@ related:
   - PLAN-STUDIO-FOUNDER-COMPLETION
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
-last_verified: 2026-09-11
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
+last_verified: 2026-09-12
 ---
 
 # Execution plans
@@ -23,7 +24,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [`PLAN-CONTACT-INQUIRY-PIPELINE`](active/contact-inquiry-pipeline.md): active five-PR sequence for verified Formspree provisioning/privacy closure, the tested provider-neutral adapter, paired Privacy routes, atomic accessible Contact-form launch, and production evidence/plan closure.
+- [`PLAN-CONTACT-INQUIRY-PIPELINE`](active/contact-inquiry-pipeline.md): active sequence with the provider-neutral boundary complete, followed by paired demonstration Privacy routes, a full accessible zero-transmission Contact simulation, deployed GitHub Pages proof, and preserved future commercial activation gates.
 
 ## Completed
 

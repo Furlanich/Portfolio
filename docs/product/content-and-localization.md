@@ -12,6 +12,7 @@ related:
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
 last_verified: 2026-09-12
@@ -102,11 +103,13 @@ Proposed Spanish homepage metadata:
 
 > **Description:** Sitios y aplicaciones web, automatización por WhatsApp, integraciones y mantenimiento de software para pymes de Argentina. Atención técnica directa.
 
-## Canonical domain — OPEN, RELEASE BLOCKER
+## Canonical deployment URL — APPROVED
 
-The canonical production domain does not block component implementation, localized route implementation, or integration testing. It blocks final production metadata and release sign-off.
+The lasting public host is the default GitHub Pages project site:
 
-Before the business homepage is declared production-ready, approve either a custom domain or the current deployment URL as canonical, then use that value consistently for canonical URLs, language alternates, sitemap entries, and social metadata. Do not invent a production origin during implementation.
+> `https://furlanich.github.io/Portfolio/`
+
+Use `https://furlanich.github.io` as the origin and `/Portfolio` as the repository base path. No custom domain is planned. Future canonical URLs, language alternates, sitemap entries, and social metadata use this value consistently while the site remains a non-commercial portfolio and technical demonstration.
 
 ## Claims and evidence
 
@@ -129,7 +132,8 @@ Before final public content is complete, the repository needs:
 - publication-ready item-level project records;
 - client logo and description permissions;
 - optional founder photograph if a future approved portrait treatment is pursued;
-- accepted Contact provider architecture, verified deployed configuration facts, and professionally reviewed Privacy wording;
+- for the current demonstration, exact zero-transmission Contact/Privacy copy and the approved mock resource kit;
+- before any commercial Contact activation, verified provider configuration facts and professionally reviewed Privacy wording;
 - final English adaptations outside the approved complete homepage, complete Services page, Projects records, Studio, Founder, and Contact experience;
 - verified public URLs and repositories.
 
@@ -152,12 +156,16 @@ Studio's four principles are criteria for decision-making, not a translation or 
 
 English outside the complete homepage, Services, Projects system/content already approved for current public records, Studio, Founder, and minimum Contact destinations remains subject to separate item/page approval.
 
-## Contact inquiry bilingual scope — APPROVED
+## Contact inquiry bilingual scope — APPROVED dual-mode copy
 
-[`PAGE-CONTACT`](pages/contact-and-privacy.md#approved-bilingual-contact-copy) owns the complete Spanish and English Contact copy. Spanish keeps natural professional voseo; English is a direct adaptation, not a literal translation. Both locales preserve the same hierarchy and meaning: intro, response expectation, primary inquiry form, alternatives in WhatsApp/email/phone order, and subdued Founder context.
+[`PAGE-CONTACT`](pages/contact-and-privacy.md) owns the complete Spanish and English demonstration and dormant commercial Contact copy. Spanish keeps natural professional voseo; English is a direct adaptation, not a literal translation. Both locales preserve the same hierarchy: intro, response expectation, primary form, alternatives in WhatsApp/email/phone order, and subdued Founder context.
 
-Labels remain visible and persistent. Required/optional wording, helper text, field errors, submitting, success, failure, retry, privacy context, and alternative-channel labels are localized; raw provider messages never appear. The copy confirms provider acceptance rather than claiming the inbox was read, states clearly when delivery was not confirmed, and warns visitors not to include passwords, credentials, or sensitive information.
+Labels remain visible and persistent. Required/optional wording, helper text, field errors, submitting, success, failure, retry, privacy context, and alternative-channel labels are localized; raw adapter/provider messages never appear.
+
+For the current public demonstration, exact copy states that submission is simulated locally, no values are sent, no commercial inquiry is created, and no inbox is reached. Spanish and English also explain the reserved `.invalid` failure control and the external fallback boundary. The exact public demonstration Privacy copy is approved in `PAGE-PRIVACY`.
+
+For a later commercial activation, copy confirms provider acceptance rather than claiming the inbox was read, states clearly when delivery was not confirmed, and warns visitors not to include passwords, credentials, or sensitive information.
 
 The accepted processor name and boundary come from `ADR-CONTACT-INQUIRY-PIPELINE`. Exact storage behavior, material subprocessors, international-transfer disclosure, responsible legal/business identity, retention wording, and request/legal notice must come from verified provisioning and professional legal review. No translation may guess or generalize those deployed facts.
 
-On 2026-09-12, provider schema/settings, origin probes, synthetic delivery, and deletion checks were reported PASS for the configured Formspree endpoint. The bilingual Privacy copy was reported available but has not been persisted in this repository; its legal approval remains OPEN, so localized implementation must wait for the exact reviewed owner text.
+On 2026-09-12, the owner approved the zero-transmission demonstration copy and mock resource kit for deployment on `main`. This authorization unblocks demonstration implementation only. Exact storage behavior, material subprocessors, international-transfer disclosure, responsible legal/business identity, retention wording, request notice, and professional review remain OPEN before any real commercial submission.
