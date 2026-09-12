@@ -11,7 +11,7 @@ owners:
   - frontend
   - qa
 created: 2026-09-11
-last_verified: 2026-09-11
+last_verified: 2026-09-12
 related:
   - GOV-ENGINEERING-LIFECYCLE
   - PAGE-CONTACT
@@ -86,19 +86,30 @@ At plan creation, `/contacto/` and `/en/contact/` render `MinimumDestination` wi
 | Order | Pull Request | Public behavior | Merge gate |
 | --- | --- | --- | --- |
 | Planning | `docs: plan Contact inquiry delivery` | None | ADR/RFC/status synchronization, active plan, docs check, complete docs-only diff review |
-| 1 | `docs: close Contact provider and privacy gates` | None | Verified Formspree configuration facts, final hostname, professional legal review, exact bilingual Privacy copy, sanitized staging/deletion evidence |
-| 2 | `feat: add the inquiry submission boundary` | None | Provider-neutral contract, pure validation, Formspree adapter, fail-closed configuration, deterministic RED/GREEN tests, no live network |
+| 1 | `docs: close Contact provider and privacy gates` | None | Development-only documentation checkpoint: supplied provider evidence is recorded without public behavior; final hostname/domain restriction, account-specific privacy facts, professional legal review, and exact bilingual Privacy copy remain OPEN and block release work |
+| 2 | `feat: add the inquiry submission boundary` | None | Provider-neutral contract, pure validation, Formspree adapter, fail-closed configuration, deterministic RED/GREEN tests, no live network; may proceed after the Task 1 docs checkpoint is reviewed and merged |
 | 3 | `feat: publish the bilingual Privacy experience` | Adds accurate Privacy routes/footer links; Contact remains direct-channel only | Exact Task 1 facts/copy, paired routes, footer coverage, static/base-path/browser/axe validation |
 | 4 | `feat: launch the accessible Contact inquiry form` | Atomically replaces both minimum Contact routes with the complete form | Unit/state/adapter tests, Playwright success/failure, accessibility and visual QA, normal/base-path exports, real staged inbox/Reply-To/deletion proof before merge |
 | 5 | `docs: record Contact inquiry release verification` | None | Production-host smoke, final domain restriction, cleanup/deletion evidence, architecture synchronization, completed-plan move |
 
 No Pull Request combines two rows. No implementation PR is stacked on an unmerged predecessor. PR 4 is the only release cutover; its branch may exercise a real staging submission, but automated CI remains provider-isolated.
 
+## Development-only continuation authorization — APPROVED 2026-09-12
+
+The repository owner authorizes completion of the Task 1 / PR 1 documentation checkpoint and continuation into Task 2 / PR 2 using the currently configured Formspree resources, despite unresolved final-host and professional legal/privacy gates. This is a sequencing authorization for development and does not approve public release, legal wording, or production processing.
+
+- Task 1 / PR 1 may be reviewed and merged as a documentation-only checkpoint with the supplied sanitized provider evidence and the unresolved items explicitly marked OPEN.
+- After the Task 1 docs-only checkpoint is reviewed and merged, Task 2 / PR 2 may implement the provider-neutral contract, pure validator, direct-fetch adapter, fail-closed endpoint configuration, and deterministic provider-isolated tests.
+- Task 2 must not contact the real endpoint in automated tests, commit the endpoint or form ID, expose private configuration, add a provider SDK, or enable public form behavior. Any local or staging configuration uses synthetic test coverage unless a later task explicitly authorizes labeled manual smoke work.
+- Task 3 / PR 3, Task 4 / PR 4, and Task 5 / PR 5 remain gated by the exact reviewed Privacy copy, complete processor/storage/retention/transfer facts, final host/domain restriction, professional legal review, and the required rendered, delivery, deletion, and production evidence.
+
+This deviation changes only the serial development gate between Tasks 1 and 2. It does not supersede ADR-CONTACT-INQUIRY-PIPELINE, change the payload or state model, authorize a release, or close any OPEN item.
+
 ## Exactly one first implementation task
 
 After the planning PR is human-reviewed and merged, the **only authorized first implementation task** is **Task 1 / PR 1: provision and verify the dedicated Formspree form, complete professional privacy/legal review, and record the exact non-secret deployment facts and bilingual Privacy copy in a docs-only PR**.
 
-Do not begin the adapter, Privacy route, or Contact UI tasks until Task 1 is reviewed and merged. If the final hostname, processor chain, retention/deletion behavior, or legally sufficient notice remains unresolved, keep Task 1 open and stop; architecture approval is not permission to guess those release facts.
+The Task 1 docs-only checkpoint must be reviewed and merged before Task 2 begins. Under the development-only continuation authorization above, unresolved final-host, processor-chain, retention/deletion, or legally sufficient-notice items keep Tasks 1, 3, 4, and 5 open and block public release, but do not block Task 2's provider-isolated implementation. Architecture approval is not permission to guess those release facts.
 
 ## Mandatory execution skills
 
@@ -215,13 +226,17 @@ The route entry passes locale, localized content, resolved Privacy/Founder links
 
   Recheck the official Formspree AJAX, Workflow validation, allowed-field schema, `Reply-To`, subject, honeypot, spam, domain restriction, system/account limits, privacy, terms, security, DPA, subprocessor, and status materials already linked by the RFC. Record the check date and any change against the ADR in the PR body. If a change invalidates the accepted architecture, stop and open governance work rather than editing the ADR.
 
+  Public Formspree materials were rechecked 2026-09-12. No architecture-invalidating change was identified in the reviewed AJAX, Workflow, Reply-To, honeypot, domain, limit, privacy, and security materials. The current AJAX documentation foregrounds the optional Formspree AJAX package, but this plan's accepted direct-fetch boundary remains unchanged and no provider SDK is approved. Account-specific DPA, subprocessor, retention, transfer, and final-host evidence remain OPEN.
+
 - [ ] **Step 2: Provision the dedicated form and account controls**
 
   Samuel provisions or verifies a Samuel-controlled account with MFA and a dedicated FURLANICH form. Configure the exact six business fields, required/type/max-length rules, undeclared-field and file rejection, `_gotcha`, Formshield, CAPTCHA-off posture, final hostname restriction, verified recipient, fixed `[FURLANICH] Website inquiry` subject, visitor `email` as `Reply-To`, labeled body, provider receipt time, and quota notifications. Recipient and mail credentials remain provider-side; the public endpoint is stored only in approved deployment/staging configuration.
 
-- [ ] **Step 3: Exercise provider controls with labeled synthetic probes**
+- [x] **Step 3: Exercise provider controls with labeled synthetic probes**
 
   From an approved staging origin, submit synthetic boundary cases for missing required fields, malformed email, every maximum plus one, undeclared field, file content, filled honeypot, allowed origin, disallowed origin, and quota/rate behavior that can be tested without abuse. Verify the provider result against the accepted mapping. Record sanitized PASS/FAIL facts and timestamps; do not commit response bodies, real addresses beyond the already-public business contact, cookies, account screenshots, form IDs, or submission content.
+
+  Owner-reported sanitized result on 2026-09-12: allowed/disallowed-origin probes and synthetic delivery probes PASS. Detailed probe timestamps and private provider response evidence remain outside the repository.
 
 - [ ] **Step 4: Verify storage, deletion, delivery-chain, and transfer facts**
 
@@ -237,7 +252,7 @@ The route entry passes locale, localized content, resolved Privacy/Founder links
 
 - [ ] **Step 7: Validate and open PR 1**
 
-  Run `npm run docs:check`, inspect `main...HEAD` for documentation-only scope, secrets, provider IDs, prospect data, screenshots, and accidental status upgrades, then open `docs: close Contact provider and privacy gates`. Stop before merge.
+  Run `npm run docs:check`, inspect `main...HEAD` for documentation-only scope, secrets, provider IDs, prospect data, screenshots, and accidental status upgrades, then open `docs: close Contact provider and privacy gates` as the development-only Task 1 checkpoint. Human review and merge are required before Task 2 begins; unresolved release gates remain OPEN.
 
 ### Task 2 / PR 2: Add the provider-neutral contract and Formspree adapter
 
@@ -255,35 +270,35 @@ The route entry passes locale, localized content, resolved Privacy/Founder links
 - Consumes: the `InquiryValues`, `InquiryPayload`, `InquirySubmissionResult`, and `SubmitInquiry` signatures defined above plus Task 1's verified Formspree response/control facts.
 - Produces: `validateInquiry(values, locale)` and `createFormspreeSubmitInquiry(options): SubmitInquiry` for the future form. No route imports them yet.
 
-- [ ] **Step 1: Write literal validation RED tests**
+- [x] **Step 1: Write literal validation RED tests**
 
   Add table-driven tests for surrounding trim, required name/email/message, email syntax, all exact maximums and maximum-plus-one cases, optional company omission, `es-AR`/`/contacto/` and `en`/`/en/contact/` binding, unsupported field exclusion, Unicode byte counting, and the 24 KiB ceiling. Hand-derive expectations; do not call production helpers to build them.
 
-- [ ] **Step 2: Run the focused validation RED**
+- [x] **Step 2: Run the focused validation RED**
 
   Run `node --test scripts/inquiry-validation.test.mjs`. The test uses a guarded dynamic import that converts the absent implementation into an explicit assertion failure. Expected: FAIL with `validateInquiry has not been implemented`, while existing tests remain untouched; do not accept a syntax, resolution, or harness error as RED.
 
-- [ ] **Step 3: Implement the minimal pure contract and validator**
+- [x] **Step 3: Implement the minimal pure contract and validator**
 
   Add only the types and pure behavior required by the tests. Return every field error at once, preserve raw `InquiryValues` outside the function, and create the normalized payload only when valid. Do not add localized prose, browser state, Formspree fields, logging, retries, or a general schema framework.
 
-- [ ] **Step 4: Run validation GREEN and refactor while green**
+- [x] **Step 4: Run validation GREEN and refactor while green**
 
   Run `node --test scripts/inquiry-validation.test.mjs`, confirm all cases pass, then remove duplication without changing the public signatures and rerun the same command.
 
-- [ ] **Step 5: Write adapter RED tests with an injected fetch double**
+- [x] **Step 5: Write adapter RED tests with an injected fetch double**
 
   Prove the exact method, headers, allowlisted JSON, empty-company omission, `_gotcha`, locale/source, request ceiling, one request, 10-second abort, and zero automatic retry. Add provider fixtures for recognized `{ ok: true }` acceptance; approved field errors; unknown/provider-only fields; 400/403/404/422; 429; 5xx; inactive/missing form; network rejection; abort; malformed JSON; empty body; and unexpected JSON. Assert only provider-neutral results and ensure raw messages never appear.
 
-- [ ] **Step 6: Run the adapter RED**
+- [x] **Step 6: Run the adapter RED**
 
   Run `node --test scripts/formspree-adapter.test.mjs`. The guarded dynamic import converts the absent export into an explicit assertion failure. Expected: FAIL with `createFormspreeSubmitInquiry has not been implemented` while validation tests remain green; fix any syntax, resolution, or harness error before proceeding.
 
-- [ ] **Step 7: Implement the minimal Formspree adapter**
+- [x] **Step 7: Implement the minimal Formspree adapter**
 
   Validate an HTTPS `formspree.io` form endpoint, serialize the exact transport, call injected/browser fetch once with an `AbortController`, clear its timer, and map only the verified response shapes to the accepted union. Do not import React, read DOM state, translate messages, log payloads, contact the real provider, or add a dependency.
 
-- [ ] **Step 8: Run focused and complete GREEN**
+- [x] **Step 8: Run focused and complete GREEN**
 
   Run:
 
@@ -298,6 +313,8 @@ The route entry passes locale, localized content, resolved Privacy/Founder links
 - [ ] **Step 9: Review and open PR 2**
 
   Inspect `main...HEAD` for route/UI changes, inquiry data, provider IDs, network-capable tests, new dependencies, logging, or generalized abstractions. Open `feat: add the inquiry submission boundary` with RED/GREEN evidence and stop before merge.
+
+  Implementation and deterministic evidence are complete on the task branch; opening and merging PR 2 remain human-review actions.
 
 ### Task 3 / PR 3: Publish the bilingual Privacy experience
 
@@ -605,7 +622,10 @@ If the pre-release smoke fails, do not merge PR 4. If the deployed form fails af
 
 - 2026-09-10: the repository owner merged Governance PR #43, accepting Formspree behind the narrow provider-neutral inquiry boundary for the current static release.
 - 2026-09-11: `ADR-CONTACT-INQUIRY-PIPELINE` and this ACTIVE five-PR execution plan were prepared on `codex/contact-inquiry-execution-plan`. The planning PR changes documentation only.
-- First implementation task selected: Task 1 / PR 1, `docs: close Contact provider and privacy gates`. No application implementation is authorized before that task is human-reviewed and merged.
+- 2026-09-12: Sanitized Task 1 evidence was supplied: a Samuel-controlled Formspree endpoint exists outside the repository; the Formspree plan and schema/settings were reported confirmed/PASS; allowed/disallowed-origin probes, synthetic delivery, Formspree deletion, and Gmail deletion were reported PASS; the reported staging host is furlanich.github.io. No final production host has been selected, and professional legal review remains OPEN. The endpoint value, form ID, submission content, inbox evidence, and private legal materials are intentionally not recorded here.
+- 2026-09-12: Task 1 remains OPEN. The reported provider evidence is partial progress, not release approval: final-host/domain restriction, complete storage/retention/subprocessor/transfer facts, professional legal review, and the exact bilingual Privacy owner text still need closure. Under the owner-authorized development-only deviation, Task 2's provider-isolated implementation may proceed while those release gates remain open; Tasks 3–5 remain blocked until the release gates close.
+- First implementation task selected: Task 1 / PR 1, `docs: close Contact provider and privacy gates`. Task 2 / PR 2 is authorized as development-only continuation; no public form behavior or release processing is authorized.
+- 2026-09-12: Task 2 implementation evidence recorded: literal validator and adapter RED assertions were observed before implementation; the focused suites pass 19/19; `npm run validate` passes documentation checks, 78 repository tests, lint, typecheck, and build; `npm run verify:static-export` passes for 18 routes at base path `/`. The adapter tests use only the synthetic `https://formspree.io/f/test-contact` endpoint and injected fetch doubles; no live provider request occurred.
 
 ## Important implementation decisions
 
@@ -619,4 +639,4 @@ If the pre-release smoke fails, do not merge PR 4. If the deployed form fails af
 
 ## Deviations discovered during execution
 
-None at plan creation. Record a deviation here before implementing any change to the accepted processor, data contract, state model, route/hosting model, privacy facts, release sequence, or evidence boundary.
+2026-09-12 owner-authorized deviation: the development-only continuation authorization above permits the Task 1 docs checkpoint to be reviewed/merged and Task 2 provider-neutral implementation to proceed before final-host selection and professional legal/privacy closure. The accepted processor, data contract, state model, route/hosting model, and release evidence requirements are unchanged; all unresolved legal, privacy, retention, transfer, and production-host items remain OPEN and release-blocking.

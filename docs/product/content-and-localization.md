@@ -14,7 +14,7 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-11
+last_verified: 2026-09-12
 ---
 
 # Content and localization
@@ -159,3 +159,5 @@ English outside the complete homepage, Services, Projects system/content already
 Labels remain visible and persistent. Required/optional wording, helper text, field errors, submitting, success, failure, retry, privacy context, and alternative-channel labels are localized; raw provider messages never appear. The copy confirms provider acceptance rather than claiming the inbox was read, states clearly when delivery was not confirmed, and warns visitors not to include passwords, credentials, or sensitive information.
 
 The accepted processor name and boundary come from `ADR-CONTACT-INQUIRY-PIPELINE`. Exact storage behavior, material subprocessors, international-transfer disclosure, responsible legal/business identity, retention wording, and request/legal notice must come from verified provisioning and professional legal review. No translation may guess or generalize those deployed facts.
+
+On 2026-09-12, provider schema/settings, origin probes, synthetic delivery, and deletion checks were reported PASS for the configured Formspree endpoint. The bilingual Privacy copy was reported available but has not been persisted in this repository; its legal approval remains OPEN, so localized implementation must wait for the exact reviewed owner text.

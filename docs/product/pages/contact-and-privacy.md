@@ -15,7 +15,7 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-11
+last_verified: 2026-09-12
 ---
 
 # Contact and privacy pages
@@ -308,6 +308,8 @@ ContactForm
 Only the form/client boundary and one provider adapter should know Formspree response details. The UI consumes a small typed outcome sufficient for `SUCCESS`, field validation, or `ERROR`. Do not build a plugin system, provider registry, generic workflow engine, CRM abstraction, or bespoke backend around this form.
 
 The existing deployment reference to `NEXT_PUBLIC_FORMSPREE_ENDPOINT` and the retired pre-cutover Formspree form are **CURRENT/LEGACY evidence only**. They do not approve the provider or prove the current account configuration, recipient, storage, retention, spam, privacy, or delivery behavior.
+
+On 2026-09-12, a current Formspree endpoint and account configuration were reported outside the repository, with the plan, schema/settings, origin probes, synthetic delivery, and deletion checks reported as PASS. This is sanitized progress evidence only: no endpoint or form identifier is stored here, no final production host has been selected, and professional legal/privacy review remains OPEN.
 
 Provider capabilities and terms were rechecked against first-party [Formspree AJAX](https://help.formspree.io/articles/building-your-form/submit-forms-with-javascript-ajax), [Formspree spam](https://help.formspree.io/articles/troubleshooting/how-to-prevent-spam), [Formspree privacy](https://formspree.io/legal/privacy-policy/), [Resend email API](https://resend.com/docs/api-reference/emails/send-email), and [EmailJS security](https://www.emailjs.com/docs/faq/does-emailjs-expose-my-account-to-spam/) documentation on 2026-09-10. The RFC and release review must recheck them because plans, privacy terms, retention controls, and APIs may change.
 
