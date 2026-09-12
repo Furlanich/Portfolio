@@ -25,7 +25,7 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-11
+last_verified: 2026-09-12
 ---
 
 # Product knowledge status register
@@ -177,7 +177,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 - Extended visual identity and design-system decisions beyond the approved commercial homepage and Services-page baselines: custom mark, additional semantic colors, full component variants, and broader imagery.
 - Confirmed commercial domain and canonical production URL. This is a **RELEASE BLOCKER**, not an implementation or integration blocker.
-- Contact deployment and privacy facts: provisioned account/schema/delivery behavior, content-deletion evidence, complete processor chain, international-transfer safeguards, final domain restriction, operational ownership, and professionally reviewed privacy/legal wording. These remain **IMPLEMENTATION OR RELEASE BLOCKERS** under `PLAN-CONTACT-INQUIRY-PIPELINE`; the provider architecture, form experience, and factual disclosure requirements are approved.
+- Contact deployment and privacy facts: a Formspree endpoint, plan, schema/settings, origin probes, synthetic delivery, and provider/Gmail deletion checks were reported PASS on 2026-09-12. The final production host/domain restriction, complete storage/retention/subprocessor/transfer facts, operational ownership, exact bilingual Privacy owner text, and professional privacy/legal review remain OPEN IMPLEMENTATION OR RELEASE BLOCKERS under `PLAN-CONTACT-INQUIRY-PIPELINE`; the provider architecture, form experience, and factual disclosure requirements remain approved.
 - Final legal and contractual review of commercial boundaries.
 - Founder photograph and any later CV content refresh/redesign are **DEFERRED** and non-blocking for the text-led Studio/Founder experience.
 - Permission, functional verification, and approved bilingual item copy required to advance the remaining blocked/private project records or broaden the three READY records beyond their current summary-only detail scope.
