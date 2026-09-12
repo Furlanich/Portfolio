@@ -310,11 +310,11 @@ The route entry passes locale, localized content, resolved Privacy/Founder links
 
   `verify:static-export` uses the build produced by `npm run validate`. Confirm Contact artifacts remain the existing direct-channel pages and no live request occurred.
 
-- [ ] **Step 9: Review and open PR 2**
+- [x] **Step 9: Review and open PR 2**
 
   Inspect `main...HEAD` for route/UI changes, inquiry data, provider IDs, network-capable tests, new dependencies, logging, or generalized abstractions. Open `feat: add the inquiry submission boundary` with RED/GREEN evidence and stop before merge.
 
-  Implementation and deterministic evidence are complete on the task branch; opening and merging PR 2 remain human-review actions.
+  Implementation and deterministic evidence were reviewed in [PR #45](https://github.com/Furlanich/Portfolio/pull/45), which was human-merged into `main` on 2026-09-12.
 
 ### Task 3 / PR 3: Publish the bilingual Privacy experience
 
@@ -626,6 +626,7 @@ If the pre-release smoke fails, do not merge PR 4. If the deployed form fails af
 - 2026-09-12: Task 1 remains OPEN. The reported provider evidence is partial progress, not release approval: final-host/domain restriction, complete storage/retention/subprocessor/transfer facts, professional legal review, and the exact bilingual Privacy owner text still need closure. Under the owner-authorized development-only deviation, Task 2's provider-isolated implementation may proceed while those release gates remain open; Tasks 3–5 remain blocked until the release gates close.
 - First implementation task selected: Task 1 / PR 1, `docs: close Contact provider and privacy gates`. Task 2 / PR 2 is authorized as development-only continuation; no public form behavior or release processing is authorized.
 - 2026-09-12: Task 2 implementation evidence recorded: literal validator and adapter RED assertions were observed before implementation; the focused suites pass 19/19; `npm run validate` passes documentation checks, 78 repository tests, lint, typecheck, and build; `npm run verify:static-export` passes for 18 routes at base path `/`. The adapter tests use only the synthetic `https://formspree.io/f/test-contact` endpoint and injected fetch doubles; no live provider request occurred.
+- 2026-09-12: [PR #45](https://github.com/Furlanich/Portfolio/pull/45) was verified through GitHub as merged into `main` with merge commit `335822fc7461717383ce6e524f89f9dc674a8096`. Task 2 / PR 2 is complete; Task 3 / PR 3 and Task 4 / PR 4 remain gated by the exact reviewed Privacy copy, complete processor/storage/retention/transfer facts, final host/domain restriction, and professional legal review.
 
 ## Important implementation decisions
 
