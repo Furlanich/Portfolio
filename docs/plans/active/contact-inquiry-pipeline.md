@@ -76,9 +76,9 @@ If this plan conflicts with an owner, the owner wins and this plan must be synch
 
 ## Current-main baseline
 
-Current `main` at `e3b62f5` contains the provider-neutral inquiry types, pure validator, and direct-fetch Formspree adapter merged through [PR #45](https://github.com/Furlanich/Portfolio/pull/45), plus the approved demonstration-mode governance amendment in [PR #46](https://github.com/Furlanich/Portfolio/pull/46). Focused adapter and validator tests pass without live network access. No public route imports this boundary.
+Current `main` at `fd2833d` contains the provider-neutral inquiry types, pure validator, and direct-fetch Formspree adapter merged through [PR #45](https://github.com/Furlanich/Portfolio/pull/45), the approved demonstration-mode governance amendment in [PR #46](https://github.com/Furlanich/Portfolio/pull/46), and the Task 3 Privacy implementation commit. Focused adapter and validator tests pass without live network access. No public route imports this boundary.
 
-`/contacto/` and `/en/contact/` still render the direct-channel `MinimumDestination`; Privacy routes and footer links do not exist. The deployment workflow passes `NEXT_PUBLIC_FORMSPREE_ENDPOINT`, but no current route consumes it. The application exports with `NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}`, producing `https://furlanich.github.io/Portfolio/`.
+`/contacto/` and `/en/contact/` still render the direct-channel `MinimumDestination`; Task 3 now supplies the paired `/privacidad/` and `/en/privacy/` routes and localized footer destinations. The deployment workflow passes `NEXT_PUBLIC_FORMSPREE_ENDPOINT`, but no current route consumes it. The application exports with `NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}`, producing `https://furlanich.github.io/Portfolio/`.
 
 ## Reviewable Pull Request sequence
 
@@ -86,7 +86,7 @@ Current `main` at `e3b62f5` contains the provider-neutral inquiry types, pure va
 | --- | --- | --- | --- |
 | Governance | `docs: approve Contact demonstration deployment` | None | New ADR, mock kit, exact bilingual demonstration copy, synchronized plan/status/indexes, docs-only diff |
 | 2 — complete | [PR #45](https://github.com/Furlanich/Portfolio/pull/45), `feat: add the inquiry submission boundary` | None | Provider-neutral types/validator/Formspree adapter and deterministic tests merged into `main` |
-| 3 | `feat: publish the demonstration Privacy experience` | Adds paired, accurately labeled demonstration Privacy routes and footer links | Exact owner copy, locale/route/static/base-path tests, browser/axe/manual/visual QA |
+| 3 — applied on main | Commit [`fd2833d`](https://github.com/Furlanich/Portfolio/commit/fd2833d), `feat: publish the demonstration Privacy experience` | Adds paired, accurately labeled demonstration Privacy routes and footer links | Exact owner copy, locale/route/static/base-path tests, browser/axe coverage; manual visual review remains open |
 | 4 | `feat: publish the accessible Contact demonstration` | Replaces both minimum Contact pages with the four-field local simulation and retains fallbacks | Demo adapter/state/UI RED-GREEN evidence, success/failure Playwright, zero-transmission proof, accessibility/visual QA, endpoint removed from deploy workflow |
 | 5 | `docs: record deployed Contact demonstration` | None | Live GitHub Pages verification, zero-transmission evidence, architecture synchronization, completed-plan move |
 
@@ -94,7 +94,7 @@ No Pull Request combines two rows. No implementation PR is stacked on an unmerge
 
 ## Exactly one next implementation task
 
-After the governance amendment containing this plan is reviewed and merged, the **only authorized next implementation task** is **Task 3 / PR 3: publish the paired bilingual demonstration Privacy experience and footer links using the exact `PAGE-PRIVACY` copy**.
+The Task 3 implementation commit is present on `main` at `fd2833d`, but GitHub has no associated Pull Request or merge event for it; the attempted PR creation returned `422: No commits between main and codex/contact-inquiry-pr3`. The owner must confirm that this direct remote advancement satisfies the human-merge gate before Task 4 begins.
 
 Task 4 must not begin until Task 3 is human-merged. Task 5 must not begin until Task 4 is human-merged and GitHub Pages finishes deploying it.
 
@@ -241,7 +241,7 @@ Evidence recorded 2026-09-13: the focused RED suite reported explicit missing Pr
 
 - [ ] **Step 8: Review and open PR 3**
 
-  Inspect `main...HEAD` for invented facts, commercial claims, duplicate public copy, unrelated shell changes, generated artifacts, secrets, or form behavior. Commit `feat: publish the demonstration Privacy experience`, open the evidence-backed PR, and stop before merge.
+  Inspect `main...HEAD` for invented facts, commercial claims, duplicate public copy, unrelated shell changes, generated artifacts, secrets, or form behavior. The implementation is committed as `fd2833d`, but no PR was opened because GitHub already reports the commit on `main`. Resolve that PR/merge-state discrepancy before Task 4 proceeds.
 
 ### Task 4 / PR 4: Publish the accessible Contact demonstration
 
@@ -364,7 +364,8 @@ If Task 3 fails, revert it and retain the site without Privacy routes. If Task 4
 - 2026-09-12: PR #45 merged the provider-neutral contracts, validator, and Formspree adapter. No public route or live request was added.
 - 2026-09-12: The owner selected `https://furlanich.github.io/Portfolio/` as the lasting host, classified the site as a non-commercial showcase, authorized mock resources on `main`, and approved a local-only Contact simulation. `ADR-CONTACT-INQUIRY-DEMO-MODE` records the decision.
 - 2026-09-12: The active sequence now targets demonstrative Privacy and Contact publication followed by live zero-transmission verification. Commercial activation is a separately gated later initiative.
-- 2026-09-13: Task 3 implementation is complete on the isolated PR branch: paired Privacy routes, exact locale-owned disclosure content, shared server composition, localized footer destinations, static/base-path assertions, browser coverage, and representative axe coverage are green. Human review and merge remain pending.
+- 2026-09-13: Task 3 implementation was completed on the isolated branch: paired Privacy routes, exact locale-owned disclosure content, shared server composition, localized footer destinations, static/base-path assertions, browser coverage, and representative axe coverage are green. Human PR review remains pending.
+- 2026-09-13: The pushed Task 3 branch and remote `main` both point to `fd2833d`. GitHub reports no PR associated with the commit and rejected PR creation because there are no commits between `main` and `codex/contact-inquiry-pr3`; no PR number or merge event is recorded. Task 4 remains gated pending owner confirmation.
 
 ## Important implementation decisions
 
