@@ -11,6 +11,8 @@ const representativeRoutes = [
   ['English Studio', stableRoutes.studio.en],
   ['Spanish Founder', stableRoutes.founder.es],
   ['English Founder', stableRoutes.founder.en],
+  ['Spanish Privacy', stableRoutes.privacy.es],
+  ['English Privacy', stableRoutes.privacy.en],
 ] as const;
 
 for (const [name, route] of representativeRoutes) {

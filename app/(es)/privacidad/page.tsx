@@ -1,15 +1,13 @@
+import { PrivacyPage } from '@/components/privacy/PrivacyPage';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
-import { ProjectsPage } from '@/components/projects/ProjectsPage';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
-import { getPublishedProjectCards, validateProjectContent } from '@/lib/projects/publication';
 import { contactContent } from '../_content/contact';
 import { founderContent } from '../_content/founder';
-import { projectPageContent } from '../_content/projects';
+import { privacyContent } from '../_content/privacy';
 
-const route = { locale: 'es' as const, routeId: 'projects' as const };
+const route = { locale: 'es' as const, routeId: 'privacy' as const };
 const paths = getFoundationNavigationPaths(route.locale, route.routeId);
-validateProjectContent(projectPageContent, route.locale);
 
 export default function Page() {
   return (
@@ -25,11 +23,11 @@ export default function Page() {
           process: 'Proceso',
           studio: 'El estudio',
           contact: 'Contacto',
-          primaryAction: contactContent.actions[0].label,
+          primaryAction: 'Contanos sobre tu proyecto',
           languageSwitch: 'Ver sitio en inglés',
         }}
       />
-      <ProjectsPage content={projectPageContent} cards={getPublishedProjectCards(projectPageContent, route.locale)} />
+      <PrivacyPage content={privacyContent} />
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}
@@ -42,8 +40,8 @@ export default function Page() {
           studio: 'El estudio',
           founder: 'Samuel Furlanich',
           contact: 'Contacto',
-          directContact: 'Contacto directo',
           privacy: 'Privacidad',
+          directContact: 'Contacto directo',
           professional: 'Enlaces profesionales',
           location: contactContent.location,
         }}

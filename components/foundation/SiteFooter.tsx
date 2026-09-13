@@ -13,6 +13,7 @@ interface SiteFooterProps {
     studio: string;
     founder: string;
     contact: string;
+    privacy: string;
     directContact: string;
     professional: string;
     location: string;
@@ -39,6 +40,7 @@ export function SiteFooter({ contactActions, founderLinks, labels, paths }: Site
             <li><Link href={paths.process} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.process}</Link></li>
             <li><Link href={paths.studio} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.studio}</Link></li>
             <li><Link href={paths.contact} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.contact}</Link></li>
+            <li><Link href={paths.privacy} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.privacy}</Link></li>
           </ul>
         </nav>
 

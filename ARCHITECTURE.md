@@ -28,14 +28,14 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-12
+last_verified: 2026-09-13
 ---
 
 # FURLANICH architecture map
 
 ## CURRENT
 
-The current application is a Next.js 16 App Router site with ten static foundation routes: Spanish at the root and English under `/en/`, plus six paired static project-detail artifacts. Locale-specific Server Component trees compose shared semantic foundation components from route-owned content. Retained founder source remains under `data/`; the obsolete project JSON, project-only types/exports, animated Card primitive, and unapproved legacy project SVGs were retired after Task 4 consumer verification.
+The current application is a Next.js 16 App Router site with fourteen static foundation routes: Spanish at the root and English under `/en/`, plus six paired static project-detail artifacts. Locale-specific Server Component trees compose shared semantic foundation components from route-owned content. The paired Privacy routes use a shared server-rendered composition and exact locale-owned demonstration disclosure. Retained founder source remains under `data/`; the obsolete project JSON, project-only types/exports, animated Card primitive, and unapproved legacy project SVGs were retired after Task 4 consumer verification.
 
 Tailwind CSS provides utility styling and the small component primitives. `next/font` loads Inter; `public/` holds static images, including legacy project previews. The site is statically exported with trailing slashes, optional GitHub Pages base path/asset prefix, and unoptimized images. The deployment workflow builds `main` with Node 24 and publishes `out/` to GitHub Pages.
 
@@ -43,7 +43,7 @@ The approved Studio route pair is not yet materialized: the shared route/navigat
 
 The runtime dependency boundary is Next.js, React, TypeScript, Tailwind, Framer Motion, React Hook Form, and Lucide React. The approved foundation has no runtime localization dependency. Development verification adds pinned Playwright Test and axe integration. Repository checks are documentation/Skill integrity, Node contract tests, ESLint, TypeScript no-emit checking, production static build and artifact verification, a three-engine browser smoke suite, responsive profiles, and representative automated accessibility scans. See [current system](docs/architecture/current-system.md), [testing strategy](docs/testing/strategy.md), and [quality findings](docs/architecture/current-quality-findings.md) for evidence and limits.
 
-Task 2 current state: the complete commercial homepage is merged with ten static Spanish-root and English-/en/ foundation routes, including the bilingual image-free Projects index, route-owned public project content, the typed fail-closed project manifest, shared Server Component cards, and Projects navigation. Task 3/4 current state: the three approved detail-destination entries generate exactly six paired static detail artifacts, and the former legacy project publication paths are removed. The implementation preserves the static-export and optional GitHub Pages base-path constraints while retaining only approved project WebP visuals and unrelated founder source material.
+Task 2 current state: the complete commercial homepage is merged with fourteen static Spanish-root and English-/en/ foundation routes, including the bilingual image-free Projects index, route-owned public project content, the typed fail-closed project manifest, shared Server Component cards, and Projects navigation. Task 3 current state: the paired demonstration Privacy routes, exact locale-owned disclosure, semantic route equivalence, localized footer destinations, and static/base-path/browser/accessibility checks are implemented on the PR branch. Task 3/4 project state: the three approved detail-destination entries generate exactly six paired static detail artifacts, and the former legacy project publication paths are removed. The implementation preserves the static-export and optional GitHub Pages base-path constraints while retaining only approved project WebP visuals and unrelated founder source material.
 
 ## APPROVED product constraints
 

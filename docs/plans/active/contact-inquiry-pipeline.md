@@ -11,7 +11,7 @@ owners:
   - frontend
   - qa
 created: 2026-09-11
-last_verified: 2026-09-12
+last_verified: 2026-09-13
 related:
   - GOV-ENGINEERING-LIFECYCLE
   - PAGE-CONTACT
@@ -76,7 +76,7 @@ If this plan conflicts with an owner, the owner wins and this plan must be synch
 
 ## Current-main baseline
 
-Current `main` at `335822f` contains the provider-neutral inquiry types, pure validator, and direct-fetch Formspree adapter merged through [PR #45](https://github.com/Furlanich/Portfolio/pull/45). Focused adapter and validator tests pass without live network access. No public route imports this boundary.
+Current `main` at `e3b62f5` contains the provider-neutral inquiry types, pure validator, and direct-fetch Formspree adapter merged through [PR #45](https://github.com/Furlanich/Portfolio/pull/45), plus the approved demonstration-mode governance amendment in [PR #46](https://github.com/Furlanich/Portfolio/pull/46). Focused adapter and validator tests pass without live network access. No public route imports this boundary.
 
 `/contacto/` and `/en/contact/` still render the direct-channel `MinimumDestination`; Privacy routes and footer links do not exist. The deployment workflow passes `NEXT_PUBLIC_FORMSPREE_ENDPOINT`, but no current route consumes it. The application exports with `NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}`, producing `https://furlanich.github.io/Portfolio/`.
 
@@ -207,33 +207,37 @@ Evidence recorded 2026-09-12: focused suites passed 19/19; repository validation
 - Consumes: exact demonstration Privacy copy in `PAGE-PRIVACY`, `REF-CONTACT-DEMO-PROVIDER`, and existing localized route/footer conventions.
 - Produces: `privacy` route equivalence, shared semantic `PrivacyPage`, paired static routes, and footer destinations. It creates no form, provider call, client state, or commercial legal claim.
 
-- [ ] **Step 1: Read Next.js 16 references and required Skills**
+- [x] **Step 1: Read Next.js 16 references and required Skills**
 
   Read `node_modules/next/dist/docs/01-app/01-getting-started/05-server-and-client-components.md`, `node_modules/next/dist/docs/01-app/02-guides/static-exports.md`, `frontend-implementation`, `test-driven-development`, `playwright-qa`, and the owning product/design/testing records.
 
-- [ ] **Step 2: Write literal Privacy content and route RED tests**
+- [x] **Step 2: Write literal Privacy content and route RED tests**
 
   Assert one locale per module; exact demonstration heading/lead and required facts; no Formspree, inbox-delivery, DPA, legal-approval, consent-sufficiency, or commercial-processing claim; `/privacidad/` ↔ `/en/privacy/`; correct language switching; one H1/main; ordered headings; footer links on every route; and root/base-path-safe links.
 
-- [ ] **Step 3: Run focused RED**
+- [x] **Step 3: Run focused RED**
 
   Run `node --test scripts/privacy-content.test.mjs scripts/privacy-route.test.mjs scripts/site-routes.test.mjs`. Expected: explicit missing route/content assertions. Import, syntax, or harness errors do not count as RED.
 
-- [ ] **Step 4: Implement locale-owned content and shared composition**
+- [x] **Step 4: Implement locale-owned content and shared composition**
 
   Use only exact `PAGE-PRIVACY` text. Render semantic headings, paragraphs, and lists with readable measure. Identify GitHub Pages hosting metadata, local-only form memory, no submission/inbox/storage, external fallback boundaries, absence of inquiry analytics, value lifetime, questions route, and future commercial re-review. Add no fake lawyer, controller address, DPA, safeguard, provider chain, or legal conclusion.
 
-- [ ] **Step 5: Add paired routes, equivalence, and footer destinations**
+- [x] **Step 5: Add paired routes, equivalence, and footer destinations**
 
   Add `privacy` to the typed route/equivalence maps. Render existing localized shells without changing primary navigation. Add localized footer links across every current route shell, preserving trailing slashes and base-path resolution.
 
-- [ ] **Step 6: Reach deterministic GREEN and verify both exports**
+- [x] **Step 6: Reach deterministic GREEN and verify both exports**
 
   Run the focused Node suite, `npm run validate`, and `npm run verify:static-export`, then rebuild with `$env:NEXT_PUBLIC_BASE_PATH='/Portfolio'` and repeat static verification before removing the environment variable.
 
 - [ ] **Step 7: Run Playwright, accessibility, and visual QA**
 
   Run the focused Privacy spec under existing projects and representative axe coverage. Manually inspect both locales at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900`, plus 200% zoom, keyboard focus, reduced motion, wrapping, and JavaScript-disabled semantics.
+
+Evidence recorded 2026-09-13: the focused RED suite reported explicit missing Privacy route/content/contract failures before implementation. After implementation, the full Node suite passed 86/86, lint and typecheck passed, the production build passed, and static export verification passed for 20 routes at both `/` and `/Portfolio` base paths. The Privacy Playwright suite passed 36/36 across Chromium, Firefox, WebKit, 320x800, 390x844, 768x1024, and 1440x900 configurations. Representative axe coverage passed 11/11 with no critical or serious violations. No live provider request or form submission was performed.
+
+- Automated Playwright viewport coverage and representative axe checks are green. The desktop visual-inspection surface could not start in this environment, so manual 200% zoom, reduced-motion, JavaScript-disabled, and rendered visual review remain pending for human PR review.
 
 - [ ] **Step 8: Review and open PR 3**
 
@@ -360,6 +364,7 @@ If Task 3 fails, revert it and retain the site without Privacy routes. If Task 4
 - 2026-09-12: PR #45 merged the provider-neutral contracts, validator, and Formspree adapter. No public route or live request was added.
 - 2026-09-12: The owner selected `https://furlanich.github.io/Portfolio/` as the lasting host, classified the site as a non-commercial showcase, authorized mock resources on `main`, and approved a local-only Contact simulation. `ADR-CONTACT-INQUIRY-DEMO-MODE` records the decision.
 - 2026-09-12: The active sequence now targets demonstrative Privacy and Contact publication followed by live zero-transmission verification. Commercial activation is a separately gated later initiative.
+- 2026-09-13: Task 3 implementation is complete on the isolated PR branch: paired Privacy routes, exact locale-owned disclosure content, shared server composition, localized footer destinations, static/base-path assertions, browser coverage, and representative axe coverage are green. Human review and merge remain pending.
 
 ## Important implementation decisions
 

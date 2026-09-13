@@ -40,6 +40,7 @@ export default function Page() {
           founder: 'Samuel Furlanich',
           contact: 'Contact',
           directContact: 'Direct contact',
+          privacy: 'Privacy',
           professional: 'Professional links',
           location: contactContent.location,
         }}

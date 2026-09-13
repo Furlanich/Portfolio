@@ -74,3 +74,18 @@ export type ContactContent = {
   actions: ContactAction[];
   founderContextAction: ActionLink;
 };
+
+export type PrivacySection = {
+  id: string;
+  heading: string;
+  paragraphs: string[];
+};
+
+export type PrivacyContent = {
+  locale: Locale;
+  routeId: 'privacy';
+  heading: string;
+  introduction: string;
+  sections: PrivacySection[];
+  githubLink: ExternalLink;
+};

@@ -23,6 +23,12 @@ const routeDefinitions = [
   },
   {
     locale: 'es',
+    routeId: 'privacy',
+    path: '../app/(es)/privacidad/page.tsx',
+    contentImport: "from '../_content/privacy'",
+  },
+  {
+    locale: 'es',
     routeId: 'founder',
     path: '../app/(es)/estudio/samuel-furlanich/page.tsx',
     contentImport: "from '../../_content/founder'",
@@ -44,6 +50,12 @@ const routeDefinitions = [
     routeId: 'contact',
     path: '../app/(en)/en/contact/page.tsx',
     contentImport: "from '../_content/contact'",
+  },
+  {
+    locale: 'en',
+    routeId: 'privacy',
+    path: '../app/(en)/en/privacy/page.tsx',
+    contentImport: "from '../_content/privacy'",
   },
   {
     locale: 'en',

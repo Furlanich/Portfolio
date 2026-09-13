@@ -74,6 +74,7 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
           founder: 'Samuel Furlanich',
           contact: 'Contacto',
           directContact: 'Contacto directo',
+          privacy: 'Privacidad',
           professional: 'Enlaces profesionales',
           location: contactContent.location,
         }}

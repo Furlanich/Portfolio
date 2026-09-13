@@ -14,6 +14,7 @@ const artifacts = [
   { route: '/proyectos/the-system/', file: 'proyectos/the-system/index.html', lang: 'es-AR' },
   { route: '/proyectos/mpc-administracion/', file: 'proyectos/mpc-administracion/index.html', lang: 'es-AR' },
   { route: '/contacto/', file: 'contacto/index.html', lang: 'es-AR' },
+  { route: '/privacidad/', file: 'privacidad/index.html', lang: 'es-AR' },
   { route: '/estudio/', file: 'estudio/index.html', lang: 'es-AR' },
   { route: '/estudio/samuel-furlanich/', file: 'estudio/samuel-furlanich/index.html', lang: 'es-AR' },
   { route: '/en/', file: 'en/index.html', lang: 'en' },
@@ -23,6 +24,7 @@ const artifacts = [
   { route: '/en/work/the-system/', file: 'en/work/the-system/index.html', lang: 'en' },
   { route: '/en/work/mpc-administracion/', file: 'en/work/mpc-administracion/index.html', lang: 'en' },
   { route: '/en/contact/', file: 'en/contact/index.html', lang: 'en' },
+  { route: '/en/privacy/', file: 'en/privacy/index.html', lang: 'en' },
   { route: '/en/about/', file: 'en/about/index.html', lang: 'en' },
   { route: '/en/about/samuel-furlanich/', file: 'en/about/samuel-furlanich/index.html', lang: 'en' },
 ];
@@ -204,6 +206,37 @@ const projectsRequirements = {
     finalHeading: 'Need to solve something similar?',
     finalAction: 'Discuss your project',
     forbiddenTaxonomy: ['Production solutions', 'FURLANICH Lab', 'Functional prototypes'],
+  },
+};
+
+const privacyRequirements = {
+  'privacidad/index.html': {
+    heading: 'Privacidad de esta demostración',
+    introduction:
+      'Este sitio funciona como portfolio y demostración técnica. No acepta consultas comerciales mediante el formulario y no presenta esta página como una política revisada por un profesional legal.',
+    sections: [
+      'Qué ocurre con los datos del formulario',
+      'Alojamiento y datos técnicos',
+      'Alternativas externas',
+      'Información sensible',
+      'Conservación y consultas',
+      'Activación comercial futura',
+    ],
+    githubLabel: 'Ver la declaración de privacidad de GitHub',
+  },
+  'en/privacy/index.html': {
+    heading: 'Privacy in this demonstration',
+    introduction:
+      'This site operates as a portfolio and technical showcase. It does not accept commercial inquiries through the form and does not present this page as a professionally reviewed legal policy.',
+    sections: [
+      'What happens to form data',
+      'Hosting and technical data',
+      'External alternatives',
+      'Sensitive information',
+      'Retention and questions',
+      'Future commercial activation',
+    ],
+    githubLabel: "View GitHub's privacy statement",
   },
 };
 
@@ -518,6 +551,38 @@ function assertProjectDetailArtifact(artifact, html) {
   }
 }
 
+function assertPrivacyArtifact(artifact, html) {
+  const requirement = privacyRequirements[artifact.file];
+  if (!requirement) return;
+
+  if (countMatches(html, /<main\b/g) !== 1) {
+    failures.push(artifact.file + ': expected exactly one main landmark');
+  }
+  if (countMatches(html, /<h1\b/g) !== 1 || !html.includes(requirement.heading)) {
+    failures.push(artifact.file + ': expected one approved visible Privacy H1');
+  }
+  if (!html.includes(requirement.introduction)) {
+    failures.push(artifact.file + ': missing approved Privacy introduction');
+  }
+
+  let previousHeadingPosition = -1;
+  for (const heading of requirement.sections) {
+    const position = html.search(new RegExp('<h2\\b[^>]*>' + escapeRegExp(heading) + '</h2>'));
+    if (position === -1 || position <= previousHeadingPosition) {
+      failures.push(artifact.file + ': Privacy sections are missing or out of approved order');
+    }
+    previousHeadingPosition = position;
+  }
+
+  const githubHref = 'https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement';
+  if (!html.includes('href="' + githubHref + '"') || !html.includes(requirement.githubLabel)) {
+    failures.push(artifact.file + ': missing GitHub privacy statement reference');
+  }
+  if (/DPA|subprocessor|(?:consulta enviada|inquiry sent)/i.test(html)) {
+    failures.push(artifact.file + ': live-processing or commercial inquiry claim leaked into Privacy artifact');
+  }
+}
+
 function expectedHref(route) {
   return `${configuredBasePath}${route}`;
 }
@@ -592,6 +657,7 @@ for (const { artifact, html } of allHtml) {
   assertStudioArtifact(artifact, html);
   assertFounderArtifact(artifact, html);
   assertProjectDetailArtifact(artifact, html);
+  assertPrivacyArtifact(artifact, html);
   const requirement = homepageRequirements[artifact.file];
   if (!requirement) continue;
 

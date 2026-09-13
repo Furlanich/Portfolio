@@ -11,14 +11,14 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-12
+last_verified: 2026-09-13
 ---
 
 # Current system
 
 ## Scope
 
-This record includes the retained pre-cutover personal-portfolio implementation and the current Task 2 commercial homepage, Projects index, Task 3 project-detail state, and Task 4 project cleanup. The ten approved foundation routes implement the documented Spanish-root and English-/en/ route pairs; the current Projects slice adds six paired static detail artifacts for the three approved slugs. Obsolete project JSON, project-only types/exports, animated Card code, and unapproved legacy SVG assets are retired; unrelated founder data and shared primitives remain available to their consumers.
+This record includes the retained pre-cutover personal-portfolio implementation and the current Task 2 commercial homepage, Projects index, Task 3 project-detail and Privacy state, and Task 4 project cleanup. The fourteen approved foundation routes implement the documented Spanish-root and English-/en/ route pairs; the current Projects slice adds six paired static detail artifacts for the three approved slugs. Obsolete project JSON, project-only types/exports, animated Card code, and unapproved legacy SVG assets are retired; unrelated founder data and shared primitives remain available to their consumers.
 
 ## Application stack
 
@@ -122,8 +122,9 @@ Content is oriented toward personal credentials and recruiters rather than the a
 
 ## Current foundation implementation — Task 3
 
-- Eight static foundation routes are rendered by locale-specific Server Component trees: Spanish at the root routes with document language es-AR, and English below /en/ with document language en.
+- Fourteen static foundation routes are rendered by locale-specific Server Component trees: Spanish at the root routes with document language es-AR, and English below /en/ with document language en.
 - Shared foundation components provide the semantic header, footer, language switch, typography-led hero, useful Services and Contact destinations, and the minimum Founder profile.
+- `/privacidad/` and `/en/privacy/` render the shared server-rendered `PrivacyPage` from locale-owned exact demonstration copy. The disclosure describes temporary page memory, GitHub Pages hosting metadata, external fallback boundaries, no form transmission or inbox copy, no inquiry analytics, and future commercial re-review gates.
 - The public foundation has no `next-intl` dependency, legacy client provider, locale React state, `window.location` parsing, or document-language mutation.
 - Foundation styling uses the approved light Canvas, Surface, Ink, Muted ink, Action blue, Action blue strong, Action tint, and Border values, with responsive CTA stacking below 480px and no horizontal overflow at 320px.
 - Retained personal data JSON, project assets, and core primitives remain in Git and are outside this cleanup; the obsolete localization shell, sections, helper, and message catalogs are retired.
@@ -134,7 +135,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Both localized home routes render one shared `CommercialHomepage` Server Component with the existing hero followed by Problems, Services, Audiences, Proof fallback, Process, Founder, and final CTA in the approved order.
 - The seven later sections use route-owned typed content from the Spanish and English home modules. Shared components contain no public copy or client-side locale state.
 - `HOME-PROOF` is the approved single-panel credibility fallback with direct-responsibility, verifiable-claims, and confidentiality commitments; no project cards, project links, metrics, or client claims were added.
-- The existing header and footer expose the localized in-page Process destination (`/#proceso` and `/en/#process`) on all eight foundation routes without adding a route ID.
+- The existing header and footer expose the localized in-page Process destination (`/#proceso` and `/en/#process`) on all fourteen foundation routes without adding a route ID.
 - The static artifact verifier checks both homepage narratives, stable labelled sections, visible headings, required internal actions, the confirmed WhatsApp action, document languages, route references, and optional base-path integrity.
 - The implementation uses the existing foundation palette, typography, spacing, borders, responsive grid rules, target sizing, focus treatment, and reduced-motion behavior. No dependencies, routes, hosting settings, metadata architecture, form, imagery, or project evidence changed.
 
@@ -151,13 +152,13 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - `/proyectos/` and `/en/work/` render one shared `ProjectsPage` Server Component with three image-free cards in approved order: General Reservation System, The-System, then MPC Administración.
 - The typed public manifest is the only project enumeration source. All three entries are `limited`, detail-destination records with approved repository evidence and labeled conceptual visuals; the index remains card-only and image-free. The removed legacy project JSON is no longer an application source.
 - Cards expose maturity, context, evidence signal, natural summaries, two or three non-interactive capability tags, and one explicit source link. The publication-scope note and inquiry CTA remain visible in normal reading order; no filter, group, empty state, whole-card interaction, or client boundary was added. Detail assets are labeled conceptual and are not runtime evidence.
-- Shared header/footer navigation now exposes localized Projects/Work links and the language switch maps the index routes while detail pages preserve the stable slug (`/proyectos/[projectSlug]/` ↔ `/en/work/[projectSlug]/`). Normal and `/Portfolio` static artifact verification covers sixteen routes: ten foundation/index artifacts plus six paired detail artifacts. The current Playwright baseline now exercises the public foundation, Services, Projects, and nested Founder routes without changing their product behavior.
+- Shared header/footer navigation now exposes localized Projects/Work and Privacy links, while the language switch maps index, Privacy, and detail routes while detail pages preserve the stable slug (`/proyectos/[projectSlug]/` ↔ `/en/work/[projectSlug]/`). Normal and `/Portfolio` static artifact verification covers twenty routes: fourteen foundation/index artifacts plus six paired detail artifacts. The current Playwright baseline exercises the public foundation, Services, Projects, Privacy, and nested Founder routes without changing their product behavior.
 
 ## Current Projects cleanup implementation — Task 4
 
 - Consumer search proved that `data/projects.json`, the project-only `Project` type/export, and `components/core/Card.tsx` had no active consumers. They were removed without deleting the unrelated founder datasets or shared foundation/commercial primitives.
 - The eight unapproved legacy SVGs were removed after confirming the three approved conceptual WebPs were present under stable slug directories. `public/projects/` now contains only those three approved detail visuals.
-- The static verifier scans visible HTML and generated text payloads for blocked/private/retired identities, internal manifest identifiers, and removed asset names. Root and `/Portfolio` verification passed for all sixteen public artifacts.
+- The static verifier scans visible HTML and generated text payloads for blocked/private/retired identities, internal manifest identifiers, and removed asset names. Root and `/Portfolio` verification passed for all twenty public artifacts.
 
 ## Current shared header implementation — Task 4
 

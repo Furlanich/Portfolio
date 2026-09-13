@@ -9,6 +9,7 @@ export const stableRoutes = {
     es: '/estudio/samuel-furlanich/',
     en: '/en/about/samuel-furlanich/',
   },
+  privacy: { es: '/privacidad/', en: '/en/privacy/' },
 } as const;
 
 export function appUrl(route: string): string {

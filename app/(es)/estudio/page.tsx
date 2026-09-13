@@ -47,6 +47,7 @@ export default function Page() {
           founder: 'Samuel Furlanich',
           contact: 'Contacto',
           directContact: 'Contacto directo',
+          privacy: 'Privacidad',
           professional: 'Enlaces profesionales',
           location: contactContent.location,
         }}
