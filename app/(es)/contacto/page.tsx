@@ -1,4 +1,4 @@
-import { MinimumDestination } from '@/components/foundation/MinimumDestination';
+import { ContactPage } from '@/components/contact/ContactPage';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
@@ -26,15 +26,7 @@ export default function Page() {
           languageSwitch: 'Ver sitio en inglés',
         }}
       />
-      <MinimumDestination
-        contactActions={contactContent.actions}
-        founderContextAction={contactContent.founderContextAction}
-        heading={contactContent.heading}
-        introduction={contactContent.introduction}
-        locale={route.locale}
-        location={contactContent.location}
-        responseExpectation={contactContent.responseExpectation}
-      />
+      <ContactPage content={contactContent} locale={route.locale} mode="demonstration" />
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}

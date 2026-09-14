@@ -240,6 +240,27 @@ const privacyRequirements = {
   },
 };
 
+const contactRequirements = {
+  'contacto/index.html': {
+    heading: 'Contanos qué necesitás resolver.',
+    notice: 'Demostración interactiva',
+    noticeBody: 'Este sitio es una muestra técnica. El formulario simula el envío en este navegador: no envía datos, no crea una consulta comercial y no llega a ninguna bandeja de entrada.',
+    fields: ['Nombre', 'Correo electrónico', 'Empresa', '¿Qué necesitás resolver?'],
+    fallback: 'WhatsApp, email y teléfono se muestran como alternativas funcionales.',
+    privacy: '/privacidad/',
+    founder: '/estudio/samuel-furlanich/',
+  },
+  'en/contact/index.html': {
+    heading: 'Tell us what you need to solve.',
+    notice: 'Interactive demonstration',
+    noticeBody: 'This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.',
+    fields: ['Name', 'Email', 'Company', 'What do you need to solve?'],
+    fallback: 'WhatsApp, email, and phone are shown as functional alternatives.',
+    privacy: '/en/privacy/',
+    founder: '/en/about/samuel-furlanich/',
+  },
+};
+
 const detailRequirements = {
   'proyectos/general-reservation-system/index.html': {
     route: '/proyectos/general-reservation-system/',
@@ -583,6 +604,28 @@ function assertPrivacyArtifact(artifact, html) {
   }
 }
 
+function assertContactArtifact(artifact, html) {
+  const requirement = contactRequirements[artifact.file];
+  if (!requirement) return;
+  if (countMatches(html, /<main\b/g) !== 1) failures.push(artifact.file + ': expected exactly one Contact main landmark');
+  if (countMatches(html, /<h1\b/g) !== 1 || !html.includes(requirement.heading)) {
+    failures.push(artifact.file + ': expected one approved Contact H1');
+  }
+  for (const text of [requirement.notice, requirement.noticeBody, requirement.fallback, ...requirement.fields]) {
+    if (!html.includes(text)) failures.push(artifact.file + ': missing approved Contact text "' + text + '"');
+  }
+  for (const route of [requirement.privacy, requirement.founder]) {
+    const expected = expectedHref(route);
+    if (!html.includes('href="' + expected + '"')) failures.push(artifact.file + ': missing Contact reference ' + expected);
+  }
+  if (!html.includes('<form') || !html.includes('Simul') && !html.includes('Simulate')) {
+    failures.push(artifact.file + ': missing local-only Contact form');
+  }
+  if (/NEXT_PUBLIC_FORMSPREE_ENDPOINT|formspree\.io|inquiry sent|consulta enviada/i.test(html)) {
+    failures.push(artifact.file + ': contains live provider or delivery wording');
+  }
+}
+
 function expectedHref(route) {
   return `${configuredBasePath}${route}`;
 }
@@ -658,6 +701,7 @@ for (const { artifact, html } of allHtml) {
   assertFounderArtifact(artifact, html);
   assertProjectDetailArtifact(artifact, html);
   assertPrivacyArtifact(artifact, html);
+  assertContactArtifact(artifact, html);
   const requirement = homepageRequirements[artifact.file];
   if (!requirement) continue;
 

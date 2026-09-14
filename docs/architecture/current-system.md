@@ -130,6 +130,15 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Retained personal data JSON, project assets, and core primitives remain in Git and are outside this cleanup; the obsolete localization shell, sections, helper, and message catalogs are retired.
 - Both normal and /Portfolio static-export modes are verified by the repository artifact checker. Task 4 browser QA repeated all eight routes at 320x800, 375x812, 768x1024, 1024x768, and 1440x900; language switching, keyboard focus, JavaScript-disabled rendering, reduced motion, contact links, Founder links, and CV routing were checked.
 
+## Current Contact demonstration — Task 4 / PR 4
+
+- The paired /contacto/ and /en/contact/ routes render a shared server-side ContactPage and narrow client-side ContactForm.
+- The form keeps exactly name, email, optional company, and message. Locale-owned content supplies labels, helpers, validation messages, demonstration disclosure, status copy, fallback note, and Privacy/Founder links.
+- The local createDemoSubmitInquiry adapter waits the approved bounded delay, returns simulated accepted results for valid values, and returns opaque unavailable failure for failure@example.invalid after normalization. It does not call fetch, XHR, beacon, navigation, storage, logging, analytics, mail, or a provider endpoint.
+- The pure reducer owns phase, request identity, duplicate prevention, stale-result protection, safe failure reasons, first-invalid focus, preserved failure values, retry, and success reset. React Hook Form owns browser field values and errors; DOM focus and announcements stay outside the reducer.
+- The deployment workflow omits NEXT_PUBLIC_FORMSPREE_ENDPOINT. The Formspree adapter remains dormant and covered only by synthetic deterministic tests.
+- Contact browser evidence covers 81/81 cases across the configured engines and viewports, including JavaScript-disabled fallback; representative axe coverage covers both Contact routes with 13/13 passing. Manual visual and assistive-technology review remains separate from automated evidence.
+
 ## Current commercial homepage implementation — Task 2
 
 - Both localized home routes render one shared `CommercialHomepage` Server Component with the existing hero followed by Problems, Services, Audiences, Proof fallback, Process, Founder, and final CTA in the approved order.

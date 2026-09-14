@@ -10,6 +10,7 @@ export const stableRoutes = {
     en: '/en/about/samuel-furlanich/',
   },
   privacy: { es: '/privacidad/', en: '/en/privacy/' },
+  contact: { es: '/contacto/', en: '/en/contact/' },
 } as const;
 
 export function appUrl(route: string): string {

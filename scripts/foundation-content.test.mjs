@@ -171,7 +171,7 @@ test('exposes the subdued Founder context action after direct contact channels',
     const content = (await import(definition.path))[definition.exportName];
 
     assert.deepEqual(content.founderContextAction, {
-      label: locale === 'es' ? 'Conocer a Samuel' : 'Meet Samuel',
+      label: locale === 'es' ? 'Conocer la trayectoria de Samuel' : "View Samuel's background",
       routeId: 'founder',
     });
   }

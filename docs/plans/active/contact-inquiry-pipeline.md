@@ -76,7 +76,7 @@ If this plan conflicts with an owner, the owner wins and this plan must be synch
 
 ## Current-main baseline
 
-Current `main` at `fd2833d` contains the provider-neutral inquiry types, pure validator, and direct-fetch Formspree adapter merged through [PR #45](https://github.com/Furlanich/Portfolio/pull/45), the approved demonstration-mode governance amendment in [PR #46](https://github.com/Furlanich/Portfolio/pull/46), and the Task 3 Privacy implementation commit. Focused adapter and validator tests pass without live network access. No public route imports this boundary.
+Current `main` at `f087479` contains the provider-neutral inquiry types, pure validator, and direct-fetch Formspree adapter merged through [PR #45](https://github.com/Furlanich/Portfolio/pull/45), the approved demonstration-mode governance amendment in [PR #46](https://github.com/Furlanich/Portfolio/pull/46), and the Task 3 Privacy implementation merged through [PR #47](https://github.com/Furlanich/Portfolio/pull/47). Task 4 is implemented on this isolated branch; its Contact route imports only the local demonstration adapter. Focused adapter and validator tests pass without live network access.
 
 `/contacto/` and `/en/contact/` still render the direct-channel `MinimumDestination`; Task 3 now supplies the paired `/privacidad/` and `/en/privacy/` routes and localized footer destinations. The deployment workflow passes `NEXT_PUBLIC_FORMSPREE_ENDPOINT`, but no current route consumes it. The application exports with `NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}`, producing `https://furlanich.github.io/Portfolio/`.
 
@@ -86,7 +86,7 @@ Current `main` at `fd2833d` contains the provider-neutral inquiry types, pure va
 | --- | --- | --- | --- |
 | Governance | `docs: approve Contact demonstration deployment` | None | New ADR, mock kit, exact bilingual demonstration copy, synchronized plan/status/indexes, docs-only diff |
 | 2 — complete | [PR #45](https://github.com/Furlanich/Portfolio/pull/45), `feat: add the inquiry submission boundary` | None | Provider-neutral types/validator/Formspree adapter and deterministic tests merged into `main` |
-| 3 — applied on main | Commit [`fd2833d`](https://github.com/Furlanich/Portfolio/commit/fd2833d), `feat: publish the demonstration Privacy experience` | Adds paired, accurately labeled demonstration Privacy routes and footer links | Exact owner copy, locale/route/static/base-path tests, browser/axe coverage; manual visual review remains open |
+| 3 — merged | [PR #47](https://github.com/Furlanich/Portfolio/pull/47), `feat: publish the demonstration Privacy experience` | Adds paired, accurately labeled demonstration Privacy routes and footer links | Exact owner copy, locale/route/static/base-path tests, browser/axe coverage; manual visual review remains open |
 | 4 | `feat: publish the accessible Contact demonstration` | Replaces both minimum Contact pages with the four-field local simulation and retains fallbacks | Demo adapter/state/UI RED-GREEN evidence, success/failure Playwright, zero-transmission proof, accessibility/visual QA, endpoint removed from deploy workflow |
 | 5 | `docs: record deployed Contact demonstration` | None | Live GitHub Pages verification, zero-transmission evidence, architecture synchronization, completed-plan move |
 
@@ -94,7 +94,7 @@ No Pull Request combines two rows. No implementation PR is stacked on an unmerge
 
 ## Exactly one next implementation task
 
-The Task 3 implementation commit is present on `main` at `fd2833d`, but GitHub has no associated Pull Request or merge event for it; the attempted PR creation returned `422: No commits between main and codex/contact-inquiry-pr3`. The owner must confirm that this direct remote advancement satisfies the human-merge gate before Task 4 begins.
+The owner confirmed that Task 3 / PR 3 merged as [PR #47](https://github.com/Furlanich/Portfolio/pull/47), so the Task 4 implementation proceeds from the merged Privacy baseline.
 
 Task 4 must not begin until Task 3 is human-merged. Task 5 must not begin until Task 4 is human-merged and GitHub Pages finishes deploying it.
 
@@ -239,9 +239,9 @@ Evidence recorded 2026-09-13: the focused RED suite reported explicit missing Pr
 
 - Automated Playwright viewport coverage and representative axe checks are green. The desktop visual-inspection surface could not start in this environment, so manual 200% zoom, reduced-motion, JavaScript-disabled, and rendered visual review remain pending for human PR review.
 
-- [ ] **Step 8: Review and open PR 3**
+- [x] **Step 8: Review and open PR 3**
 
-  Inspect `main...HEAD` for invented facts, commercial claims, duplicate public copy, unrelated shell changes, generated artifacts, secrets, or form behavior. The implementation is committed as `fd2833d`, but no PR was opened because GitHub already reports the commit on `main`. Resolve that PR/merge-state discrepancy before Task 4 proceeds.
+  Inspect main...HEAD for invented facts, commercial claims, duplicate public copy, unrelated shell changes, generated artifacts, secrets, or form behavior. The owner confirmed that Task 3 / PR 3 merged through [PR #47](https://github.com/Furlanich/Portfolio/pull/47); Task 4 proceeds from that merged baseline.
 
 ### Task 4 / PR 4: Publish the accessible Contact demonstration
 
@@ -271,37 +271,39 @@ Evidence recorded 2026-09-13: the focused RED suite reported explicit missing Pr
 - Consumes: merged `validateInquiry()` and contracts, exact `PAGE-CONTACT` demonstration copy, `REF-CONTACT-DEMO-PROVIDER`, Task 3 Privacy routes, and current fallback facts.
 - Produces: complete paired Contact routes with local-only simulation. It does not import the Formspree adapter or receive an endpoint.
 
-- [ ] **Step 1: Read Next.js form/client/environment references and required Skills**
+- [x] **Step 1: Read Next.js form/client/environment references and required Skills**
 
   Read `node_modules/next/dist/docs/01-app/01-getting-started/05-server-and-client-components.md`, `node_modules/next/dist/docs/01-app/02-guides/forms.md`, `node_modules/next/dist/docs/01-app/02-guides/environment-variables.md`, `node_modules/next/dist/docs/01-app/02-guides/static-exports.md`, plus `frontend-implementation`, `test-driven-development`, `playwright-qa`, and owning records.
 
-- [ ] **Step 2: Write adapter RED, implement, and reach GREEN**
+- [x] **Step 2: Write adapter RED, implement, and reach GREEN**
 
   Assert default/injected delay, accepted path, case-insensitive reserved failure, no mutation, one wait, no retry, no global `fetch`, no endpoint, and no storage/logging dependency. Run `node --test scripts/demo-inquiry-adapter.test.mjs`; require the explicit missing-export RED, implement the exact factory, and rerun GREEN.
 
-- [ ] **Step 3: Write state RED, implement, and reach GREEN**
+- [x] **Step 3: Write state RED, implement, and reach GREEN**
 
   Assert legal transitions, every invalid field, first-invalid focus, one active submission, ignored duplicate, failure preservation, success reset, retry, stale-result protection, and safe reason handling. Keep strings, DOM refs, React Hook Form, timers, and adapters outside the reducer.
 
-- [ ] **Step 4: Write content, route, and rendered RED tests**
+- [x] **Step 4: Write content, route, and rendered RED tests**
 
   Assert field order/limits, required/optional labels, demo notice, submit/progress/success/failure text, fallback note/order, Privacy/Founder links, both locale/source values, no delivery wording, missing Formspree route import, and the full association/focus/status contract. Playwright covers `success@example.invalid`, `failure@example.invalid`, multi-field validation, duplicate activation, retry, preservation/reset, JavaScript fallback, and a network guard that fails on XHR, fetch, beacon, navigation, or requests containing values.
 
-- [ ] **Step 5: Implement the shared page and small Client form**
+- [x] **Step 5: Implement the shared page and small Client form**
 
   Keep route shells/page composition as Server Components. `ContactForm` is the smallest Client Component and receives locale, exact content, `mode="demonstration"`, and the demo `SubmitInquiry`. Use React Hook Form for values/errors and the pure reducer for phase. Never read an endpoint, use Formspree copy, write storage, log values, or auto-retry.
 
-- [ ] **Step 6: Remove the endpoint from deployment**
+- [x] **Step 6: Remove the endpoint from deployment**
 
   Delete only `NEXT_PUBLIC_FORMSPREE_ENDPOINT` from `.github/workflows/deploy.yml`. Add a deterministic assertion that deployed Contact imports `lib/inquiry/demo.ts`, not `lib/inquiry/formspree.ts`, and the deploy workflow supplies no endpoint.
 
-- [ ] **Step 7: Reach deterministic and browser GREEN**
+- [x] **Step 7: Reach deterministic and browser GREEN**
 
   Run all inquiry/demo/state/content/route Node suites, the focused Contact Playwright spec, `npm run validate`, root static verification, and `/Portfolio` build/static verification. Confirm no provider request and that dormant Formspree tests remain green.
 
-- [ ] **Step 8: Complete accessibility and visual QA**
+- [ ] **Step 8: Complete automated accessibility and manual visual QA**
 
   Exercise idle, validation, submitting, simulated success, and simulated failure in both locales at every approved viewport. Verify keyboard-only completion/retry, focus and live announcements, 200% zoom, textarea resize, targets, reduced motion, no overflow, fallback hierarchy, axe, and zero inquiry-value network traffic.
+
+Evidence recorded 2026-09-13: adapter/state/content/route RED suites first reported explicit missing implementation failures, then passed 13/13 focused assertions after implementation. npm run lint, npm run typecheck, and the production build passed. Contact Playwright passed 81/81 across Chromium, Firefox, WebKit, mobile, tablet, compact, and portrait projects, including JavaScript-disabled fallback; representative axe coverage passed 13/13. Root static verification passed for 20 routes; /Portfolio base-path verification remains part of the final validation run. Automated browser checks prove no inquiry-value XHR/fetch/beacon traffic. Manual visual, zoom, reduced-motion, and assistive-technology review remains for human PR review because the desktop visual-inspection surface is unavailable in this environment.
 
 - [ ] **Step 9: Review and open PR 4**
 
@@ -368,6 +370,8 @@ If Task 3 fails, revert it and retain the site without Privacy routes. If Task 4
 - 2026-09-13: The pushed Task 3 branch and remote `main` both point to `fd2833d`. GitHub reports no PR associated with the commit and rejected PR creation because there are no commits between `main` and `codex/contact-inquiry-pr3`; no PR number or merge event is recorded. Task 4 remains gated pending owner confirmation.
 
 ## Important implementation decisions
+
+- 2026-09-13 superseding note: the prior Task 3 discrepancy entry above was resolved by owner confirmation that PR #47 merged. Task 4 is therefore active on codex/contact-inquiry-pr4; its implementation and automated evidence are complete, with manual visual review and PR 4 still pending.
 
 - Keep every four-field UI, accessibility, and state feature; change only submission meaning/transport in the deployed demonstration.
 - Use a local adapter behind the merged port so a later reviewed Formspree activation changes injection/copy rather than rebuilding the form.

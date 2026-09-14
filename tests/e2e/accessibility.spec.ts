@@ -13,11 +13,14 @@ const representativeRoutes = [
   ['English Founder', stableRoutes.founder.en],
   ['Spanish Privacy', stableRoutes.privacy.es],
   ['English Privacy', stableRoutes.privacy.en],
+  ['Spanish Contact', stableRoutes.contact.es],
+  ['English Contact', stableRoutes.contact.en],
 ] as const;
 
 for (const [name, route] of representativeRoutes) {
   test(`${name} has no automatically detectable critical or serious axe violations`, async ({ page }) => {
     await page.goto(appUrl(route));
+    await expect(page.locator('html')).toHaveAttribute('lang', name.startsWith('English') ? 'en' : 'es-AR');
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
       .analyze();

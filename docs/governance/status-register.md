@@ -168,6 +168,12 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - [`RFC-CONTACT-INQUIRY-PIPELINE`](../rfcs/contact-inquiry-pipeline.md) and [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) preserve Formspree behind `submitInquiry()` for a later commercial activation. The merged adapter remains dormant.
 - [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) now sequences paired demonstration Privacy routes, the complete accessible local-only form, and deployed zero-transmission proof. Its only next implementation task is Task 3 / PR 3.
 
+### Current implementation evidence — Task 4 / PR 4
+
+- Task 3 / PR 3 is confirmed merged as PR #47. Task 4 implements the paired local-only Contact demonstration on the approved GitHub Pages architecture.
+- The Contact form’s 81/81 browser matrix and 13/13 representative axe checks pass; the form has no inquiry-value network, storage, logging, analytics, mail, or provider transport. The deployment workflow supplies no Formspree endpoint.
+- The active plan’s prior Task 3 discrepancy note is historical and superseded by the owner’s merge confirmation. Manual visual and assistive-technology review remains a human PR responsibility; commercial Formspree activation gates remain OPEN.
+
 ## PROPOSED
 
 - Public descriptor: “Estudio de desarrollo de software a medida.”

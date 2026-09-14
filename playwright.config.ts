@@ -42,22 +42,23 @@ export default defineConfig({
         /smoke\.spec\.ts/,
         /studio-founder\.spec\.ts/,
         /privacy\.spec\.ts/,
+        /contact\.spec\.ts/,
       ],
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'firefox-desktop',
-      testMatch: [/smoke\.spec\.ts/, /privacy\.spec\.ts/],
+      testMatch: [/smoke\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/],
       use: { ...devices['Desktop Firefox'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'webkit-desktop',
-      testMatch: [/smoke\.spec\.ts/, /privacy\.spec\.ts/],
+      testMatch: [/smoke\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/],
       use: { ...devices['Desktop Safari'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'mobile-chromium',
-      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/],
+      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/],
       use: {
         browserName: 'chromium',
         viewport: { width: 390, height: 844 },
@@ -67,27 +68,27 @@ export default defineConfig({
     },
     {
       name: 'mobile-webkit',
-      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/],
+      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/],
       use: { ...devices['iPhone 13'] },
     },
     {
       name: 'tablet-chromium',
-      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/],
+      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/],
       use: { ...devices['Desktop Chrome'], viewport: { width: 1024, height: 768 } },
     },
     {
       name: 'wide-chromium',
-      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/],
+      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/],
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'compact-320-chromium',
-      testMatch: [/studio-founder-responsive\.spec\.ts/, /privacy\.spec\.ts/],
+      testMatch: [/studio-founder-responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/],
       use: { ...devices['Desktop Chrome'], viewport: { width: 320, height: 800 } },
     },
     {
       name: 'tablet-portrait-chromium',
-      testMatch: [/studio-founder-responsive\.spec\.ts/, /privacy\.spec\.ts/],
+      testMatch: [/studio-founder-responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/],
       use: { ...devices['Desktop Chrome'], viewport: { width: 768, height: 1024 } },
     },
     {
