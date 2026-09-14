@@ -6,7 +6,12 @@ related:
   - HOME-PROCESS
   - PAGE-SERVICES
   - PAGE-CONTACT
-last_verified: 2026-09-05
+  - PAGE-PRIVACY
+  - PAGE-LEGAL
+  - LEGAL-PROTOTYPE-POSTURE
+  - LEGAL-COMMERCIAL-TERMS-TEMPLATE
+  - RELEASE-READINESS
+last_verified: 2026-09-14
 ---
 
 # Delivery and commercial boundaries
@@ -25,6 +30,12 @@ The exact homepage language is owned by [`HOME-PROCESS`](pages/home.md#home-proc
 ## Engagement model — PROPOSED
 
 The detailed commercial defaults below remain proposed and are not public contractual commitments.
+
+## Prototype legal boundary — APPROVED
+
+The public demonstration uses the concise Legal Notice owned by `PAGE-LEGAL`, not commercial Terms and Conditions. It may explain identity, demonstration/informational scope, original and third-party material, external links, availability, and changes. It must not create binding payment, acceptance, ownership, warranty, liability, termination, consumer, tax, or jurisdiction terms for transactions that the website does not offer.
+
+The [future commercial Terms template](../legal/future-commercial-terms-template.md) is non-public and remains `OPEN — REQUIRED BEFORE COMMERCIAL RELEASE`. Proposed percentages, warranty periods, ownership defaults, or other realistic commercial ideas in this document do not become authoritative because a polished template exists.
 
 ## Services-page public boundary — APPROVED
 

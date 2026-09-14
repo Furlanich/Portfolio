@@ -23,6 +23,9 @@ related:
   - PAGE-FOUNDER
   - PAGE-CONTACT
   - PAGE-PRIVACY
+  - PAGE-LEGAL
+  - LEGAL-PROTOTYPE-POSTURE
+  - RELEASE-READINESS
   - CONTENT-LOCALIZATION
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
@@ -174,6 +177,16 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - The Contact form’s 81/81 browser matrix and 13/13 representative axe checks pass; the form has no inquiry-value network, storage, logging, analytics, mail, or provider transport. The deployment workflow supplies no Formspree endpoint.
 - The completed plan records the merged/deployed state. Human PR review accepted the rendered result without making a whole-site conformance claim; commercial Formspree activation gates remain OPEN.
 
+### Privacy, Legal, and release-readiness decision closure
+
+- `PAGE-PRIVACY` approves exact mature Spanish and English demonstration Privacy copy with a genuine September 2026 revision. It preserves the deployed zero-transmission facts and adds explicit scope, hosting, external-service, cookie/browser-storage/analytics, retention, questions, and version sections.
+- `PAGE-LEGAL` approves a dedicated `/aviso-legal/` ↔ `/en/legal/` prototype Legal Notice. It identifies FURLANICH and Samuel, states the site's demonstration and informational scope, and provides bounded intellectual-property, external-link, availability, and change wording without inventing an entity, tax ID, legal domicile, registration, reviewer, certification, or commercial contract.
+- Privacy and Legal Notice are footer peers and remain outside primary navigation. Commercial Terms remain non-public.
+- `LEGAL-PROTOTYPE-POSTURE` classifies public verified facts, generated explanatory copy, hidden production placeholders, and legal-review blockers. It records that the current form does not send to Formspree or an inbox and does not copy values to direct channels.
+- Approved status terms are `PROTOTYPE_COPY_APPROVED`, `DEMO_READY`, `COMMERCIAL_BLOCKED`, and `LEGAL_REVIEW_REQUIRED`. The current decision state is `PROTOTYPE_COPY_APPROVED`, `COMMERCIAL_BLOCKED`, and `LEGAL_REVIEW_REQUIRED`; `DEMO_READY` awaits implementation and fresh release evidence.
+- `RELEASE-READINESS` owns separate demonstration and commercial checklists. Passing the demonstration checklist never implies commercial readiness or legal compliance.
+- The route/content/footer/test implementation fits `ADR-STATIC-LOCALIZED-ROUTING` and requires a versioned execution plan, not a new RFC or ADR. Any real processor activation remains a separate security/privacy-sensitive governance change.
+
 ## PROPOSED
 
 - Public descriptor: “Estudio de desarrollo de software a medida.”
@@ -186,6 +199,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Extended visual identity and design-system decisions beyond the approved commercial homepage and Services-page baselines: custom mark, additional semantic colors, full component variants, and broader imagery.
 - Commercial Contact activation: complete Formspree storage/retention/subprocessor/transfer facts, operational ownership, restriction to `furlanich.github.io`, exact bilingual commercial Privacy owner text, professional privacy/legal review, and real staging/production delivery and deletion evidence remain OPEN. They do not block the approved zero-transmission demonstration and are not marked PASS by mock evidence.
 - Final legal and contractual review of commercial boundaries.
+- Commercial identity, CUIT/tax and invoicing facts, legal domicile, responsible-party/controller role, registration applicability, retention/deletion operations, international-transfer safeguards, consumer-law applicability, final Privacy, commercial Terms, and professional Argentine legal/privacy review are `OPEN — REQUIRED BEFORE COMMERCIAL RELEASE`.
 - Founder photograph and any later CV content refresh/redesign are **DEFERRED** and non-blocking for the text-led Studio/Founder experience.
 - Permission, functional verification, and approved bilingual item copy required to advance the remaining blocked/private project records or broaden the three READY records beyond their current summary-only detail scope.
 - Richer public evidence for WhatsApp automation and maintenance/consulting. Its absence is explicit and does not block the approved Services page.
@@ -213,4 +227,8 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Launching an empty Projects route, empty maturity group, or empty project-detail page.
 - Adding launch filters for the current small inventory.
 - Presenting MPC Administración as client or production work.
+- Publishing a fictional CUIT, legal domicile, incorporated name, controller registration, reviewer, certification, insurance fact, retention period, transfer safeguard, jurisdiction clause, warranty period, liability position, or other realistic-looking placeholder.
+- Presenting the dormant Formspree adapter, a proposed test inbox, or future provider configuration as current deployed behavior.
+- Combining the complete Legal Notice into Privacy or reducing it to a footer-only paragraph.
+- Publishing commercial Terms for transactions or contracting behavior that the site does not offer.
 - Repeating three service-card CTAs that all lead to the Services page root.
