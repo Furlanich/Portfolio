@@ -17,6 +17,7 @@ related:
   - RELEASE-READINESS
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-CONTACT-INQUIRY-PIPELINE
+  - PLAN-PRIVACY-LEGAL-RELEASE-READINESS
 last_verified: 2026-09-14
 ---
 
@@ -46,3 +47,5 @@ Governance PR #43 and [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inqu
 Initiative 7 keeps the existing static localized architecture and approves one new paired destination: `/aviso-legal/` ↔ `/en/legal/`. Revised Privacy and new Legal Notice content remain route-owned, shared compositions remain locale-agnostic, and both destinations join the semantic equivalence/footer contracts without entering primary navigation.
 
 This substantial cross-cutting implementation requires a versioned execution plan but no new RFC or ADR. The current deployed release still has the shorter Privacy content, no Legal Notice artifact or footer link, and a generic Next.js 404. Real Formspree activation remains outside this scope and would require separate security/privacy governance.
+
+[`PLAN-PRIVACY-LEGAL-RELEASE-READINESS`](../plans/active/privacy-legal-release-readiness.md) owns the approved implementation sequence and release evidence boundary.

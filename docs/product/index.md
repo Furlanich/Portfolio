@@ -15,6 +15,7 @@ related:
   - RELEASE-READINESS
   - PROJECT-INVENTORY
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
+  - PLAN-PRIVACY-LEGAL-RELEASE-READINESS
 last_verified: 2026-09-14
 ---
 
@@ -55,4 +56,4 @@ Initiative 4 makes the Projects product and design decisions complete. General R
 
 Initiative 6 delivered the complete local-only Contact demonstration and the first factual Privacy pair. The form remains the primary action, collects only name, email, optional company, and the problem to solve, simulates outcomes without transmitting values, preserves content on error, and retains WhatsApp, email, and phone fallbacks. [`PAGE-CONTACT / PAGE-PRIVACY`](pages/contact-and-privacy.md) owns the complete bilingual copy, state model, factual data flow, and dormant commercial requirements. `ADR-CONTACT-INQUIRY-DEMO-MODE` owns current deployment behavior; `ADR-CONTACT-INQUIRY-PIPELINE` preserves the dormant Formspree boundary.
 
-Initiative 7 approves mature bilingual demonstration Privacy copy and a separate bilingual prototype Legal Notice in [`PAGE-LEGAL`](pages/legal-notice.md). [The legal posture](../legal/prototype-legal-posture.md) owns fact/placeholder/review traceability, future templates remain non-public, and [release readiness](../release/readiness.md) keeps `DEMO_READY` distinct from `COMMERCIAL_BLOCKED` and `LEGAL_REVIEW_REQUIRED`. Implementation requires a versioned execution plan within the accepted static localized architecture; no new RFC or ADR is required.
+Initiative 7 approves mature bilingual demonstration Privacy copy and a separate bilingual prototype Legal Notice in [`PAGE-LEGAL`](pages/legal-notice.md). [The legal posture](../legal/prototype-legal-posture.md) owns fact/placeholder/review traceability, future templates remain non-public, and [release readiness](../release/readiness.md) keeps `DEMO_READY` distinct from `COMMERCIAL_BLOCKED` and `LEGAL_REVIEW_REQUIRED`. Implementation is sequenced by [`PLAN-PRIVACY-LEGAL-RELEASE-READINESS`](../plans/active/privacy-legal-release-readiness.md) within the accepted static localized architecture; no new RFC or ADR is required.
