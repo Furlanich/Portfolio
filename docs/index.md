@@ -7,6 +7,7 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
+  - PLAN-PRIVACY-LEGAL-RELEASE-READINESS
   - REF-CONTACT-DEMO-KIT
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
@@ -89,3 +90,5 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 [`LEGAL-PROTOTYPE-POSTURE`](legal/prototype-legal-posture.md) separates verified facts, generated explanatory copy, hidden future placeholders, and mandatory professional-review items. Non-public [Privacy](legal/future-commercial-privacy-template.md) and [Terms](legal/future-commercial-terms-template.md) templates use explicit bracketed requirements instead of plausible filler.
 
 [`RELEASE-READINESS`](release/readiness.md) defines `PROTOTYPE_COPY_APPROVED`, `DEMO_READY`, `COMMERCIAL_BLOCKED`, and `LEGAL_REVIEW_REQUIRED`. Current copy is approved, but `DEMO_READY` awaits implementation and fresh evidence; commercial release remains blocked. The approved implementation fits the existing static localized architecture and requires a versioned execution plan, not a new RFC or ADR.
+
+[`PLAN-PRIVACY-LEGAL-RELEASE-READINESS`](plans/active/privacy-legal-release-readiness.md) is the active Route B execution strategy. It sequences content contracts, public route/footer delivery, deterministic release-integrity gates, and same-commit deployed proof while keeping future commercial material documentation-only.

@@ -11,6 +11,7 @@ related:
   - TEST-PLAYWRIGHT
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - ADR-CONTACT-INQUIRY-PIPELINE
+  - PLAN-PRIVACY-LEGAL-RELEASE-READINESS
 last_verified: 2026-09-14
 ---
 
@@ -79,3 +80,5 @@ Until every applicable gate passes, status remains `COMMERCIAL_BLOCKED` and `LEG
 The approved `/aviso-legal/` ↔ `/en/legal/` route pair, revised Privacy content, footer links, and release validation reuse `ADR-STATIC-LOCALIZED-ROUTING` and the current design/test system. They change no hosting, runtime dependency, backend, processor, authentication, or localization architecture.
 
 Implementation is substantial and cross-cutting, so it requires a versioned execution plan. It does not require a new RFC or ADR. A later activation of Formspree or any other real inquiry processor would change a security/privacy-sensitive accepted boundary and requires separate governance review before its implementation plan.
+
+[`PLAN-PRIVACY-LEGAL-RELEASE-READINESS`](../plans/active/privacy-legal-release-readiness.md) owns the four-PR implementation, generated-public integrity checks, same-commit deployed proof, and the rule that `DEMO_READY` remains unassigned until every demonstration gate passes.

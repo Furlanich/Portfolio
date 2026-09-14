@@ -18,6 +18,7 @@ related:
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-STUDIO-FOUNDER-COMPLETION
   - PLAN-CONTACT-INQUIRY-PIPELINE
+  - PLAN-PRIVACY-LEGAL-RELEASE-READINESS
   - PAGE-HOME
   - PAGE-SERVICES
   - PAGE-PROJECTS
@@ -80,7 +81,7 @@ Initiative 5 closes Studio and Founder product/design decisions within the same 
 
 Initiative 6 has two accepted modes. [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) governs the current public portfolio/technical demonstration at `https://furlanich.github.io/Portfolio/`: the complete four-field Contact UI uses a local adapter, simulates success/failure, and sends or stores nothing. [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md) retains Formspree behind the same provider-neutral port for a later commercial activation. [`PLAN-CONTACT-INQUIRY-PIPELINE`](docs/plans/completed/contact-inquiry-pipeline.md) records the completed demonstration Privacy/Contact and deployed zero-transmission proof while preserving real privacy/legal/provider/inbox/deletion gates for separate activation.
 
-Initiative 7 approves a mature demonstration Privacy revision and a dedicated `/aviso-legal/` ↔ `/en/legal/` Legal Notice pair. Both remain locale-owned static content composed by shared locale-agnostic Server Components, use the existing shell/design primitives, preserve trailing slashes and optional base-path behavior, and appear in the footer rather than primary navigation. The implementation adds no dependency, backend, processor, cookie/analytics system, hosting change, runtime locale state, authentication, or new design-system architecture. It requires a versioned execution plan because it crosses routes, content, equivalence, footer, static verification, browser QA, and deployed proof; no new RFC or ADR is required.
+Initiative 7 approves a mature demonstration Privacy revision and a dedicated `/aviso-legal/` ↔ `/en/legal/` Legal Notice pair. Both remain locale-owned static content composed by shared locale-agnostic Server Components, use the existing shell/design primitives, preserve trailing slashes and optional base-path behavior, and appear in the footer rather than primary navigation. The implementation adds no dependency, backend, processor, cookie/analytics system, hosting change, runtime locale state, authentication, or new design-system architecture. [`PLAN-PRIVACY-LEGAL-RELEASE-READINESS`](docs/plans/active/privacy-legal-release-readiness.md) sequences routes, content, equivalence, footer, static verification, browser QA, and deployed proof; no new RFC or ADR is required.
 
 The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. The default GitHub Pages project URL is the approved canonical deployment URL; no custom domain is planned. Long-term hosting may still be reconsidered only through a future architecture decision while current static-export and `/Portfolio` base-path constraints remain.
 

@@ -26,6 +26,7 @@ related:
   - PAGE-LEGAL
   - LEGAL-PROTOTYPE-POSTURE
   - RELEASE-READINESS
+  - PLAN-PRIVACY-LEGAL-RELEASE-READINESS
   - CONTENT-LOCALIZATION
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
@@ -186,6 +187,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Approved status terms are `PROTOTYPE_COPY_APPROVED`, `DEMO_READY`, `COMMERCIAL_BLOCKED`, and `LEGAL_REVIEW_REQUIRED`. The current decision state is `PROTOTYPE_COPY_APPROVED`, `COMMERCIAL_BLOCKED`, and `LEGAL_REVIEW_REQUIRED`; `DEMO_READY` awaits implementation and fresh release evidence.
 - `RELEASE-READINESS` owns separate demonstration and commercial checklists. Passing the demonstration checklist never implies commercial readiness or legal compliance.
 - The route/content/footer/test implementation fits `ADR-STATIC-LOCALIZED-ROUTING` and requires a versioned execution plan, not a new RFC or ADR. Any real processor activation remains a separate security/privacy-sensitive governance change.
+- `PLAN-PRIVACY-LEGAL-RELEASE-READINESS` is the active four-PR execution strategy; it preserves independent demonstration and commercial gates and leaves commercial activation blockers OPEN.
 
 ## PROPOSED
 
