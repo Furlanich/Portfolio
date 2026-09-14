@@ -7,8 +7,12 @@ related:
   - CONTENT-LOCALIZATION
   - PAGE-HOME
   - PAGE-CONTACT
+  - PAGE-PRIVACY
+  - PAGE-LEGAL
+  - LEGAL-PROTOTYPE-POSTURE
+  - RELEASE-READINESS
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # Vision and positioning
@@ -34,6 +38,8 @@ The intended long-term product remains the founder-led commercial website descri
 The canonical demonstration URL is `https://furlanich.github.io/Portfolio/`. Commercially oriented copy and service structures demonstrate the intended product direction; they are not evidence that the corresponding commercial operation is active. Contact and Privacy must make this boundary explicit. The public Contact form may demonstrate fields, validation, loading, success, failure, preservation, retry, and fallbacks only through the zero-transmission mode accepted by [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../decisions/contact-inquiry-demonstration-mode.md).
 
 Changing from demonstration to commercial operation is a future product, legal, privacy, operational, and release decision. It requires repository synchronization and a human-reviewed activation plan rather than an environment-only switch.
+
+The public release may look professionally prepared through exact bilingual Privacy and Legal Notice content while remaining truthful about this boundary. `PROTOTYPE_COPY_APPROVED` is a content status, not a corporate, tax, regulatory, compliance, or legal-review claim. `DEMO_READY` never implies commercial readiness; commercial operation remains `COMMERCIAL_BLOCKED` and `LEGAL_REVIEW_REQUIRED` until its real facts and review gates are closed.
 
 ## Commercial identity
 

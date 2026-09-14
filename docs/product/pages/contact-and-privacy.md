@@ -4,6 +4,7 @@ type: page-spec
 status: OPEN
 related:
   - PAGE-PRIVACY
+  - PAGE-LEGAL
   - HOME-CTA
   - IA-SITE
   - PAGE-FOUNDER
@@ -16,6 +17,8 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - REF-CONTACT-DEMO-KIT
+  - LEGAL-PROTOTYPE-POSTURE
+  - RELEASE-READINESS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
 last_verified: 2026-09-14
 ---
@@ -389,87 +392,139 @@ Provider capabilities and terms were rechecked against first-party [Formspree AJ
 
 ## Exact public demonstration Privacy copy — APPROVED
 
-The following copy describes the current deployed behavior and may be published while the site remains in demonstration mode. It is product disclosure, not a professional legal opinion and not reusable for real inquiry processing.
+The following copy describes the current deployed behavior and may replace the shorter demonstration page while the site remains in zero-transmission mode. It is `GENERATED EXPLANATORY COPY` with status `PROTOTYPE_COPY_APPROVED`, not a professional legal opinion and not reusable for real inquiry processing.
 
 ### Spanish demonstration Privacy page
 
+**Page label:** `Política de privacidad`
+
+**Prototype marker:** `Versión demostrativa`
+
+**Revision:** `Última actualización: septiembre de 2026.`
+
 **H1**
 
-> Privacidad de esta demostración
+> Política de privacidad
 
 **Introduction**
 
-> Este sitio funciona como portfolio y demostración técnica. No acepta consultas comerciales mediante el formulario y no presenta esta página como una política revisada por un profesional legal.
+> Esta Política de privacidad explica qué ocurre con la información al visitar la demostración pública de FURLANICH y al probar su formulario de Contacto. Describe únicamente el comportamiento actual del sitio y no se presenta como una política para operaciones comerciales ni como texto revisado o certificado por un profesional legal.
 
-**H2: Qué ocurre con los datos del formulario**
+**Prototype-status callout heading:** `Alcance del prototipo`
 
-> Los valores que escribís en nombre, correo electrónico, empresa y mensaje permanecen temporalmente en la memoria de esta página. La simulación los valida y muestra estados de carga, éxito o error, pero no los envía a FURLANICH, Formspree, Gmail ni a ninguna bandeja de entrada.
+> FURLANICH se encuentra en una etapa de crecimiento y preparación comercial. El sitio muestra nuestros servicios, productos, proyectos y capacidades profesionales, pero el formulario todavía funciona como una demostración: no crea una consulta comercial ni envía sus valores a Samuel o a un proveedor.
 
-> Después de un éxito simulado, los campos se limpian. Si hay un error de validación o una falla simulada, los valores permanecen visibles para que puedas corregirlos o volver a probar. Al recargar la página o salir de ella, la implementación de Contacto no los conserva.
+**H2: 1. Alcance de esta demostración**
 
-**H2: Alojamiento y datos técnicos**
+> Esta política se aplica al sitio estático publicado en `https://furlanich.github.io/Portfolio/`. No describe una futura plataforma comercial, un servicio contratado por un cliente ni el tratamiento que realicen sitios o aplicaciones externos después de que decidas abrirlos.
 
-> GitHub Pages publica los archivos estáticos del sitio en `https://furlanich.github.io/Portfolio/`. GitHub informa que registra la dirección IP de quienes visitan sitios de GitHub Pages por motivos de seguridad. Ese tratamiento técnico se rige por la documentación y la declaración de privacidad de GitHub.
+**H2: 2. Información ingresada en Contacto**
 
-> FURLANICH no agrega analítica, publicidad, perfiles, CRM, almacenamiento del formulario ni eventos de conversión para esta demostración.
-
-**H2: Alternativas externas**
-
-> Los enlaces de WhatsApp, email y teléfono son ejemplos funcionales separados del formulario. Si elegís uno, tu dispositivo abre un servicio externo y cualquier dato que decidas comunicar queda sujeto a ese servicio. Los valores escritos en el formulario no se copian automáticamente.
-
-**H2: Información sensible**
+> El formulario permite escribir nombre, correo electrónico, empresa opcional y un mensaje sobre la necesidad a resolver. Esos campos existen para demostrar validación, carga, éxito, error, corrección y reintento en la interfaz.
 
 > No ingreses contraseñas, credenciales, datos de producción de clientes, información sensible ni archivos. El formulario no solicita ni necesita esos datos para demostrar su funcionamiento.
 
-**H2: Conservación y consultas**
+**H2: 3. Cómo se maneja la información del formulario**
 
-> La simulación no crea copias en un proveedor, una base de datos o una bandeja de entrada. Solo mantiene los valores en la página durante la interacción descrita arriba. Para preguntas sobre esta demostración, podés escribir a `samuelfurlanich@gmail.com` sin copiar datos sensibles.
+> Los valores permanecen temporalmente en la memoria de la página mientras interactuás con el formulario. La aplicación los valida y simula un resultado después de una breve espera local, pero no los transmite mediante `fetch`, XHR, balizas, navegación, Formspree, Gmail ni otro proveedor, y no llega una copia a ninguna bandeja de entrada.
 
-**H2: Activación comercial futura**
+> Después de un éxito simulado, los campos se limpian. Si hay un error de validación o una falla simulada, los valores permanecen visibles para que puedas corregirlos o volver a probar. Al recargar la página o salir de ella, la implementación de Contacto los descarta.
 
-> Antes de habilitar un envío real, FURLANICH deberá reemplazar esta explicación por información verificada sobre responsables, proveedores, finalidades, conservación, transferencias y derechos; completar una revisión profesional; y demostrar la entrega y eliminación de una consulta de prueba. Nada de eso se considera aprobado por esta demostración.
+**H2: 4. Alojamiento y datos técnicos**
 
-**GitHub link label:** `Ver la declaración de privacidad de GitHub`
+> GitHub Pages publica los archivos estáticos del sitio. GitHub informa que registra y conserva la dirección IP de quienes visitan sitios de GitHub Pages por motivos de seguridad. También puede procesar datos técnicos ordinarios de uso de acuerdo con su propia documentación y declaración de privacidad.
+
+> Los valores del formulario de Contacto no se envían a GitHub Pages. El navegador solicita a GitHub solamente los archivos y recursos necesarios para mostrar el sitio.
+
+**H2: 5. Servicios y enlaces externos**
+
+> Los enlaces a WhatsApp, email y teléfono son alternativas funcionales separadas del formulario. Si elegís una, tu dispositivo abre un servicio externo y vos decidís qué información comunicar. Los valores escritos en el formulario no se copian automáticamente.
+
+> El sitio también puede enlazar a GitHub, LinkedIn y destinos de proyectos o repositorios. Cada servicio externo opera bajo sus propias condiciones, disponibilidad y reglas de privacidad. FURLANICH no controla el tratamiento que realicen esos servicios una vez que los abrís.
+
+**H2: 6. Cookies, almacenamiento del navegador y analítica**
+
+> La aplicación FURLANICH no utiliza intencionalmente cookies, `localStorage`, `sessionStorage`, identificadores de analítica, identificadores publicitarios ni eventos de analítica de consultas en esta demostración. Esta afirmación se limita al código y al comportamiento actual de FURLANICH; GitHub y los destinos externos mantienen sus propias prácticas.
+
+**H2: 7. Conservación en la demostración**
+
+> La simulación no crea copias de los valores del formulario en un proveedor, una base de datos, un registro de la aplicación o una bandeja de entrada. Los valores existen en la página durante la interacción descrita y desaparecen al recargar o abandonar la ruta.
+
+**H2: 8. Preguntas sobre privacidad**
+
+> Para preguntas sobre esta demostración, podés escribir a `samuelfurlanich@gmail.com`. No incluyas información sensible. Antes de habilitar un envío real, FURLANICH deberá publicar información verificada sobre la identidad responsable, finalidades, proveedores, destinatarios, conservación, transferencias y ejercicio de derechos, además de completar una revisión profesional.
+
+**H2: 9. Versión y actualizaciones**
+
+> Esta versión refleja el comportamiento auditado en septiembre de 2026. La política se actualizará si cambia el alojamiento, el formulario, el almacenamiento, la analítica o cualquier otro tratamiento relevante. La fecha publicada debe corresponder siempre a una revisión real; no se inventará un historial de versiones.
+
+**GitHub link label:** `Ver la información de privacidad de GitHub Pages`
 
 ### English demonstration Privacy page
 
+**Page label:** `Privacy Policy`
+
+**Prototype marker:** `Demonstration version`
+
+**Revision:** `Last updated: September 2026.`
+
 **H1**
 
-> Privacy in this demonstration
+> Privacy Policy
 
 **Introduction**
 
-> This site operates as a portfolio and technical showcase. It does not accept commercial inquiries through the form and does not present this page as a professionally reviewed legal policy.
+> This Privacy Policy explains what happens to information when you visit the public FURLANICH demonstration and try its Contact form. It describes only the website's current behavior; it is not presented as a policy for commercial operations or as text reviewed or certified by legal counsel.
 
-**H2: What happens to form data**
+**Prototype-status callout heading:** `Prototype scope`
 
-> Values entered in the name, email, company, and message fields remain temporarily in this page's memory. The simulation validates them and shows loading, success, or failure states, but does not send them to FURLANICH, Formspree, Gmail, or any inbox.
+> FURLANICH is growing and preparing for commercial operations. The website showcases our services, products, projects, and professional capabilities, but the form still operates as a demonstration: it does not create a commercial inquiry or send its values to Samuel or a provider.
 
-> After simulated success, the fields are cleared. After a validation error or simulated failure, the values remain visible so you can correct them or try again. Reloading or leaving the page causes the Contact implementation to discard them.
+**H2: 1. Scope of this demonstration**
 
-**H2: Hosting and technical data**
+> This policy applies to the static website published at `https://furlanich.github.io/Portfolio/`. It does not describe a future commercial platform, a client engagement, or processing performed by external websites or applications after you choose to open them.
 
-> GitHub Pages publishes the site's static files at `https://furlanich.github.io/Portfolio/`. GitHub states that it logs the IP addresses of visitors to GitHub Pages sites for security purposes. That technical processing is governed by GitHub's documentation and privacy statement.
+**H2: 2. Information entered in Contact**
 
-> FURLANICH adds no analytics, advertising, profiling, CRM, form storage, or conversion events to this demonstration.
-
-**H2: External alternatives**
-
-> The WhatsApp, email, and phone links are functional examples separate from the form. Selecting one opens an external service on your device, and any information you choose to communicate is governed by that service. Values entered in the form are not copied automatically.
-
-**H2: Sensitive information**
+> The form lets you enter a name, email address, optional company, and a message about the need you want to address. These fields exist to demonstrate validation, loading, success, failure, correction, and retry behavior in the interface.
 
 > Do not enter passwords, credentials, client production data, sensitive information, or files. The form neither requests nor needs that information to demonstrate its behavior.
 
-**H2: Retention and questions**
+**H2: 3. How form information is handled**
 
-> The simulation creates no provider, database, or inbox copy. It keeps values only on the page for the interaction described above. For questions about this demonstration, you may email `samuelfurlanich@gmail.com` without including sensitive information.
+> Values remain temporarily in the page's memory while you interact with the form. The application validates them and simulates a result after a short local delay, but does not transmit them through `fetch`, XHR, beacons, navigation, Formspree, Gmail, or another provider, and no inbox receives a copy.
 
-**H2: Future commercial activation**
+> After simulated success, the fields are cleared. After a validation error or simulated failure, the values remain visible so you can correct them or try again. Reloading or leaving the page causes the Contact implementation to discard them.
 
-> Before enabling real submission, FURLANICH must replace this explanation with verified information about responsible parties, providers, purposes, retention, transfers, and rights; complete professional review; and prove delivery and deletion of a test inquiry. This demonstration does not approve any of those items.
+**H2: 4. Hosting and technical data**
 
-**GitHub link label:** `View GitHub's privacy statement`
+> GitHub Pages publishes the website's static files. GitHub states that it logs and stores the IP addresses of visitors to GitHub Pages sites for security purposes. It may also process ordinary service-usage data under its own documentation and privacy statement.
+
+> Contact form values are not sent to GitHub Pages. The browser requests from GitHub only the files and resources needed to display the website.
+
+**H2: 5. External services and links**
+
+> WhatsApp, email, and phone links are functional alternatives separate from the form. If you select one, your device opens an external service and you decide what information to communicate. Values entered in the form are not copied automatically.
+
+> The website may also link to GitHub, LinkedIn, and project or repository destinations. Each external service operates under its own terms, availability, and privacy practices. FURLANICH does not control how those services process information after you open them.
+
+**H2: 6. Cookies, browser storage, and analytics**
+
+> The FURLANICH application does not intentionally use cookies, `localStorage`, `sessionStorage`, analytics identifiers, advertising identifiers, or inquiry-analytics events in this demonstration. This statement is limited to FURLANICH's current code and behavior; GitHub and external destinations maintain their own practices.
+
+**H2: 7. Retention in the demonstration**
+
+> The simulation creates no copy of form values in a provider, database, application log, or inbox. Values exist on the page during the interaction described above and disappear when you reload or leave the route.
+
+**H2: 8. Privacy questions**
+
+> Questions about this demonstration may be sent to `samuelfurlanich@gmail.com`. Do not include sensitive information. Before enabling real submission, FURLANICH must publish verified information about the responsible identity, purposes, providers, recipients, retention, transfers, and rights procedures, and complete professional review.
+
+**H2: 9. Version and updates**
+
+> This version reflects behavior audited in September 2026. The policy will be updated if hosting, form submission, storage, analytics, or any other relevant processing changes. The published date must always reflect a real revision; no earlier version history will be invented.
+
+**GitHub link label:** `View GitHub Pages privacy information`
 
 ## Commercial privacy and deployed data-path requirements — APPROVED requirements; legal wording OPEN
 

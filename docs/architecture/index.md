@@ -12,6 +12,9 @@ related:
   - PAGE-PROJECTS
   - PAGE-CONTACT
   - PAGE-PRIVACY
+  - PAGE-LEGAL
+  - LEGAL-PROTOTYPE-POSTURE
+  - RELEASE-READINESS
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-CONTACT-INQUIRY-PIPELINE
 last_verified: 2026-09-14
@@ -37,3 +40,9 @@ Incrementally modernize this repository, remain static-first initially, reduce u
 The current public mode is the zero-transmission demonstration recorded by [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../decisions/contact-inquiry-demonstration-mode.md): `ContactForm -> submitInquiry() -> demo adapter -> local simulated outcome`. It preserves the complete form, validation, state, localization, and accessibility behavior without a provider, inbox, storage, or commercial-intake claim.
 
 Governance PR #43 and [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) preserve `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured inbox` for a separately reviewed commercial activation. PR #45 merged that provider-neutral boundary without route integration. [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md) records the completed demonstration delivery and deployed zero-transmission proof; real account/configuration, processor/transfer, professional review, inbox delivery, and deletion remain OPEN future gates.
+
+## Privacy and Legal release architecture — APPROVED, NOT IMPLEMENTED
+
+Initiative 7 keeps the existing static localized architecture and approves one new paired destination: `/aviso-legal/` ↔ `/en/legal/`. Revised Privacy and new Legal Notice content remain route-owned, shared compositions remain locale-agnostic, and both destinations join the semantic equivalence/footer contracts without entering primary navigation.
+
+This substantial cross-cutting implementation requires a versioned execution plan but no new RFC or ADR. The current deployed release still has the shorter Privacy content, no Legal Notice artifact or footer link, and a generic Next.js 404. Real Formspree activation remains outside this scope and would require separate security/privacy governance.

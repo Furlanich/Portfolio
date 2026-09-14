@@ -11,11 +11,14 @@ related:
   - PAGE-FOUNDER
   - PAGE-CONTACT
   - PAGE-PRIVACY
+  - PAGE-LEGAL
+  - LEGAL-PROTOTYPE-POSTURE
+  - RELEASE-READINESS
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # Content and localization
@@ -169,3 +172,18 @@ For a later commercial activation, copy confirms provider acceptance rather than
 The accepted processor name and boundary come from `ADR-CONTACT-INQUIRY-PIPELINE`. Exact storage behavior, material subprocessors, international-transfer disclosure, responsible legal/business identity, retention wording, and request/legal notice must come from verified provisioning and professional legal review. No translation may guess or generalize those deployed facts.
 
 On 2026-09-12, the owner approved the zero-transmission demonstration copy and mock resource kit for deployment on `main`. This authorization unblocks demonstration implementation only. Exact storage behavior, material subprocessors, international-transfer disclosure, responsible legal/business identity, retention wording, request notice, and professional review remain OPEN before any real commercial submission.
+
+## Privacy and Legal Notice bilingual scope — APPROVED
+
+`PAGE-PRIVACY` owns the exact mature demonstration Privacy copy and `PAGE-LEGAL` owns the exact prototype Legal Notice copy. Spanish uses professional Argentine phrasing and restrained voseo; English is a natural business adaptation. Both locales must preserve the same facts, limitations, hierarchy, and revision without duplicating Spanish syntax.
+
+Approved public status treatments are:
+
+- Privacy: `Versión demostrativa` ↔ `Demonstration version`.
+- Legal Notice: `Seguimos creciendo` ↔ `Building what comes next`.
+- Shared factual callout: `Alcance del prototipo` ↔ `Prototype scope`.
+- Revision: `Última actualización: septiembre de 2026.` ↔ `Last updated: September 2026.`
+
+These are product-content decisions, not evidence of incorporation, registration, compliance, certification, or legal review. `PROTOTYPE_COPY_APPROVED` means that the bilingual copy is approved for the observed demonstration only. Future commercial Privacy and Terms templates remain non-public and retain bracketed placeholders until facts and professional review exist.
+
+Do not translate `COMMERCIAL_BLOCKED` or `LEGAL_REVIEW_REQUIRED` into reassuring public marketing language. They are internal release states. Do not publish CUIT, legal domicile, incorporated name, controller registration, retention period, transfer safeguard, reviewer identity, insurance, certification, jurisdiction, warranty, liability, or other legal/commercial data without verified evidence and the required review.
