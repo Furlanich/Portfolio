@@ -28,7 +28,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 ---
 
 # FURLANICH architecture map
@@ -47,11 +47,13 @@ Task 2 current state: the complete commercial homepage is merged with fourteen s
 
 ## Current Contact demonstration — Task 4 / PR 4
 
+This section supersedes the older pre-merge baseline wording above: Contact Task 4 is merged in `e17fd1e`, deployed on `gh-pages`, and recorded by the completed Contact + Inquiry plan.
+
 The public Contact pair at /contacto/ and /en/contact/ now renders a shared server-side ContactPage with a narrow client-side ContactForm. The form keeps exactly four validated fields, uses React Hook Form for browser values, and uses a pure reducer for validation, submission, simulated success, failure, retry, duplicate prevention, focus, announcements, preservation, and reset behavior.
 
 The client boundary constructs createDemoSubmitInquiry() with the approved 650 ms local delay. A normalized failure@example.invalid email produces the opaque unavailable scenario; other validated values produce simulated acceptance. No Contact submission calls fetch, XHR, beacon, navigation, storage, logging, analytics, mail, or a provider endpoint. WhatsApp, email, and phone remain explicit external fallback links in that order. The deployment workflow no longer receives NEXT_PUBLIC_FORMSPREE_ENDPOINT; the dormant Formspree adapter remains isolated for a separately reviewed commercial activation.
 
-Task 3 / PR 3 was confirmed merged as PR #47 after the earlier transient branch-state note. Task 4 automated RED/GREEN, static-export, browser, and representative axe evidence is recorded in the active Contact + Inquiry implementation plan; manual rendered visual and assistive-technology review remains a human PR responsibility.
+Task 3 / PR 3 was confirmed merged as PR #47 after the earlier transient branch-state note. Task 4 / PR 4 is merged as `e17fd1e` and deployed. Automated RED/GREEN, static-export, browser, representative axe, and deployed zero-transmission evidence is recorded in the completed Contact + Inquiry implementation plan; no whole-site conformance claim is made.
 
 ## APPROVED product constraints
 
@@ -67,7 +69,7 @@ Initiative 4's Projects/Evidence decisions also fit the accepted boundary. [`PLA
 
 Initiative 5 closes Studio and Founder product/design decisions within the same accepted boundary. The approved implementation adds the existing sitemap's /estudio/ and /en/about/ pair as semantic Studio routes, retains the nested Founder pair, routes primary navigation to Studio, and uses route-owned localized content with shared locale-agnostic semantic components. It reuses existing tokens, primitives, static export, trailing slashes, and optional base-path behavior. The completed work is recorded by [`PLAN-STUDIO-FOUNDER-COMPLETION`](docs/plans/completed/studio-founder-completion.md), which sequences route/content contracts, Studio publication, Founder completion, and cross-page verification in four reviewable implementation PRs. It requires no RFC, new ADR, CMS, backend, runtime localization, dependency, hosting change, or new design-system architecture.
 
-Initiative 6 has two accepted modes. [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) governs the current public portfolio/technical demonstration at `https://furlanich.github.io/Portfolio/`: the complete four-field Contact UI uses a local adapter, simulates success/failure, and sends or stores nothing. [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md) retains Formspree behind the same provider-neutral port for a later commercial activation. [`PLAN-CONTACT-INQUIRY-PIPELINE`](docs/plans/active/contact-inquiry-pipeline.md) delivers demonstration Privacy/Contact and deployed zero-transmission proof while preserving real privacy/legal/provider/inbox/deletion gates for separate activation.
+Initiative 6 has two accepted modes. [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) governs the current public portfolio/technical demonstration at `https://furlanich.github.io/Portfolio/`: the complete four-field Contact UI uses a local adapter, simulates success/failure, and sends or stores nothing. [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md) retains Formspree behind the same provider-neutral port for a later commercial activation. [`PLAN-CONTACT-INQUIRY-PIPELINE`](docs/plans/completed/contact-inquiry-pipeline.md) records the completed demonstration Privacy/Contact and deployed zero-transmission proof while preserving real privacy/legal/provider/inbox/deletion gates for separate activation.
 
 The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. The default GitHub Pages project URL is the approved canonical deployment URL; no custom domain is planned. Long-term hosting may still be reconsidered only through a future architecture decision while current static-export and `/Portfolio` base-path constraints remain.
 

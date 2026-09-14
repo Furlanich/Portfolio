@@ -12,7 +12,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # Execution plans
@@ -23,11 +23,9 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 - [Completed Stage B harness plan](completed/stage-b-agent-engineering-harness.md)
 
 ## Active
-
-- [`PLAN-CONTACT-INQUIRY-PIPELINE`](active/contact-inquiry-pipeline.md): active sequence with the provider-neutral boundary complete, followed by paired demonstration Privacy routes, a full accessible zero-transmission Contact simulation, deployed GitHub Pages proof, and preserved future commercial activation gates.
-
 ## Completed
 
+- [`PLAN-CONTACT-INQUIRY-PIPELINE`](completed/contact-inquiry-pipeline.md): completed the bilingual demonstration Privacy and Contact experience, deployed zero-transmission proof, and preserved future commercial activation gates.
 - [`PLAN-STUDIO-FOUNDER-COMPLETION`](completed/studio-founder-completion.md): completed the four-PR bilingual Studio experience, Founder profile, cross-page integration, evidence links, and verification sequence.
 - [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](completed/projects-evidence-experience.md): completed the fail-closed public content boundary, bilingual Projects index, approved paired detail routes, legacy project-path cleanup, and evidence-boundary verification.
 

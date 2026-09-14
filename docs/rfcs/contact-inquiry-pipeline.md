@@ -13,7 +13,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # Contact inquiry submission pipeline
@@ -246,7 +246,7 @@ Compared with a Worker, FURLANICH has less control over CORS semantics, request-
 
 ## Migration and implementation impact
 
-This accepted RFC is recorded by [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md). [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) sequences the following work before release:
+This accepted RFC is recorded by [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md). The completed [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md) records the demonstration release sequence; commercial activation remains separately gated:
 
 1. provision and verify the dedicated Formspree form without committing secrets or real data;
 2. configure and staging-test the exact field schema, max lengths, file/unknown-field rejection, recipient, subject, `Reply-To`, Formshield, honeypot, domain restriction, CAPTCHA-off posture, and 30-day retention behavior;
@@ -302,13 +302,13 @@ Do not approve a full-site hosting migration, browser-side SMTP/Gmail/Resend sec
 
 ## Approval resolution
 
-The repository owner accepted Formspree behind the narrow `submitInquiry()` boundary when [Governance PR #43](https://github.com/Furlanich/Portfolio/pull/43) was merged on 2026-09-10. [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) records the durable decision, and [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) owns its execution.
+The repository owner accepted Formspree behind the narrow `submitInquiry()` boundary when [Governance PR #43](https://github.com/Furlanich/Portfolio/pull/43) was merged on 2026-09-10. [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) records the durable decision, and [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md) records its completed demonstration execution while the commercial activation gates remain OPEN.
 
 The merge resolves provider architecture, not the release gates. Verified account/schema/delivery/deletion behavior, the final production hostname, complete processor chain and transfer treatment, professional privacy/legal review, accurate deployed Privacy pages, deterministic checks, and labeled staging/production smoke evidence remain required.
 
 ## Status
 
-**APPROVED.** The repository owner approved this architecture by merging [Governance PR #43](https://github.com/Furlanich/Portfolio/pull/43) on 2026-09-10. The original comparison, alternatives, and trade-offs remain above as decision history. Application delivery is governed by `ADR-CONTACT-INQUIRY-PIPELINE` and `PLAN-CONTACT-INQUIRY-PIPELINE`; keep the Contact form disabled until the configuration, Privacy page, legal review, deterministic tests, and labeled delivery/deletion smoke gates are complete.
+**APPROVED.** The repository owner approved this architecture by merging [Governance PR #43](https://github.com/Furlanich/Portfolio/pull/43) on 2026-09-10. The original comparison, alternatives, and trade-offs remain above as decision history. Commercial Formspree delivery is governed by `ADR-CONTACT-INQUIRY-PIPELINE` and the completed `PLAN-CONTACT-INQUIRY-PIPELINE`; keep that activation disabled until the configuration, commercial Privacy page, legal review, deterministic tests, and labeled delivery/deletion smoke gates are complete.
 
 ## Subsequent demonstration-mode decision — 2026-09-12
 

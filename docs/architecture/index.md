@@ -14,7 +14,7 @@ related:
   - PAGE-PRIVACY
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-CONTACT-INQUIRY-PIPELINE
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # Existing-system documentation
@@ -32,8 +32,8 @@ The homepage-foundation localized-routing target is approved and delivered under
 
 Incrementally modernize this repository, remain static-first initially, reduce unnecessary client boundaries, and modernize CI later rather than adopt a greenfield rebuild. This is preserved discovery knowledge, not a target-architecture decision. It authorizes no architecture or CI change until a later architecture stage resolves it.
 
-## Contact inquiry architecture — ACCEPTED DUAL MODE, EXECUTION ACTIVE
+## Contact inquiry architecture — ACCEPTED DUAL MODE, EXECUTION COMPLETE
 
 The current public mode is the zero-transmission demonstration recorded by [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../decisions/contact-inquiry-demonstration-mode.md): `ContactForm -> submitInquiry() -> demo adapter -> local simulated outcome`. It preserves the complete form, validation, state, localization, and accessibility behavior without a provider, inbox, storage, or commercial-intake claim.
 
-Governance PR #43 and [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) preserve `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured inbox` for a separately reviewed commercial activation. PR #45 merged that provider-neutral boundary without route integration. [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) now owns demonstration delivery and deployed zero-transmission proof; real account/configuration, processor/transfer, professional review, inbox delivery, and deletion remain OPEN future gates.
+Governance PR #43 and [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) preserve `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured inbox` for a separately reviewed commercial activation. PR #45 merged that provider-neutral boundary without route integration. [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md) records the completed demonstration delivery and deployed zero-transmission proof; real account/configuration, processor/transfer, professional review, inbox delivery, and deletion remain OPEN future gates.

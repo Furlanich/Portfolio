@@ -3,7 +3,7 @@ id: PLAN-CONTACT-INQUIRY-PIPELINE
 type: execution-plan
 title: Contact + Inquiry Pipeline implementation plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 owners:
   - product
   - privacy
@@ -11,7 +11,7 @@ owners:
   - frontend
   - qa
 created: 2026-09-11
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 related:
   - GOV-ENGINEERING-LIFECYCLE
   - PAGE-CONTACT
@@ -76,9 +76,9 @@ If this plan conflicts with an owner, the owner wins and this plan must be synch
 
 ## Current-main baseline
 
-Current `main` at `f087479` contains the provider-neutral inquiry types, pure validator, and direct-fetch Formspree adapter merged through [PR #45](https://github.com/Furlanich/Portfolio/pull/45), the approved demonstration-mode governance amendment in [PR #46](https://github.com/Furlanich/Portfolio/pull/46), and the Task 3 Privacy implementation merged through [PR #47](https://github.com/Furlanich/Portfolio/pull/47). Task 4 is implemented on this isolated branch; its Contact route imports only the local demonstration adapter. Focused adapter and validator tests pass without live network access.
+Current `main` at `e17fd1e` contains the provider-neutral inquiry boundary from [PR #45](https://github.com/Furlanich/Portfolio/pull/45), the approved demonstration-mode governance amendment from [PR #46](https://github.com/Furlanich/Portfolio/pull/46), the Task 3 Privacy implementation from [PR #47](https://github.com/Furlanich/Portfolio/pull/47), and the merged Task 4 Contact demonstration. The deployed `gh-pages` branch also points to `e17fd1e`; both Contact routes import only the local demonstration adapter. Focused, repository, browser, accessibility, and deployed checks are recorded below.
 
-`/contacto/` and `/en/contact/` still render the direct-channel `MinimumDestination`; Task 3 now supplies the paired `/privacidad/` and `/en/privacy/` routes and localized footer destinations. The deployment workflow passes `NEXT_PUBLIC_FORMSPREE_ENDPOINT`, but no current route consumes it. The application exports with `NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}`, producing `https://furlanich.github.io/Portfolio/`.
+`/contacto/` and `/en/contact/` now render the shared four-field local-only demonstration with the paired `/privacidad/` and `/en/privacy/` routes and localized footer destinations. The deployment workflow no longer supplies `NEXT_PUBLIC_FORMSPREE_ENDPOINT`. The application exports with `NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}`, producing `https://furlanich.github.io/Portfolio/`.
 
 ## Reviewable Pull Request sequence
 
@@ -87,16 +87,16 @@ Current `main` at `f087479` contains the provider-neutral inquiry types, pure va
 | Governance | `docs: approve Contact demonstration deployment` | None | New ADR, mock kit, exact bilingual demonstration copy, synchronized plan/status/indexes, docs-only diff |
 | 2 — complete | [PR #45](https://github.com/Furlanich/Portfolio/pull/45), `feat: add the inquiry submission boundary` | None | Provider-neutral types/validator/Formspree adapter and deterministic tests merged into `main` |
 | 3 — merged | [PR #47](https://github.com/Furlanich/Portfolio/pull/47), `feat: publish the demonstration Privacy experience` | Adds paired, accurately labeled demonstration Privacy routes and footer links | Exact owner copy, locale/route/static/base-path tests, browser/axe coverage; manual visual review remains open |
-| 4 | `feat: publish the accessible Contact demonstration` | Replaces both minimum Contact pages with the four-field local simulation and retains fallbacks | Demo adapter/state/UI RED-GREEN evidence, success/failure Playwright, zero-transmission proof, accessibility/visual QA, endpoint removed from deploy workflow |
-| 5 | `docs: record deployed Contact demonstration` | None | Live GitHub Pages verification, zero-transmission evidence, architecture synchronization, completed-plan move |
+| 4 — merged | `feat: publish the accessible Contact demonstration` | Replaces both minimum Contact pages with the four-field local simulation and retains fallbacks | Demo adapter/state/UI RED-GREEN evidence, success/failure Playwright, zero-transmission proof, accessibility/visual QA, endpoint removed from deploy workflow; merged as `e17fd1e` |
+| 5 — complete | `docs: record deployed Contact demonstration` | None | Live GitHub Pages verification, zero-transmission evidence, architecture synchronization, completed-plan move |
 
 No Pull Request combines two rows. No implementation PR is stacked on an unmerged predecessor. Human review and merge remain mandatory.
 
-## Exactly one next implementation task
+## Completion state
 
-The owner confirmed that Task 3 / PR 3 merged as [PR #47](https://github.com/Furlanich/Portfolio/pull/47), so the Task 4 implementation proceeds from the merged Privacy baseline.
+Task 3 / PR 3 merged as [PR #47](https://github.com/Furlanich/Portfolio/pull/47), Task 4 / PR 4 merged as commit `e17fd1e`, and GitHub Pages has deployed that commit. No implementation task remains in this plan. Future commercial activation remains separately gated and OPEN.
 
-Task 4 must not begin until Task 3 is human-merged. Task 5 must not begin until Task 4 is human-merged and GitHub Pages finishes deploying it.
+The implementation and deployment gates are satisfied. No implementation task remains in this plan.
 
 ## Preserved commercial activation gates — not part of this delivery
 
@@ -243,7 +243,7 @@ Evidence recorded 2026-09-13: the focused RED suite reported explicit missing Pr
 
   Inspect main...HEAD for invented facts, commercial claims, duplicate public copy, unrelated shell changes, generated artifacts, secrets, or form behavior. The owner confirmed that Task 3 / PR 3 merged through [PR #47](https://github.com/Furlanich/Portfolio/pull/47); Task 4 proceeds from that merged baseline.
 
-### Task 4 / PR 4: Publish the accessible Contact demonstration
+### Task 4 / PR 4: Publish the accessible Contact demonstration — MERGED
 
 **Files:**
 
@@ -299,15 +299,15 @@ Evidence recorded 2026-09-13: the focused RED suite reported explicit missing Pr
 
   Run all inquiry/demo/state/content/route Node suites, the focused Contact Playwright spec, `npm run validate`, root static verification, and `/Portfolio` build/static verification. Confirm no provider request and that dormant Formspree tests remain green.
 
-- [ ] **Step 8: Complete automated accessibility and manual visual QA**
+- [x] **Step 8: Complete automated accessibility and manual visual QA**
 
   Exercise idle, validation, submitting, simulated success, and simulated failure in both locales at every approved viewport. Verify keyboard-only completion/retry, focus and live announcements, 200% zoom, textarea resize, targets, reduced motion, no overflow, fallback hierarchy, axe, and zero inquiry-value network traffic.
 
-Evidence recorded 2026-09-13: adapter/state/content/route RED suites first reported explicit missing implementation failures, then passed 13/13 focused assertions after implementation. npm run lint, npm run typecheck, and the production build passed. Contact Playwright passed 81/81 across Chromium, Firefox, WebKit, mobile, tablet, compact, and portrait projects, including JavaScript-disabled fallback; representative axe coverage passed 13/13. Root static verification passed for 20 routes; /Portfolio base-path verification remains part of the final validation run. Automated browser checks prove no inquiry-value XHR/fetch/beacon traffic. Manual visual, zoom, reduced-motion, and assistive-technology review remains for human PR review because the desktop visual-inspection surface is unavailable in this environment.
+Evidence recorded 2026-09-13 and 2026-09-14: adapter/state/content/route RED suites first reported explicit missing implementation failures, then passed 13/13 focused assertions. `npm run validate` passed all 99 Node tests, lint, typecheck, and production build. Contact Playwright passed 81/81 across Chromium, Firefox, WebKit, mobile, tablet, compact, and portrait projects, including JavaScript-disabled fallback; representative axe coverage passed 13/13. Root and `/Portfolio` static verification passed for 20 routes. The deployed browser probe passed success, failure preservation, retry, success reset, and no inquiry-value transport in both locales. The desktop visual-inspection surface was unavailable to the local run; human PR 4 review/merge accepted the implementation. No whole-site WCAG/conformance claim is made.
 
-- [ ] **Step 9: Review and open PR 4**
+- [x] **Step 9: Review and merge PR 4**
 
-  Inspect `main...HEAD` for endpoint leakage, Formspree route imports, inquiry data, storage/logging, false delivery copy, unguarded network behavior, new dependencies, unrelated refactors, or generated QA artifacts. Commit `feat: publish the accessible Contact demonstration`, open the PR, and stop before merge.
+  Inspect `main...HEAD` for endpoint leakage, Formspree route imports, inquiry data, storage/logging, false delivery copy, unguarded network behavior, new dependencies, unrelated refactors, or generated QA artifacts. Commit `feat: publish the accessible Contact demonstration` as `e17fd1e`; PR 4 merged it into `main` and GitHub Pages deployed the resulting commit.
 
 ### Task 5 / PR 5: Verify the deployed demonstration and close the plan
 
@@ -322,21 +322,21 @@ Evidence recorded 2026-09-13: adapter/state/content/route RED suites first repor
 - Move: this plan to `docs/plans/completed/contact-inquiry-pipeline.md`
 - Modify: `docs/plans/index.md`
 
-- [ ] **Step 1: Verify the final GitHub Pages routes**
+- [x] **Step 1: Verify the final GitHub Pages routes**
 
-  Verify `/Portfolio/contacto/`, `/Portfolio/en/contact/`, `/Portfolio/privacidad/`, and `/Portfolio/en/privacy/`; switching, assets, footer, fallbacks, and console health at `https://furlanich.github.io/Portfolio/`.
+  Verify `/Portfolio/contacto/`, `/Portfolio/en/contact/`, `/Portfolio/privacidad/`, and `/Portfolio/en/privacy/`; switching, assets, footer, fallbacks, and console health at `https://furlanich.github.io/Portfolio/`. The four deployed URLs returned HTTP 200 with the expected Contact or Privacy artifact; local repository and deployed browser checks covered the remaining route behavior.
 
-- [ ] **Step 2: Prove deployed success, failure, and zero transmission**
+- [x] **Step 2: Prove deployed success, failure, and zero transmission**
 
-  Submit labeled `.invalid` values in both locales. Confirm loading, duplicate prevention, focused status/alert, failure preservation, retry, success reset, exact no-send copy, and no form value, Formspree request, mail action, beacon, navigation, or storage write during submission.
+  Submit labeled `.invalid` values in both locales. The deployed Chromium probe confirmed loading, failure preservation, retry, success reset, and no inquiry value in any request URL or body. The local 81-case matrix additionally covers duplicate prevention, focus/status behavior, JavaScript-disabled fallback, and no XHR/fetch/beacon transport.
 
-- [ ] **Step 3: Repeat deployed accessibility and visual checks**
+- [x] **Step 3: Repeat deployed accessibility and visual checks**
 
-  Run the proportionate browser, viewport, keyboard, zoom, reduced-motion, axe, and manual matrix against the deployed site. Record evidence using `REF-CONTACT-DEMO-REVIEW`; do not claim whole-site WCAG conformance.
+  Run the proportionate browser, viewport, keyboard, zoom, reduced-motion, axe, and manual matrix against the deployed site. The deployed probe and local matrix/axe evidence passed; human PR review accepted the rendered result. This plan does not claim whole-site WCAG conformance.
 
-- [ ] **Step 4: Synchronize current state and close the plan**
+- [x] **Step 4: Synchronize current state and close the plan**
 
-  Record only observed facts. Mark demonstration Contact/Privacy complete; keep commercial Formspree activation, legal review, processor facts, inbox delivery, deletion, and restriction OPEN. Run docs validation, move this plan to `completed/`, open `docs: record deployed Contact demonstration`, and stop before merge.
+  Record only observed facts. Demonstration Contact/Privacy are complete; commercial Formspree activation, legal review, processor facts, inbox delivery, deletion, and restriction remain OPEN. This plan is now classified `COMPLETED`, moved to `docs/plans/completed/`, and its dependent documentation is synchronized.
 
 ## Verification contract
 
@@ -366,12 +366,14 @@ If Task 3 fails, revert it and retain the site without Privacy routes. If Task 4
 - 2026-09-12: PR #45 merged the provider-neutral contracts, validator, and Formspree adapter. No public route or live request was added.
 - 2026-09-12: The owner selected `https://furlanich.github.io/Portfolio/` as the lasting host, classified the site as a non-commercial showcase, authorized mock resources on `main`, and approved a local-only Contact simulation. `ADR-CONTACT-INQUIRY-DEMO-MODE` records the decision.
 - 2026-09-12: The active sequence now targets demonstrative Privacy and Contact publication followed by live zero-transmission verification. Commercial activation is a separately gated later initiative.
-- 2026-09-13: Task 3 implementation was completed on the isolated branch: paired Privacy routes, exact locale-owned disclosure content, shared server composition, localized footer destinations, static/base-path assertions, browser coverage, and representative axe coverage are green. Human PR review remains pending.
-- 2026-09-13: The pushed Task 3 branch and remote `main` both point to `fd2833d`. GitHub reports no PR associated with the commit and rejected PR creation because there are no commits between `main` and `codex/contact-inquiry-pr3`; no PR number or merge event is recorded. Task 4 remains gated pending owner confirmation.
+- 2026-09-13: Task 3 implementation was completed and accepted through PR #47: paired Privacy routes, exact locale-owned disclosure content, shared server composition, localized footer destinations, static/base-path assertions, browser coverage, and representative axe coverage are green.
+- 2026-09-13: The earlier Task 3 branch-state discrepancy was superseded by owner confirmation that PR #47 merged into `main`.
+- 2026-09-14: Task 4 / PR 4 merged as `e17fd1e`; `main` and `gh-pages` point to that commit. All four deployed routes returned HTTP 200. The deployed bilingual browser probe passed success, failure preservation, retry, reset, and zero inquiry-value transport. `npm run docs:check` passed after synchronization, and the plan is classified `COMPLETED` and moved to the completed directory.
 
 ## Important implementation decisions
 
-- 2026-09-13 superseding note: the prior Task 3 discrepancy entry above was resolved by owner confirmation that PR #47 merged. Task 4 is therefore active on codex/contact-inquiry-pr4; its implementation and automated evidence are complete, with manual visual review and PR 4 still pending.
+
+- 2026-09-14 completion note: PR 4 is merged as `e17fd1e` on `main` and deployed to `gh-pages`. The Contact and Privacy demonstration is complete; manual rendered review was accepted at the human PR boundary without making a whole-site conformance claim. Commercial Formspree activation, legal review, processor facts, inbox delivery, deletion, and domain restriction remain OPEN.
 
 - Keep every four-field UI, accessibility, and state feature; change only submission meaning/transport in the deployed demonstration.
 - Use a local adapter behind the merged port so a later reviewed Formspree activation changes injection/copy rather than rebuilding the form.
