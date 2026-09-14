@@ -11,7 +11,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-13
+last_verified: 2026-09-14
 ---
 
 # Current system
@@ -88,14 +88,14 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - The approved optional business field is absent.
 - Submission posts JSON to `NEXT_PUBLIC_FORMSPREE_ENDPOINT`.
 - Success and error states are announced in an `aria-live` region.
-- The current source and deployment workflow reference a public Formspree endpoint, but no current Contact route consumes it. Formspree is the accepted target provider under `ADR-CONTACT-INQUIRY-PIPELINE`; provisioning, Privacy, implementation, and live delivery/deletion remain future plan work rather than current-system behavior.
+- The pre-cutover source and deployment configuration referenced a public Formspree endpoint, but the deployed Contact route does not consume it. Formspree is the accepted target provider under `ADR-CONTACT-INQUIRY-PIPELINE`; provisioning, commercial Privacy, and live delivery/deletion remain future activation work rather than current demonstration behavior.
 
 ## Current inquiry boundary — PR #45
 
 - `lib/inquiry/contracts.ts` defines the provider-neutral values, payload, validation-code, result, and `SubmitInquiry` interfaces.
 - `lib/inquiry/validation.ts` implements pure allowlisted normalization and field/request limits for both localized Contact sources.
 - `lib/inquiry/formspree.ts` implements the accepted direct-fetch Formspree adapter behind injected fetch/time behavior; its deterministic tests use only synthetic fixtures and never contact the provider.
-- No current public route imports these modules, so the merged boundary changes no visitor behavior and sends no inquiry.
+- The current Contact route imports the provider-neutral contracts and validator plus the local demonstration adapter; it does not import the Formspree adapter. The merged boundary remains provider-isolated and sends no inquiry.
 - `ADR-CONTACT-INQUIRY-DEMO-MODE` now governs the next public integration: a new local-only adapter will use the same port for demonstrative outcomes while the Formspree adapter remains dormant.
 
 ## Pre-cutover metadata
@@ -130,14 +130,14 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Retained personal data JSON, project assets, and core primitives remain in Git and are outside this cleanup; the obsolete localization shell, sections, helper, and message catalogs are retired.
 - Both normal and /Portfolio static-export modes are verified by the repository artifact checker. Task 4 browser QA repeated all eight routes at 320x800, 375x812, 768x1024, 1024x768, and 1440x900; language switching, keyboard focus, JavaScript-disabled rendering, reduced motion, contact links, Founder links, and CV routing were checked.
 
-## Current Contact demonstration — Task 4 / PR 4
+## Current Contact demonstration — Task 4 / PR 4 — DEPLOYED
 
 - The paired /contacto/ and /en/contact/ routes render a shared server-side ContactPage and narrow client-side ContactForm.
 - The form keeps exactly name, email, optional company, and message. Locale-owned content supplies labels, helpers, validation messages, demonstration disclosure, status copy, fallback note, and Privacy/Founder links.
 - The local createDemoSubmitInquiry adapter waits the approved bounded delay, returns simulated accepted results for valid values, and returns opaque unavailable failure for failure@example.invalid after normalization. It does not call fetch, XHR, beacon, navigation, storage, logging, analytics, mail, or a provider endpoint.
 - The pure reducer owns phase, request identity, duplicate prevention, stale-result protection, safe failure reasons, first-invalid focus, preserved failure values, retry, and success reset. React Hook Form owns browser field values and errors; DOM focus and announcements stay outside the reducer.
-- The deployment workflow omits NEXT_PUBLIC_FORMSPREE_ENDPOINT. The Formspree adapter remains dormant and covered only by synthetic deterministic tests.
-- Contact browser evidence covers 81/81 cases across the configured engines and viewports, including JavaScript-disabled fallback; representative axe coverage covers both Contact routes with 13/13 passing. Manual visual and assistive-technology review remains separate from automated evidence.
+- The deployment workflow omits NEXT_PUBLIC_FORMSPREE_ENDPOINT. The Formspree adapter remains dormant and covered only by synthetic deterministic tests. The implementation is recorded in the completed Contact + Inquiry plan; commercial activation gates remain OPEN.
+- Contact browser evidence covers 81/81 cases across the configured engines and viewports, including JavaScript-disabled fallback; representative axe coverage covers both Contact routes with 13/13 passing. The deployed bilingual browser probe passed success, failure, retry, reset, and zero inquiry-value transport. Human PR review accepted the rendered result without a whole-site conformance claim.
 
 ## Current commercial homepage implementation — Task 2
 

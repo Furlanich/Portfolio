@@ -27,7 +27,7 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # Product knowledge status register
@@ -166,13 +166,13 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Exact demonstration Privacy copy describes temporary page memory, GitHub Pages hosting metadata, external fallback services, no form processor/inbox copy, no inquiry analytics, value lifetime, and future commercial gates. It is approved product copy, not professional legal review.
 - WhatsApp, email, and phone remain functional external fallback demonstrations in that order. Their copy explains that they leave the local form simulation and do not receive its values automatically.
 - [`RFC-CONTACT-INQUIRY-PIPELINE`](../rfcs/contact-inquiry-pipeline.md) and [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) preserve Formspree behind `submitInquiry()` for a later commercial activation. The merged adapter remains dormant.
-- [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) now sequences paired demonstration Privacy routes, the complete accessible local-only form, and deployed zero-transmission proof. Its only next implementation task is Task 3 / PR 3.
+- [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md) records the completed paired demonstration Privacy routes, complete accessible local-only form, and deployed zero-transmission proof. Commercial Formspree activation and its legal, processor, inbox, deletion, and domain-restriction gates remain OPEN.
 
-### Current implementation evidence — Task 4 / PR 4
+### Completed implementation evidence — Task 4 / PR 4
 
 - Task 3 / PR 3 is confirmed merged as PR #47. Task 4 implements the paired local-only Contact demonstration on the approved GitHub Pages architecture.
 - The Contact form’s 81/81 browser matrix and 13/13 representative axe checks pass; the form has no inquiry-value network, storage, logging, analytics, mail, or provider transport. The deployment workflow supplies no Formspree endpoint.
-- The active plan’s prior Task 3 discrepancy note is historical and superseded by the owner’s merge confirmation. Manual visual and assistive-technology review remains a human PR responsibility; commercial Formspree activation gates remain OPEN.
+- The completed plan records the merged/deployed state. Human PR review accepted the rendered result without making a whole-site conformance claim; commercial Formspree activation gates remain OPEN.
 
 ## PROPOSED
 

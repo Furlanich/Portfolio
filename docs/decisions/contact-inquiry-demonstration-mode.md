@@ -10,7 +10,7 @@ related:
   - PAGE-PRIVACY
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - REF-CONTACT-DEMO-KIT
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # Contact inquiry demonstration mode
@@ -89,7 +89,7 @@ This ADR scopes the current deployed mode; it does not rewrite or supersede [`AD
 ## Related requirements
 
 - [`PAGE-CONTACT` and `PAGE-PRIVACY`](../product/pages/contact-and-privacy.md) own the exact demonstration and dormant commercial copy/behavior.
-- [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md) sequences demonstration implementation and preserves the future commercial activation gates.
+- [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md) records the completed demonstration implementation and preserves the future commercial activation gates.
 - [`REF-CONTACT-DEMO-KIT`](../references/contact-inquiry-demonstration/index.md) contains the approved synthetic operational and review resources.
 
 ## Date and status

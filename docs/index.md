@@ -23,7 +23,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # FURLANICH project knowledge
@@ -75,4 +75,4 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 
 [`RFC-CONTACT-INQUIRY-PIPELINE`](rfcs/contact-inquiry-pipeline.md) and [`ADR-CONTACT-INQUIRY-PIPELINE`](decisions/contact-inquiry-pipeline.md) preserve Formspree behind `submitInquiry()` for a future commercial activation. The provider-neutral types, validator, and adapter are merged but dormant.
 
-[`ADR-CONTACT-INQUIRY-DEMO-MODE`](decisions/contact-inquiry-demonstration-mode.md) records the current deployment decision: `https://furlanich.github.io/Portfolio/` remains a non-commercial portfolio/technical demonstration, and its public form simulates outcomes locally without sending or storing values. [`REF-CONTACT-DEMO-KIT`](references/contact-inquiry-demonstration/index.md) provides the approved synthetic resources. [`PLAN-CONTACT-INQUIRY-PIPELINE`](plans/active/contact-inquiry-pipeline.md) now sequences the demonstration Privacy routes, accessible form, and deployed zero-transmission proof. Real processor/legal/inbox/deletion gates remain OPEN for a separately reviewed commercial activation.
+[`ADR-CONTACT-INQUIRY-DEMO-MODE`](decisions/contact-inquiry-demonstration-mode.md) records the current deployment decision: `https://furlanich.github.io/Portfolio/` remains a non-commercial portfolio/technical demonstration, and its public form simulates outcomes locally without sending or storing values. [`REF-CONTACT-DEMO-KIT`](references/contact-inquiry-demonstration/index.md) provides the approved synthetic resources. [`PLAN-CONTACT-INQUIRY-PIPELINE`](plans/completed/contact-inquiry-pipeline.md) records the completed demonstration Privacy/Contact implementation and deployed zero-transmission proof. Real processor/legal/inbox/deletion gates remain OPEN for a separately reviewed commercial activation.

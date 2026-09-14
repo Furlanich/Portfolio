@@ -11,7 +11,7 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # Site feature catalogue
@@ -38,7 +38,7 @@ This concise catalogue traces visitor-facing capabilities to their authoritative
 
 ## OPEN capabilities and dependencies
 
-- Commercial Contact delivery: [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) retains Formspree behind `submitInquiry()` for a later activation. Provider configuration/retention, processor/transfer facts, professionally reviewed notice/consent wording, and live delivery/deletion evidence remain OPEN. They do not block the zero-transmission demonstration owned by the active plan.
+- Commercial Contact delivery: [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) retains Formspree behind `submitInquiry()` for a later activation. Provider configuration/retention, processor/transfer facts, professionally reviewed notice/consent wording, and live delivery/deletion evidence remain OPEN. They do not block the completed zero-transmission demonstration recorded by [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md).
 - Final project search/filter behavior and public project demos or video walkthroughs. See [`PROJECT-EVIDENCE`](project-evidence.md).
 - Analytics and conversion measurement.
 - Blog or resources after launch. They are excluded from the initial sitemap by [`IA-SITE`](information-architecture.md#launch-exclusions).

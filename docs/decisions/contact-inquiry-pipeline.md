@@ -11,7 +11,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-11
+last_verified: 2026-09-14
 ---
 
 # Contact inquiry submission pipeline
@@ -116,7 +116,7 @@ Rejected because every shipped browser value is public and static export has no 
 
 The complete comparison, operational model, risk analysis, official references, and migration triggers were proposed in [`RFC-CONTACT-INQUIRY-PIPELINE`](../rfcs/contact-inquiry-pipeline.md). The repository owner accepted the proposal by merging [Governance PR #43](https://github.com/Furlanich/Portfolio/pull/43) on 2026-09-10.
 
-Delivery is governed by [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/active/contact-inquiry-pipeline.md). The plan keeps unresolved professional legal wording, verified provider configuration, final-host domain restriction, delivery, and deletion evidence as explicit gates rather than treating architectural approval as release approval.
+Delivery was implemented in the completed demonstration plan [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md). Unresolved professional legal wording, verified provider configuration, final-host domain restriction, delivery, and deletion evidence remain explicit gates rather than being treated as release approval.
 
 ## Related requirements
 

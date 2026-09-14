@@ -17,7 +17,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - REF-CONTACT-DEMO-KIT
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-12
+last_verified: 2026-09-14
 ---
 
 # Contact and privacy pages
@@ -28,7 +28,7 @@ The complete commercial Contact experience remains the future conversion destina
 
 For the current public site, [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../../decisions/contact-inquiry-demonstration-mode.md) approves a visibly labeled, local-only simulation on `https://furlanich.github.io/Portfolio/`. It keeps the same four fields, state model, validation, visual composition, accessibility behavior, bilingual experience, and direct alternatives, but it sends nothing and creates no commercial inquiry. The Formspree pipeline remains dormant future architecture.
 
-The provider boundary is consequential because it processes personal information, controls delivery and storage, and may create an international transfer. The repository owner accepted [`RFC-CONTACT-INQUIRY-PIPELINE`](../../rfcs/contact-inquiry-pipeline.md) in Governance PR #43, and [`ADR-CONTACT-INQUIRY-PIPELINE`](../../decisions/contact-inquiry-pipeline.md) records Formspree behind the narrow provider-neutral adapter for a future commercial release. [`PLAN-CONTACT-INQUIRY-PIPELINE`](../../plans/active/contact-inquiry-pipeline.md) owns implementation. Real transmission must not be enabled until the verified provider configuration, commercial Privacy page, professional legal review, deterministic and rendered checks, and labeled delivery/deletion evidence are complete.
+The provider boundary is consequential because it processes personal information, controls delivery and storage, and may create an international transfer. The repository owner accepted [`RFC-CONTACT-INQUIRY-PIPELINE`](../../rfcs/contact-inquiry-pipeline.md) in Governance PR #43, and [`ADR-CONTACT-INQUIRY-PIPELINE`](../../decisions/contact-inquiry-pipeline.md) records Formspree behind the narrow provider-neutral adapter for a future commercial release. [`PLAN-CONTACT-INQUIRY-PIPELINE`](../../plans/completed/contact-inquiry-pipeline.md) records the completed demonstration implementation. Real transmission must not be enabled until the verified provider configuration, commercial Privacy page, professional legal review, deterministic and rendered checks, and labeled delivery/deletion evidence are complete.
 
 The demonstration form may be publicly enabled because it uses [`REF-CONTACT-DEMO-PROVIDER`](../../references/contact-inquiry-demonstration/provider-profile.md), makes no request, does not use Formspree or an inbox, and tells the visitor exactly that.
 
