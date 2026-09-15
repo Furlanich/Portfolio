@@ -9,9 +9,6 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
-  - PAGE-LEGAL
-  - LEGAL-PROTOTYPE-POSTURE
-  - RELEASE-READINESS
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
 last_verified: 2026-09-14
@@ -187,12 +184,3 @@ Local `.env` files exist and are intentionally not documented or read into the k
 Pull Requests targeting `main` run separate `validate` and `browser` jobs through `.github/workflows/ci.yml`. The deterministic gate covers documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build with the repository base path. The browser gate installs the pinned Chromium, Firefox, and WebKit revisions, runs the Playwright/axe matrix under that base path, and retains reports/results only on failure. The existing deployment workflow remains push-to-`main` only and is unchanged.
 
 The local browser layer is independently runnable through `test:e2e` and `test:a11y`, with screenshots, video, traces, and HTML reports retained only as ignored or CI failure evidence. Browser QA does not replace generated static-route and base-path validation.
-
-## Initiative 7 deployed legal/privacy audit — CURRENT
-
-- The deployed `/Portfolio/privacidad/` and `/Portfolio/en/privacy/` routes return the shorter Initiative 6 demonstration disclosure. They accurately state local-only form memory, zero transmission, no inbox/provider/database copy, no inquiry analytics, and the external-link boundary.
-- The shipped Contact application chunk implements the bounded local simulation and reserved `failure@example.invalid` failure. It contains no application-level Formspree, cookie, `localStorage`, `sessionStorage`, analytics, advertising, or inquiry-transport identifier. Framework runtime transport utilities are not invoked by the Contact adapter.
-- The deployed footer links Privacy plus static WhatsApp, email, phone, LinkedIn, GitHub, and internal destinations. Form values are not copied into direct-channel URLs.
-- GitHub Pages serves the static release and, according to current GitHub documentation, logs visitor IP addresses for security. That hosting fact is separate from FURLANICH application behavior.
-- No `/aviso-legal/` or `/en/legal/` route/artifact or footer destination exists yet. The approved Initiative 7 target remains implementation work.
-- The deployed `404.html` is the generic Next.js response. A localized FURLANICH recovery experience is an unresolved release-readiness gap rather than a passed gate.

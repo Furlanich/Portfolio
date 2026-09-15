@@ -12,12 +12,10 @@ related:
   - PAGE-FOUNDER
   - PAGE-CONTACT
   - PAGE-PRIVACY
-  - PAGE-LEGAL
-  - RELEASE-READINESS
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-14
+last_verified: 2026-09-12
 ---
 
 # Visual language
@@ -349,25 +347,3 @@ In demonstration mode, the approved notice sits at the start of the form surface
 - No default CAPTCHA badge, challenge, floating widget, or provider-branded redirect is part of the approved launch composition. A later challenge requires its own privacy/accessibility review.
 
 Long translated labels, helper text, errors, and status copy grow naturally. Controls, messages, and actions use no fixed content height, line clamp, clipping, or horizontal scrolling.
-
-## Privacy and Legal Notice editorial baseline — APPROVED
-
-This baseline extends the current FURLANICH system for `PAGE-PRIVACY` and `PAGE-LEGAL`; it does not create a separate official-looking legal theme.
-
-### Composition and measure
-
-- Use the standard page Canvas and Surface only. The reading column is approximately 70–75 characters wide within the existing responsive container.
-- Render one strong H1, a restrained prototype marker and genuine revision line, the lead, then a small prototype-scope callout before the numbered or titled H2 sections.
-- Privacy may use numbered H2 headings because it describes a sequence of policy topics. Legal Notice uses concise titled H2 sections. Both remain normal editorial flow rather than card collections.
-- The prototype callout may reuse Surface, Action tint, Border, and modest padding. It is an explanatory boundary, not an error, warning banner, certification panel, or promotional hero.
-- Paragraphs, short lists, and descriptive links carry the content. Avoid sidebars, dense metadata tables in the public page, multi-column legal prose, nested cards, sticky tables of contents, and decorative dividers beyond the established 1px Border.
-
-### Typography and restraint
-
-- Reuse the established H1, H2, body, supporting-text, link, spacing, and focus treatments. Body copy must remain comfortable at the default browser size and after zoom.
-- Use Muted ink for the marker/revision and Ink for headings/body. Legal meaning never depends on tint or emphasis alone.
-- Use no legal icons, scales, shields, locks, signatures, seals, government motifs, certification marks, gradients, stock courthouse imagery, or fake compliance badges.
-- Do not visually promote legal text as evidence that FURLANICH is incorporated, registered, insured, certified, compliant, or lawyer-approved.
-- Preserve selectable text and a clean print result. Do not render substantive copy into images or decorative pseudo-elements.
-
-The public footer presents Privacy and Legal Notice as quiet peer links. They do not compete with Contact or enter the primary navigation.

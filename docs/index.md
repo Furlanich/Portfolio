@@ -7,7 +7,6 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
-  - PLAN-PRIVACY-LEGAL-RELEASE-READINESS
   - REF-CONTACT-DEMO-KIT
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-HOMEPAGE-FOUNDATION
@@ -21,9 +20,6 @@ related:
   - PAGE-FOUNDER
   - PAGE-CONTACT
   - PAGE-PRIVACY
-  - PAGE-LEGAL
-  - LEGAL-PROTOTYPE-POSTURE
-  - RELEASE-READINESS
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
@@ -49,8 +45,6 @@ Front matter records the overall governance status of a document. In mixed-statu
 
 - [Knowledge management](governance/knowledge-management.md): authority, status, maintenance, and update rules.
 - [Status register](governance/status-register.md): approved, proposed, open, and rejected decisions in one place.
-- [Legal and privacy](legal/index.md): verified prototype facts, approved public-copy owners, hidden commercial templates, and review blockers.
-- [Release readiness](release/readiness.md): independent demonstration and commercial gates.
 - [Product index](product/index.md): business purpose, audiences, services, information architecture, page specifications, and migration requirements.
 - [Design index](design/index.md): approved homepage-foundation visual/interaction baseline, existing-system context, and broader unsettled design areas.
 - [Architecture index](architecture/index.md): current implementation facts and known quality findings; it is not a target-architecture decision.
@@ -82,13 +76,3 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 [`RFC-CONTACT-INQUIRY-PIPELINE`](rfcs/contact-inquiry-pipeline.md) and [`ADR-CONTACT-INQUIRY-PIPELINE`](decisions/contact-inquiry-pipeline.md) preserve Formspree behind `submitInquiry()` for a future commercial activation. The provider-neutral types, validator, and adapter are merged but dormant.
 
 [`ADR-CONTACT-INQUIRY-DEMO-MODE`](decisions/contact-inquiry-demonstration-mode.md) records the current deployment decision: `https://furlanich.github.io/Portfolio/` remains a non-commercial portfolio/technical demonstration, and its public form simulates outcomes locally without sending or storing values. [`REF-CONTACT-DEMO-KIT`](references/contact-inquiry-demonstration/index.md) provides the approved synthetic resources. [`PLAN-CONTACT-INQUIRY-PIPELINE`](plans/completed/contact-inquiry-pipeline.md) records the completed demonstration Privacy/Contact implementation and deployed zero-transmission proof. Real processor/legal/inbox/deletion gates remain OPEN for a separately reviewed commercial activation.
-
-## Initiative 7 — Privacy, Legal, and release-readiness decision closure
-
-[`PAGE-PRIVACY`](product/pages/contact-and-privacy.md#exact-public-demonstration-privacy-copy-approved) owns exact mature bilingual demonstration Privacy copy. [`PAGE-LEGAL`](product/pages/legal-notice.md) owns exact bilingual prototype Legal Notice copy and the approved `/aviso-legal/` ↔ `/en/legal/` footer-only route pair. Both use genuine September 2026 revisions and state the observed zero-transmission demonstration boundary without claiming legal review.
-
-[`LEGAL-PROTOTYPE-POSTURE`](legal/prototype-legal-posture.md) separates verified facts, generated explanatory copy, hidden future placeholders, and mandatory professional-review items. Non-public [Privacy](legal/future-commercial-privacy-template.md) and [Terms](legal/future-commercial-terms-template.md) templates use explicit bracketed requirements instead of plausible filler.
-
-[`RELEASE-READINESS`](release/readiness.md) defines `PROTOTYPE_COPY_APPROVED`, `DEMO_READY`, `COMMERCIAL_BLOCKED`, and `LEGAL_REVIEW_REQUIRED`. Current copy is approved, but `DEMO_READY` awaits implementation and fresh evidence; commercial release remains blocked. The approved implementation fits the existing static localized architecture and requires a versioned execution plan, not a new RFC or ADR.
-
-[`PLAN-PRIVACY-LEGAL-RELEASE-READINESS`](plans/active/privacy-legal-release-readiness.md) is the active Route B execution strategy. It sequences content contracts, public route/footer delivery, deterministic release-integrity gates, and same-commit deployed proof while keeping future commercial material documentation-only.

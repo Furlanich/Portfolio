@@ -18,7 +18,6 @@ related:
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-STUDIO-FOUNDER-COMPLETION
   - PLAN-CONTACT-INQUIRY-PIPELINE
-  - PLAN-PRIVACY-LEGAL-RELEASE-READINESS
   - PAGE-HOME
   - PAGE-SERVICES
   - PAGE-PROJECTS
@@ -26,9 +25,6 @@ related:
   - PAGE-FOUNDER
   - PAGE-CONTACT
   - PAGE-PRIVACY
-  - PAGE-LEGAL
-  - LEGAL-PROTOTYPE-POSTURE
-  - RELEASE-READINESS
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
@@ -59,12 +55,6 @@ The client boundary constructs createDemoSubmitInquiry() with the approved 650 m
 
 Task 3 / PR 3 was confirmed merged as PR #47 after the earlier transient branch-state note. Task 4 / PR 4 is merged as `e17fd1e` and deployed. Automated RED/GREEN, static-export, browser, representative axe, and deployed zero-transmission evidence is recorded in the completed Contact + Inquiry implementation plan; no whole-site conformance claim is made.
 
-## Current Privacy/Legal release baseline — Initiative 7 discovery
-
-The deployed Spanish and English Privacy routes render the shorter factual demonstration disclosure from Initiative 6. The deployed Contact application and its route chunk contain the local 650 ms simulation and no application-level Formspree, cookie, localStorage, sessionStorage, analytics, advertising, or inquiry-transport identifier. Direct WhatsApp, email, and phone destinations are static links and do not copy Contact form values.
-
-The current route/equivalence/footer contracts include Privacy but no Legal Notice. No `/aviso-legal/` or `/en/legal/` artifact exists on `gh-pages`. The deployed 404 artifact is the generic Next.js response rather than a localized FURLANICH recovery experience. These are current implementation facts, not accepted target behavior.
-
 ## APPROVED product constraints
 
 The intended product is a bilingual, commercial-first FURLANICH site with Spanish root routes and English `/en/` routes, as defined by the [information architecture](docs/product/information-architecture.md). The current single-page/client-state localization model is not approval to retain that implementation. Product and design requirements remain authoritative in [project knowledge](docs/index.md).
@@ -80,8 +70,6 @@ Initiative 4's Projects/Evidence decisions also fit the accepted boundary. [`PLA
 Initiative 5 closes Studio and Founder product/design decisions within the same accepted boundary. The approved implementation adds the existing sitemap's /estudio/ and /en/about/ pair as semantic Studio routes, retains the nested Founder pair, routes primary navigation to Studio, and uses route-owned localized content with shared locale-agnostic semantic components. It reuses existing tokens, primitives, static export, trailing slashes, and optional base-path behavior. The completed work is recorded by [`PLAN-STUDIO-FOUNDER-COMPLETION`](docs/plans/completed/studio-founder-completion.md), which sequences route/content contracts, Studio publication, Founder completion, and cross-page verification in four reviewable implementation PRs. It requires no RFC, new ADR, CMS, backend, runtime localization, dependency, hosting change, or new design-system architecture.
 
 Initiative 6 has two accepted modes. [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) governs the current public portfolio/technical demonstration at `https://furlanich.github.io/Portfolio/`: the complete four-field Contact UI uses a local adapter, simulates success/failure, and sends or stores nothing. [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md) retains Formspree behind the same provider-neutral port for a later commercial activation. [`PLAN-CONTACT-INQUIRY-PIPELINE`](docs/plans/completed/contact-inquiry-pipeline.md) records the completed demonstration Privacy/Contact and deployed zero-transmission proof while preserving real privacy/legal/provider/inbox/deletion gates for separate activation.
-
-Initiative 7 approves a mature demonstration Privacy revision and a dedicated `/aviso-legal/` ↔ `/en/legal/` Legal Notice pair. Both remain locale-owned static content composed by shared locale-agnostic Server Components, use the existing shell/design primitives, preserve trailing slashes and optional base-path behavior, and appear in the footer rather than primary navigation. The implementation adds no dependency, backend, processor, cookie/analytics system, hosting change, runtime locale state, authentication, or new design-system architecture. [`PLAN-PRIVACY-LEGAL-RELEASE-READINESS`](docs/plans/active/privacy-legal-release-readiness.md) sequences routes, content, equivalence, footer, static verification, browser QA, and deployed proof; no new RFC or ADR is required.
 
 The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. The default GitHub Pages project URL is the approved canonical deployment URL; no custom domain is planned. Long-term hosting may still be reconsidered only through a future architecture decision while current static-export and `/Portfolio` base-path constraints remain.
 
@@ -103,7 +91,7 @@ For the current deployment, [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/con
 
 ## OPEN questions
 
-Commercial legal/business identity, tax and domicile facts, Contact account/delivery/deletion behavior, complete processor/transfer facts, commercial Privacy/Terms wording, professional Argentine privacy/legal review, long-term hosting beyond the approved default GitHub Pages site, the extended design system, whole-site accessibility claims, global performance budgets, and optional imagery outside approved evidence remain OPEN in their owners. These items do not block the zero-transmission demonstration and are not satisfied by polished copy or mock resources.
+Commercial Contact account/delivery/deletion behavior, complete processor/transfer facts, professional privacy/legal wording, long-term hosting beyond the approved default GitHub Pages site, the extended design system, whole-site accessibility claims, global performance budgets, and optional imagery outside approved evidence remain OPEN in their owners. These items do not block the zero-transmission demonstration and are not satisfied by mock resources.
 
 ## Engineering records
 

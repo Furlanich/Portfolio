@@ -10,13 +10,9 @@ related:
   - PAGE-PROJECTS
   - PAGE-CONTACT
   - PAGE-PRIVACY
-  - PAGE-LEGAL
-  - LEGAL-PROTOTYPE-POSTURE
-  - RELEASE-READINESS
   - PROJECT-INVENTORY
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-  - PLAN-PRIVACY-LEGAL-RELEASE-READINESS
-last_verified: 2026-09-14
+last_verified: 2026-09-10
 ---
 
 # Product documentation
@@ -46,7 +42,6 @@ Product documentation defines what the FURLANICH website is, who it serves, why 
 - [`PAGE-PROJECTS` and `PAGE-PROJECT-DETAIL`](pages/projects.md)
 - [`PAGE-STUDIO` and `PAGE-FOUNDER`](pages/studio-and-founder.md)
 - [`PAGE-CONTACT` and `PAGE-PRIVACY`](pages/contact-and-privacy.md)
-- [`PAGE-LEGAL`](pages/legal-notice.md)
 
 `PAGE-NOT-FOUND` is defined at the responsibility level in the information architecture because no detailed content design has been approved.
 
@@ -54,6 +49,4 @@ Initiative 3 makes `PAGE-SERVICES` implementation-ready in Spanish and English, 
 
 Initiative 4 makes the Projects product and design decisions complete. General Reservation System, The-System, and MPC Administración are READY for limited image-free bilingual cards and paired summary-only detail pages, satisfying the Task 2 / PR 2 gate and the Task 3 / PR 3 detail gate in [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/completed/projects-evidence-experience.md). Task 4 retires the verified-unused legacy project paths after the approved replacement boundary is in place. The approved inventory-sensitive structure uses one ungrouped editorial grid for these three items, rejects empty groups and launch filters, and keeps `HOME-PROOF` unchanged.
 
-Initiative 6 delivered the complete local-only Contact demonstration and the first factual Privacy pair. The form remains the primary action, collects only name, email, optional company, and the problem to solve, simulates outcomes without transmitting values, preserves content on error, and retains WhatsApp, email, and phone fallbacks. [`PAGE-CONTACT / PAGE-PRIVACY`](pages/contact-and-privacy.md) owns the complete bilingual copy, state model, factual data flow, and dormant commercial requirements. `ADR-CONTACT-INQUIRY-DEMO-MODE` owns current deployment behavior; `ADR-CONTACT-INQUIRY-PIPELINE` preserves the dormant Formspree boundary.
-
-Initiative 7 approves mature bilingual demonstration Privacy copy and a separate bilingual prototype Legal Notice in [`PAGE-LEGAL`](pages/legal-notice.md). [The legal posture](../legal/prototype-legal-posture.md) owns fact/placeholder/review traceability, future templates remain non-public, and [release readiness](../release/readiness.md) keeps `DEMO_READY` distinct from `COMMERCIAL_BLOCKED` and `LEGAL_REVIEW_REQUIRED`. Implementation is sequenced by [`PLAN-PRIVACY-LEGAL-RELEASE-READINESS`](../plans/active/privacy-legal-release-readiness.md) within the accepted static localized architecture; no new RFC or ADR is required.
+Initiative 6 makes the Contact product, content, and page-design requirements implementation-ready while deliberately leaving the processor architecture unapproved. The form remains the primary action, collects only name, email, optional company, and the problem to solve, submits without leaving FURLANICH, preserves content on error, and retains WhatsApp, email, and phone fallbacks. [`PAGE-CONTACT / PAGE-PRIVACY`](pages/contact-and-privacy.md) owns the complete bilingual copy, state model, notification, abuse, factual data-flow, retention, legal-review, and release gates. A Governance RFC must approve the provider and exact deployed processing path before code changes.

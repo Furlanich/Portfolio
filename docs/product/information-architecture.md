@@ -10,11 +10,9 @@ related:
   - PAGE-FOUNDER
   - PAGE-CONTACT
   - PAGE-PRIVACY
-  - PAGE-LEGAL
   - CONTENT-LOCALIZATION
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-  - RELEASE-READINESS
-last_verified: 2026-09-14
+last_verified: 2026-09-12
 ---
 
 # Information architecture
@@ -32,7 +30,6 @@ Spanish is primary:
 │   └── samuel-furlanich/
 ├── contacto/
 ├── privacidad/
-├── aviso-legal/
 └── 404/
 ```
 
@@ -47,7 +44,6 @@ English is secondary:
 │   └── samuel-furlanich/
 ├── contact/
 ├── privacy/
-├── legal/
 └── 404/
 ```
 
@@ -86,7 +82,6 @@ The footer provides:
 - Buenos Aires, Argentina;
 - founder profile, LinkedIn, and GitHub;
 - privacy;
-- legal notice;
 - language switching;
 - copyright identity.
 
@@ -102,7 +97,6 @@ Exact footer grouping and visual layout remain part of future design work.
 - **PAGE-FOUNDER:** Preserve Samuel's biography, experience, skills, education, selected work, CV, and professional links.
 - **PAGE-CONTACT:** Collect the structured inquiry and provide secondary contact channels and response expectations.
 - **PAGE-PRIVACY:** Explain collected data, purpose, providers, retention, and applicable user rights in plain language.
-- **PAGE-LEGAL:** Identify the public site and founder, explain its demonstration/informational scope, and provide bounded intellectual-property, external-link, availability, and change notices without pretending to be commercial Terms.
 - **PAGE-NOT-FOUND:** Restore navigation to Home, Services, Projects, or Contact in the active language.
 
 ## Launch exclusions
@@ -147,19 +141,6 @@ PAGE-FOUNDER
 - No custom domain or alternate production host is planned.
 - The sitemap remains the bilingual product demonstration IA. Public presence of Home, Services, Projects, Studio, Founder, Contact, and Privacy does not mean their depicted commercial capabilities are operational.
 - Contact may publish the full four-field interaction only in the zero-transmission demonstration mode recorded by `ADR-CONTACT-INQUIRY-DEMO-MODE`. A later real-processing activation changes product/deployment state and requires separate review.
-
-## Privacy and Legal Notice route closure — APPROVED
-
-Initiative 7 adds one paired legal destination within the accepted route model:
-
-- `/privacidad/` ↔ `/en/privacy/` remains the factual data-handling page.
-- `/aviso-legal/` ↔ `/en/legal/` is the dedicated prototype Legal Notice.
-- Both routes use static export, trailing slashes, locale-owned content, shared locale-agnostic composition, and context-preserving language switching.
-- Privacy and Legal Notice appear together in the footer on every supported page. Neither enters primary navigation.
-- A combined Privacy/Legal page and a footer-only legal paragraph are rejected because they mix distinct responsibilities or make the complete notice difficult to find and link.
-- Commercial Terms remain non-public and do not receive a route.
-
-This is a bounded extension of `ADR-STATIC-LOCALIZED-ROUTING`. Implementation requires a versioned execution plan because it affects content, routes, equivalence, footer, static verification, and browser QA; it does not require a new RFC or ADR.
 
 
 ## Studio and Founder route closure — APPROVED

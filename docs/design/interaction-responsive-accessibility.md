@@ -8,15 +8,13 @@ related:
   - PAGE-SERVICES
   - PAGE-CONTACT
   - PAGE-PRIVACY
-  - PAGE-LEGAL
-  - RELEASE-READINESS
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PAGE-PROJECTS
   - PAGE-STUDIO
   - PAGE-FOUNDER
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-14
+last_verified: 2026-09-12
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -286,16 +284,3 @@ These requirements implement the `PAGE-CONTACT` state model without claiming aud
 ### Verification boundary
 
 Verify both locale routes at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900`, including root and optional `/Portfolio` base paths. Cover keyboard-only completion and retry; focus/error association; all state announcements; duplicate prevention; preserved values; reset after simulated success only; textarea resize; translated copy; 200% zoom; reduced motion; no raw adapter response; fallback order; representative axe scans; manual contrast, semantics, reading-order, and assistive-technology checks; and zero inquiry-value network traffic. A labeled live delivery smoke is required only by a later commercial activation and never runs automatically in public CI.
-
-## Privacy and Legal Notice interaction and accessibility baseline — APPROVED
-
-- Each route renders one `main`, one H1, and sequential H2/H3 hierarchy. The marker and revision are supporting text, not competing headings.
-- All substantive information is visible by default. Do not place policy or notice text in accordions, dialogs, hover/focus disclosures, tooltips, carousels, or client-only rendering.
-- The document language matches `es-AR` or `en`; language switching preserves Privacy-to-Privacy and Legal-Notice-to-Legal-Notice context.
-- Links use descriptive visible labels. Email links identify the action or address; external privacy/project links identify their destination. Keyboard focus remains visible and unclipped.
-- Text remains selectable, copyable, and print friendly. Reading order follows source order and does not rely on CSS reordering.
-- At 200% zoom and the approved viewport matrix, the editorial measure becomes fluid, headings/URLs wrap, and no horizontal overflow, clipped text, fixed-height region, or overlapping footer content appears.
-- Do not auto-scroll, animate sections into view, add nonessential motion, or use a sticky legal navigation. Reduced-motion preference must not hide or change information.
-- Footer Privacy and Legal Notice links meet the existing minimum target and focus requirements without increasing primary-navigation density.
-
-Verification covers `/privacidad/`, `/en/privacy/`, `/aviso-legal/`, and `/en/legal/` at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900`; root and `/Portfolio` exports; 200% zoom; keyboard traversal; text selection/copy; print preview; long-link wrapping; JavaScript-disabled semantics; language switching; footer destinations; representative axe checks; and manual hierarchy, contrast, focus, reading-order, and overflow review. Automated results do not establish whole-site WCAG conformance.
