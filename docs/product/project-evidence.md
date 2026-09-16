@@ -373,8 +373,8 @@ Every candidate now has an explicit permission matrix. Unknown permission contin
 
 **Revision 1: APPROVED under D04.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The homepage bridge and selection boundary are accepted; item permissions, maturity, authorship and evidence strength do not change.
 
-The [proposed inventory selection](projects/index.md#mkt-d04-evidence-placement-approved-revision-1) keeps every underlying evidence/permission state. Home retains founder/process proof with no project cards, names, logos, images, metrics, maturity badges or project-specific summaries.
+The [accepted inventory selection](projects/index.md#mkt-d04-evidence-placement-approved-revision-1) keeps every underlying evidence/permission state. Home retains founder/process proof with no project cards, names, logos, images, metrics, maturity badges or project-specific summaries.
 
-One new permission is requested: allow a generic link from HOME-PROOF to the Projects index, with an explicit limitations-oriented label owned by PAGE-HOME. This would supersede **only** the existing fallback's prohibition on a Projects-route CTA. It does not waive the prototype homepage gate or imply that any item is homepage-eligible. Until explicitly approved, the existing no-Projects-CTA fallback remains authoritative.
+D04 accepts one narrow permission: a generic link from HOME-PROOF to the Projects index, with an explicit limitations-oriented label owned by PAGE-HOME. This supersedes **only** the existing fallback's prohibition on a Projects-route CTA. It does not waive the prototype homepage gate or imply that any item is homepage-eligible.
 
 Services remains text-only for GRS. A contextual link to its already authorized detail is accepted under D04; it is not authorization for service cards, screenshots, a functional demo or stronger results. The absence of suitable public WhatsApp and maintenance evidence remains visible. Authorizing revised public wording in the item records is a separate editorial approval, never proof of execution.

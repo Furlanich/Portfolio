@@ -505,7 +505,7 @@ The complete homepage may proceed to implementation planning using the fallback 
 
 **Revision 1: APPROVED. Human disposition D02: APPROVED.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The user supplied “D02 - APPROVED”. This accepts the bilingual hero and action wording as a pair. D03 is rejected, so its proposed route-wide notice and Contact presentation are not adopted; the existing demonstration boundary remains authoritative.
 
-Current text below is an excerpt from the deployed baseline audited on 2026-09-15. Accepted wording targets D01 territory B. Global demonstration notice and Contact contract are owned by [D03](contact-and-privacy.md#mkt-d03-demonstration-presentation-contract-rejected-revision-1); the notice appears on every route before the hero. No response promise belongs beside the current demo CTA.
+Current text below is an excerpt from the deployed baseline audited on 2026-09-15. Accepted wording targets D01 territory B. The existing demonstration context remains owned by rejected [D03](contact-and-privacy.md#mkt-d03-demonstration-presentation-contract-rejected-revision-1); its proposed notice is not adopted. No response promise belongs beside the current demo CTA.
 
 | Field | Current ES / EN | Accepted Spanish | Accepted English | Reason / permission |
 | --- | --- | --- | --- | --- |

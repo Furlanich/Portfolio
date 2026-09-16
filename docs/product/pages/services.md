@@ -742,9 +742,9 @@ The copy intentionally removes generic transformation language, technology catal
 
 **Revision 1: APPROVED under D05.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The user supplied “D05 - APPROVED”. This accepts the buyer scan order, bilingual replacements and visible boundaries; existing commercial terms and rejected D03 presentation remain governed by their owners.
 
-Current baseline: each service repeats situations, scope levels, outcomes, examples, inclusions, exclusions, fit, dependencies and evidence before its CTA. Candidate: intro and non-sticky service index → Web → WhatsApp → Consulting → shared working boundaries → demo-aware final action. Keep all four existing localized fragments. No service is converted into a fixed package, price tier or guaranteed result.
+Current baseline: each service repeats situations, scope levels, outcomes, examples, inclusions, exclusions, fit, dependencies and evidence before its CTA. Accepted structure: intro and non-sticky service index → Web → WhatsApp → Consulting → shared working boundaries → demo-aware final action. Keep all four existing localized fragments. No service is converted into a fixed package, price tier or guaranteed result.
 
-### Proposed replacement scan copy
+### Accepted replacement scan copy
 
 | Field / current role | Proposed Spanish | Proposed English | Reason / permitted basis |
 | --- | --- | --- | --- |
@@ -770,7 +770,7 @@ Current baseline: each service repeats situations, scope levels, outcomes, examp
 | Each service action: varied inquiry labels | Ver contacto | Contact options | Stable current-mode D02/D06 destination; local service context stays in preceding section |
 | Final CTA: inquiry review and response promise | Explorá el contacto y probá la demostración del formulario. | Explore the contact options and try the form demonstration. | Demo mode only; no response block |
 
-### Essential visible boundaries — proposed compressed copy
+### Essential visible boundaries — accepted compressed copy
 
 Place the service-specific boundary before that service's evidence/CTA. Keep shared boundaries visible once after the three services, linked by a same-page text link near each service boundary. Do not make exclusions disappear behind a tooltip or accordion. Removing a duplicate sentence does not remove a scope restriction.
 

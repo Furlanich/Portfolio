@@ -95,9 +95,9 @@ The completed [Projects / Evidence execution plan](../../plans/completed/project
 
 **Revision 1: APPROVED under D04.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The GRS lead, Lab secondary placement and Founder-led MPC discovery are accepted; item permissions and evidence strength remain unchanged.
 
-[Governance RFC](../../rfcs/marketing-narrative-closure.md) proposes editorial selection independently from evidence strength. Recommended index: GRS as the lead story, then one compact The-System Lab entry. No artificial empty category, new Lab route, filter or counter. MPC moves out of the commercial selection into the existing Founder education context.
+[Governance RFC](../../rfcs/marketing-narrative-closure.md) records the accepted editorial selection independently from evidence strength. Recommended index: GRS as the lead story, then one compact The-System Lab entry. No artificial empty category, new Lab route, filter or counter. MPC moves out of the commercial selection into the existing Founder education context.
 
-| Record | Current permitted placement | Proposed placement | Evidence / permissions that do not change |
+| Record | Current permitted placement | Accepted placement | Evidence / permissions that do not change |
 | --- | --- | --- | --- |
 | General Reservation System | Image-free index card, paired detail, public repository; no Home card | Lead Projects story; text-only Services pointer to existing detail | implementation-evidence; prototype; no current verified demo, production, payment or result claim; conceptual asset only on detail |
 | The-System | Second index card and paired detail | Secondary compact Lab entry beneath GRS; same detail | implementation-evidence; Lab/RPG context; no working demo, production, billing or planned-feature delivery claim |
@@ -111,4 +111,4 @@ MPC remains a permitted public record; do not change its publication state to PR
 
 All three remain ineligible for Home cards, names, thumbnails or featured project summaries. D04 accepts a generic Home link to the Projects index under a factual founder/process proof block. This is a placement permission change, not a change to item eligibility or verification.
 
-This is a deliberate proposed exception to the existing two/three-item uniform-grid rule: selected commercial relevance controls visual emphasis while evidence limitations remain equally legible. Approval must cover this inventory selection, Projects composition and the individual copy deltas together. No runtime verification is performed in this task.
+This is the accepted exception to the existing two/three-item uniform-grid rule: selected commercial relevance controls visual emphasis while evidence limitations remain equally legible. No runtime verification is performed in this task.

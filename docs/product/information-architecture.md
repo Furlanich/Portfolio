@@ -162,7 +162,7 @@ The current route contract's use of the Founder pair as the “El estudio / Abou
 
 The [RFC](../rfcs/marketing-narrative-closure.md) covers the Home consolidation and evidence discovery change. It does not change routing, hosting, base path, locale equivalence, detail slugs or generate a new page.
 
-### Proposed navigation
+### Accepted navigation
 
 Desktop: brand → language switch → Services → Projects → Process → Studio → primary Contact action. Below the existing 1024px breakpoint, brand/language/disclosure remain visible; the same links and Contact action are in the native menu. Use existing source-order constraints; final at-1024 fit must be checked with actual bilingual text. Do not compress targets to force an inline header.
 
@@ -207,7 +207,7 @@ Paths below are logical site paths; deployment prepends the existing /Portfolio 
 | CV / GitHub / LinkedIn | Existing approved Founder destinations | Same | Secondary background verification; no asset/profile revision |
 | Not-found actions | Existing Home/Services/Projects/Contact equivalents | Existing equivalents | Preserve recovery; Contact action adopts stable meaning |
 
-### Footer proposal
+### Accepted footer treatment
 
 Two compact groups after brand/location: (1) site links — Services, Work, How we work, About, Contact, Privacy; (2) person/channels — Samuel Furlanich, LinkedIn, GitHub, WhatsApp, email, phone. At wide sizes these may share rows; compact layouts wrap in the same reading order, without a full card per group or fixed height. Keep actual email/phone values readable for scanning. Contact retains WhatsApp/email/phone order; footer groups do not reorder that channel sequence.
 
