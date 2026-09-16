@@ -12,7 +12,7 @@ related:
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - PROJECTS-EXPERIENCE-CLOSURE
-last_verified: 2026-09-10
+last_verified: 2026-09-16
 ---
 
 # Design documentation
@@ -24,3 +24,7 @@ The homepage-foundation, complete commercial-homepage, Services, Projects/Eviden
 - [Market and design references](../references/market-and-design-references.md): external examples and research; references are not requirements.
 
 Future visual decisions must be persisted here before they are treated as implementation constraints. The approved baselines are sufficient for their named page scopes, including the Contact form states; they do not approve every later page or component treatment.
+
+## Marketing revision R1 — partial initiative acceptance
+
+On 2026-09-16 the human approved [VIS-R1](visual-language.md#mkt-d07-vis-r1-restrained-marketing-composition-approved) and [IX-R1](interaction-responsive-accessibility.md#mkt-d07-ix-r1-marketing-navigation-and-demo-interactions-approved) under D07. These owners define precise precedence and application gates. D02–D06 content, evidence and IA decisions remain OPEN; no page restructuring or public copy is approved by implication. The complete design system and optional immersive work remain unresolved.

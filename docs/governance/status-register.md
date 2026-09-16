@@ -177,7 +177,6 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 ## PROPOSED
 
-- Public descriptor: “Estudio de desarrollo de software a medida.”
 - Internal commercial defaults including milestone payment percentages, a 30-day defect warranty, and detailed ownership terms; these require business/legal review.
 - Incremental/static-first architecture recommendation — **PROPOSED** preserved knowledge owned by [`ARCH-INDEX`](../architecture/index.md); it authorizes no architecture or CI change.
 - Use conceptual or AI-generated imagery only when clearly identified and never as false evidence of an implemented client solution.
@@ -216,8 +215,8 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Presenting MPC Administración as client or production work.
 - Repeating three service-card CTAs that all lead to the Services page root.
 
-## Marketing narrative review — PROPOSED candidates; human dispositions OPEN
+## Marketing narrative review — D01/D07 APPROVED; D02–D06 OPEN
 
 [Decision package](../reviews/marketing-decision-closure-2026-09-15/index.md) and [RFC-MARKETING-NARRATIVE-CLOSURE](../rfcs/marketing-narrative-closure.md) propose seven groups: D01 positioning; D02 hero/actions; D03 demonstration contract; D04 evidence placement; D05 Home/Services consolidation; D06 Studio/Founder/IA/language; D07 visual/interaction revision R1.
 
-Every candidate is PROPOSED and every new human disposition is OPEN. Owning documents retain existing APPROVED baselines. No completed audit, polished wording or publication of the proposal upgrades a decision to APPROVED. Existing demonstration ADR, evidence permissions, commercial-activation gates, optional media and immersive-design deferrals remain unchanged. No versioned implementation plan exists for this proposal; create one only after explicit owner-level acceptance.
+On 2026-09-16 the human explicitly approved D01 (recommended territory B, bilingual category and priority buying problem) and D07 (VIS-R1 and IX-R1). Their [owning records and approval source](../reviews/marketing-decision-closure-2026-09-15/index.md#decision-register) identify the exact scope and superseded clauses. D02–D06 and their subdecisions remain PROPOSED with human disposition OPEN. D07 does not approve its dependent content/IA changes. Other existing APPROVED baselines remain effective. No completed audit, polished wording or publication of the proposal upgrades a decision to APPROVED. Existing demonstration ADR, evidence permissions, commercial-activation gates, optional media and immersive-design deferrals remain unchanged. No versioned implementation plan exists for this proposal; create one only after explicit owner-level acceptance.

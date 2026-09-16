@@ -11,7 +11,7 @@ last_verified: 2026-09-16
 
 # Page outlines and low-fidelity layout studies — R1
 
-[Decision package](index.md) · [Visual owner](../../design/visual-language.md#mkt-d07-vis-r1-restrained-marketing-composition-proposed) · [Interaction owner](../../design/interaction-responsive-accessibility.md#mkt-d07-ix-r1-marketing-navigation-and-demo-interactions-proposed)
+[Decision package](index.md) · [Visual owner](../../design/visual-language.md#mkt-d07-vis-r1-restrained-marketing-composition-approved) · [Interaction owner](../../design/interaction-responsive-accessibility.md#mkt-d07-ix-r1-marketing-navigation-and-demo-interactions-approved)
 
 ## How to review
 
@@ -49,7 +49,7 @@ All templates begin with the same header and in-flow demonstration notice and en
 | 1024px | Inline header, 48px gutters; wide grid; Contact 8/4 | Do actual long bilingual nav labels fit with target sizes? Do side columns retain reading order? |
 | 1440px | Max 1200px container; wide editorial composition | Does whitespace establish emphasis without inflating thin project content? |
 
-The exact proposed visual numbers and authority are in VIS-R1. The sketches show the direction and representative copy wrapping; they do not close real-browser UI acceptance, 200% text zoom, assistive-technology behavior, font loading or performance. Those belong to the later approved implementation work.
+The exact approved visual dimensions and their content-dependency gates are in VIS-R1. D07 was accepted on 2026-09-16; these original review sketches still contain proposed D02–D06 copy and structure. Their captions and embedded OPEN labels record the initial study, not the current owner-level disposition. The sketches show the direction and representative copy wrapping; they do not close real-browser UI acceptance, 200% text zoom, assistive-technology behavior, font loading or performance. Those belong to the later approved implementation work.
 
 ## Comparison to the deployed audit
 

@@ -26,4 +26,4 @@ Do not create status directories until the number of RFCs or their lifecycle mak
 
 ## Proposed marketing decision closure
 
-- [RFC-MARKETING-NARRATIVE-CLOSURE](marketing-narrative-closure.md): proposed cross-page narrative, evidence discovery and demonstration presentation. All new decisions remain OPEN for human disposition in their owning records; no implementation or new ADR is authorized.
+- [RFC-MARKETING-NARRATIVE-CLOSURE](marketing-narrative-closure.md): proposed cross-page narrative, evidence discovery and demonstration presentation. D01 and D07 have explicit human approval recorded in their owners; D02–D06 remain OPEN, so this RFC stays PROPOSED. No implementation, versioned plan or new ADR is authorized.

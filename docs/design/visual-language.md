@@ -349,9 +349,9 @@ In demonstration mode, the approved notice sits at the start of the form surface
 
 Long translated labels, helper text, errors, and status copy grow naturally. Controls, messages, and actions use no fixed content height, line clamp, clipping, or horizontal scrolling.
 
-## MKT-D07-VIS-R1 — Restrained marketing composition — PROPOSED
+## MKT-D07-VIS-R1 — Restrained marketing composition — APPROVED
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit acceptance reference: **OPEN**. This named revision does not replace any existing APPROVED baseline until human acceptance is recorded.
+**Revision 1: APPROVED. Human disposition D07: APPROVED.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in [the decision-review task](codex://threads/01a0a5e6-85b2-7122-90e8-ba0e0ccf09a2), following the R1 packet published in [PR #52](https://github.com/Furlanich/Portfolio/pull/52). The user wrote “DO7: APPROVED”; DO7 is recorded as D07, accepting both VIS-R1 and IX-R1. Approval selects these design treatments, not the still-OPEN content, evidence-placement or IA decisions D02–D06. No implementation is performed or authorized by this documentation task.
 
 Compared with DESIGN-VISUAL at main revision 2be0286 (approved section baselines last verified 2026-09-12). This is a page-composition revision, not a palette, font, component-library or styling-architecture replacement. [RFC](../rfcs/marketing-narrative-closure.md) owns cross-page decision dependencies; [review layouts](../reviews/marketing-decision-closure-2026-09-15/layouts.md) are non-normative low-fidelity studies.
 
@@ -359,9 +359,9 @@ Compared with DESIGN-VISUAL at main revision 2be0286 (approved section baselines
 
 Keep Inter, current colors/contrast, 1200px container, 20/32/48px gutters, existing H1/H2/body scales, 48px primary actions, focus ring, light-only presentation, sticky app bar, native mobile disclosure, no decorative shadows, and content-driven height. Keep detail-only conceptual images with captions. No portrait, icon system, logo redraw, gradient, glass, 3D or new motion is selected.
 
-### Named changes for approval
+### Approved design treatments and application dependencies
 
-| Revision part | Existing approved treatment | Proposed treatment | Why / boundary |
+| Revision part | Earlier approved treatment | Accepted design treatment | Why / boundary |
 | --- | --- | --- | --- |
 | VIS-R1.1 Entry and hero | 80/96/128px hero vertical padding; separate access lines | One in-flow demonstration notice before main, then 48/64/96px hero padding for compact/medium/wide. Keep category, H1, support, primary/secondary, named lead, availability in that order | Make disclosure and actions readable sooner; no forced viewport hero or guaranteed above-fold position |
 | VIS-R1.2 Home rhythm | Four Problems cards plus four Audiences cards; Proof panel | Three plain situation rows with thin separators; audience sentence integrated. Keep three service summaries as the only comparison-card group. Proof becomes unboxed headline, short text and secondary links | Different visual roles rather than eleven equal boxes; conditional on D04/D05 |
@@ -371,6 +371,8 @@ Keep Inter, current colors/contrast, 1200px container, 20/32/48px gutters, exist
 | VIS-R1.6 Studio/Founder | Separate repeated model/location bands; CV primary | Studio uses a text-led intro plus compact accountability aside, then principles and a combined location/Founder bridge. Founder starts with short context; professional links are secondary below background | Named person supports the business; preserve complete factual history |
 | VIS-R1.7 Contact | Long intro, response block, form and alternatives | Short demo-first intro; no response-time block; disclosure directly before fields. Keep form/alternatives 8/4 wide and single-column below 1024, with alternatives after form | Current-mode truth and earlier fields; same four-field form |
 | VIS-R1.8 Endings/footer | Repeated roomy endings; stacked utility groups | One short left-aligned Action-tint ending; two compact footer groups and utility row, using wrapping rather than a full card per link group | Retain useful destinations and readable values |
+
+**Precedence and application gates:** VIS-R1 supersedes the earlier visual treatment only for the named design dimensions. R1.1 approves the shorter hero padding, but the notice and exact hero content require D03/D02. R1.2 requires D04/D05 for proof and section consolidation; R1.4 requires D05; R1.5 requires D04; R1.6 requires D06; R1.7 requires D03; R1.8 requires D03/D06 for ending copy and footer grouping. R1.3 approves subgroup spacing without authorizing section removal. Pending those decisions, existing page content, order, evidence permissions and destinations remain operative. This section takes precedence over conflicting earlier visual descriptions only within those accepted dimensions and gates.
 
 At wide widths, typography and asymmetric text columns supply identity. No decorative visual is needed for R1. A later restrained 2D motif remains OPEN; it must explain a relevant process and needs a separate asset decision. It is not required to close this revision.
 

@@ -113,11 +113,11 @@ It does not automatically include a full rebuild, a new system, on-call incident
 
 `PAGE-SERVICES` is implementation-ready with explicit evidence-status copy. Stronger evidence remains deferred until an item reaches the publication lifecycle required by `PROJECT-EVIDENCE`. These gaps must remain visible rather than being filled with fictional client work, generalized founder experience, equal-looking placeholder cards, or implied certifications.
 
-## MKT-D01 audience emphasis — PROPOSED revision 1
+## MKT-D01 audience emphasis — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** No approval is inferred from drafting, this task, or an unqualified PR merge. Existing APPROVED requirements remain operative until the owner explicitly accepts the named revision. Human reviewer, date, decision and approval reference: **OPEN**.
+**Revision 1: APPROVED under D01.** The 2026-09-16 explicit human disposition and its source are recorded in the [positioning owner](vision-and-positioning.md#mkt-d01-durable-category-and-buying-problem-approved-revision-1). No service, audience eligibility or operating-status expansion is accepted.
 
-The [D01 positioning candidate](vision-and-positioning.md#mkt-d01-durable-category-and-buying-problem-proposed-revision-1) leads with SMB owners and operations decision-makers whose orders, bookings or everyday coordination require repeated manual handoffs between messages, spreadsheets and software. This prioritizes an existing buying situation; it adds no industry-expertise claim and removes no approved audience.
+The [approved D01 positioning](vision-and-positioning.md#mkt-d01-durable-category-and-buying-problem-approved-revision-1) leads with SMB owners and operations decision-makers whose orders, bookings or everyday coordination require repeated manual handoffs between messages, spreadsheets and software. This prioritizes an existing buying situation; it adds no industry-expertise claim and removes no approved audience.
 
 Web presence/catalogues remain requestable. Existing-system diagnosis remains an entry point even where no new build is needed. WhatsApp remains one possible channel, subject to feasibility and human handoff. Technical partners and recruiters retain their existing secondary roles. Scope, provider responsibilities, AI posture and commercial boundaries above remain unchanged.
 
