@@ -111,13 +111,13 @@ The Projects index does not add a general Founder CTA. A project detail may incl
 
 The link never replaces the related-service link or final inquiry CTA and does not imply that founder authorship proves production use, client permission, outcomes, or sole authorship.
 
-## MKT-D04 — Projects narrative and detail outline — PROPOSED revision 1
+## MKT-D04 — Projects narrative and detail outline — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing item permissions and APPROVED requirements remain operative; no evidence-strength upgrade is proposed.
+**Revision 1: APPROVED under D04.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The user supplied “D04 - APPROVED”. Existing item permissions and evidence-strength classifications remain operative; no item is upgraded.
 
-Proposed index outline: global demo notice → short introduction → GRS lead → compact The-System Lab entry → disclosure note → demo-aware Contact action. The [inventory](../projects/index.md#mkt-d04-evidence-placement-proposed-revision-1) owns selection and unchanged evidence states. Detail outline is owned by the [experience delta](../projects/experience.md#mkt-d04-experience-delta-proposed-revision-1). Existing detail URLs and language switching stay intact, including MPC.
+Accepted index outline under D04: global demo notice → short introduction → GRS lead → compact The-System Lab entry → disclosure note → demo-aware Contact action. The [inventory](../projects/index.md#mkt-d04-evidence-placement-approved-revision-1) owns selection and unchanged evidence states. Detail outline is owned by the [experience delta](../projects/experience.md#mkt-d04-experience-delta-approved-revision-1). Existing detail URLs and language switching stay intact, including MPC.
 
-| Field / current ES and EN | Proposed Spanish | Proposed English | Reason / permission |
+| Field / current ES and EN | Accepted Spanish | Accepted English | Reason / permission |
 | --- | --- | --- | --- |
 | Intro: Cada proyecto distingue qué está en producción… / what is in production… | Proyectos para explorar cómo se aborda un problema en el código. Incluyen su contexto y sus límites; no se presentan como casos de clientes ni como sistemas verificados en producción. | Projects that show how a problem is approached in code. Each includes its context and limitations; these are not client case studies or verified production systems. | Describe actual selection; no implication of a hidden production portfolio |
 | Evidence action: Repositorio público aprobado / Approved public repository | Ver código fuente | View source code | Plain action; same approved public repository URLs |

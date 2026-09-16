@@ -84,7 +84,7 @@ Preserve all current URL pairs and fragments. New shared-boundary fragments are 
 
 | Risk | Control |
 | --- | --- |
-| Proposal mistaken for approval because text is polished | Explicit item statuses: D01/D07 accepted, D02–D06 OPEN; only named approved clauses supersede baseline |
+| Proposal mistaken for approval because text is polished | Explicit group statuses: D01/D02/D04/D05/D06/D07 accepted and D03 rejected; only named approved clauses supersede baseline |
 | New copy broadens evidence or ownership | Item-specific deltas; explicit no current verification/client/production claims; item permissions remain unchanged |
 | Shorter Services conceals provider restrictions | Coverage table and visible boundaries before CTA; no hidden critical disclosure |
 | Demo copy promises actual inquiry response | Route-wide notice and D03 replacement inventory; response expectation dormant |
@@ -94,14 +94,14 @@ Preserve all current URL pairs and fragments. New shared-boundary fragments are 
 
 ## Unresolved questions
 
-D01 and D07 are APPROVED by explicit human disposition on 2026-09-16, as recorded in the [decision register](../reviews/marketing-decision-closure-2026-09-15/index.md#human-disposition-record-2026-09-16) and their authoritative owners. D02–D06 remain OPEN: exact hero/actions, demonstration contract, evidence/item placement and wording, Home/Services consolidation, and Studio/Founder/IA/language. D07 design acceptance does not close those content dependencies.
+D01, D02, D04, D05 and D06 are APPROVED, D03 is REJECTED, and D07 is APPROVED by explicit human disposition on 2026-09-16, as recorded in the [decision register](../reviews/marketing-decision-closure-2026-09-15/index.md#human-disposition-record-2026-09-16) and their authoritative owners. D03 rejection leaves the existing demonstration contract effective; no additional approval is inferred beyond the named groups. Item-level exceptions not explicitly accepted remain OPEN. D07 design acceptance does not override D03 rejection or authorize unaccepted implementation details.
 
 Broader OPEN items remain outside this RFC: commercial activation, legal/privacy provider facts, new project runtime evidence/media permissions, portrait/logo/2D motif, immersive design, new metrics and SEO/release work. No review item silently closes them.
 
 ## Recommendation
 
-D01 and D07 are closed at their named scope. Review D03 next because it governs action and response meaning, then D02/D05, D04 and D06. Accept or reject subparts explicitly where dependencies differ. Do not approve the whole packet through an ambiguous general acknowledgment.
+D01–D07 now have recorded dispositions at group scope. D03 is rejected, so preserve its existing baseline while implementation sequencing is revisited. No versioned plan is prepared until the accepted groups are reconciled with that baseline. Accept or reject subparts explicitly where dependencies differ. Do not approve the whole packet through an ambiguous general acknowledgment.
 
 ## Status
 
-**PROPOSED RFC; partial human acceptance. D01 and D07: APPROVED (2026-09-16). D02–D06: OPEN.** The owner-level records identify the human reviewer, explicit dispositions and source. Acceptance means recording APPROVED, REJECTED or OPEN against each owner revision, with any wording exceptions. An unqualified merge records document publication, not adoption of every proposal. Stop at this governance PR; no merge, execution plan or implementation in this task.
+**PROPOSED RFC; human dispositions recorded. D01, D02, D04, D05, D06 and D07: APPROVED (2026-09-16). D03: REJECTED.** The owner-level records identify the human reviewer, explicit dispositions and source. Acceptance means recording APPROVED, REJECTED or OPEN against each owner revision, with any wording exceptions. An unqualified merge records document publication, not adoption of every proposal. Stop at this governance PR; no merge, execution plan or implementation in this task.

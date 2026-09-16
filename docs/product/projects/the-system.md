@@ -95,18 +95,18 @@ The visual explains the modeled implementation boundaries without presenting pla
 
 Publish the image-free bilingual card above and the paired Spanish/English detail page described here, linking to the public source and showing the labeled conceptual visual. A screenshot, demo, `functional-demonstration` label, and claims about planned scene or collaboration features remain unapproved. Current runtime verification and authorized media would be required before broadening the evidence claim.
 
-## MKT-D04-LAB — Editorial candidate — PROPOSED revision 1
+## MKT-D04-LAB — Editorial candidate — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing item permissions and APPROVED requirements remain operative; no evidence-strength upgrade is proposed.
+**Revision 1: APPROVED under D04.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The Lab editorial framing is accepted; evidence strength, maturity, READY state and no-homepage-card eligibility do not change.
 
 Current complete card/detail copy and permissions above remain authoritative. This table proposes only a shorter summary plus a single clear relationship and limitation treatment; all titles, permitted source-backed scope, result restrictions, source URL, conceptual caption/alt and publication scope not explicitly replaced remain unchanged.
 
-| Field / current treatment | Proposed Spanish | Proposed English | Permission |
+| Field / current treatment | Accepted Spanish | Accepted English | Permission |
 | --- | --- | --- | --- |
-| Card/detail summary: Long lab summary with implementation/blueprint vocabulary | Laboratorio de campañas de rol con código para cuentas, membresías, invitaciones y permisos. | A role-playing campaign lab with code for accounts, memberships, invitations and permissions. | New wording requires item-owner approval; same source-backed scope |
+| Card/detail summary: Long lab summary with implementation/blueprint vocabulary | Laboratorio de campañas de rol con código para cuentas, membresías, invitaciones y permisos. | A role-playing campaign lab with code for accounts, memberships, invitations and permissions. | Accepted under D04 item disposition; same source-backed scope |
 | Relationship scattered across copy | Laboratorio publicado por Samuel, sin relación de cliente ni entrega en producción. | Lab published by Samuel, with no client relationship or production delivery. | Must accompany summary; no ownership/employment/client upgrade |
 | Detail limitations repeated across bands | No hay demostración pública ni ejecución actual verificada. La suscripción está modelada en el código; no se presenta como facturación operativa. Escenas, activos, notas y colaboración completa no se presentan como entregados. | There is no public demonstration or verified current execution. Subscription boundaries are modeled in code, not presented as operational billing. Scenes, assets, notes and full collaboration are not presented as delivered. | Preserve all limitations; no live/demo/result/visual permission expansion |
 
 Keep the existing concise card limitation as well as the new detail limitations, so the index never relies on a click to reveal lack of current verification. The conceptual visual remains exact-asset/detail-only. Recommended index placement is a visibly secondary Lab entry, retaining the RPG domain.
 
-Approval unit: MKT-D04-LAB. Evidence strength, maturity, READY state and no-homepage-card eligibility do not change.
+Decision record: MKT-D04-LAB. Evidence strength, maturity, READY state and no-homepage-card eligibility do not change.

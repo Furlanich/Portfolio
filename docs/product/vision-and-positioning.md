@@ -64,7 +64,7 @@ The value proposition must lead with business usefulness rather than a technolog
 
 [MKT-D01 revision 1](#mkt-d01-durable-category-and-buying-problem-approved-revision-1) owns the accepted bilingual descriptor and priority buying situation. The earlier proposed descriptor “Estudio de desarrollo de software a medida” is superseded by that category decision.
 
-The existing approved homepage H1 and surrounding copy remain owned by [`HOME-HERO`](pages/home.md#home-hero). The replacement hero in D02 remains OPEN; accepting the durable category does not adopt its proposed H1, support or CTA labels.
+The existing approved homepage H1 and surrounding copy remain owned by [`HOME-HERO`](pages/home.md#home-hero). The replacement hero in D02 is now accepted under its owner; accepting D01 did not by itself adopt that hero, support or CTA wording.
 
 ## Differentiation
 
@@ -135,4 +135,4 @@ Governance: [marketing narrative RFC](../rfcs/marketing-narrative-closure.md). T
 
 Do not promise quantified savings, growth, automated exception handling, enterprise scale, instant ERP, proprietary products or an active commercial service. Availability remains Argentina/international, in Spanish/English; never convert it into project-history claims. The category is not a legal entity name.
 
-**Closed approval unit D01:** territory B, bilingual category and priority problem. The internal differentiating mechanism guides framing; its revised public wording remains PROPOSED as stated in the table. D02 homepage wording and all other unaccepted copy remain OPEN. Territory A is retained above for decision history, not as the selected R1 direction.
+**Closed approval unit D01:** territory B, bilingual category and priority problem. The internal differentiating mechanism guides framing; its revised public wording remains PROPOSED as stated in the table. D02 homepage wording is accepted in its owner; the internal differentiating mechanism and all other unaccepted copy remain OPEN. Territory A is retained above for decision history, not as the selected R1 direction.

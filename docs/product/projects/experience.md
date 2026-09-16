@@ -192,9 +192,9 @@ Use a typed static project content model with explicit localized fields, evidenc
 
 Internal relationship, permission, evidence-strength, lifecycle, restriction, and homepage-eligibility data remains in `PROJECT-EVIDENCE` and the item records. Public application modules contain only an explicit publication manifest and approved localized public content. The completed implementation sequence and its evidence gates are recorded by [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../../plans/completed/projects-evidence-experience.md).
 
-## MKT-D04 experience delta — PROPOSED revision 1
+## MKT-D04 experience delta — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing item permissions and APPROVED requirements remain operative; no evidence-strength upgrade is proposed.
+**Revision 1: APPROVED under D04.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The approved experience framing is accepted without changing evidence strength, maturity or publication permissions.
 
 Recommended composition: one substantial GRS entry followed by a shorter The-System entry with its Lab context visible; MPC is discovered through Founder. This explicitly proposes replacing the uniform two/three-record grid for this inventory only. Do not create top-level maturity groups or a separate Lab navigation item.
 
