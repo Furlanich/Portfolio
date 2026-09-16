@@ -3,6 +3,7 @@ id: PAGE-STUDIO
 type: page-spec
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - PAGE-FOUNDER
   - BRAND-POSITIONING
   - PAGE-CONTACT
@@ -13,7 +14,7 @@ related:
   - DESIGN-IX-A11Y
   - PAGE-PROJECTS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-07
+last_verified: 2026-09-16
 ---
 
 # Studio and founder pages
@@ -624,3 +625,41 @@ No RFC or new ADR is required. Implementation is substantial and must use a vers
 - The page-specific visual, responsive, accessibility, and motion rules in DESIGN-VISUAL and DESIGN-IX-A11Y are satisfied.
 - CV download and professional destinations are reverified in normal and /Portfolio modes before integration.
 - No application implementation changes are part of this decision-closure task.
+
+## MKT-D06-STUDIO-FOUNDER — Emphasis and copy — PROPOSED revision 1
+
+**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing APPROVED content and navigation remain operative until this revision is accepted.
+
+Studio remains the operating-model page; Founder remains the professional background page. Keep both existing route pairs and Founder outside primary navigation. No new seniority, degree title, employee, employer endorsement, client history, legal identity or portrait is proposed.
+
+### Proposed Studio outline and changed copy
+
+Outline: global demo notice → introduction with accountability/collaborator explanation → four principles → location and Founder bridge → current-mode Contact ending. The principles keep their approved content and semantic list; the process remains on Home. Merge STUDIO-ACCOUNTABILITY into the introduction and STUDIO-LOCATION with the Founder bridge; retain distinct headings where needed, without repeating the same operating-model facts.
+
+| Field / current ES and EN treatment | Proposed Spanish | Proposed English | Reason / permitted basis |
+| --- | --- | --- | --- |
+| Intro: operating model plus repeated accountability | Un estudio con dirección técnica de principio a fin | A studio with technical leadership from start to finish | Founder-led responsibility, not a multi-person consultancy |
+| Accountability: sales/management-layer comparison | Samuel Furlanich participa en la definición del problema, las decisiones técnicas y la revisión del trabajo. La responsabilidad tiene un nombre y se mantiene durante el proyecto. | Samuel Furlanich is involved in defining the problem, technical decisions and review of the work. One named technical lead remains accountable throughout the project. | Positive model; intended operation under demo notice |
+| Collaborators: de forma explícita / brought in explicitly | Cuando el alcance requiere otra especialidad, se acuerda la participación de colaboradores y sus responsabilidades. Samuel mantiene la dirección técnica. | When the scope calls for another specialty, collaborator involvement and responsibilities are agreed. Samuel retains technical leadership. | Scope-dependent collaboration; no permanent team implied |
+| Location: con proyectos en todo el país / with projects across the country | Desde Buenos Aires, Argentina, con disponibilidad para proyectos en el país y el exterior. Comunicación en español e inglés. | Based in Buenos Aires, Argentina, with availability for work in Argentina and internationally. Communication in Spanish and English. | Availability, not delivery footprint |
+| Founder bridge: list of biography/CV/page contents | Conocé la experiencia y formación de quien dirige el trabajo. | Explore the experience and background of the person leading the work. | One reason to inspect Founder |
+| Founder link | Conocer a Samuel | Meet Samuel | Existing Founder route |
+| Closing inquiry/response promise | Ver las opciones de contacto y la demostración del formulario. | Explore contact options and the form demonstration. | D03 demo contract; CTA label owned by IA |
+
+### Proposed Founder outline and changed copy
+
+Source order: global demo notice → short header → complete existing experience → complete existing detailed biography in readable paragraphs → complete education with proposed MPC contextual entry → grouped capabilities → professional links → Projects bridge → demo-aware Contact ending. All facts remain visible without disclosure controls. The long biography moves below experience, not behind a click. Current employment stays in the narrative only, as already approved; it is not silently added to the timeline.
+
+| Field / current ES and EN treatment | Proposed Spanish | Proposed English | Reason / permission |
+| --- | --- | --- | --- |
+| Opening: role sentence immediately followed by full biography | Samuel Furlanich / Desarrollador de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento. | Samuel Furlanich / Software developer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance. | Approved capabilities; no seniority label or inflated tenure |
+| Capability lead: no en acumular nombres de herramientas / not a catalogue of tools | Capacidades para construir y mejorar sistemas | Capabilities for building and improving systems | Positive group introduction; approved group details remain unchanged |
+| Projects bridge: internal anti-duplication rationale | Los proyectos públicos permiten explorar código, contexto y límites. | The public projects let you explore code, context and limitations. | Evidence role, not professional-client equivalence |
+| Projects action | Ver proyectos | Explore projects | Existing localized index |
+| Final commercial invitation | Explorá las opciones de contacto y la demostración del formulario. | Explore the contact options and the form demonstration. | Removes review/response promise during demo |
+
+Keep independent practice since 2024, every approved employment/internship date, completed studies wording, exact institutions and current employment narrative. Splitting biography paragraphs must not change its facts or imply an unverified qualification. Group IDs must be valid and stable independently of localized titles; that is a correctness repair, not new public copy.
+
+Professional links move below substantive background. CV, LinkedIn and GitHub are ordinary secondary links, with the same existing destinations and accessible external/download behavior; CV loses solid primary-button prominence. No CV asset redesign is included. The MPC teaser and detail link use only [MKT-D04-MPC](../projects/mpc-administracion.md#mkt-d04-mpc-editorial-candidate-proposed-revision-1), placed with education and labeled educational group work. No new Founder-only repository is published.
+
+**Approval unit D06-STUDIO-FOUNDER:** accept order and changed copy together; D04 must also be accepted before moving MPC. The approved portrait deferral remains unchanged.

@@ -3,6 +3,7 @@ id: PROJECT-EVIDENCE
 type: product-spec
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - PAGE-PROJECTS
   - PAGE-PROJECT-DETAIL
   - HOME-PROOF
@@ -10,7 +11,7 @@ related:
   - SERVICE-WHATSAPP
   - SERVICE-CONSULTING
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-last_verified: 2026-09-06
+last_verified: 2026-09-16
 ---
 
 # Project evidence inventory
@@ -367,3 +368,13 @@ Alternatives rejected for the canonical taxonomy were `Trabajo en producción / 
 ### Permission policy
 
 Every candidate now has an explicit permission matrix. Unknown permission continues to fail closed. Public availability, repository ownership, a legacy portfolio entry, and an existing asset do not independently grant permission. On 2026-09-06 the initiative owner explicitly approved limited publication of the three READY records: their exact bilingual card/detail fields, source-backed capability statements, generic context, public-source label, limitations, public repository link, and one generated conceptual visual per record. Screenshots, videos, metrics, testimonials, production claims, client/employment claims, sole-authorship claims, and homepage use remain unapproved unless an item record says otherwise. The generated visuals are labeled as conceptual and are not evidence of runtime behavior.
+
+## MKT-D04 — Homepage bridge and selection boundary — PROPOSED revision 1
+
+**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing item permissions and APPROVED requirements remain operative; no evidence-strength upgrade is proposed.
+
+The [proposed inventory selection](projects/index.md#mkt-d04-evidence-placement-proposed-revision-1) keeps every underlying evidence/permission state. Home retains founder/process proof with no project cards, names, logos, images, metrics, maturity badges or project-specific summaries.
+
+One new permission is requested: allow a generic link from HOME-PROOF to the Projects index, with an explicit limitations-oriented label owned by PAGE-HOME. This would supersede **only** the existing fallback's prohibition on a Projects-route CTA. It does not waive the prototype homepage gate or imply that any item is homepage-eligible. Until explicitly approved, the existing no-Projects-CTA fallback remains authoritative.
+
+Services remains text-only for GRS. A contextual link to its already authorized detail is proposed; it is not authorization for service cards, screenshots, a functional demo or stronger results. The absence of suitable public WhatsApp and maintenance evidence remains visible. Authorizing revised public wording in the item records is a separate editorial approval, never proof of execution.

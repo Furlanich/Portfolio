@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
@@ -23,7 +24,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-15
+last_verified: 2026-09-16
 ---
 
 # FURLANICH project knowledge
@@ -77,3 +78,7 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 [`RFC-CONTACT-INQUIRY-PIPELINE`](rfcs/contact-inquiry-pipeline.md) and [`ADR-CONTACT-INQUIRY-PIPELINE`](decisions/contact-inquiry-pipeline.md) preserve Formspree behind `submitInquiry()` for a future commercial activation. The provider-neutral types, validator, and adapter are merged but dormant.
 
 [`ADR-CONTACT-INQUIRY-DEMO-MODE`](decisions/contact-inquiry-demonstration-mode.md) records the current deployment decision: `https://furlanich.github.io/Portfolio/` remains a non-commercial portfolio/technical demonstration, and its public form simulates outcomes locally without sending or storing values. [`REF-CONTACT-DEMO-KIT`](references/contact-inquiry-demonstration/index.md) provides the approved synthetic resources. [`PLAN-CONTACT-INQUIRY-PIPELINE`](plans/completed/contact-inquiry-pipeline.md) records the completed demonstration Privacy/Contact implementation and deployed zero-transmission proof. Real processor/legal/inbox/deletion gates remain OPEN for a separately reviewed commercial activation.
+
+## Marketing narrative decision review — PROPOSED
+
+[The review package](reviews/marketing-decision-closure-2026-09-15/index.md) provides owner-level bilingual copy comparisons, evidence/CTA tables, nine page outlines and five-width low-fidelity studies. [RFC-MARKETING-NARRATIVE-CLOSURE](rfcs/marketing-narrative-closure.md) covers the proposed narrative and evidence-discovery changes. All seven decision groups remain OPEN for human disposition; existing approvals, the demonstration ADR and evidence restrictions remain operative. No application change or execution plan is included.

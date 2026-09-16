@@ -3,6 +3,7 @@ id: PAGE-CONTACT
 type: page-spec
 status: OPEN
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - PAGE-PRIVACY
   - HOME-CTA
   - IA-SITE
@@ -17,7 +18,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - REF-CONTACT-DEMO-KIT
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-14
+last_verified: 2026-09-16
 ---
 
 # Contact and privacy pages
@@ -636,3 +637,48 @@ After the primary direct-contact choices and response expectation, Contact may i
 - English: “View Samuel's background” → /en/about/samuel-furlanich/
 
 This link provides relevant professional context. It is not a primary or secondary contact button, does not precede the inquiry/direct-channel actions, and does not duplicate the Studio or Founder narrative.
+
+## MKT-D03 — Demonstration presentation contract — PROPOSED revision 1
+
+**Candidate: PROPOSED. Human disposition: OPEN.** Existing APPROVED copy and requirements remain operative. Reviewer, date and explicit acceptance/rejection reference: **OPEN**.
+
+This revision resolves MKT-CONTACT-001 and MKT-POS-002 while preserving ADR-CONTACT-INQUIRY-DEMO-MODE. It changes presentation only. No service acceptance, quote, commercial intake, provider configuration, data path or operational response commitment is activated.
+
+### D03 mode and placement contract
+
+- Every direct entry route, including project details, Founder, Privacy and localized not-found pages, shows the same short, non-dismissible demonstration notice in normal flow immediately after the shared header and before main content. It is not another sticky bar or alert dialog. The notice links to Contact for explanation and does not obscure anchors.
+- Services and intended operating-model language are read under that explicit notice. On Home, it precedes the hero. Footer need not repeat the full notice; the Contact/Privacy links remain accessible. No real-inquiry promise survives in a demo-page ending.
+- Contact leads with one short introduction, then a concise form disclosure. The response-expectation block is omitted in the current mode, including Home, Services, Studio, Founder and project endings. The existing same-business-day/two-business-day commitment remains dormant for a future activation; do not newly promise that timing for external demo links.
+- Preserve four fields, required/optional rules, validation limits, 650ms local behavior, failure control, focus, retry, reset and zero-transmission adapter. Keep the failure-test instruction visible near the email field; no hidden critical disclosure or new accordion is proposed.
+- External links remain functional examples after the form, ordered WhatsApp, email, phone. They open the selected service and do not inherit any form values. They do not create commercial intake through this demonstration.
+- The existing exact public demonstration Privacy explanation remains unchanged. Do not shorten hosting/privacy facts into a claim that the entire website performs no network activity. Only the form's defined submission behavior is zero-transmission.
+
+### D03 current-versus-proposed bilingual copy
+
+| Key / current ES and EN | Proposed Spanish | Proposed English | Reason / permission |
+| --- | --- | --- | --- |
+| Global mode notice: absent from most entry pages | Demostración técnica. Los servicios comerciales aún no están activos. | Technical demonstration. Commercial services are not active yet. | Current deployment fact; persistent visible context on every route |
+| Notice link: new | Acerca de esta demostración | About this demonstration | Localized Contact route; D06 CTA map |
+| Contact H1: business-need invitation | Probá el formulario de contacto | Try the contact form | Sets correct demo expectation immediately |
+| Introduction: Samuel will review the inquiry | Explorá cómo funciona el formulario. Esta prueba no envía una consulta a Samuel. | Explore how the form works. This test does not send an inquiry to Samuel. | No review or response promise |
+| Form disclosure: long notice plus response block | La simulación ocurre en este navegador. No envía datos ni crea una consulta comercial. Usá datos de prueba. | The simulation runs in this browser. It sends no data and creates no commercial inquiry. Use sample details. | Current local adapter; no implication of real delivery |
+| Email helper: Lo usaremos únicamente para responder esta consulta. / We will use it only to respond to this inquiry. | El correo se valida solo para esta prueba. Para probar un error, usá failure@example.invalid. | The email is validated only for this test. To try an error, use failure@example.invalid. | Eliminates unsupported use promise; keeps reserved QA value |
+| Data-use helper: Usaremos tus datos para evaluar y responder tu consulta. / We will use your information to review and respond to your inquiry. | Los valores quedan temporalmente en esta página. Se borran al completar la simulación, salir o recargar. Si hay un error, se conservan para volver a probar. | Values stay temporarily on this page. They are cleared after a successful simulation, when you leave, or when you reload. After an error, they remain so you can try again. | Exact local lifecycle; no hosting-wide privacy claim |
+| Privacy link: repeated phrase/link | Privacidad de esta demostración | Privacy in this demonstration | Existing localized Privacy route; no legal-policy approval |
+| Submit: Simular envío / Simulate submission | Simular envío | Simulate submission | Retain approved meaning |
+| Loading: Simulando… / Simulating… | Simulando… | Simulating… | Retain approved state |
+| Success heading/body duplicate first sentence | Heading: Demostración completada. Body: No se enviaron datos ni se creó una consulta comercial. | Heading: Demonstration complete. Body: No data was sent and no commercial inquiry was created. | Separate heading/body; retain explicit outcome |
+| Failure heading/body duplicate first sentence | Heading: No se pudo completar la simulación. Body: No se enviaron datos. Tus valores siguen en esta página para volver a probar. | Heading: The simulation could not be completed. Body: No data was sent. Your values remain on this page so you can try again. | Reassuring and shorter; retry behavior unchanged |
+| Retry: Intentar nuevamente / Try again | Volver a probar | Try again | Consistent demonstration language |
+| Alternatives heading: preference question | Ejemplos de contacto externo | External contact examples | Clear boundary after form |
+| Alternatives explanatory paragraph | Estos enlaces abren WhatsApp, correo o teléfono. Son independientes de la prueba y no copian los valores del formulario. | These links open WhatsApp, email or phone. They are separate from the test and do not copy form values. | Functional external examples; no reply promise |
+| Direct labels: Escribir por WhatsApp / Write on WhatsApp; email; phone | Abrir WhatsApp / Enviar un correo / Llamar | Open WhatsApp / Send an email / Call | Each action must open its named channel; approved destinations unchanged |
+| Founder tail | Conocé a Samuel Furlanich | Meet Samuel Furlanich | Subdued Founder link after alternatives |
+
+Names of the four fields, required/optional wording, individual validation errors and sensitive-information warning remain the existing approved bilingual copy. No silent rewrite is authorized outside the listed rows. Do not render the table's structural words Heading/Body to visitors.
+
+### D03 dormant commercial distinction
+
+Current public Contact remains a simulation. Existing dormant commercial fields, consent/data-use copy, provider acceptance language and response expectation remain in their original sections for future review. No public toggle, environment-only activation or dual-purpose submit button is proposed. Future provider/legal/operational work must revisit all mode-specific strings and prove actual delivery/deletion before any activation; this RFC does not perform or close those gates.
+
+**Approval unit D03:** accept the global notice, mode/placement contract and bilingual replacements together, or record exceptions explicitly. A copy approval must not be recorded as approval to change the adapter or current deployment status.

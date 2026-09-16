@@ -3,12 +3,13 @@ id: BRAND-POSITIONING
 type: product-foundation
 status: PROPOSED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - AUDIENCES-SERVICES
   - CONTENT-LOCALIZATION
   - PAGE-HOME
   - PAGE-CONTACT
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-12
+last_verified: 2026-09-16
 ---
 
 # Vision and positioning
@@ -112,3 +113,26 @@ Public availability, a legacy portfolio entry, or a source repository does not b
 - **OPEN:** Final public wording and any internal confidentiality policy for AI-assisted work.
 
 The vendor-independent handling proposal is preserved in [Delivery and commercial boundaries](delivery-and-commercial-boundaries.md). It is not a certification claim.
+
+## MKT-D01 — Durable category and buying problem — PROPOSED revision 1
+
+**Candidate: PROPOSED. Human disposition: OPEN.** No approval is inferred from drafting, this task, or an unqualified PR merge. Existing APPROVED requirements remain operative until the owner explicitly accepts the named revision. Human reviewer, date, decision and approval reference: **OPEN**.
+
+Governance: [marketing narrative RFC](../rfcs/marketing-narrative-closure.md). This revision selects a strategic direction for the intended studio; the current technical-demonstration posture above remains APPROVED and unchanged.
+
+| Shortlisted territory | Category / priority | Advantage | Cost |
+| --- | --- | --- | --- |
+| A — General custom software studio | Custom development across web, automation and maintenance, with equal prominence | Familiar category; broad eligibility | Little distinction; buyers must choose a service before recognizing their situation |
+| B — Operations-focused custom software studio — RECOMMENDED | Familiar custom-software category; lead with disconnected orders, bookings and daily workflows | Concrete buying trigger; connects integrations and improvement of existing software | Simple brochure-site work receives less hero emphasis; must remain visible in Services |
+
+**Recommended selection: B.** The durable category remains familiar; the priority problem supplies differentiation. This is not a sector-specialist or proprietary-platform claim.
+
+| Field | Existing status / wording | Proposed Spanish | Proposed English | Basis / permission |
+| --- | --- | --- | --- | --- |
+| Durable category | PROPOSED: Estudio de desarrollo de software a medida | Estudio de software a medida | Custom software studio | Existing founder-led model and three approved services; human adoption required |
+| Priority buying situation | Several operating contexts, no ranked lead problem | Pedidos, reservas y tareas que dependen de mensajes, planillas y sistemas desconectados. | Orders, bookings and everyday tasks spread across messages, spreadsheets and disconnected systems. | Existing Home/Services situations; no claim of past client results |
+| Differentiating mechanism, internal direction | Several repeated accountability statements | Samuel conecta la definición del problema con las decisiones técnicas y la revisión del trabajo. | Samuel connects problem definition, technical decisions and review of the work. | Founder responsibility is approved; revised public wording remains proposed |
+
+Do not promise quantified savings, growth, automated exception handling, enterprise scale, instant ERP, proprietary products or an active commercial service. Availability remains Argentina/international, in Spanish/English; never convert it into project-history claims. The category is not a legal entity name.
+
+**Approval unit D01:** choose A or B, then explicitly accept/revise the bilingual category and priority problem. Homepage wording is a separate D02 decision. If D01 remains OPEN, D02 can be reviewed but cannot become the new durable positioning by implication.

@@ -3,12 +3,13 @@ id: RFC-INDEX
 type: rfc-index
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - GOV-ENGINEERING-LIFECYCLE
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-STATIC-LOCALIZED-ROUTING
-last_verified: 2026-09-11
+last_verified: 2026-09-16
 ---
 
 # RFCs
@@ -22,3 +23,7 @@ An RFC is a consequential product or architectural proposal that requires agreem
 - [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](homepage-foundation-static-localized-routing.md): approved in [Governance PR #6](https://github.com/Furlanich/Portfolio/pull/6). It selects explicit locale route trees and locale-specific root layouts for static Spanish root routes and English `/en/` routes while preserving GitHub Pages and build-time base-path compatibility.
 
 Do not create status directories until the number of RFCs or their lifecycle makes the additional structure useful.
+
+## Proposed marketing decision closure
+
+- [RFC-MARKETING-NARRATIVE-CLOSURE](marketing-narrative-closure.md): proposed cross-page narrative, evidence discovery and demonstration presentation. All new decisions remain OPEN for human disposition in their owning records; no implementation or new ADR is authorized.
