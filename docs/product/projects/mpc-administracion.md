@@ -95,18 +95,18 @@ The visual clarifies the educational workflow theme without presenting the ficti
 
 Publish the image-free bilingual card above and the paired Spanish/English detail page described here, linking to the public source and showing the labeled conceptual visual. A screenshot, homepage placement, functional-demonstration label, and broader technical or authorship claims remain unapproved. Runtime verification and authorized original-system imagery would be required before broadening the evidence claim.
 
-## MKT-D04-MPC — Editorial candidate — PROPOSED revision 1
+## MKT-D04-MPC — Editorial candidate — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing item permissions and APPROVED requirements remain operative; no evidence-strength upgrade is proposed.
+**Revision 1: APPROVED under D04.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The MPC editorial framing is accepted; evidence strength, maturity, READY state and no-homepage-card eligibility do not change.
 
 Current complete card/detail copy and permissions above remain authoritative. This table proposes only a shorter summary plus a single clear relationship and limitation treatment; all titles, permitted source-backed scope, result restrictions, source URL, conceptual caption/alt and publication scope not explicitly replaced remain unchanged.
 
-| Field / current treatment | Proposed Spanish | Proposed English | Permission |
+| Field / current treatment | Accepted Spanish | Accepted English | Permission |
 | --- | --- | --- | --- |
-| Card/detail summary: 2021 group/fictional description repeated through sections | Proyecto educativo grupal de 2021 para administrar producción y stock de una fábrica de quesos ficticia. | A 2021 educational group project for managing production and inventory at a fictional cheese factory. | New wording requires item-owner approval; same source-backed scope |
+| Card/detail summary: 2021 group/fictional description repeated through sections | Proyecto educativo grupal de 2021 para administrar producción y stock de una fábrica de quesos ficticia. | A 2021 educational group project for managing production and inventory at a fictional cheese factory. | Accepted under D04 item disposition; same source-backed scope |
 | Relationship scattered across copy | Trabajo educativo grupal; no representa un cliente, un empleo ni una entrega de FURLANICH. | Educational group work; it does not represent a client, employment or a FURLANICH delivery. | Must accompany summary; no ownership/employment/client upgrade |
 | Detail limitations repeated across bands | No se verificó su funcionamiento actual. No se afirma autoría individual, uso real, despliegue ni resultado comercial. No hay material visual autorizado del sistema original. | Current functionality has not been verified. Sole authorship, real-world use, deployment and business results are not claimed. No visual material from the original system is authorized. | Preserve all limitations; no live/demo/result/visual permission expansion |
 
 Keep the existing concise card limitation as well as the new detail limitations, so the index never relies on a click to reveal lack of current verification. The conceptual visual remains exact-asset/detail-only. Proposed discovery is the Founder education context, linked to the existing paired detail routes. The new educational teaser uses the summary and relationship above; it is not a new case study.
 
-Approval unit: MKT-D04-MPC. Evidence strength, maturity, READY state and no-homepage-card eligibility do not change.
+Decision record: MKT-D04-MPC. Evidence strength, maturity, READY state and no-homepage-card eligibility do not change.

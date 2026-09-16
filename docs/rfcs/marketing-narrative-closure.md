@@ -44,7 +44,7 @@ A buyer must work through too much explanation before understanding the relevant
 
 ## Proposed approach
 
-Recommend territory B: an operations-focused custom software studio, using a familiar category and leading with fragmented orders, bookings and daily coordination. The proposed global notice makes the inactive commercial status visible while pages demonstrate the intended offer.
+D01 now accepts territory B: an operations-focused custom software studio, using a familiar category and leading with fragmented orders, bookings and daily coordination. The proposed global notice makes the inactive commercial status visible while pages demonstrate the intended offer.
 
 Home merges audience relevance into Problems, keeps three service summaries, and replaces defensive proof language with concise founder/process accountability. A generic Projects link is separately proposed; no project gains Home-card eligibility. Projects leads with GRS, treats The-System as secondary Lab material, and moves MPC discovery to Founder education while preserving the existing paired detail URLs.
 
@@ -56,8 +56,8 @@ The exact copy and normative candidate decisions live in their [owning records](
 
 | Alternative | Benefit | Trade-off | Recommendation |
 | --- | --- | --- | --- |
-| A: general custom-software positioning, equal service weight | Broad familiar category; little reorganization | Leaves the buying trigger and differentiation vague | Not preferred; still OPEN for human choice |
-| B: operational buying situation with familiar studio category | Connects web, integration and existing-system work through a recognizable need | Needs clear simple-website visibility on Services | Recommended; PROPOSED |
+| A: general custom-software positioning, equal service weight | Broad familiar category; little reorganization | Leaves the buying trigger and differentiation vague | Not selected under D01 revision 1 |
+| B: operational buying situation with familiar studio category | Connects web, integration and existing-system work through a recognizable need | Needs clear simple-website visibility on Services | APPROVED under D01 on 2026-09-16 |
 | Correctness repairs only | Lowest scope; resolves wrong labels/raw tokens/accessible references | Does not address persuasion, length or evidence selection | May proceed later as separate approved-scope work; insufficient as full response |
 | Hide demonstration and keep strong commercial CTAs | Superficially cleaner funnel | Misrepresents current operation and conflicts with the ADR | Incompatible with approved boundary; not a candidate |
 | Decorative redesign/3D before narrative closure | Could create visual novelty | Does not repair proof or mode truth; additional risk | Deferred and out of scope |
@@ -84,7 +84,7 @@ Preserve all current URL pairs and fragments. New shared-boundary fragments are 
 
 | Risk | Control |
 | --- | --- |
-| Proposal mistaken for approval because text is polished | Every owner section has PROPOSED candidate and OPEN human disposition; no overwrite of approved baseline |
+| Proposal mistaken for approval because text is polished | Explicit group statuses: D01/D02/D04/D05/D06/D07 accepted and D03 rejected; only named approved clauses supersede baseline |
 | New copy broadens evidence or ownership | Item-specific deltas; explicit no current verification/client/production claims; item permissions remain unchanged |
 | Shorter Services conceals provider restrictions | Coverage table and visible boundaries before CTA; no hidden critical disclosure |
 | Demo copy promises actual inquiry response | Route-wide notice and D03 replacement inventory; response expectation dormant |
@@ -94,14 +94,14 @@ Preserve all current URL pairs and fragments. New shared-boundary fragments are 
 
 ## Unresolved questions
 
-All human dispositions D01–D07 remain OPEN. The human must choose territory, accept/revise exact bilingual copy, approve the narrow Home evidence-link permission, approve Founder-led MPC discovery, accept the visual/interaction revisions and record any exceptions. No current task text supplies those specific approvals.
+D01, D02, D04, D05 and D06 are APPROVED, D03 is REJECTED, and D07 is APPROVED by explicit human disposition on 2026-09-16, as recorded in the [decision register](../reviews/marketing-decision-closure-2026-09-15/index.md#human-disposition-record-2026-09-16) and their authoritative owners. D03 rejection leaves the existing demonstration contract effective; no additional approval is inferred beyond the named groups. Item-level exceptions not explicitly accepted remain OPEN. D07 design acceptance does not override D03 rejection or authorize unaccepted implementation details.
 
 Broader OPEN items remain outside this RFC: commercial activation, legal/privacy provider facts, new project runtime evidence/media permissions, portrait/logo/2D motif, immersive design, new metrics and SEO/release work. No review item silently closes them.
 
 ## Recommendation
 
-Review D01 and D03 first because they govern the meaning of the rest. Then review D02/D05, D04, D06 and D07. Accept or reject subparts explicitly where dependencies differ. Do not approve the whole packet through an ambiguous general acknowledgment.
+D01–D07 now have recorded dispositions at group scope. D03 is rejected, so preserve its existing baseline while implementation sequencing is revisited. No versioned plan is prepared until the accepted groups are reconciled with that baseline. Accept or reject subparts explicitly where dependencies differ. Do not approve the whole packet through an ambiguous general acknowledgment.
 
 ## Status
 
-**PROPOSED. Human decision: OPEN.** Authoring this packet is authorized; changing product requirements is not automatically approved. Human reviewer/date/reference: OPEN. Acceptance means recording APPROVED, REJECTED or OPEN against each owner revision, with any wording exceptions. An unqualified merge records document publication, not adoption of every proposal. Stop at this governance PR; no merge, execution plan or implementation in this task.
+**PROPOSED RFC; human dispositions recorded. D01, D02, D04, D05, D06 and D07: APPROVED (2026-09-16). D03: REJECTED.** The owner-level records identify the human reviewer, explicit dispositions and source. Acceptance means recording APPROVED, REJECTED or OPEN against each owner revision, with any wording exceptions. An unqualified merge records document publication, not adoption of every proposal. Stop at this governance PR; no merge, execution plan or implementation in this task.

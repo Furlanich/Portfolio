@@ -41,7 +41,7 @@ Changing from demonstration to commercial operation is a future product, legal, 
 - **APPROVED:** Commercial name: **FURLANICH**.
 - **APPROVED:** Founder-led model with Samuel as the face and directly accountable technical lead.
 - **APPROVED:** Collaborators may participate when scope requires specialized capacity; their existence or identities should not change the client's understanding of accountability.
-- **PROPOSED:** Public descriptor: “Estudio de desarrollo de software a medida.”
+- **APPROVED:** Durable public descriptor and priority buying situation: see [MKT-D01 revision 1](#mkt-d01-durable-category-and-buying-problem-approved-revision-1).
 - **REJECTED:** Presenting the permanent size or composition of a team as a primary trust signal.
 
 ## Positioning
@@ -60,11 +60,11 @@ The value proposition must lead with business usefulness rather than a technolog
 - Spanish for Argentina is primary; English is secondary.
 - Availability must not be rewritten as an unsupported claim of existing international clients.
 
-### Durable public descriptor — PROPOSED
+### Durable public descriptor — APPROVED
 
-> Estudio de desarrollo de software a medida
+[MKT-D01 revision 1](#mkt-d01-durable-category-and-buying-problem-approved-revision-1) owns the accepted bilingual descriptor and priority buying situation. The earlier proposed descriptor “Estudio de desarrollo de software a medida” is superseded by that category decision.
 
-The approved homepage H1 and its surrounding copy are owned by [`HOME-HERO`](pages/home.md#home-hero). That page-level approval does not adopt the copy as permanent brand language. The general descriptor remains proposed until it is separately adopted as durable brand language.
+The existing approved homepage H1 and surrounding copy remain owned by [`HOME-HERO`](pages/home.md#home-hero). The replacement hero in D02 is now accepted under its owner; accepting D01 did not by itself adopt that hero, support or CTA wording.
 
 ## Differentiation
 
@@ -114,9 +114,9 @@ Public availability, a legacy portfolio entry, or a source repository does not b
 
 The vendor-independent handling proposal is preserved in [Delivery and commercial boundaries](delivery-and-commercial-boundaries.md). It is not a certification claim.
 
-## MKT-D01 — Durable category and buying problem — PROPOSED revision 1
+## MKT-D01 — Durable category and buying problem — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** No approval is inferred from drafting, this task, or an unqualified PR merge. Existing APPROVED requirements remain operative until the owner explicitly accepts the named revision. Human reviewer, date, decision and approval reference: **OPEN**.
+**Revision 1: APPROVED. Human disposition D01: APPROVED.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in [the decision-review task](codex://threads/01a0a5e6-85b2-7122-90e8-ba0e0ccf09a2), following the R1 packet published in [PR #52](https://github.com/Furlanich/Portfolio/pull/52). The user wrote “DO1: APPROVED”; DO1 is recorded as decision D01. This accepts recommended territory B and the bilingual category and priority buying situation below. It does not approve D02 hero copy or activate commercial services.
 
 Governance: [marketing narrative RFC](../rfcs/marketing-narrative-closure.md). This revision selects a strategic direction for the intended studio; the current technical-demonstration posture above remains APPROVED and unchanged.
 
@@ -125,14 +125,14 @@ Governance: [marketing narrative RFC](../rfcs/marketing-narrative-closure.md). T
 | A — General custom software studio | Custom development across web, automation and maintenance, with equal prominence | Familiar category; broad eligibility | Little distinction; buyers must choose a service before recognizing their situation |
 | B — Operations-focused custom software studio — RECOMMENDED | Familiar custom-software category; lead with disconnected orders, bookings and daily workflows | Concrete buying trigger; connects integrations and improvement of existing software | Simple brochure-site work receives less hero emphasis; must remain visible in Services |
 
-**Recommended selection: B.** The durable category remains familiar; the priority problem supplies differentiation. This is not a sector-specialist or proprietary-platform claim.
+**Accepted selection: B (2026-09-16).** The durable category remains familiar; the priority problem supplies differentiation. This is not a sector-specialist or proprietary-platform claim.
 
-| Field | Existing status / wording | Proposed Spanish | Proposed English | Basis / permission |
+| Field | Previous status / wording | Revision 1 Spanish | Revision 1 English | Current status / permission |
 | --- | --- | --- | --- | --- |
-| Durable category | PROPOSED: Estudio de desarrollo de software a medida | Estudio de software a medida | Custom software studio | Existing founder-led model and three approved services; human adoption required |
-| Priority buying situation | Several operating contexts, no ranked lead problem | Pedidos, reservas y tareas que dependen de mensajes, planillas y sistemas desconectados. | Orders, bookings and everyday tasks spread across messages, spreadsheets and disconnected systems. | Existing Home/Services situations; no claim of past client results |
+| Durable category | PROPOSED: Estudio de desarrollo de software a medida | Estudio de software a medida | Custom software studio | APPROVED under D01; existing founder-led model and three approved services |
+| Priority buying situation | Several operating contexts, no ranked lead problem | Pedidos, reservas y tareas que dependen de mensajes, planillas y sistemas desconectados. | Orders, bookings and everyday tasks spread across messages, spreadsheets and disconnected systems. | APPROVED under D01; existing Home/Services situations; no claim of past client results |
 | Differentiating mechanism, internal direction | Several repeated accountability statements | Samuel conecta la definición del problema con las decisiones técnicas y la revisión del trabajo. | Samuel connects problem definition, technical decisions and review of the work. | Founder responsibility is approved; revised public wording remains proposed |
 
 Do not promise quantified savings, growth, automated exception handling, enterprise scale, instant ERP, proprietary products or an active commercial service. Availability remains Argentina/international, in Spanish/English; never convert it into project-history claims. The category is not a legal entity name.
 
-**Approval unit D01:** choose A or B, then explicitly accept/revise the bilingual category and priority problem. Homepage wording is a separate D02 decision. If D01 remains OPEN, D02 can be reviewed but cannot become the new durable positioning by implication.
+**Closed approval unit D01:** territory B, bilingual category and priority problem. The internal differentiating mechanism guides framing; its revised public wording remains PROPOSED as stated in the table. D02 homepage wording is accepted in its owner; the internal differentiating mechanism and all other unaccepted copy remain OPEN. Territory A is retained above for decision history, not as the selected R1 direction.

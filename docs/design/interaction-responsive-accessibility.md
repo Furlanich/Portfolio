@@ -286,13 +286,13 @@ These requirements implement the `PAGE-CONTACT` state model without claiming aud
 
 Verify both locale routes at `320x800`, `390x844`, `768x1024`, `1024x768`, and `1440x900`, including root and optional `/Portfolio` base paths. Cover keyboard-only completion and retry; focus/error association; all state announcements; duplicate prevention; preserved values; reset after simulated success only; textarea resize; translated copy; 200% zoom; reduced motion; no raw adapter response; fallback order; representative axe scans; manual contrast, semantics, reading-order, and assistive-technology checks; and zero inquiry-value network traffic. A labeled live delivery smoke is required only by a later commercial activation and never runs automatically in public CI.
 
-## MKT-D07-IX-R1 — Marketing navigation and demo interactions — PROPOSED
+## MKT-D07-IX-R1 — Marketing navigation and demo interactions — APPROVED
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit acceptance reference: **OPEN**. This named revision does not replace any existing APPROVED baseline until human acceptance is recorded.
+**Revision 1: APPROVED. Human disposition D07: APPROVED.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in [the decision-review task](codex://threads/01a0a5e6-85b2-7122-90e8-ba0e0ccf09a2), following the R1 packet published in [PR #52](https://github.com/Furlanich/Portfolio/pull/52). The user wrote “DO7: APPROVED”; DO7 is recorded as D07, accepting both VIS-R1 and IX-R1. Approval selects these design treatments, not the still-OPEN content, evidence-placement or IA decisions D02–D06. No implementation is performed or authorized by this documentation task.
 
 Compared with DESIGN-IX-A11Y at main revision 2be0286 (approved baseline last verified 2026-09-12). Preserve static localized routes, source-order parity, semantic landmarks, visible focus, 44px minimum targets, 48px primary actions, reduced-motion behavior and zero-transmission Contact. No animation, scroll-linked scene, forced focus trap or modal menu is introduced.
 
-| Interaction | Proposed requirement | Acceptance evidence after implementation |
+| Interaction | Accepted interaction treatment | Acceptance evidence after implementation |
 | --- | --- | --- |
 | Global demo notice | In normal flow, visible on direct entry, not dismissible; plain status text, not role=alert; explanation link to Contact | All route families / ES+EN, no-JS, screen-reader landmark/reading-order check |
 | Mobile disclosure selection | With enhancement available, selecting a destination closes the menu. Same-page selection lands with heading visible below sticky bar; move focus to the destination heading without leaving it in hidden menu content | Keyboard Enter, touch/click, same-page and cross-page paths; no scroll/focus race |
@@ -305,4 +305,4 @@ Compared with DESIGN-IX-A11Y at main revision 2be0286 (approved baseline last ve
 | Form errors/states | Existing first-invalid/status focus behavior and no-send confirmations; no new data collection, persistence or real channel activation | Existing contract tests plus browser interaction and request/storage checks |
 | Cards/links | Noninteractive content remains noninteractive. No whole-card pseudo-action, hover-only content or hidden essential limits | Keyboard order, touch and no-JS review |
 
-**D07 acceptance:** approve VIS-R1 and IX-R1 with their dependent content/IA decisions, or record exact exceptions. Existing valid-ID and unobscured-anchor requirements already authorize later correctness repairs through a separate implementation PR; this documentation task performs none. Reduced motion removes nonessential transitions; no new transitions are proposed.
+**D07 acceptance recorded:** VIS-R1 and IX-R1 are APPROVED without wording exceptions. The global notice and revised Contact order require D03; new shared-boundary fragments require D05/D06. Existing routes and language pairs remain unchanged. Earlier interaction clauses are superseded only for the accepted enhanced-menu dismissal/Escape/focus behavior and the named treatments whose content dependencies are subsequently accepted. No notice copy, response-block removal, added fragment or IA change is approved through D07 alone. Existing valid-ID and unobscured-anchor requirements already authorize later correctness repairs through a separate implementation PR; this documentation task performs none. Reduced motion removes nonessential transitions; no new transitions are proposed.

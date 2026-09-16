@@ -638,9 +638,9 @@ After the primary direct-contact choices and response expectation, Contact may i
 
 This link provides relevant professional context. It is not a primary or secondary contact button, does not precede the inquiry/direct-channel actions, and does not duplicate the Studio or Founder narrative.
 
-## MKT-D03 — Demonstration presentation contract — PROPOSED revision 1
+## MKT-D03 — Demonstration presentation contract — REJECTED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Existing APPROVED copy and requirements remain operative. Reviewer, date and explicit acceptance/rejection reference: **OPEN**.
+**Revision 1: REJECTED. Human disposition D03: REJECTED.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The user supplied “D03 - REJECTED”. The proposed route-wide notice, revised Contact presentation and replacement demo copy are not adopted. Existing APPROVED Contact requirements, the deployed demonstration boundary and the Contact demonstration ADR remain authoritative.
 
 This revision resolves MKT-CONTACT-001 and MKT-POS-002 while preserving ADR-CONTACT-INQUIRY-DEMO-MODE. It changes presentation only. No service acceptance, quote, commercial intake, provider configuration, data path or operational response commitment is activated.
 
@@ -681,4 +681,4 @@ Names of the four fields, required/optional wording, individual validation error
 
 Current public Contact remains a simulation. Existing dormant commercial fields, consent/data-use copy, provider acceptance language and response expectation remain in their original sections for future review. No public toggle, environment-only activation or dual-purpose submit button is proposed. Future provider/legal/operational work must revisit all mode-specific strings and prove actual delivery/deletion before any activation; this RFC does not perform or close those gates.
 
-**Approval unit D03:** accept the global notice, mode/placement contract and bilingual replacements together, or record exceptions explicitly. A copy approval must not be recorded as approval to change the adapter or current deployment status.
+**Disposition D03:** the global notice, mode/placement contract and bilingual replacements are REJECTED together. Existing demonstration presentation and adapter/current-deployment boundaries remain in force. This rejection does not activate commercial intake or alter the ADR.

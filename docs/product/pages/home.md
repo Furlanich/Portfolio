@@ -501,31 +501,31 @@ The complete homepage may proceed to implementation planning using the fallback 
 - Keyboard and mobile users can reach all navigation and CTAs.
 - Project cards comply with disclosure permissions.
 
-## MKT-D02 — Hero and actions — PROPOSED revision 1
+## MKT-D02 — Hero and actions — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** No approval is inferred from drafting, this task, or an unqualified PR merge. Existing APPROVED requirements remain operative until the owner explicitly accepts the named revision. Human reviewer, date, decision and approval reference: **OPEN**.
+**Revision 1: APPROVED. Human disposition D02: APPROVED.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The user supplied “D02 - APPROVED”. This accepts the bilingual hero and action wording as a pair. D03 is rejected, so its proposed route-wide notice and Contact presentation are not adopted; the existing demonstration boundary remains authoritative.
 
-Current text below is an excerpt from the deployed baseline audited on 2026-09-15. Candidate wording targets D01 territory B. Global demonstration notice and Contact contract are owned by [D03](contact-and-privacy.md#mkt-d03-demonstration-presentation-contract-proposed-revision-1); the notice appears on every route before the hero. No response promise belongs beside the current demo CTA.
+Current text below is an excerpt from the deployed baseline audited on 2026-09-15. Accepted wording targets D01 territory B. The existing demonstration context remains owned by rejected [D03](contact-and-privacy.md#mkt-d03-demonstration-presentation-contract-rejected-revision-1); its proposed notice is not adopted. No response promise belongs beside the current demo CTA.
 
-| Field | Current ES / EN | Proposed Spanish | Proposed English | Reason / permission |
+| Field | Current ES / EN | Accepted Spanish | Accepted English | Reason / permission |
 | --- | --- | --- | --- | --- |
-| Eyebrow | Desarrollo de software a medida para pymes / Custom software development for small and medium-sized businesses | Estudio de software a medida | Custom software studio | Short category; D01 approval required |
+| Eyebrow | Desarrollo de software a medida para pymes / Custom software development for small and medium-sized businesses | Estudio de software a medida | Custom software studio | Accepted under D01; concise durable category |
 | H1 | Software práctico para vender, atender y operar mejor. / Practical software to help you sell, serve customers, and run your business better. | Conectá tus sistemas. Simplificá el trabajo diario. | Connect your systems. Simplify everyday work. | Priority situation; intended service value, not a verified outcome |
 | Support | Full three-service catalogue ending necesidades concretas / concrete needs | Sitios y aplicaciones web, automatización por WhatsApp e integraciones para coordinar pedidos, reservas y tareas. También mejoramos sistemas existentes. | Websites, web applications, WhatsApp automation and integrations for orders, bookings and everyday tasks. We also improve existing systems. | Preserve all three services; boundaries remain on Services and global demo notice |
-| Primary | Contanos sobre tu proyecto / Tell us about your project | Ver contacto | Contact options | Opens Contact; never means WhatsApp or submitted inquiry; D03/D06 |
+| Primary | Contanos sobre tu proyecto / Tell us about your project | Ver contacto | Contact options | Opens Contact; never means WhatsApp or submitted inquiry; D03 baseline preserved |
 | Secondary | Ver servicios / View services | Ver servicios | Explore services | Opens localized Services |
 | Accountability | Atención técnica directa / Direct technical contact plus geographic/language fragments | Samuel Furlanich, responsable técnico del estudio. | Samuel Furlanich, the studio’s technical lead. | Named accountability, not team-size or seniority claim |
 | Availability | Separate geographic and language lines | Buenos Aires, Argentina. Disponibilidad en español e inglés para Argentina y el exterior. | Based in Buenos Aires, Argentina. Available in Spanish and English for work in Argentina and internationally. | Availability only, under explicit inactive-service demonstration notice; no client-history claim |
 
-**D02 acceptance:** approve ES and EN as a pair, including disclosure adjacency and CTA meaning. No manual line breaks, hidden qualifiers or smaller mobile type to force the candidate to fit. If the operational H1 is judged too narrow for the intended audience, return to D01 rather than combining both territories in a longer hero.
+**D02 acceptance recorded:** ES and EN hero/action wording is approved as a pair. The existing demonstration context remains authoritative under rejected D03; its proposed notice and Contact replacements are not adopted. No manual line breaks, hidden qualifiers or smaller mobile type force the candidate to fit. The operational H1 remains within accepted D01 territory.
 
-## MKT-D05-HOME — Consolidated narrative — PROPOSED revision 1
+## MKT-D05-HOME — Consolidated narrative — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** No approval is inferred from drafting, this task, or an unqualified PR merge. Existing APPROVED requirements remain operative until the owner explicitly accepts the named revision. Human reviewer, date, decision and approval reference: **OPEN**.
+**Revision 1: APPROVED under D05.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The user supplied “D05 - APPROVED”. This accepts the Home consolidation and bilingual content structure, subject to the D04 evidence boundary and the D03 rejection.
 
-Proposed source order: global demo notice → HOME-HERO → HOME-PROBLEMS (with audience context) → HOME-SERVICES → HOME-PROOF → HOME-PROCESS → HOME-FOUNDER → HOME-CTA. Retire only the standalone HOME-AUDIENCES presentation; preserve its relevant audience meaning in Problems and Services. Retain stable process fragments. No project card or project name is added to Home.
+Accepted source order under D05: global demo notice → HOME-HERO → HOME-PROBLEMS (with audience context) → HOME-SERVICES → HOME-PROOF → HOME-PROCESS → HOME-FOUNDER → HOME-CTA. Retire only the standalone HOME-AUDIENCES presentation; preserve its relevant audience meaning in Problems and Services. Retain stable process fragments. No project card or project name is added to Home.
 
-| Section / current ES and EN | Proposed Spanish | Proposed English | Role / retained boundary |
+| Section / current ES and EN | Accepted Spanish | Accepted English | Role / retained boundary |
 | --- | --- | --- | --- |
 | Problems introduction: Estos son algunos de los problemas… / These are some of the problems… | Cuando el trabajo queda repartido entre herramientas | When work is spread across tools | Three plain situation rows; consolidate duplicated audience cards |
 | New merged audience sentence, replacing standalone sector list | Para pymes que coordinan pedidos, reservas o atención al cliente, o necesitan mejorar un sistema existente. | For small and medium-sized businesses managing orders, bookings or customer service, or improving an existing system. | Target contexts, not sector experience |
@@ -533,9 +533,9 @@ Proposed source order: global demo notice → HOME-HERO → HOME-PROBLEMS (with 
 | Services intro: No imponemos una plataforma genérica. / We do not force a generic platform. | Construir, conectar o mejorar, según el problema. | Build, connect or improve, depending on the problem. | Services labels and summaries remain the three approved offers; one Services CTA |
 | Proof heading: Credibilidad sin promesas infladas / Credibility without inflated claims | Una responsabilidad técnica clara | Clear technical accountability | Founder/process evidence only; no evidence-strength upgrade |
 | Proof commitments replace publication-policy lead | Samuel participa en la definición del problema, las decisiones técnicas y la revisión del trabajo. El alcance y las validaciones se acuerdan según cada necesidad. | Samuel is involved in defining the problem, technical decisions and review of the work. Scope and validation are agreed around each need. | Intended operating model; no past-delivery guarantee |
-| Proof secondary link: founder-only bridge | Ver proyectos y sus límites | Explore projects and their limitations | Proposed index link only; requires explicit D04 permission for this placement; no featured item/card/media |
+| Proof secondary link: founder-only bridge | Ver proyectos y sus límites | Explore projects and their limitations | Accepted generic Projects-index bridge under D04; no featured item/card/media |
 | Process opening and step descriptions | Cómo trabajamos / Entender: revisar el proceso y el problema. / Definir: acordar alcance, responsabilidades y entregables. / Construir y revisar: comprobar los recorridos importantes. / Entregar: documentar el uso y acordar los pasos siguientes. | How we work / Understand: review the process and the problem. / Define: agree scope, responsibilities and deliverables. / Build and review: check important user journeys. / Hand over: document use and agree next steps. | Four ordered steps; preserves proportional validation, not certification or SLA |
 | Founder long biography bridge | Samuel Furlanich dirige FURLANICH. Conocé su experiencia y formación. | Samuel Furlanich leads FURLANICH. Explore his experience and background. | Link to Founder; no duplicated education/history or employer claim |
 | Final conditional inquiry/response paragraph | Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario. | Explore the contact options and try the demonstration form. The form does not send inquiries. | Current demo mode; primary label from D02, no response-time line |
 
-Services card text not listed for replacement remains approved. Other copy within a removed block is retired from that location only. Proposed Home keeps seven semantic sections after consolidation, with distinct relevance, offer, trust, process, person and next-action roles. The low-fidelity study uses these roles; it does not approve final spacing or type changes.
+Services card text not listed for replacement remains approved. Other copy within a removed block is retired from that location only. Accepted Home keeps seven semantic sections after consolidation, with distinct relevance, offer, trust, process, person and next-action roles. The low-fidelity study uses these roles; it does not approve final spacing or type changes.

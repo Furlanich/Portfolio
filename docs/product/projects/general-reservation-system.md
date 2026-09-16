@@ -108,18 +108,18 @@ The visual explains the implementation scope without claiming that the workflow 
 
 Publish the image-free bilingual card above and the paired Spanish/English detail page described here, linking to the public source and showing the labeled conceptual visual. A screenshot, demo, production claim, and `functional-demonstration` label remain unapproved. Reconsider those uses only after a clean current run, recorded tests, verified workflows, and authorized current media.
 
-## MKT-D04-GRS — Editorial candidate — PROPOSED revision 1
+## MKT-D04-GRS — Editorial candidate — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing item permissions and APPROVED requirements remain operative; no evidence-strength upgrade is proposed.
+**Revision 1: APPROVED under D04.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The GRS editorial framing is accepted; evidence strength, maturity, READY state and no-homepage-card eligibility do not change.
 
 Current complete card/detail copy and permissions above remain authoritative. This table proposes only a shorter summary plus a single clear relationship and limitation treatment; all titles, permitted source-backed scope, result restrictions, source URL, conceptual caption/alt and publication scope not explicitly replaced remain unchanged.
 
-| Field / current treatment | Proposed Spanish | Proposed English | Permission |
+| Field / current treatment | Accepted Spanish | Accepted English | Permission |
 | --- | --- | --- | --- |
-| Card/detail summary: Reference implementation / implementation-evidence caveats | Código para gestionar recorridos, estaciones, asientos y reservas de transporte de pasajeros. | Code for managing passenger transport routes, stations, seats and reservations. | New wording requires item-owner approval; same source-backed scope |
+| Card/detail summary: Reference implementation / implementation-evidence caveats | Código para gestionar recorridos, estaciones, asientos y reservas de transporte de pasajeros. | Code for managing passenger transport routes, stations, seats and reservations. | Accepted under D04 item disposition; same source-backed scope |
 | Relationship scattered across copy | Prototipo publicado por Samuel; hay otro colaborador en el repositorio. No es un trabajo de cliente ni una entrega en producción. | Prototype published by Samuel, with another repository contributor. It is not client work or a production delivery. | Must accompany summary; no ownership/employment/client upgrade |
 | Detail limitations repeated across bands | No hay una demostración pública verificada. El funcionamiento actual no fue revalidado y la interfaz de pagos no se presenta como implementada. No se afirman adopción, disponibilidad ni resultados comerciales. | There is no verified public demonstration. Current behavior has not been revalidated and the payment interface is not presented as implemented. Adoption, uptime and business results are not claimed. | Preserve all limitations; no live/demo/result/visual permission expansion |
 
 Keep the existing concise card limitation as well as the new detail limitations, so the index never relies on a click to reveal lack of current verification. The conceptual visual remains exact-asset/detail-only. Recommended index placement is the first, strongest relevant source-backed story.
 
-Approval unit: MKT-D04-GRS. Evidence strength, maturity, READY state and no-homepage-card eligibility do not change.
+Decision record: MKT-D04-GRS. Evidence strength, maturity, READY state and no-homepage-card eligibility do not change.

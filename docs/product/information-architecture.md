@@ -156,13 +156,13 @@ Initiative 5 confirms that the existing sitemap is implementation-ready without 
 
 The current route contract's use of the Founder pair as the “El estudio / About” link is an implementation gap, not an approved IA change.
 
-## MKT-D06-IA — Navigation and action contract — PROPOSED revision 1
+## MKT-D06-IA — Navigation and action contract — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing APPROVED content and navigation remain operative until this revision is accepted.
+**Revision 1: APPROVED under D06.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The user supplied “D06 - APPROVED”. This accepts the navigation/action contract and stable route rules; D03’s rejected presentation copy remains unchanged.
 
 The [RFC](../rfcs/marketing-narrative-closure.md) covers the Home consolidation and evidence discovery change. It does not change routing, hosting, base path, locale equivalence, detail slugs or generate a new page.
 
-### Proposed navigation
+### Accepted navigation
 
 Desktop: brand → language switch → Services → Projects → Process → Studio → primary Contact action. Below the existing 1024px breakpoint, brand/language/disclosure remain visible; the same links and Contact action are in the native menu. Use existing source-order constraints; final at-1024 fit must be checked with actual bilingual text. Do not compress targets to force an inline header.
 
@@ -178,7 +178,7 @@ Desktop: brand → language switch → Services → Projects → Process → Stu
 
 Remove the rendered redundant standalone Contact navigation link; the primary action provides that destination. This returns the count to the approved IA's four navigation subjects while replacing the current-mode CTA label explicitly. Founder remains secondary. The semantic sequence is preserved within expanded/compact navigation; visual language-switch placement must not create keyboard-order mismatch.
 
-### Complete proposed CTA destination contract
+### Complete accepted CTA destination contract
 
 Paths below are logical site paths; deployment prepends the existing /Portfolio base path. No submitted form values, personal data or service context are added to URLs. Every contextual Contact label has the same meaning: open the Contact page; never send a message or launch WhatsApp.
 
@@ -187,11 +187,11 @@ Paths below are logical site paths; deployment prepends the existing /Portfolio 
 | Global notice explanation | /contacto/ | /en/contact/ | Explain current demo; D03 |
 | Header, Home primary/final, each Services action/final, Projects/detail ending, Studio and Founder ending | /contacto/ | /en/contact/ | Stable Contact action; D02/D03 |
 | Home secondary, Problems/Services action | /servicios/ | /en/services/ | Explore intended offer |
-| Home proof index bridge | /proyectos/ | /en/work/ | Inspect current source-backed selection; requires D04 placement approval |
+| Home proof index bridge | /proyectos/ | /en/work/ | Inspect current source-backed selection; placement accepted under D04 |
 | Home Founder bridge; Studio Founder link | /estudio/samuel-furlanich/ | /en/about/samuel-furlanich/ | Background of accountable lead |
 | Process nav/footer | /#proceso | /en/#process | Same localized Home process; headings unobscured |
 | Services index | #web, #whatsapp, #consultoria | #web, #whatsapp, #consulting | In-page exploration; existing fragments |
-| Proposed shared service boundaries link | #condiciones | #working-boundaries | New same-page anchors only; D05; no new routes |
+| Accepted shared service boundaries link | #condiciones | #working-boundaries | New same-page anchors under D05; no new routes |
 | Web evidence | /proyectos/general-reservation-system/ | /en/work/general-reservation-system/ | Existing approved limited detail; D04 |
 | GRS / The-System index entries | /proyectos/general-reservation-system/; /proyectos/the-system/ | /en/work/general-reservation-system/; /en/work/the-system/ | Same approved detail scope |
 | GRS / The-System related service | /servicios/#web | /en/services/#web | Web relevance, no feature/result guarantee |
@@ -207,7 +207,7 @@ Paths below are logical site paths; deployment prepends the existing /Portfolio 
 | CV / GitHub / LinkedIn | Existing approved Founder destinations | Same | Secondary background verification; no asset/profile revision |
 | Not-found actions | Existing Home/Services/Projects/Contact equivalents | Existing equivalents | Preserve recovery; Contact action adopts stable meaning |
 
-### Footer proposal
+### Accepted footer treatment
 
 Two compact groups after brand/location: (1) site links — Services, Work, How we work, About, Contact, Privacy; (2) person/channels — Samuel Furlanich, LinkedIn, GitHub, WhatsApp, email, phone. At wide sizes these may share rows; compact layouts wrap in the same reading order, without a full card per group or fixed height. Keep actual email/phone values readable for scanning. Contact retains WhatsApp/email/phone order; footer groups do not reorder that channel sequence.
 

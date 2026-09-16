@@ -171,15 +171,15 @@ The accepted processor name and boundary come from `ADR-CONTACT-INQUIRY-PIPELINE
 
 On 2026-09-12, the owner approved the zero-transmission demonstration copy and mock resource kit for deployment on `main`. This authorization unblocks demonstration implementation only. Exact storage behavior, material subprocessors, international-transfer disclosure, responsible legal/business identity, retention wording, request notice, and professional review remain OPEN before any real commercial submission.
 
-## MKT-D06-LANGUAGE — Editorial conventions — PROPOSED revision 1
+## MKT-D06-LANGUAGE — Editorial conventions — APPROVED revision 1
 
-**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing APPROVED content and navigation remain operative until this revision is accepted.
+**Revision 1: APPROVED under D06.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The user supplied “D06 - APPROVED”. This accepts the ES-AR and US English editorial conventions; metadata/SEO, legal notices and CV rewriting remain outside this decision.
 
 - Spanish remains es-AR: concise professional voseo in helpful actions; do not add voseo to every explanatory sentence. Prefer concrete nouns/verbs over repeated alcance, concreto, explícito and evidencia de implementación where the meaning can be stated plainly. Preserve necessary evidence limitations rather than erasing them for tone.
-- English candidate convention: US spelling and inquiry, organize, authorized, licenses, while preserving proper project/institution names. This supersedes the previously preferred enquiry spelling only if accepted. Use independent English sentence structure; preserve equal promises, exclusions, mode, authorship and evidence strength.
+- English candidate convention: US spelling and inquiry, organize, authorized, licenses, while preserving proper project/institution names. This supersedes the previously preferred enquiry spelling under the accepted D06 convention. Use independent English sentence structure; preserve equal promises, exclusions, mode, authorship and evidence strength.
 - Service names remain semantic equivalents; natural short page labels may differ from internal IDs. Public source-code actions use plain language; internal enum values never render as copy.
 - Capability statements describe permitted code or intended service scope. Outcome words are not proof of a delivered result. Technical detail remains available when it helps evaluation, below buyer context.
 - Current-mode actions mean navigation or a local test, not active commercial intake. D03 owns notice, form, feedback and alternative-channel wording. D06-IA owns navigation/footer labels and destinations. Page owners own their narrative replacements.
 - Review typography apostrophes/punctuation and compound labels in both locales without changing facts. Keep dates, institution names, .NET and approved work history exact. No invented degree or international client history.
 
-**Approval unit D06-LANGUAGE:** human accepts or revises convention before a site-wide consistency edit. Metadata/SEO wording, future legal notices and CV rewriting remain outside this initiative.
+**Decision D06-LANGUAGE recorded:** the convention is APPROVED for a site-wide consistency edit. Metadata/SEO wording, future legal notices and CV rewriting remain outside this initiative.
