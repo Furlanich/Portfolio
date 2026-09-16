@@ -3,12 +3,13 @@ id: PROJECT-INVENTORY
 type: product-record
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - PROJECT-EVIDENCE
   - PAGE-PROJECTS
   - PAGE-PROJECT-DETAIL
   - SERVICE-WEB
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-last_verified: 2026-09-06
+last_verified: 2026-09-16
 ---
 
 # Project evidence inventory
@@ -89,3 +90,25 @@ Ordering is editorial rather than chronological. The launch order is General Res
 The three READY item records now contain complete Spanish and English card and detail content, approved repository links, and labeled conceptual visuals. Maturity groups remain deferred because the approved two-or-three-item launch structure is one ungrouped editorial grid, not because evidence is blocked.
 
 The completed [Projects / Evidence execution plan](../../plans/completed/projects-evidence-experience.md) records Task 2 / PR 2, Task 3 / PR 3, and Task 4 / PR 4 for these three paired summary-only pages and their cleanup boundary. Homepage integration remains outside that authorization.
+
+## MKT-D04 — Evidence placement — PROPOSED revision 1
+
+**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing item permissions and APPROVED requirements remain operative; no evidence-strength upgrade is proposed.
+
+[Governance RFC](../../rfcs/marketing-narrative-closure.md) proposes editorial selection independently from evidence strength. Recommended index: GRS as the lead story, then one compact The-System Lab entry. No artificial empty category, new Lab route, filter or counter. MPC moves out of the commercial selection into the existing Founder education context.
+
+| Record | Current permitted placement | Proposed placement | Evidence / permissions that do not change |
+| --- | --- | --- | --- |
+| General Reservation System | Image-free index card, paired detail, public repository; no Home card | Lead Projects story; text-only Services pointer to existing detail | implementation-evidence; prototype; no current verified demo, production, payment or result claim; conceptual asset only on detail |
+| The-System | Second index card and paired detail | Secondary compact Lab entry beneath GRS; same detail | implementation-evidence; Lab/RPG context; no working demo, production, billing or planned-feature delivery claim |
+| MPC Administración | Third index card and paired detail | Founder education entry with link to existing detail; removed from Projects selection | 2021 educational group work for fictional factory; no sole authorship, client, studio delivery or current runtime claim |
+| Busesfy | Blocked permission | No public placement | BLOCKED-PERMISSION |
+| ChronoApp | Retired | No public placement | RETIRED |
+| Documancer | Private | No public placement | PRIVATE |
+| Other Founder-only candidates | Not publication-ready merely by discovery disposition | No new publication in this initiative | Existing item audit and permission gates still apply |
+
+MPC remains a permitted public record; do not change its publication state to PRIVATE or RETIRED to hide it from the index. Preserve its two existing detail URLs and locale equivalence, reachable from Founder. This is **Founder-led discovery**, not a claim that a public URL becomes private. Remove its commercial related-service bridge from the rendered detail only if D04 is approved; keep the internal service relationship for provenance. Use the Founder return link and neutral Contact demonstration ending instead.
+
+All three remain ineligible for Home cards, names, thumbnails or featured project summaries. D04 separately proposes a generic Home link to the Projects index under a factual founder/process proof block. That is a placement permission change, not a change to item eligibility or verification. It needs explicit approval in PROJECT-EVIDENCE and PAGE-HOME.
+
+This is a deliberate proposed exception to the existing two/three-item uniform-grid rule: selected commercial relevance controls visual emphasis while evidence limitations remain equally legible. Approval must cover this inventory selection, Projects composition and the individual copy deltas together. No runtime verification is performed in this task.

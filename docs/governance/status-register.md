@@ -3,6 +3,7 @@ id: GOV-STATUS
 type: decision-register
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - GOV-KNOWLEDGE
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
@@ -27,7 +28,7 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-14
+last_verified: 2026-09-16
 ---
 
 # Product knowledge status register
@@ -214,3 +215,9 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Adding launch filters for the current small inventory.
 - Presenting MPC Administración as client or production work.
 - Repeating three service-card CTAs that all lead to the Services page root.
+
+## Marketing narrative review — PROPOSED candidates; human dispositions OPEN
+
+[Decision package](../reviews/marketing-decision-closure-2026-09-15/index.md) and [RFC-MARKETING-NARRATIVE-CLOSURE](../rfcs/marketing-narrative-closure.md) propose seven groups: D01 positioning; D02 hero/actions; D03 demonstration contract; D04 evidence placement; D05 Home/Services consolidation; D06 Studio/Founder/IA/language; D07 visual/interaction revision R1.
+
+Every candidate is PROPOSED and every new human disposition is OPEN. Owning documents retain existing APPROVED baselines. No completed audit, polished wording or publication of the proposal upgrades a decision to APPROVED. Existing demonstration ADR, evidence permissions, commercial-activation gates, optional media and immersive-design deferrals remain unchanged. No versioned implementation plan exists for this proposal; create one only after explicit owner-level acceptance.

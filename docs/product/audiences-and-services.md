@@ -3,10 +3,11 @@ id: AUDIENCES-SERVICES
 type: product-foundation
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - BRAND-POSITIONING
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
-last_verified: 2026-09-05
+last_verified: 2026-09-16
 ---
 
 # Audiences and services
@@ -111,3 +112,13 @@ It does not automatically include a full rebuild, a new system, on-call incident
 - No approved public maintenance/consulting intervention story is currently inventoried.
 
 `PAGE-SERVICES` is implementation-ready with explicit evidence-status copy. Stronger evidence remains deferred until an item reaches the publication lifecycle required by `PROJECT-EVIDENCE`. These gaps must remain visible rather than being filled with fictional client work, generalized founder experience, equal-looking placeholder cards, or implied certifications.
+
+## MKT-D01 audience emphasis — PROPOSED revision 1
+
+**Candidate: PROPOSED. Human disposition: OPEN.** No approval is inferred from drafting, this task, or an unqualified PR merge. Existing APPROVED requirements remain operative until the owner explicitly accepts the named revision. Human reviewer, date, decision and approval reference: **OPEN**.
+
+The [D01 positioning candidate](vision-and-positioning.md#mkt-d01-durable-category-and-buying-problem-proposed-revision-1) leads with SMB owners and operations decision-makers whose orders, bookings or everyday coordination require repeated manual handoffs between messages, spreadsheets and software. This prioritizes an existing buying situation; it adds no industry-expertise claim and removes no approved audience.
+
+Web presence/catalogues remain requestable. Existing-system diagnosis remains an entry point even where no new build is needed. WhatsApp remains one possible channel, subject to feasibility and human handoff. Technical partners and recruiters retain their existing secondary roles. Scope, provider responsibilities, AI posture and commercial boundaries above remain unchanged.
+
+Decision reference: MKT-D01; disposition recorded with the positioning owner, not independently upgraded here.

@@ -1,0 +1,815 @@
+{
+  "errors": [],
+  "results": [
+    {
+      "locale": "es",
+      "template": "home",
+      "width": 320,
+      "height": 5058,
+      "overflow": false,
+      "h1": "Conectá tus sistemas. Simplificá el trabajo diario.",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "services",
+      "width": 320,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "projects",
+      "width": 320,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "grs",
+      "width": 320,
+      "height": 5661,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "lab",
+      "width": 320,
+      "height": 5661,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "mpc",
+      "width": 320,
+      "height": 5661,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "studio",
+      "width": 320,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "founder",
+      "width": 320,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "es",
+      "template": "contact",
+      "width": 320,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Probá el formulario de contacto",
+      "sections": 2
+    },
+    {
+      "locale": "es",
+      "template": "home",
+      "width": 390,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Conectá tus sistemas. Simplificá el trabajo diario.",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "services",
+      "width": 390,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "projects",
+      "width": 390,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "grs",
+      "width": 390,
+      "height": 5661,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "lab",
+      "width": 390,
+      "height": 5661,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "mpc",
+      "width": 390,
+      "height": 5661,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "studio",
+      "width": 390,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "founder",
+      "width": 390,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "es",
+      "template": "contact",
+      "width": 390,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Probá el formulario de contacto",
+      "sections": 2
+    },
+    {
+      "locale": "es",
+      "template": "home",
+      "width": 768,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Conectá tus sistemas. Simplificá el trabajo diario.",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "services",
+      "width": 768,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "projects",
+      "width": 768,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "grs",
+      "width": 768,
+      "height": 5661,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "lab",
+      "width": 768,
+      "height": 5661,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "mpc",
+      "width": 768,
+      "height": 5661,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "studio",
+      "width": 768,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "founder",
+      "width": 768,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "es",
+      "template": "contact",
+      "width": 768,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Probá el formulario de contacto",
+      "sections": 2
+    },
+    {
+      "locale": "es",
+      "template": "home",
+      "width": 1024,
+      "height": 5661,
+      "overflow": false,
+      "h1": "Conectá tus sistemas. Simplificá el trabajo diario.",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "services",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "projects",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "grs",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "lab",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "mpc",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "studio",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "founder",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "es",
+      "template": "contact",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Probá el formulario de contacto",
+      "sections": 2
+    },
+    {
+      "locale": "es",
+      "template": "home",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Conectá tus sistemas. Simplificá el trabajo diario.",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "services",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "es",
+      "template": "projects",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "grs",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "lab",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "mpc",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "es",
+      "template": "studio",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "es",
+      "template": "founder",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "es",
+      "template": "contact",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Probá el formulario de contacto",
+      "sections": 2
+    },
+    {
+      "locale": "en",
+      "template": "home",
+      "width": 320,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Connect your systems. Simplify everyday work.",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "services",
+      "width": 320,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "projects",
+      "width": 320,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "grs",
+      "width": 320,
+      "height": 5701,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "lab",
+      "width": 320,
+      "height": 5701,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "mpc",
+      "width": 320,
+      "height": 5701,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "studio",
+      "width": 320,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "founder",
+      "width": 320,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "en",
+      "template": "contact",
+      "width": 320,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Try the contact form",
+      "sections": 2
+    },
+    {
+      "locale": "en",
+      "template": "home",
+      "width": 390,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Connect your systems. Simplify everyday work.",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "services",
+      "width": 390,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "projects",
+      "width": 390,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "grs",
+      "width": 390,
+      "height": 5701,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "lab",
+      "width": 390,
+      "height": 5701,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "mpc",
+      "width": 390,
+      "height": 5701,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "studio",
+      "width": 390,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "founder",
+      "width": 390,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "en",
+      "template": "contact",
+      "width": 390,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Try the contact form",
+      "sections": 2
+    },
+    {
+      "locale": "en",
+      "template": "home",
+      "width": 768,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Connect your systems. Simplify everyday work.",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "services",
+      "width": 768,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "projects",
+      "width": 768,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "grs",
+      "width": 768,
+      "height": 5701,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "lab",
+      "width": 768,
+      "height": 5701,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "mpc",
+      "width": 768,
+      "height": 5701,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "studio",
+      "width": 768,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "founder",
+      "width": 768,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "en",
+      "template": "contact",
+      "width": 768,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Try the contact form",
+      "sections": 2
+    },
+    {
+      "locale": "en",
+      "template": "home",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Connect your systems. Simplify everyday work.",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "services",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "projects",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "grs",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "lab",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "mpc",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "studio",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "founder",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "en",
+      "template": "contact",
+      "width": 1024,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Try the contact form",
+      "sections": 2
+    },
+    {
+      "locale": "en",
+      "template": "home",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Connect your systems. Simplify everyday work.",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "services",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Services",
+      "sections": 6
+    },
+    {
+      "locale": "en",
+      "template": "projects",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Projects",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "grs",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "GRS detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "lab",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "The-System detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "mpc",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "MPC educational detail",
+      "sections": 5
+    },
+    {
+      "locale": "en",
+      "template": "studio",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Studio",
+      "sections": 4
+    },
+    {
+      "locale": "en",
+      "template": "founder",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Founder",
+      "sections": 7
+    },
+    {
+      "locale": "en",
+      "template": "contact",
+      "width": 1440,
+      "height": 5701,
+      "overflow": false,
+      "h1": "Try the contact form",
+      "sections": 2
+    }
+  ]
+}

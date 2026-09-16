@@ -3,6 +3,7 @@ id: DESIGN-VISUAL
 type: design-spec
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - BRAND-POSITIONING
   - PROJECT-EVIDENCE
   - PAGE-HOME
@@ -15,7 +16,7 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-12
+last_verified: 2026-09-16
 ---
 
 # Visual language
@@ -347,3 +348,40 @@ In demonstration mode, the approved notice sits at the start of the form surface
 - No default CAPTCHA badge, challenge, floating widget, or provider-branded redirect is part of the approved launch composition. A later challenge requires its own privacy/accessibility review.
 
 Long translated labels, helper text, errors, and status copy grow naturally. Controls, messages, and actions use no fixed content height, line clamp, clipping, or horizontal scrolling.
+
+## MKT-D07-VIS-R1 — Restrained marketing composition — PROPOSED
+
+**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit acceptance reference: **OPEN**. This named revision does not replace any existing APPROVED baseline until human acceptance is recorded.
+
+Compared with DESIGN-VISUAL at main revision 2be0286 (approved section baselines last verified 2026-09-12). This is a page-composition revision, not a palette, font, component-library or styling-architecture replacement. [RFC](../rfcs/marketing-narrative-closure.md) owns cross-page decision dependencies; [review layouts](../reviews/marketing-decision-closure-2026-09-15/layouts.md) are non-normative low-fidelity studies.
+
+### Retained baseline
+
+Keep Inter, current colors/contrast, 1200px container, 20/32/48px gutters, existing H1/H2/body scales, 48px primary actions, focus ring, light-only presentation, sticky app bar, native mobile disclosure, no decorative shadows, and content-driven height. Keep detail-only conceptual images with captions. No portrait, icon system, logo redraw, gradient, glass, 3D or new motion is selected.
+
+### Named changes for approval
+
+| Revision part | Existing approved treatment | Proposed treatment | Why / boundary |
+| --- | --- | --- | --- |
+| VIS-R1.1 Entry and hero | 80/96/128px hero vertical padding; separate access lines | One in-flow demonstration notice before main, then 48/64/96px hero padding for compact/medium/wide. Keep category, H1, support, primary/secondary, named lead, availability in that order | Make disclosure and actions readable sooner; no forced viewport hero or guaranteed above-fold position |
+| VIS-R1.2 Home rhythm | Four Problems cards plus four Audiences cards; Proof panel | Three plain situation rows with thin separators; audience sentence integrated. Keep three service summaries as the only comparison-card group. Proof becomes unboxed headline, short text and secondary links | Different visual roles rather than eleven equal boxes; conditional on D04/D05 |
+| VIS-R1.3 Section spacing | Every commercial section uses 64/80/96px | Keep 64/80/96px between major sections; use 32/48/64px between related subgroups inside one section. Do not give each small fact a full-width band | Shorter details/Services without shrinking readable type |
+| VIS-R1.4 Services | Multiple level, fit, scope/exclusion and principle panel groups | Service heading/lead followed by a plain list of work types, starting point, fit, visible dependency, evidence and action. Shared boundaries are one labeled text block. No pricing cards or accordion | Buyer scan order; important restrictions remain visible |
+| VIS-R1.5 Projects | Two/three-item uniform grid; many detail bands | One GRS entry with approximately 7/12 title/context and 5/12 summary/status at wide widths; compact Lab row below. Details group context/scope/evidence rather than assigning each label a background band | Deliberate asymmetry, not stronger evidence. Images remain detail-only |
+| VIS-R1.6 Studio/Founder | Separate repeated model/location bands; CV primary | Studio uses a text-led intro plus compact accountability aside, then principles and a combined location/Founder bridge. Founder starts with short context; professional links are secondary below background | Named person supports the business; preserve complete factual history |
+| VIS-R1.7 Contact | Long intro, response block, form and alternatives | Short demo-first intro; no response-time block; disclosure directly before fields. Keep form/alternatives 8/4 wide and single-column below 1024, with alternatives after form | Current-mode truth and earlier fields; same four-field form |
+| VIS-R1.8 Endings/footer | Repeated roomy endings; stacked utility groups | One short left-aligned Action-tint ending; two compact footer groups and utility row, using wrapping rather than a full card per link group | Retain useful destinations and readable values |
+
+At wide widths, typography and asymmetric text columns supply identity. No decorative visual is needed for R1. A later restrained 2D motif remains OPEN; it must explain a relevant process and needs a separate asset decision. It is not required to close this revision.
+
+### Responsive composition study
+
+| Width | Header / columns | Page composition |
+| --- | --- | --- |
+| 320px | Native disclosure; 20px gutters; one column | Full-width stacked actions, content-driven notice, no sidebars; all scope/limitations visible; footer wraps |
+| 390px | Native disclosure; 20px gutters; one column | Same reading order with natural shorter wrapping; no separate mobile copy |
+| 768px | Native disclosure; 32px gutters | Home situation rows and Services remain text-led; process 2 columns; Founder single reading column; Contact stacked |
+| 1024px | Inline navigation if actual text fits approved targets; 48px gutters | Home 8/12 hero; process 4 columns; Projects 7/5 lead; Studio split; Contact 8/4; no breakpoint change assumed |
+| 1440px | Inline within max 1200px | Same wide rules with generous margins; text max 65–68ch; no typography enlargement beyond baseline |
+
+Candidate copy needs both-locale rendered review at every width, 200% text zoom and keyboard/reduced-motion checks before implementation acceptance. Wireframes test grouping only; their placeholder lengths are not production height, font-loading, accessibility or conversion evidence. If long labels fail at 1024px, revise layout/wording through this owner; do not silently lower font size/target size or alter the approved breakpoint.

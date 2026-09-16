@@ -3,6 +3,7 @@ id: PROJECTS-EXPERIENCE-CLOSURE
 type: product-design-spec
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - PROJECT-EVIDENCE
   - PAGE-PROJECTS
   - PAGE-PROJECT-DETAIL
@@ -10,7 +11,7 @@ related:
   - CONTENT-LOCALIZATION
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-06
+last_verified: 2026-09-16
 ---
 
 # Projects and evidence experience
@@ -190,3 +191,13 @@ Also check keyboard-only traversal, screen-reader heading/link structure, 200% t
 Use a typed static project content model with explicit localized fields, evidence/disclosure data, service relationships, and optional links/assets. Task 3 / PR 3 may extend the existing static locale route map for the three paired summary-only detail pages. Do not add a CMS, database, dynamic backend, project API, admin panel, search engine, or filter framework for the current inventory.
 
 Internal relationship, permission, evidence-strength, lifecycle, restriction, and homepage-eligibility data remains in `PROJECT-EVIDENCE` and the item records. Public application modules contain only an explicit publication manifest and approved localized public content. The completed implementation sequence and its evidence gates are recorded by [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../../plans/completed/projects-evidence-experience.md).
+
+## MKT-D04 experience delta — PROPOSED revision 1
+
+**Candidate: PROPOSED. Human disposition: OPEN.** Reviewer, date and explicit decision reference: **OPEN**. Existing item permissions and APPROVED requirements remain operative; no evidence-strength upgrade is proposed.
+
+Recommended composition: one substantial GRS entry followed by a shorter The-System entry with its Lab context visible; MPC is discovered through Founder. This explicitly proposes replacing the uniform two/three-record grid for this inventory only. Do not create top-level maturity groups or a separate Lab navigation item.
+
+Details become four readable content groups after the header: (1) modeled context and opportunity; (2) source-backed scope and capabilities; (3) evidence, present limitations and publication disclosure; (4) related service where commercially relevant, Founder context and current-mode Contact action. Preserve headings and all material limitations; do not repeat an identical qualification in multiple short full-width bands. Conceptual media remains detail-only with the existing visible caption and alt text. The image is never the main proof.
+
+Keep current source-backed claims unless an item explicitly proposes revised wording. New exact summary/limitation proposals live only in each item record. No strong production result or runtime demonstration is substituted for the existing result statements.

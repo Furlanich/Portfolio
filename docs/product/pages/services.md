@@ -3,6 +3,7 @@ id: PAGE-SERVICES
 type: page-spec
 status: APPROVED
 related:
+  - RFC-MARKETING-NARRATIVE-CLOSURE
   - AUDIENCES-SERVICES
   - SERVICE-WEB
   - SERVICE-WHATSAPP
@@ -16,7 +17,7 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-SERVICES-EXPERIENCE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-05
+last_verified: 2026-09-16
 ---
 
 # Services page
@@ -736,3 +737,51 @@ The copy intentionally removes generic transformation language, technology catal
 - Each service has one contextual inquiry path and the page ends with one general inquiry path.
 - Exact Spanish and English copy preserves the same product meaning without mechanical translation.
 - No application implementation code is authorized by this specification alone; a versioned execution plan is the next engineering artifact.
+
+## MKT-D05-SERVICES — Buyer scan layer — PROPOSED revision 1
+
+**Candidate: PROPOSED. Human disposition: OPEN.** Existing APPROVED copy and requirements remain operative. Reviewer, date and explicit acceptance/rejection reference: **OPEN**.
+
+Current baseline: each service repeats situations, scope levels, outcomes, examples, inclusions, exclusions, fit, dependencies and evidence before its CTA. Candidate: intro and non-sticky service index → Web → WhatsApp → Consulting → shared working boundaries → demo-aware final action. Keep all four existing localized fragments. No service is converted into a fixed package, price tier or guaranteed result.
+
+### Proposed replacement scan copy
+
+| Field / current role | Proposed Spanish | Proposed English | Reason / permitted basis |
+| --- | --- | --- | --- |
+| Page H1: Servicios para resolver necesidades concretas del negocio / Services for concrete business needs | Software para tu negocio | Software for your business | Short page orientation under global demo notice |
+| Intro: long definition and reassurance | Sitios web, automatización e integraciones, y mejoras para sistemas existentes. No hace falta tener una solución definida para entender las opciones. | Websites, automation and integrations, and improvements to existing systems. You do not need a solution worked out to explore the options. | Three approved services; no inquiry response promise |
+| Web heading | Sitios y aplicaciones web | Websites and web applications | Same SERVICE-WEB category |
+| Web lead: several situations/outcomes paragraphs | Desde presentar tu negocio hasta coordinar pedidos, reservas o acceso de clientes. El alcance depende del proceso que necesitás resolver. | From presenting your business to managing orders, bookings or customer access. Scope depends on the process you need to support. | Intended scope, no existing-client result |
+| Web deliverable examples: three levels/cards | Sitio o catálogo: presentar la oferta. / Pedidos o reservas: organizar solicitudes e integrar proveedores cuando sea viable. / Portal o aplicación: dar acceso y gestionar un proceso específico. | Website or catalogue: present the offer. / Orders or bookings: organize requests and integrate providers where feasible. / Portal or application: provide access and manage a specific workflow. | Three plain labeled rows; payments subject to separate provider feasibility |
+| Web starting point | Revisar contenido, recorridos y sistemas existentes para acordar qué conviene construir o integrar. | Review content, user journeys and existing systems to agree what to build or integrate. | Assessment activity, not a free discovery offer |
+| Web fit / simpler alternative | Un sitio o una herramienta existente puede ser suficiente. El desarrollo a medida tiene sentido cuando el proceso necesita algo que esas opciones no resuelven. | An existing website tool or product may be enough. Custom development makes sense when the workflow needs something those options do not provide. | Honest fit, positive comparison |
+| Web evidence: policy-heavy paragraph | General Reservation System contiene código para reservas de transporte de pasajeros. Su funcionamiento actual no está verificado y no se presenta como trabajo de cliente. | General Reservation System contains code for passenger transport reservations. Its current behavior is unverified and it is not presented as client work. | Text only; source-backed scope. Proposed detail link needs D04; no screenshot/demo/payment/result claim |
+| Web evidence link | Ver el proyecto y sus límites | View the project and its limitations | Existing GRS detail, not a homepage card |
+| WhatsApp heading | WhatsApp e integraciones | WhatsApp and integrations | Preserve channel and systems scope |
+| WhatsApp lead | Organizá consultas repetidas, solicitudes y avisos, con una persona a cargo cuando el flujo necesita atención. | Organize repeated questions, requests and notifications, with a person responsible when the workflow needs attention. | Desired service behavior; no delivery/automation guarantee |
+| WhatsApp levels: four cards | Un enlace abre una conversación. Un flujo automatizado organiza pasos. Un bot ayuda con respuestas definidas. Una integración conecta sistemas cuando la plataforma y los proveedores lo permiten. | A link opens a conversation. An automated flow organizes steps. A bot supports defined responses. An integration connects systems where the platform and providers allow it. | Explain different scopes without suggesting all bots require the same integration |
+| WhatsApp starting point / fit | Revisar volumen, datos, excepciones y quién atiende cada caso. Con pocas consultas, un enlace o respuestas manuales pueden ser suficientes. | Review volume, data, exceptions and who handles each case. At low volume, a link or manual replies may be enough. | Human handoff and proportional solution |
+| WhatsApp evidence | Todavía no hay un proyecto público de WhatsApp que podamos mostrar. | There is no public WhatsApp project to show yet. | Honest absence; no placeholder/certification |
+| Consulting heading | Mejoras para sistemas existentes | Improvements to existing systems | Accessible label; maintenance and consulting remain same service |
+| Consulting lead | Investigá fallas, conectá herramientas y evaluá mejoras antes de decidir una reconstrucción. | Investigate faults, connect tools and assess improvements before deciding on a rebuild. | Intended diagnosis/remediation; no guarantee |
+| Consulting work examples | Diagnóstico y corrección de fallas. / Actualizaciones e integraciones. / Revisión de rendimiento y plan de modernización. | Fault diagnosis and fixes. / Updates and integrations. / Performance review and modernization planning. | Existing approved scope |
+| Consulting starting point / fit | Primero se revisa el sistema y los accesos autorizados. El diagnóstico define las opciones; las mejoras y el soporte continuo se acuerdan por separado. | Start with the system and authorized access. Diagnosis identifies options; improvements and ongoing support are agreed separately. | No automatic rebuild, incident response or SLA |
+| Consulting evidence | El enfoque se apoya en la experiencia técnica de Samuel. Todavía no hay una intervención pública autorizada para mostrar. | The approach draws on Samuel’s technical background. There is no authorized public intervention to show yet. | Founder-backed scope, not a case study or employer endorsement |
+| Each service action: varied inquiry labels | Ver contacto | Contact options | Stable current-mode D02/D06 destination; local service context stays in preceding section |
+| Final CTA: inquiry review and response promise | Explorá el contacto y probá la demostración del formulario. | Explore the contact options and try the form demonstration. | Demo mode only; no response block |
+
+### Essential visible boundaries — proposed compressed copy
+
+Place the service-specific boundary before that service's evidence/CTA. Keep shared boundaries visible once after the three services, linked by a same-page text link near each service boundary. Do not make exclusions disappear behind a tooltip or accordion. Removing a duplicate sentence does not remove a scope restriction.
+
+| Boundary | Proposed Spanish | Proposed English | Coverage retained |
+| --- | --- | --- | --- |
+| Web | Diseño, contenido, integraciones, administración y pruebas se acuerdan según el proyecto. Marca, producción de contenido, alojamiento, cargos de proveedores, aplicaciones móviles y mantenimiento no están incluidos salvo acuerdo. Los resultados comerciales no se garantizan. | Design, content, integrations, administration and testing are scoped for each project. Branding, content production, hosting, provider charges, mobile apps and maintenance are included only by agreement. Business results are not guaranteed. | All existing Web exclusion categories; payments provider-dependent |
+| WhatsApp | La viabilidad depende de las políticas de WhatsApp/Meta, aprobaciones de cuentas y plantillas cuando correspondan, proveedores, costos, datos y sistemas disponibles. FURLANICH no controla esas aprobaciones, disponibilidad, entrega de mensajes ni cambios de precios. Los pagos dependen del proveedor; no se procesan necesariamente dentro de WhatsApp. | Feasibility depends on WhatsApp/Meta policies, account and template approvals where required, providers, costs, data and available systems. FURLANICH does not control those approvals, availability, message delivery or price changes. Payments depend on the provider and do not necessarily happen inside WhatsApp. | Provider control, fees, data, delivery and payment constraints remain explicit |
+| Consulting | Se necesitan accesos autorizados al código, entornos, registros, documentación y personas que conocen el sistema. No incluye por defecto reconstrucción, sistema nuevo, guardias, SLA, certificación, licencias, infraestructura ni tareas de otro proveedor. | Authorized access to code, environments, logs, documentation and people who know the system is needed. Rebuilds, new systems, on-call response, SLAs, certification, licenses, infrastructure and another provider’s work are not included by default. | Complete current dependency/exclusion set |
+| Shared working agreement | Antes de avanzar se acuerdan alcance, entregables, responsabilidades, validaciones y entrega. Samuel mantiene la responsabilidad técnica, con implementación mantenible y documentación proporcional. El trabajo depende de la participación del negocio y de los accesos necesarios. Costos externos, propiedad, licencias y continuidad se definen en el acuerdo correspondiente. | Scope, deliverables, responsibilities, validation and handover are agreed before proceeding. Samuel retains technical responsibility, with maintainable implementation and proportionate documentation. Work depends on business participation and the necessary access. External costs, ownership, licenses and ongoing support are defined in the relevant agreement. | Scope/participation/QA/handover and terms; no new legal allocation |
+| AI / ERP | Los sistemas de gestión y la IA se evalúan según la necesidad. La IA requiere revisar datos, proveedores, costos, límites y supervisión humana. | Management systems and AI are assessed against the need. AI requires review of data, providers, costs, limitations and human oversight. | Tailored possibilities, no instant product or fourth-service hierarchy |
+
+The complete existing approved **Límites comerciales / Commercial boundaries** block remains visible verbatim after the new shared-working summary: price/timing after scoping; no metric/fixed-time/continuous-availability guarantee; external hosting/domain/license/payment/messaging/API/subscription costs; client-authorized content/data/access/accounts/decisions/validation; separate maintenance/scope-change/support agreements; inquiry response versus support SLA; and contract-specific payment/acceptance/ownership/warranty/liability subject to review. This task does not rewrite legal/commercial terms. The summary is introductory, not a substitute for that retained block. The six old principle cards are consolidated into starting-point, fit, shared-working and boundary prose; direct technical responsibility and proportionate maintainability/documentation remain in the shared content.
+
+**Decision D05-SERVICES:** accept scan order, replacements and boundary coverage together. Proposed review target: approximately 900–1,200 words per locale including service boundaries but excluding site chrome; not a mandate to cut necessary disclosures to meet a number. Exact full-page assembly and content-driven height must be validated before implementation approval. No price, timeline, free assessment, client result or support SLA is introduced.
