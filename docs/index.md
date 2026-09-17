@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
@@ -24,7 +25,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 ---
 
 # FURLANICH project knowledge
@@ -81,4 +82,4 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 
 ## Marketing narrative decision review — PROPOSED
 
-[The review package](reviews/marketing-decision-closure-2026-09-15/index.md) provides owner-level bilingual copy comparisons, evidence/CTA tables, nine page outlines and five-width low-fidelity studies. [RFC-MARKETING-NARRATIVE-CLOSURE](rfcs/marketing-narrative-closure.md) covers the proposed narrative and evidence-discovery changes. D01, D02, D04, D05, D06 and D07 were explicitly APPROVED on 2026-09-16; D03 was REJECTED. The D03 baseline remains effective, and no unaccepted item-level exception or commercial activation is inferred. Other existing approvals, the demonstration ADR and evidence restrictions remain operative. No application change or execution plan is included.
+[The review package](reviews/marketing-decision-closure-2026-09-15/index.md) provides owner-level bilingual copy comparisons, evidence/CTA tables, nine page outlines and five-width low-fidelity studies. [RFC-MARKETING-NARRATIVE-CLOSURE](rfcs/marketing-narrative-closure.md) covers the proposed narrative and evidence-discovery changes. D01, D02, D04, D05, D06 and D07 were explicitly APPROVED on 2026-09-16; D03 was REJECTED. The D03 baseline remains effective, and no unaccepted item-level exception or commercial activation is inferred. Other existing approvals, the demonstration ADR and evidence restrictions remain operative. The original decision review contained no application change or execution plan. The subsequently authorized [PLAN-MARKETING-PRESENTATION-EXCELLENCE](plans/active/marketing-presentation-excellence-v1.md) is APPROVED / ACTIVE under Route B, with D03 preserved and six sequential implementation PRs. PR 1 — Navigation and footer is the only first implementation step; no product implementation is included in the planning PR.

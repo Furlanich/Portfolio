@@ -3,6 +3,7 @@ id: ARCH-CURRENT
 type: existing-system
 status: APPROVED
 related:
+  - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - ARCH-FINDINGS
   - IA-SITE
   - PAGE-SERVICES
@@ -11,7 +12,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-14
+last_verified: 2026-09-17
 ---
 
 # Current system
@@ -27,7 +28,7 @@ This record includes the retained pre-cutover personal-portfolio implementation 
 - TypeScript `5.5.4` with strict checking and no emit.
 - Tailwind CSS `3.4.7`.
 - Framer Motion for retained legacy reveal and hover primitives.
-- React Hook Form remains in the dependency baseline for deferred form work; the approved foundation does not expose a form.
+- React Hook Form supports the implemented four-field Contact demonstration. Earlier foundation-only notes predate that integration; the public form simulates outcomes locally.
 - Lucide React plus repository SVG assets for icons.
 - Playwright Test `1.63.0` and `@axe-core/playwright` `4.13.0` are development-only browser and accessibility dependencies.
 
@@ -96,7 +97,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - `lib/inquiry/validation.ts` implements pure allowlisted normalization and field/request limits for both localized Contact sources.
 - `lib/inquiry/formspree.ts` implements the accepted direct-fetch Formspree adapter behind injected fetch/time behavior; its deterministic tests use only synthetic fixtures and never contact the provider.
 - The current Contact route imports the provider-neutral contracts and validator plus the local demonstration adapter; it does not import the Formspree adapter. The merged boundary remains provider-isolated and sends no inquiry.
-- `ADR-CONTACT-INQUIRY-DEMO-MODE` now governs the next public integration: a new local-only adapter will use the same port for demonstrative outcomes while the Formspree adapter remains dormant.
+- `ADR-CONTACT-INQUIRY-DEMO-MODE` governs the implemented public integration: the local-only adapter uses the same port for simulated outcomes while Formspree remains dormant.
 
 ## Pre-cutover metadata
 
@@ -184,3 +185,10 @@ Local `.env` files exist and are intentionally not documented or read into the k
 Pull Requests targeting `main` run separate `validate` and `browser` jobs through `.github/workflows/ci.yml`. The deterministic gate covers documentation validation, Node tests, lint, explicit TypeScript checking, and the production static build with the repository base path. The browser gate installs the pinned Chromium, Firefox, and WebKit revisions, runs the Playwright/axe matrix under that base path, and retains reports/results only on failure. The existing deployment workflow remains push-to-`main` only and is unchanged.
 
 The local browser layer is independently runnable through `test:e2e` and `test:a11y`, with screenshots, video, traces, and HTML reports retained only as ignored or CI failure evidence. Browser QA does not replace generated static-route and base-path validation.
+
+
+## Current Studio/Founder and marketing baseline — 2026-09-17
+
+MKT-DOC-001 synchronization at main 7062bda: Studio and Founder are fully materialized as distinct ES/EN route pairs, with shared server compositions and route-owned content. Navigation targets Studio; Founder remains nested/secondary. The [completed Studio/Founder plan](../plans/completed/studio-founder-completion.md) records PR #40 and preserved biography, experience, education, capabilities, CV and professional links. Earlier minimum-Founder and pre-cutover descriptions above are dated history, not outstanding implementation work.
+
+The three permitted project records have six static details and approved captioned conceptual visuals; no runtime-evidence upgrade follows. The current index still includes MPC. [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/active/marketing-presentation-excellence-v1.md) will separate editorial selection from publication, correct localized disclosure rendering and implement the accepted navigation/presentation revisions. Those revisions are not present merely because their plan is approved; the existing header remains a native server-rendered disclosure at this baseline.

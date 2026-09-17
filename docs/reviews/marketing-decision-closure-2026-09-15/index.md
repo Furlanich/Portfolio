@@ -3,9 +3,10 @@ id: REVIEW-MARKETING-DECISIONS
 type: governance-review
 status: PROPOSED
 related:
+  - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - REVIEW-MARKETING-PRESENTATION
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 ---
 
 # Marketing decision review package — revision 1
@@ -28,7 +29,7 @@ Recommendation: operations-focused studio positioning; truthful global demo cont
 | D06 | Focus Studio; preserve Founder facts; secondary CV; stable navigation/footer; US English | [Studio/Founder](../../product/pages/studio-and-founder.md#mkt-d06-studio-founder-emphasis-and-copy-approved-revision-1), [IA/CTA map](../../product/information-architecture.md#mkt-d06-ia-navigation-and-action-contract-approved-revision-1), [language](../../product/content-and-localization.md#mkt-d06-language-editorial-conventions-approved-revision-1) | APPROVED — 2026-09-16 |
 | D07 | Keep design tokens; fewer cards, grouped content, shorter hero padding and deliberate menu dismissal | [VIS-R1](../../design/visual-language.md#mkt-d07-vis-r1-restrained-marketing-composition-approved), [IX-R1](../../design/interaction-responsive-accessibility.md#mkt-d07-ix-r1-marketing-navigation-and-demo-interactions-approved) | APPROVED — 2026-09-16 |
 
-D01, D02, D04, D05 and D06 are APPROVED at their named scopes; D03 is REJECTED; D07 accepts VIS-R1 and IX-R1 with its remaining implementation gates. The authoritative owners record each disposition, date and source. No unaccepted subdecision is inferred, and D03 rejection leaves the existing demonstration baseline effective. Existing baseline requirements remain effective wherever not explicitly superseded by the named decisions. An OPEN dependency prevents dependent implementation; the RFC remains PROPOSED and no versioned implementation plan is prepared.
+D01, D02, D04, D05 and D06 are APPROVED at their named scopes; D03 is REJECTED; D07 accepts VIS-R1 and IX-R1 with its remaining implementation gates. The authoritative owners record each disposition, date and source. No unaccepted subdecision is inferred, and D03 rejection leaves the existing demonstration baseline effective. Existing baseline requirements remain effective wherever not explicitly superseded by the named decisions. An OPEN dependency prevents dependent implementation; the RFC remains PROPOSED. The original packet prepared no execution plan. The subsequently authorized [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../../plans/active/marketing-presentation-excellence-v1.md) records Route B execution for accepted groups, D03 excluded, with PR 1 — Navigation and footer as the only first implementation step.
 
 ## Human disposition record — 2026-09-16
 
@@ -65,7 +66,7 @@ The narrow generic Home index link is accepted under D04. MPC retains existing U
 
 ## Candidate implementation PR groups — not an execution plan
 
-These are independent reviewable scope groups with explicit dependencies. They are not scheduled tasks, executable steps or authorization. Create a versioned plan only after human decision closure.
+These historical candidate groups retain original dependencies for provenance. They are not the current execution sequence or authorization. The [approved Route B plan](../../plans/active/marketing-presentation-excellence-v1.md) replaces this grouping for execution after the explicit planning instruction of 2026-09-17; C1 is not executable because D03 is REJECTED.
 
 | Group | Scope | Depends on | Verification focus |
 | --- | --- | --- | --- |
@@ -106,3 +107,8 @@ The validation below records preparation of PR #52 and this follow-up. The dispo
 Validation: npm run validate exited 0 (107 Markdown files, 73 document IDs, 10 Skills; 99/99 tests; lint; typecheck; static build). Existing Node MODULE_TYPELESS_PACKAGE_JSON warnings appeared in tests; no configuration/dependency change was made. The build-added next-env.d.ts root-params reference was restored to baseline, then docs:check and typecheck passed again. Final whitespace and file-scope review accompanies the commit.
 
 The initial PR #52 self-review distinguished proposed requirements from facts, confirmed that all seven dispositions were OPEN at the time of the original PR #52 review, checked no approved body/ADR history was overwritten, retained full commercial-term text, examined copy and evidence scope for unsupported claims, inspected corrected visual studies, and checked that only docs files enter the PR. The technical study uses no production components or live external actions. It cannot certify final text zoom, assistive-technology behavior, real-device layout or performance.
+
+
+## Execution dependency clarification — 2026-09-17
+
+The R1 layouts and owner outlines include the rejected global-notice candidate. Their examples do not authorize D03, Contact helper/feedback replacements, response-block removal or VIS-R1.7. Existing direct-channel labels remain effective. Separately approved Home, Services, Projects and Studio/Founder substitutions and the accepted menu/footer treatments are sequenced by the single linked plan. The original audit, review evidence, dispositions and RFC partial acceptance remain intact.

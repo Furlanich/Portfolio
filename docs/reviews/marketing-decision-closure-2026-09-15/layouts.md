@@ -3,15 +3,20 @@ id: REVIEW-MARKETING-LAYOUTS
 type: design-review
 status: PROPOSED
 related:
+  - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - REVIEW-MARKETING-DECISIONS
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 ---
 
 # Page outlines and low-fidelity layout studies — R1
 
 [Decision package](index.md) · [Visual owner](../../design/visual-language.md#mkt-d07-vis-r1-restrained-marketing-composition-approved) · [Interaction owner](../../design/interaction-responsive-accessibility.md#mkt-d07-ix-r1-marketing-navigation-and-demo-interactions-approved)
+
+## Execution boundary after D03 rejection
+
+These are historical R1 candidate studies. Any global notice, revised Contact helpers/feedback, removal of its response block or VIS-R1.7 shown here depends on D03, which remains REJECTED. HTML and captures are preserved as review history, not execution authority. [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../../plans/active/marketing-presentation-excellence-v1.md) applies accepted D01/D02/D04/D05/D06 and applicable D07 only; separately approved page replacements remain eligible. Privacy/Contact baseline is preserved. Statements below about all templates having a notice describe the original proposal only.
 
 ## How to review
 

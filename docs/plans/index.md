@@ -3,6 +3,7 @@ id: PLAN-INDEX
 type: execution-plan-index
 status: APPROVED
 related:
+  - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - GOV-ENGINEERING-LIFECYCLE
   - PLAN-HOMEPAGE-FOUNDATION
   - PLAN-HOMEPAGE-COMPLETION
@@ -12,7 +13,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-14
+last_verified: 2026-09-17
 ---
 
 # Execution plans
@@ -23,6 +24,9 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 - [Completed Stage B harness plan](completed/stage-b-agent-engineering-harness.md)
 
 ## Active
+
+- [PLAN-MARKETING-PRESENTATION-EXCELLENCE](active/marketing-presentation-excellence-v1.md): APPROVED / ACTIVE Route B plan for D01, D02, D04, D05, D06 and applicable D07; D03 remains REJECTED. Six sequential bilingual implementation PRs after human merges; only first implementation step is PR 1 — Navigation and footer.
+
 ## Completed
 
 - [`PLAN-CONTACT-INQUIRY-PIPELINE`](completed/contact-inquiry-pipeline.md): completed the bilingual demonstration Privacy and Contact experience, deployed zero-transmission proof, and preserved future commercial activation gates.

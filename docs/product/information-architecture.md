@@ -3,6 +3,7 @@ id: IA-SITE
 type: information-architecture
 status: APPROVED
 related:
+  - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - PAGE-HOME
   - PAGE-SERVICES
@@ -13,7 +14,7 @@ related:
   - PAGE-PRIVACY
   - CONTENT-LOCALIZATION
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 ---
 
 # Information architecture
@@ -154,7 +155,7 @@ Initiative 5 confirms that the existing sitemap is implementation-ready without 
 - Language switching preserves Studio-to-Studio and Founder-to-Founder context.
 - The footer exposes Studio under site navigation and “Samuel Furlanich” under professional links; LinkedIn and GitHub do not substitute for the internal Founder destination.
 
-The current route contract's use of the Founder pair as the “El estudio / About” link is an implementation gap, not an approved IA change.
+Historical implementation gap: the route contract formerly used the Founder pair for “El estudio / About”. The [completed Studio/Founder plan](../plans/completed/studio-founder-completion.md) closed that gap; the current navigation points to the separate Studio pair. MKT-DOC-001 synchronizes this note without changing the approved IA.
 
 ## MKT-D06-IA — Navigation and action contract — APPROVED revision 1
 
@@ -214,3 +215,8 @@ Two compact groups after brand/location: (1) site links — Services, Work, How 
 Include equivalent-language control and the existing brand-only copyright requirement in a final utility row. Proposed literal identity: © {current year} FURLANICH, with the build year supplied normally; no corporate suffix, registration, tax statement or address is added. Copyright identity presentation is not verification of legal status. A footer Contact link is useful navigation even when the header has a primary action.
 
 Exact direct-channel action wording is owned by D03. Other navigation labels above apply consistently to header/footer. No new page or top-level Founder/Lab item. Every non-Contact CTA not listed for replacement retains its approved label/destination; no context-carrying form feature is proposed.
+
+
+## Execution dependency clarification — 2026-09-17
+
+[PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/active/marketing-presentation-excellence-v1.md) sequences accepted D06-IA work. D03 remains REJECTED: the Global notice explanation row is not executable, and direct-channel wording remains the existing Contact baseline. Stable navigation labels, footer grouping, locale equivalence and owner-approved page endings do not adopt the rejected global notice or Contact replacements.

@@ -3,6 +3,7 @@ id: RFC-MARKETING-NARRATIVE-CLOSURE
 type: request-for-comments
 status: PROPOSED
 related:
+  - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - REVIEW-MARKETING-PRESENTATION
   - BRAND-POSITIONING
   - IA-SITE
@@ -16,7 +17,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 ---
 
 # Marketing narrative, evidence hierarchy and demonstration presentation
@@ -100,8 +101,11 @@ Broader OPEN items remain outside this RFC: commercial activation, legal/privacy
 
 ## Recommendation
 
-D01–D07 now have recorded dispositions at group scope. D03 is rejected, so preserve its existing baseline while implementation sequencing is revisited. No versioned plan is prepared until the accepted groups are reconciled with that baseline. Accept or reject subparts explicitly where dependencies differ. Do not approve the whole packet through an ambiguous general acknowledgment.
+D01–D07 have recorded dispositions at group scope. D03 is rejected, so its existing baseline remains. The owner authorized [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/active/marketing-presentation-excellence-v1.md) on 2026-09-17 after reconciling dependencies: accepted D01/D02/D04/D05/D06 and applicable D07 only, Route B, no new RFC/ADR. The plan excludes the notice, Contact substitutions and VIS-R1.7 while retaining separately accepted page replacements. This does not approve the whole packet or change RFC status.
 
 ## Status
 
-**PROPOSED RFC; human dispositions recorded. D01, D02, D04, D05, D06 and D07: APPROVED (2026-09-16). D03: REJECTED.** The owner-level records identify the human reviewer, explicit dispositions and source. Acceptance means recording APPROVED, REJECTED or OPEN against each owner revision, with any wording exceptions. An unqualified merge records document publication, not adoption of every proposal. Stop at this governance PR; no merge, execution plan or implementation in this task.
+**PROPOSED RFC; human dispositions recorded. D01, D02, D04, D05, D06 and D07: APPROVED (2026-09-16). D03: REJECTED.** The owner-level records identify the human reviewer, explicit dispositions and source. Acceptance means recording APPROVED, REJECTED or OPEN against each owner revision, with any wording exceptions. An unqualified merge records document publication, not adoption of every proposal. The original governance task stopped without merge, execution plan or implementation. The later authorized Route B plan is linked above; its planning PR contains no product implementation and leaves merge authority with a human.
+
+
+The original risk controls and migration candidate groups above are preserved review history. A route-wide notice and D03 response-block changes are rejected, not active mitigations. The execution plan owns the current sequence and explicitly retains the resulting Contact/positioning findings as pending by decision.
