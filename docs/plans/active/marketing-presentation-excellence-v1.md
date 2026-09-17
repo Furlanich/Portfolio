@@ -88,7 +88,7 @@ Interfaces permitidas: view models locales, selección editorial, campos diferen
 - [x] Sincronizar MKT-DOC-001 en `ARCHITECTURE.md`, `docs/architecture/current-system.md`, `docs/product/audiences-and-services.md`, `docs/product/information-architecture.md`: Studio implementado, detalles/visuales conceptuales autorizados, Founder-as-Studio histórico. Preservar historia/aprobaciones.
 - [x] Aclarar D03 en índice y layouts del review R1 sin editar capturas históricas.
 - [x] Ejecutar `npm run validate`, `npm run skills:check`, `npm run verify:static-export` del build generado y `git diff --check`; revisar diff completo, solo docs y metadatos TypeSafe.
-- [ ] Abrir PR hacia main: `docs: plan approved marketing and presentation corrections`; Route B, decisiones, D03 preservado, pendientes, PR 1 único siguiente paso. No merge.
+- [x] Abrir PR hacia main: `docs: plan approved marketing and presentation corrections`; Route B, decisiones, D03 preservado, pendientes, PR 1 único siguiente paso. No merge.
 
 **Aceptación:** enlaces/IDs válidos, un plan ACTIVE, RFC PROPOSED, ADR/Skills protegidas intactos; sin aplicación/config/validador/assets. MKT-DOC-001 se contrasta otra vez en T6.
 
@@ -239,7 +239,7 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 
 | Tarea | Estado inicial | Dependencia / evidencia |
 | --- | --- | --- |
-| T0 | Validado, listo para abrir PR | Baseline remoto confirmado, TypeSafe `b29040e`, registro de validación abajo. |
+| T0 | PR listo para revisión humana | [PR #54](https://github.com/Furlanich/Portfolio/pull/54), base main 7062bda, TypeSafe `b29040e`, plan/sincronización `1351961`; sin merge. |
 | T1 | No iniciada | Único siguiente PR; merge humano T0. |
 | T2 | No iniciada | Merge humano T1. |
 | T3 | No iniciada | Merge humano T2. |
@@ -268,6 +268,10 @@ Validación ejecutada el 2026-09-17 en Windows, Node v24.14.0 / npm 11.9.0:
 Avisos no bloqueantes: Node MODULE_TYPELESS_PACKAGE_JSON y normalización Git LF/CRLF. No se alteró configuración para silenciarlos. El RED inicial de metadata se observó en los diagnósticos de docs:check; su exit code no se capturó por separado en ese comando compuesto. Un control posterior detectó incompatibilidad entre anchors GitHub y el normalizador local (docs:check exit 1); se corrigieron los enlaces nuevos con permalinks del baseline, sin tocar el validador, y el rerun pasó. Log completo de validate conservado fuera de Git en `%TEMP%/furlanich-marketing-plan-validate.log`.
 
  Matriz de navegador, QA visual y mediciones de rendimiento de implementación: **NO EJECUTADAS** en este PR documental, no declaradas PASS.
+
+### Handoff de planificación
+
+[PR #54](https://github.com/Furlanich/Portfolio/pull/54) abierto el 2026-09-17 con el título solicitado, base main y head codex/marketing-presentation-plan-v1, draft false, merged false. La corrección TypeSafe está separada del commit documental. T1–T6 siguen sin iniciar; el plan continúa ACTIVE. El siguiente paso después del merge humano es exclusivamente PR 1 — Navegación y footer. La apertura y este registro no autorizan merge ni implementación en la tarea documental.
 
 ### Desviaciones
 
