@@ -4,6 +4,7 @@ import type { Locale } from '@/lib/locales';
 import type { ResolvedProjectDetail } from './content-types';
 
 export type ProjectDetailLabels = {
+  contextGroupHeading: string;
   evidenceHeading: string;
   contextHeading: string;
   problemHeading: string;
@@ -13,6 +14,7 @@ export type ProjectDetailLabels = {
   evidenceLinkLabel: string;
   limitationsHeading: string;
   relatedServiceHeading: string;
+  nextStepsHeading: string;
   finalHeading: string;
   finalDescription: string;
   finalAction: string;
@@ -37,7 +39,11 @@ export function ProjectDetailPage({ detail, locale, labels, contactHref }: Proje
             <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-foundation-muted">
               <span>{detail.maturityLabel}</span>
               <span aria-hidden="true">·</span>
-              <span>{detail.publicationScope === 'limited' ? (locale === 'es' ? 'Alcance limitado' : 'Limited scope') : detail.publicationScope}</span>
+              <span>
+                {detail.publicationPermission === 'limited'
+                  ? (locale === 'es' ? 'Alcance limitado' : 'Limited scope')
+                  : detail.publicationPermission}
+              </span>
             </div>
             <h1 className="mt-5 max-w-[52rem] text-4xl font-semibold tracking-[-0.03em] text-foundation-ink md:text-6xl">
               {detail.title}
@@ -46,6 +52,9 @@ export function ProjectDetailPage({ detail, locale, labels, contactHref }: Proje
               {detail.headerSummary}
             </p>
             <p className="mt-6 max-w-[48rem] text-base leading-7 text-foundation-muted">
+              {detail.relationship}
+            </p>
+            <p className="mt-4 max-w-[48rem] text-base leading-7 text-foundation-muted">
               {detail.evidenceStatement}
             </p>
           </div>
@@ -65,105 +74,104 @@ export function ProjectDetailPage({ detail, locale, labels, contactHref }: Proje
         </div>
       </section>
 
-      <section className="bg-foundation-surface" aria-labelledby="detail-evidence-heading">
-        <div className="mx-auto grid w-full max-w-[1200px] gap-8 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-12 lg:gap-12 lg:px-12">
-          <div className="lg:col-span-8">
-            <h2 id="detail-evidence-heading" className="text-3xl font-semibold text-foundation-ink">{labels.evidenceHeading}</h2>
-            <div className="mt-8 grid gap-8">
-              <section aria-labelledby="detail-context-heading">
-                <h3 id="detail-context-heading" className="text-xl font-semibold text-foundation-ink">{labels.contextHeading}</h3>
-                <p className="mt-3 text-base leading-7 text-foundation-muted">{detail.context}</p>
-              </section>
-              <section aria-labelledby="detail-problem-heading">
-                <h3 id="detail-problem-heading" className="text-xl font-semibold text-foundation-ink">{labels.problemHeading}</h3>
-                <p className="mt-3 text-base leading-7 text-foundation-muted">{detail.problem}</p>
-              </section>
+      <section data-detail-group="context" className="bg-foundation-surface" aria-labelledby="detail-context-group-heading">
+        <div className="mx-auto w-full max-w-[1200px] px-5 py-14 md:px-8 md:py-20 lg:px-12">
+          <h2 id="detail-context-group-heading" className="text-3xl font-semibold text-foundation-ink">
+            {labels.contextGroupHeading}
+          </h2>
+          <div className="mt-8 grid gap-8 lg:grid-cols-2 lg:gap-12">
+            <section aria-labelledby="detail-context-heading">
+              <h3 id="detail-context-heading" className="text-xl font-semibold text-foundation-ink">{labels.contextHeading}</h3>
+              <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{detail.context}</p>
+            </section>
+            <section aria-labelledby="detail-problem-heading">
+              <h3 id="detail-problem-heading" className="text-xl font-semibold text-foundation-ink">{labels.problemHeading}</h3>
+              <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{detail.problem}</p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section data-detail-group="scope" className="bg-foundation-canvas" aria-labelledby="detail-scope-heading">
+        <div className="mx-auto w-full max-w-[1200px] px-5 py-14 md:px-8 md:py-20 lg:px-12">
+          <h2 id="detail-scope-heading" className="text-3xl font-semibold text-foundation-ink">{labels.scopeHeading}</h2>
+          <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-12">
+            <div>
+              <ul className="grid gap-3 text-base leading-7 text-foundation-muted">
+                {detail.deliveredScope.map((item) => <li key={item} className="border-l-2 border-foundation-action pl-4">{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-foundation-ink">{labels.capabilitiesHeading}</h3>
+              <ul className="mt-6 grid gap-3 text-base leading-7 text-foundation-muted">
+                {detail.capabilities.map((item) => <li key={item} className="border-t border-foundation-border pt-3">{item}</li>)}
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-foundation-canvas" aria-labelledby="detail-scope-heading">
-        <div className="mx-auto grid w-full max-w-[1200px] gap-8 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-12 lg:gap-12 lg:px-12">
-          <div className="lg:col-span-8">
-            <h2 id="detail-scope-heading" className="text-3xl font-semibold text-foundation-ink">{labels.scopeHeading}</h2>
-            <ul className="mt-6 grid gap-3 text-base leading-7 text-foundation-muted">
-              {detail.deliveredScope.map((item) => <li key={item} className="border-l-2 border-foundation-action pl-4">{item}</li>)}
-            </ul>
+      <section data-detail-group="evidence" className="bg-foundation-surface" aria-labelledby="detail-evidence-heading">
+        <div className="mx-auto w-full max-w-[1200px] px-5 py-14 md:px-8 md:py-20 lg:px-12">
+          <h2 id="detail-evidence-heading" className="text-3xl font-semibold text-foundation-ink">{labels.evidenceHeading}</h2>
+          <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-12">
+            <section aria-labelledby="detail-result-heading">
+              <h3 id="detail-result-heading" className="text-xl font-semibold text-foundation-ink">{labels.resultHeading}</h3>
+              <p className="mt-4 max-w-[68ch] text-base leading-7 text-foundation-muted">{detail.result}</p>
+            </section>
+            <section aria-labelledby="detail-links-heading">
+              <h3 id="detail-links-heading" className="text-xl font-semibold text-foundation-ink">{labels.evidenceLinkLabel}</h3>
+              <ul className="mt-6 grid gap-3">
+                {detail.evidence.links.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex min-h-11 items-center font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
+                    >
+                      {link.label} <span className="ml-1">{labels.sourceLinkSuffix}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+          <div className="mt-10 border-t border-foundation-border pt-6" aria-labelledby="detail-limitations-heading">
+            <h3 id="detail-limitations-heading" className="text-xl font-semibold text-foundation-ink">{labels.limitationsHeading}</h3>
+            <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{detail.limitations}</p>
+            <p className="mt-4 max-w-[68ch] text-base leading-7 text-foundation-muted">{detail.publicationScope}</p>
           </div>
         </div>
       </section>
 
-      <section className="bg-foundation-surface" aria-labelledby="detail-capabilities-heading">
-        <div className="mx-auto grid w-full max-w-[1200px] gap-8 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-12 lg:gap-12 lg:px-12">
-          <div className="lg:col-span-8">
-            <h2 id="detail-capabilities-heading" className="text-3xl font-semibold text-foundation-ink">{labels.capabilitiesHeading}</h2>
-            <ul className="mt-6 grid gap-3 md:grid-cols-3">
-              {detail.capabilities.map((item) => <li key={item} className="rounded-[12px] border border-foundation-border p-4 text-base font-semibold text-foundation-ink">{item}</li>)}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-foundation-canvas" aria-labelledby="detail-result-heading">
-        <div className="mx-auto grid w-full max-w-[1200px] gap-8 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-12 lg:gap-12 lg:px-12">
-          <div className="lg:col-span-8">
-            <h2 id="detail-result-heading" className="text-3xl font-semibold text-foundation-ink">{labels.resultHeading}</h2>
-            <p className="mt-4 text-base leading-7 text-foundation-muted">{detail.result}</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-foundation-surface" aria-labelledby="detail-links-heading">
-        <div className="mx-auto grid w-full max-w-[1200px] gap-8 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-12 lg:gap-12 lg:px-12">
-          <div className="lg:col-span-8">
-            <h2 id="detail-links-heading" className="text-3xl font-semibold text-foundation-ink">{labels.evidenceLinkLabel}</h2>
-            <ul className="mt-6 grid gap-3">
-              {detail.evidence.links.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex min-h-11 items-center font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
-                  >
-                    {link.label} <span className="ml-1">{labels.sourceLinkSuffix}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-
+      <section data-detail-group="next-steps" className="bg-foundation-canvas" aria-labelledby="detail-next-steps-heading">
+        <div className="mx-auto w-full max-w-[1200px] px-5 py-14 md:px-8 md:py-20 lg:px-12">
+          <h2 id="detail-next-steps-heading" className="text-3xl font-semibold text-foundation-ink">{labels.nextStepsHeading}</h2>
+          <div className="mt-8 flex flex-wrap gap-x-8 gap-y-5">
+            {detail.relatedService.visibility === 'public' ? (
+              <div>
+                <h3 className="text-xl font-semibold text-foundation-ink">{labels.relatedServiceHeading}</h3>
+                <Link
+                  href={detail.relatedServiceHref}
+                  className="mt-4 inline-flex min-h-11 items-center font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
+                >
+                  {detail.relatedService.label}
+                </Link>
+              </div>
+            ) : null}
             {detail.founderAction ? (
-              <div className="mt-8 border-t border-foundation-border pt-6">
+              <div>
+                <h3 className="text-xl font-semibold text-foundation-ink">{locale === 'es' ? 'Contexto de Founder' : 'Founder context'}</h3>
                 <Link
                   href={detail.founderAction.href}
-                  className="inline-flex min-h-11 items-center font-semibold text-foundation-muted underline decoration-foundation-border underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
+                  className="mt-4 inline-flex min-h-11 items-center font-semibold text-foundation-muted underline decoration-foundation-border underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
                 >
                   {detail.founderAction.label}
                 </Link>
               </div>
             ) : null}
           </div>
-        </div>
-      </section>
-
-      <section className="border-y border-foundation-border bg-foundation-canvas" aria-labelledby="detail-limitations-heading">
-        <div className="mx-auto w-full max-w-[1200px] px-5 py-12 md:px-8 md:py-16 lg:px-12">
-          <h2 id="detail-limitations-heading" className="text-2xl font-semibold text-foundation-ink">{labels.limitationsHeading}</h2>
-          <p className="mt-3 max-w-[52rem] text-base leading-7 text-foundation-muted">{detail.limitations}</p>
-          <p className="mt-4 max-w-[52rem] text-base leading-7 text-foundation-muted">{detail.publicationScope}</p>
-        </div>
-      </section>
-
-      <section className="bg-foundation-surface" aria-labelledby="detail-related-service-heading">
-        <div className="mx-auto w-full max-w-[1200px] px-5 py-12 md:px-8 md:py-16 lg:px-12">
-          <h2 id="detail-related-service-heading" className="text-2xl font-semibold text-foundation-ink">{labels.relatedServiceHeading}</h2>
-          <Link
-            href={detail.relatedServiceHref}
-            className="mt-4 inline-flex min-h-11 items-center font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
-          >
-            {detail.relatedService.label}
-          </Link>
         </div>
       </section>
 

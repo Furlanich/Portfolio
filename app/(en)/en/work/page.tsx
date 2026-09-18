@@ -22,10 +22,9 @@ export default function Page() {
           menu: 'Open primary navigation',
           services: 'Services',
           projects: 'Work',
-          process: 'Process',
+          process: 'How we work',
           studio: 'About',
-          contact: 'Contact',
-          primaryAction: contactContent.actions[0].label,
+          primaryAction: 'Contact options',
           languageSwitch: 'View site in Spanish',
         }}
       />
@@ -38,7 +37,7 @@ export default function Page() {
           navigation: 'Navigation',
           services: 'Services',
           projects: 'Work',
-          process: 'Process',
+          process: 'How we work',
           studio: 'About',
           founder: 'Samuel Furlanich',
           contact: 'Contact',
@@ -46,6 +45,7 @@ export default function Page() {
           privacy: 'Privacy',
           professional: 'Professional links',
           location: contactContent.location,
+          languageSwitch: 'View site in Spanish',
         }}
       />
     </>

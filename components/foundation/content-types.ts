@@ -38,6 +38,32 @@ export type ContactAction = {
   href: string;
 };
 
+export type SiteHeaderLabels = {
+  navigation: string;
+  menu: string;
+  services: string;
+  projects: string;
+  process: string;
+  studio: string;
+  primaryAction: string;
+  languageSwitch: string;
+};
+
+export type SiteFooterLabels = {
+  navigation: string;
+  services: string;
+  projects: string;
+  process: string;
+  studio: string;
+  founder: string;
+  contact: string;
+  privacy: string;
+  directContact: string;
+  professional: string;
+  languageSwitch: string;
+  location: string;
+};
+
 export type HomeHeroContent = {
   locale: Locale;
   routeId: 'home';

@@ -11,6 +11,7 @@ interface ProjectsPageProps {
 export function ProjectsPage({ content, cards }: ProjectsPageProps) {
   const finalAction = resolveActionLink(content.finalCta.action, content.locale);
   const hasLimitedPublication = cards.some((card) => card.publicationScope === 'limited');
+  const [leadCard, ...secondaryCards] = cards;
 
   return (
     <main>
@@ -30,8 +31,17 @@ export function ProjectsPage({ content, cards }: ProjectsPageProps) {
           <h2 id="selected-projects-heading" className="sr-only">
             {content.heading}
           </h2>
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {cards.map((card) => <ProjectCard key={card.slug} card={card} />)}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            {leadCard ? (
+              <div className="lg:col-span-7">
+                <ProjectCard card={leadCard} presentation="lead" />
+              </div>
+            ) : null}
+            <div className="grid gap-6 lg:col-span-5">
+              {secondaryCards.map((card) => (
+                <ProjectCard key={card.slug} card={card} presentation="secondary" />
+              ))}
+            </div>
           </div>
         </div>
       </section>

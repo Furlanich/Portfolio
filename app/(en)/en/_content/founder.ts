@@ -40,6 +40,15 @@ export const founderContent = {
       { title: 'Computer Science', institution: 'University of Buenos Aires', status: 'Studies completed' },
       { title: 'IT Technician', institution: 'E.E.S.T. No. 1, Chivilcoy', status: 'Training completed' },
     ],
+    project: {
+      slug: 'mpc-administracion',
+      title: 'MPC Administración',
+      context: 'Educational group work · 2021',
+      summary: 'A 2021 educational group project for managing production and inventory at a fictional cheese factory.',
+      relationship: 'Educational group work; it does not represent a client, employment or a FURLANICH delivery.',
+      limitation: 'Current functionality has not been verified. Sole authorship, real-world use, deployment and business results are not claimed. No visual material from the original system is authorized.',
+      actionLabel: 'View educational project',
+    },
   },
   capabilities: {
     heading: 'Systems we can engineer',

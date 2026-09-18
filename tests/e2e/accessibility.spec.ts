@@ -7,10 +7,13 @@ const representativeRoutes = [
   ['English homepage', stableRoutes.home.en],
   ['Spanish Services', stableRoutes.services.es],
   ['Spanish Projects', stableRoutes.projects.es],
+  ['English Projects', stableRoutes.projects.en],
   ['Spanish Studio', stableRoutes.studio.es],
   ['English Studio', stableRoutes.studio.en],
   ['Spanish Founder', stableRoutes.founder.es],
   ['English Founder', stableRoutes.founder.en],
+  ['Spanish GRS detail', '/proyectos/general-reservation-system/'],
+  ['English MPC detail', '/en/work/mpc-administracion/'],
   ['Spanish Privacy', stableRoutes.privacy.es],
   ['English Privacy', stableRoutes.privacy.en],
   ['Spanish Contact', stableRoutes.contact.es],
@@ -31,7 +34,7 @@ for (const [name, route] of representativeRoutes) {
     expect(blockingViolations).toEqual([]);
     await expect(page.locator('main h1:visible')).toHaveCount(1);
     await expect(page.getByRole('navigation', { name: /Navegación principal|Primary navigation/ })).toBeVisible();
-    await expect(page.locator('a[hreflang]')).toBeVisible();
+    await expect(page.getByRole('banner').locator('a[hreflang]')).toBeVisible();
   });
 }
 
@@ -43,7 +46,7 @@ test('homepage focus progresses through the brand, language switch, and primary 
     page.getByRole('banner').getByRole('link', { name: 'FURLANICH' }),
   ).toBeFocused();
   await page.keyboard.press('Tab');
-  await expect(page.getByRole('link', { name: 'Ver sitio en inglés' })).toBeFocused();
+  await expect(page.getByRole('banner').getByRole('link', { name: 'Ver sitio en inglés' })).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Servicios' })).toBeFocused();
 });

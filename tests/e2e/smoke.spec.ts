@@ -29,15 +29,15 @@ for (const [name, route, language] of routeCases) {
 
 test('language switching preserves equivalent homepage, Services, and Studio context', async ({ page }) => {
   await page.goto(appUrl(stableRoutes.home.es));
-  await page.locator('a[hreflang="en"]').click();
+  await page.getByRole('banner').locator('a[hreflang="en"]').click();
   await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.home.en));
 
   await page.goto(appUrl(stableRoutes.services.en));
-  await page.locator('a[hreflang="es-AR"]').click();
+  await page.getByRole('banner').locator('a[hreflang="es-AR"]').click();
   await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.services.es));
 
   await page.goto(appUrl(stableRoutes.studio.es));
-  await page.locator('a[hreflang="en"]').click();
+  await page.getByRole('banner').locator('a[hreflang="en"]').click();
   await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.studio.en));
 });
 
@@ -62,14 +62,14 @@ test('visible Spanish primary-navigation destinations resolve without browser er
 
 test('language switching preserves Contact, Founder, and Projects context', async ({ page }) => {
   await page.goto(appUrl('/contacto/'));
-  await page.locator('a[hreflang="en"]').click();
+  await page.getByRole('banner').locator('a[hreflang="en"]').click();
   await expect(page).toHaveURL((url) => url.pathname === appPathname('/en/contact/'));
 
   await page.goto(appUrl(stableRoutes.founder.en));
-  await page.locator('a[hreflang="es-AR"]').click();
+  await page.getByRole('banner').locator('a[hreflang="es-AR"]').click();
   await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.founder.es));
 
   await page.goto(appUrl(stableRoutes.projects.es));
-  await page.locator('a[hreflang="en"]').click();
+  await page.getByRole('banner').locator('a[hreflang="en"]').click();
   await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.projects.en));
 });

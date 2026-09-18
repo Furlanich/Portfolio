@@ -1,27 +1,22 @@
 import Link from 'next/link';
 import type { FoundationNavigationPaths } from '@/lib/foundation-navigation';
-import type { ContactAction, ExternalLink } from '@/components/foundation/content-types';
+import { LanguageSwitch } from '@/components/foundation/LanguageSwitch';
+import type {
+  ContactAction,
+  ExternalLink,
+  SiteFooterLabels,
+} from '@/components/foundation/content-types';
 
 interface SiteFooterProps {
   contactActions: ContactAction[];
   founderLinks: ExternalLink[];
-  labels: {
-    navigation: string;
-    services: string;
-    projects: string;
-    process: string;
-    studio: string;
-    founder: string;
-    contact: string;
-    privacy: string;
-    directContact: string;
-    professional: string;
-    location: string;
-  };
+  labels: SiteFooterLabels;
   paths: FoundationNavigationPaths;
 }
 
 export function SiteFooter({ contactActions, founderLinks, labels, paths }: SiteFooterProps) {
+  const copyrightYear = new Date().getFullYear();
+
   return (
     <footer className="border-t border-foundation-border bg-foundation-surface">
       <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-5 py-12 md:grid-cols-3 md:px-8 lg:px-12">
@@ -45,15 +40,7 @@ export function SiteFooter({ contactActions, founderLinks, labels, paths }: Site
         </nav>
 
         <div>
-          <h2 className="text-sm font-semibold text-foundation-ink">{labels.directContact}</h2>
-          <ul className="mt-3 grid gap-2 text-sm text-foundation-muted">
-            {contactActions.map((action) => (
-              <li key={action.kind}>
-                <a href={action.href} className="inline-flex min-h-11 items-center hover:text-foundation-action">{action.label}</a>
-              </li>
-            ))}
-          </ul>
-          <h2 className="mt-6 text-sm font-semibold text-foundation-ink">{labels.professional}</h2>
+          <h2 className="text-sm font-semibold text-foundation-ink">{labels.professional}</h2>
           <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-foundation-muted">
             <li>
               <Link href={paths.founder} className="inline-flex min-h-11 items-center hover:text-foundation-action">
@@ -66,6 +53,23 @@ export function SiteFooter({ contactActions, founderLinks, labels, paths }: Site
               </li>
             ))}
           </ul>
+          <h3 className="mt-6 text-sm font-semibold text-foundation-ink">{labels.directContact}</h3>
+          <ul className="mt-3 grid gap-2 text-sm text-foundation-muted">
+            {contactActions.map((action) => (
+              <li key={action.kind}>
+                <a href={action.href} className="inline-flex min-h-11 items-center hover:text-foundation-action">{action.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex flex-col gap-4 border-t border-foundation-border pt-6 md:col-span-3 md:flex-row md:items-center md:justify-between">
+          <LanguageSwitch
+            alternateHref={paths.alternateHref}
+            alternateLocale={paths.alternateLocale}
+            label={labels.languageSwitch}
+          />
+          <p className="text-sm text-foundation-muted">© {copyrightYear} FURLANICH</p>
         </div>
       </div>
     </footer>

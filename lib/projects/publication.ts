@@ -60,6 +60,8 @@ export const publishedProjectManifest: readonly PublicProjectManifestEntry[] = [
   },
 ];
 
+export const publishedProjectIndexManifest = ['PROJECT-GRS', 'PROJECT-THE-SYSTEM'] as const;
+
 const allowedMaturities = new Set<PublicProjectManifestEntry['maturity']>([
   'production',
   'lab',
@@ -97,6 +99,8 @@ function assertCardContent(card: PublicProjectCardContent, entry: PublicProjectM
     'context',
     'maturityLabel',
     'summary',
+    'relationship',
+    'limitation',
     'evidenceSignal',
     'actionLabel',
   ] as const) {
@@ -119,7 +123,7 @@ function assertDetailContent(
   entry: PublicProjectManifestEntry,
   locale: Locale,
 ): void {
-  for (const field of ['headerSummary', 'evidenceStatement', 'context', 'problem', 'result', 'limitations', 'publicationScope'] as const) {
+  for (const field of ['headerSummary', 'evidenceStatement', 'relationship', 'context', 'problem', 'result', 'limitations', 'publicationScope'] as const) {
     if (typeof detail[field] !== 'string' || !detail[field].trim()) {
       throw new Error(`${locale} ${entry.id} ${field} must not be empty`);
     }
@@ -135,6 +139,9 @@ function assertDetailContent(
   }
   if (!entry.services.includes(detail.relatedService.serviceId) || !detail.relatedService.label.trim()) {
     throw new Error(`${locale} ${entry.id} related service is not approved`);
+  }
+  if (detail.relatedService.visibility !== 'public' && detail.relatedService.visibility !== 'internal') {
+    throw new Error(`${locale} ${entry.id} related service visibility is not approved`);
   }
   if (detail.founderAction && detail.founderAction.routeId !== 'founder') {
     throw new Error(`${locale} ${entry.id} Founder action must target the Founder route`);
@@ -175,11 +182,22 @@ function getManifestEntry(id: string): PublicProjectManifestEntry | undefined {
   return publishedProjectManifest.find((entry) => entry.id === id);
 }
 
+function getPublishedProjectIndexEntries(): PublicProjectManifestEntry[] {
+  return publishedProjectIndexManifest.map((id) => {
+    const entry = getManifestEntry(id);
+    if (!entry) throw new Error(`project index selection is outside the publication manifest: ${id}`);
+    if (entry.destination.kind !== 'detail') {
+      throw new Error(`project index selection requires an approved detail destination: ${id}`);
+    }
+    return entry;
+  });
+}
+
 export function getPublishedProjectCards(
   content: PublicProjectLocaleContent,
   locale: Locale,
 ): ResolvedProjectCard[] {
-  return publishedProjectManifest.map((entry) => {
+  return getPublishedProjectIndexEntries().map((entry) => {
     const card = content.cards[entry.id];
     if (!card) throw new Error(`${locale} content is missing ${entry.id}`);
     return {
@@ -264,7 +282,7 @@ export function getPublishedProjectDetail(
     maturityLabel: content.cards[entry.id].maturityLabel,
     maturity: entry.maturity,
     serviceIds: entry.services,
-    publicationScope: entry.publicationScope,
+    publicationPermission: entry.publicationScope,
     visual: { ...entry.visual, ...detail.visual },
     relatedServiceHref: getServiceSectionHref(locale, detail.relatedService.serviceId),
     founderAction: detail.founderAction

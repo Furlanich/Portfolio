@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { appUrl, stableRoutes } from './support/paths';
+import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 test.describe.configure({ timeout: 60_000 });
 
@@ -39,7 +39,7 @@ for (const pageCase of cases) {
     await expect(page.getByRole('main').locator('a[href^="https://wa.me"], a[href^="mailto:"], a[href^="tel:"]')).toHaveCount(3);
     await expect(page.getByRole('main').getByRole('link', { name: /Privacy Policy|Política de privacidad/ })).toHaveAttribute(
       'href',
-      pageCase.language === 'en' ? '/en/privacy/' : '/privacidad/',
+      appPathname(pageCase.language === 'en' ? '/en/privacy/' : '/privacidad/'),
     );
     await expect(page.getByRole('link', { name: /Samuel/ }).last()).toBeVisible();
   });

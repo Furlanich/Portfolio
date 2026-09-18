@@ -34,10 +34,9 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
           menu: 'Abrir navegación principal',
           services: 'Servicios',
           projects: 'Proyectos',
-          process: 'Proceso',
+          process: 'Cómo trabajamos',
           studio: 'El estudio',
-          contact: 'Contacto',
-          primaryAction: contactContent.actions[0].label,
+          primaryAction: 'Ver contacto',
           languageSwitch: 'Ver sitio en inglés',
         }}
       />
@@ -46,7 +45,8 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
         locale={locale}
         contactHref={getFoundationPath('contact', locale)}
         labels={{
-          evidenceHeading: 'Evidencia del proyecto',
+          contextGroupHeading: 'Contexto y oportunidad',
+          evidenceHeading: 'Evidencia y límites',
           contextHeading: 'Contexto',
           problemHeading: 'Oportunidad modelada',
           scopeHeading: 'Alcance implementado',
@@ -55,8 +55,9 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
           evidenceLinkLabel: 'Evidencia pública',
           limitationsHeading: 'Limitaciones y alcance',
           relatedServiceHeading: 'Servicio relacionado',
+          nextStepsHeading: 'Siguientes destinos',
           finalHeading: '¿Necesitás resolver algo parecido?',
-          finalDescription: 'Contanos el contexto, el proceso o el sistema que necesitás mejorar. Te respondemos con una evaluación directa del próximo paso.',
+          finalDescription: 'Explorá las opciones de contacto y la demostración del formulario.',
           finalAction: 'Hablar sobre tu proyecto',
           sourceLinkSuffix: '(enlace externo)',
         }}
@@ -69,7 +70,7 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
           navigation: 'Navegación',
           services: 'Servicios',
           projects: 'Proyectos',
-          process: 'Proceso',
+          process: 'Cómo trabajamos',
           studio: 'El estudio',
           founder: 'Samuel Furlanich',
           contact: 'Contacto',
@@ -77,6 +78,7 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
           privacy: 'Privacidad',
           professional: 'Enlaces profesionales',
           location: contactContent.location,
+          languageSwitch: 'Ver sitio en inglés',
         }}
       />
     </>

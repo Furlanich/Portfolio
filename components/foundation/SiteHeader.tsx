@@ -2,21 +2,13 @@ import Link from 'next/link';
 import type { FoundationNavigationPaths } from '@/lib/foundation-navigation';
 import type { Locale } from '@/lib/locales';
 import { LanguageSwitch } from '@/components/foundation/LanguageSwitch';
+import { NavigationDisclosure } from '@/components/foundation/NavigationDisclosure';
+import type { SiteHeaderLabels } from '@/components/foundation/content-types';
 
 interface SiteHeaderProps {
   locale: Locale;
   paths: FoundationNavigationPaths;
-  labels: {
-    navigation: string;
-    menu: string;
-    services: string;
-    projects: string;
-    process: string;
-    studio: string;
-    contact: string;
-    primaryAction: string;
-    languageSwitch: string;
-  };
+  labels: SiteHeaderLabels;
 }
 
 type SiteNavigationLink = {
@@ -60,7 +52,6 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
     { href: paths.projects, label: labels.projects },
     { href: paths.process, label: labels.process },
     { href: paths.studio, label: labels.studio },
-    { href: paths.contact, label: labels.contact },
   ];
 
   return (
@@ -92,31 +83,12 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
             />
           </nav>
 
-          <details className="group lg:hidden">
-            <summary
-              aria-label={labels.menu}
-              aria-controls="primary-navigation-panel"
-              className="flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center rounded-[10px] border border-foundation-border text-foundation-ink transition-colors duration-[160ms] ease-out hover:bg-foundation-tint hover:text-foundation-action focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-surface focus-visible:ring-offset-[3px] focus-visible:ring-offset-foundation-action-strong lg:hidden [&::-webkit-details-marker]:hidden"
-            >
-              <span className="sr-only">{labels.menu}</span>
-              <span aria-hidden="true" className="flex w-5 flex-col gap-1">
-                <span className="h-0.5 w-full bg-current" />
-                <span className="h-0.5 w-full bg-current" />
-                <span className="h-0.5 w-full bg-current" />
-              </span>
-            </summary>
-
-            <nav
-              id="primary-navigation-panel"
-              aria-label={labels.navigation}
-              className="absolute left-1/2 top-full hidden w-[min(calc(100vw-40px),24rem)] -translate-x-1/2 flex-col gap-1 rounded-[12px] border border-foundation-border bg-foundation-surface p-2 text-sm font-semibold text-foundation-muted shadow-[0_12px_32px_rgba(11,31,51,0.12)] group-open:flex"
-            >
-              <PrimaryNavigationItems
-                links={navigationLinks}
-                primaryAction={{ href: paths.contact, label: labels.primaryAction }}
-              />
-            </nav>
-          </details>
+          <NavigationDisclosure menuLabel={labels.menu} navigationLabel={labels.navigation}>
+            <PrimaryNavigationItems
+              links={navigationLinks}
+              primaryAction={{ href: paths.contact, label: labels.primaryAction }}
+            />
+          </NavigationDisclosure>
         </div>
 
         <span className="sr-only">{locale === 'es' ? 'Español' : 'English'}</span>
