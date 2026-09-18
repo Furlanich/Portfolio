@@ -3,11 +3,12 @@ id: AUDIENCES-SERVICES
 type: product-foundation
 status: APPROVED
 related:
+  - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - BRAND-POSITIONING
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
-last_verified: 2026-09-16
+last_verified: 2026-09-17
 ---
 
 # Audiences and services
@@ -107,7 +108,7 @@ It does not automatically include a full rebuild, a new system, on-call incident
 
 ## Evidence posture — APPROVED
 
-- Commercial web work has three READY, source-backed Projects cards related to `SERVICE-WEB`: General Reservation System, The-System, and MPC Administración. Their limitations and bilingual presentation are approved, but they remain implementation evidence without current functional demonstration, production/client claims, approved imagery, detail pages, or homepage eligibility. Busesfy remains unusable as evidence while relationship, authorship, maturity, and permission are unclear.
+- The inventory has three READY source-backed records with an internal `SERVICE-WEB` relationship: General Reservation System, The-System, and MPC Administración. Their owners authorize paired summary-only details and one labeled conceptual detail visual per item, implemented by the [completed Projects plan](../plans/completed/projects-evidence-experience.md). This does not authorize screenshots, current functional demonstrations, production/client claims or Home-card eligibility. [D04 selection in the inventory](projects/index.md) accepts GRS lead, secondary Lab and Founder-led educational MPC discovery; those marketing placement changes await implementation. MPC is educational group work, not commercial delivery. Busesfy remains unusable while relationship, authorship, maturity and permission are unclear. This MKT-DOC-001 correction supersedes the stale no-detail/no-imagery summary, preserving item permissions and approval history.
 - No verified public WhatsApp-automation project is currently inventoried.
 - No approved public maintenance/consulting intervention story is currently inventoried.
 

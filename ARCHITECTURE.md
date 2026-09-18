@@ -3,6 +3,7 @@ id: ARCHITECTURE-MAP
 type: architecture-map
 status: APPROVED
 related:
+  - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - ARCH-CURRENT
   - ARCH-FINDINGS
   - ARCH-STAGE-B-HARNESS-DESIGN
@@ -28,7 +29,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-14
+last_verified: 2026-09-17
 ---
 
 # FURLANICH architecture map
@@ -37,9 +38,9 @@ last_verified: 2026-09-14
 
 The current application is a Next.js 16 App Router site with fourteen static foundation routes: Spanish at the root and English under `/en/`, plus six paired static project-detail artifacts. Locale-specific Server Component trees compose shared semantic foundation components from route-owned content. The paired Privacy routes use a shared server-rendered composition and exact locale-owned demonstration disclosure. Retained founder source remains under `data/`; the obsolete project JSON, project-only types/exports, animated Card primitive, and unapproved legacy project SVGs were retired after Task 4 consumer verification.
 
-Tailwind CSS provides utility styling and the small component primitives. `next/font` loads Inter; `public/` holds static images, including legacy project previews. The site is statically exported with trailing slashes, optional GitHub Pages base path/asset prefix, and unoptimized images. The deployment workflow builds `main` with Node 24 and publishes `out/` to GitHub Pages.
+Tailwind CSS provides utility styling and the small component primitives. `next/font` loads Inter; `public/` holds static images, including the three approved conceptual project-detail visuals. The site is statically exported with trailing slashes, optional GitHub Pages base path/asset prefix, and unoptimized images. The deployment workflow builds `main` with Node 24 and publishes `out/` to GitHub Pages.
 
-The approved Studio route pair is not yet materialized: the shared route/navigation contract currently uses the nested Founder pair as the “El estudio / About” destination. Both Founder pages render the minimum preserved profile, but the completed Studio page and completed Founder sections remain implementation work.
+Studio and Founder are implemented as separate localized route pairs. Studio navigation points to `/estudio/` and `/en/about/`; Founder remains nested and secondary. The earlier Founder-as-Studio/minimum-profile gap was closed by the [completed Studio/Founder plan](docs/plans/completed/studio-founder-completion.md), including integration PR #40 (`cc18f55`). This factual synchronization addresses MKT-DOC-001; the new marketing revisions remain implementation work under [PLAN-MARKETING-PRESENTATION-EXCELLENCE](docs/plans/active/marketing-presentation-excellence-v1.md).
 
 The runtime dependency boundary is Next.js, React, TypeScript, Tailwind, Framer Motion, React Hook Form, and Lucide React. The approved foundation has no runtime localization dependency. Development verification adds pinned Playwright Test and axe integration. Repository checks are documentation/Skill integrity, Node contract tests, ESLint, TypeScript no-emit checking, production static build and artifact verification, a three-engine browser smoke suite, responsive profiles, and representative automated accessibility scans. See [current system](docs/architecture/current-system.md), [testing strategy](docs/testing/strategy.md), and [quality findings](docs/architecture/current-quality-findings.md) for evidence and limits.
 
@@ -57,7 +58,7 @@ Task 3 / PR 3 was confirmed merged as PR #47 after the earlier transient branch-
 
 ## APPROVED product constraints
 
-The intended product is a bilingual, commercial-first FURLANICH site with Spanish root routes and English `/en/` routes, as defined by the [information architecture](docs/product/information-architecture.md). The current single-page/client-state localization model is not approval to retain that implementation. Product and design requirements remain authoritative in [project knowledge](docs/index.md).
+The intended product is a bilingual, commercial-first FURLANICH site with Spanish root routes and English `/en/` routes, as defined by the [information architecture](docs/product/information-architecture.md). The former single-page/client-state localization model is retained only as historical context. Product and design requirements remain authoritative in [project knowledge](docs/index.md).
 
 The approved [homepage hero implementation boundary](docs/rfcs/homepage-hero-implementation-boundary.md) governs the first business-homepage slice. Its English copy, minimum visual direction, responsive/motion behavior, CTA destinations, and founder-content preservation scope are now approved in their owning product/design records.
 
@@ -79,9 +80,9 @@ The homepage foundation uses explicit Spanish root routes and English `/en/` rou
 
 The accepted route tree, component boundaries, migration rules, trade-offs, and approval provenance are owned by `ADR-STATIC-LOCALIZED-ROUTING`; this map does not duplicate them.
 
-## TEMPORARY migration state — pre-cutover record
+## HISTORICAL migration state — pre-cutover record
 
-Until the atomic locale-root cutover, the current personal homepage and client-only localization remain the public implementation. Behavior-neutral route contracts and route-private localized content may coexist during preparatory PRs, but incomplete public locale trees must not be exposed. `next-intl` may remain temporarily for legacy consumers and is removed only after repository search proves its final consumer is gone. The active execution plan owns this transition and its rollback gates.
+Before the completed atomic locale-root cutover, the personal homepage and client-only localization remained the public implementation. The following transition rules are historical, not current implementation gaps. Behavior-neutral route contracts and route-private localized content may coexist during preparatory PRs, but incomplete public locale trees must not be exposed. `next-intl` may remain temporarily for legacy consumers and is removed only after repository search proves its final consumer is gone. The active execution plan owns this transition and its rollback gates.
 
 ## PROPOSED architecture
 
