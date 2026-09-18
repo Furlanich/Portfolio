@@ -3,9 +3,10 @@ import type { FounderPageContent } from './content-types';
 interface FounderProfessionalHistoryProps {
   experience: FounderPageContent['experience'];
   education: FounderPageContent['education'];
+  projectHref: string;
 }
 
-export function FounderProfessionalHistory({ experience, education }: FounderProfessionalHistoryProps) {
+export function FounderProfessionalHistory({ experience, education, projectHref }: FounderProfessionalHistoryProps) {
   return (
     <>
       <section aria-labelledby="founder-experience-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
@@ -43,6 +44,19 @@ export function FounderProfessionalHistory({ experience, education }: FounderPro
                 <p className="mt-2 text-sm font-semibold leading-6 text-foundation-action">{entry.status}</p>
               </li>
             ))}
+            <li data-founder-education-project className="border-t border-foundation-border pt-5 md:col-span-2">
+              <h3 className="text-lg font-bold leading-7 text-foundation-ink">{education.project.title}</h3>
+              <p className="mt-2 text-sm font-semibold leading-6 text-foundation-action">{education.project.context}</p>
+              <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{education.project.summary}</p>
+              <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{education.project.relationship}</p>
+              <p className="mt-3 max-w-[68ch] text-sm leading-6 text-foundation-muted">{education.project.limitation}</p>
+              <a
+                href={projectHref}
+                className="mt-4 inline-flex min-h-11 items-center font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
+              >
+                {education.project.actionLabel}
+              </a>
+            </li>
           </ul>
         </div>
       </section>

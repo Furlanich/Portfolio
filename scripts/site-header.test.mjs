@@ -22,3 +22,11 @@ test('anchors the wordmark to a non-sticky top target on the localized home rout
   assert.match(source, /href=\{`\$\{paths\.home\}#site-top`\}/);
   assert.doesNotMatch(source, /<header\s+id="site-top"/);
 });
+
+test('exposes four navigation subjects and one stable Contact action', () => {
+  const source = fs.readFileSync(siteHeaderPath, 'utf8');
+
+  assert.match(source, /NavigationDisclosure/);
+  assert.match(source, /label: labels\.primaryAction/);
+  assert.doesNotMatch(source, /\{ href: paths\.contact, label: labels\.contact \}/);
+});

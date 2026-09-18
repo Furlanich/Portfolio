@@ -31,7 +31,9 @@ export const projectPageContent = {
       context: 'Passenger transport',
       maturityLabel: 'Reservation prototype',
       summary:
-        'Reference implementation for managing routes, stations, seat availability, reservations, and passenger self-service. It is published as implementation evidence; no production use or measured business outcome is claimed.',
+        'Code for managing passenger transport routes, stations, seats and reservations.',
+      relationship: 'Prototype published by Samuel, with another repository contributor. It is not client work or a production delivery.',
+      limitation: 'No current public demo; current behavior has not been revalidated.',
       capabilities: ['Reservations', 'Seat availability', 'Passenger portal'],
       evidenceSignal: 'Public source',
       actionLabel: 'View project',
@@ -41,7 +43,9 @@ export const projectPageContent = {
       context: 'FURLANICH Lab · Role-playing operations',
       maturityLabel: 'FURLANICH Lab',
       summary:
-        'Web-application lab with identity and access, campaigns, memberships and invitations, and subscription boundaries represented in code. It is published as implementation evidence; planned areas are not presented as delivered.',
+        'A role-playing campaign lab with code for accounts, memberships, invitations and permissions.',
+      relationship: 'Lab published by Samuel, with no client relationship or production delivery.',
+      limitation: 'No public demo or current runtime verification; no production use is claimed.',
       capabilities: ['Identity and access', 'Multi-user permissions', 'Campaign management'],
       evidenceSignal: 'Public source',
       actionLabel: 'View project',
@@ -51,7 +55,9 @@ export const projectPageContent = {
       context: 'Educational group project · Fictional manufacturing operations',
       maturityLabel: 'Educational prototype',
       summary:
-        'A 2021 group project for a fictional organization, with administration workflows for production, inventory, users, logs, and curing data. It is published as educational implementation evidence, not as client work or a production system.',
+        'A 2021 educational group project for managing production and inventory at a fictional cheese factory.',
+      relationship: 'Educational group work; it does not represent a client, employment or a FURLANICH delivery.',
+      limitation: 'No current runtime verification; no claim of sole authorship, real-world use, or business outcome.',
       capabilities: ['Production', 'Inventory', 'Administration'],
       evidenceSignal: 'Public source',
       actionLabel: 'View project',
@@ -63,8 +69,9 @@ export const projectPageContent = {
         label: 'Meet Samuel',
         routeId: 'founder',
       },
-      headerSummary: 'Reference implementation for coordinating passenger transport reservations. This page documents scope and implementation, not production use.',
+      headerSummary: 'Code for managing passenger transport routes, stations, seats and reservations.',
       evidenceStatement: 'Implementation evidence based on the public repository and its available technical history. Current behavior has not been revalidated.',
+      relationship: 'Prototype published by Samuel, with another repository contributor. It is not client work or a production delivery.',
       context: 'The project explores route, station, seat, and self-service operations for passenger transport.',
       problem: 'The scope addresses coordination of availability and reservations that is often split across operations, administration, and passengers. This describes the modeled opportunity, not a confirmed client problem.',
       deliveredScope: ['Account access', 'Route and station management', 'Seat availability', 'Reservation creation and cancellation', 'Passenger self-service', 'Administration', 'CSV station exchange'],
@@ -73,8 +80,8 @@ export const projectPageContent = {
       evidence: {
         links: [{ label: 'Approved public repository', href: 'https://github.com/Furlanich/GeneralReservationSystem', kind: 'repository' }],
       },
-      limitations: 'The documented demo returned 404; local startup and workflows were not revalidated; the payment UI must not be presented as implemented.',
-      relatedService: { label: 'Commercial websites and web applications', serviceId: 'web' },
+      limitations: 'There is no verified public demonstration. Current behavior has not been revalidated and the payment interface is not presented as implemented. Adoption, uptime and business results are not claimed.',
+      relatedService: { label: 'Commercial websites and web applications', serviceId: 'web', visibility: 'public' },
       publicationScope: 'The public description is limited by publication permissions. The image is conceptual and does not show a real interface.',
       visual: {
         label: 'Conceptual illustration · not a product screenshot',
@@ -86,8 +93,9 @@ export const projectPageContent = {
         label: 'Meet Samuel',
         routeId: 'founder',
       },
-      headerSummary: 'Web-application laboratory for organizing role-playing campaigns with identity, memberships, and multi-user permissions. This page distinguishes existing code from planned areas.',
+      headerSummary: 'A role-playing campaign lab with code for accounts, memberships, invitations and permissions.',
       evidenceStatement: 'Implementation evidence based on the public repository, its tests, and development configuration. A current runtime was not verified.',
+      relationship: 'Lab published by Samuel, with no client relationship or production delivery.',
       context: 'The laboratory explores role-playing campaign operations and the access boundaries needed when several people participate.',
       problem: 'The scope models how to separate identity, memberships, invitations, and permissions around a campaign. This describes a product exploration, not a confirmed client need.',
       deliveredScope: ['Authentication and email verification', 'Password recovery', 'External-auth boundaries', 'Campaign CRUD', 'Memberships and invitations', 'Subscription/billing abstractions', 'Next.js client foundation', 'Backend-layer and frontend tests'],
@@ -96,8 +104,8 @@ export const projectPageContent = {
       evidence: {
         links: [{ label: 'Approved public repository', href: 'https://github.com/Furlanich/The-System', kind: 'repository' }],
       },
-      limitations: 'There is no public demo or current runtime verification; several blueprint areas remain planned or scaffolded.',
-      relatedService: { label: 'Commercial websites and web applications', serviceId: 'web' },
+      limitations: 'There is no public demonstration or verified current execution. Subscription boundaries are modeled in code, not presented as operational billing. Scenes, assets, notes and full collaboration are not presented as delivered.',
+      relatedService: { label: 'Commercial websites and web applications', serviceId: 'web', visibility: 'public' },
       publicationScope: 'The public description is limited by publication permissions. The image is conceptual and does not show a real interface.',
       visual: {
         label: 'Conceptual illustration · not a product screenshot',
@@ -105,8 +113,13 @@ export const projectPageContent = {
       },
     },
     'PROJECT-MPC-ADMIN': {
-      headerSummary: 'Educational group prototype for production and inventory administration for a fictional organization. This page keeps its academic context explicit.',
+      founderAction: {
+        label: "View Samuel's background",
+        routeId: 'founder',
+      },
+      headerSummary: 'A 2021 educational group project for managing production and inventory at a fictional cheese factory.',
       evidenceStatement: 'Implementation evidence based on the public repository and the 2021 technical-education competition context. A current runtime was not verified.',
+      relationship: 'Educational group work; it does not represent a client, employment or a FURLANICH delivery.',
       context: 'The work models administrative operations for a fictional cheese factory within a group educational activity.',
       problem: 'The assignment explored how to organize production, inventory, users, logs, and curing data in an administrative system. It does not represent a confirmed problem from a real company.',
       deliveredScope: ['Administration workflows for production and inventory', 'Users', 'Logs', 'Curing data', 'Fictional organization structure'],
@@ -115,8 +128,8 @@ export const projectPageContent = {
       evidence: {
         links: [{ label: 'Approved public repository', href: 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-', kind: 'repository' }],
       },
-      limitations: 'The project is 2021 group work for a fictional organization; there is no current runtime verification or authorized visual material from the original system.',
-      relatedService: { label: 'Commercial websites and web applications', serviceId: 'web' },
+      limitations: 'Current functionality has not been verified. Sole authorship, real-world use, deployment and business results are not claimed. No visual material from the original system is authorized.',
+      relatedService: { label: 'Commercial websites and web applications', serviceId: 'web', visibility: 'internal' },
       publicationScope: 'The public description is limited by the educational context and publication permissions. The image is conceptual and does not show a real interface.',
       visual: {
         label: 'Conceptual illustration · not a product screenshot',

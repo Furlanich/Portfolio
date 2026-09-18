@@ -34,10 +34,9 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
           menu: 'Open primary navigation',
           services: 'Services',
           projects: 'Work',
-          process: 'Process',
+          process: 'How we work',
           studio: 'About',
-          contact: 'Contact',
-          primaryAction: contactContent.actions[0].label,
+          primaryAction: 'Contact options',
           languageSwitch: 'View site in Spanish',
         }}
       />
@@ -46,7 +45,8 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
         locale={locale}
         contactHref={getFoundationPath('contact', locale)}
         labels={{
-          evidenceHeading: 'Project evidence',
+          contextGroupHeading: 'Context and opportunity',
+          evidenceHeading: 'Evidence and limitations',
           contextHeading: 'Context',
           problemHeading: 'Modeled opportunity',
           scopeHeading: 'Implemented scope',
@@ -55,8 +55,9 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
           evidenceLinkLabel: 'Public evidence',
           limitationsHeading: 'Limitations and scope',
           relatedServiceHeading: 'Related service',
+          nextStepsHeading: 'Next destinations',
           finalHeading: 'Need to solve something similar?',
-          finalDescription: 'Tell us about the context, process, or system you need to improve. We will respond with a direct assessment of the next step.',
+          finalDescription: 'Explore the contact options and the form demonstration.',
           finalAction: 'Discuss your project',
           sourceLinkSuffix: '(external link)',
         }}
@@ -69,7 +70,7 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
           navigation: 'Navigation',
           services: 'Services',
           projects: 'Work',
-          process: 'Process',
+          process: 'How we work',
           studio: 'About',
           founder: 'Samuel Furlanich',
           contact: 'Contact',
@@ -77,6 +78,7 @@ export default async function Page({ params }: { params: Promise<{ projectSlug: 
           privacy: 'Privacy',
           professional: 'Professional links',
           location: contactContent.location,
+          languageSwitch: 'View site in Spanish',
         }}
       />
     </>

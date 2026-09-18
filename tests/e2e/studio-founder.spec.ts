@@ -59,7 +59,7 @@ for (const studioCase of studioCases) {
       await expect(founderAction).toHaveAttribute('href', appPathname(studioCase.founderRoute));
     }
 
-    await page.locator(`a[hreflang="${studioCase.alternateLocale}"]`).click();
+    await page.getByRole('banner').locator(`a[hreflang="${studioCase.alternateLocale}"]`).click();
     await expect(page).toHaveURL((url) => url.pathname === appPathname(studioCase.alternateRoute));
     assertNoBrowserErrors();
   });
@@ -188,7 +188,7 @@ for (const founderCase of founderCases) {
     await page.keyboard.press('Tab');
     await expect(actions.nth(2)).toBeFocused();
 
-    await page.locator('a[hreflang="' + founderCase.alternateLocale + '"]').click();
+    await page.getByRole('banner').locator('a[hreflang="' + founderCase.alternateLocale + '"]').click();
     await expect(page).toHaveURL((url) => url.pathname === appPathname(founderCase.alternateRoute));
   });
 
@@ -214,7 +214,9 @@ const integrationCases = [
     locale: 'Spanish',
     contactRoute: '/contacto/',
     contactActionLabels: ['Escribir por WhatsApp', 'Enviar un correo', 'Llamar'],
-    founderLabel: 'Conocer a Samuel',
+    contactFounderLabel: 'Conocer la trayectoria de Samuel',
+    projectFounderLabel: 'Conocer a Samuel',
+    mpcFounderLabel: 'Conocer la trayectoria de Samuel',
     founderRoute: stableRoutes.founder.es,
     projectRoutes: {
       'general-reservation-system': '/proyectos/general-reservation-system/',
@@ -226,7 +228,9 @@ const integrationCases = [
     locale: 'English',
     contactRoute: '/en/contact/',
     contactActionLabels: ['Write on WhatsApp', 'Send an email', 'Call'],
-    founderLabel: 'Meet Samuel',
+    contactFounderLabel: "View Samuel's background",
+    projectFounderLabel: 'Meet Samuel',
+    mpcFounderLabel: "View Samuel's background",
     founderRoute: stableRoutes.founder.en,
     projectRoutes: {
       'general-reservation-system': '/en/work/general-reservation-system/',
@@ -241,26 +245,31 @@ for (const integrationCase of integrationCases) {
     await page.goto(appUrl(integrationCase.contactRoute));
 
     const main = page.getByRole('main');
-    const founderLink = main.getByRole('link', { name: integrationCase.founderLabel });
+    const founderLink = main.getByRole('link', { name: integrationCase.contactFounderLabel });
     await expect(founderLink).toHaveAttribute('href', appPathname(integrationCase.founderRoute));
 
     const linkOrder = await main.getByRole('link').evaluateAll((links) =>
       links.map((link) => (link as HTMLAnchorElement).textContent?.trim()),
     );
-    expect(linkOrder.slice(-1)[0]).toBe(integrationCase.founderLabel);
-    expect(linkOrder.slice(0, 3)).toEqual(integrationCase.contactActionLabels);
+    expect(linkOrder.slice(-1)[0]).toBe(integrationCase.contactFounderLabel);
+    expect(linkOrder.filter((label) => integrationCase.contactActionLabels.includes(label as never))).toEqual(
+      integrationCase.contactActionLabels,
+    );
   });
 
   test(`${integrationCase.locale} project details expose Founder context only when evidence authorizes it`, async ({ page }) => {
     for (const slug of ['general-reservation-system', 'the-system'] as const) {
       await page.goto(appUrl(integrationCase.projectRoutes[slug]));
-      await expect(page.getByRole('main').getByRole('link', { name: integrationCase.founderLabel })).toHaveAttribute(
+      await expect(page.getByRole('main').getByRole('link', { name: integrationCase.projectFounderLabel })).toHaveAttribute(
         'href',
         appPathname(integrationCase.founderRoute),
       );
     }
 
     await page.goto(appUrl(integrationCase.projectRoutes['mpc-administracion']));
-    await expect(page.getByRole('main').getByRole('link', { name: integrationCase.founderLabel })).toHaveCount(0);
+    await expect(page.getByRole('main').getByRole('link', { name: integrationCase.mpcFounderLabel })).toHaveAttribute(
+      'href',
+      appPathname(integrationCase.founderRoute),
+    );
   });
 }

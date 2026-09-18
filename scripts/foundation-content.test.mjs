@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 
 const modules = [
   { locale: 'es', routeId: 'home', path: '../app/(es)/_content/home.ts', exportName: 'homeContent' },
@@ -129,6 +130,11 @@ test('exports the complete approved Founder profile in both locales', async () =
     assert.equal(content.experience.entries.some(({ role }) => /Clever Soft/i.test(role)), false);
 
     assert.equal(content.education.entries.length, 2);
+    assert.equal(content.education.project.slug, 'mpc-administracion');
+    assert.match(content.education.project.summary, /2021/);
+    assert.match(content.education.project.summary, /fictic|ficticio|fictional/i);
+    assert.match(content.education.project.relationship, /grup|group/i);
+    assert.match(content.education.project.limitation, /verific|claimed|afirma/i);
     assert.equal(content.capabilities.groups.length, 4);
     assert.match(content.capabilities.heading, /systems|sistemas/i);
     assert.match(content.capabilities.introduction, /problem|problema|system|sistema/i);
@@ -174,5 +180,38 @@ test('exposes the subdued Founder context action after direct contact channels',
       label: locale === 'es' ? 'Conocer la trayectoria de Samuel' : "View Samuel's background",
       routeId: 'founder',
     });
+  }
+});
+
+test('uses the stable C-NAV Contact action in every localized shell', () => {
+  const pagePaths = [
+    'app/(es)/page.tsx',
+    'app/(es)/servicios/page.tsx',
+    'app/(es)/proyectos/page.tsx',
+    'app/(es)/proyectos/[projectSlug]/page.tsx',
+    'app/(es)/contacto/page.tsx',
+    'app/(es)/privacidad/page.tsx',
+    'app/(es)/estudio/page.tsx',
+    'app/(es)/estudio/samuel-furlanich/page.tsx',
+    'app/(en)/en/page.tsx',
+    'app/(en)/en/services/page.tsx',
+    'app/(en)/en/work/page.tsx',
+    'app/(en)/en/work/[projectSlug]/page.tsx',
+    'app/(en)/en/contact/page.tsx',
+    'app/(en)/en/privacy/page.tsx',
+    'app/(en)/en/about/page.tsx',
+    'app/(en)/en/about/samuel-furlanich/page.tsx',
+  ];
+
+  for (const relativePath of pagePaths) {
+    const source = fs.readFileSync(relativePath, 'utf8');
+    const expectedLabel = relativePath.startsWith('app/(es)') ? 'Ver contacto' : 'Contact options';
+
+    assert.match(source, new RegExp("primaryAction: ['\"]" + expectedLabel + "['\"]"), relativePath);
+    assert.doesNotMatch(
+      source,
+      /primaryAction:\s*(?:homeContent|contactContent|founderContent|studioPageContent)\.[^\n]+/,
+      relativePath,
+    );
   }
 });

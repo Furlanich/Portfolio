@@ -26,6 +26,8 @@ export type PublicProjectCardContent = {
   context: string;
   maturityLabel: string;
   summary: string;
+  relationship: string;
+  limitation: string;
   capabilities: readonly [string, string] | readonly [string, string, string];
   evidenceSignal: string;
   actionLabel: string;
@@ -41,6 +43,7 @@ export type PublicProjectEvidenceLink = {
 export type PublicProjectDetailContent = {
   headerSummary: string;
   evidenceStatement: string;
+  relationship: string;
   context: string;
   problem: string;
   deliveredScope: readonly string[];
@@ -53,6 +56,7 @@ export type PublicProjectDetailContent = {
   relatedService: {
     label: string;
     serviceId: ServiceSectionId;
+    visibility: 'public' | 'internal';
   };
   publicationScope: string;
   visual: {
@@ -105,7 +109,7 @@ export type ResolvedProjectDetail = PublicProjectDetailContent & {
   maturityLabel: string;
   maturity: PublicProjectManifestEntry['maturity'];
   serviceIds: PublicProjectManifestEntry['services'];
-  publicationScope: PublicProjectManifestEntry['publicationScope'];
+  publicationPermission: PublicProjectManifestEntry['publicationScope'];
   visual: NonNullable<PublicProjectManifestEntry['visual']> & PublicProjectDetailContent['visual'];
   relatedServiceHref: string;
   founderAction?: ActionLink & { href: string };

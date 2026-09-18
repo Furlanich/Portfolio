@@ -24,6 +24,16 @@ export type FounderEducationEntry = {
   status: string;
 };
 
+export type FounderEducationProject = {
+  slug: string;
+  title: string;
+  context: string;
+  summary: string;
+  relationship: string;
+  limitation: string;
+  actionLabel: string;
+};
+
 export type FounderCapabilityGroup = {
   title: string;
   items: string[];
@@ -46,6 +56,7 @@ export type FounderPageContent = {
   education: {
     heading: string;
     entries: FounderEducationEntry[];
+    project: FounderEducationProject;
   };
   capabilities: {
     heading: string;

@@ -68,7 +68,7 @@ for (const pageCase of routeCases) {
 async function switchLanguage(page: Page, language: string, route: string) {
   await Promise.all([
     page.waitForURL((url) => url.pathname === appPathname(route)),
-    page.locator('a[hreflang="' + language + '"]').click(),
+    page.getByRole('banner').locator('a[hreflang="' + language + '"]').click(),
   ]);
 }
 

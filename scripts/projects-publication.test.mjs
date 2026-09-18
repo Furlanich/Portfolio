@@ -4,6 +4,7 @@ import { access, readdir, readFile } from 'node:fs/promises';
 
 const {
   publishedProjectManifest,
+  publishedProjectIndexManifest,
   getPublishedProjectCards,
   getPublishedProjectDetail,
   getPublishedProjectDetails,
@@ -24,7 +25,7 @@ function assertUnique(values, label) {
 }
 
 function assertPublicCard(card, locale, id) {
-  for (const field of ['title', 'context', 'maturityLabel', 'summary', 'evidenceSignal', 'actionLabel']) {
+  for (const field of ['title', 'context', 'maturityLabel', 'summary', 'relationship', 'limitation', 'evidenceSignal', 'actionLabel']) {
     assert.equal(typeof card[field], 'string', `${locale} ${id} ${field} must be a string`);
     assert.ok(card[field].trim(), `${locale} ${id} ${field} must not be empty`);
   }
@@ -90,14 +91,24 @@ test('keeps Spanish and English public content maps exactly aligned to the manif
 test('resolves only manifest cards to paired detail links and complete details', () => {
   const spanishCards = getPublishedProjectCards(spanish, 'es');
   const englishCards = getPublishedProjectCards(english, 'en');
-  assert.deepEqual(spanishCards.map((card) => card.id), ['PROJECT-GRS', 'PROJECT-THE-SYSTEM', 'PROJECT-MPC-ADMIN']);
-  assert.deepEqual(englishCards.map((card) => card.id), ['PROJECT-GRS', 'PROJECT-THE-SYSTEM', 'PROJECT-MPC-ADMIN']);
-  assert.deepEqual(spanishCards.map((card) => card.action.href), expectedEntries.map((entry) => `/proyectos/${entry[1]}/`));
-  assert.deepEqual(englishCards.map((card) => card.action.href), expectedEntries.map((entry) => `/en/work/${entry[1]}/`));
-  assert.deepEqual(spanishCards.map((card) => card.actionLabel), ['Ver proyecto', 'Ver proyecto', 'Ver proyecto']);
-  assert.deepEqual(englishCards.map((card) => card.actionLabel), ['View project', 'View project', 'View project']);
+  assert.deepEqual(publishedProjectIndexManifest, ['PROJECT-GRS', 'PROJECT-THE-SYSTEM']);
+  assert.deepEqual(spanishCards.map((card) => card.id), ['PROJECT-GRS', 'PROJECT-THE-SYSTEM']);
+  assert.deepEqual(englishCards.map((card) => card.id), ['PROJECT-GRS', 'PROJECT-THE-SYSTEM']);
+  assert.deepEqual(spanishCards.map((card) => card.action.href), expectedEntries.slice(0, 2).map((entry) => `/proyectos/${entry[1]}/`));
+  assert.deepEqual(englishCards.map((card) => card.action.href), expectedEntries.slice(0, 2).map((entry) => `/en/work/${entry[1]}/`));
+  assert.deepEqual(spanishCards.map((card) => card.actionLabel), ['Ver proyecto', 'Ver proyecto']);
+  assert.deepEqual(englishCards.map((card) => card.actionLabel), ['View project', 'View project']);
   assert.deepEqual(getPublishedProjectDetails(spanish, 'es').map((entry) => entry.slug), expectedEntries.map((entry) => entry[1]));
   assert.deepEqual(getPublishedProjectDetails(english, 'en').map((entry) => entry.slug), expectedEntries.map((entry) => entry[1]));
+});
+
+test('keeps MPC public and reachable through its detail route without selecting it for the commercial index', () => {
+  const mpcEntry = publishedProjectManifest.find((entry) => entry.id === 'PROJECT-MPC-ADMIN');
+  assert.ok(mpcEntry);
+  assert.equal(mpcEntry.publicationScope, 'limited');
+  assert.equal(publishedProjectIndexManifest.includes(mpcEntry.id), false);
+  assert.ok(getPublishedProjectDetails(spanish, 'es').some((entry) => entry.id === mpcEntry.id));
+  assert.ok(getPublishedProjectDetails(english, 'en').some((entry) => entry.id === mpcEntry.id));
 });
 
 test('rejects extra localized content outside the publication manifest', () => {
@@ -178,8 +189,18 @@ test('removes legacy project imports and types from active application sources',
 });
 
 test('exposes Founder context only for evidence-authorized founder-published projects', () => {
-  const eligibleIds = new Set(['PROJECT-GRS', 'PROJECT-THE-SYSTEM']);
-  const expectedLabels = { es: 'Conocer a Samuel', en: 'Meet Samuel' };
+  const expectedLabels = {
+    es: {
+      'PROJECT-GRS': 'Conocer a Samuel',
+      'PROJECT-THE-SYSTEM': 'Conocer a Samuel',
+      'PROJECT-MPC-ADMIN': 'Conocer la trayectoria de Samuel',
+    },
+    en: {
+      'PROJECT-GRS': 'Meet Samuel',
+      'PROJECT-THE-SYSTEM': 'Meet Samuel',
+      'PROJECT-MPC-ADMIN': "View Samuel's background",
+    },
+  };
   const expectedHrefs = {
     es: '/estudio/samuel-furlanich/',
     en: '/en/about/samuel-furlanich/',
@@ -190,16 +211,11 @@ test('exposes Founder context only for evidence-authorized founder-published pro
 
     for (const entry of publishedProjectManifest) {
       const founderAction = content.details[entry.id].founderAction;
-      if (eligibleIds.has(entry.id)) {
-        assert.deepEqual(founderAction, { label: expectedLabels[locale], routeId: 'founder' });
-        assert.deepEqual(
-          getPublishedProjectDetail(content, entry.slug, locale).founderAction,
-          { ...founderAction, href: expectedHrefs[locale] },
-        );
-      } else {
-        assert.equal(founderAction, undefined);
-        assert.equal(getPublishedProjectDetail(content, entry.slug, locale).founderAction, undefined);
-      }
+      assert.deepEqual(founderAction, { label: expectedLabels[locale][entry.id], routeId: 'founder' });
+      assert.deepEqual(
+        getPublishedProjectDetail(content, entry.slug, locale).founderAction,
+        { ...founderAction, href: expectedHrefs[locale] },
+      );
     }
   }
 });

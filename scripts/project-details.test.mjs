@@ -61,8 +61,46 @@ test('each locale supplies complete bounded detail content for every eligible pr
       assert.equal(entry.visual.kind, 'illustration');
       assert.equal(entry.visual.src.endsWith('.webp'), true);
       assert.equal(detail.visual.alt.length > 0, true);
+      assert.ok(detail.relationship);
+      assert.ok(detail.relatedService.visibility === 'public' || detail.relatedService.visibility === 'internal');
     }
   }
+});
+
+test('keeps localized publication prose separate from the internal publication permission', () => {
+  const spanishDetail = getPublishedProjectDetail(spanish, 'general-reservation-system', 'es');
+  const englishDetail = getPublishedProjectDetail(english, 'general-reservation-system', 'en');
+
+  assert.equal(spanishDetail.publicationPermission, 'limited');
+  assert.equal(englishDetail.publicationPermission, 'limited');
+  assert.equal(
+    spanishDetail.publicationScope,
+    'La descripción pública está limitada por permisos de publicación. La imagen es conceptual y no muestra una interfaz real.',
+  );
+  assert.equal(
+    englishDetail.publicationScope,
+    'The public description is limited by publication permissions. The image is conceptual and does not show a real interface.',
+  );
+  assert.notEqual(spanishDetail.publicationScope, 'limited');
+  assert.notEqual(englishDetail.publicationScope, 'limited');
+});
+
+test('routes MPC back to Founder education without rendering a commercial service destination', () => {
+  const spanishDetail = getPublishedProjectDetail(spanish, 'mpc-administracion', 'es');
+  const englishDetail = getPublishedProjectDetail(english, 'mpc-administracion', 'en');
+
+  assert.equal(spanishDetail.relatedService.visibility, 'internal');
+  assert.equal(englishDetail.relatedService.visibility, 'internal');
+  assert.deepEqual(spanishDetail.founderAction, {
+    label: 'Conocer la trayectoria de Samuel',
+    routeId: 'founder',
+    href: '/estudio/samuel-furlanich/',
+  });
+  assert.deepEqual(englishDetail.founderAction, {
+    label: "View Samuel's background",
+    routeId: 'founder',
+    href: '/en/about/samuel-furlanich/',
+  });
 });
 
 test('detail assets exist only at the three approved conceptual paths', async () => {
@@ -100,5 +138,12 @@ test('detail composition is a server-rendered accessible evidence boundary', asy
   assert.match(source, /target="_blank"/);
   assert.match(source, /rel="noreferrer"/);
   assert.match(source, /min-h-11/);
+  assert.match(source, /publicationPermission/);
+  assert.match(source, /relatedService\.visibility/);
+  assert.match(source, /data-detail-group="context"/);
+  assert.match(source, /data-detail-group="scope"/);
+  assert.match(source, /data-detail-group="evidence"/);
+  assert.match(source, /data-detail-group="next-steps"/);
+  assert.doesNotMatch(source, /detail\.publicationScope === 'limited'/);
   assert.doesNotMatch(source, /carousel|line-clamp|shadow-|functional-demonstration/i);
 });
