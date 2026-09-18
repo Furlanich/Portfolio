@@ -162,6 +162,9 @@ test.describe('native disclosure fallback', () => {
     await menu.click();
     await expect(details).toHaveAttribute('open', '');
     await expect(details.locator('nav').getByRole('link', { name: 'Servicios', exact: true })).toBeVisible();
-    await expect(details.locator('nav').getByRole('link', { name: 'Cómo trabajamos', exact: true })).toHaveAttribute('href', '/#proceso');
+    await expect(details.locator('nav').getByRole('link', { name: 'Cómo trabajamos', exact: true })).toHaveAttribute(
+      'href',
+      appPathname(stableRoutes.home.es) + '#proceso',
+    );
   });
 });

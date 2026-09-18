@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { FounderPageContent } from './content-types';
 
 interface FounderProfessionalHistoryProps {
@@ -50,12 +51,12 @@ export function FounderProfessionalHistory({ experience, education, projectHref 
               <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{education.project.summary}</p>
               <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{education.project.relationship}</p>
               <p className="mt-3 max-w-[68ch] text-sm leading-6 text-foundation-muted">{education.project.limitation}</p>
-              <a
+              <Link
                 href={projectHref}
                 className="mt-4 inline-flex min-h-11 items-center font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
               >
                 {education.project.actionLabel}
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
