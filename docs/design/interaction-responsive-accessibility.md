@@ -3,6 +3,8 @@ id: DESIGN-IX-A11Y
 type: design-spec
 status: APPROVED
 related:
+  - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
+  - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - IA-SITE
   - PAGE-HOME
@@ -15,7 +17,7 @@ related:
   - PAGE-FOUNDER
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-16
+last_verified: 2026-09-19
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -306,3 +308,55 @@ Compared with DESIGN-IX-A11Y at main revision 2be0286 (approved baseline last ve
 | Cards/links | Noninteractive content remains noninteractive. No whole-card pseudo-action, hover-only content or hidden essential limits | Keyboard order, touch and no-JS review |
 
 **D07 acceptance recorded:** VIS-R1 and IX-R1 are APPROVED without wording exceptions. The global notice and revised Contact order require D03; new shared-boundary fragments require D05/D06. Existing routes and language pairs remain unchanged. Earlier interaction clauses are superseded only for the accepted enhanced-menu dismissal/Escape/focus behavior and the named treatments whose content dependencies are subsequently accepted. No notice copy, response-block removal, added fragment or IA change is approved through D07 alone. Existing valid-ID and unobscured-anchor requirements already authorize later correctness repairs through a separate implementation PR; this documentation task performs none. Reduced motion removes nonessential transitions; no new transitions are proposed.
+
+## IMMERSIVE-HOME-V1 — Progressive WebGL interaction — APPROVED
+
+**Approved 2026-09-19.** This section records the responsive, interaction and accessibility requirements accepted in [RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1](../rfcs/visual-identity-immersive-experience-v1.md) and the architecture boundary in [ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE](../decisions/progressive-immersive-homepage.md). It supersedes the earlier homepage prohibition on scroll-linked motion only for the signature scene described here. All other page-motion restrictions and the existing semantic, keyboard, focus, target-size, Contact and evidence requirements remain authoritative.
+
+### Progressive structure
+
+The localized homepage must be complete before enhancement:
+
+- one server-rendered HTML proposition, description and CTA sequence;
+- the protected SVG identity;
+- a resolved static poster occupying the final scene dimensions;
+- a lazy capability gate that may replace or cover the poster with the decorative real-time scene.
+
+No heading, paragraph, CTA, navigation destination, evidence state or disclosure exists only inside canvas. The canvas is decorative, is excluded from the accessibility tree, receives no focus and never intercepts page scrolling or ordinary pointer interaction. The same semantic/source order is used at every width and in both locales.
+
+The poster remains when reduced motion is requested, WebGL is unavailable or unsuitable, initialization fails or the context is lost. Failure is quiet: no error panel interrupts the visitor, layout dimensions remain stable, and all copy/actions continue to work.
+
+### Scroll behavior and motion
+
+Native document scroll maps normalized progress to four reversible states: Recognition, Fragmentation, Connection and Coordination. Scrolling backward reverses the state progression without jumps or a second narrative. The site does not hijack scrolling, change the scrollbar, require a cinematic wait, autoplay audio or hide essential content pending animation.
+
+The scene may animate camera, transform, opacity and material properties. It must not animate document layout. Rendering settles when progress stops; continuous idle animation is outside v1. The existing Framer Motion boundary is the first orchestration candidate. GSAP or another scroll runtime requires prototype evidence that the existing dependency cannot produce smooth reversible progression.
+
+Under `prefers-reduced-motion: reduce`, the resolved poster is shown and the narrative remains understandable without scrub motion. Reduced motion is a complete composition, not a slowed version of the effect.
+
+### Responsive composition
+
+| Width | Required composition |
+| ---: | --- |
+| 1440 px | Full split editorial stage with complete depth and camera travel inside the 1200px content boundary |
+| 1024 px | Compressed split with shorter camera movement and unchanged semantic order |
+| 768 px | Stacked or locally overlaid stage with reduced scene detail |
+| 390 px | Copy and actions first; compact local scene without a long pinned viewport |
+| 320 px | Same reading order with tighter measure, simplified detail and full-width actions |
+
+Rendering quality is capability-aware rather than selected by width alone. Long Spanish and English content must grow without clipping or horizontal overflow. The compact layouts cannot make visitors traverse an artificially long pinned stage. At 200% text zoom, the semantic content reflows and the decorative scene must not obscure it.
+
+### Capability and verification boundary
+
+Prototype and implementation evidence must cover:
+
+- both locales and all five representative widths;
+- forward and reverse scroll progression;
+- keyboard traversal and visible focus independent of canvas;
+- reduced motion, unavailable WebGL, forced initialization failure and context loss;
+- no-JavaScript semantic content and poster;
+- layout stability before, during and after lazy activation;
+- root and optional `/Portfolio` base-path behavior;
+- representative loading cost, JavaScript transfer, frame time and mobile quality reduction.
+
+Exact mobile activation thresholds, device-pixel-ratio caps, JavaScript/loading budgets and frame-time gates remain **OPEN** until measured by the isolated prototype. The prototype verdict also decides whether Framer Motion is sufficient. Production planning cannot convert assumed values into requirements.

@@ -7,7 +7,7 @@ related:
   - BRAND-POSITIONING
   - AUDIENCES-SERVICES
   - PROJECT-EVIDENCE
-last_verified: 2026-09-02
+last_verified: 2026-09-19
 ---
 
 # FURLANICH Product Context
@@ -21,7 +21,7 @@ The commercial identity for the founder-led software studio.
 _Avoid_: FURLANICH Solutions, Samuel's portfolio
 
 **Founder**:
-Samuel Furlanich, the public face and directly accountable technical lead of FURLANICH.
+Samuel Furlanich, Software Engineer, public face, and directly accountable technical lead of FURLANICH.
 _Avoid_: employee, agency representative
 
 **Collaborator**:

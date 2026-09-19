@@ -4,6 +4,7 @@ type: architecture-map
 status: APPROVED
 related:
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
+  - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - ARCH-CURRENT
   - ARCH-FINDINGS
@@ -89,13 +90,17 @@ Before the completed atomic locale-root cutover, the personal homepage and clien
 
 The preserved recommendation is incremental, static-first modernization: reduce unnecessary client boundaries and evolve the existing repository rather than perform a greenfield rebuild. It is a recommendation, not implementation authority. See the [architecture index](docs/architecture/index.md).
 
-[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](docs/rfcs/visual-identity-immersive-experience-v1.md) proposes one homepage-only, progressively enhanced React Three Fiber scene behind complete server-rendered HTML/SVG content and a static poster. The RFC preserves React 18, static export, locale routes, GitHub Pages and base-path behavior, and proposes testing the existing Framer Motion boundary before adding another scroll runtime. No Three.js or React Three Fiber dependency, canvas, font, asset or application change is approved while the RFC remains PROPOSED.
+## APPROVED immersive-homepage architecture
+
+[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](docs/rfcs/visual-identity-immersive-experience-v1.md) is approved. [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/progressive-immersive-homepage.md) records one homepage-only, progressively enhanced React Three Fiber 8 scene behind complete server-rendered HTML/SVG content and a resolved static poster. It preserves React 18, static export, locale routes, GitHub Pages and base-path behavior, and requires prototype evidence before dependencies or production implementation. The existing Framer Motion boundary is the first orchestration candidate; mobile thresholds and measured budgets remain prototype outputs.
+
+## APPROVED contact-demonstration architecture
 
 For the current deployment, [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) accepts `ContactForm -> submitInquiry() -> demo adapter -> local simulated outcome`, with no network, storage, mail, logging, or analytics. The GitHub Pages build must not receive the Formspree endpoint. The existing `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured inbox` boundary remains dormant under `ADR-CONTACT-INQUIRY-PIPELINE` until a separately reviewed commercial activation passes every real gate.
 
 ## OPEN questions
 
-Commercial Contact account/delivery/deletion behavior, complete processor/transfer facts, professional privacy/legal wording, long-term hosting beyond the approved default GitHub Pages site, the extended design system, whole-site accessibility claims, global performance budgets, and optional imagery outside approved evidence remain OPEN in their owners. These items do not block the zero-transmission demonstration and are not satisfied by mock resources.
+Commercial Contact account/delivery/deletion behavior, complete processor/transfer facts, professional privacy/legal wording, long-term hosting beyond the approved default GitHub Pages site, whole-site accessibility claims, visual-identity prototype thresholds, global performance budgets beyond the accepted homepage gate, and optional imagery outside approved evidence remain OPEN in their owners. These items do not block the zero-transmission demonstration and are not satisfied by mock resources.
 
 ## Engineering records
 
