@@ -13,7 +13,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-17
+last_verified: 2026-09-19
 ---
 
 # Execution plans
@@ -25,10 +25,11 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [PLAN-MARKETING-PRESENTATION-EXCELLENCE](active/marketing-presentation-excellence-v1.md): APPROVED / ACTIVE Route B plan for D01, D02, D04, D05, D06 and applicable D07; D03 remains REJECTED. Six sequential bilingual implementation PRs after human merges; only first implementation step is PR 1 — Navigation and footer.
+None.
 
 ## Completed
 
+- [PLAN-MARKETING-PRESENTATION-EXCELLENCE](completed/marketing-presentation-excellence-v1.md): APPROVED / COMPLETED Route B plan for D01, D02, D04, D05, D06 and applicable D07; D03 remains REJECTED. Six sequential bilingual implementation PRs were completed through human merges of PRs #55–#59.
 - [`PLAN-CONTACT-INQUIRY-PIPELINE`](completed/contact-inquiry-pipeline.md): completed the bilingual demonstration Privacy and Contact experience, deployed zero-transmission proof, and preserved future commercial activation gates.
 - [`PLAN-STUDIO-FOUNDER-COMPLETION`](completed/studio-founder-completion.md): completed the four-PR bilingual Studio experience, Founder profile, cross-page integration, evidence links, and verification sequence.
 - [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](completed/projects-evidence-experience.md): completed the fail-closed public content boundary, bilingual Projects index, approved paired detail routes, legacy project-path cleanup, and evidence-boundary verification.

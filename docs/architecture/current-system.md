@@ -12,7 +12,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-17
+last_verified: 2026-09-19
 ---
 
 # Current system
@@ -191,4 +191,4 @@ The local browser layer is independently runnable through `test:e2e` and `test:a
 
 MKT-DOC-001 synchronization at main 7062bda: Studio and Founder are fully materialized as distinct ES/EN route pairs, with shared server compositions and route-owned content. Navigation targets Studio; Founder remains nested/secondary. The [completed Studio/Founder plan](../plans/completed/studio-founder-completion.md) records PR #40 and preserved biography, experience, education, capabilities, CV and professional links. Earlier minimum-Founder and pre-cutover descriptions above are dated history, not outstanding implementation work.
 
-The three permitted project records have six static details and approved captioned conceptual visuals; no runtime-evidence upgrade follows. The current index still includes MPC. [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/active/marketing-presentation-excellence-v1.md) will separate editorial selection from publication, correct localized disclosure rendering and implement the accepted navigation/presentation revisions. Those revisions are not present merely because their plan is approved; the existing header remains a native server-rendered disclosure at this baseline.
+The three permitted project records have six static details and approved captioned conceptual visuals; no runtime-evidence upgrade follows. The current index still includes MPC. The [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/marketing-presentation-excellence-v1.md) records the T1–T6 delivery of the editorial selection/publication boundary, localized disclosure rendering, accepted navigation/presentation revisions and final audit. Those changes remain bounded by their approved owners; D03 and the runtime-evidence limits remain effective, and the header remains a native server-rendered disclosure.

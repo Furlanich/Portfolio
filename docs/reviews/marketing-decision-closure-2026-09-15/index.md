@@ -6,7 +6,7 @@ related:
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - REVIEW-MARKETING-PRESENTATION
-last_verified: 2026-09-17
+last_verified: 2026-09-19
 ---
 
 # Marketing decision review package — revision 1
@@ -29,7 +29,7 @@ Recommendation: operations-focused studio positioning; truthful global demo cont
 | D06 | Focus Studio; preserve Founder facts; secondary CV; stable navigation/footer; US English | [Studio/Founder](../../product/pages/studio-and-founder.md#mkt-d06-studio-founder-emphasis-and-copy-approved-revision-1), [IA/CTA map](../../product/information-architecture.md#mkt-d06-ia-navigation-and-action-contract-approved-revision-1), [language](../../product/content-and-localization.md#mkt-d06-language-editorial-conventions-approved-revision-1) | APPROVED — 2026-09-16 |
 | D07 | Keep design tokens; fewer cards, grouped content, shorter hero padding and deliberate menu dismissal | [VIS-R1](../../design/visual-language.md#mkt-d07-vis-r1-restrained-marketing-composition-approved), [IX-R1](../../design/interaction-responsive-accessibility.md#mkt-d07-ix-r1-marketing-navigation-and-demo-interactions-approved) | APPROVED — 2026-09-16 |
 
-D01, D02, D04, D05 and D06 are APPROVED at their named scopes; D03 is REJECTED; D07 accepts VIS-R1 and IX-R1 with its remaining implementation gates. The authoritative owners record each disposition, date and source. No unaccepted subdecision is inferred, and D03 rejection leaves the existing demonstration baseline effective. Existing baseline requirements remain effective wherever not explicitly superseded by the named decisions. An OPEN dependency prevents dependent implementation; the RFC remains PROPOSED. The original packet prepared no execution plan. The subsequently authorized [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../../plans/active/marketing-presentation-excellence-v1.md) records Route B execution for accepted groups, D03 excluded, with PR 1 — Navigation and footer as the only first implementation step.
+D01, D02, D04, D05 and D06 are APPROVED at their named scopes; D03 is REJECTED; D07 accepts VIS-R1 and IX-R1 with its remaining implementation gates. The authoritative owners record each disposition, date and source. No unaccepted subdecision is inferred, and D03 rejection leaves the existing demonstration baseline effective. Existing baseline requirements remain effective wherever not explicitly superseded by the named decisions. An OPEN dependency prevents dependent implementation; the RFC remains PROPOSED. The original packet prepared no execution plan. The subsequently authorized [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](../../plans/completed/marketing-presentation-excellence-v1.md) records the completed Route B execution for accepted groups, D03 excluded, through PRs #55–#59.
 
 ## Human disposition record — 2026-09-16
 
@@ -66,7 +66,7 @@ The narrow generic Home index link is accepted under D04. MPC retains existing U
 
 ## Candidate implementation PR groups — not an execution plan
 
-These historical candidate groups retain original dependencies for provenance. They are not the current execution sequence or authorization. The [approved Route B plan](../../plans/active/marketing-presentation-excellence-v1.md) replaces this grouping for execution after the explicit planning instruction of 2026-09-17; C1 is not executable because D03 is REJECTED.
+These historical candidate groups retain original dependencies for provenance. They are not the current execution sequence or authorization. The [completed Route B plan](../../plans/completed/marketing-presentation-excellence-v1.md) replaced this grouping for execution after the explicit planning instruction of 2026-09-17; C1 was not executable because D03 is REJECTED.
 
 | Group | Scope | Depends on | Verification focus |
 | --- | --- | --- | --- |
