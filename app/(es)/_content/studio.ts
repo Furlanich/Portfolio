@@ -20,13 +20,12 @@ export const studioPageContent = {
   accountability: {
     heading: 'Dirección técnica de principio a fin',
     paragraphs: [
-      'Samuel lidera el relevamiento inicial, define la dirección técnica y permanece involucrado durante la entrega. La conversación comercial y las decisiones técnicas no quedan separadas por capas de venta o gestión que oculten quién responde por el trabajo.',
-      'Esta continuidad reduce pérdidas de contexto, permite explicar los compromisos con claridad y mantiene visible la responsabilidad sobre lo que se decide, se construye y se entrega.',
+      'Samuel Furlanich participa en la definición del problema, las decisiones técnicas y la revisión del trabajo. La responsabilidad tiene un nombre y se mantiene durante el proyecto.',
     ],
   },
   collaboratorModel: {
     heading: 'Colaboración según el alcance',
-    paragraphs: ['FURLANICH está liderado por Samuel. Cuando un proyecto requiere experiencia fuera del alcance principal de entrega, pueden incorporarse colaboradores especializados de forma explícita. Su participación depende de las necesidades del proyecto y no cambia quién conduce la dirección técnica ni quién responde por la entrega.'],
+    paragraphs: ['Cuando el alcance requiere otra especialidad, se acuerda la participación de colaboradores y sus responsabilidades. Samuel mantiene la dirección técnica.'],
   },
   principles: {
     heading: 'Principios para trabajar con claridad',
@@ -40,16 +39,16 @@ export const studioPageContent = {
   },
   location: {
     heading: 'Base en Buenos Aires, disponibilidad nacional e internacional',
-    description: 'FURLANICH trabaja desde Buenos Aires, Argentina, con proyectos en todo el país y disponibilidad para colaboraciones internacionales. La comunicación puede desarrollarse en español o en inglés.',
+    description: 'Desde Buenos Aires, Argentina, con disponibilidad para proyectos en el país y el exterior. Comunicación en español e inglés.',
   },
   founderBridge: {
     heading: 'La persona detrás de la dirección técnica',
-    description: 'Samuel Furlanich es el fundador y responsable técnico directo de FURLANICH. Su experiencia combina desarrollo backend con .NET, interfaces web, sistemas de gestión, automatizaciones y mantenimiento de software. En su perfil profesional podés consultar la biografía completa, experiencia, formación, capacidades, trabajo seleccionado, CV y enlaces profesionales.',
+    description: 'Conocé la experiencia y formación de quien dirige el trabajo.',
     action: { label: 'Conocer a Samuel', routeId: 'founder' },
   },
   finalCta: {
     heading: 'Conversemos sobre lo que hoy frena a tu negocio',
-    description: 'Contanos qué necesitás resolver y cómo funciona hoy. Samuel revisará personalmente la consulta para evaluar el próximo paso razonable.',
+    description: 'Explorá las opciones de contacto y la demostración del formulario.',
     action: { label: 'Iniciar una consulta', routeId: 'contact' },
   },
 } satisfies StudioPageContent;

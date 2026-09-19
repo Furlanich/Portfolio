@@ -6,8 +6,15 @@ export const founderContent = {
   header: {
     context: 'Fundador de FURLANICH · Desarrollador de software full-stack',
     name: 'Samuel Furlanich',
-    biography:
-      'Samuel Furlanich es desarrollador de software full-stack y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones. Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor. También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
+    opening: 'Desarrollador de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.',
+  },
+  biography: {
+    heading: 'Biografía profesional',
+    paragraphs: [
+      'Samuel Furlanich es desarrollador de software full-stack y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
+      'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.',
+      'También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
+    ],
   },
   professionalLinks: {
     heading: 'Perfil profesional',
@@ -56,18 +63,22 @@ export const founderContent = {
       'El foco está en lo que el sistema permite ordenar, automatizar y hacer evolucionar, no en acumular nombres de herramientas.',
     groups: [
       {
+        id: 'management-systems',
         title: 'Sistemas de gestión y operación',
         items: ['Sistemas para administrar usuarios, permisos, roles y circuitos internos', 'Paneles para registrar, consultar y auditar operaciones', 'Flujos de trabajo con estados, reglas y validaciones', 'Modelos de datos preparados para crecer con el negocio'],
       },
       {
+        id: 'web-applications',
         title: 'Portales y aplicaciones web',
         items: ['Sitios comerciales orientados a consultas, reservas o ventas', 'Portales con recorridos diferenciados por tipo de usuario', 'Interfaces adaptables para tareas comerciales y operativas', 'Experiencias accesibles, claras y mantenibles'],
       },
       {
+        id: 'automation-integrations',
         title: 'Automatizaciones e integraciones',
         items: ['Conexiones entre sistemas existentes y servicios externos', 'Sincronización de datos, calendarios, pagos y mensajería', 'Automatizaciones para reducir carga manual y errores', 'Procesos con trazabilidad, reintentos y manejo de excepciones'],
       },
       {
+        id: 'evolving-systems',
         title: 'Sistemas existentes que necesitan evolucionar',
         items: ['Aplicaciones de escritorio cuando el contexto lo requiere', 'Mantenimiento y mejora de sistemas existentes', 'Diagnóstico de rendimiento, fallas y deuda técnica', 'Pruebas, documentación y publicación para sostener el sistema'],
       },

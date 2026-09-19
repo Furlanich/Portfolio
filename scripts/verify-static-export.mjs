@@ -57,7 +57,7 @@ const studioRequirements = {
 const founderRequirements = {
   'estudio/samuel-furlanich/index.html': {
     heading: 'Samuel Furlanich',
-    sections: ['Perfil profesional', 'Experiencia profesional', 'Formación', 'Sistemas que podemos construir', 'Trabajo y evidencia técnica', '¿Querés conversar sobre una necesidad de tu negocio?'],
+    sections: ['Perfil profesional', 'Experiencia profesional', 'Biografía profesional', 'Formación', 'Sistemas que podemos construir', 'Trabajo y evidencia técnica', '¿Querés conversar sobre una necesidad de tu negocio?'],
     projects: '/proyectos/',
     contact: '/contacto/',
     cv: '/Samuel-Furlanich-CV.pdf',
@@ -66,7 +66,7 @@ const founderRequirements = {
   },
   'en/about/samuel-furlanich/index.html': {
     heading: 'Samuel Furlanich',
-    sections: ['Professional profile', 'Professional experience', 'Education', 'Systems we can engineer', 'Work and technical evidence', 'Want to discuss a business need?'],
+    sections: ['Professional profile', 'Professional experience', 'Professional biography', 'Education', 'Systems we can engineer', 'Work and technical evidence', 'Want to discuss a business need?'],
     projects: '/en/work/',
     contact: '/en/contact/',
     cv: '/Samuel-Furlanich-CV.pdf',
@@ -635,6 +635,10 @@ function assertFounderArtifact(artifact, html) {
   }
   if (countMatches(html, /<section\b[^>]*data-founder-capability-group/g) !== 4) {
     failures.push(artifact.file + ': expected exactly four Founder capability groups');
+  }
+  const capabilityReferences = [...html.matchAll(/<section\b[^>]*data-founder-capability-group[^>]*aria-labelledby="([^"]+)"/g)].map((match) => match[1]);
+  if (capabilityReferences.length !== 4 || new Set(capabilityReferences).size !== 4 || capabilityReferences.some((reference) => /\s/.test(reference))) {
+    failures.push(artifact.file + ': Founder capability groups must use unique whitespace-free aria-labelledby references');
   }
   if (!html.includes('Clever Soft SA') || /<h[1-6]\b[^>]*>[^<]*Clever Soft SA/i.test(html)) {
     failures.push(artifact.file + ': Clever Soft SA must remain narrative-only');

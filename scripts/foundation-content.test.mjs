@@ -114,8 +114,17 @@ test('exports the complete approved Founder profile in both locales', async () =
 
     assert.equal(content.header.name, 'Samuel Furlanich');
     assert.match(content.header.context, /founder|fundador/i);
-    assert.match(content.header.biography, /2024/);
-    assert.match(content.header.biography, /Clever Soft SA/);
+    assert.equal(
+      content.header.opening,
+      locale === 'es'
+        ? 'Desarrollador de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.'
+        : 'Software developer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance.',
+    );
+    assert.equal('biography' in content.header, false);
+    assert.ok(content.biography.heading);
+    assert.ok(content.biography.paragraphs.length >= 2);
+    assert.match(content.biography.paragraphs.join(' '), /2024/);
+    assert.match(content.biography.paragraphs.join(' '), /Clever Soft SA/);
     assert.equal(content.professionalLinks.cv.path, '/Samuel-Furlanich-CV.pdf');
     assert.equal(content.professionalLinks.linkedin.href, expectedProfessionalLinks.linkedin);
     assert.equal(content.professionalLinks.github.href, expectedProfessionalLinks.github);
@@ -138,6 +147,10 @@ test('exports the complete approved Founder profile in both locales', async () =
     assert.equal(content.capabilities.groups.length, 4);
     assert.match(content.capabilities.heading, /systems|sistemas/i);
     assert.match(content.capabilities.introduction, /problem|problema|system|sistema/i);
+    assert.deepEqual(
+      content.capabilities.groups.map(({ id }) => id),
+      ['management-systems', 'web-applications', 'automation-integrations', 'evolving-systems'],
+    );
     assert.equal(
         content.capabilities.groups.some(({ items }) =>
             items.some((item) => /\.NET|ASP\.NET|React|Next\.js|Blazor|Docker|CI\/CD|API/i.test(item)),

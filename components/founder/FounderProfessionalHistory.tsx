@@ -3,14 +3,15 @@ import type { FounderPageContent } from './content-types';
 
 interface FounderProfessionalHistoryProps {
   experience: FounderPageContent['experience'];
+  biography: FounderPageContent['biography'];
   education: FounderPageContent['education'];
   projectHref: string;
 }
 
-export function FounderProfessionalHistory({ experience, education, projectHref }: FounderProfessionalHistoryProps) {
+export function FounderProfessionalHistory({ experience, biography, education, projectHref }: FounderProfessionalHistoryProps) {
   return (
     <>
-      <section aria-labelledby="founder-experience-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
+      <section aria-labelledby="founder-experience-heading" className="bg-foundation-surface py-16 md:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
           <h2 id="founder-experience-heading" className="text-2xl font-bold leading-8 text-foundation-ink md:text-3xl">
             {experience.heading}
@@ -29,10 +30,18 @@ export function FounderProfessionalHistory({ experience, education, projectHref 
               </li>
             ))}
           </ol>
+          <section data-founder-biography aria-labelledby="founder-biography-heading" className="mt-16 border-t border-foundation-border pt-16">
+            <h2 id="founder-biography-heading" className="text-2xl font-bold leading-8 text-foundation-ink md:text-3xl">
+              {biography.heading}
+            </h2>
+            <div className="mt-6 grid max-w-[68ch] gap-5 text-lg leading-8 text-foundation-muted md:text-xl">
+              {biography.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            </div>
+          </section>
         </div>
       </section>
 
-      <section aria-labelledby="founder-education-heading" className="bg-foundation-surface py-16 md:py-20 lg:py-24">
+      <section aria-labelledby="founder-education-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
           <h2 id="founder-education-heading" className="text-2xl font-bold leading-8 text-foundation-ink md:text-3xl">
             {education.heading}

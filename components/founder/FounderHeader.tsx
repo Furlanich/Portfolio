@@ -13,7 +13,7 @@ export function FounderHeader({ content }: FounderHeaderProps) {
           <h1 id="founder-heading" className="mt-4 text-[36px] font-bold leading-10 tracking-[-0.02em] text-foundation-ink md:text-[48px] md:leading-[52px]">
             {content.name}
           </h1>
-          <p className="mt-6 text-lg leading-8 text-foundation-muted md:text-xl">{content.biography}</p>
+          <p className="mt-6 text-lg leading-8 text-foundation-muted md:text-xl">{content.opening}</p>
         </div>
       </div>
     </section>

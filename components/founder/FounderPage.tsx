@@ -23,6 +23,7 @@ export function FounderPage({ content }: FounderPageProps) {
       <FounderProfessionalLinks content={content.professionalLinks} />
       <FounderProfessionalHistory
         experience={content.experience}
+        biography={content.biography}
         education={content.education}
         projectHref={educationProjectHref}
       />

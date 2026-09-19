@@ -59,8 +59,10 @@ for (const studioCase of studioCases) {
       await expect(founderAction).toHaveAttribute('href', appPathname(studioCase.founderRoute));
     }
 
-    await page.getByRole('banner').locator(`a[hreflang="${studioCase.alternateLocale}"]`).click();
-    await expect(page).toHaveURL((url) => url.pathname === appPathname(studioCase.alternateRoute));
+    await Promise.all([
+      page.waitForURL((url) => url.pathname === appPathname(studioCase.alternateRoute)),
+      page.getByRole('banner').locator(`a[hreflang="${studioCase.alternateLocale}"]`).click(),
+    ]);
     assertNoBrowserErrors();
   });
 
@@ -111,6 +113,7 @@ const founderCases = [
     capabilitiesHeading: 'Sistemas que podemos construir',
     projectsHeading: 'Trabajo y evidencia técnica',
     finalHeading: '¿Querés conversar sobre una necesidad de tu negocio?',
+    opening: 'Desarrollador de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.',
     cvLabel: 'Descargar CV',
     projectsLabel: 'Ver proyectos seleccionados',
     contactLabel: 'Iniciar una consulta',
@@ -128,6 +131,7 @@ const founderCases = [
     capabilitiesHeading: 'Systems we can engineer',
     projectsHeading: 'Work and technical evidence',
     finalHeading: 'Want to discuss a business need?',
+    opening: 'Software developer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance.',
     cvLabel: 'Download CV',
     projectsLabel: 'View selected work',
     contactLabel: 'Start an enquiry',
@@ -151,6 +155,29 @@ for (const founderCase of founderCases) {
       founderCase.finalHeading,
     ]) {
       await expect(page.getByRole('heading', { name: heading })).toBeVisible();
+    }
+
+    await expect(page.getByText(founderCase.opening, { exact: true })).toBeVisible();
+    const experience = page.getByRole('region', { name: founderCase.experienceHeading });
+    const biography = page.locator('[data-founder-biography]');
+    await expect(biography).toBeVisible();
+    const experienceBox = await experience.boundingBox();
+    const biographyBox = await biography.boundingBox();
+    expect(experienceBox).not.toBeNull();
+    expect(biographyBox).not.toBeNull();
+    expect(biographyBox!.y).toBeGreaterThan(experienceBox!.y);
+
+    const capabilityGroups = page.locator('[data-founder-capability-group]');
+    const references = await capabilityGroups.evaluateAll((groups) => groups.map((group) => ({
+      reference: group.getAttribute('aria-labelledby'),
+      heading: group.querySelector('h3')?.id,
+    })));
+    expect(references).toHaveLength(4);
+    expect(new Set(references.map(({ reference }) => reference)).size).toBe(4);
+    for (const { reference, heading } of references) {
+      expect(reference).toBeTruthy();
+      expect(heading).toBe(reference);
+      expect(reference).not.toMatch(/\s/);
     }
 
     await expect(page.getByRole('main').getByRole('link', { name: founderCase.projectsLabel })).toHaveAttribute(
