@@ -18,13 +18,12 @@ export const studioPageContent = {
   accountability: {
     heading: 'Technical direction from start to finish',
     paragraphs: [
-      'Samuel leads the initial discovery, sets the technical direction, and remains involved throughout delivery. Commercial conversations and technical decisions are not separated by sales or project-management layers that obscure who is accountable for the work.',
-      'That continuity reduces lost context, makes trade-offs easier to explain, and keeps responsibility visible across what is decided, built, and delivered.',
+      'Samuel Furlanich is involved in defining the problem, technical decisions and review of the work. One named technical lead remains accountable throughout the project.',
     ],
   },
   collaboratorModel: {
     heading: 'Collaboration shaped by the scope',
-    paragraphs: ['FURLANICH is led by Samuel. When a project requires expertise beyond the core delivery scope, specialist collaborators may be brought in explicitly. Their involvement depends on the needs of the project and does not change who leads the technical direction or remains accountable for delivery.'],
+    paragraphs: ['When the scope calls for another specialty, collaborator involvement and responsibilities are agreed. Samuel retains technical leadership.'],
   },
   principles: {
     heading: 'Principles for clear delivery',
@@ -38,16 +37,16 @@ export const studioPageContent = {
   },
   location: {
     heading: 'Based in Buenos Aires, available nationally and internationally',
-    description: 'FURLANICH works from Buenos Aires, Argentina, with projects across the country and availability for international engagements. Communication is available in Spanish and English.',
+    description: 'Based in Buenos Aires, Argentina, with availability for work in Argentina and internationally. Communication is available in Spanish and English.',
   },
   founderBridge: {
     heading: 'The person behind the technical direction',
-    description: 'Samuel Furlanich is the founder and directly accountable technical lead of FURLANICH. His background spans .NET backend development, web interfaces, management systems, automation, and software maintenance. His professional profile provides the full biography, experience, education, capabilities, selected work, CV, and professional links.',
+    description: 'Explore the experience and background of the person leading the work.',
     action: { label: 'Meet Samuel', routeId: 'founder' },
   },
   finalCta: {
     heading: "Let's talk about what's holding your business back",
-    description: 'Tell us what you need to solve and how it works today. Samuel will personally review your enquiry to assess the most sensible next step.',
+    description: 'Explore contact options and the form demonstration.',
     action: { label: 'Start an enquiry', routeId: 'contact' },
   },
 } satisfies StudioPageContent;

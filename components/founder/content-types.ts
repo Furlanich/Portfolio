@@ -8,7 +8,12 @@ import type { Locale } from '@/lib/locales';
 export type FounderHeaderContent = {
   context: string;
   name: string;
-  biography: string;
+  opening: string;
+};
+
+export type FounderBiographyContent = {
+  heading: string;
+  paragraphs: string[];
 };
 
 export type FounderExperienceEntry = {
@@ -35,6 +40,7 @@ export type FounderEducationProject = {
 };
 
 export type FounderCapabilityGroup = {
+  id: 'management-systems' | 'web-applications' | 'automation-integrations' | 'evolving-systems';
   title: string;
   items: string[];
 };
@@ -43,6 +49,7 @@ export type FounderPageContent = {
   locale: Locale;
   routeId: 'founder';
   header: FounderHeaderContent;
+  biography: FounderBiographyContent;
   professionalLinks: {
     heading: string;
     cv: DocumentLink;

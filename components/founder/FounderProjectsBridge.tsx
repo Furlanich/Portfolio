@@ -8,7 +8,7 @@ interface FounderProjectsBridgeProps {
 
 export function FounderProjectsBridge({ content, actionHref }: FounderProjectsBridgeProps) {
   return (
-    <section aria-labelledby="founder-projects-heading" className="bg-foundation-surface py-16 md:py-20 lg:py-24">
+    <section aria-labelledby="founder-projects-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
         <div className="max-w-[68ch]">
           <h2 id="founder-projects-heading" className="text-2xl font-bold leading-8 text-foundation-ink md:text-3xl">

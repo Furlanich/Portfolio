@@ -6,8 +6,15 @@ export const founderContent = {
   header: {
     context: 'Founder of FURLANICH · Full-stack software developer',
     name: 'Samuel Furlanich',
-    biography:
-      'Samuel Furlanich is a full-stack software developer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations. He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor. He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
+    opening: 'Software developer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance.',
+  },
+  biography: {
+    heading: 'Professional biography',
+    paragraphs: [
+      'Samuel Furlanich is a full-stack software developer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations.',
+      'He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor.',
+      'He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
+    ],
   },
   professionalLinks: {
     heading: 'Professional profile',
@@ -56,18 +63,22 @@ export const founderContent = {
       'The focus is what the system enables the business to organize, automate, and evolve—not a catalogue of tools.',
     groups: [
       {
+        id: 'management-systems',
         title: 'Management and operational systems',
         items: ['Systems for users, permissions, roles, and internal workflows', 'Dashboards to record, query, and audit operations', 'Workflows with states, rules, and validation', 'Data models prepared to grow with the business'],
       },
       {
+        id: 'web-applications',
         title: 'Websites and web applications',
         items: ['Commercial sites oriented to enquiries, reservations, or sales', 'Portals with journeys tailored to different user types', 'Responsive interfaces for commercial and operational work', 'Accessible, clear, maintainable experiences'],
       },
       {
+        id: 'automation-integrations',
         title: 'Automation and integrations',
         items: ['Connections between existing systems and external services', 'Data synchronization across calendars, payments, and messaging', 'Automations that reduce manual work and errors', 'Traceable processes with retries and exception handling'],
       },
       {
+        id: 'evolving-systems',
         title: 'Existing systems that need to evolve',
         items: ['Desktop applications when the context calls for them', 'Maintenance and improvement of existing systems', 'Diagnosis of performance issues, failures, and technical debt', 'Testing, documentation, and deployment to sustain the system'],
       },

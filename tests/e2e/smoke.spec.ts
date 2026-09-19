@@ -1,6 +1,13 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
+
+async function switchLanguage(page: Page, language: string, route: string) {
+  await Promise.all([
+    page.waitForURL((url: URL) => url.pathname === appPathname(route)),
+    page.getByRole('banner').locator(`a[hreflang="${language}"]`).click(),
+  ]);
+}
 
 const routeCases = [
   ['Spanish homepage', stableRoutes.home.es, 'es-AR'],
@@ -86,16 +93,13 @@ for (const narrativeCase of homepageNarrativeCases) {
 
 test('language switching preserves equivalent homepage, Services, and Studio context', async ({ page }) => {
   await page.goto(appUrl(stableRoutes.home.es));
-  await page.getByRole('banner').locator('a[hreflang="en"]').click();
-  await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.home.en));
+  await switchLanguage(page, 'en', stableRoutes.home.en);
 
   await page.goto(appUrl(stableRoutes.services.en));
-  await page.getByRole('banner').locator('a[hreflang="es-AR"]').click();
-  await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.services.es));
+  await switchLanguage(page, 'es-AR', stableRoutes.services.es);
 
   await page.goto(appUrl(stableRoutes.studio.es));
-  await page.getByRole('banner').locator('a[hreflang="en"]').click();
-  await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.studio.en));
+  await switchLanguage(page, 'en', stableRoutes.studio.en);
 });
 
 test('visible Spanish primary-navigation destinations resolve without browser errors', async ({ page }) => {
@@ -119,14 +123,11 @@ test('visible Spanish primary-navigation destinations resolve without browser er
 
 test('language switching preserves Contact, Founder, and Projects context', async ({ page }) => {
   await page.goto(appUrl('/contacto/'));
-  await page.getByRole('banner').locator('a[hreflang="en"]').click();
-  await expect(page).toHaveURL((url) => url.pathname === appPathname('/en/contact/'));
+  await switchLanguage(page, 'en', '/en/contact/');
 
   await page.goto(appUrl(stableRoutes.founder.en));
-  await page.getByRole('banner').locator('a[hreflang="es-AR"]').click();
-  await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.founder.es));
+  await switchLanguage(page, 'es-AR', stableRoutes.founder.es);
 
   await page.goto(appUrl(stableRoutes.projects.es));
-  await page.getByRole('banner').locator('a[hreflang="en"]').click();
-  await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.projects.en));
+  await switchLanguage(page, 'en', stableRoutes.projects.en);
 });

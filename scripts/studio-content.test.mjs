@@ -31,6 +31,28 @@ for (const definition of modules) {
     assert.ok(content.collaboratorModel.heading);
     assert.ok(content.collaboratorModel.paragraphs.length > 0);
 
+    const expectedAccountability = definition.locale === 'es'
+      ? 'Samuel Furlanich participa en la definición del problema, las decisiones técnicas y la revisión del trabajo. La responsabilidad tiene un nombre y se mantiene durante el proyecto.'
+      : 'Samuel Furlanich is involved in defining the problem, technical decisions and review of the work. One named technical lead remains accountable throughout the project.';
+    const expectedCollaboratorModel = definition.locale === 'es'
+      ? 'Cuando el alcance requiere otra especialidad, se acuerda la participación de colaboradores y sus responsabilidades. Samuel mantiene la dirección técnica.'
+      : 'When the scope calls for another specialty, collaborator involvement and responsibilities are agreed. Samuel retains technical leadership.';
+    const expectedLocation = definition.locale === 'es'
+      ? 'Desde Buenos Aires, Argentina, con disponibilidad para proyectos en el país y el exterior. Comunicación en español e inglés.'
+      : 'Based in Buenos Aires, Argentina, with availability for work in Argentina and internationally. Communication is available in Spanish and English.';
+    const expectedFounderBridge = definition.locale === 'es'
+      ? 'Conocé la experiencia y formación de quien dirige el trabajo.'
+      : 'Explore the experience and background of the person leading the work.';
+    const expectedFinalCta = definition.locale === 'es'
+      ? 'Explorá las opciones de contacto y la demostración del formulario.'
+      : 'Explore contact options and the form demonstration.';
+
+    assert.deepEqual(content.accountability.paragraphs, [expectedAccountability]);
+    assert.deepEqual(content.collaboratorModel.paragraphs, [expectedCollaboratorModel]);
+    assert.equal(content.location.description, expectedLocation);
+    assert.equal(content.founderBridge.description, expectedFounderBridge);
+    assert.equal(content.finalCta.description, expectedFinalCta);
+
     assert.ok(content.principles.heading);
     assert.ok(content.principles.introduction);
     assert.equal(content.principles.items.length, 4);
