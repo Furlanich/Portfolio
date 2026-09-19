@@ -21,7 +21,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - TEST-STRATEGY
-last_verified: 2026-09-18
+last_verified: 2026-09-19
 ---
 
 # FURLANICH — Marketing & Presentation Excellence, v1
@@ -148,10 +148,10 @@ Interfaces permitidas: view models locales, selección editorial, campos diferen
 
 **Archivos:** ambos `_content/services.ts`, `components/services/{ServicesPage,ServicesIntroduction,ServiceSection,ServicesPrinciples,ServicesFinalCta}.tsx`, `content-types.ts`; `lib/site-routes.ts` solo si necesita modelar fragmentos adicionales. Tests: `scripts/services-content.test.mjs`, `services-route.test.mjs`, `verify-static-export.mjs`; nueva `tests/e2e/marketing-services.spec.ts`, axe y perfiles.
 
-- [ ] RED: H1/filas aceptadas, todas las restricciones y bloque comercial literal; orden lead → tipos de trabajo → punto de partida → adecuación → restricciones → evidencia → acción; límites antes de CTA.
-- [ ] GREEN: copy propietario; principios/condiciones consolidados sin accordions ni paquetes; distinción diagnóstico/mejoras/soporte; ausencia pública de evidencia WhatsApp/mantenimiento.
-- [ ] RED → GREEN: enlace textual GRS y `#condiciones` / `#working-boundaries`; conservar `#web`, `#whatsapp`, `#consultoria` / `#consulting`; headings visibles, destinos correctos, sin contexto transportado a Contact.
-- [ ] Refactor, escaneo ES/EN, límites completos, gates/evidencia/diff y PR. Objetivo 900–1200 palabras orientativo; jamás recortar restricciones para cumplirlo.
+- [x] RED observado: los contratos y componentes pre-D05 fallaron por H1/copy/shape, tarjetas de niveles, principios en cards y response promise; el RED focal fue reproducible.
+- [x] GREEN: copy propietario; principios/condiciones consolidados sin accordions ni paquetes; distinción diagnóstico/mejoras/soporte; ausencia pública de evidencia WhatsApp/mantenimiento.
+- [x] RED → GREEN: enlace textual GRS y anchors localizados #condiciones / #working-boundaries; se conservaron #web, #whatsapp, #consultoria / #consulting; headings visibles, destinos correctos, sin contexto transportado a Contact.
+- [x] Refactor, escaneo ES/EN, límites completos, gates/evidencia/diff completados en el commit de implementación. Objetivo 900–1200 palabras orientativo; jamás se recortaron restricciones para cumplirlo.
 
 **Visual/aceptación:** tipos de trabajo en listas, límites visibles y un bloque compartido completo; acciones escaneables, sin promesas de resultados/precios/plazos/evaluación gratuita. Focal: `node --test scripts/services-content.test.mjs scripts/services-route.test.mjs`; `npx playwright test tests/e2e/marketing-services.spec.ts --project=chromium-desktop`, luego matriz.
 
@@ -242,10 +242,39 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 | T0 | PR listo para revisión humana | [PR #54](https://github.com/Furlanich/Portfolio/pull/54), base main 7062bda, TypeSafe `b29040e`, plan/sincronización `1351961`; sin merge. |
 | T1 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; navegación/footer y sus pruebas quedaron en `7dee240`. |
 | T2 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; evidencia/proyectos y sus pruebas quedaron en `7dee240`. |
-| T3 | [PR #56](https://github.com/Furlanich/Portfolio/pull/56) abierto para revisión humana | `fb3ef88`, base `4d0280b`; Home bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
-| T4 | No iniciada | Merge humano T3. |
+| T3 | Completada en PR #56 | PR #56 mergeado en `667ca419`; Home bilingüe y pruebas/gates ejecutados. |
+| T4 | [PR #57](https://github.com/Furlanich/Portfolio/pull/57) abierto para revisión humana | `b998cdc`, base `667ca419`; Services buyer-evaluation, pruebas/gates ejecutados y registro detallado abajo. |
 | T5 | No iniciada | Merge humano T4. |
 | T6 | No iniciada | Merge humano T5; pendientes explícitos al cierre. |
+
+### Ejecución T4 y estado de T1/T2/T3
+
+T4 se implementó en b998cdcd672b4ab734f70e9b72964257dad68eef (feat(marketing): simplify services buyer evaluation), rama codex/marketing-presentation-pr4-services, base 667ca419d67d1e6768672631b378d8c3bdc09168 (main posterior al merge humano de PR #56). Archivos: ambos contenidos Services, tipos y composición Services, contrato de export estático, contrato foundation sincronizado, nueva suite E2E de Services y ampliación de perfiles Playwright. El modelo comprador quedó en lead → tipos de trabajo → punto de partida → buen encaje → límites → evidencia → acción; se eliminó el modelo de paquetes/cards y la promesa de respuesta. Se añadieron el enlace textual al detalle GRS y los anchors localizados condiciones/working-boundaries.
+
+PR #57 se abrió contra main en el commit c98a43666d7adac504fcf9214113577a83f1c154, con base 667ca419d67d1e6768672631b378d8c3bdc09168. Queda abierto para revisión humana; no se hace merge autónomo.
+
+El RED focal observado fue node --test scripts/services-content.test.mjs scripts/services-route.test.mjs con exit 1: el contrato pre-D05 mantenía seis principios, H1/copy anteriores, grupos narrativos, cards y responseStatement. El GREEN posterior pasó con exit 0; tras el ajuste de anchors, el focal ampliado pasó con exit 0 en 11 pruebas. La validación ejecutada quedó así:
+
+| Comando / contexto | Resultado observado |
+| --- | --- |
+| npm test | Exit 0: 107 pruebas. |
+| npm run lint | Exit 0. |
+| npm run typecheck | Exit 0. |
+| npm run build | Exit 0: 22 páginas estáticas. |
+| npm run verify:static-export | Exit 0: 20 rutas, base root. |
+| npm run test:e2e | Exit 0: 561 passed, 80 skipped; matriz completa configurada. |
+| npm run test:a11y | Exit 0: 16 pruebas. |
+| npm run docs:check | Exit 0: 92 Markdown, 74 IDs, 11 Skills. |
+| npm run skills:check | Exit 0: 4 Skills, 8 archivos íntegros. |
+| git diff --check | Exit 0; solo advertencias normales de LF/CRLF. |
+| focused Services Chromium | Exit 0: 4 pruebas bilingües, anchors, destinos, overflow y errores de navegador. |
+| Services browser/profile matrix | Exit 0: 32 pruebas en Chromium, Firefox, WebKit, mobile, tablet, wide, compact 320 y portrait 768. |
+
+Rutas y comportamiento: Services ES /servicios/ y EN /en/services/, anchors web/whatsapp/consultoria y web/whatsapp/consulting, Contact contextual y evidencia GRS en su detalle localizado. Se mantuvieron restricciones completas de Web, WhatsApp, Consulting, acuerdo compartido, límites comerciales y AI/ERP; no se añadieron rutas, dependencias, requests, campos ni paquetes.
+
+QA visual/manual: se capturó el render español completo mediante Playwright fuera de Git y las assertions de render, reflow, overflow, semántica y axe pasaron. La inspección visual manual no pudo completarse porque el helper de imagen y el kernel CUA fallaron con helper_unknown_error: setup refresh had errors. No se declara PASS manual para esa capa; la captura queda fuera de Git para revisión humana. Advertencias no bloqueantes: warnings existentes de NO_COLOR, Browserslist, LCP de imágenes de Projects y smooth-scroll; no se cambió configuración para silenciarlos.
+
+T1 y T2 quedaron incorporadas en el PR humano #55, mergeado sobre 4d0280b desde 7dee240. T3 se implementó en fb3ef88 y el PR #56 se mergeó sobre el main que ahora fija 667ca419; no se reescribe la historia de esos PRs.
 
 ### Ejecución T1/T2 confirmada y handoff de T3
 

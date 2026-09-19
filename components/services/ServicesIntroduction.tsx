@@ -20,19 +20,16 @@ export function ServicesIntroduction({ content, indexHrefs }: ServicesIntroducti
           <p className="mt-6 text-lg leading-7 text-foundation-muted lg:text-xl lg:leading-8">
             {content.description}
           </p>
-          <p className="mt-6 text-base leading-7 text-foundation-ink">
-            {content.qualification}
-          </p>
         </div>
 
-        <div className="mt-8 rounded-[16px] border border-foundation-border bg-foundation-surface p-4 md:p-6">
+        <div className="mt-8 border-y border-foundation-border py-4 md:py-5">
           <nav aria-label={content.indexLabel}>
-            <ul className="flex list-none flex-wrap gap-3">
+            <ul className="flex list-none flex-wrap gap-x-6 gap-y-3">
               {content.indexItems.map((item) => (
                 <li key={item.id}>
                   <Link
                     href={indexHrefs[item.id]}
-                    className="inline-flex min-h-11 items-center justify-center rounded-[10px] border border-foundation-border px-4 text-base font-semibold text-foundation-action transition-colors duration-[160ms] ease-out hover:bg-foundation-tint hover:text-foundation-action-strong"
+                    className="inline-flex min-h-11 items-center text-base font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong hover:decoration-foundation-action-strong"
                   >
                     {item.label}
                   </Link>
