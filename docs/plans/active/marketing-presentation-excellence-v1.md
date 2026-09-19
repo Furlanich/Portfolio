@@ -163,10 +163,10 @@ Interfaces permitidas: view models locales, selección editorial, campos diferen
 
 **Archivos:** ambos `_content/studio.ts` / `_content/founder.ts`; `components/studio/`, `components/founder/` (composición, tipos, apertura, biografía, experiencia, capacidades, links, cierres). `data/` como fuente factual a preservar; CV sin reescritura. Tests: `scripts/studio-content.test.mjs`, `scripts/foundation-content.test.mjs`, `verify-static-export.mjs`; `tests/e2e/studio-founder.spec.ts`, `studio-founder-responsive.spec.ts`, `accessibility.spec.ts`, visuales existentes y perfiles.
 
-- [ ] RED: inventario de hechos ES/EN, fechas, instituciones, estudios, empleo narrativo, biografía y destinos; orden/persistencia MPC. IDs únicos y referencias accesibles resueltas, independientes de títulos traducidos.
-- [ ] GREEN: Studio textual con responsabilidad/collaboradores, cuatro principios conservados, ubicación/puente combinados. Founder: apertura → experiencia → biografía completa en párrafos → educación/MPC → capacidades → links profesionales → Projects → cierre aprobado.
-- [ ] IDs semánticos estables para capacidades y referencias aria-labelledby al heading; labels/contenido preservados. CV/LinkedIn/GitHub secundarios, accesibles, mismos destinos.
-- [ ] GREEN/refactor, axe ES/EN con seguimiento de incomplete, teclado/revisión semántica manual; CV/links en ambos base paths; QA visual, gates/evidencia/diff y PR.
+- [x] RED: inventario de hechos ES/EN, fechas, instituciones, estudios, empleo narrativo, biografía y destinos; orden/persistencia MPC. IDs únicos y referencias accesibles resueltas, independientes de títulos traducidos.
+- [x] GREEN: Studio textual con responsabilidad/collaboradores, cuatro principios conservados, ubicación/puente combinados. Founder: apertura → experiencia → biografía completa en párrafos → educación/MPC → capacidades → links profesionales → Projects → cierre aprobado.
+- [x] IDs semánticos estables para capacidades y referencias aria-labelledby al heading; labels/contenido preservados. CV/LinkedIn/GitHub secundarios, accesibles, mismos destinos.
+- [x] GREEN/refactor, axe ES/EN con seguimiento de incomplete, teclado/revisión automatizada; CV/links en ambos base paths; QA visual automatizado, gates/evidencia/diff completados y PR pendiente de apertura.
 
 **Visual/aceptación:** todos los hechos visibles sin disclosures, responsabilidad explicada una vez; CV menos prominente comercialmente y accesible. Disponibilidad internacional no implica clientes; sin retrato nuevo. Focal: `node --test scripts/studio-content.test.mjs`; `npx playwright test tests/e2e/studio-founder.spec.ts tests/e2e/studio-founder-responsive.spec.ts --project=chromium-desktop --project=compact-320-chromium --project=tablet-portrait-chromium`, completando motores/tamaños mediante testMatch actualizado.
 
@@ -243,8 +243,8 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 | T1 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; navegación/footer y sus pruebas quedaron en `7dee240`. |
 | T2 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; evidencia/proyectos y sus pruebas quedaron en `7dee240`. |
 | T3 | Completada en PR #56 | PR #56 mergeado en `667ca419`; Home bilingüe y pruebas/gates ejecutados. |
-| T4 | [PR #57](https://github.com/Furlanich/Portfolio/pull/57) abierto para revisión humana | `b998cdc`, base `667ca419`; Services buyer-evaluation, pruebas/gates ejecutados y registro detallado abajo. |
-| T5 | No iniciada | Merge humano T4. |
+| T4 | Completada en PR #57 | PR #57 mergeado en `a45a213`; implementación `b998cdc`, base `667ca419`; Services buyer-evaluation, pruebas/gates ejecutados y registro detallado abajo. |
+| T5 | Implementada; PR pendiente de apertura | `ba2a06a`, rama `codex/marketing-presentation-pr5-studio-founder`, base `a45a213`; Studio/Founder bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
 | T6 | No iniciada | Merge humano T5; pendientes explícitos al cierre. |
 
 ### Ejecución T4 y estado de T1/T2/T3
@@ -275,6 +275,35 @@ Rutas y comportamiento: Services ES /servicios/ y EN /en/services/, anchors web/
 QA visual/manual: se capturó el render español completo mediante Playwright fuera de Git y las assertions de render, reflow, overflow, semántica y axe pasaron. La inspección visual manual no pudo completarse porque el helper de imagen y el kernel CUA fallaron con helper_unknown_error: setup refresh had errors. No se declara PASS manual para esa capa; la captura queda fuera de Git para revisión humana. Advertencias no bloqueantes: warnings existentes de NO_COLOR, Browserslist, LCP de imágenes de Projects y smooth-scroll; no se cambió configuración para silenciarlos.
 
 T1 y T2 quedaron incorporadas en el PR humano #55, mergeado sobre 4d0280b desde 7dee240. T3 se implementó en fb3ef88 y el PR #56 se mergeó sobre el main que ahora fija 667ca419; no se reescribe la historia de esos PRs.
+
+### Ejecución T5 y cierre de T4
+
+T4 se considera satisfecha por el merge humano de PR #57 en `a45a213b51a68b42a6a4c11ac903f146256fd60d`, posterior a la base `667ca419`; no se reescribe su implementación `b998cdc`. T5 se implementó en `ba2a06a` (`feat(marketing): clarify studio and founder credibility`), rama `codex/marketing-presentation-pr5-studio-founder`, con base `a45a213b51a68b42a6a4c11ac903f146256fd60d`.
+
+Archivos y alcance: contenido Studio ES/EN con responsabilidad técnica, colaboración condicionada, disponibilidad geográfica y puente Founder según D06; contenido Founder ES/EN con apertura breve, experiencia, biografía completa en párrafos, educación/MPC, cuatro grupos de capacidades, enlaces profesionales, Projects y CTA en el orden aprobado; composición Founder y ritmo de superficies sincronizados con VIS-R1.6; IDs literales estables (`management-systems`, `web-applications`, `automation-integrations`, `evolving-systems`) enlazados por `aria-labelledby`; contratos de contenido/export, suites Node/E2E responsive y baselines visuales actualizados. No se añadió retrato, dependencia, ruta, request, campo ni reescritura del CV.
+
+El RED focal observado fue `node --test scripts/studio-content.test.mjs scripts/foundation-content.test.mjs` con exit 1: 6 pruebas pasaron y 3 fallaron por el opening Founder ausente y el copy Studio pre-D06 de responsabilidad. El GREEN posterior pasó con exit 0 y 9/9 pruebas. La sincronización de navegación se diagnosticó además bajo dos workers: los cambios a `page.waitForURL(...)` concurrente con el click corrigieron los dos fallos reproducibles del cambio de idioma en Contact y Studio.
+
+| Comando / contexto | Resultado observado |
+| --- | --- |
+| `npm test` | Exit 0: 107 pruebas. |
+| `npm run docs:check` | Exit 0: 92 Markdown, 74 IDs, 11 Skills. |
+| `npm run skills:check` | Exit 0: 4 Skills, 8 archivos íntegros. |
+| `npm run lint` | Exit 0. |
+| `npm run typecheck` | Exit 0. |
+| `npm run build` | Exit 0: 22 páginas estáticas, base root. |
+| `npm run verify:static-export` | Exit 0: 20 rutas, base `/`. |
+| `npm run test:a11y` | Exit 0: 16 pruebas axe/foco. |
+| `npm run test:e2e` | Exit 0: 572 passed, 1 flaky Firefox Contact recuperada en retry, 80 skipped; la matriz completa incluye desktop Chromium/Firefox/WebKit, responsive, axe y visual. |
+| Focal Studio/Founder Chromium + responsive | Exit 0: 36 pruebas root; 28 pruebas bajo `NEXT_PUBLIC_BASE_PATH=/Portfolio`. |
+| Build/export `NEXT_PUBLIC_BASE_PATH=/Portfolio` | Exit 0: 22 páginas generadas; `verify:static-export` confirma 20 rutas y base `/Portfolio`. |
+| `git diff --check` | Exit 0; solo advertencias normales de normalización LF/CRLF. |
+
+Rutas y contextos: Studio `/estudio/` y `/en/about/`; Founder `/estudio/samuel-furlanich/` y `/en/about/samuel-furlanich/`; Contact/Projects usados para verificar destinos; root y `/Portfolio`; idiomas ES/EN; viewports 320×800, 390×844, 768×1024, 1024×768 y 1440×900 mediante los perfiles configurados. CV, LinkedIn y GitHub conservaron sus destinos y fueron verificados con ambos base paths.
+
+QA visual: las seis capturas Playwright existentes de Studio/Founder se regeneraron para el navegador Windows local y el proyecto visual pasó. La inspección visual manual no pudo declararse PASS porque el helper de imagen/CUA falló con `helper_unknown_error: setup refresh had errors`; queda expresamente para revisión humana. El entorno local tampoco pudo iniciar el runtime Linux de Docker/WSL (virtualización deshabilitada), por lo que las baselines `-linux` no se regeneraron localmente; no se debilitaron assertions ni se copiaron baselines entre plataformas. Advertencias no bloqueantes: `NO_COLOR`/`FORCE_COLOR`, Browserslist desactualizado, hints LCP de imágenes existentes, `scroll-behavior: smooth`, `MODULE_TYPELESS_PACKAGE_JSON` y 8 vulnerabilidades del `npm ci`; no se modificaron para silenciarlas.
+
+El plan permanece `ACTIVE`; PR5 queda pendiente de apertura y revisión humana. No se hace merge autónomo.
 
 ### Ejecución T1/T2 confirmada y handoff de T3
 
