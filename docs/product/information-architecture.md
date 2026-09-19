@@ -14,7 +14,7 @@ related:
   - PAGE-PRIVACY
   - CONTENT-LOCALIZATION
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-17
+last_verified: 2026-09-19
 ---
 
 # Information architecture
@@ -219,4 +219,4 @@ Exact direct-channel action wording is owned by D03. Other navigation labels abo
 
 ## Execution dependency clarification — 2026-09-17
 
-[PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/active/marketing-presentation-excellence-v1.md) sequences accepted D06-IA work. D03 remains REJECTED: the Global notice explanation row is not executable, and direct-channel wording remains the existing Contact baseline. Stable navigation labels, footer grouping, locale equivalence and owner-approved page endings do not adopt the rejected global notice or Contact replacements.
+The [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/marketing-presentation-excellence-v1.md) records the T1–T6 delivery of accepted D06-IA work. D03 remains REJECTED: the Global notice explanation row is not executable, and direct-channel wording remains the existing Contact baseline. Stable navigation labels, footer grouping, locale equivalence and owner-approved page endings do not adopt the rejected global notice or Contact replacements.

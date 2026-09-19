@@ -17,7 +17,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-17
+last_verified: 2026-09-19
 ---
 
 # Marketing narrative, evidence hierarchy and demonstration presentation
@@ -101,7 +101,7 @@ Broader OPEN items remain outside this RFC: commercial activation, legal/privacy
 
 ## Recommendation
 
-D01–D07 have recorded dispositions at group scope. D03 is rejected, so its existing baseline remains. The owner authorized [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/active/marketing-presentation-excellence-v1.md) on 2026-09-17 after reconciling dependencies: accepted D01/D02/D04/D05/D06 and applicable D07 only, Route B, no new RFC/ADR. The plan excludes the notice, Contact substitutions and VIS-R1.7 while retaining separately accepted page replacements. This does not approve the whole packet or change RFC status.
+D01–D07 have recorded dispositions at group scope. D03 is rejected, so its existing baseline remains. The owner authorized the [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/marketing-presentation-excellence-v1.md) on 2026-09-17 after reconciling dependencies: accepted D01/D02/D04/D05/D06 and applicable D07 only, Route B, no new RFC/ADR. The completed plan excludes the notice, Contact substitutions and VIS-R1.7 while retaining separately accepted page replacements. This does not approve the whole packet or change RFC status.
 
 ## Status
 

@@ -10,7 +10,7 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-STATIC-LOCALIZED-ROUTING
-last_verified: 2026-09-17
+last_verified: 2026-09-19
 ---
 
 # RFCs
@@ -27,4 +27,4 @@ Do not create status directories until the number of RFCs or their lifecycle mak
 
 ## Proposed marketing decision closure
 
-- [RFC-MARKETING-NARRATIVE-CLOSURE](marketing-narrative-closure.md): proposed cross-page narrative, evidence discovery and demonstration presentation. D01, D02, D04, D05, D06 and D07 have explicit human approval recorded in their owners; D03 is REJECTED, so its baseline remains effective and this RFC stays PROPOSED. The original review authorized no implementation, plan or new ADR. The owner subsequently authorized [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/active/marketing-presentation-excellence-v1.md) for accepted groups under Route B; no new RFC/ADR is needed. D03 dependencies stay excluded and RFC status does not change.
+- [RFC-MARKETING-NARRATIVE-CLOSURE](marketing-narrative-closure.md): proposed cross-page narrative, evidence discovery and demonstration presentation. D01, D02, D04, D05, D06 and D07 have explicit human approval recorded in their owners; D03 is REJECTED, so its baseline remains effective and this RFC stays PROPOSED. The original review authorized no implementation, plan or new ADR. The owner subsequently authorized the completed [PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/marketing-presentation-excellence-v1.md) for accepted groups under Route B; no new RFC/ADR is needed. D03 dependencies stay excluded and RFC status does not change.

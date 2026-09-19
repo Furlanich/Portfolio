@@ -2,7 +2,7 @@
 id: PLAN-MARKETING-PRESENTATION-EXCELLENCE
 type: execution-plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 related:
   - REVIEW-MARKETING-DECISIONS
   - REVIEW-MARKETING-PRESENTATION
@@ -245,7 +245,7 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 | T3 | Completada en PR #56 | PR #56 mergeado en `667ca419`; Home bilingüe y pruebas/gates ejecutados. |
 | T4 | Completada en PR #57 | PR #57 mergeado en `a45a213`; implementación `b998cdc`, base `667ca419`; Services buyer-evaluation, pruebas/gates ejecutados y registro detallado abajo. |
 | T5 | Completada en PR #58 | ba2a06a + registro 715c079, rama codex/marketing-presentation-pr5-studio-founder, base a45a213; Studio/Founder bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
-| T6 | [PR #59](https://github.com/Furlanich/Portfolio/pull/59) abierto para revisión humana | Rama codex/marketing-presentation-pr6-final-audit, base d2fccf1; comparación auditable, matriz root/Portfolio, límites y revisión de documentación registrados abajo. |
+| T6 | Completada en [PR #59](https://github.com/Furlanich/Portfolio/pull/59) | PR #59 mergeado por revisión humana en `ef00d7a`; rama codex/marketing-presentation-pr6-final-audit, base d2fccf1; comparación auditable, matriz root/Portfolio, límites y revisión de documentación registrados abajo. |
 
 ### Ejecución T4 y estado de T1/T2/T3
 
@@ -318,7 +318,7 @@ La auditoría cubrió las 20 rutas ES/EN del plan, seis detalles localizados, CV
 | Accessibility incluida en la matriz y suite dedicada | Exit 0: 16 pruebas por contexto; la suite dedicada `/Portfolio` pasó 16/16 en puerto fresco tras un panic interno transitorio de Turbopack. |
 Las dos ejecuciones registraron un flaky transitorio distinto y recuperado por retry: una carga Chromium de `/en/work/the-system/` en root y la validación móvil de Contact bajo `/Portfolio`. Se conserva el dato de primera ejecución; no se corrige código por una falla no reproducible. Advertencias de `NO_COLOR`/`FORCE_COLOR`, Browserslist, LCP, smooth-scroll, `MODULE_TYPELESS_PACKAGE_JSON` y advisories locales no bloquean T6 y no se alteraron.
 QA visual automatizado: las seis capturas Playwright de Founder/Studio pasaron en root y `/Portfolio`. La inspección manual de jerarquía, wrapping, foco, contraste, 200%, reduced motion, dispositivo real y lector de pantalla no pudo declararse PASS porque el helper de imagen/CUA falló con `helper_unknown_error: setup refresh had errors`; queda para revisión humana. No hubo ajustes de producto, rutas, assets, dependencias, processor Contact ni runtime de proyectos.
-El plan sigue `ACTIVE` hasta la aceptación humana del [PR #59](https://github.com/Furlanich/Portfolio/pull/59); la comparación, los índices y los límites están preparados para revisión. D03 sigue `REJECTED`, el informe original `PROPOSED`, y Contact/evidencia/identidad mantienen estados pendientes o diferidos explícitos.
+El plan está `COMPLETED` tras la aceptación humana y merge del [PR #59](https://github.com/Furlanich/Portfolio/pull/59) en `ef00d7ae3e15e9fd2d7c92f7743d0ffd3c96b8be`. La comparación, los índices y los límites quedan registrados para mantenimiento futuro. Este mismo plan se mueve de `docs/plans/active/` a `docs/plans/completed/`; no se crea un plan nuevo. D03 sigue `REJECTED`, el informe original `PROPOSED`, y Contact/evidencia/identidad mantienen estados pendientes o diferidos explícitos.
 ### Ejecución T1/T2 confirmada y handoff de T3
 
 T1 y T2 quedaron incorporadas en el PR humano [#55](https://github.com/Furlanich/Portfolio/pull/55), mergeado sobre el main vigente en `4d0280b` desde `7dee240`. El PR cubrió navegación/footer y evidencia seleccionada/proyectos; por eso la dependencia de T3 se considera satisfecha. No se reescribe la historia de esos PRs.
