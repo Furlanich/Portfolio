@@ -3,6 +3,7 @@ id: PAGE-STUDIO
 type: page-spec
 status: APPROVED
 related:
+  - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - PAGE-FOUNDER
   - BRAND-POSITIONING
@@ -14,7 +15,7 @@ related:
   - DESIGN-IX-A11Y
   - PAGE-PROJECTS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-16
+last_verified: 2026-09-19
 ---
 
 # Studio and founder pages
@@ -41,7 +42,7 @@ Preserve the professional depth of the personal portfolio without making it the 
 
 ## Approved founder facts
 
-- Samuel Furlanich is a full-stack software developer and founder of FURLANICH.
+- Samuel Furlanich uses the public professional descriptor Software Engineer and is the founder of FURLANICH.
 - Independent work began in 2024.
 - Computer Science studies at the University of Buenos Aires were completed.
 - Technical education was completed at E.E.S.T. N.º 1 in Chivilcoy.
@@ -53,11 +54,11 @@ Clever Soft SA appears in narrative biography only, not as a résumé-style fact
 
 ## Approved detailed biography
 
-> Samuel Furlanich es desarrollador de software full-stack y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones. Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor. También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.
+> Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones. Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor. También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.
 
 ### Approved English adaptation
 
-> Samuel Furlanich is a full-stack software developer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations. He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor. He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.
+> Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations. He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor. He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.
 
 Both biographies are **APPROVED**. Clever Soft SA remains part of the narrative rather than a résumé-style timeline entry.
 
@@ -67,7 +68,7 @@ Before the personal homepage hero is removed, `/estudio/samuel-furlanich/` and `
 
 The minimum localized profile contains:
 
-1. Samuel's name and role as founder and full-stack software developer.
+1. Samuel's name and role as founder and Software Engineer.
 2. The approved biography in the active language.
 3. Concise, fact-checked experience and education content migrated from the current portfolio; Clever Soft SA remains inside the biography only.
 4. Outcome-oriented system capabilities, with detailed technology kept secondary.
@@ -365,9 +366,9 @@ The approved detailed Spanish and English biographies earlier in this document r
 
 ### FOUNDER-HEADER — APPROVED
 
-**Spanish context:** “Fundador de FURLANICH · Desarrollador de software full-stack”
+**Spanish context:** “Fundador de FURLANICH · Ingeniero de software”
 
-**English context:** “Founder of FURLANICH · Full-stack software developer”
+**English context:** “Founder of FURLANICH · Software Engineer”
 
 **H1 in both languages:** “Samuel Furlanich”
 
@@ -652,7 +653,7 @@ Source order: global demo notice → short header → complete existing experien
 
 | Field / current ES and EN treatment | Proposed Spanish | Proposed English | Reason / permission |
 | --- | --- | --- | --- |
-| Opening: role sentence immediately followed by full biography | Samuel Furlanich / Desarrollador de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento. | Samuel Furlanich / Software developer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance. | Approved capabilities; no seniority label or inflated tenure |
+| Opening: role sentence immediately followed by full biography | Samuel Furlanich / Ingeniero de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento. | Samuel Furlanich / Software Engineer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance. | Approved capabilities; no seniority label or inflated tenure |
 | Capability lead: no en acumular nombres de herramientas / not a catalogue of tools | Capacidades para construir y mejorar sistemas | Capabilities for building and improving systems | Positive group introduction; approved group details remain unchanged |
 | Projects bridge: internal anti-duplication rationale | Los proyectos públicos permiten explorar código, contexto y límites. | The public projects let you explore code, context and limitations. | Evidence role, not professional-client equivalence |
 | Projects action | Ver proyectos | Explore projects | Existing localized index |
@@ -663,3 +664,16 @@ Keep independent practice since 2024, every approved employment/internship date,
 Professional links move below substantive background. CV, LinkedIn and GitHub are ordinary secondary links, with the same existing destinations and accessible external/download behavior; CV loses solid primary-button prominence. No CV asset redesign is included. The MPC teaser and detail link use only [MKT-D04-MPC](../projects/mpc-administracion.md#mkt-d04-mpc-editorial-candidate-approved-revision-1), placed with education and labeled educational group work. No new Founder-only repository is published.
 
 **Decision D06-STUDIO-FOUNDER recorded:** order and changed copy are APPROVED together. D04 is also approved for the MPC placement. The approved portrait deferral remains unchanged.
+
+## VISUAL-IDENTITY-V1-FOUNDER-DESCRIPTOR — APPROVED
+
+**Approved 2026-09-19 through [RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1](../../rfcs/visual-identity-immersive-experience-v1.md).** Samuel's durable public professional descriptor is:
+
+- Spanish: **Ingeniero de software**
+- English: **Software Engineer**
+
+This wording supersedes “desarrollador de software”, “software developer” and their “full-stack” role variants when the public site identifies Samuel's general profession. Full-stack remains valid as a capability description where the distinction is useful.
+
+The descriptor does not assert a specific engineering degree, professional license, seniority level or protected credential. The education wording remains the factual statement that Samuel completed Computer Science studies at the University of Buenos Aires. The recorded employment title at Clever Soft SA remains exactly **Software Developer** because it is an employer-specific fact, not the site's general professional label.
+
+This revision changes role framing only. It does not change dates, experience, education, technologies, evidence permissions, employer relationship, biography scope or founder-led accountability.
