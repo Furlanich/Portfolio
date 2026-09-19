@@ -3,6 +3,7 @@ id: GOV-STATUS
 type: decision-register
 status: APPROVED
 related:
+  - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - GOV-KNOWLEDGE
@@ -178,6 +179,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 ## PROPOSED
 
+- [`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](../rfcs/visual-identity-immersive-experience-v1.md): Contained Master identity, bone/azure Precision Assembly visual system, Instrument Sans/Plex Mono typography, and one progressively enhanced four-beat homepage WebGL sequence. No application change, dependency, ADR, prototype or implementation plan is authorized while the RFC remains PROPOSED.
 - Internal commercial defaults including milestone payment percentages, a 30-day defect warranty, and detailed ownership terms; these require business/legal review.
 - Incremental/static-first architecture recommendation — **PROPOSED** preserved knowledge owned by [`ARCH-INDEX`](../architecture/index.md); it authorizes no architecture or CI change.
 - Use conceptual or AI-generated imagery only when clearly identified and never as false evidence of an implemented client solution.

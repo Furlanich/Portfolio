@@ -3,6 +3,7 @@ id: ARCHITECTURE-MAP
 type: architecture-map
 status: APPROVED
 related:
+  - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - ARCH-CURRENT
   - ARCH-FINDINGS
@@ -29,7 +30,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-17
+last_verified: 2026-09-19
 ---
 
 # FURLANICH architecture map
@@ -87,6 +88,8 @@ Before the completed atomic locale-root cutover, the personal homepage and clien
 ## PROPOSED architecture
 
 The preserved recommendation is incremental, static-first modernization: reduce unnecessary client boundaries and evolve the existing repository rather than perform a greenfield rebuild. It is a recommendation, not implementation authority. See the [architecture index](docs/architecture/index.md).
+
+[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](docs/rfcs/visual-identity-immersive-experience-v1.md) proposes one homepage-only, progressively enhanced React Three Fiber scene behind complete server-rendered HTML/SVG content and a static poster. The RFC preserves React 18, static export, locale routes, GitHub Pages and base-path behavior, and proposes testing the existing Framer Motion boundary before adding another scroll runtime. No Three.js or React Three Fiber dependency, canvas, font, asset or application change is approved while the RFC remains PROPOSED.
 
 For the current deployment, [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) accepts `ContactForm -> submitInquiry() -> demo adapter -> local simulated outcome`, with no network, storage, mail, logging, or analytics. The GitHub Pages build must not receive the Formspree endpoint. The existing `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured inbox` boundary remains dormant under `ADR-CONTACT-INQUIRY-PIPELINE` until a separately reviewed commercial activation passes every real gate.
 
