@@ -18,7 +18,6 @@ export function ServicesFinalCta({ content, actionHref }: ServicesFinalCtaProps)
             {content.heading}
           </h2>
           <p className="mt-6 text-lg leading-7 text-foundation-muted lg:text-xl lg:leading-8">{content.description}</p>
-          <p className="mt-6 text-base leading-7 text-foundation-ink">{content.responseStatement}</p>
           <Link
             href={actionHref}
             className="mt-8 inline-flex min-h-12 items-center justify-center rounded-[10px] bg-foundation-action px-6 text-base font-semibold text-white transition-colors duration-[160ms] ease-out hover:bg-foundation-action-strong max-[479px]:w-full"

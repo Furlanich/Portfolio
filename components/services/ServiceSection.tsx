@@ -1,102 +1,71 @@
 import Link from 'next/link';
-import { CommercialContentCard } from '@/components/commercial/CommercialContentCard';
 import { CommercialSectionHeading } from '@/components/commercial/CommercialSectionHeading';
-import { commercialEqualHeightCardGridClassName } from '@/components/commercial/equal-height-card-grid';
 import type { ServicesSectionContent } from './content-types';
 
 interface ServiceSectionProps {
   content: ServicesSectionContent;
   anchor: string;
   actionHref: string;
+  evidenceHref?: string;
   surface: 'canvas' | 'surface';
 }
 
 const listClassName = 'grid list-disc gap-3 pl-5 text-base leading-7 text-foundation-muted';
 const groupHeadingClassName = 'text-xl font-bold leading-7 text-foundation-ink';
-const panelClassName = 'rounded-[16px] border border-foundation-border bg-foundation-surface p-6 md:p-8';
 
-export function ServiceSection({ content, anchor, actionHref, surface }: ServiceSectionProps) {
+export function ServiceSection({ content, anchor, actionHref, evidenceHref, surface }: ServiceSectionProps) {
+  const sectionClassName =
+    'scroll-mt-24 py-16 md:scroll-mt-28 md:py-20 lg:scroll-mt-32 lg:py-24 ' +
+    (surface === 'surface' ? 'bg-foundation-surface' : 'bg-foundation-canvas');
+
   return (
     <section
       id={anchor}
-      aria-labelledby={`${anchor}-heading`}
-      className={`scroll-mt-24 py-16 md:scroll-mt-28 md:py-20 lg:scroll-mt-32 lg:py-24 ${surface === 'surface' ? 'bg-foundation-surface' : 'bg-foundation-canvas'}`}
+      aria-labelledby={anchor + '-heading'}
+      className={sectionClassName}
     >
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <CommercialSectionHeading headingId={`${anchor}-heading`} heading={content.heading} />
+        <CommercialSectionHeading headingId={anchor + '-heading'} heading={content.heading} />
 
         <div className="mt-8 max-w-[68ch]">
-          <p className="text-lg leading-7 text-foundation-muted lg:text-xl lg:leading-8">{content.situation}</p>
+          <p className="text-lg leading-7 text-foundation-muted lg:text-xl lg:leading-8">{content.lead}</p>
         </div>
 
         <div className="mt-12 grid gap-10 md:mt-16 md:gap-12">
           <div>
-            <h3 className={groupHeadingClassName}>{content.situationsHeading}</h3>
-            <ul className={`mt-4 ${listClassName}`}>
-              {content.situations.map((item) => <li key={item}>{item}</li>)}
+            <h3 className={groupHeadingClassName}>{content.workHeading}</h3>
+            <ul className={'mt-4 ' + listClassName}>
+              {content.work.map((item) => <li key={item}>{item}</li>)}
             </ul>
           </div>
 
-          <div className="max-w-[68ch]">
-            <h3 className={groupHeadingClassName}>{content.outcomeHeading}</h3>
-            <p className="mt-4 text-base leading-7 text-foundation-muted">{content.outcome}</p>
-          </div>
-
-          {content.levels.length > 0 && content.levelsHeading ? (
-            <div>
-              <h3 className={groupHeadingClassName}>{content.levelsHeading}</h3>
-              <ul className={`mt-6 ${commercialEqualHeightCardGridClassName} ${content.levels.length === 3 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2'}`}>
-                {content.levels.map((level) => (
-                  <li key={level.title}>
-                    <CommercialContentCard title={level.title} description={level.description} />
-                  </li>
-                ))}
-              </ul>
-              {content.levelsNote ? <p className="mt-4 text-base leading-7 text-foundation-muted">{content.levelsNote}</p> : null}
+          <div className="grid gap-8 md:grid-cols-2 md:gap-12">
+            <div className="max-w-[68ch]">
+              <h3 className={groupHeadingClassName}>{content.startingHeading}</h3>
+              <p className="mt-4 text-base leading-7 text-foundation-muted">{content.startingPoint}</p>
             </div>
-          ) : null}
-
-          <div>
-            <h3 className={groupHeadingClassName}>{content.examplesHeading}</h3>
-            <ul className={`mt-4 ${listClassName}`}>
-              {content.examples.map((item) => <li key={item}>{item}</li>)}
-            </ul>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-2">
-            <div>
-              <h3 className={groupHeadingClassName}>{content.engagementHeading}</h3>
-              <ul className={`mt-4 ${listClassName}`}>
-                {content.engagement.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
-            <div className={panelClassName}>
-              <h3 className={groupHeadingClassName}>{content.boundariesHeading}</h3>
-              <ul className={`mt-4 ${listClassName}`}>
-                {content.boundaries.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
-          </div>
-
-          <div className={panelClassName}>
-            <h3 className={groupHeadingClassName}>{content.dependenciesHeading}</h3>
-            <p className="mt-4 max-w-[78ch] text-base leading-7 text-foundation-muted">{content.dependencies}</p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className={panelClassName}>
+            <div className="max-w-[68ch]">
               <h3 className={groupHeadingClassName}>{content.fitHeading}</h3>
               <p className="mt-4 text-base leading-7 text-foundation-muted">{content.fit}</p>
-            </div>
-            <div className={panelClassName}>
-              <h3 className={groupHeadingClassName}>{content.nonFitHeading}</h3>
-              <p className="mt-4 text-base leading-7 text-foundation-muted">{content.nonFit}</p>
             </div>
           </div>
 
           <div className="max-w-[78ch] border-l-4 border-foundation-border pl-4 md:pl-6">
+            <h3 className={groupHeadingClassName}>{content.boundariesHeading}</h3>
+            <p className="mt-4 text-base leading-7 text-foundation-muted">{content.boundaries}</p>
+          </div>
+
+          <div className="max-w-[78ch] border-l-4 border-foundation-action/40 pl-4 md:pl-6">
             <h3 className={groupHeadingClassName}>{content.evidenceHeading}</h3>
             <p className="mt-4 text-base leading-7 text-foundation-muted">{content.evidence}</p>
+            {content.evidenceLink && evidenceHref ? (
+              <Link
+                href={evidenceHref}
+                className="mt-4 inline-flex min-h-11 items-center text-base font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong hover:decoration-foundation-action-strong"
+              >
+                {content.evidenceLink.label}
+              </Link>
+            ) : null}
           </div>
 
           <div>

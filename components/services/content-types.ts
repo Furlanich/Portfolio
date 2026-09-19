@@ -3,44 +3,31 @@ import type { Locale } from '../../lib/locales';
 
 export type ServiceSectionId = 'web' | 'whatsapp' | 'consulting';
 
-export type ServicesTextItem = {
-  title: string;
-  description: string;
-};
-
-export type ServicesLevel = ServicesTextItem;
-
 export type ServicesIndexItem = {
   id: ServiceSectionId;
   label: string;
 };
 
+export type ServiceEvidenceLink = {
+  label: string;
+  slug: string;
+};
+
 export type ServicesSectionContent = {
   id: ServiceSectionId;
-  eyebrow: string;
   heading: string;
-  situation: string;
-  situationsHeading: string;
-  situations: string[];
-  outcomeHeading: string;
-  outcome: string;
-  levelsHeading?: string;
-  levels: ServicesLevel[];
-  levelsNote?: string;
-  examplesHeading: string;
-  examples: string[];
-  engagementHeading: string;
-  engagement: string[];
-  boundariesHeading: string;
-  boundaries: string[];
-  dependenciesHeading: string;
-  dependencies: string;
+  lead: string;
+  workHeading: string;
+  work: string[];
+  startingHeading: string;
+  startingPoint: string;
   fitHeading: string;
   fit: string;
-  nonFitHeading: string;
-  nonFit: string;
+  boundariesHeading: string;
+  boundaries: string;
   evidenceHeading: string;
   evidence: string;
+  evidenceLink?: ServiceEvidenceLink;
   action: ActionLink;
 };
 
@@ -50,7 +37,6 @@ export type ServicesPageContent = {
   introduction: {
     heading: string;
     description: string;
-    qualification: string;
     indexLabel: string;
     indexItems: ServicesIndexItem[];
   };
@@ -58,7 +44,8 @@ export type ServicesPageContent = {
   principles: {
     heading: string;
     introduction: string;
-    items: ServicesTextItem[];
+    workingHeading: string;
+    workingAgreement: string;
   };
   commercialBoundaries: {
     heading: string;
@@ -72,7 +59,6 @@ export type ServicesPageContent = {
   finalCta: {
     heading: string;
     description: string;
-    responseStatement: string;
     action: ActionLink;
   };
 };

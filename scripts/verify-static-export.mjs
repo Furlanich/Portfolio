@@ -129,7 +129,7 @@ const servicesRequirements = {
   'servicios/index.html': {
     route: '/servicios/',
     lang: 'es-AR',
-    heading: 'Servicios para resolver necesidades concretas del negocio',
+    heading: 'Software para tu negocio',
     indexLabel: 'Ir a un servicio',
     index: [
       ['/servicios/#web', 'Sitios y aplicaciones web'],
@@ -137,33 +137,33 @@ const servicesRequirements = {
       ['/servicios/#consultoria', 'Mantenimiento y consultoría'],
     ],
     services: [
-      ['web', 'Sitios y aplicaciones web comerciales'],
-      ['whatsapp', 'Automatización por WhatsApp e integraciones'],
-      ['consultoria', 'Mantenimiento y consultoría de software'],
+      ['web', 'Sitios y aplicaciones web'],
+      ['whatsapp', 'WhatsApp e integraciones'],
+      ['consultoria', 'Mejoras para sistemas existentes'],
     ],
     groups: [
-      'Situaciones habituales', 'Qué resultado buscamos', 'Distintos niveles de trabajo web',
-      'Ejemplos posibles', 'Un trabajo puede incluir', 'No incluye automáticamente',
-      'Dependencias externas', 'Buen encaje', 'Cuándo conviene otra alternativa', 'Evidencia disponible',
+      'Tipos de trabajo', 'Punto de partida', 'Buen encaje', 'Límites del servicio',
+      'Evidencia disponible', 'Acuerdo de trabajo', 'Límites comerciales',
+      'IA solo cuando aporta valor',
     ],
     principlesHeading: 'Qué podés esperar de cualquier servicio',
+    principlesAnchor: 'condiciones',
     finalHeading: 'Contanos qué necesitás resolver',
     actions: [
-      'Contanos qué necesitás resolver en la web',
-      'Conversemos sobre tu flujo por WhatsApp',
-      'Contanos qué pasa con tu sistema',
+      'Ver contacto',
       'Iniciar una consulta',
     ],
     evidence: [
-      'El repositorio conserva un sistema general de reservas publicado por Samuel como evidencia de implementación.',
-      'Hoy no hay un proyecto público de automatización por WhatsApp',
-      'Hoy no hay una intervención pública de mantenimiento o consultoría',
+      'General Reservation System contiene código para reservas de transporte de pasajeros.',
+      'Todavía no hay un proyecto público de WhatsApp que podamos mostrar.',
+      'El enfoque se apoya en la experiencia técnica de Samuel.',
     ],
+    evidenceLink: ['/proyectos/general-reservation-system/', 'Ver el proyecto y sus límites'],
   },
   'en/services/index.html': {
     route: '/en/services/',
     lang: 'en',
-    heading: 'Services for concrete business needs',
+    heading: 'Software for your business',
     indexLabel: 'Jump to a service',
     index: [
       ['/en/services/#web', 'Websites and web applications'],
@@ -171,28 +171,28 @@ const servicesRequirements = {
       ['/en/services/#consulting', 'Maintenance and consulting'],
     ],
     services: [
-      ['web', 'Business websites and web applications'],
-      ['whatsapp', 'WhatsApp automation and integrations'],
-      ['consulting', 'Software maintenance and IT consulting'],
+      ['web', 'Websites and web applications'],
+      ['whatsapp', 'WhatsApp and integrations'],
+      ['consulting', 'Improvements to existing systems'],
     ],
     groups: [
-      'Common situations', 'The outcome we work towards', 'Different levels of web work',
-      'Representative examples', 'An engagement may include', 'Not automatically included',
-      'External dependencies', 'A good fit', 'When another option may be better', 'Available evidence',
+      'Ways of working', 'Starting point', 'A good fit', 'Service boundaries',
+      'Available evidence', 'Working agreement', 'Commercial boundaries',
+      'AI only where it adds value',
     ],
     principlesHeading: 'What you can expect from every service',
+    principlesAnchor: 'working-boundaries',
     finalHeading: 'Tell us what you need to solve',
     actions: [
-      'Tell us what you need to solve on the web',
-      'Discuss your WhatsApp workflow',
-      'Tell us what is happening with your system',
+      'Contact options',
       'Start an enquiry',
     ],
     evidence: [
-      'The repository contains a general reservation system published by Samuel as implementation evidence.',
-      'There is currently no public WhatsApp automation project',
-      'There is currently no public maintenance or consulting intervention',
+      'General Reservation System contains code for passenger transport reservations.',
+      'There is no public WhatsApp project to show yet.',
+      'The approach draws on Samuel’s technical background.',
     ],
+    evidenceLink: ['/en/work/general-reservation-system/', 'View the project and its limitations'],
   },
 };
 
@@ -489,6 +489,9 @@ function assertServicesArtifact(artifact, html) {
       failures.push(`${artifact.file}: missing internal group heading "${group}"`);
     }
   }
+  if (!html.includes('id="' + requirement.principlesAnchor + '"')) {
+    failures.push(artifact.file + ': missing principles anchor');
+  }
   if (!hasHeading(html, 'h2', requirement.principlesHeading)) {
     failures.push(`${artifact.file}: missing principles heading`);
   }
@@ -502,11 +505,19 @@ function assertServicesArtifact(artifact, html) {
     if (!html.includes(evidence)) failures.push(`${artifact.file}: missing evidence text "${evidence}"`);
   }
 
+  if (requirement.evidenceLink) {
+    const [route, label] = requirement.evidenceLink;
+    if (!html.includes('href="' + expectedHref(route) + '"') || !html.includes(label)) {
+      failures.push(artifact.file + ': missing evidence link ' + expectedHref(route));
+    }
+  }
+
   const forbidden = [
     /https?:\/\/[^\"]*(?:general.?reservation|reservation.?system)/i,
     /Busesfy|ChronoApp|MPC Administración|Documancer/i,
     /<img\b/i,
     /project-card|case-study|testimonial|client-logo|metric-card/i,
+    /mismo día hábil|same business day|responseStatement/i,
   ];
   for (const pattern of forbidden) {
     if (pattern.test(html)) failures.push(`${artifact.file}: forbidden public evidence or route content matched ${pattern}`);
