@@ -25,7 +25,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-17
+last_verified: 2026-09-19
 ---
 
 # FURLANICH project knowledge
@@ -55,7 +55,7 @@ Front matter records the overall governance status of a document. In mixed-statu
 - [RFCs](rfcs/index.md), [ADRs](decisions/index.md), and [execution plans](plans/index.md): consequential proposals, accepted architecture history, and substantial-work records.
 - [Testing strategy](testing/strategy.md): TDD, deterministic, browser, accessibility, visual, and static-export verification layers.
 - [Project-local process Skills](superpowers/README.md): pinned Taste/Superpowers provenance and methodology artifact locations.
-- [Marketing and presentation audit](reviews/marketing-presentation-2026-09-15/index.md): deployed bilingual review, evidence, scores and proposed corrections; no new copy/design approval.
+- [Marketing and presentation audit](reviews/marketing-presentation-2026-09-15/index.md): deployed bilingual review, evidence, scores and proposed corrections; no new copy/design approval. [T6 comparison](reviews/marketing-presentation-excellence-v1/index.md) records the post-T1–T5 status without replacing the original review.
 - [Research references](references/market-and-design-references.md): external sources that informed earlier positioning and evidence discussions.
 - [Domain glossary](../CONTEXT.md): canonical project-specific terminology.
 
