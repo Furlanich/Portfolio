@@ -243,13 +243,15 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 | T1 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; navegación/footer y sus pruebas quedaron en `7dee240`. |
 | T2 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; evidencia/proyectos y sus pruebas quedaron en `7dee240`. |
 | T3 | Completada en PR #56 | PR #56 mergeado en `667ca419`; Home bilingüe y pruebas/gates ejecutados. |
-| T4 | Lista para revisión humana | `b998cdc`, base `667ca419`; PR 4 de Services, pruebas/gates ejecutados y registro detallado abajo. |
+| T4 | [PR #57](https://github.com/Furlanich/Portfolio/pull/57) abierto para revisión humana | `b998cdc`, base `667ca419`; Services buyer-evaluation, pruebas/gates ejecutados y registro detallado abajo. |
 | T5 | No iniciada | Merge humano T4. |
 | T6 | No iniciada | Merge humano T5; pendientes explícitos al cierre. |
 
 ### Ejecución T4 y estado de T1/T2/T3
 
 T4 se implementó en b998cdcd672b4ab734f70e9b72964257dad68eef (feat(marketing): simplify services buyer evaluation), rama codex/marketing-presentation-pr4-services, base 667ca419d67d1e6768672631b378d8c3bdc09168 (main posterior al merge humano de PR #56). Archivos: ambos contenidos Services, tipos y composición Services, contrato de export estático, contrato foundation sincronizado, nueva suite E2E de Services y ampliación de perfiles Playwright. El modelo comprador quedó en lead → tipos de trabajo → punto de partida → buen encaje → límites → evidencia → acción; se eliminó el modelo de paquetes/cards y la promesa de respuesta. Se añadieron el enlace textual al detalle GRS y los anchors localizados condiciones/working-boundaries.
+
+PR #57 se abrió contra main en el commit c98a43666d7adac504fcf9214113577a83f1c154, con base 667ca419d67d1e6768672631b378d8c3bdc09168. Queda abierto para revisión humana; no se hace merge autónomo.
 
 El RED focal observado fue node --test scripts/services-content.test.mjs scripts/services-route.test.mjs con exit 1: el contrato pre-D05 mantenía seis principios, H1/copy anteriores, grupos narrativos, cards y responseStatement. El GREEN posterior pasó con exit 0; tras el ajuste de anchors, el focal ampliado pasó con exit 0 en 11 pruebas. La validación ejecutada quedó así:
 
