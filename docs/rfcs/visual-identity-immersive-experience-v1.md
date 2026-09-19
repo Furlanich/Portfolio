@@ -1,9 +1,10 @@
 ---
 id: RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
 type: request-for-comments
-status: PROPOSED
+status: APPROVED
 related:
   - ARCHITECTURE-MAP
+  - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - ADR-STATIC-LOCALIZED-ROUTING
   - BRAND-POSITIONING
   - DESIGN-VISUAL
@@ -298,4 +299,4 @@ Approve the integrated v1 direction for prototype validation: the Contained Mast
 
 ## Status
 
-**PROPOSED.** The owner approved the conversational design sections on 2026-09-19 so they could be written as a formal RFC. That approval authorizes this review artifact only. It does not approve the written RFC, change the design owners, create an ADR, authorize the prototype, add dependencies, or authorize production implementation. Human review must explicitly accept, reject or revise this RFC before the next governance stage.
+**APPROVED — 2026-09-19.** The repository owner explicitly approved this RFC and merged [Governance PR #61](https://github.com/Furlanich/Portfolio/pull/61). The approval authorizes the design-owner revisions, architecture ADR and isolated prototype described here. It does not authorize production implementation, runtime dependencies, generated media, provider activation, evidence upgrades, release/legal/SEO expansion or a versioned execution plan before the prototype verdict receives human review.

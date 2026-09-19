@@ -4,6 +4,7 @@ type: decision-register
 status: APPROVED
 related:
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
+  - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - GOV-KNOWLEDGE
@@ -72,6 +73,8 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Explicit Spanish-root and English-`/en/` static route trees with locale-specific root layouts are approved in [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](../rfcs/homepage-foundation-static-localized-routing.md) and recorded by [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). Delivery is tracked by [`PLAN-HOMEPAGE-FOUNDATION`](../plans/completed/homepage-foundation.md).
 
 ### Homepage and process
+
+- Visual Identity & Immersive Experience v1 is approved for prototype validation: Contained Master, Precision Assembly, Instrument Sans/Plex Mono and one homepage-only progressive scene. [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](../decisions/progressive-immersive-homepage.md) owns the runtime boundary. Production implementation and a versioned execution plan remain blocked until prototype review.
 
 - The approved homepage sequence, Spanish copy, natural English adaptations, CTA destinations, evidence boundaries, conversion narrative, and implementation-readiness matrix are owned by [`PAGE-HOME`](../product/pages/home.md).
 - The approved [`RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY`](../rfcs/homepage-hero-implementation-boundary.md) requires the homepage-foundation prerequisites to be resolved and planned before application implementation begins; it does not approve the remaining OPEN product or architecture choices.
@@ -179,14 +182,14 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 ## PROPOSED
 
-- [`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](../rfcs/visual-identity-immersive-experience-v1.md): Contained Master identity, bone/azure Precision Assembly visual system, Instrument Sans/Plex Mono typography, and one progressively enhanced four-beat homepage WebGL sequence. No application change, dependency, ADR, prototype or implementation plan is authorized while the RFC remains PROPOSED.
+
 - Internal commercial defaults including milestone payment percentages, a 30-day defect warranty, and detailed ownership terms; these require business/legal review.
 - Incremental/static-first architecture recommendation — **PROPOSED** preserved knowledge owned by [`ARCH-INDEX`](../architecture/index.md); it authorizes no architecture or CI change.
 - Use conceptual or AI-generated imagery only when clearly identified and never as false evidence of an implemented client solution.
 
 ## OPEN
 
-- Extended visual identity and design-system decisions beyond the approved commercial homepage and Services-page baselines: custom mark, additional semantic colors, full component variants, and broader imagery.
+- Visual Identity v1 prototype outputs: exact mark geometry/clear space/minimum sizes, mobile activation thresholds, pixel-ratio and frame-time limits, JavaScript/loading budgets, Framer Motion scrub quality, and whether rendered media justifies a later pipeline.
 - Commercial Contact activation: complete Formspree storage/retention/subprocessor/transfer facts, operational ownership, restriction to `furlanich.github.io`, exact bilingual commercial Privacy owner text, professional privacy/legal review, and real staging/production delivery and deletion evidence remain OPEN. They do not block the approved zero-transmission demonstration and are not marked PASS by mock evidence.
 - Final legal and contractual review of commercial boundaries.
 - Founder photograph and any later CV content refresh/redesign are **DEFERRED** and non-blocking for the text-led Studio/Founder experience.
@@ -222,7 +225,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 [Decision package](../reviews/marketing-decision-closure-2026-09-15/index.md) and [RFC-MARKETING-NARRATIVE-CLOSURE](../rfcs/marketing-narrative-closure.md) propose seven groups: D01 positioning; D02 hero/actions; D03 demonstration contract; D04 evidence placement; D05 Home/Services consolidation; D06 Studio/Founder/IA/language; D07 visual/interaction revision R1.
 
-On 2026-09-16 the human explicitly approved D01 (recommended territory B, bilingual category and priority buying problem), D02 (bilingual hero/actions), D04 (evidence placement/story), D05 (Home/Services consolidation), D06 (Studio/Founder/IA/language) and D07 (VIS-R1 and IX-R1), and rejected D03 (the proposed demonstration presentation contract). Their [owning records and approval source](../reviews/marketing-decision-closure-2026-09-15/index.md#decision-register) identify the exact scope and superseded clauses. D03 rejection preserves the existing demonstration presentation and adapter boundaries. D01/D02/D04/D05/D06/D07 owners record their accepted scopes; D03 owners record the rejected candidate and preserved baseline. No unaccepted item-level exception or commercial activation is inferred. Other existing APPROVED baselines remain effective. No completed audit, polished wording or publication of the proposal upgrades a decision to APPROVED. Existing demonstration ADR, evidence permissions, commercial-activation gates, optional media and immersive-design deferrals remain unchanged. The original review did not include an execution plan. On 2026-09-17 the owner explicitly authorized the [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/marketing-presentation-excellence-v1.md), APPROVED / COMPLETED Route B plan for accepted groups only after human merges of PRs #55–#59. D03 remains REJECTED; the marketing RFC remains PROPOSED with partial acceptance, and no further implementation PR is authorized by this plan.
+On 2026-09-16 the human explicitly approved D01 (recommended territory B, bilingual category and priority buying problem), D02 (bilingual hero/actions), D04 (evidence placement/story), D05 (Home/Services consolidation), D06 (Studio/Founder/IA/language) and D07 (VIS-R1 and IX-R1), and rejected D03 (the proposed demonstration presentation contract). Their [owning records and approval source](../reviews/marketing-decision-closure-2026-09-15/index.md#decision-register) identify the exact scope and superseded clauses. D03 rejection preserves the existing demonstration presentation and adapter boundaries. D01/D02/D04/D05/D06/D07 owners record their accepted scopes; D03 owners record the rejected candidate and preserved baseline. No unaccepted item-level exception or commercial activation is inferred. Other existing APPROVED baselines remain effective. No completed audit, polished wording or publication of the proposal upgrades a decision to APPROVED. Existing demonstration ADR, evidence permissions and commercial-activation gates remain unchanged by that marketing decision. The later approved visual-identity RFC supersedes the immersive-design deferral only within its named v1 scope; rendered media remains prototype-dependent. The original review did not include an execution plan. On 2026-09-17 the owner explicitly authorized the [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/marketing-presentation-excellence-v1.md), APPROVED / COMPLETED Route B plan for accepted groups only after human merges of PRs #55–#59. D03 remains REJECTED; the marketing RFC remains PROPOSED with partial acceptance, and no further implementation PR is authorized by this plan.
 
 
 MKT-DOC-001 factual synchronization now records implemented Studio, authorized project details/conceptual visuals and the historical navigation gap in their owners; T6 rechecked those records in the completed plan. MKT-POS-002 and MKT-CONTACT-001, MKT-CONTACT-002, MKT-CONTACT-003 remain pending by D03 decision. MKT-PROOF-003 runtime verification, MKT-TRUST-001 new evidence, MKT-VIS-002 media/motif/portrait, MKT-CONV-001 transported context and future MKT-VIS-004 effects remain outside approved execution. The plan owns task/evidence tracking; no audit finding is resolved by planning alone.

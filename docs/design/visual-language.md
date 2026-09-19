@@ -3,6 +3,8 @@ id: DESIGN-VISUAL
 type: design-spec
 status: APPROVED
 related:
+  - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
+  - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - BRAND-POSITIONING
   - PROJECT-EVIDENCE
@@ -16,7 +18,7 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-16
+last_verified: 2026-09-19
 ---
 
 # Visual language
@@ -357,7 +359,7 @@ Compared with DESIGN-VISUAL at main revision 2be0286 (approved section baselines
 
 ### Retained baseline
 
-Keep Inter, current colors/contrast, 1200px container, 20/32/48px gutters, existing H1/H2/body scales, 48px primary actions, focus ring, light-only presentation, sticky app bar, native mobile disclosure, no decorative shadows, and content-driven height. Keep detail-only conceptual images with captions. No portrait, icon system, logo redraw, gradient, glass, 3D or new motion is selected.
+For R1 itself, keep Inter, current colors/contrast, 1200px container, 20/32/48px gutters, existing H1/H2/body scales, 48px primary actions, focus ring, light-only presentation, sticky app bar, native mobile disclosure, no decorative shadows, and content-driven height. Keep detail-only conceptual images with captions. R1 selects no portrait, icon system, logo redraw, gradient, glass, 3D or new motion; the later approved VISUAL-IDENTITY-V1 section supersedes that deferral only in its named scope.
 
 ### Approved design treatments and application dependencies
 
@@ -387,3 +389,60 @@ At wide widths, typography and asymmetric text columns supply identity. No decor
 | 1440px | Inline within max 1200px | Same wide rules with generous margins; text max 65–68ch; no typography enlargement beyond baseline |
 
 Candidate copy needs both-locale rendered review at every width, 200% text zoom and keyboard/reduced-motion checks before implementation acceptance. Wireframes test grouping only; their placeholder lengths are not production height, font-loading, accessibility or conversion evidence. If long labels fail at 1024px, revise layout/wording through this owner; do not silently lower font size/target size or alter the approved breakpoint.
+
+## VISUAL-IDENTITY-V1 — Contained Master and Precision Assembly — APPROVED
+
+**Approved 2026-09-19.** The repository owner approved and merged [RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1](../rfcs/visual-identity-immersive-experience-v1.md) in [Governance PR #61](https://github.com/Furlanich/Portfolio/pull/61). This section supersedes the earlier Inter/palette/custom-mark deferrals and the VIS-R1 prohibition on 3D only within the scope stated here. Existing content hierarchy, Contact demonstration treatment, evidence restrictions, target sizes, focus behavior, content-driven growth and page-specific disclosure rules remain authoritative.
+
+### Identity assets
+
+The canonical **Contained Master** symbol is three broad, equal-weight upward chevrons sharing one central axis. Equal negative space separates the layers, peaks use sharp mitres, and every endpoint remains visible. The geometry is a newly constructed abstraction informed by the supplied family-symbol reference; the raster reference is not a production asset or a claim of exact heraldic reproduction.
+
+The primary lockup is the symbol followed by the exact wordmark `FURLANICH`. The symbol may stand alone only where context already identifies the brand, including favicons, social avatars and repeated navigation. The production identity set must include:
+
+- horizontal lockup;
+- azure-on-bone and bone-on-azure variants;
+- protected icon-only mark;
+- favicon exports;
+- clear-space, minimum-size and invalid-use guidance.
+
+The master mark is protected. It does not stretch, crop, rotate, separate, morph or become scene geometry. The immersive homepage uses a separate derived sculpture that may fragment and reconnect.
+
+Exact optical geometry, clear space and minimum sizes remain **OPEN** until vector refinement is reviewed. Production assets cannot be inferred from the design-reference raster or the prototype.
+
+### Color roles
+
+| Role | Value | Use |
+| --- | --- | --- |
+| Bone | `#F9F6EE` | Primary canvas and identity ground |
+| Azure | `#004589` | Symbol, primary action, active state and sculpture |
+| Ink | `#09243D` | Headings and long-form text |
+| Muted | `#526473` | Secondary text and metadata |
+| Tint | `#E7EEF5` | Quiet separation and restrained states |
+
+Bone and azure are the recognizable pair. Full-azure surfaces are reserved for deliberate emphasis. UI gradients, neon and glass remain excluded. A physically lit 3D material may create tonal variation inside the scene without becoming a general interface gradient. Final tokens, interactive states and every foreground/background pair require deterministic contrast verification.
+
+### Typography system
+
+Instrument Sans is the primary family for headings, body, navigation and actions. IBM Plex Mono is limited to short sequence labels, section numbers and compact technical metadata. It is not paragraph text, a decorative code texture or a developer-console theme.
+
+Production must self-host only approved weights/subsets through the existing Next.js font boundary, retain license notices and verify Spanish/English glyph coverage. Loading and layout stability remain implementation gates. The earlier Inter requirements remain historical baseline; they no longer define the accepted target identity.
+
+### Precision Assembly composition
+
+The visual direction combines warm editorial space, controlled asymmetry, exact rules and one dimensional azure sculpture. Typography, whitespace, rules, project media and section numbering carry most site-wide identity. Cards remain reserved for genuine comparison, bounded evidence and controls; ordinary ideas use editorial composition rather than a bordered rectangle.
+
+Home alone receives the v1 real-time scene. Its four visual beats are:
+
+1. **Recognition:** a resolved three-layer sculpture establishes the identity beside the proposition and actions.
+2. **Fragmentation:** layers separate as operational inputs such as orders, bookings and messages appear without a shared flow.
+3. **Connection:** paths form and the layers move toward coordination.
+4. **Coordination:** the sculpture resolves as one system and hands the visitor into business problems and services.
+
+The scene is brand illustration and a general explanation of connected systems. It is not project evidence, a client workflow, a proprietary platform, a production result or proof of operating scale.
+
+Services, Projects, Studio, Founder and Contact use the symbol, type, spacing, section numbering, controlled azure fields, editorial layouts and approved evidence media without additional WebGL in v1. No dark theme, portrait, evidence upgrade or new icon system is approved by this revision.
+
+### Prototype-dependent design questions
+
+The isolated prototype must determine whether procedural geometry reaches the accepted visual quality and whether any rendered media would add enough value to justify a separate later pipeline. Those questions remain **OPEN**. Higgsfield and Blender may support offline look development, but neither is an accepted website runtime dependency.

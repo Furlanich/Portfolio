@@ -3,6 +3,7 @@ id: PAGE-HOME
 type: page-spec
 status: APPROVED
 related:
+  - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - BRAND-POSITIONING
   - AUDIENCES-SERVICES
@@ -13,7 +14,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-16
+last_verified: 2026-09-19
 ---
 
 # Spanish homepage
@@ -392,7 +393,7 @@ When at least one project reaches the `ready` publication state, this fallback m
 
 **Homepage biography**
 
-> FURLANICH está liderado por Samuel Furlanich, desarrollador de software full-stack con estudios completos en Ciencias de la Computación en la Universidad de Buenos Aires. Samuel mantiene la responsabilidad técnica directa en cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.
+> FURLANICH está liderado por Samuel Furlanich, ingeniero de software con estudios completos en Ciencias de la Computación en la Universidad de Buenos Aires. Samuel mantiene la responsabilidad técnica directa en cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.
 
 This concise homepage copy is **APPROVED**. The detailed biography remains owned by [`PAGE-FOUNDER`](studio-and-founder.md).
 
@@ -412,7 +413,7 @@ This concise homepage copy is **APPROVED**. The detailed biography remains owned
 
 **Homepage biography**
 
-> FURLANICH is led by Samuel Furlanich, a full-stack software developer who completed his Computer Science studies at the University of Buenos Aires. Samuel retains direct technical responsibility for every project and brings in specialist collaborators when the scope requires them.
+> FURLANICH is led by Samuel Furlanich, a Software Engineer who completed his Computer Science studies at the University of Buenos Aires. Samuel retains direct technical responsibility for every project and brings in specialist collaborators when the scope requires them.
 
 **Primary CTA:** `Let's talk about your project` → `/en/contact/`
 
