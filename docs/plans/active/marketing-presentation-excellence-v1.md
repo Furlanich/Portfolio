@@ -166,7 +166,7 @@ Interfaces permitidas: view models locales, selección editorial, campos diferen
 - [x] RED: inventario de hechos ES/EN, fechas, instituciones, estudios, empleo narrativo, biografía y destinos; orden/persistencia MPC. IDs únicos y referencias accesibles resueltas, independientes de títulos traducidos.
 - [x] GREEN: Studio textual con responsabilidad/collaboradores, cuatro principios conservados, ubicación/puente combinados. Founder: apertura → experiencia → biografía completa en párrafos → educación/MPC → capacidades → links profesionales → Projects → cierre aprobado.
 - [x] IDs semánticos estables para capacidades y referencias aria-labelledby al heading; labels/contenido preservados. CV/LinkedIn/GitHub secundarios, accesibles, mismos destinos.
-- [x] GREEN/refactor, axe ES/EN con seguimiento de incomplete, teclado/revisión automatizada; CV/links en ambos base paths; QA visual automatizado, gates/evidencia/diff completados y PR pendiente de apertura.
+- [x] GREEN/refactor, axe ES/EN con seguimiento de incomplete, teclado/revisión automatizada; CV/links en ambos base paths; QA visual automatizado, gates/evidencia/diff completados y [PR #58](https://github.com/Furlanich/Portfolio/pull/58) abierto para revisión humana.
 
 **Visual/aceptación:** todos los hechos visibles sin disclosures, responsabilidad explicada una vez; CV menos prominente comercialmente y accesible. Disponibilidad internacional no implica clientes; sin retrato nuevo. Focal: `node --test scripts/studio-content.test.mjs`; `npx playwright test tests/e2e/studio-founder.spec.ts tests/e2e/studio-founder-responsive.spec.ts --project=chromium-desktop --project=compact-320-chromium --project=tablet-portrait-chromium`, completando motores/tamaños mediante testMatch actualizado.
 
@@ -244,7 +244,7 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 | T2 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; evidencia/proyectos y sus pruebas quedaron en `7dee240`. |
 | T3 | Completada en PR #56 | PR #56 mergeado en `667ca419`; Home bilingüe y pruebas/gates ejecutados. |
 | T4 | Completada en PR #57 | PR #57 mergeado en `a45a213`; implementación `b998cdc`, base `667ca419`; Services buyer-evaluation, pruebas/gates ejecutados y registro detallado abajo. |
-| T5 | Implementada; PR pendiente de apertura | `ba2a06a`, rama `codex/marketing-presentation-pr5-studio-founder`, base `a45a213`; Studio/Founder bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
+| T5 | [PR #58](https://github.com/Furlanich/Portfolio/pull/58) abierto para revisión humana | `ba2a06a` + registro `715c079`, rama `codex/marketing-presentation-pr5-studio-founder`, base `a45a213`; Studio/Founder bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
 | T6 | No iniciada | Merge humano T5; pendientes explícitos al cierre. |
 
 ### Ejecución T4 y estado de T1/T2/T3
@@ -303,7 +303,7 @@ Rutas y contextos: Studio `/estudio/` y `/en/about/`; Founder `/estudio/samuel-f
 
 QA visual: las seis capturas Playwright existentes de Studio/Founder se regeneraron para el navegador Windows local y el proyecto visual pasó. La inspección visual manual no pudo declararse PASS porque el helper de imagen/CUA falló con `helper_unknown_error: setup refresh had errors`; queda expresamente para revisión humana. El entorno local tampoco pudo iniciar el runtime Linux de Docker/WSL (virtualización deshabilitada), por lo que las baselines `-linux` no se regeneraron localmente; no se debilitaron assertions ni se copiaron baselines entre plataformas. Advertencias no bloqueantes: `NO_COLOR`/`FORCE_COLOR`, Browserslist desactualizado, hints LCP de imágenes existentes, `scroll-behavior: smooth`, `MODULE_TYPELESS_PACKAGE_JSON` y 8 vulnerabilidades del `npm ci`; no se modificaron para silenciarlas.
 
-El plan permanece `ACTIVE`; PR5 queda pendiente de apertura y revisión humana. No se hace merge autónomo.
+El plan permanece `ACTIVE`; [PR #58](https://github.com/Furlanich/Portfolio/pull/58) queda abierto para revisión humana. No se hace merge autónomo.
 
 ### Ejecución T1/T2 confirmada y handoff de T3
 
