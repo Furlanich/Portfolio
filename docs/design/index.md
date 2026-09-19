@@ -3,6 +3,7 @@ id: DESIGN-INDEX
 type: design-index
 status: APPROVED
 related:
+  - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
   - PAGE-HOME
   - PAGE-SERVICES
@@ -12,7 +13,7 @@ related:
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - PROJECTS-EXPERIENCE-CLOSURE
-last_verified: 2026-09-16
+last_verified: 2026-09-19
 ---
 
 # Design documentation
@@ -28,3 +29,5 @@ Future visual decisions must be persisted here before they are treated as implem
 ## Marketing revision R1 — partial initiative acceptance
 
 On 2026-09-16 the human approved [VIS-R1](visual-language.md#mkt-d07-vis-r1-restrained-marketing-composition-approved) and [IX-R1](interaction-responsive-accessibility.md#mkt-d07-ix-r1-marketing-navigation-and-demo-interactions-approved) under D07. These owners define precise precedence and application gates. D03 is REJECTED and its baseline remains effective; accepted D02/D04/D05/D06 content and IA scopes are recorded in their owners. No commercial activation or unaccepted item-level change is approved by implication. The complete design system and optional immersive work remain unresolved.
+
+[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](../rfcs/visual-identity-immersive-experience-v1.md) now provides a PROPOSED complete-identity and homepage-immersion candidate. It does not alter this index's approved design owners until explicit RFC acceptance; the existing visual and interaction baselines remain authoritative during review.
