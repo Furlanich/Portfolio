@@ -242,7 +242,7 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 | T0 | PR listo para revisión humana | [PR #54](https://github.com/Furlanich/Portfolio/pull/54), base main 7062bda, TypeSafe `b29040e`, plan/sincronización `1351961`; sin merge. |
 | T1 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; navegación/footer y sus pruebas quedaron en `7dee240`. |
 | T2 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; evidencia/proyectos y sus pruebas quedaron en `7dee240`. |
-| T3 | PR listo para revisión humana | `fb3ef88`, base `4d0280b`; Home bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
+| T3 | [PR #56](https://github.com/Furlanich/Portfolio/pull/56) abierto para revisión humana | `fb3ef88`, base `4d0280b`; Home bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
 | T4 | No iniciada | Merge humano T3. |
 | T5 | No iniciada | Merge humano T4. |
 | T6 | No iniciada | Merge humano T5; pendientes explícitos al cierre. |
@@ -251,7 +251,7 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 
 T1 y T2 quedaron incorporadas en el PR humano [#55](https://github.com/Furlanich/Portfolio/pull/55), mergeado sobre el main vigente en `4d0280b` desde `7dee240`. El PR cubrió navegación/footer y evidencia seleccionada/proyectos; por eso la dependencia de T3 se considera satisfecha. No se reescribe la historia de esos PRs.
 
-T3 se implementó en `fb3ef88` (`feat(marketing): refine homepage positioning`), rama `codex/marketing-presentation-pr3-home`, base `4d0280b`. Archivos: ambos contenidos Home, `HomeHero`, composición y secciones Home, tipos, pruebas de contenido/primitivas/export estático y smoke/responsive; `HomeAudiences.tsx` fue eliminado tras `rg` sin consumidores en `app/` ni `components/`. Hallazgos y autoridad: MKT-POS-001, MKT-HOME-001/002/003, MKT-CONV-002; partes MKT-STUDIO-002, MKT-VIS-001/004 y MKT-COPY-001/002; C-HERO/C-HOME, D01/D02/D05-HOME/D04, PAGE-HOME, R1.1/R1.2/R1.3/R1.8 y Process de accesibilidad.
+T3 se implementó en `fb3ef88` (`feat(marketing): refine homepage positioning`), rama `codex/marketing-presentation-pr3-home`, base `4d0280b`, y se abrió el [PR #56](https://github.com/Furlanich/Portfolio/pull/56). Archivos: ambos contenidos Home, `HomeHero`, composición y secciones Home, tipos, pruebas de contenido/primitivas/export estático y smoke/responsive; `HomeAudiences.tsx` fue eliminado tras `rg` sin consumidores en `app/` ni `components/`. Hallazgos y autoridad: MKT-POS-001, MKT-HOME-001/002/003, MKT-CONV-002; partes MKT-STUDIO-002, MKT-VIS-001/004 y MKT-COPY-001/002; C-HERO/C-HOME, D01/D02/D05-HOME/D04, PAGE-HOME, R1.1/R1.2/R1.3/R1.8 y Process de accesibilidad.
 
 El RED focal observado fue `node --test scripts/homepage-content.test.mjs` con exit 1 y dos fallos de headings anteriores; el GREEN posterior pasó con exit 0 y dos pruebas. La validación completa quedó así:
 
