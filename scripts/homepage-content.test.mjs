@@ -34,6 +34,10 @@ function assertItems(items, expectedCount) {
   }
 }
 
+function assertSituationRows(rows, expected) {
+  assert.deepEqual(rows, expected);
+}
+
 function assertHomepageContent(content, expected) {
   for (const field of requiredHeroFields) {
     assert.ok(field in content);
@@ -44,7 +48,8 @@ function assertHomepageContent(content, expected) {
 
   assert.equal(content.problems.heading, expected.problems.heading);
   assert.equal(content.problems.introduction, expected.problems.introduction);
-  assertItems(content.problems.situations, 4);
+  assert.equal(content.problems.audienceStatement, expected.problems.audienceStatement);
+  assertSituationRows(content.problems.situations, expected.problems.situations);
   assertAction(content.problems.action, 'services', expected.problems.action);
 
   assert.equal(content.servicesSection.heading, expected.services.heading);
@@ -56,15 +61,10 @@ function assertHomepageContent(content, expected) {
     assert.equal('href' in service, false);
   }
 
-  assert.equal(content.audiences.heading, expected.audiences.heading);
-  assertItems(content.audiences.audiences, 4);
-  assert.equal(content.audiences.closing, expected.audiences.closing);
-  assertAction(content.audiences.action, 'contact', expected.audiences.action);
-
   assert.equal(content.proof.heading, expected.proof.heading);
   assert.equal(content.proof.introduction, expected.proof.introduction);
-  assertItems(content.proof.commitments, 3);
-  assertAction(content.proof.action, 'founder', expected.proof.action);
+  assertAction(content.proof.action, 'projects', expected.proof.action);
+  assert.equal('commitments' in content.proof, false);
   for (const forbidden of [
     'projects',
     'project',
@@ -79,18 +79,19 @@ function assertHomepageContent(content, expected) {
   }
 
   assert.equal(content.process.heading, expected.process.heading);
-  assertItems(content.process.steps, 4);
+  assert.deepEqual(content.process.steps, expected.process.steps);
   assert.equal(content.process.qualityStatement, expected.process.qualityStatement);
   assertAction(content.process.action, 'contact', expected.process.action);
 
   assert.equal(content.founderSection.heading, expected.founder.heading);
   assert.equal(content.founderSection.biography, expected.founder.biography);
-  assertAction(content.founderSection.primaryAction, 'contact', expected.founder.primaryAction);
-  assertAction(content.founderSection.secondaryAction, 'founder', expected.founder.secondaryAction);
+  assertAction(content.founderSection.action, 'founder', expected.founder.action);
+  assert.equal('primaryAction' in content.founderSection, false);
+  assert.equal('secondaryAction' in content.founderSection, false);
 
   assert.equal(content.cta.heading, expected.cta.heading);
   assert.equal(content.cta.description, expected.cta.description);
-  assert.equal(content.cta.responseStatement, expected.cta.responseStatement);
+  assert.equal(content.cta.demoStatement, expected.cta.demoStatement);
   assertAction(content.cta.primaryAction, 'contact', expected.cta.primaryAction);
   assert.deepEqual(content.cta.secondaryAction, {
     label: expected.cta.secondaryAction,
@@ -112,48 +113,50 @@ test('Spanish home content contains the approved complete homepage contract', ()
   assertHomepageContent(spanish, {
     locale: 'es',
     problems: {
-      heading: 'Cuando lo manual empieza a frenar el negocio',
-      introduction:
-        'Una solución digital tiene sentido cuando reduce trabajo repetitivo, evita errores o permite atender mejor. Estos son algunos de los problemas que FURLANICH puede ayudarte a resolver.',
+      heading: 'Cuando el trabajo queda repartido entre herramientas',
+      introduction: 'Cuando el trabajo queda repartido entre herramientas',
+      audienceStatement:
+        'Para pymes que coordinan pedidos, reservas o atención al cliente, o necesitan mejorar un sistema existente.',
+      situations: [
+        'Pedidos y reservas que se reorganizan a mano.',
+        'Consultas repetidas que interrumpen el trabajo.',
+        'Sistemas que no comparten información o necesitan mejoras.',
+      ],
       action: 'Ver cómo podemos ayudarte',
     },
     services: {
       heading: 'Servicios para necesidades concretas',
-      introduction:
-        'No imponemos una plataforma genérica. Primero entendemos el proceso y después evaluamos si conviene construir, integrar o modernizar.',
+      introduction: 'Construir, conectar o mejorar, según el problema.',
       action: 'Ver todos los servicios',
     },
-    audiences: {
-      heading: 'Pensado para negocios con operaciones reales',
-      closing:
-        'Si tu sector no aparece en esta lista, el punto de partida sigue siendo el mismo: entender el proceso, el problema y el resultado que necesitás.',
-      action: 'Contanos cómo funciona tu negocio',
-    },
     proof: {
-      heading: 'Credibilidad sin promesas infladas',
+      heading: 'Una responsabilidad técnica clara',
       introduction:
-        'FURLANICH solo presenta un trabajo cuando su contexto, estado y permiso de publicación están claros. No convertimos prototipos en historias de clientes ni publicamos métricas sin una fuente verificable.',
-      action: 'Conocer la trayectoria de Samuel',
+        'Samuel participa en la definición del problema, las decisiones técnicas y la revisión del trabajo. El alcance y las validaciones se acuerdan según cada necesidad.',
+      action: 'Ver proyectos y sus límites',
     },
     process: {
-      heading: 'De una necesidad concreta a una solución mantenible',
+      heading: 'Cómo trabajamos',
+      steps: [
+        { title: 'Entender', description: 'Revisar el proceso y el problema.' },
+        { title: 'Definir', description: 'Acordar alcance, responsabilidades y entregables.' },
+        { title: 'Construir y revisar', description: 'Comprobar los recorridos importantes.' },
+        { title: 'Entregar', description: 'Documentar el uso y acordar los pasos siguientes.' },
+      ],
       qualityStatement:
         'Antes de una puesta en producción, cada entrega pasa por revisión técnica, pruebas funcionales y validación de los recorridos principales. Los controles específicos se definen según el tipo de solución y su nivel de riesgo.',
       action: 'Empezar una consulta',
     },
     founder: {
       heading: 'Responsabilidad técnica directa',
-      biography:
-        'FURLANICH está liderado por Samuel Furlanich, desarrollador de software full-stack con estudios completos en Ciencias de la Computación en la Universidad de Buenos Aires. Samuel mantiene la responsabilidad técnica directa en cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
-      primaryAction: 'Hablemos de tu proyecto',
-      secondaryAction: 'Conocer a Samuel',
+      biography: 'Samuel Furlanich dirige FURLANICH. Conocé su experiencia y formación.',
+      action: 'Conocer a Samuel',
     },
     cta: {
       heading: '¿Tenés una necesidad concreta o un sistema que necesita atención?',
       description:
         'Contanos brevemente qué querés resolver. Samuel revisará personalmente la consulta para determinar si tiene sentido avanzar con una conversación.',
-      responseStatement:
-        'Respuesta habitual dentro del mismo día hábil. En casos excepcionales, puede demorar hasta dos días hábiles.',
+      demoStatement: 'Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario.',
       primaryAction: 'Contanos sobre tu proyecto',
       secondaryAction: 'Escribir por WhatsApp',
     },
@@ -166,48 +169,50 @@ test('English home content contains the approved natural adaptation', () => {
   assertHomepageContent(english, {
     locale: 'en',
     problems: {
-      heading: 'When manual work starts holding the business back',
-      introduction:
-        'A digital solution makes sense when it reduces repetitive work, prevents errors, or helps you serve customers better. These are some of the problems FURLANICH can help you solve.',
+      heading: 'When work is spread across tools',
+      introduction: 'When work is spread across tools',
+      audienceStatement:
+        'For small and medium-sized businesses managing orders, bookings or customer service, or improving an existing system.',
+      situations: [
+        'Orders and bookings reorganized by hand.',
+        'Repeated questions that interrupt work.',
+        'Systems that do not share information or need improvement.',
+      ],
       action: 'See how we can help',
     },
     services: {
       heading: 'Services for concrete business needs',
-      introduction:
-        'We do not force a generic platform. First we understand the process, then decide whether building, integrating, or modernizing is the right approach.',
+      introduction: 'Build, connect or improve, depending on the problem.',
       action: 'View all services',
     },
-    audiences: {
-      heading: 'Built for businesses with real operations',
-      closing:
-        'If your sector is not listed, the starting point is still the same: understand the process, the problem, and the outcome you need.',
-      action: 'Tell us how your business works',
-    },
     proof: {
-      heading: 'Credibility without inflated claims',
+      heading: 'Clear technical accountability',
       introduction:
-        'FURLANICH only presents work when its context, status, and publication permission are clear. We do not turn prototypes into client stories or publish metrics without a verifiable source.',
-      action: "View Samuel's background",
+        'Samuel is involved in defining the problem, technical decisions and review of the work. Scope and validation are agreed around each need.',
+      action: 'Explore projects and their limitations',
     },
     process: {
-      heading: 'From a concrete need to a maintainable solution',
+      heading: 'How we work',
+      steps: [
+        { title: 'Understand', description: 'Review the process and the problem.' },
+        { title: 'Define', description: 'Agree scope, responsibilities and deliverables.' },
+        { title: 'Build and review', description: 'Check important user journeys.' },
+        { title: 'Hand over', description: 'Document use and agree next steps.' },
+      ],
       qualityStatement:
         'Before a production release, each delivery goes through technical review, functional testing, and validation of its main user journeys. The exact controls depend on the type of solution and its level of risk.',
       action: 'Start an inquiry',
     },
     founder: {
       heading: 'Direct technical responsibility',
-      biography:
-        'FURLANICH is led by Samuel Furlanich, a full-stack software developer who completed his Computer Science studies at the University of Buenos Aires. Samuel retains direct technical responsibility for every project and brings in specialist collaborators when the scope requires them.',
-      primaryAction: "Let's talk about your project",
-      secondaryAction: 'Meet Samuel',
+      biography: "Samuel Furlanich leads FURLANICH. Explore his experience and background.",
+      action: 'Meet Samuel',
     },
     cta: {
       heading: 'Do you have a concrete need or a system that needs attention?',
       description:
         'Tell us briefly what you need to solve. Samuel will personally review your inquiry to determine whether it makes sense to continue with a conversation.',
-      responseStatement:
-        'Usual response time is within the same business day. In exceptional cases, it may take up to two business days.',
+      demoStatement: 'Explore the contact options and try the demonstration form. The form does not send inquiries.',
       primaryAction: 'Tell us about your project',
       secondaryAction: 'Write on WhatsApp',
     },

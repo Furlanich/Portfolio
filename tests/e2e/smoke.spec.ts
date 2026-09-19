@@ -27,6 +27,63 @@ for (const [name, route, language] of routeCases) {
   });
 }
 
+const homepageNarrativeCases = [
+  {
+    locale: 'Spanish',
+    route: stableRoutes.home.es,
+    heading: 'Cuando el trabajo queda repartido entre herramientas',
+    servicesHeading: 'Servicios para necesidades concretas',
+    audience: 'Para pymes que coordinan pedidos, reservas o atención al cliente, o necesitan mejorar un sistema existente.',
+    proofHeading: 'Una responsabilidad técnica clara',
+    proofAction: 'Ver proyectos y sus límites',
+    processHeading: 'Cómo trabajamos',
+    founderHeading: 'Responsabilidad técnica directa',
+    ctaHeading: '¿Tenés una necesidad concreta o un sistema que necesita atención?',
+    demoStatement: 'Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario.',
+    projectsPath: '/proyectos/',
+  },
+  {
+    locale: 'English',
+    route: stableRoutes.home.en,
+    heading: 'When work is spread across tools',
+    servicesHeading: 'Services for concrete business needs',
+    audience: 'For small and medium-sized businesses managing orders, bookings or customer service, or improving an existing system.',
+    proofHeading: 'Clear technical accountability',
+    proofAction: 'Explore projects and their limitations',
+    processHeading: 'How we work',
+    founderHeading: 'Direct technical responsibility',
+    ctaHeading: 'Do you have a concrete need or a system that needs attention?',
+    demoStatement: 'Explore the contact options and try the demonstration form. The form does not send inquiries.',
+    projectsPath: '/en/work/',
+  },
+] as const;
+
+for (const narrativeCase of homepageNarrativeCases) {
+  test(`${narrativeCase.locale} homepage presents the approved seven-section narrative`, async ({ page }) => {
+    await page.goto(appUrl(narrativeCase.route));
+
+    const main = page.getByRole('main');
+    await expect(main.locator('section')).toHaveCount(7);
+    await expect(main.locator('h2')).toHaveText([
+      narrativeCase.heading,
+      narrativeCase.servicesHeading,
+      narrativeCase.proofHeading,
+      narrativeCase.processHeading,
+      narrativeCase.founderHeading,
+      narrativeCase.ctaHeading,
+    ]);
+    await expect(main.getByText(narrativeCase.audience, { exact: true })).toBeVisible();
+    await expect(main.getByRole('region', { name: narrativeCase.proofHeading }).getByRole('link', { name: narrativeCase.proofAction })).toHaveAttribute(
+      'href',
+      appPathname(narrativeCase.projectsPath),
+    );
+    await expect(main.getByText(narrativeCase.demoStatement, { exact: true })).toBeVisible();
+    await expect(main.locator('img')).toHaveCount(0);
+    await expect(main).not.toContainText('MPC Administración');
+    await expect(main).not.toContainText('MPC Administration');
+  });
+}
+
 test('language switching preserves equivalent homepage, Services, and Studio context', async ({ page }) => {
   await page.goto(appUrl(stableRoutes.home.es));
   await page.getByRole('banner').locator('a[hreflang="en"]').click();

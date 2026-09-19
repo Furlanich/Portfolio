@@ -12,7 +12,8 @@ export type HomepageItem = {
 export type HomeProblemsContent = {
   heading: string;
   introduction: string;
-  situations: HomepageItem[];
+  audienceStatement: string;
+  situations: string[];
   action: ActionLink;
 };
 
@@ -23,17 +24,9 @@ export type HomeServicesSectionContent = {
   action: ActionLink;
 };
 
-export type HomeAudiencesContent = {
-  heading: string;
-  audiences: HomepageItem[];
-  closing: string;
-  action: ActionLink;
-};
-
 export type HomeProofContent = {
   heading: string;
   introduction: string;
-  commitments: HomepageItem[];
   action: ActionLink;
 };
 
@@ -47,14 +40,13 @@ export type HomeProcessContent = {
 export type HomeFounderSectionContent = {
   heading: string;
   biography: string;
-  primaryAction: ActionLink;
-  secondaryAction: ActionLink;
+  action: ActionLink;
 };
 
 export type HomeCtaContent = {
   heading: string;
   description: string;
-  responseStatement: string;
+  demoStatement: string;
   primaryAction: ActionLink;
   secondaryAction: ContactAction;
 };
@@ -62,7 +54,6 @@ export type HomeCtaContent = {
 export type HomePageContent = HomeHeroContent & {
   problems: HomeProblemsContent;
   servicesSection: HomeServicesSectionContent;
-  audiences: HomeAudiencesContent;
   proof: HomeProofContent;
   process: HomeProcessContent;
   founderSection: HomeFounderSectionContent;

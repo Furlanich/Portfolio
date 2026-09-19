@@ -77,38 +77,50 @@ const founderRequirements = {
 const homepageRequirements = {
   'index.html': {
     sections: [
-      ['problems', 'problems-heading', 'Cuando lo manual empieza a frenar el negocio'],
+      ['problems', 'problems-heading', 'Cuando el trabajo queda repartido entre herramientas'],
       ['services', 'services-heading', 'Servicios para necesidades concretas'],
-      ['audiences', 'audiences-heading', 'Pensado para negocios con operaciones reales'],
-      ['proof', 'proof-heading', 'Credibilidad sin promesas infladas'],
-      ['proceso', 'proceso-heading', 'De una necesidad concreta a una solución mantenible'],
+      ['proof', 'proof-heading', 'Una responsabilidad técnica clara'],
+      ['proceso', 'proceso-heading', 'Cómo trabajamos'],
       ['founder', 'founder-heading', 'Responsabilidad técnica directa'],
       ['cta', 'cta-heading', '¿Tenés una necesidad concreta o un sistema que necesita atención?'],
     ],
     requiredReferences: [
       '/servicios/',
       '/contacto/',
+      '/proyectos/',
       '/estudio/samuel-furlanich/',
       '/#proceso',
       'https://wa.me/5491150117565',
     ],
+    forbidden: [
+      /id="audiences"|audiences-heading/i,
+      /Pensado para negocios con operaciones reales|MKT-D05/i,
+      /Busesfy|ChronoApp|MPC Administración|Documancer/i,
+      /<img\b|project-card|case-study|testimonial|client-logo|metric-card/i,
+    ],
   },
   'en/index.html': {
     sections: [
-      ['problems', 'problems-heading', 'When manual work starts holding the business back'],
+      ['problems', 'problems-heading', 'When work is spread across tools'],
       ['services', 'services-heading', 'Services for concrete business needs'],
-      ['audiences', 'audiences-heading', 'Built for businesses with real operations'],
-      ['proof', 'proof-heading', 'Credibility without inflated claims'],
-      ['process', 'process-heading', 'From a concrete need to a maintainable solution'],
+      ['proof', 'proof-heading', 'Clear technical accountability'],
+      ['process', 'process-heading', 'How we work'],
       ['founder', 'founder-heading', 'Direct technical responsibility'],
       ['cta', 'cta-heading', 'Do you have a concrete need or a system that needs attention?'],
     ],
     requiredReferences: [
       '/en/services/',
       '/en/contact/',
+      '/en/work/',
       '/en/about/samuel-furlanich/',
       '/en/#process',
       'https://wa.me/5491150117565',
+    ],
+    forbidden: [
+      /id="audiences"|audiences-heading/i,
+      /Built for businesses with real operations|MKT-D05/i,
+      /Busesfy|ChronoApp|MPC Administración|Documancer/i,
+      /<img\b|project-card|case-study|testimonial|client-logo|metric-card/i,
     ],
   },
 };
@@ -830,6 +842,12 @@ for (const { artifact, html } of allHtml) {
     const expectedReference = reference.startsWith('/') ? expectedHref(reference) : reference;
     if (!html.includes(`href="${expectedReference}"`)) {
       failures.push(`${artifact.file}: missing required homepage reference ${expectedReference}`);
+    }
+  }
+
+  for (const pattern of requirement.forbidden) {
+    if (pattern.test(html)) {
+      failures.push(`${artifact.file}: forbidden Home content or presentation matched ${pattern}`);
     }
   }
 }
