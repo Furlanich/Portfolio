@@ -21,7 +21,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - TEST-STRATEGY
-last_verified: 2026-09-17
+last_verified: 2026-09-18
 ---
 
 # FURLANICH — Marketing & Presentation Excellence, v1
@@ -100,11 +100,11 @@ Interfaces permitidas: view models locales, selección editorial, campos diferen
 
 **Archivos:** `components/foundation/SiteHeader.tsx`, `SiteFooter.tsx`, `LanguageSwitch.tsx`, `content-types.ts`; nueva `components/foundation/NavigationDisclosure.tsx` para eventos si corresponde; `lib/foundation-navigation.ts`; consumidores header/footer bajo `app/(es)/`, `app/(en)/` y `components/projects/ProjectDetailPage.tsx`; `app/globals.css` para offset si hace falta. Tests: `scripts/site-header.test.mjs`, `foundation-content.test.mjs`, `site-routes.test.mjs`, `verify-static-export.mjs`; nueva `tests/e2e/marketing-navigation.spec.ts` registrada en `playwright.config.ts`; acotar selectores de idioma existentes a header/footer.
 
-- [ ] RED: label/destino Contact en veinte rutas, cuatro asuntos de navegación y CTA único sin Contact duplicado en header; footer con equivalencia en seis detalles. Fallo pertinente, no selector ambiguo.
-- [ ] GREEN: desacoplar label de `contactContent.actions[0]` e invitaciones locales; prop C-NAV estable. Header servidor, frontera cliente pequeña, sin modal.
-- [ ] RED → GREEN: selección cierra menú; Process de la misma página enfoca heading visible bajo header; Escape devuelve foco al trigger, cerrado no hace nada. Cubrir click/touch/Enter, otras rutas, reduced motion, no-JS.
-- [ ] Footer con dos grupos compactos y fila idioma/copyright con año de build, valores email/teléfono legibles, orden WhatsApp → email → teléfono. Retirar solo Contact duplicado del header, conservar enlace footer.
-- [ ] Refactor verde, matriz/gates, bytes JS incremental, evidencia/diff y PR.
+- [x] RED: label/destino Contact en veinte rutas, cuatro asuntos de navegación y CTA único sin Contact duplicado en header; footer con equivalencia en seis detalles. Fallo pertinente, no selector ambiguo.
+- [x] GREEN: desacoplar label de `contactContent.actions[0]` e invitaciones locales; prop C-NAV estable. Header servidor, frontera cliente pequeña, sin modal.
+- [x] RED → GREEN: selección cierra menú; Process de la misma página enfoca heading visible bajo header; Escape devuelve foco al trigger, cerrado no hace nada. Cubrir click/touch/Enter, otras rutas, reduced motion, no-JS.
+- [x] Footer con dos grupos compactos y fila idioma/copyright con año de build, valores email/teléfono legibles, orden WhatsApp → email → teléfono. Retirar solo Contact duplicado del header, conservar enlace footer.
+- [x] Refactor verde, matriz/gates, bytes JS incremental, evidencia/diff y PR.
 
 **Visual/aceptación:** label/destino coherentes en veinte rutas; sin overflow a 1024 ni letra reducida; targets conservados, footer envuelve en ambos idiomas, anclas visibles tras asentarse scroll, sin focus trap/foco oculto. Sin JS, `<details>` y links siguen útiles; no exigir cierre mejorado al fallback. Focal: `node --test scripts/site-header.test.mjs scripts/foundation-content.test.mjs scripts/site-routes.test.mjs`; `npx playwright test tests/e2e/marketing-navigation.spec.ts --project=chromium-desktop`, luego motores/perfiles de la matriz.
 
@@ -116,12 +116,12 @@ Interfaces permitidas: view models locales, selección editorial, campos diferen
 
 **Archivos:** `components/projects/{ProjectsPage,ProjectCard,ProjectDetailPage}.tsx`, `content-types.ts`, `lib/projects/publication.ts`, ambos `_content/projects.ts` y `_content/founder.ts`; `components/founder/FounderProfessionalHistory.tsx`, `content-types.ts`; rutas detalle existentes. Tests: `scripts/projects-publication.test.mjs`, `project-details.test.mjs`, `projects-route.test.mjs`, `verify-static-export.mjs`; nueva `tests/e2e/marketing-projects.spec.ts`, ampliar `accessibility.spec.ts` y perfiles.
 
-- [ ] RED: índice selecciona GRS/Lab, pero conserva tres registros públicos y seis detalles/equivalencias, MPC alcanzable desde educación; permisos fail-closed.
-- [ ] RED: `getPublishedProjectDetail(content, slug, locale)` conserva Publication scope localizado. El spread actual finaliza con `publicationScope: entry.publicationScope` y sobrescribe prosa con enum.
-- [ ] GREEN: separar campo interno de permiso del texto en `ResolvedProjectDetail` y renderer, preservando firma/validación; selección editorial independiente de `publishedProjectManifest`. Test de párrafo completo ES/EN y ausencia de `limited` como prosa.
-- [ ] Aplicar C-PROJECTS/C-ITEMS; GRS principal, Lab secundario/RPG visible. Añadir teaser MPC en el mismo PR que retira su card del índice; conservar año, grupo, fábrica ficticia y no autoría exclusiva; MPC nunca PRIVATE/RETIRED para ocultarlo.
-- [ ] Agrupar detalles en contexto, alcance, evidencia/limitaciones, siguientes destinos. Conservar captions/alt/media conceptual. MPC vuelve a Founder, relación interna Web solo procedencia, sin puente comercial renderizado.
-- [ ] GREEN/refactor, QA/gates/diff; MKT-PROOF-003 parcialmente resuelto, sin atribuir runtime verification a los repositorios fuente.
+- [x] RED: índice selecciona GRS/Lab, pero conserva tres registros públicos y seis detalles/equivalencias, MPC alcanzable desde educación; permisos fail-closed.
+- [x] RED: `getPublishedProjectDetail(content, slug, locale)` conserva Publication scope localizado. El spread actual finaliza con `publicationScope: entry.publicationScope` y sobrescribe prosa con enum.
+- [x] GREEN: separar campo interno de permiso del texto en `ResolvedProjectDetail` y renderer, preservando firma/validación; selección editorial independiente de `publishedProjectManifest`. Test de párrafo completo ES/EN y ausencia de `limited` como prosa.
+- [x] Aplicar C-PROJECTS/C-ITEMS; GRS principal, Lab secundario/RPG visible. Añadir teaser MPC en el mismo PR que retira su card del índice; conservar año, grupo, fábrica ficticia y no autoría exclusiva; MPC nunca PRIVATE/RETIRED para ocultarlo.
+- [x] Agrupar detalles en contexto, alcance, evidencia/limitaciones, siguientes destinos. Conservar captions/alt/media conceptual. MPC vuelve a Founder, relación interna Web solo procedencia, sin puente comercial renderizado.
+- [x] GREEN/refactor, QA/gates/diff; MKT-PROOF-003 parcialmente resuelto, sin atribuir runtime verification a los repositorios fuente.
 
 **Visual/aceptación:** GRS aproximadamente 7/12–5/12 en ancho; Lab fila compacta; mobile apilado. Limitaciones junto a claims y limitación concisa junto al teaser. Seis detalles/equivalencias intactos; sin imágenes en Home/índice ni nuevos claims de ejecución/clientes/pagos/resultados. Focal: `node --test scripts/projects-publication.test.mjs scripts/project-details.test.mjs scripts/projects-route.test.mjs`; `npx playwright test tests/e2e/marketing-projects.spec.ts --project=chromium-desktop`, luego matriz.
 
@@ -131,12 +131,12 @@ Interfaces permitidas: view models locales, selección editorial, campos diferen
 
 **Dependencia:** merge humano T2. **Autoridad/copy:** C-HERO/C-HOME, D01/D02/D05-HOME/D04; PAGE-HOME, BRAND-POSITIONING, AUDIENCES-SERVICES, PROJECT-EVIDENCE; DESIGN-VISUAL VIS-R1.1/R1.2/R1.3 y cierre aplicable R1.8; DESIGN-IX-A11Y Process. H1 literal desde fila H1 D02.
 
-**Archivos:** ambos `_content/home.ts`, `components/foundation/HomeHero.tsx`, `components/homepage/{CommercialHomepage,HomeProblems,HomeAudiences,HomeServices,HomeProof,HomeProcess,HomeFounder,HomeCta}.tsx`, `content-types.ts`. Retirar componente solo tras probar ausencia de consumidores. Tests: `scripts/homepage-content.test.mjs`, `foundation-content.test.mjs`, `verify-static-export.mjs`; `tests/e2e/smoke.spec.ts`, `responsive.spec.ts`, `accessibility.spec.ts` y perfiles.
+**Archivos:** ambos `_content/home.ts`, `components/foundation/HomeHero.tsx`, `components/homepage/{CommercialHomepage,HomeProblems,HomeServices,HomeProof,HomeProcess,HomeFounder,HomeCta}.tsx`, `content-types.ts`; se retiró `HomeAudiences.tsx` después de probar ausencia de consumidores. Tests: `scripts/homepage-content.test.mjs`, `foundation-content.test.mjs`, `verify-static-export.mjs`; `tests/e2e/smoke.spec.ts`, `responsive.spec.ts`, `accessibility.spec.ts` y perfiles.
 
-- [ ] RED: siete roles narrativos, hero D02 completo, audiencia integrada, único puente genérico a Projects desde proof; sin nombres/cards/media de proyectos; tres resúmenes de servicio y cuatro pasos/fragmentos conservados.
-- [ ] GREEN: todas las filas C-HERO/C-HOME bilingües; retirar sección independiente Audiences y simplificar puente Founder. Cierre demo solo desde PAGE-HOME.
-- [ ] Hero padding 48/64/96px; tres situaciones sin cards; servicios como comparación; proof sin panel. Cierre corto a izquierda, sin aviso global.
-- [ ] GREEN/refactor, recorridos Services/Projects/Founder/Contact, QA visual/manual, gates, evidencia y PR.
+- [x] RED: siete roles narrativos, hero D02 completo, audiencia integrada, único puente genérico a Projects desde proof; sin nombres/cards/media de proyectos; tres resúmenes de servicio y cuatro pasos/fragmentos conservados.
+- [x] GREEN: todas las filas C-HERO/C-HOME bilingües; retirar sección independiente Audiences y simplificar puente Founder. Cierre demo solo desde PAGE-HOME.
+- [x] Hero padding 48/64/96px; tres situaciones sin cards; servicios como comparación; proof sin panel. Cierre corto a izquierda, sin aviso global.
+- [x] GREEN/refactor, recorridos Services/Projects/Founder/Contact, QA visual/manual, gates, evidencia y PR.
 
 **Visual/aceptación:** siete secciones incluyendo hero con roles distintos; oferta/problema prioritario comprensibles; wrapping natural ES/EN sin saltos manuales ni reducción tipográfica. No inventar imagen para llenar espacio. Focal: `node --test scripts/homepage-content.test.mjs scripts/foundation-content.test.mjs`; `npx playwright test tests/e2e/smoke.spec.ts tests/e2e/responsive.spec.ts --project=chromium-desktop --project=mobile-chromium`, completando cinco tamaños efectivos/matriz.
 
@@ -240,12 +240,40 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 | Tarea | Estado inicial | Dependencia / evidencia |
 | --- | --- | --- |
 | T0 | PR listo para revisión humana | [PR #54](https://github.com/Furlanich/Portfolio/pull/54), base main 7062bda, TypeSafe `b29040e`, plan/sincronización `1351961`; sin merge. |
-| T1 | No iniciada | Único siguiente PR; merge humano T0. |
-| T2 | No iniciada | Merge humano T1. |
-| T3 | No iniciada | Merge humano T2. |
+| T1 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; navegación/footer y sus pruebas quedaron en `7dee240`. |
+| T2 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; evidencia/proyectos y sus pruebas quedaron en `7dee240`. |
+| T3 | PR listo para revisión humana | `fb3ef88`, base `4d0280b`; Home bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
 | T4 | No iniciada | Merge humano T3. |
 | T5 | No iniciada | Merge humano T4. |
 | T6 | No iniciada | Merge humano T5; pendientes explícitos al cierre. |
+
+### Ejecución T1/T2 confirmada y handoff de T3
+
+T1 y T2 quedaron incorporadas en el PR humano [#55](https://github.com/Furlanich/Portfolio/pull/55), mergeado sobre el main vigente en `4d0280b` desde `7dee240`. El PR cubrió navegación/footer y evidencia seleccionada/proyectos; por eso la dependencia de T3 se considera satisfecha. No se reescribe la historia de esos PRs.
+
+T3 se implementó en `fb3ef88` (`feat(marketing): refine homepage positioning`), rama `codex/marketing-presentation-pr3-home`, base `4d0280b`. Archivos: ambos contenidos Home, `HomeHero`, composición y secciones Home, tipos, pruebas de contenido/primitivas/export estático y smoke/responsive; `HomeAudiences.tsx` fue eliminado tras `rg` sin consumidores en `app/` ni `components/`. Hallazgos y autoridad: MKT-POS-001, MKT-HOME-001/002/003, MKT-CONV-002; partes MKT-STUDIO-002, MKT-VIS-001/004 y MKT-COPY-001/002; C-HERO/C-HOME, D01/D02/D05-HOME/D04, PAGE-HOME, R1.1/R1.2/R1.3/R1.8 y Process de accesibilidad.
+
+El RED focal observado fue `node --test scripts/homepage-content.test.mjs` con exit 1 y dos fallos de headings anteriores; el GREEN posterior pasó con exit 0 y dos pruebas. La validación completa quedó así:
+
+| Comando / contexto | Resultado observado |
+| --- | --- |
+| `npm test` | Exit 0: 107 pruebas. |
+| `npm run lint` | Exit 0. |
+| `npm run typecheck` | Exit 0. |
+| `npm run build` | Exit 0: 22 páginas estáticas. |
+| `npm run verify:static-export` | Exit 0: 20 rutas, base `/`. |
+| `npm run test:e2e` | Exit 0: 525 passed, 80 skipped; matriz completa configurada, incluyendo Chromium/Firefox/WebKit, responsive y axe/visual existentes. |
+| `npm run test:a11y` | Exit 0: 16 pruebas. |
+| `npm run docs:check` | Exit 0: 92 Markdown, 74 IDs, 11 Skills. |
+| `npm run skills:check` | Exit 0: 4 Skills, 8 archivos íntegros. |
+| `git diff --check` | Exit 0. |
+| `set NEXT_PUBLIC_BASE_PATH=/Portfolio && npm run build` | Exit 0: 22 páginas estáticas. |
+| `set NEXT_PUBLIC_BASE_PATH=/Portfolio && npm run verify:static-export` | Exit 0: 20 rutas, base `/Portfolio`. |
+| smoke/responsive focal | Exit 0: 18 pruebas en Chromium desktop y mobile Chromium. |
+
+Rutas y comportamiento: Home ES `/` y EN `/en/`, recorridos visibles a Services, Projects, Founder y Contact, export root y `/Portfolio`; la suite E2E se ejecutó en su servidor root y cubrió los perfiles configurados. El render mantiene siete secciones con roles distintos, wrapping natural bilingüe, tres situaciones sin cards, servicios comparables, proof sin panel, puente único a Projects y cierre demo solo de Home. No se añadieron imágenes, fuentes, librerías, rutas, requests, campos ni destinos nuevos.
+
+QA visual/manual: se capturaron renders ES/EN ancho y estrecho mediante Playwright fuera de Git y pasaron las capturas automatizadas existentes; la inspección visual manual no pudo completarse porque el helper de pantalla falló repetidamente con `helper_unknown_error: setup refresh had errors`. No se declara PASS manual para esa capa; la limitación queda abierta para revisión humana. No hubo desviaciones de copy: el proof commitment aprobado se expresa en el intro editorial D05, sin panel, conforme a VIS-R1.3/R1.8. Advertencias no bloqueantes: warnings existentes de `NO_COLOR`, LCP de imágenes de detalles y normalización LF/CRLF; no se cambió configuración para silenciarlos.
 
 ### Validación del PR de planificación
 
