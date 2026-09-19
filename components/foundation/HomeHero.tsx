@@ -15,7 +15,7 @@ export function HomeHero({ content, paths }: HomeHeroProps) {
   return (
     <section
       aria-labelledby="home-heading"
-      className="bg-foundation-canvas py-20 md:py-24 lg:py-32"
+      className="bg-foundation-canvas py-12 md:py-16 lg:py-24"
     >
       <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-6 px-5 md:px-8 lg:grid-cols-12 lg:px-12">
         <div className="min-w-0 lg:col-span-8">

@@ -1,15 +1,20 @@
 import { expect, test } from '@playwright/test';
 import { appUrl, stableRoutes } from './support/paths';
 
-test('the homepage reflows without horizontal document overflow', async ({ page }) => {
-  await page.goto(appUrl(stableRoutes.home.es));
-  const dimensions = await page.evaluate(() => ({
-    clientWidth: document.documentElement.clientWidth,
-    scrollWidth: document.documentElement.scrollWidth,
-  }));
+for (const [locale, route] of [
+  ['Spanish', stableRoutes.home.es],
+  ['English', stableRoutes.home.en],
+] as const) {
+  test(`${locale} homepage reflows without horizontal document overflow`, async ({ page }) => {
+    await page.goto(appUrl(route));
+    const dimensions = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
 
-  expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
-});
+    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+  });
+}
 
 test('the primary navigation matches the compact or wide interaction model', async ({ page }, testInfo) => {
   await page.goto(appUrl(stableRoutes.home.es));

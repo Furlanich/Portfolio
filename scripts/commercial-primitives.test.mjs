@@ -33,7 +33,6 @@ test('promotes the homepage primitives without changing their public markup cont
   assert.match(card, /className="mt-3 text-base leading-\[26px\] text-foundation-muted"/);
 
   const homepageFiles = [
-    'HomeAudiences.tsx',
     'HomeFounder.tsx',
     'HomeProcess.tsx',
     'HomeProblems.tsx',
@@ -48,4 +47,6 @@ test('promotes the homepage primitives without changing their public markup cont
 
   assert.equal(fs.existsSync(path.join(root, 'components/homepage/HomepageSectionHeading.tsx')), false);
   assert.equal(fs.existsSync(path.join(root, 'components/homepage/HomepageContentCard.tsx')), false);
+  assert.equal(fs.existsSync(path.join(root, 'components/homepage/HomeAudiences.tsx')), false);
+  assert.doesNotMatch(read('components/homepage/CommercialHomepage.tsx'), /HomeAudiences|audiences/);
 });

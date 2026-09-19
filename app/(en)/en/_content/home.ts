@@ -18,30 +18,14 @@ export const homeContent = {
   trustLine: 'Direct technical contact · Buenos Aires, Argentina · Projects in Spanish and English',
   availability: 'Available for projects across Argentina and internationally.',
   problems: {
-    heading: 'When manual work starts holding the business back',
-    introduction:
-      'A digital solution makes sense when it reduces repetitive work, prevents errors, or helps you serve customers better. These are some of the problems FURLANICH can help you solve.',
+    heading: 'When work is spread across tools',
+    introduction: 'When work is spread across tools',
+    audienceStatement:
+      'For small and medium-sized businesses managing orders, bookings or customer service, or improving an existing system.',
     situations: [
-      {
-        title: 'Scattered orders and bookings',
-        description:
-          'Enquiries spread across messages, calls, spreadsheets, and notes that are difficult to keep up to date.',
-      },
-      {
-        title: 'Processes that take too much time',
-        description:
-          'Administrative or customer-service work that could be connected, simplified, or automated.',
-      },
-      {
-        title: 'A web presence that does not support the business',
-        description:
-          'Sites that provide information but do not let customers book, buy, place an order, or start a request.',
-      },
-      {
-        title: 'Software that is difficult to maintain',
-        description:
-          'Unstable or outdated systems without a clear technical direction.',
-      },
+      'Orders and bookings reorganized by hand.',
+      'Repeated questions that interrupt work.',
+      'Systems that do not share information or need improvement.',
     ],
     action: {
       label: 'See how we can help',
@@ -50,8 +34,7 @@ export const homeContent = {
   },
   servicesSection: {
     heading: 'Services for concrete business needs',
-    introduction:
-      'We do not force a generic platform. First we understand the process, then decide whether building, integrating, or modernizing is the right approach.',
+    introduction: 'Build, connect or improve, depending on the problem.',
     services: [
       {
         title: 'Business websites and web applications',
@@ -74,84 +57,33 @@ export const homeContent = {
       routeId: 'services',
     },
   },
-  audiences: {
-    heading: 'Built for businesses with real operations',
-    audiences: [
-      {
-        title: 'Retailers and shops',
-        description:
-          'Catalogues, orders, enquiries, payments, and tools for organizing day-to-day operations.',
-      },
-      {
-        title: 'Restaurants and food-service businesses',
-        description:
-          'Menus, orders, bookings, confirmations, and customer-service channels.',
-      },
-      {
-        title: 'Transport and logistics',
-        description:
-          'Requests, coordination, tracking, and information for passengers or customers.',
-      },
-      {
-        title: 'Professional services and consultancies',
-        description:
-          'Portals, automations, integrations, and technical capacity for projects or existing systems.',
-      },
-    ],
-    closing:
-      'If your sector is not listed, the starting point is still the same: understand the process, the problem, and the outcome you need.',
-    action: {
-      label: 'Tell us how your business works',
-      routeId: 'contact',
-    },
-  },
   proof: {
-    heading: 'Credibility without inflated claims',
+    heading: 'Clear technical accountability',
     introduction:
-      'FURLANICH only presents work when its context, status, and publication permission are clear. We do not turn prototypes into client stories or publish metrics without a verifiable source.',
-    commitments: [
-      {
-        title: 'Direct accountability',
-        description: 'Samuel retains technical responsibility for every FURLANICH project.',
-      },
-      {
-        title: 'Verifiable claims',
-        description:
-          "A project's status, scope, and limitations are explained before it is used as evidence.",
-      },
-      {
-        title: 'Confidentiality respected',
-        description:
-          'Client identities, screenshots, and results are published only with explicit permission.',
-      },
-    ],
+      'Samuel is involved in defining the problem, technical decisions and review of the work. Scope and validation are agreed around each need.',
     action: {
-      label: "View Samuel's background",
-      routeId: 'founder',
+      label: 'Explore projects and their limitations',
+      routeId: 'projects',
     },
   },
   process: {
-    heading: 'From a concrete need to a maintainable solution',
+    heading: 'How we work',
     steps: [
       {
-        title: 'Understand and diagnose',
-        description:
-          'We learn how the business works, what the problem is, who uses the process, and which constraints matter. If it is not yet clear what to build, we first clarify the need.',
+        title: 'Understand',
+        description: 'Review the process and the problem.',
       },
       {
-        title: 'Define the scope',
-        description:
-          'We document objectives, deliverables, boundaries, risks, responsibilities, and a clear proposal for the work.',
+        title: 'Define',
+        description: 'Agree scope, responsibilities and deliverables.',
       },
       {
-        title: 'Build and validate',
-        description:
-          'We work through reviewable deliveries, testing, and validation so issues are found before production.',
+        title: 'Build and review',
+        description: 'Check important user journeys.',
       },
       {
-        title: 'Launch and support',
-        description:
-          'We prepare the release, documentation, and agreed follow-up so the solution can be used and maintained.',
+        title: 'Hand over',
+        description: 'Document use and agree next steps.',
       },
     ],
     qualityStatement:
@@ -163,13 +95,8 @@ export const homeContent = {
   },
   founderSection: {
     heading: 'Direct technical responsibility',
-    biography:
-      'FURLANICH is led by Samuel Furlanich, a full-stack software developer who completed his Computer Science studies at the University of Buenos Aires. Samuel retains direct technical responsibility for every project and brings in specialist collaborators when the scope requires them.',
-    primaryAction: {
-      label: "Let's talk about your project",
-      routeId: 'contact',
-    },
-    secondaryAction: {
+    biography: 'Samuel Furlanich leads FURLANICH. Explore his experience and background.',
+    action: {
       label: 'Meet Samuel',
       routeId: 'founder',
     },
@@ -178,8 +105,7 @@ export const homeContent = {
     heading: 'Do you have a concrete need or a system that needs attention?',
     description:
       'Tell us briefly what you need to solve. Samuel will personally review your inquiry to determine whether it makes sense to continue with a conversation.',
-    responseStatement:
-      'Usual response time is within the same business day. In exceptional cases, it may take up to two business days.',
+    demoStatement: 'Explore the contact options and try the demonstration form. The form does not send inquiries.',
     primaryAction: {
       label: 'Tell us about your project',
       routeId: 'contact',
