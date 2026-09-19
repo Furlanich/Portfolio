@@ -176,10 +176,10 @@ Interfaces permitidas: view models locales, selección editorial, campos diferen
 
 **Dependencia:** merge humano T5. **Autoridad/copy:** todos los propietarios C-NAV a C-FOUNDER y D03 baseline; ninguna nueva fuente. **Archivos:** este plan, índices/estado, propietarios factuales, nueva comparación `docs/reviews/marketing-presentation-excellence-v1/index.md`, pruebas afectadas. Cada ajuste final de producto debe identificar MKT completo y requisito ya aprobado.
 
-- [ ] Auditar veinte rutas ES/EN contra informe original y propietarios actuales. Repuntuar posicionamiento, Home, Services, evidencia, Studio, Founder, Contact, navegación, calidad visual, confianza, conversión, mobile y copy ES/EN con razones observables.
-- [ ] Conservar informe original; publicar comparación por hallazgo: resuelto, parcialmente resuelto, pendiente por decisión o diferido, enlazando PR/evidencia. Confirmar MKT-DOC-001 y pendientes de la tabla de límites.
-- [ ] Matriz completa root y `/Portfolio` secuencial; repetir cero transmisión/estados Contact, CV, links profesionales, seis detalles y restricciones de evidencia. Ajustes finales solo desviaciones de requisitos aceptados, con RED/GREEN si cambia comportamiento.
-- [ ] Registrar revisión visual/manual, resultados/limitaciones y diff; pr-readiness y revisión humana. No puntuación artificial ni perfección inferida de tests verdes; alcance aprobado puede completarse con pendientes Contact/evidencia explícitos.
+- [x] Auditar veinte rutas ES/EN contra informe original y propietarios actuales. Repuntuar posicionamiento, Home, Services, evidencia, Studio, Founder, Contact, navegación, calidad visual, confianza, conversión, mobile y copy ES/EN con razones observables en la [comparación T6](../../reviews/marketing-presentation-excellence-v1/index.md).
+- [x] Conservar informe original; publicar comparación por hallazgo: resuelto, parcialmente resuelto, pendiente por decisión o diferido, enlazando PR/evidencia. Confirmar MKT-DOC-001 y pendientes de la tabla de límites.
+- [x] Ejecutar la matriz completa root y `/Portfolio` secuencialmente; repetir cero transmisión/estados Contact, CV, links profesionales, seis detalles y restricciones de evidencia. No hubo desviación de requisito aprobado que requiriera cambio de producto.
+- [x] Registrar revisión visual automatizada y limitaciones de revisión manual, resultados y diff; preparar pr-readiness y revisión humana. No se asigna perfección a partir de tests verdes; Contact/evidencia permanecen explícitamente pendientes o diferidos.
 
 **Visual/aceptación:** coherencia entre páginas, cierres y chrome; límites/evidencia legibles, sin contradicciones de copy/permisos. Comparación auditable de mejoras/pendientes. Tras aceptación humana final mover este mismo plan a completed con historia intacta, actualizar enlaces/plan_status; no crear otro plan.
 
@@ -244,8 +244,8 @@ Completar para cada tarea en este mismo plan: PR/commit/base, archivos, MKT y pr
 | T2 | Completada en PR #55 | PR #55 mergeado en `4d0280b`; evidencia/proyectos y sus pruebas quedaron en `7dee240`. |
 | T3 | Completada en PR #56 | PR #56 mergeado en `667ca419`; Home bilingüe y pruebas/gates ejecutados. |
 | T4 | Completada en PR #57 | PR #57 mergeado en `a45a213`; implementación `b998cdc`, base `667ca419`; Services buyer-evaluation, pruebas/gates ejecutados y registro detallado abajo. |
-| T5 | [PR #58](https://github.com/Furlanich/Portfolio/pull/58) abierto para revisión humana | `ba2a06a` + registro `715c079`, rama `codex/marketing-presentation-pr5-studio-founder`, base `a45a213`; Studio/Founder bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
-| T6 | No iniciada | Merge humano T5; pendientes explícitos al cierre. |
+| T5 | Completada en PR #58 | ba2a06a + registro 715c079, rama codex/marketing-presentation-pr5-studio-founder, base a45a213; Studio/Founder bilingüe, pruebas/gates ejecutados y registro detallado abajo. |
+| T6 | [PR #59](https://github.com/Furlanich/Portfolio/pull/59) abierto para revisión humana | Rama codex/marketing-presentation-pr6-final-audit, base d2fccf1; comparación auditable, matriz root/Portfolio, límites y revisión de documentación registrados abajo. |
 
 ### Ejecución T4 y estado de T1/T2/T3
 
@@ -303,8 +303,22 @@ Rutas y contextos: Studio `/estudio/` y `/en/about/`; Founder `/estudio/samuel-f
 
 QA visual: las seis capturas Playwright existentes de Studio/Founder se regeneraron para el navegador Windows local y el proyecto visual pasó. La inspección visual manual no pudo declararse PASS porque el helper de imagen/CUA falló con `helper_unknown_error: setup refresh had errors`; queda expresamente para revisión humana. El entorno local tampoco pudo iniciar el runtime Linux de Docker/WSL (virtualización deshabilitada), por lo que las baselines `-linux` no se regeneraron localmente. El primer `Quality` de Ubuntu confirmó seis baselines Linux obsoletas, con diferencias estables en ambos intentos; las seis capturas `actual` del artefacto de ese run se adoptaron como las baselines `-linux` en `385d6df`, sin debilitar assertions ni copiar baselines entre plataformas. El `Quality` posterior pasó completo, incluidas las seis pruebas visuales. Advertencias no bloqueantes: `NO_COLOR`/`FORCE_COLOR`, Browserslist desactualizado, hints LCP de imágenes existentes, `scroll-behavior: smooth`, `MODULE_TYPELESS_PACKAGE_JSON` y 8 vulnerabilidades del `npm ci`; no se modificaron para silenciarlas.
 
-El plan permanece `ACTIVE`; [PR #58](https://github.com/Furlanich/Portfolio/pull/58) queda abierto para revisión humana. No se hace merge autónomo.
+El plan permanecía `ACTIVE` en el cierre de T5; [PR #58](https://github.com/Furlanich/Portfolio/pull/58) fue posteriormente mergeado por revisión humana. No se hace merge autónomo.
 
+### Ejecución T6 — auditoría final y comparación
+T5 quedó satisfecho por el merge humano de PR #58 en `d2fccf16146dbdef7c6ad8a318a31980545d790d`, posterior a la base `a45a213b51a68b42a6a4c11ac903f146256fd60d`. T6 se ejecuta en la rama `codex/marketing-presentation-pr6-final-audit`, con esa revisión como base. No se reescribe la implementación ni la evidencia histórica de T1–T5.
+Se publicó la [comparación T6](../../reviews/marketing-presentation-excellence-v1/index.md), que conserva el [informe original](../../reviews/marketing-presentation-2026-09-15/index.md) y reconcilia los 36 hallazgos MKT con los PRs #55–#58, los propietarios vigentes y los límites D03. La comparación re-puntúa las 15 áreas con heurísticas explícitas y razones observables; no convierte pruebas verdes en evidencia comercial ni modifica decisiones. El resultado global orientativo es 6.8/10 frente a 5.8/10 inicial, con Contact 5/10 y Trust 5.5/10 preservados por la falta de decisión D03 y de evidencia de runtime/resultados.
+La auditoría cubrió las 20 rutas ES/EN del plan, seis detalles localizados, CV/LinkedIn/GitHub, navegación/footer, Contact y límites de publicación. El resultado de la matriz completa fue:
+| Comando / contexto | Resultado observado |
+| --- | --- |
+| `npm test` | Exit 0: 107 pruebas antes de las ediciones documentales. |
+| `npm run test:e2e` root | Exit 0: 572 pasadas, 1 flaky recuperada en retry, 80 skipped; 653 entradas. |
+| `npm run test:e2e` `/Portfolio` | Exit 0: 572 pasadas, 1 flaky recuperada en retry, 80 skipped; 653 entradas. |
+| Visual root y `/Portfolio` | Exit 0: las 6 visuales de Founder/Studio pasaron en ambos contextos. |
+| Accessibility incluida en la matriz y suite dedicada | Exit 0: 16 pruebas por contexto; la suite dedicada `/Portfolio` pasó 16/16 en puerto fresco tras un panic interno transitorio de Turbopack. |
+Las dos ejecuciones registraron un flaky transitorio distinto y recuperado por retry: una carga Chromium de `/en/work/the-system/` en root y la validación móvil de Contact bajo `/Portfolio`. Se conserva el dato de primera ejecución; no se corrige código por una falla no reproducible. Advertencias de `NO_COLOR`/`FORCE_COLOR`, Browserslist, LCP, smooth-scroll, `MODULE_TYPELESS_PACKAGE_JSON` y advisories locales no bloquean T6 y no se alteraron.
+QA visual automatizado: las seis capturas Playwright de Founder/Studio pasaron en root y `/Portfolio`. La inspección manual de jerarquía, wrapping, foco, contraste, 200%, reduced motion, dispositivo real y lector de pantalla no pudo declararse PASS porque el helper de imagen/CUA falló con `helper_unknown_error: setup refresh had errors`; queda para revisión humana. No hubo ajustes de producto, rutas, assets, dependencias, processor Contact ni runtime de proyectos.
+El plan sigue `ACTIVE` hasta la aceptación humana del [PR #59](https://github.com/Furlanich/Portfolio/pull/59); la comparación, los índices y los límites están preparados para revisión. D03 sigue `REJECTED`, el informe original `PROPOSED`, y Contact/evidencia/identidad mantienen estados pendientes o diferidos explícitos.
 ### Ejecución T1/T2 confirmada y handoff de T3
 
 T1 y T2 quedaron incorporadas en el PR humano [#55](https://github.com/Furlanich/Portfolio/pull/55), mergeado sobre el main vigente en `4d0280b` desde `7dee240`. El PR cubrió navegación/footer y evidencia seleccionada/proyectos; por eso la dependencia de T3 se considera satisfecha. No se reescribe la historia de esos PRs.
