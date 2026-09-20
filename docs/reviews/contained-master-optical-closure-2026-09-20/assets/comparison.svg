@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">Contained Master optical comparison</title>
+  <desc id="desc">Candidates A, B and C with approved candidate B shown at multiple sizes, in reverse and beside the FURLANICH wordmark.</desc>
+  <rect width="1200" height="650" fill="#F9F6EE"/>
+  <style>
+    .label{font:600 18px Arial,sans-serif;fill:#09243D}.meta{font:14px Arial,sans-serif;fill:#526473}
+    .word{font:700 50px Arial,sans-serif;letter-spacing:4px;fill:#09243D}
+  </style>
+  <g transform="translate(60 70)">
+    <text class="label" x="128" y="-20" text-anchor="middle">A · WIDE HERALDIC</text>
+    <g fill="none" stroke="#004589" stroke-width="28" stroke-linecap="butt" stroke-linejoin="miter"><polyline points="24,94 128,32 232,94"/><polyline points="24,154 128,92 232,154"/><polyline points="24,214 128,152 232,214"/></g>
+  </g>
+  <g transform="translate(472 70)">
+    <text class="label" x="128" y="-20" text-anchor="middle">B · BALANCED CONTAINED · APPROVED</text>
+    <g fill="none" stroke="#004589" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter"><polyline points="30,102 128,28 226,102"/><polyline points="30,166 128,92 226,166"/><polyline points="30,230 128,156 226,230"/></g>
+  </g>
+  <g transform="translate(884 70)">
+    <text class="label" x="128" y="-20" text-anchor="middle">C · VERTICAL SIGNAL</text>
+    <g fill="none" stroke="#004589" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter"><polyline points="46,102 128,22 210,102"/><polyline points="46,172 128,92 210,172"/><polyline points="46,242 128,162 210,242"/></g>
+  </g>
+  <line x1="60" x2="1140" y1="370" y2="370" stroke="#D2DCE5"/>
+  <text class="label" x="60" y="410">APPROVED B · SCALE / REVERSE / LOCKUP STUDY</text>
+  <g transform="translate(60 440) scale(.58)"><g fill="none" stroke="#004589" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter"><polyline points="30,102 128,28 226,102"/><polyline points="30,166 128,92 226,166"/><polyline points="30,230 128,156 226,230"/></g></g>
+  <text class="meta" x="130" y="610" text-anchor="middle">160 px</text>
+  <g transform="translate(245 465) scale(.25)"><g fill="none" stroke="#004589" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter"><polyline points="30,102 128,28 226,102"/><polyline points="30,166 128,92 226,166"/><polyline points="30,230 128,156 226,230"/></g></g>
+  <text class="meta" x="277" y="610" text-anchor="middle">64 px</text>
+  <g transform="translate(340 490) scale(.125)"><g fill="none" stroke="#004589" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter"><polyline points="30,102 128,28 226,102"/><polyline points="30,166 128,92 226,166"/><polyline points="30,230 128,156 226,230"/></g></g>
+  <text class="meta" x="356" y="610" text-anchor="middle">32 px</text>
+  <g transform="translate(415 502) scale(.0625)"><g fill="none" stroke="#004589" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter"><polyline points="30,102 128,28 226,102"/><polyline points="30,166 128,92 226,166"/><polyline points="30,230 128,156 226,230"/></g></g>
+  <text class="meta" x="423" y="610" text-anchor="middle">16 px</text>
+  <g transform="translate(485 445)"><rect width="150" height="150" rx="12" fill="#004589"/><g transform="translate(18 18) scale(.445)" fill="none" stroke="#F9F6EE" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter"><polyline points="30,102 128,28 226,102"/><polyline points="30,166 128,92 226,166"/><polyline points="30,230 128,156 226,230"/></g></g>
+  <g transform="translate(690 450)"><g transform="scale(.48)" fill="none" stroke="#004589" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter"><polyline points="30,102 128,28 226,102"/><polyline points="30,166 128,92 226,166"/><polyline points="30,230 128,156 226,230"/></g><text class="word" x="160" y="90">FURLANICH</text></g>
+</svg>

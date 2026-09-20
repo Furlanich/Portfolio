@@ -4,6 +4,7 @@ type: documentation-index
 status: APPROVED
 related:
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
   - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
@@ -91,4 +92,4 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 
 ## Visual identity and immersive experience v1 — APPROVED FOR PLANNING
 
-[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](rfcs/visual-identity-immersive-experience-v1.md) established the identity and prototype boundary. The approved [throwaway prototype review](reviews/immersive-homepage-prototype-2026-09-19/index.md) records the bilingual five-width matrix, failure behavior, direct Three.js feasibility, React Three Fiber 8 incompatibility and payload evidence. [`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](rfcs/adaptive-immersive-homepage-production-v1.md) approves C2 Adaptive System Instrument, the governed hybrid-media boundary, responsive choreography and production gates. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](decisions/adaptive-immersive-homepage.md) supersedes the earlier prototype ADR. A versioned execution plan is now authorized; production implementation remains blocked until that plan is approved.
+[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](rfcs/visual-identity-immersive-experience-v1.md) established the identity and prototype boundary. The approved [throwaway prototype review](reviews/immersive-homepage-prototype-2026-09-19/index.md) records the bilingual five-width matrix, failure behavior, direct Three.js feasibility, React Three Fiber 8 incompatibility and payload evidence. [`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](rfcs/adaptive-immersive-homepage-production-v1.md) approves C2 Adaptive System Instrument, the governed hybrid-media boundary, responsive choreography and production gates. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](decisions/adaptive-immersive-homepage.md) supersedes the earlier prototype ADR. The [G0/G1 review](reviews/contained-master-optical-closure-2026-09-20/index.md) approves Balanced Contained as the exact protected geometry and Operational Clarity as the exact bilingual chapter voice. The versioned execution plan remains PROPOSED; production implementation remains blocked until that plan is approved.

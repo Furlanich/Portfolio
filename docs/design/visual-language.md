@@ -4,6 +4,7 @@ type: design-spec
 status: APPROVED
 related:
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
   - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
@@ -411,7 +412,41 @@ The primary lockup is the symbol followed by the exact wordmark `FURLANICH`. The
 
 The master mark is protected. It does not stretch, crop, rotate, separate, morph or become scene geometry. The immersive homepage uses a separate derived sculpture that may fragment and reconnect.
 
-Exact optical geometry, clear space and minimum sizes remain **OPEN** until vector refinement is reviewed. Production assets cannot be inferred from the design-reference raster or the prototype.
+#### Contained Master G0 optical closure — APPROVED
+
+**Approved 2026-09-20.** The repository owner selected **Geometry B — Balanced Contained** in [REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20](../reviews/contained-master-optical-closure-2026-09-20/index.md).
+
+The canonical construction is deterministic:
+
+- SVG coordinate system: `viewBox="0 0 256 256"`;
+- three open chevron centerlines:
+  - `30,102 128,28 226,102`;
+  - `30,166 128,92 226,166`;
+  - `30,230 128,156 226,230`;
+- constant band width `x = 30` units;
+- `stroke-linecap="butt"`, `stroke-linejoin="miter"` and `stroke-miterlimit="4"`;
+- no rounding, taper, layer-to-layer weight change or hidden/cropped endpoint.
+
+Production exports may convert the strokes to outlined paths, but the rendered silhouette and control-point geometry cannot change.
+
+Placement and sizing rules:
+
+- clear space is at least `1x` measured outward from the rendered silhouette on every side;
+- horizontal-lockup gap is `1.25x` between the rendered symbol and wordmark;
+- the symbol and wordmark are optically centered; the symbol is not forced onto the text baseline;
+- the wordmark remains exact uppercase `FURLANICH`, Instrument Sans 700, with `0.08em` tracking;
+- icon-only minimum is 16 CSS px digitally and 6 mm in print;
+- horizontal-lockup minimum is 128 CSS px digitally and 32 mm in print;
+- below the lockup minimum, use the protected icon only when context identifies FURLANICH, or use the text wordmark alone;
+- the 16 px favicon uses the same geometry. There is no simplified alternate mark.
+
+Approved variants are azure `#004589` on bone `#F9F6EE`, bone on azure and a single flat ink/white reproduction when a one-color medium requires it. Layers never receive different colors. Transparency may replace the background only when the surrounding approved surface supplies the required contrast.
+
+Invalid uses include cropping, stretching, skewing, rotating, rounding, outlining as a decorative effect, adding gradients/shadows, changing individual layer color or weight, removing a layer, changing the equal cadence, placing the mark inside an unrelated container, or using the protected mark as animated scene geometry.
+
+The durable comparison below records the approved candidate beside the two rejected refinements and at representative digital sizes.
+
+![Contained Master optical comparison](../reviews/contained-master-optical-closure-2026-09-20/assets/comparison.svg)
 
 ### Color roles
 
@@ -483,10 +518,9 @@ Every asset is classified as brand motion, demonstration or project evidence. Hi
 
 The exploratory C2 concept image is a review aid only. Its navigation, small captions, glass details, platform and generated interface are not approved production requirements.
 
-### Open visual items
+### Remaining open visual items
 
 The following remain **OPEN** for asset review without changing the approved composition:
 
-- final optical geometry, clear space and minimum sizes for the Contained Master;
 - exact Connection-film shot list and production tool;
 - final poster artwork and video encodes within the accepted budgets.

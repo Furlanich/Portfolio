@@ -4,6 +4,7 @@ type: page-spec
 status: APPROVED
 related:
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
+  - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - BRAND-POSITIONING
   - AUDIENCES-SERVICES
@@ -14,7 +15,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-19
+last_verified: 2026-09-20
 ---
 
 # Spanish homepage
@@ -540,3 +541,49 @@ Accepted source order under D05: global demo notice → HOME-HERO → HOME-PROBL
 | Final conditional inquiry/response paragraph | Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario. | Explore the contact options and try the demonstration form. The form does not send inquiries. | Current demo mode; primary label from D02, no response-time line |
 
 Services card text not listed for replacement remains approved. Other copy within a removed block is retired from that location only. Accepted Home keeps seven semantic sections after consolidation, with distinct relevance, offer, trust, process, person and next-action roles. The low-fidelity study uses these roles; it does not approve final spacing or type changes.
+
+## IMMERSIVE-HOME-G1 — Operational Clarity copy — APPROVED
+
+**Approved 2026-09-20.** The repository owner selected **Copy 1 — Operational Clarity** in [REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20](../../reviews/contained-master-optical-closure-2026-09-20/index.md).
+
+This copy belongs to the C2 Adaptive System Instrument. It supplements the approved hero without replacing its category, H1, support, CTA, accountability or availability meaning.
+
+### Instrument interface
+
+| Element | Spanish | English |
+| --- | --- | --- |
+| Instrument label | `FURLANICH · Del proceso al sistema` | `FURLANICH · From process to system` |
+| Phase-status template | `ETAPA {current} DE 04` | `PHASE {current} OF 04` |
+| Pause control | `Pausar movimiento` | `Pause motion` |
+| Resume control | `Reanudar movimiento` | `Resume motion` |
+
+`{current}` is zero-padded from `01` through `04`. The phase status is visible compact metadata, not an assertive live-region announcement during scroll.
+
+### Spanish chapters
+
+| Sequence / stable state | Heading | Description |
+| --- | --- | --- |
+| `01 / recognition` | `Reconocer el sistema real` | `Pedidos, reservas, mensajes y tareas ya conviven en un mismo negocio. El primer paso es entender cómo se relacionan.` |
+| `02 / fragmentation` | `Ver dónde se fragmenta` | `Cuando la información cambia de canal y se repite, la operación depende de más controles manuales.` |
+| `03 / connection` | `Conectar lo que importa` | `Una solución bien definida reúne datos, reglas y acciones sin sumar complejidad innecesaria.` |
+| `04 / coordination` | `Coordinar el trabajo` | `El sistema acompaña el proceso real y deja una base que puede mantenerse y adaptarse cuando cambia el negocio.` |
+
+### English chapters
+
+| Sequence / stable state | Heading | Description |
+| --- | --- | --- |
+| `01 / recognition` | `Recognize the real system` | `Orders, bookings, messages, and tasks already coexist in one business. The first step is understanding how they relate.` |
+| `02 / fragmentation` | `See where it fragments` | `When information changes channels and is repeated, operations depend on more manual checks.` |
+| `03 / connection` | `Connect what matters` | `A well-defined solution brings data, rules, and actions together without adding unnecessary complexity.` |
+| `04 / coordination` | `Coordinate the work` | `The system supports the real process and creates a foundation that can be maintained and adapted as the business changes.` |
+
+### Presentation and claim boundary
+
+- Route-owned locale modules own these exact strings. Shared components contain no locale branching or replacement prose.
+- Do not insert manual line breaks. At 320 px, headings and descriptions wrap naturally; the redundant instrument label may be visually omitted under the approved compact-label rule.
+- The same source order and meaning remain at every width. Wide layouts may use a shared stage; compact layouts render four normal-flow chapters.
+- Static chapter artwork is decorative and uses empty alternative text because the adjacent heading and description carry the complete meaning.
+- Canvas duplicates no accessible content and is excluded from the accessibility tree.
+- A later meaningful Connection film still needs an adjacent caption/transcript decision. It cannot replace these HTML descriptions.
+- The sequence describes a general service idea. It is not a product name, platform, case study, client workflow, proprietary method or measured outcome.
+- System Logic and Precision Movement are REJECTED copy territories: the first is too abstract/technical for the primary buyer, while the second relies too heavily on animation to explain the idea.

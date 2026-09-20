@@ -8,6 +8,7 @@ related:
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
   - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
+  - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - PAGE-HOME
@@ -67,12 +68,7 @@ Deliver the approved visual identity across the existing public site and make th
 
 **Route:** approved consequential RFC and superseding ADR, followed by this versioned execution plan.
 
-The runtime, renderer, media ceiling, responsive choreography and visual territory are closed by the related RFCs and ADR. Two production inputs remain deliberately OPEN and are handled as gates rather than assumptions:
-
-- exact optical geometry, clear space and minimum sizes for the Contained Master;
-- exact Connection film, shot list, production tool, codec and rendition ladder.
-
-The first blocks brand-asset implementation. The second does not block the identity, static C2 or direct Three.js implementation.
+The runtime, renderer, media ceiling, responsive choreography and visual territory are closed by the related RFCs and ADR. The two pre-implementation definition gates are now closed by [`REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20`](../../reviews/contained-master-optical-closure-2026-09-20/index.md): Balanced Contained owns the exact protected geometry, and Operational Clarity owns the exact bilingual chapter interface copy. The exact optional Connection film, shot list, production tool, codec and rendition ladder remain OPEN and do not block the identity, static C2 or direct Three.js implementation.
 
 ## Requirements implemented
 
@@ -104,8 +100,8 @@ The first blocks brand-asset implementation. The second does not block the ident
 | Instrument Sans + IBM Plex Mono | APPROVED | Self-host required Latin files and licenses; mono remains limited to short labels |
 | Bone `#F9F6EE` + azure `#004589` | APPROVED | Migrate semantic roles and verify every contrast/state pairing |
 | General founder descriptor | APPROVED | Use `Ingeniero de software` / `Software Engineer`; preserve employer title |
-| Exact master geometry | OPEN | Gate G0 must close before committing production identity assets |
-| Exact chapter microcopy | OPEN | Gate G1 must close before static C2 implementation |
+| Exact master geometry | APPROVED — Balanced Contained | G0 is closed; PR2 must use the recorded coordinates and rules |
+| Exact chapter microcopy | APPROVED — Operational Clarity | G1 is closed; PR5 must copy the PAGE-HOME strings exactly |
 | Connection authored film | OPEN / optional | Gate G2 is conditional and cannot block v1 without video |
 | 768 px local sticky interval | CONDITIONAL | Default to sequential flow; add short sticky only after real-device evidence |
 | Analytics/conversion measurement | OPEN / out of scope | Do not add tracking in this plan |
@@ -142,12 +138,12 @@ PRs 3 and 4 may be developed independently after PR2 merges. PR5 depends on G1 a
 - Modify after human selection: `docs/design/visual-language.md`
 - Modify after human selection: `docs/governance/status-register.md`
 
-- [ ] Construct three optical refinements from new vector geometry: equal-weight upward chevrons, equal negative space, visible endpoints and sharp mitred peaks. Do not trace or publish `arrow-stripes.png`.
-- [ ] Show every candidate at 16, 24, 32, 64 and 160 px, as icon-only and beside the `FURLANICH` wordmark, in azure-on-bone and bone-on-azure.
-- [ ] Record clear-space and minimum-size proposals, favicon legibility, monochrome behavior and resemblance risks.
-- [ ] Run `npm.cmd run docs:check` and inspect the SVGs for scripts, external resources, raster payloads, text elements and unnecessary metadata.
-- [ ] Stop for explicit selection. Record the chosen geometry and rejected alternatives in `DESIGN-VISUAL`; leave implementation unauthorized until this plan is separately approved.
-- [ ] Commit: `docs(design): close contained master geometry`.
+- [x] Construct three optical refinements from new vector geometry: equal-weight upward chevrons, equal negative space, visible endpoints and sharp mitred peaks. Do not trace or publish `arrow-stripes.png`.
+- [x] Show every candidate at master size and the recommended candidate at 16, 32, 64 and 160 px, as icon-only and beside the `FURLANICH` wordmark, in azure-on-bone and bone-on-azure.
+- [x] Record clear-space and minimum-size proposals, favicon legibility, monochrome behavior and resemblance risks.
+- [x] Run `npm.cmd run docs:check` and inspect the SVGs for scripts, external resources, raster payloads, text elements and unnecessary metadata.
+- [x] Stop for explicit selection. Record the chosen geometry and rejected alternatives in `DESIGN-VISUAL`; leave implementation unauthorized until this plan is separately approved.
+- [x] Record G0 and G1 together in the approved gate-closure commit.
 
 **Acceptance:** one exact vector geometry, clear-space rule, minimum sizes and invalid-use list are APPROVED. G0 contains no production application code.
 
@@ -159,13 +155,13 @@ PRs 3 and 4 may be developed independently after PR2 merges. PR5 depends on G1 a
 - Modify: `docs/design/visual-language.md`
 - Modify: `docs/governance/status-register.md`
 
-- [ ] Propose concise Spanish and natural-English HTML copy for Recognition, Fragmentation, Connection and Coordination, plus the instrument label, status text, Pause motion and Resume motion labels.
-- [ ] Keep the existing approved hero proposition and CTA meaning. Do not introduce a platform name, outcome metric or implied case study.
-- [ ] Record whether each chapter visual is decorative or needs an adjacent explanatory caption. Static chapter meaning must remain clear without canvas.
-- [ ] Review 320 px Spanish wrapping and 1440 px English balance in low-fidelity layouts before approval.
-- [ ] Run `npm.cmd run docs:check`.
-- [ ] Stop for explicit bilingual copy approval and record the disposition in `PAGE-HOME`.
-- [ ] Commit: `docs(content): close immersive chapter copy`.
+- [x] Propose concise Spanish and natural-English HTML copy for Recognition, Fragmentation, Connection and Coordination, plus the instrument label, status text, Pause motion and Resume motion labels.
+- [x] Keep the existing approved hero proposition and CTA meaning. Do not introduce a platform name, outcome metric or implied case study.
+- [x] Record whether each chapter visual is decorative or needs an adjacent explanatory caption. Static chapter meaning must remain clear without canvas.
+- [x] Review 320 px Spanish wrapping and 1440 px English balance in low-fidelity layouts before approval.
+- [x] Run `npm.cmd run docs:check`.
+- [x] Stop for explicit bilingual copy approval and record the disposition in `PAGE-HOME`.
+- [x] Commit: `docs(design): close visual identity gates`.
 
 **Acceptance:** exact route-owned strings are APPROVED before PR5 copies them into code.
 
@@ -696,8 +692,8 @@ Repeat build, static export verification and representative browser journeys wit
 - [x] RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1 approved.
 - [x] ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE recorded.
 - [ ] This execution plan approved.
-- [ ] G0 Contained Master optical closure approved.
-- [ ] G1 bilingual immersive chapter copy approved.
+- [x] G0 Contained Master optical closure approved: Balanced Contained.
+- [x] G1 bilingual immersive chapter copy approved: Operational Clarity.
 - [ ] PR1 marketing-contract reconciliation merged.
 - [ ] PR2 identity foundation merged.
 - [ ] PR3 offer/evidence presentation merged.

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Candidate A — Wide Heraldic</title>
+  <desc id="desc">Three broad azure upward chevrons on a bone field.</desc>
+  <rect width="256" height="256" fill="#F9F6EE"/>
+  <g fill="none" stroke="#004589" stroke-width="28" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4">
+    <polyline points="24,94 128,32 232,94"/>
+    <polyline points="24,154 128,92 232,154"/>
+    <polyline points="24,214 128,152 232,214"/>
+  </g>
+</svg>

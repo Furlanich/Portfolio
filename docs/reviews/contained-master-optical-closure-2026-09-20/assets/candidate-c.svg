@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Candidate C — Vertical Signal</title>
+  <desc id="desc">Three narrow steep azure upward chevrons on a bone field.</desc>
+  <rect width="256" height="256" fill="#F9F6EE"/>
+  <g fill="none" stroke="#004589" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4">
+    <polyline points="46,102 128,22 210,102"/>
+    <polyline points="46,172 128,92 210,172"/>
+    <polyline points="46,242 128,162 210,242"/>
+  </g>
+</svg>
