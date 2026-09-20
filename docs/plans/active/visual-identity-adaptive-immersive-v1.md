@@ -176,6 +176,7 @@ This PR repairs known divergence only. It introduces no visual system or runtime
 - Modify: `scripts/homepage-content.test.mjs`
 - Modify: `scripts/studio-content.test.mjs`
 - Modify: `scripts/foundation-content.test.mjs`
+- Modify: `tests/e2e/studio-founder.spec.ts`
 - Modify: `app/(es)/_content/home.ts`
 - Modify: `app/(en)/en/_content/home.ts`
 - Modify: `app/(es)/_content/founder.ts`
@@ -184,38 +185,37 @@ This PR repairs known divergence only. It introduces no visual system or runtime
 - Modify only if current route composition still diverges: `components/homepage/CommercialHomepage.tsx`
 - Modify: `ARCHITECTURE.md`
 
-### Task 1.1 — make the accepted homepage contract fail first
+### Task 1.1 — disposition: superseded by the merged MKT-D05 homepage contract
 
-- [ ] Extend `scripts/homepage-content.test.mjs` to assert the exact `PAGE-HOME` headings, four Problems items, audience section, three proof commitments, four complete process descriptions, two Founder actions and demo-aware final CTA in both locales.
-- [ ] Assert that Problems heading and introduction are distinct and that the honest proof fallback remains present without project cards.
-- [ ] Run `node --test scripts/homepage-content.test.mjs`; expect failure against the current pre-D02 content.
-- [ ] Commit the failing contract: `test(home): capture approved marketing narrative`.
+- [x] Compared the planned pre-D02 assertions with the later APPROVED `PAGE-HOME` MKT-D05 contract already present on `main`.
+- [x] Confirmed `scripts/homepage-content.test.mjs` already protects the current seven-section sequence, distinct Problems heading/introduction and honest Projects proof bridge in both locales.
+- [x] Did not fabricate a historical red test or commit for requirements superseded before this plan was approved.
 
-### Task 1.2 — copy the owner verbatim and restore the complete sequence
+### Task 1.2 — disposition: current route-owned content already satisfies MKT-D05
 
-- [ ] Copy exact Spanish and English strings from `PAGE-HOME` into the two route-owned `home.ts` modules. Do not paraphrase inside code.
-- [ ] Restore `HOME-AUDIENCES` and the approved proof/process/Founder models if the current content type or composition omits them.
-- [ ] Run `node --test scripts/homepage-content.test.mjs` and `npm.cmd run typecheck`; expect pass.
-- [ ] Commit: `fix(home): reconcile approved commercial narrative`.
+- [x] Confirmed the exact approved Spanish and English MKT-D05 strings remain in the two route-owned `home.ts` modules.
+- [x] Preserved the approved consolidation: audience meaning is folded into Problems, Problems has three rows and proof uses the technical-accountability bridge to Projects; the retired standalone audience section was not restored.
+- [x] Ran the homepage contract test and TypeScript check successfully without changing the current Home composition.
 
 ### Task 1.3 — apply the general professional descriptor without altering employment history
 
-- [ ] Add assertions that the Founder header/opening/biography use `Ingeniero de software` and `Software Engineer` for Samuel's general profession.
-- [ ] Add assertions that the Clever Soft SA sentence still uses the exact employer title `Software Developer` and that education still says completed Computer Science studies rather than an engineering degree.
-- [ ] Run the focused tests and confirm red before editing content.
-- [ ] Update only the general professional-label occurrences in the two Founder modules and approved homepage Founder copy.
-- [ ] Run `node --test scripts/studio-content.test.mjs scripts/foundation-content.test.mjs scripts/homepage-content.test.mjs`.
-- [ ] Commit: `fix(founder): use approved software engineer descriptor`.
+- [x] Added assertions that the Founder header/opening/biography use `Ingeniero de software` and `Software Engineer` for Samuel's general profession.
+- [x] Added assertions that the Clever Soft SA sentence still uses the exact employer title `Software Developer` and that education still says completed Computer Science studies rather than an engineering degree.
+- [x] Confirmed the focused descriptor contract red before editing content.
+- [x] Updated only the general professional-label occurrences in the two Founder modules; the homepage Founder copy contains no profession label requiring a change.
+- [x] Ran `node --test scripts/studio-content.test.mjs scripts/foundation-content.test.mjs scripts/homepage-content.test.mjs` successfully.
+- [x] Updated the existing browser contract after its old descriptor assertions failed, then confirmed all 16 Studio/Founder Chromium checks pass.
+- [x] Commit: `fix(founder): use approved software engineer descriptor`.
 
 ### PR1 verification
 
-- [ ] `npm.cmd run docs:check`
-- [ ] `npm.cmd test`
-- [ ] `npm.cmd run lint`
-- [ ] `npm.cmd run typecheck`
-- [ ] `npm.cmd run build`
-- [ ] `npm.cmd run verify:static-export`
-- [ ] Review ES and EN Home and Founder at 320 and 1440 px for clipping and hierarchy; no redesign in this PR.
+- [x] `npm.cmd run docs:check`
+- [x] `npm.cmd test`
+- [x] `npm.cmd run lint`
+- [x] `npm.cmd run typecheck`
+- [x] `npm.cmd run build`
+- [x] `npm.cmd run verify:static-export`
+- [x] Reviewed ES and EN Home and Founder at 320 and 1440 px for clipping and hierarchy; no redesign was introduced in this PR.
 
 ---
 
@@ -713,4 +713,5 @@ Repeat build, static export verification and representative browser journeys wit
 
 ## Deviations discovered during execution
 
-None. Record deviations here with the affected requirement, evidence, disposition and whether a new RFC/ADR is required.
+- **PR1 Tasks 1.1-1.2:** the task text assumed the pre-D02 homepage, but MKT-D05 was approved and merged before this plan received implementation approval. Evidence: `PAGE-HOME` and `scripts/homepage-content.test.mjs` define the current seven-section contract, retired standalone audience section, three Problems rows and Projects proof bridge. Disposition: preserve the newer approved contract and do not recreate obsolete content or artificial red-history commits. No RFC or ADR is required.
+- **PR1 browser contract:** `tests/e2e/studio-founder.spec.ts` still asserted the former general descriptor after the Node content contract was updated. Evidence: the focused Chromium run failed only on the two old opening strings, then passed 16/16 after updating them to the approved bilingual descriptor. Disposition: include the browser assertion update in PR1. No RFC or ADR is required.
