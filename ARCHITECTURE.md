@@ -3,6 +3,8 @@ id: ARCHITECTURE-MAP
 type: architecture-map
 status: APPROVED
 related:
+  - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
@@ -31,7 +33,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-19
+last_verified: 2026-09-20
 ---
 
 # FURLANICH architecture map
@@ -92,7 +94,11 @@ The preserved recommendation is incremental, static-first modernization: reduce 
 
 ## APPROVED immersive-homepage architecture
 
-[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](docs/rfcs/visual-identity-immersive-experience-v1.md) is approved. [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/progressive-immersive-homepage.md) records one homepage-only, progressively enhanced React Three Fiber 8 scene behind complete server-rendered HTML/SVG content and a resolved static poster. It preserves React 18, static export, locale routes, GitHub Pages and base-path behavior, and requires prototype evidence before dependencies or production implementation. The existing Framer Motion boundary is the first orchestration candidate; mobile thresholds and measured budgets remain prototype outputs.
+[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](docs/rfcs/visual-identity-immersive-experience-v1.md) is approved. [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/progressive-immersive-homepage.md) remains the current architecture record for one homepage-only progressive scene behind complete server-rendered HTML/SVG and a resolved static poster. The [prototype review](docs/reviews/immersive-homepage-prototype-2026-09-19/index.md) records that its React Three Fiber 8 candidate failed under the repository runtime while direct Three.js completed the throwaway matrix. Production implementation remains unauthorized.
+
+## PROPOSED adaptive immersive-homepage production architecture
+
+[`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](docs/rfcs/adaptive-immersive-homepage-production-v1.md) proposes C2 Adaptive System Instrument: semantic HTML and static chapter posters, direct demand-rendered Three.js, the existing Framer Motion progress boundary and at most one governed native-video surface. It adds responsive choreography, accessibility/failure contracts and measured budgets. This proposal does not supersede the current ADR or authorize a plan until human review, owner revisions and a new ADR.
 
 ## APPROVED contact-demonstration architecture
 

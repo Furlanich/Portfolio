@@ -3,6 +3,7 @@ id: RFC-INDEX
 type: rfc-index
 status: APPROVED
 related:
+  - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - RFC-MARKETING-NARRATIVE-CLOSURE
@@ -11,7 +12,7 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-STATIC-LOCALIZED-ROUTING
-last_verified: 2026-09-19
+last_verified: 2026-09-20
 ---
 
 # RFCs
@@ -26,6 +27,10 @@ An RFC is a consequential product or architectural proposal that requires agreem
 - [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](homepage-foundation-static-localized-routing.md): approved in [Governance PR #6](https://github.com/Furlanich/Portfolio/pull/6). It selects explicit locale route trees and locale-specific root layouts for static Spanish root routes and English `/en/` routes while preserving GitHub Pages and build-time base-path compatibility.
 
 Do not create status directories until the number of RFCs or their lifecycle makes the additional structure useful.
+
+## Proposed immersive production direction
+
+- [RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1](adaptive-immersive-homepage-production-v1.md): proposes C2 Adaptive System Instrument, direct Three.js, one governed authored-video surface, responsive choreography and measured production gates after the throwaway prototype. The current ADR remains authoritative until this RFC is accepted and a superseding ADR is recorded.
 
 ## Proposed marketing decision closure
 

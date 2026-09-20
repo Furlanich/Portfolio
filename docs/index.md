@@ -3,6 +3,8 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
@@ -27,7 +29,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-19
+last_verified: 2026-09-20
 ---
 
 # FURLANICH project knowledge
@@ -86,6 +88,6 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 
 [The review package](reviews/marketing-decision-closure-2026-09-15/index.md) provides owner-level bilingual copy comparisons, evidence/CTA tables, nine page outlines and five-width low-fidelity studies. [RFC-MARKETING-NARRATIVE-CLOSURE](rfcs/marketing-narrative-closure.md) covers the proposed narrative and evidence-discovery changes. D01, D02, D04, D05, D06 and D07 were explicitly APPROVED on 2026-09-16; D03 was REJECTED. The D03 baseline remains effective, and no unaccepted item-level exception or commercial activation is inferred. Other existing approvals, the demonstration ADR and evidence restrictions remain operative. The original decision review contained no application change or execution plan. The subsequently authorized [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](plans/completed/marketing-presentation-excellence-v1.md) is APPROVED / COMPLETED under Route B after human merges of PRs #55–#59, with D03 preserved and no further implementation PR authorized by this plan.
 
-## Visual identity and immersive experience v1 — APPROVED FOR PROTOTYPE
+## Visual identity and immersive experience v1 — PROTOTYPE REVIEWED; PRODUCTION RFC PROPOSED
 
-[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](rfcs/visual-identity-immersive-experience-v1.md) was approved and merged in [PR #61](https://github.com/Furlanich/Portfolio/pull/61). The visual and interaction owners now record the Contained Master, bone/azure Precision Assembly system, Instrument Sans/Plex Mono typography and one progressive homepage sequence; [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](decisions/progressive-immersive-homepage.md) records the runtime boundary. The isolated prototype is authorized. Production code, dependencies and a versioned execution plan remain blocked until its verdict receives human review.
+[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](rfcs/visual-identity-immersive-experience-v1.md) was approved and merged in [PR #61](https://github.com/Furlanich/Portfolio/pull/61). The [throwaway prototype review](reviews/immersive-homepage-prototype-2026-09-19/index.md) records the completed bilingual five-width matrix, static/failure behavior, direct Three.js feasibility, React Three Fiber 8 incompatibility and payload evidence. [`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](rfcs/adaptive-immersive-homepage-production-v1.md) now proposes C2 Adaptive System Instrument, a governed hybrid-media boundary, responsive choreography and production gates. [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](decisions/progressive-immersive-homepage.md) remains authoritative until the follow-up RFC is accepted and a superseding ADR is recorded. Production implementation and a versioned plan remain blocked.
