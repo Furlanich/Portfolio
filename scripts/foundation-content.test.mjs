@@ -124,11 +124,20 @@ test('exports the complete approved Founder profile in both locales', async () =
     assert.ok(content.biography.heading);
     assert.ok(content.biography.paragraphs.length >= 2);
     assert.match(content.biography.paragraphs.join(' '), /2024/);
-    assert.match(content.biography.paragraphs.join(' '), /Clever Soft SA/);
+    assert.equal(
+      content.biography.paragraphs[1],
+      locale === 'es'
+        ? 'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.'
+        : 'He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor.',
+    );
+    assert.equal(
+      content.biography.paragraphs[2],
+      locale === 'es'
+        ? 'También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.'
+        : 'He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
+    );
     assert.match(content.header.context, locale === 'es' ? /Ingeniero de software/ : /Software Engineer/);
     assert.match(content.biography.paragraphs[0], locale === 'es' ? /es ingeniero de software/ : /is a Software Engineer/);
-    assert.match(content.biography.paragraphs.join(' '), /Software Developer/);
-    assert.match(content.biography.paragraphs.join(' '), locale === 'es' ? /Ciencias de la Computación/ : /Computer Science studies/);
     assert.equal(content.professionalLinks.cv.path, '/Samuel-Furlanich-CV.pdf');
     assert.equal(content.professionalLinks.linkedin.href, expectedProfessionalLinks.linkedin);
     assert.equal(content.professionalLinks.github.href, expectedProfessionalLinks.github);
@@ -173,9 +182,10 @@ test('keeps the approved minimum homepage and services copy', async () => {
   const spanishServices = (await import('../app/(es)/_content/services.ts')).servicesPageContent;
   const englishServices = (await import('../app/(en)/en/_content/services.ts')).servicesPageContent;
 
-  assert.equal(spanishHome.eyebrow, 'Desarrollo de software a medida para pymes');
-  assert.equal(spanishHome.heading, 'Software práctico para vender, atender y operar mejor.');
-  assert.equal(englishHome.heading, 'Practical software to help you sell, serve customers, and run your business better.');
+  assert.equal(spanishHome.eyebrow, 'Estudio de software a medida');
+  assert.equal(englishHome.eyebrow, 'Custom software studio');
+  assert.equal(spanishHome.heading, 'Conectá tus sistemas. Simplificá el trabajo diario.');
+  assert.equal(englishHome.heading, 'Connect your systems. Simplify everyday work.');
   assert.equal(spanishHome.primaryAction.routeId, 'contact');
   assert.equal(spanishHome.secondaryAction.routeId, 'services');
   assert.equal(englishHome.primaryAction.routeId, 'contact');
