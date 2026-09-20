@@ -3,6 +3,9 @@ id: DESIGN-VISUAL
 type: design-spec
 status: APPROVED
 related:
+  - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
+  - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - RFC-MARKETING-NARRATIVE-CLOSURE
@@ -18,7 +21,7 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-19
+last_verified: 2026-09-20
 ---
 
 # Visual language
@@ -443,6 +446,47 @@ The scene is brand illustration and a general explanation of connected systems. 
 
 Services, Projects, Studio, Founder and Contact use the symbol, type, spacing, section numbering, controlled azure fields, editorial layouts and approved evidence media without additional WebGL in v1. No dark theme, portrait, evidence upgrade or new icon system is approved by this revision.
 
-### Prototype-dependent design questions
+### Prototype verdict
 
-The isolated prototype must determine whether procedural geometry reaches the accepted visual quality and whether any rendered media would add enough value to justify a separate later pipeline. Those questions remain **OPEN**. Higgsfield and Blender may support offline look development, but neither is an accepted website runtime dependency.
+The [isolated prototype review](../reviews/immersive-homepage-prototype-2026-09-19/index.md) validated the four-state model, direct scroll mapping, static posters and demand rendering. Its original System Instrument composition did not meet the final hierarchy standard. The accepted C2 revision below resolves the production art-direction and hybrid-media boundary. Exact master-mark optical geometry and the authored brand-motion asset remain **OPEN**.
+
+
+## IMMERSIVE-HOME-V1.1 — C2 Adaptive System Instrument — APPROVED
+
+**Approved 2026-09-20.** The repository owner approved [RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1](../rfcs/adaptive-immersive-homepage-production-v1.md) after reviewing the prototype evidence and C2 concept. [ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE](../decisions/adaptive-immersive-homepage.md) owns the runtime. This section supersedes only the earlier immersive scene composition and prototype-dependent media questions. The Contained Master, palette, typography, evidence permissions, commercial copy and other page requirements remain authoritative.
+
+### C2 composition
+
+Wide Home layouts use two dominant zones:
+
+- an editorial anchor occupying approximately 42–46 percent of the stage;
+- one large 4:5 instrument viewport occupying the remaining space.
+
+A thin phase spine belongs to their boundary and never becomes a competing information column. The proposition and primary action remain visually dominant before the visitor interprets the scene.
+
+The nested-arrow geometry supplies alignment, direction, cropping and transition logic. The derived sculpture may separate and reconnect; the protected master mark may not. Labels attach to meaningful operational channels or states. Generic dashboard cards, floating telemetry, particle fields, neon, continuous rotation, elastic motion and ornamental glass are excluded. Transparent structural planes, restrained shadows and physically useful material variation are permitted inside the scene.
+
+### Chapter compositions
+
+1. **Recognition:** bone editorial surface, intact derived sculpture, proposition and primary action.
+2. **Fragmentation:** layers separate into operational planes; orders, bookings, messages and manual tasks become distinct channels.
+3. **Connection:** channels acquire deliberate routes; concentrated azure becomes active; one governed demonstration window may appear.
+4. **Coordination:** inputs resolve into an ordered system; the composition calms and hands into services, approved evidence and contact.
+
+Each chapter has a complete static composition. The visual system changes typography balance, surface, geometry and media framing together rather than animating an isolated object.
+
+### Instrument media
+
+The stage uses one dominant instrument window, normally 4:5 wide and 1:1 compact. One authored video is permitted only in Connection when it materially improves the explanation. The film stays spatially connected to the arrow system, receives a poster and fallback, and never becomes a generic portfolio reel.
+
+Every asset is classified as brand motion, demonstration or project evidence. Higgsfield, Blender and other generated work is brand motion by default. Generated interfaces cannot imply client work, a proprietary platform, outcomes or operating scale. Project media remains subject to PROJECT-EVIDENCE. Essential bilingual copy is HTML, not baked into media.
+
+The exploratory C2 concept image is a review aid only. Its navigation, small captions, glass details, platform and generated interface are not approved production requirements.
+
+### Open visual items
+
+The following remain **OPEN** for asset review without changing the approved composition:
+
+- final optical geometry, clear space and minimum sizes for the Contained Master;
+- exact Connection-film shot list and production tool;
+- final poster artwork and video encodes within the accepted budgets.

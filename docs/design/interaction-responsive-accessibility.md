@@ -3,6 +3,9 @@ id: DESIGN-IX-A11Y
 type: design-spec
 status: APPROVED
 related:
+  - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
+  - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - RFC-MARKETING-NARRATIVE-CLOSURE
@@ -17,7 +20,7 @@ related:
   - PAGE-FOUNDER
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-19
+last_verified: 2026-09-20
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -359,4 +362,70 @@ Prototype and implementation evidence must cover:
 - root and optional `/Portfolio` base-path behavior;
 - representative loading cost, JavaScript transfer, frame time and mobile quality reduction.
 
-Exact mobile activation thresholds, device-pixel-ratio caps, JavaScript/loading budgets and frame-time gates remain **OPEN** until measured by the isolated prototype. The prototype verdict also decides whether Framer Motion is sufficient. Production planning cannot convert assumed values into requirements.
+The [prototype review](../reviews/immersive-homepage-prototype-2026-09-19/index.md) closes the first feasibility questions. The accepted production interaction, responsive, media and budget requirements are recorded in the V1.1 revision below.
+
+
+## IMMERSIVE-HOME-V1.1 — Adaptive hybrid interaction — APPROVED
+
+**Approved 2026-09-20.** This revision implements the accepted requirements in [RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1](../rfcs/adaptive-immersive-homepage-production-v1.md) and [ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE](../decisions/adaptive-immersive-homepage.md). It supersedes the earlier React Three Fiber candidate, single-poster reduced-motion detail, responsive composition table and OPEN performance thresholds. The semantic-first and native-scroll requirements remain.
+
+### Progressive structure and media lifecycle
+
+The server-rendered page owns localized copy, actions, chapter descriptions, captions, protected identity and stable static artwork. Direct Three.js and one optional native Connection video are progressive enhancements.
+
+The page paints meaningful HTML and the Recognition poster before loading Three.js. The Connection film is requested only as its chapter approaches the viewport, pauses when inactive and retains its poster. No more than one video decodes or plays. Save-Data, reduced motion, no JavaScript, unsupported WebGL and initialization failure use the static path. Context loss removes the canvas for the session. Initialization is attempted once.
+
+### Scroll and motion control
+
+Native progress maps to four stable reversible chapters: Recognition, Fragmentation, Connection and Coordination. Reverse scrolling follows the same paths. Geometry, video and surface transitions settle when scrolling stops; no idle render loop continues.
+
+A visible **Pause motion** control beside instrument status pauses WebGL updates and active video without changing the chapter. It is keyboard operable, exposes its state, has a visible focus indicator and supplements rather than replaces `prefers-reduced-motion`.
+
+Reduced motion presents static chapter compositions with immediate state changes and no autoplay. No audio autoplays.
+
+### Responsive choreography
+
+| Width | Required composition | Media behavior |
+| ---: | --- | --- |
+| 1440 px | Editorial anchor, integrated phase spine and persistent 4:5 stage | Complete depth and restrained camera travel |
+| 1024 px | Compact two-zone composition | Shorter travel and fewer simultaneous layers |
+| 768 px | Sequential copy and media | Short local sticky behavior only if real-device testing proves useful |
+| 390 px | Four document chapters with inline 1:1 media | No prolonged pinning; near-viewport media only |
+| 320 px | Condensed headings, full-width actions and static-first media | Minimal depth; nonessential labels removed |
+
+Resize preserves the active chapter and document position. It cannot restart media, jump the page or retain a desktop intermediate state after reflow. Width does not stand in for capability. Both locales grow without clipping, and media yields to content at 200 percent zoom.
+
+### Accessibility and failure contract
+
+The canvas is decorative, excluded from the accessibility tree, unfocusable and unable to own scroll or pointer interaction. Chapter meaning appears in HTML. Meaningful video receives an adjacent caption and transcript; decorative brand film is hidden from assistive technology and contains no essential information. Color is never the only state signal.
+
+| Condition | Required result |
+| --- | --- |
+| JavaScript unavailable | Complete semantic document and static chapter artwork |
+| Dynamic import failure | Current static composition remains |
+| WebGL unsupported | Static chapter compositions |
+| Context loss | Canvas removed for the session; current poster remains |
+| Video blocked or failed | Poster and HTML caption remain |
+| Slow connection | Poster remains without interruption |
+| Resize during transition | State recalculates from document position |
+| Optional asset absent | Chapter closes without an empty frame |
+
+### Production gates
+
+| Gate | Limit |
+| --- | ---: |
+| Incremental immersive JavaScript | ≤120 KiB Brotli |
+| First poster | ≤150 KiB |
+| Compact Connection-video rendition | ≤1.2 MB |
+| Wide Connection-video rendition | ≤2.5 MB |
+| Simultaneously playing videos | 1 |
+| Canvas device-pixel ratio | ≤1.5 wide; ≤1.25 compact |
+| Scroll frame interval p95 | ≤20 ms |
+| Main-thread interaction task | <50 ms |
+| Media-attributable layout shift | 0 |
+| LCP p75 | ≤2.5 seconds |
+| INP p75 | ≤200 ms |
+
+The prototype bundle is not accepted merely because it fell below the JavaScript ceiling by only 3,173 bytes (about 3.1 KiB). Production must create meaningful headroom or return to governance before exceeding the ceiling.
+
+Acceptance evidence covers both locales, all five widths, forward/reverse traversal, resize and orientation change, keyboard/focus, 200 percent zoom, reduced motion, Save-Data, no JavaScript, unavailable WebGL, initialization failure, context loss, blocked media, root and optional base paths, static export, layout stability, a constrained Android device and repeated traversal for memory and thermal behavior.

@@ -3,6 +3,9 @@ id: ARCHITECTURE-MAP
 type: architecture-map
 status: APPROVED
 related:
+  - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
+  - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
@@ -31,7 +34,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-19
+last_verified: 2026-09-20
 ---
 
 # FURLANICH architecture map
@@ -92,7 +95,7 @@ The preserved recommendation is incremental, static-first modernization: reduce 
 
 ## APPROVED immersive-homepage architecture
 
-[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](docs/rfcs/visual-identity-immersive-experience-v1.md) is approved. [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/progressive-immersive-homepage.md) records one homepage-only, progressively enhanced React Three Fiber 8 scene behind complete server-rendered HTML/SVG content and a resolved static poster. It preserves React 18, static export, locale routes, GitHub Pages and base-path behavior, and requires prototype evidence before dependencies or production implementation. The existing Framer Motion boundary is the first orchestration candidate; mobile thresholds and measured budgets remain prototype outputs.
+[`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](docs/rfcs/adaptive-immersive-homepage-production-v1.md) approves C2 Adaptive System Instrument: semantic HTML and static chapter posters, direct demand-rendered Three.js, the existing Framer Motion progress boundary and one governed native-video surface in Connection. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/adaptive-immersive-homepage.md) records the runtime and supersedes [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/progressive-immersive-homepage.md). The [prototype review](docs/reviews/immersive-homepage-prototype-2026-09-19/index.md) remains the evidence source. A versioned plan is authorized; production implementation remains unauthorized until that plan is approved.
 
 ## APPROVED contact-demonstration architecture
 

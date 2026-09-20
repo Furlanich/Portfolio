@@ -3,6 +3,7 @@ id: PLAN-INDEX
 type: execution-plan-index
 status: APPROVED
 related:
+  - PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - GOV-ENGINEERING-LIFECYCLE
   - PLAN-HOMEPAGE-FOUNDATION
@@ -13,7 +14,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-19
+last_verified: 2026-09-20
 ---
 
 # Execution plans
@@ -25,7 +26,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-None.
+- [PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1](active/visual-identity-adaptive-immersive-v1.md): PROPOSED implementation sequence for the approved FURLANICH identity, static C2 composition, direct Three.js enhancement, optional governed Connection media and production acceptance.
 
 ## Completed
 

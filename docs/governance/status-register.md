@@ -3,6 +3,9 @@ id: GOV-STATUS
 type: decision-register
 status: APPROVED
 related:
+  - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
+  - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
@@ -31,7 +34,7 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-19
+last_verified: 2026-09-20
 ---
 
 # Product knowledge status register
@@ -74,7 +77,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 ### Homepage and process
 
-- Visual Identity & Immersive Experience v1 is approved for prototype validation: Contained Master, Precision Assembly, Instrument Sans/Plex Mono and one homepage-only progressive scene. [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](../decisions/progressive-immersive-homepage.md) owns the runtime boundary. Production implementation and a versioned execution plan remain blocked until prototype review.
+- Visual Identity & Immersive Experience v1 and [`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](../rfcs/adaptive-immersive-homepage-production-v1.md) are APPROVED. The [prototype review](../reviews/immersive-homepage-prototype-2026-09-19/index.md) records completed feasibility evidence and React Three Fiber 8 incompatibility. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](../decisions/adaptive-immersive-homepage.md) supersedes the prototype ADR and records C2, direct Three.js, one governed Connection-video surface and production gates. A versioned plan is authorized; production implementation remains blocked until that plan is approved.
 
 - The approved homepage sequence, Spanish copy, natural English adaptations, CTA destinations, evidence boundaries, conversion narrative, and implementation-readiness matrix are owned by [`PAGE-HOME`](../product/pages/home.md).
 - The approved [`RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY`](../rfcs/homepage-hero-implementation-boundary.md) requires the homepage-foundation prerequisites to be resolved and planned before application implementation begins; it does not approve the remaining OPEN product or architecture choices.
