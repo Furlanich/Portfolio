@@ -1,9 +1,10 @@
 ---
 id: RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
 type: request-for-comments
-status: PROPOSED
+status: APPROVED
 related:
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
+  - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
   - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
   - DESIGN-VISUAL
@@ -35,7 +36,7 @@ The prototype closed basic feasibility but did not produce a production-ready vi
 
 The tested System Instrument behaved like an isolated technical demonstration. Arrow fragments and decorative signals changed inside a bordered canvas while the surrounding composition remained largely static. Compact layouts rearranged the same parts instead of changing the choreography.
 
-The approved ADR also names a renderer candidate that failed in the repository runtime. Direct Three.js proved feasible but reached 119.7 KiB incremental Brotli JavaScript, nearly the proposed ceiling before production media control and instrumentation. Adding authored video without governance would increase transfer, autoplay, motion, evidence and accessibility risk.
+The approved ADR also names a renderer candidate that failed in the repository runtime. Direct Three.js proved feasible but reached 119,707 incremental Brotli bytes (116.9 KiB), nearly the proposed ceiling before production media control and instrumentation. Adding authored video without governance would increase transfer, autoplay, motion, evidence and accessibility risk.
 
 A production plan cannot begin until the repository decides the evolved art direction, hybrid-media boundary, renderer, responsive choreography, budgets, failure behavior and ADR supersession path.
 
@@ -286,4 +287,4 @@ After approval, revise the owners and record the superseding ADR. Only then writ
 
 ## Status
 
-**PROPOSED — 2026-09-20.** The owner approved the conceptual C2 sections and requested this written artifact. Written review remains required. This RFC does not revise authoritative owners, supersede ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE, authorize dependencies, authorize production implementation or authorize an execution plan.
+**APPROVED — 2026-09-20.** The repository owner explicitly approved the complete written RFC. This approval authorizes the design-owner revisions, [ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE](../decisions/adaptive-immersive-homepage.md) and a versioned execution plan. It does not authorize production implementation, release, provider activation, evidence upgrades, legal/SEO work, additional WebGL routes or a React-major migration.

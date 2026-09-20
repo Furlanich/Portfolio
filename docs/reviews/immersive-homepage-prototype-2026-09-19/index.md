@@ -1,10 +1,11 @@
 ---
 id: REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
 type: prototype-review
-status: PROPOSED
+status: APPROVED
 related:
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
   - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
@@ -165,4 +166,4 @@ npx.cmd playwright test tests/e2e/immersive-prototype.spec.ts --project=firefox-
 
 ## Status
 
-**PROPOSED REVIEW RECORD — 2026-09-20.** The measurements are factual prototype evidence. This durable summary remains subject to review with the follow-up RFC and creates no production authority.
+**APPROVED REVIEW RECORD — 2026-09-20.** The repository owner approved this durable evidence summary with the follow-up RFC. It records prototype facts and creates no production implementation authority.
