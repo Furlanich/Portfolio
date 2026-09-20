@@ -117,14 +117,18 @@ test('exports the complete approved Founder profile in both locales', async () =
     assert.equal(
       content.header.opening,
       locale === 'es'
-        ? 'Desarrollador de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.'
-        : 'Software developer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance.',
+        ? 'Ingeniero de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.'
+        : 'Software Engineer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance.',
     );
     assert.equal('biography' in content.header, false);
     assert.ok(content.biography.heading);
     assert.ok(content.biography.paragraphs.length >= 2);
     assert.match(content.biography.paragraphs.join(' '), /2024/);
     assert.match(content.biography.paragraphs.join(' '), /Clever Soft SA/);
+    assert.match(content.header.context, locale === 'es' ? /Ingeniero de software/ : /Software Engineer/);
+    assert.match(content.biography.paragraphs[0], locale === 'es' ? /es ingeniero de software/ : /is a Software Engineer/);
+    assert.match(content.biography.paragraphs.join(' '), /Software Developer/);
+    assert.match(content.biography.paragraphs.join(' '), locale === 'es' ? /Ciencias de la Computación/ : /Computer Science studies/);
     assert.equal(content.professionalLinks.cv.path, '/Samuel-Furlanich-CV.pdf');
     assert.equal(content.professionalLinks.linkedin.href, expectedProfessionalLinks.linkedin);
     assert.equal(content.professionalLinks.github.href, expectedProfessionalLinks.github);
