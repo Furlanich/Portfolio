@@ -13,7 +13,6 @@ export function HomeCta({ content, actionHref }: HomeCtaProps) {
         <h2 id="cta-heading" className="max-w-[20ch] text-[32px] font-bold leading-[38px] tracking-[-0.015em] text-foundation-ink md:text-[40px] md:leading-[48px]">
           {content.heading}
         </h2>
-        <p className="mt-6 max-w-[68ch] text-lg leading-7 text-foundation-muted lg:text-xl lg:leading-8">{content.description}</p>
         <p className="mt-6 max-w-[60ch] text-base leading-[26px] text-foundation-muted">{content.demoStatement}</p>
         <div className="mt-8 flex flex-wrap justify-start gap-4 max-[479px]:flex-col">
           <Link href={actionHref} className="inline-flex min-h-12 w-auto items-center justify-center rounded-[10px] bg-foundation-action px-6 text-base font-semibold text-white transition-colors duration-[160ms] ease-out hover:bg-foundation-action-strong max-[479px]:w-full">

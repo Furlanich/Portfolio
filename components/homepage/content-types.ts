@@ -45,7 +45,6 @@ export type HomeFounderSectionContent = {
 
 export type HomeCtaContent = {
   heading: string;
-  description: string;
   demoStatement: string;
   primaryAction: ActionLink;
   secondaryAction: ContactAction;

@@ -3,22 +3,22 @@ import type { HomePageContent } from '../../../../components/homepage/content-ty
 export const homeContent = {
   locale: 'en',
   routeId: 'home',
-  eyebrow: 'Custom software development for small and medium-sized businesses',
-  heading: 'Practical software to help you sell, serve customers, and run your business better.',
+  eyebrow: 'Custom software studio',
+  heading: 'Connect your systems. Simplify everyday work.',
   description:
-    'FURLANICH designs and builds business websites and web applications, WhatsApp automations and integrations, and improvements to existing systems for organizations with concrete needs.',
+    'Websites, web applications, WhatsApp automation and integrations for orders, bookings and everyday tasks. We also improve existing systems.',
   primaryAction: {
-    label: 'Tell us about your project',
+    label: 'Contact options',
     routeId: 'contact',
   },
   secondaryAction: {
-    label: 'View services',
+    label: 'Explore services',
     routeId: 'services',
   },
-  trustLine: 'Direct technical contact · Buenos Aires, Argentina · Projects in Spanish and English',
-  availability: 'Available for projects across Argentina and internationally.',
+  trustLine: 'Samuel Furlanich, the studio’s technical lead.',
+  availability: 'Based in Buenos Aires, Argentina. Available in Spanish and English for work in Argentina and internationally.',
   problems: {
-    heading: 'When work is spread across tools',
+    heading: 'When manual work starts holding the business back',
     introduction: 'When work is spread across tools',
     audienceStatement:
       'For small and medium-sized businesses managing orders, bookings or customer service, or improving an existing system.',
@@ -103,11 +103,9 @@ export const homeContent = {
   },
   cta: {
     heading: 'Do you have a concrete need or a system that needs attention?',
-    description:
-      'Tell us briefly what you need to solve. Samuel will personally review your inquiry to determine whether it makes sense to continue with a conversation.',
     demoStatement: 'Explore the contact options and try the demonstration form. The form does not send inquiries.',
     primaryAction: {
-      label: 'Tell us about your project',
+      label: 'Contact options',
       routeId: 'contact',
     },
     secondaryAction: {
