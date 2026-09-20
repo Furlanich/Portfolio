@@ -51,6 +51,8 @@ The runtime dependency boundary is Next.js, React, TypeScript, Tailwind, Framer 
 
 Task 2 current state: the complete commercial homepage is merged with fourteen static Spanish-root and English-/en/ foundation routes, including the bilingual image-free Projects index, route-owned public project content, the typed fail-closed project manifest, shared Server Component cards, and Projects navigation. Task 3 current state: the paired demonstration Privacy routes, exact locale-owned disclosure, semantic route equivalence, localized footer destinations, and static/base-path/browser/accessibility checks are present on main at commit fd2833d. GitHub reports no Pull Request associated with the commit; PR creation was rejected because there are no commits between main and codex/contact-inquiry-pr3. Task 3/4 project state: the three approved detail-destination entries generate exactly six paired static detail artifacts, and the former legacy project publication paths are removed. The implementation preserves the static-export and optional GitHub Pages base-path constraints while retaining only approved project WebP visuals and unrelated founder source material.
 
+Home now uses the approved D02 bilingual hero/action/accountability/availability copy and the MKT-D05 seven-section consolidation, including a distinct Problems heading/introduction, three situation rows, the technical-accountability Projects bridge and a demo-only final CTA paragraph.
+
 ## Current Contact demonstration — Task 4 / PR 4
 
 This section supersedes the older pre-merge baseline wording above: Contact Task 4 is merged in `e17fd1e`, deployed on `gh-pages`, and recorded by the completed Contact + Inquiry plan.

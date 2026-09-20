@@ -185,17 +185,20 @@ This PR repairs known divergence only. It introduces no visual system or runtime
 - Modify only if current route composition still diverges: `components/homepage/CommercialHomepage.tsx`
 - Modify: `ARCHITECTURE.md`
 
-### Task 1.1 — disposition: superseded by the merged MKT-D05 homepage contract
+### Task 1.1 — rebase the failing contract onto the merged MKT-D05 structure
 
-- [x] Compared the planned pre-D02 assertions with the later APPROVED `PAGE-HOME` MKT-D05 contract already present on `main`.
-- [x] Confirmed `scripts/homepage-content.test.mjs` already protects the current seven-section sequence, distinct Problems heading/introduction and honest Projects proof bridge in both locales.
-- [x] Did not fabricate a historical red test or commit for requirements superseded before this plan was approved.
+- [x] Rebased the original pre-D02 task assumptions onto the later APPROVED MKT-D05 seven-section Home contract already present on `main`.
+- [x] Extended `scripts/homepage-content.test.mjs` to protect the exact D02 hero/actions/accountability/availability, the distinct approved HOME-PROBLEMS heading plus D05 introduction, the merged audience and three situation rows, and the D05 demo-only final paragraph with the D02 primary label.
+- [x] Ran `node --test scripts/homepage-content.test.mjs`; both locale contracts failed first against the former hero copy.
+- [x] Commit: `test(home): capture approved marketing narrative`.
 
-### Task 1.2 — disposition: current route-owned content already satisfies MKT-D05
+### Task 1.2 — copy the remaining approved D02/D05 wording and preserve the consolidated sequence
 
-- [x] Confirmed the exact approved Spanish and English MKT-D05 strings remain in the two route-owned `home.ts` modules.
-- [x] Preserved the approved consolidation: audience meaning is folded into Problems, Problems has three rows and proof uses the technical-accountability bridge to Projects; the retired standalone audience section was not restored.
-- [x] Ran the homepage contract test and TypeScript check successfully without changing the current Home composition.
+- [x] Copied the exact approved Spanish and English D02 hero strings and remaining D05 final-CTA strings into the two route-owned `home.ts` modules.
+- [x] Preserved the approved MKT-D05 consolidation: audience meaning stays folded into Problems, Problems has three rows, proof uses the technical-accountability Projects bridge and the retired standalone audience section was not restored.
+- [x] Removed the superseded conditional-inquiry `description` field and rendering so the current demo statement is the final CTA's only explanatory paragraph.
+- [x] Ran `node --test scripts/homepage-content.test.mjs` and `npm.cmd run typecheck`; both passed.
+- [x] Commit: `fix(home): reconcile approved commercial narrative`.
 
 ### Task 1.3 — apply the general professional descriptor without altering employment history
 
@@ -713,5 +716,5 @@ Repeat build, static export verification and representative browser journeys wit
 
 ## Deviations discovered during execution
 
-- **PR1 Tasks 1.1-1.2:** the task text assumed the pre-D02 homepage, but MKT-D05 was approved and merged before this plan received implementation approval. Evidence: `PAGE-HOME` and `scripts/homepage-content.test.mjs` define the current seven-section contract, retired standalone audience section, three Problems rows and Projects proof bridge. Disposition: preserve the newer approved contract and do not recreate obsolete content or artificial red-history commits. No RFC or ADR is required.
+- **PR1 Tasks 1.1-1.2:** the task text assumed the pre-D02 homepage, but MKT-D05 was approved and merged before this plan received implementation approval. Evidence: `PAGE-HOME` defines the current seven-section contract, retired standalone audience section, three Problems rows and Projects proof bridge while D02 still owns the approved hero/action wording. Disposition: preserve the newer D05 structure, reconcile the remaining D02/D05 copy through a real red/green contract pair and do not restore obsolete sections. The first review caught and corrected an overbroad initial disposition that had treated all Home copy as already complete. No RFC or ADR is required.
 - **PR1 browser contract:** `tests/e2e/studio-founder.spec.ts` still asserted the former general descriptor after the Node content contract was updated. Evidence: the focused Chromium run failed only on the two old opening strings, then passed 16/16 after updating them to the approved bilingual descriptor. Disposition: include the browser assertion update in PR1. No RFC or ADR is required.
