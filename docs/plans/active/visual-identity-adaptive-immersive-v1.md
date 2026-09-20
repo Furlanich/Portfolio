@@ -1,7 +1,7 @@
 ---
 id: PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1
 type: execution-plan
-status: PROPOSED
+status: APPROVED
 plan_status: ACTIVE
 related:
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
@@ -32,7 +32,7 @@ last_verified: 2026-09-20
 
 ## Global Constraints
 
-- This plan is **PROPOSED**. Writing it does not authorize production implementation. Record human approval here before the first implementation PR.
+- This plan is **APPROVED — 2026-09-20** by the repository owner. Approval authorizes the sequenced implementation PRs below; it does not collapse their human-review and merge boundaries.
 - Preserve the founder-led studio model, demonstration Contact contract, evidence permissions and all current route pairs. Do not imply a larger team, clients, outcomes, funding, a proprietary platform or commercial scale.
 - Preserve static export, trailing slashes, Spanish root routes, English `/en/` routes, optional `/Portfolio` base path and GitHub Pages deployment.
 - The protected Contained Master is a DOM/SVG brand asset. Never import its geometry into Three.js, deform it or use it as the animated sculpture.
@@ -691,7 +691,7 @@ Repeat build, static export verification and representative browser journeys wit
 - [x] Throwaway prototype completed and reviewed.
 - [x] RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1 approved.
 - [x] ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE recorded.
-- [ ] This execution plan approved.
+- [x] This execution plan approved by the repository owner on 2026-09-20.
 - [x] G0 Contained Master optical closure approved: Balanced Contained.
 - [x] G1 bilingual immersive chapter copy approved: Operational Clarity.
 - [ ] PR1 marketing-contract reconciliation merged.

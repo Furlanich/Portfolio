@@ -95,7 +95,7 @@ The preserved recommendation is incremental, static-first modernization: reduce 
 
 ## APPROVED immersive-homepage architecture
 
-[`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](docs/rfcs/adaptive-immersive-homepage-production-v1.md) approves C2 Adaptive System Instrument: semantic HTML and static chapter posters, direct demand-rendered Three.js, the existing Framer Motion progress boundary and one governed native-video surface in Connection. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/adaptive-immersive-homepage.md) records the runtime and supersedes [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/progressive-immersive-homepage.md). The [prototype review](docs/reviews/immersive-homepage-prototype-2026-09-19/index.md) remains the evidence source. A versioned plan is authorized; production implementation remains unauthorized until that plan is approved.
+[`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](docs/rfcs/adaptive-immersive-homepage-production-v1.md) approves C2 Adaptive System Instrument: semantic HTML and static chapter posters, direct demand-rendered Three.js, the existing Framer Motion progress boundary and one governed native-video surface in Connection. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/adaptive-immersive-homepage.md) records the runtime and supersedes [`ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE`](docs/decisions/progressive-immersive-homepage.md). The [prototype review](docs/reviews/immersive-homepage-prototype-2026-09-19/index.md) remains the evidence source. [`PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1`](docs/plans/active/visual-identity-adaptive-immersive-v1.md) is APPROVED for sequential implementation through human-reviewed Pull Requests.
 
 ## APPROVED contact-demonstration architecture
 

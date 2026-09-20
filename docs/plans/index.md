@@ -26,7 +26,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1](active/visual-identity-adaptive-immersive-v1.md): PROPOSED implementation sequence for the approved FURLANICH identity, static C2 composition, direct Three.js enhancement, optional governed Connection media and production acceptance.
+- [PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1](active/visual-identity-adaptive-immersive-v1.md): APPROVED active implementation sequence for the approved FURLANICH identity, static C2 composition, direct Three.js enhancement, optional governed Connection media and production acceptance.
 
 ## Completed
 
