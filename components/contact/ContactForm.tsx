@@ -90,7 +90,7 @@ export function ContactForm({ content, locale, mode }: ContactFormProps) {
       aria-labelledby={'contact-' + locale + '-form-heading'}
       className="rounded-2xl border border-foundation-border bg-foundation-surface p-6 md:p-8"
     >
-      <div className="border border-foundation-border bg-foundation-tint p-5">
+      <div className="rounded-[12px] border border-foundation-border bg-foundation-tint p-5 md:p-6">
         <h2 className="text-xl font-bold leading-7 text-foundation-ink">{content.notice.heading}</h2>
         <p className="mt-3 text-base leading-7 text-foundation-ink">{content.notice.body}</p>
         <p className="mt-3 text-sm leading-6 text-foundation-muted">{content.notice.failureHelper}</p>
@@ -143,12 +143,12 @@ export function ContactForm({ content, locale, mode }: ContactFormProps) {
                 {field.inputType === 'textarea' ? (
                   <textarea
                     {...commonProps}
-                    className="mt-2 min-h-[180px] w-full resize-y rounded-[10px] border border-foundation-border bg-foundation-surface px-4 py-3 text-base leading-7 text-foundation-ink outline-none transition-colors duration-[160ms] ease-out focus:border-foundation-action focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-2"
+                    className="mt-2 min-h-[180px] w-full resize-y rounded-[10px] border border-foundation-muted bg-foundation-surface px-4 py-3 text-base leading-7 text-foundation-ink outline-none transition-colors duration-[160ms] ease-out focus:border-foundation-action focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-2"
                   />
                 ) : (
                   <input
                     {...commonProps}
-                    className="mt-2 min-h-12 w-full rounded-[10px] border border-foundation-border bg-foundation-surface px-4 text-base leading-7 text-foundation-ink outline-none transition-colors duration-[160ms] ease-out focus:border-foundation-action focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-2"
+                    className="mt-2 min-h-12 w-full rounded-[10px] border border-foundation-muted bg-foundation-surface px-4 text-base leading-7 text-foundation-ink outline-none transition-colors duration-[160ms] ease-out focus:border-foundation-action focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-2"
                     type={field.inputType}
                   />
                 )}
@@ -174,18 +174,18 @@ export function ContactForm({ content, locale, mode }: ContactFormProps) {
         </p>
 
         {isSubmitting ? (
-          <p id={statusId} role="status" aria-live="polite" className="mt-6 border border-foundation-border bg-foundation-tint p-4 text-base leading-7 text-foundation-ink">
+          <p id={statusId} role="status" aria-live="polite" className="mt-6 rounded-[12px] border border-foundation-border bg-foundation-tint p-4 text-base leading-7 text-foundation-ink">
             {content.form.submitting}
           </p>
         ) : null}
         {state.phase === 'success' ? (
-          <div ref={successStatus} id={statusId} role="status" aria-live="polite" tabIndex={-1} className="mt-6 border border-[#067647] bg-foundation-surface p-4 text-foundation-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action">
+          <div ref={successStatus} id={statusId} role="status" aria-live="polite" tabIndex={-1} className="mt-6 rounded-[12px] border border-[#067647] bg-foundation-surface p-4 text-foundation-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action">
             <h3 className="font-bold">{content.form.success.heading}</h3>
             <p className="mt-2 text-base leading-7">{content.form.success.body}</p>
           </div>
         ) : null}
         {isFailure ? (
-          <div ref={failureStatus} id={statusId} role="alert" tabIndex={-1} className="mt-6 border border-[#B42318] bg-foundation-surface p-4 text-foundation-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action">
+          <div ref={failureStatus} id={statusId} role="alert" tabIndex={-1} className="mt-6 rounded-[12px] border border-[#B42318] bg-foundation-surface p-4 text-foundation-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action">
             <h3 className="font-bold">{content.form.failure.heading}</h3>
             <p className="mt-2 text-base leading-7">{content.form.failure.body}</p>
           </div>

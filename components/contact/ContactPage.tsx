@@ -28,7 +28,7 @@ export function ContactPage({ content, locale, mode }: ContactPageProps) {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]">
+        <div className="mt-10 grid gap-10 border-t-2 border-foundation-ink pt-10 md:mt-12 md:pt-12 lg:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]">
           <ContactForm content={content} locale={locale} mode={mode} />
           <aside className="self-start lg:pt-8">
             <section aria-labelledby={'contact-' + locale + '-alternatives-heading'}>

@@ -8,9 +8,9 @@ interface PrivacyPageProps {
 export function PrivacyPage({ content }: PrivacyPageProps) {
   return (
     <main className="bg-foundation-canvas">
-      <section className="border-b border-foundation-border bg-foundation-canvas">
-        <div className="mx-auto w-full max-w-[1200px] px-5 py-16 md:px-8 md:py-24 lg:px-12">
-          <h1 className="max-w-[18ch] text-4xl font-bold leading-tight tracking-[-0.02em] text-foundation-ink md:text-5xl md:leading-[1.1]">
+      <section className="bg-foundation-canvas">
+        <div className="mx-auto w-full max-w-[1200px] px-5 pb-10 pt-16 md:px-8 md:pb-12 md:pt-24 lg:px-12">
+          <h1 className="max-w-[18ch] text-[36px] font-bold leading-10 tracking-[-0.02em] text-foundation-ink md:text-[48px] md:leading-[52px]">
             {content.heading}
           </h1>
           <p className="mt-6 max-w-[68ch] text-lg leading-8 text-foundation-muted">
@@ -19,8 +19,8 @@ export function PrivacyPage({ content }: PrivacyPageProps) {
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-[1200px] px-5 py-12 md:px-8 md:py-16 lg:px-12">
-        <div className="max-w-[760px]">
+      <div className="mx-auto w-full max-w-[1200px] px-5 pb-16 md:px-8 md:pb-20 lg:px-12">
+        <div className="max-w-[760px] border-t-2 border-foundation-ink pt-10 md:pt-12">
           {content.sections.map((section) => (
             <section
               key={section.id}
