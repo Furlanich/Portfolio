@@ -466,6 +466,20 @@ Instrument Sans is the primary family for headings, body, navigation and actions
 
 Production must self-host only approved weights/subsets through the existing Next.js font boundary, retain license notices and verify Spanish/English glyph coverage. Loading and layout stability remain implementation gates. The earlier Inter requirements remain historical baseline; they no longer define the accepted target identity.
 
+#### Production font files
+
+`app/fonts.ts` loads these files through `next/font/local` with `display: swap`. Only Instrument Sans preloads. `scripts/brand-assets.test.mjs` fails if a shipped file's SHA-256 is missing here, a face is added, or a Spanish/English content character is not covered.
+
+| Shipped file | Source | Processing | Bytes | SHA-256 |
+| --- | --- | --- | --- | --- |
+| `instrument-sans-variable-latin.woff2` | [Instrument/instrument-sans](https://github.com/Instrument/instrument-sans) commit `7fa22308a3d0c94ee2b3cd537a1196b65db34a3e`, `fonts/webfonts/InstrumentSans[wdth,wght].woff2` (SHA-256 `aa72922aafcc0dc18f36ec1d805b0212057dabe8b9d5b8b57f67035aea1b826d`) | fontTools 4.65.0: `wdth` pinned to 100, `wght` limited to 400–700, subset to the Latin range `U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD`, all layout features kept | 38,368 | `7fa7ad123a3be5fcee990b5d100b4179f79f1e2e400f02784c2ccf5e6b7f088e` |
+| `ibm-plex-mono-regular-latin.woff2` | [IBM/plex](https://github.com/IBM/plex) tag `@ibm/plex-mono@2.5.0`, `packages/plex-mono/fonts/split/woff2/IBMPlexMono-Regular-Latin1.woff2` | Unmodified official Latin-1 split | 17,544 | `e8993d946649b9d01abb1ed06d574b19d8ea3e66b5c3948602db335c44c18e56` |
+| `ibm-plex-mono-semibold-latin.woff2` | Same tag, `IBMPlexMono-SemiBold-Latin1.woff2` | Unmodified official Latin-1 split | 17,872 | `b7acd05041ab65f3b7039e218ddd893065e11a07e85ea85019473152a51b6b7d` |
+
+Total added font transfer is 73,784 bytes, of which 38,368 bytes (the preloaded primary face) sit on the critical path. The license texts are retained as `app/fonts/OFL-instrument-sans.txt` (`OFL.txt` at the Instrument commit) and `app/fonts/OFL-ibm-plex.txt` (`packages/plex-mono/LICENSE.txt` at the Plex tag).
+
+The lockup wordmark is outlined from the official static `fonts/ttf/InstrumentSans-Bold.ttf` at the same Instrument commit (SHA-256 `735badeb8b2046cee6f5e1226412ab6c29db04accbca413af03d70e991dce10d`) with the font's pair kerning and `0.08em` tracking. That file is a build input only and is not shipped.
+
 ### Precision Assembly composition
 
 The visual direction combines warm editorial space, controlled asymmetry, exact rules and one dimensional azure sculpture. Typography, whitespace, rules, project media and section numbering carry most site-wide identity. Cards remain reserved for genuine comparison, bounded evidence and controls; ordinary ideas use editorial composition rather than a bordered rectangle.

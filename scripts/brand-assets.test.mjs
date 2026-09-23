@@ -156,22 +156,24 @@ function cmapCodePoints(cmap) {
   return codePoints;
 }
 
+// Prefers the typographic family (name ID 16) over the legacy style-linked family (ID 1).
 function familyName(nameTable) {
   const count = nameTable.readUInt16BE(2);
   const storage = nameTable.readUInt16BE(4);
+  const names = new Map();
   for (let index = 0; index < count; index += 1) {
     const record = 6 + index * 12;
     const platform = nameTable.readUInt16BE(record);
     const nameId = nameTable.readUInt16BE(record + 6);
-    if (platform !== 3 || nameId !== 1) continue;
+    if (platform !== 3 || (nameId !== 1 && nameId !== 16)) continue;
     const length = nameTable.readUInt16BE(record + 8);
     const start = storage + nameTable.readUInt16BE(record + 10);
     const utf16 = nameTable.subarray(start, start + length);
     let name = '';
     for (let offset = 0; offset < utf16.length; offset += 2) name += String.fromCharCode(utf16.readUInt16BE(offset));
-    return name;
+    names.set(nameId, name);
   }
-  return '';
+  return names.get(16) ?? names.get(1) ?? '';
 }
 
 function variationAxes(fvar) {

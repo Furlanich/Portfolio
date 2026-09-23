@@ -1,19 +1,17 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { instrumentSans, plexMono } from '../fonts';
 import '../globals.css';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-});
 
 const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/$/, '');
 
 export const metadata: Metadata = {
   title: 'FURLANICH',
   icons: {
-    icon: `${basePath}/favicon.ico`,
+    icon: [
+      { url: `${basePath}/favicon.ico`, sizes: '16x16 32x32' },
+      { url: `${basePath}/favicon.svg`, type: 'image/svg+xml' },
+    ],
+    apple: `${basePath}/apple-touch-icon.png`,
   },
 };
 
@@ -24,7 +22,7 @@ export const viewport = {
 
 export default function SpanishLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es-AR" className={inter.variable}>
+    <html lang="es-AR" className={`${instrumentSans.variable} ${plexMono.variable}`}>
       <body>{children}</body>
     </html>
   );
