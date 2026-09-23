@@ -3,6 +3,7 @@ id: GOV-STATUS
 type: decision-register
 status: APPROVED
 related:
+  - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
@@ -35,7 +36,7 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-20
+last_verified: 2026-09-23
 ---
 
 # Product knowledge status register
@@ -78,7 +79,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 ### Homepage and process
 
-- Visual Identity & Immersive Experience v1 and [`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](../rfcs/adaptive-immersive-homepage-production-v1.md) are APPROVED. The [prototype review](../reviews/immersive-homepage-prototype-2026-09-19/index.md) records completed feasibility evidence and React Three Fiber 8 incompatibility. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](../decisions/adaptive-immersive-homepage.md) records C2, direct Three.js, one governed Connection-video surface and production gates. [`REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20`](../reviews/contained-master-optical-closure-2026-09-20/index.md) closes the exact Balanced Contained geometry and Operational Clarity bilingual chapter copy. [`PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1`](../plans/active/visual-identity-adaptive-immersive-v1.md) is APPROVED for sequential implementation through human-reviewed Pull Requests.
+- Visual Identity & Immersive Experience v1 and [`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](../rfcs/adaptive-immersive-homepage-production-v1.md) are APPROVED. The [prototype review](../reviews/immersive-homepage-prototype-2026-09-19/index.md) records completed feasibility evidence and React Three Fiber 8 incompatibility. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](../decisions/adaptive-immersive-homepage.md) records C2, direct Three.js, one governed Connection-video surface and production gates. [`REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20`](../reviews/contained-master-optical-closure-2026-09-20/index.md) closes the exact Balanced Contained geometry and Operational Clarity bilingual chapter copy. [`PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1`](../plans/active/visual-identity-adaptive-immersive-v1.md) is APPROVED and delivered PRs #65–#72; PR7 (optional Connection film) is omitted. The PR8 [acceptance record](../reviews/adaptive-immersive-homepage-acceptance-v1/index.md) is PROPOSED until the constrained Android evidence and a real screen-reader spot check are recorded.
 
 - The approved homepage sequence, Spanish copy, natural English adaptations, CTA destinations, evidence boundaries, conversion narrative, and implementation-readiness matrix are owned by [`PAGE-HOME`](../product/pages/home.md).
 - The approved [`RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY`](../rfcs/homepage-hero-implementation-boundary.md) requires the homepage-foundation prerequisites to be resolved and planned before application implementation begins; it does not approve the remaining OPEN product or architecture choices.
@@ -193,7 +194,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 ## OPEN
 
-- Visual Identity & Immersive Experience v1 still requires final static poster execution within budget, the optional Connection-film asset/shot list/tool/codec decision, the 768 px local-sticky verdict after real-device testing, and any future analytics or conversion-measurement decision. The versioned implementation plan, exact master geometry and bilingual chapter copy are APPROVED and no longer OPEN.
+- Visual Identity & Immersive Experience v1 still requires the constrained Android acceptance evidence and a real screen-reader spot check ([acceptance record](../reviews/adaptive-immersive-homepage-acceptance-v1/index.md)), any later Connection-film asset/shot list/tool/codec decision (PR7 was omitted from v1), and any future analytics or conversion-measurement decision. The 768 px composition stays sequential in v1; a local sticky interval may be reconsidered only with real-device evidence. The versioned implementation plan, exact master geometry, bilingual chapter copy and static poster art direction are APPROVED and no longer OPEN.
 - Commercial Contact activation: complete Formspree storage/retention/subprocessor/transfer facts, operational ownership, restriction to `furlanich.github.io`, exact bilingual commercial Privacy owner text, professional privacy/legal review, and real staging/production delivery and deletion evidence remain OPEN. They do not block the approved zero-transmission demonstration and are not marked PASS by mock evidence.
 - Final legal and contractual review of commercial boundaries.
 - Founder photograph and any later CV content refresh/redesign are **DEFERRED** and non-blocking for the text-led Studio/Founder experience.
