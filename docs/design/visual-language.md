@@ -482,7 +482,7 @@ Recorded contrast (`scripts/design-tokens.test.mjs`): Ink 14.61:1 on Bone, 15.77
 - `public/brand/furlanich-mark-*.svg` keep the canonical `0 0 256 256` coordinate system with no ground. The file name states the intended ground; the surrounding surface supplies the 1x clear space.
 - `public/brand/furlanich-lockup-*.svg` carry their ground and 1x clear space. The mark is unscaled beside a wordmark outlined from Instrument Sans Bold with cap height `74.6` units, which keeps the G0 lockup study's silhouette-to-cap ratio of about 3.1:1, and a 1.25x silhouette gap. The azure-on-bone lockup sets the wordmark in Ink; the reverse sets both in Bone.
 - `public/favicon.svg` is an Azure square with the Bone mark scaled uniformly (`0.8744`) so 1x clear space surrounds the silhouette. The 16/32 px ICO, 32 px PNG, 180 px Apple touch icon and 512 px icon are rasterized from it.
-- `BrandSignature` renders the azure-on-bone mark at 40 px beside the live 16 px `FURLANICH` wordmark, preserving the lockup ratio. The mark is decorative (`alt=""`) so the link's accessible name remains `FURLANICH`.
+- `BrandSignature` renders the azure-on-bone mark at 40 px beside the live 16 px `FURLANICH` wordmark, preserving the lockup ratio. The mark is an inline, `aria-hidden` SVG with the canonical geometry, so the link's accessible name remains `FURLANICH` and page-media contracts that count content images are unaffected.
 
 ### Typography system
 

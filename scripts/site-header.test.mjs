@@ -34,10 +34,15 @@ test('exposes four navigation subjects and one stable Contact action', () => {
 test('renders the protected mark beside the accessible text wordmark', () => {
   const signature = fs.readFileSync(path.join(process.cwd(), 'components/brand/BrandSignature.tsx'), 'utf8');
 
-  assert.match(signature, /src=\{withBasePath\('\/brand\/furlanich-mark-azure-on-bone\.svg'\)\}/);
-  assert.match(signature, /alt=""/, 'the mark is decorative beside the text wordmark');
-  assert.match(signature, /width=\{40\}\s+height=\{40\}/, 'the mark keeps its square coordinate system');
-  assert.match(signature, /loading="eager"/);
+  // Inline rather than an image element: the static-export gate counts page images as content media.
+  assert.doesNotMatch(signature, /<img|<Image|next\/image/);
+  assert.match(signature, /<svg\s+aria-hidden="true"\s+focusable="false"\s+viewBox="0 0 256 256"\s+width=\{40\}\s+height=\{40\}/);
+  assert.match(signature, /stroke="#004589" strokeWidth=\{30\} strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit=\{4\}/);
+  assert.deepEqual(
+    [...signature.matchAll(/<polyline points="([^"]+)" \/>/g)].map((match) => match[1]),
+    ['30,102 128,28 226,102', '30,166 128,92 226,166', '30,230 128,156 226,230'],
+    'the chrome mark keeps the G0 centerlines',
+  );
   assert.match(signature, /<span>FURLANICH<\/span>/);
   assert.match(signature, /font-bold tracking-\[0\.08em\] text-foundation-ink/);
   assert.match(signature, /gap-\[2\.6px\]/, '1.25x silhouette gap at the 40px mark size');
