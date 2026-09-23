@@ -74,8 +74,23 @@ const founderRequirements = {
     mpcHref: '/en/work/mpc-administracion/',
   },
 };
+// Four decorative brand-motion posters from lib/immersive-home/media-manifest.ts. They are
+// the only images the homepage may render, and each must carry an empty alternative text.
+const homepagePosters = [
+  '/brand/immersive/recognition.svg',
+  '/brand/immersive/fragmentation.svg',
+  '/brand/immersive/connection.svg',
+  '/brand/immersive/coordination.svg',
+];
+
 const homepageRequirements = {
   'index.html': {
+    chapters: [
+      ['Reconocer el sistema real', 'Pedidos, reservas, mensajes y tareas ya conviven en un mismo negocio. El primer paso es entender cómo se relacionan.'],
+      ['Ver dónde se fragmenta', 'Cuando la información cambia de canal y se repite, la operación depende de más controles manuales.'],
+      ['Conectar lo que importa', 'Una solución bien definida reúne datos, reglas y acciones sin sumar complejidad innecesaria.'],
+      ['Coordinar el trabajo', 'El sistema acompaña el proceso real y deja una base que puede mantenerse y adaptarse cuando cambia el negocio.'],
+    ],
     sections: [
       ['problems', 'problems-heading', 'Cuando el trabajo queda repartido entre herramientas'],
       ['services', 'services-heading', 'Servicios para necesidades concretas'],
@@ -96,10 +111,16 @@ const homepageRequirements = {
       /id="audiences"|audiences-heading/i,
       /Pensado para negocios con operaciones reales|MKT-D05/i,
       /Busesfy|ChronoApp|MPC Administración|Documancer/i,
-      /<img\b|project-card|case-study|testimonial|client-logo|metric-card/i,
+      /project-card|case-study|testimonial|client-logo|metric-card/i,
     ],
   },
   'en/index.html': {
+    chapters: [
+      ['Recognize the real system', 'Orders, bookings, messages, and tasks already coexist in one business. The first step is understanding how they relate.'],
+      ['See where it fragments', 'When information changes channels and is repeated, operations depend on more manual checks.'],
+      ['Connect what matters', 'A well-defined solution brings data, rules, and actions together without adding unnecessary complexity.'],
+      ['Coordinate the work', 'The system supports the real process and creates a foundation that can be maintained and adapted as the business changes.'],
+    ],
     sections: [
       ['problems', 'problems-heading', 'When work is spread across tools'],
       ['services', 'services-heading', 'Services for concrete business needs'],
@@ -120,7 +141,7 @@ const homepageRequirements = {
       /id="audiences"|audiences-heading/i,
       /Built for businesses with real operations|MKT-D05/i,
       /Busesfy|ChronoApp|MPC Administración|Documancer/i,
-      /<img\b|project-card|case-study|testimonial|client-logo|metric-card/i,
+      /project-card|case-study|testimonial|client-logo|metric-card/i,
     ],
   },
 };
@@ -830,6 +851,38 @@ for (const { artifact, html } of allHtml) {
   assertContactArtifact(artifact, html);
   const requirement = homepageRequirements[artifact.file];
   if (!requirement) continue;
+
+  let previousChapterPosition = -1;
+  for (const [heading, description] of requirement.chapters) {
+    const chapterPosition = html.search(new RegExp(`<h2\\b[^>]*>${escapeRegExp(heading)}</h2>`));
+    if (chapterPosition === -1 || chapterPosition <= previousChapterPosition) {
+      failures.push(`${artifact.file}: instrument chapter "${heading}" is missing or out of order`);
+    }
+    previousChapterPosition = chapterPosition;
+    if (!html.includes(description)) {
+      failures.push(`${artifact.file}: missing instrument chapter description for "${heading}"`);
+    }
+  }
+  const problemsPosition = html.search(/<section\b[^>]*\bid="problems"/);
+  if (previousChapterPosition !== -1 && problemsPosition !== -1 && problemsPosition < previousChapterPosition) {
+    failures.push(`${artifact.file}: instrument chapters must precede Problems`);
+  }
+
+  const expectedPosters = homepagePosters.map((poster) => expectedHref(poster));
+  for (const image of html.match(/<img\b[^>]*>/gi) ?? []) {
+    const src = image.match(/\ssrc="([^"]+)"/)?.[1];
+    if (!expectedPosters.includes(src)) {
+      failures.push(`${artifact.file}: unexpected homepage image ${src}`);
+    }
+    if (!/\salt=""/.test(image)) {
+      failures.push(`${artifact.file}: homepage poster ${src} must be decorative (alt="")`);
+    }
+  }
+  for (const poster of expectedPosters) {
+    if (!html.includes(`src="${poster}"`)) {
+      failures.push(`${artifact.file}: missing instrument poster ${poster}`);
+    }
+  }
 
   let previousSectionPosition = -1;
   for (const [sectionId, headingId, heading] of requirement.sections) {
