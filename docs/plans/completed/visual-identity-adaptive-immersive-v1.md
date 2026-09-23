@@ -2,7 +2,7 @@
 id: PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1
 type: execution-plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 related:
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
@@ -20,6 +20,8 @@ last_verified: 2026-09-23
 ---
 
 # Visual Identity and Adaptive Immersive Experience v1 Implementation Plan
+
+> **APPROVED / COMPLETED — 2026-09-23.** PRs #65–#69 and #71–#73 are merged; PR7 is omitted. On 2026-09-23, after [PR #73](https://github.com/Furlanich/Portfolio/pull/73) merged, the repository owner closed this plan and moved the remaining corrections and improvements to a new execution plan: the constrained Android evidence, a real screen-reader spot check and the compact Pause-control placement. These items were not collected or changed here and are not recorded as PASS.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Also use the repository `frontend-implementation`, `test-driven-development`, `playwright-qa`, `visual-qa`, `verification-before-completion`, and `pr-readiness` Skills at their named boundaries. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -618,7 +620,7 @@ This PR is conditional. Omit it when no asset materially improves Connection or 
 - Modify: `docs/governance/status-register.md`
 - Modify: `docs/index.md`
 - Modify: `docs/plans/index.md`
-- Move after completion: `docs/plans/active/visual-identity-adaptive-immersive-v1.md` to `docs/plans/completed/visual-identity-adaptive-immersive-v1.md`
+- Moved after completion: `docs/plans/active/visual-identity-adaptive-immersive-v1.md` to `docs/plans/completed/visual-identity-adaptive-immersive-v1.md`
 - Modify: the plan progress and deviation sections below
 
 ### Task 8.1 — run the complete desktop and responsive matrix
@@ -626,12 +628,12 @@ This PR is conditional. Omit it when no asset materially improves Connection or 
 - [x] Both locales: initial viewport, four chapters forward and reverse, resize/orientation, handoff into Problems, final page CTA. `tests/e2e/immersive-home-acceptance.spec.ts` in `immersive-chromium`.
 - [x] Widths: 320×800, 390×844, 768×1024, 1024×768 and 1440×900.
 - [x] Modes: normal, reduced motion, Save-Data, no JavaScript, unsupported WebGL, initialization failure, context loss and absent video (no film exists; see the G2 disposition).
-- [ ] Input/accessibility: keyboard only, Pause/Resume, visible focus, 200% zoom, source order, color-independent state and representative axe scan pass. **OPEN:** the real screen-reader spot check needs the owner; the agent checked the enhanced accessibility tree only.
+- [ ] Input/accessibility: keyboard only, Pause/Resume, visible focus, 200% zoom, source order, color-independent state and representative axe scan pass. **DEFERRED to the follow-up plan:** the real screen-reader spot check; the agent checked the enhanced accessibility tree only.
 - [x] Deployment: root and `/Portfolio`; static export; direct entry and language switch; no console errors, missing assets or broken fragments. The complete suite ran against both served exports (see PR8 verification).
 
 ### Task 8.2 — record constrained Android evidence
 
-**OPEN — owner action.** No Android device or `adb` bridge was available to the agent. The [acceptance record](../../reviews/adaptive-immersive-homepage-acceptance-v1/index.md) holds the fields to complete.
+**DEFERRED to the follow-up plan by the repository owner.** No Android device or `adb` bridge was available to the agent. The [acceptance record](../../reviews/adaptive-immersive-homepage-acceptance-v1/index.md) holds the fields to complete.
 
 - [ ] Use one named lower/mid-range Android device and current Chrome. Record model, OS, browser, memory class, viewport, DPR, network profile and whether battery saver is active.
 - [ ] Cold-load each locale, traverse forward/reverse 20 times, rotate during Connection, background/foreground the tab and leave it idle for five minutes.
@@ -645,7 +647,7 @@ This PR is conditional. Omit it when no asset materially improves Connection or 
 - [x] Re-run `measure:immersive` against the final asset set and attach raw JSON plus summarized results to the acceptance record.
 - [x] Run the entire repository gate: `npm.cmd run validate`, `npm.cmd run test:e2e`, `npm.cmd run test:a11y`, `npm.cmd run verify:static-export`, base-path build/verification and `npm.cmd run measure:immersive`.
 - [x] Update `ARCHITECTURE.md` with only current implementation facts. Record any deviation that changes architecture in governance before merging. No deviation changes architecture.
-- [ ] Mark the plan `APPROVED / COMPLETED` and move it only after every required PR is human-merged and acceptance passes. If PR7 is omitted, record “optional asset absent; static chapter closes without an empty frame.”
+- [x] Mark the plan `APPROVED / COMPLETED` and move it only after every required PR is human-merged and acceptance passes. If PR7 is omitted, record “optional asset absent; static chapter closes without an empty frame.” Completed by owner disposition with the Android and screen-reader evidence deferred (see deviations); PR7 recorded as omitted.
 - [x] Commit: `docs(immersive): record production acceptance`.
 
 ### PR8 verification
@@ -660,7 +662,7 @@ This PR is conditional. Omit it when no asset materially improves Connection or 
 - [x] `npm.cmd run measure:immersive`: 114.0 KiB incremental (106.7 KiB lazy runtime), 2.21 KiB first poster, 744 ms to first frame, 16.7 ms rAF p95, no interaction long task, CLS 0, no video, 1 canvas and listeners 380 → 381.
 - [x] Firefox 155 and WebKit 26.6 activate WebGL on both Home routes with one canvas and no page error.
 - [x] Visual QA of both locales at the five widths with WebGL active; one minor OPEN observation (compact Pause control over the sculpture).
-- [ ] Constrained Android evidence and the real screen-reader spot check (owner).
+- [ ] Constrained Android evidence and the real screen-reader spot check: deferred to the follow-up plan.
 
 ---
 
@@ -723,7 +725,7 @@ Repeat build, static export verification and representative browser journeys wit
 - [x] PR5 semantic/static C2 homepage merged ([PR #71](https://github.com/Furlanich/Portfolio/pull/71)).
 - [x] PR6 direct Three.js enhancement merged ([PR #72](https://github.com/Furlanich/Portfolio/pull/72)).
 - [x] Optional G2/PR7 disposition recorded: omitted, no film.
-- [ ] PR8 acceptance record merged and plan completed.
+- [x] PR8 acceptance record merged ([PR #73](https://github.com/Furlanich/Portfolio/pull/73)) and plan completed on 2026-09-23.
 
 ## Important implementation decisions
 
@@ -762,5 +764,6 @@ Repeat build, static export verification and representative browser journeys wit
 - **PR8 lab vitals model:** Chrome's CDP throttling does not delay the navigation document, so `measure:home-vitals` charges it one Lighthouse applied request latency plus transfer time at the lab server. A stricter trial that also charged three handshake round trips measured mobile LCP p75 at 2,892 ms. That double-counts connection setup the applied latency already includes; it is recorded so the mobile margin is not overstated.
 - **PR8 Contact zero-transmission case against a production export:** `contact.spec.ts` counts every `fetch` as a possible inquiry transmission. Against a served export, Next's same-origin route prefetches are fetches, so the case fails in every project although no inquiry value leaves the page; under the dev-server harness it passes. Disposition: not changed in PR8. The Contact harness should exclude router prefetches or assert on inquiry values in a separate PR. **Resolved after PR8:** the case now records every request during submission and fails on any method other than GET or HEAD, any other origin, or any URL or body that contains a typed inquiry value, including URL-encoded forms. The router also sends same-origin HEAD requests to route documents; HEAD carries no body, so it is allowed on the same terms as GET. A companion case injects a Formspree-style cross-origin POST, a same-origin beacon, a same-origin XHR with the email in its query and a cross-origin pixel, and requires all four to be flagged while a same-origin GET and a HEAD are not. Turning off any one rule fails that case. The Contact suite passes 126/126 under the dev server and against served root and `/Portfolio` exports.
 - **PR8 Windows export layout:** a local Windows build writes router segment prefetches as nested directories, while the client and the Linux-built GitHub Pages deployment use dotted file names (200 on the deployed site). Local Windows previews therefore 404 those prefetches. Disposition: production is unaffected; `measure-home-web-vitals.mjs` maps the names locally.
+- **Plan completion with deferred acceptance evidence:** Task 8.3 requires acceptance to pass before completion, and the constrained Android evidence and real screen-reader spot check were not collected. On 2026-09-23, after [PR #73](https://github.com/Furlanich/Portfolio/pull/73) merged, the repository owner closed this plan and moved the remaining corrections and improvements to a new execution plan: the constrained Android evidence, a real screen-reader spot check and the compact Pause-control placement. These items were not collected or changed here and are not recorded as PASS. The acceptance record states which criteria passed and which were deferred. No RFC or ADR is required.
 - **Observed, pre-existing e2e harness flake:** on a cold `.next/dev` cache, parallel workers that first request a `[projectSlug]` detail route can receive `SyntaxError: Unexpected end of JSON input` from the dev server, and `marketing-navigation.spec.ts` then finds no header links. It reproduces on `origin/main` without PR2 and passes against a warmed server. Disposition: not changed in PR2. A later harness task should warm routes before the suite or run e2e against the static export.
 - **Observed for PR4, pre-existing:** Contact inputs use the decorative rule role for their boundary (1.38:1 on white after PR2; 1.30:1 before). WCAG 1.4.11 expects 3:1 for control boundaries, so PR4 should give fields a compliant boundary rather than reuse the rule. **Resolved in PR4:** fields now use the Muted role (6.12:1), enforced by `tests/e2e/contact.spec.ts`.

@@ -27,10 +27,11 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1](active/visual-identity-adaptive-immersive-v1.md): APPROVED active implementation sequence for the approved FURLANICH identity, static C2 composition, direct Three.js enhancement, optional governed Connection media and production acceptance. PRs #65–#72 are merged and PR7 is omitted; PR8 acceptance awaits constrained Android evidence.
+None.
 
 ## Completed
 
+- [PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1](completed/visual-identity-adaptive-immersive-v1.md): APPROVED / COMPLETED identity, static C2 homepage and direct Three.js enhancement through PRs #65–#69 and #71–#73; PR7 omitted. Constrained Android evidence, a real screen-reader spot check and the compact Pause-control placement are deferred to a follow-up execution plan.
 - [PLAN-MARKETING-PRESENTATION-EXCELLENCE](completed/marketing-presentation-excellence-v1.md): APPROVED / COMPLETED Route B plan for D01, D02, D04, D05, D06 and applicable D07; D03 remains REJECTED. Six sequential bilingual implementation PRs were completed through human merges of PRs #55–#59.
 - [`PLAN-CONTACT-INQUIRY-PIPELINE`](completed/contact-inquiry-pipeline.md): completed the bilingual demonstration Privacy and Contact experience, deployed zero-transmission proof, and preserved future commercial activation gates.
 - [`PLAN-STUDIO-FOUNDER-COMPLETION`](completed/studio-founder-completion.md): completed the four-PR bilingual Studio experience, Founder profile, cross-page integration, evidence links, and verification sequence.

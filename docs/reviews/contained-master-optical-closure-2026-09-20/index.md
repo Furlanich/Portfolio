@@ -16,7 +16,7 @@ last_verified: 2026-09-20
 ## Boundary
 
 This review closes the two pre-implementation gates named by
-[PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1](../../plans/active/visual-identity-adaptive-immersive-v1.md):
+[PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1](../../plans/completed/visual-identity-adaptive-immersive-v1.md):
 
 - G0: exact Contained Master optical construction;
 - G1: exact bilingual immersive chapter interface copy.
