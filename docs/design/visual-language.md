@@ -22,7 +22,7 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-20
+last_verified: 2026-09-23
 ---
 
 # Visual language
@@ -459,6 +459,30 @@ The durable comparison below records the approved candidate beside the two rejec
 | Tint | `#E7EEF5` | Quiet separation and restrained states |
 
 Bone and azure are the recognizable pair. Full-azure surfaces are reserved for deliberate emphasis. UI gradients, neon and glass remain excluded. A physically lit 3D material may create tonal variation inside the scene without becoming a general interface gradient. Final tokens, interactive states and every foreground/background pair require deterministic contrast verification.
+
+#### Semantic roles in production
+
+`tailwind.config.ts` exposes the five colors as `identity` and maps the shared `foundation` roles onto them, so pages keep their role names while PR3–PR5 migrate their composition:
+
+| Role | Value | Basis |
+| --- | --- | --- |
+| `canvas` | Bone `#F9F6EE` | Page and section ground |
+| `surface` | `#FFFFFF` | Derived. The approved Surface role for the app bar, footer and compact panel; it also keeps the existing section rhythm and field/card grounds separate from Bone until the editorial migration decides otherwise. |
+| `ink` | Ink `#09243D` | Headings and long-form text |
+| `muted` | Muted `#526473` | Secondary text and metadata |
+| `action` | Azure `#004589` | Primary action, links and active state |
+| `action-strong` | Ink `#09243D` | Hover/active state of Azure actions and the outer focus ring |
+| `tint` | Tint `#E7EEF5` | Hover grounds and restrained states |
+| `border` | `#D3D4D2` | Derived rule: Ink at 16% over Bone. Decorative only (1.38:1 on Bone) and never the sole indicator of a control or state. |
+
+Recorded contrast (`scripts/design-tokens.test.mjs`): Ink 14.61:1 on Bone, 15.77:1 on white and 13.48:1 on Tint; Muted 5.67:1 on Bone, 6.12:1 on white and 5.23:1 on Tint; Azure 8.79:1 on Bone, 9.49:1 on white and 8.11:1 on Tint; white on Azure 9.49:1; Bone on Azure 8.79:1; white on Ink 15.77:1. The Ink focus ring is at least 13.48:1 against every ground. The launch palette above remains the historical baseline only.
+
+#### Identity asset files
+
+- `public/brand/furlanich-mark-*.svg` keep the canonical `0 0 256 256` coordinate system with no ground. The file name states the intended ground; the surrounding surface supplies the 1x clear space.
+- `public/brand/furlanich-lockup-*.svg` carry their ground and 1x clear space. The mark is unscaled beside a wordmark outlined from Instrument Sans Bold with cap height `74.6` units, which keeps the G0 lockup study's silhouette-to-cap ratio of about 3.1:1, and a 1.25x silhouette gap. The azure-on-bone lockup sets the wordmark in Ink; the reverse sets both in Bone.
+- `public/favicon.svg` is an Azure square with the Bone mark scaled uniformly (`0.8744`) so 1x clear space surrounds the silhouette. The 16/32 px ICO, 32 px PNG, 180 px Apple touch icon and 512 px icon are rasterized from it.
+- `BrandSignature` renders the azure-on-bone mark at 40 px beside the live 16 px `FURLANICH` wordmark, preserving the lockup ratio. The mark is decorative (`alt=""`) so the link's accessible name remains `FURLANICH`.
 
 ### Typography system
 

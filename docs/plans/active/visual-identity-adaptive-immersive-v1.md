@@ -15,7 +15,7 @@ related:
   - PAGE-FOUNDER
   - PROJECT-EVIDENCE
   - ADR-STATIC-LOCALIZED-ROUTING
-last_verified: 2026-09-20
+last_verified: 2026-09-23
 ---
 
 # Visual Identity and Adaptive Immersive Experience v1 Implementation Plan
@@ -256,38 +256,38 @@ This PR repairs known divergence only. It introduces no visual system or runtime
 
 ### Task 2.1 — lock asset and font provenance with failing tests
 
-- [ ] Add tests for required mark variants, stable `viewBox`, no scripts/external resources/raster data/text elements, matching canonical geometry, favicon signatures/dimensions and required OFL notices.
-- [ ] Add tests that reject `next/font/google`, Inter fallbacks and unapproved font weights after migration.
-- [ ] Add contrast tests for Bone `#F9F6EE`, Azure `#004589`, Ink `#09243D`, Muted `#526473` and Tint `#E7EEF5` in every text/control pairing used by the new system.
-- [ ] Run `node --test scripts/brand-assets.test.mjs scripts/design-tokens.test.mjs`; expect failure because assets and tokens do not yet exist.
-- [ ] Commit: `test(brand): define identity asset and token contracts`.
+- [x] Added tests for both mark variants, stable `viewBox`, no scripts/external resources/raster data/text elements, the exact G0 centerlines and stroke construction, favicon PNG/ICO signatures and dimensions, and both OFL notices.
+- [x] Added tests that reject `next/font/google`, Inter fallbacks and unapproved faces or weights. The font test reads each WOFF2 `name`, `OS/2`, `fvar` and `cmap` table, requires every file's SHA-256 in `DESIGN-VISUAL`, and checks every Spanish/English content character against the primary face.
+- [x] Added contrast tests for Bone, Azure, Ink, Muted and Tint in every text/control pairing the shared roles use.
+- [x] Ran `node --test scripts/brand-assets.test.mjs scripts/design-tokens.test.mjs`; both failed because assets, fonts and tokens did not yet exist.
+- [x] Commit: `test(brand): define identity asset and token contracts`.
 
 ### Task 2.2 — add the protected master and self-hosted type
 
-- [ ] Export only the G0-approved geometry. Keep the source SVG free of motion hooks and scene-specific IDs.
-- [ ] Source the exact Latin font binaries from the official Instrument Sans and IBM Plex repositories; record release/tag and SHA-256 values in `DESIGN-VISUAL` and retain both license texts.
-- [ ] Configure `app/fonts.ts` with `next/font/local`: Instrument Sans variable as `--font-sans`; Plex Mono 400/600 as `--font-mono`; `display: swap`; preload only the primary face.
-- [ ] Import the font variables from both locale layouts. Confirm identical files are emitted once rather than per locale.
-- [ ] Run the focused tests and a static build.
-- [ ] Commit: `feat(brand): add protected mark and self-hosted typography`.
+- [x] Exported only the G0-approved geometry as stroked polylines with no IDs, classes or motion hooks. Lockup wordmarks are outlined paths, not `<text>`.
+- [x] Sourced the font binaries from the official Instrument Sans commit and IBM Plex `@ibm/plex-mono@2.5.0` tag. `DESIGN-VISUAL` records the source, processing and SHA-256 values, and both license texts are retained.
+- [x] Configured `app/fonts.ts` with `next/font/local`: Instrument Sans variable (400–700) as `--font-sans`, Plex Mono 400/600 as `--font-mono`, `display: swap`, with only the primary face preloaded.
+- [x] Imported the font variables from both locale layouts. The static export emits each of the three files once; only Instrument Sans carries the preload marker.
+- [x] Ran the focused tests and a static build.
+- [x] Commit: `feat(brand): add protected mark and self-hosted typography`.
 
 ### Task 2.3 — migrate semantic tokens and shared chrome
 
-- [ ] Replace launch foundation roles with the approved Bone/Azure/Ink/Muted/Tint roles. Add a border/surface role only when deterministic contrast and separation require it.
-- [ ] Add `font-mono` for short sequence labels only. Keep body, actions and navigation in Instrument Sans.
-- [ ] Implement `BrandSignature` as an image-backed protected mark plus the accessible text wordmark. Use the icon alone only where surrounding context already names FURLANICH.
-- [ ] Update Header/Footer/disclosure/language switch without changing route labels, order, demo contract or focus behavior.
-- [ ] Regenerate favicons from the approved master and verify 16/32 px legibility manually.
-- [ ] Run `node --test scripts/brand-assets.test.mjs scripts/design-tokens.test.mjs scripts/site-header.test.mjs scripts/site-footer.test.mjs`.
-- [ ] Commit: `feat(brand): apply identity foundation to shared chrome`.
+- [x] Replaced the launch values with the approved Bone/Azure/Ink/Muted/Tint roles. Derived surface (`#FFFFFF`) and rule (`#D3D4D2`) roles are recorded with their basis in `DESIGN-VISUAL`.
+- [x] Added `font-mono` (`--font-mono`) without applying it yet. Body, actions and navigation stay in Instrument Sans.
+- [x] Implemented `BrandSignature` as a decorative 40 px protected mark beside the live 16 px `FURLANICH` wordmark, so the accessible name stays `FURLANICH`.
+- [x] Updated Header/Footer/disclosure/language switch without changing route labels, order, demo contract or focus behavior. The app bar keeps the approved Surface role.
+- [x] Regenerated favicons from the approved master. 32 px is crisp; 16 px keeps three distinct chevrons with softened edges and needs human confirmation in a real browser tab.
+- [x] Ran `node --test scripts/brand-assets.test.mjs scripts/design-tokens.test.mjs scripts/site-header.test.mjs scripts/site-footer.test.mjs`: 22/22 pass.
+- [x] Commit: `feat(brand): apply identity foundation to shared chrome`.
 
 ### PR2 verification
 
-- [ ] `npm.cmd run validate`
-- [ ] `npm.cmd run test:e2e -- --project=chromium-desktop --project=mobile-chromium`
-- [ ] Keyboard-check the mobile disclosure, language switch and CTA at 320/390/1024/1440.
-- [ ] Run visual QA on the header/footer in both locales, including high zoom and reduced motion.
-- [ ] Measure added font transfer; record actual WOFF2 byte totals in the PR and reject unnecessary subsets or faces.
+- [x] `npm.cmd run validate`
+- [x] `npm.cmd run test:e2e -- --project=chromium-desktop --project=mobile-chromium` (after the smoke deviation below), plus the 320, tablet, wide and accessibility Chromium projects.
+- [x] Keyboard-checked brand → language switch → menu or first link at 320/390/1024/1440 in both locales. Escape closes the disclosure and returns focus to its summary.
+- [x] Visual QA of the header/footer in both locales at 320/390/1024/1440, reduced motion and a 200% zoom approximation. No horizontal overflow and no console errors.
+- [x] Added font transfer: 73,784 bytes total, of which 38,368 bytes are the preloaded primary face.
 
 ---
 
@@ -697,7 +697,7 @@ Repeat build, static export verification and representative browser journeys wit
 - [x] This execution plan approved by the repository owner on 2026-09-20.
 - [x] G0 Contained Master optical closure approved: Balanced Contained.
 - [x] G1 bilingual immersive chapter copy approved: Operational Clarity.
-- [ ] PR1 marketing-contract reconciliation merged.
+- [x] PR1 marketing-contract reconciliation merged ([PR #65](https://github.com/Furlanich/Portfolio/pull/65)).
 - [ ] PR2 identity foundation merged.
 - [ ] PR3 offer/evidence presentation merged.
 - [ ] PR4 Studio/Founder/utility presentation merged.
@@ -718,3 +718,8 @@ Repeat build, static export verification and representative browser journeys wit
 
 - **PR1 Tasks 1.1-1.2:** the task text assumed the pre-D02 homepage, but MKT-D05 was approved and merged before this plan received implementation approval. Evidence: `PAGE-HOME` defines the current seven-section contract, retired standalone audience section, three Problems rows and Projects proof bridge while D02 still owns the approved hero/action wording. Disposition: preserve the newer D05 structure, reconcile the remaining D02/D05 copy through a real red/green contract pair and do not restore obsolete sections. The first review caught and corrected an overbroad initial disposition that had treated all Home copy as already complete. No RFC or ADR is required.
 - **PR1 browser contract:** `tests/e2e/studio-founder.spec.ts` still asserted the former general descriptor after the Node content contract was updated. Evidence: the focused Chromium run failed only on the two old opening strings, then passed 16/16 after updating them to the approved bilingual descriptor. Disposition: include the browser assertion update in PR1. No RFC or ADR is required.
+- **PR2 smoke contract:** `tests/e2e/smoke.spec.ts` still expected the former Problems heading after PR1 moved that wording to the introduction. Evidence: `PAGE-HOME` and `scripts/homepage-content.test.mjs` both require `Cuando lo manual empieza a frenar el negocio` / `When manual work starts holding the business back`; only the two Chromium smoke cases failed. Disposition: correct the browser expectation in a separate PR2 commit. No RFC or ADR is required.
+- **PR2 semantic roles:** the existing `foundation-*` role names are used across 57 components that PR3–PR5 will migrate. Disposition: keep the role names, map their values onto `identity` in `tailwind.config.ts`, and use Ink for `action-strong` rather than introduce an unapproved darker azure. Surface and rule roles are derived and recorded in `DESIGN-VISUAL`. No RFC or ADR is required.
+- **PR2 chrome ground:** the approved Global app bar baseline specifies the Surface role, and VISUAL-IDENTITY-V1 does not supersede it. Disposition: header, compact panel, language switch and footer stay on Surface (`#FFFFFF`) while page grounds move to Bone. Any move of the chrome to Bone belongs to a later design decision.
+- **PR2 font processing:** Instrument publishes no Latin-only variable WOFF2. Disposition: pin `wdth` to 100, keep `wght` 400–700 and subset the official variable WOFF2 to Latin with fontTools; lockup outlines use the official static Bold TTF as an unshipped build input. Both inputs are hash-recorded in `DESIGN-VISUAL`.
+- **Observed for PR4, pre-existing:** Contact inputs use the decorative rule role for their boundary (1.38:1 on white after PR2; 1.30:1 before). WCAG 1.4.11 expects 3:1 for control boundaries, so PR4 should give fields a compliant boundary rather than reuse the rule.

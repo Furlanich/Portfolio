@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BrandSignature } from '@/components/brand/BrandSignature';
 import type { FoundationNavigationPaths } from '@/lib/foundation-navigation';
 import type { Locale } from '@/lib/locales';
 import { LanguageSwitch } from '@/components/foundation/LanguageSwitch';
@@ -59,12 +60,7 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
       <div id="site-top" aria-hidden="true" />
       <header className="sticky top-0 z-50 border-b border-foundation-border bg-foundation-surface">
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-5 py-3 md:px-8 lg:px-12">
-        <Link
-          href={`${paths.home}#site-top`}
-          className="text-base font-bold tracking-[0.08em] text-foundation-ink"
-        >
-          FURLANICH
-        </Link>
+        <BrandSignature href={`${paths.home}#site-top`} />
 
         <div className="flex items-center gap-3">
           <LanguageSwitch

@@ -21,3 +21,11 @@ test('keeps footer direct channels in the content-owned order', () => {
   assert.match(source, /contactActions\.map\(\(action\) =>/);
   assert.match(source, /key=\{action\.kind\}/);
 });
+
+test('closes every page with the shared signature', () => {
+  const source = fs.readFileSync(siteFooterPath, 'utf8');
+
+  assert.match(source, /<BrandSignature href=\{paths\.home\} \/>/);
+  assert.match(source, /<footer className="border-t border-foundation-border bg-foundation-surface">/);
+  assert.doesNotMatch(source, />\s*FURLANICH\s*<\/Link>/);
+});

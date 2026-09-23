@@ -8,7 +8,6 @@ export const instrumentSans = localFont({
   variable: '--font-sans',
   display: 'swap',
   preload: true,
-  fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
 });
 
 export const plexMono = localFont({
@@ -19,5 +18,4 @@ export const plexMono = localFont({
   variable: '--font-mono',
   display: 'swap',
   preload: false,
-  fallback: ['ui-monospace', 'monospace'],
 });

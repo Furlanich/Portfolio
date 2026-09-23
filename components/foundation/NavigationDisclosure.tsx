@@ -84,7 +84,7 @@ export function NavigationDisclosure({
         id="primary-navigation-panel"
         aria-label={navigationLabel}
         onClick={handleNavigationClick}
-        className="absolute left-1/2 top-full hidden w-[min(calc(100vw-40px),24rem)] -translate-x-1/2 flex-col gap-1 rounded-[12px] border border-foundation-border bg-foundation-surface p-2 text-sm font-semibold text-foundation-muted shadow-[0_12px_32px_rgba(11,31,51,0.12)] group-open:flex"
+        className="absolute left-1/2 top-full hidden w-[min(calc(100vw-40px),24rem)] -translate-x-1/2 flex-col gap-1 rounded-[12px] border border-foundation-border bg-foundation-surface p-2 text-sm font-semibold text-foundation-muted shadow-[0_12px_32px_rgba(9,36,61,0.12)] group-open:flex"
       >
         {children}
       </nav>
