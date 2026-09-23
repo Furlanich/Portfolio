@@ -17,6 +17,46 @@ export const homeContent = {
   },
   trustLine: 'Samuel Furlanich, responsable técnico del estudio.',
   availability: 'Buenos Aires, Argentina. Disponibilidad en español e inglés para Argentina y el exterior.',
+  instrument: {
+    label: 'FURLANICH · Del proceso al sistema',
+    statusLabel: 'ETAPA {current} DE 04',
+    pauseLabel: 'Pausar movimiento',
+    resumeLabel: 'Reanudar movimiento',
+    chapters: [
+      {
+        id: 'recognition',
+        sequence: '01',
+        heading: 'Reconocer el sistema real',
+        description:
+          'Pedidos, reservas, mensajes y tareas ya conviven en un mismo negocio. El primer paso es entender cómo se relacionan.',
+        artworkId: 'recognition-poster',
+      },
+      {
+        id: 'fragmentation',
+        sequence: '02',
+        heading: 'Ver dónde se fragmenta',
+        description:
+          'Cuando la información cambia de canal y se repite, la operación depende de más controles manuales.',
+        artworkId: 'fragmentation-poster',
+      },
+      {
+        id: 'connection',
+        sequence: '03',
+        heading: 'Conectar lo que importa',
+        description:
+          'Una solución bien definida reúne datos, reglas y acciones sin sumar complejidad innecesaria.',
+        artworkId: 'connection-poster',
+      },
+      {
+        id: 'coordination',
+        sequence: '04',
+        heading: 'Coordinar el trabajo',
+        description:
+          'El sistema acompaña el proceso real y deja una base que puede mantenerse y adaptarse cuando cambia el negocio.',
+        artworkId: 'coordination-poster',
+      },
+    ],
+  },
   problems: {
     heading: 'Cuando lo manual empieza a frenar el negocio',
     introduction: 'Cuando el trabajo queda repartido entre herramientas',

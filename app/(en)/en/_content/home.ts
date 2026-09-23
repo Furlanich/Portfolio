@@ -17,6 +17,46 @@ export const homeContent = {
   },
   trustLine: 'Samuel Furlanich, the studio’s technical lead.',
   availability: 'Based in Buenos Aires, Argentina. Available in Spanish and English for work in Argentina and internationally.',
+  instrument: {
+    label: 'FURLANICH · From process to system',
+    statusLabel: 'PHASE {current} OF 04',
+    pauseLabel: 'Pause motion',
+    resumeLabel: 'Resume motion',
+    chapters: [
+      {
+        id: 'recognition',
+        sequence: '01',
+        heading: 'Recognize the real system',
+        description:
+          'Orders, bookings, messages, and tasks already coexist in one business. The first step is understanding how they relate.',
+        artworkId: 'recognition-poster',
+      },
+      {
+        id: 'fragmentation',
+        sequence: '02',
+        heading: 'See where it fragments',
+        description:
+          'When information changes channels and is repeated, operations depend on more manual checks.',
+        artworkId: 'fragmentation-poster',
+      },
+      {
+        id: 'connection',
+        sequence: '03',
+        heading: 'Connect what matters',
+        description:
+          'A well-defined solution brings data, rules, and actions together without adding unnecessary complexity.',
+        artworkId: 'connection-poster',
+      },
+      {
+        id: 'coordination',
+        sequence: '04',
+        heading: 'Coordinate the work',
+        description:
+          'The system supports the real process and creates a foundation that can be maintained and adapted as the business changes.',
+        artworkId: 'coordination-poster',
+      },
+    ],
+  },
   problems: {
     heading: 'When manual work starts holding the business back',
     introduction: 'When work is spread across tools',
