@@ -50,3 +50,11 @@ test('promotes the homepage primitives without changing their public markup cont
   assert.equal(fs.existsSync(path.join(root, 'components/homepage/HomeAudiences.tsx')), false);
   assert.doesNotMatch(read('components/homepage/CommercialHomepage.tsx'), /HomeAudiences|audiences/);
 });
+
+test('lets a section heading carry an optional decorative mono sequence label', () => {
+  const heading = read('components/commercial/CommercialSectionHeading.tsx');
+
+  assert.match(heading, /sequence\?: string/);
+  assert.match(heading, /\{sequence \? \(\s*<p data-sequence aria-hidden="true" className="mb-4 font-mono text-sm font-semibold leading-5 text-foundation-action">/);
+  assert.match(heading, /\{sequence\}/);
+});

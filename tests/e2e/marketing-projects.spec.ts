@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
+import { IDENTITY_TINT, backgroundOf, expectSequenceMarker, expectShortMonoOnly } from './support/editorial';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 const projectCases = [
@@ -16,6 +17,10 @@ const projectCases = [
     founderLabel: 'Conocer la trayectoria de Samuel',
     publicationScope: 'La descripción pública está limitada por permisos de publicación. La imagen es conceptual y no muestra una interfaz real.',
     groupHeadings: ['Contexto y oportunidad', 'Alcance implementado', 'Evidencia y límites', 'Siguientes destinos'],
+    contact: stableRoutes.contact.es,
+    finalHeading: '¿Necesitás resolver algo parecido?',
+    finalAction: 'Hablar sobre tu proyecto',
+    limitationsHeading: 'Limitaciones y alcance',
   },
   {
     locale: 'English',
@@ -30,6 +35,10 @@ const projectCases = [
     founderLabel: "View Samuel's background",
     publicationScope: 'The public description is limited by publication permissions. The image is conceptual and does not show a real interface.',
     groupHeadings: ['Context and opportunity', 'Implemented scope', 'Evidence and limitations', 'Next destinations'],
+    contact: stableRoutes.contact.en,
+    finalHeading: 'Need to solve something similar?',
+    finalAction: 'Discuss your project',
+    limitationsHeading: 'Limitations and scope',
   },
 ] as const;
 
@@ -104,6 +113,52 @@ for (const projectCase of projectCases) {
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     });
   }
+}
+
+for (const projectCase of projectCases) {
+  test(`${projectCase.locale} Projects keeps evidence cards bounded and ends on the inquiry band`, async ({ page }) => {
+    await page.goto(appUrl(projectCase.index));
+    const main = page.getByRole('main');
+    const cards = main.locator('[data-project-slug]');
+
+    for (const card of await cards.all()) {
+      await expect(card.getByRole('link')).toHaveCount(1);
+      await expect(card).not.toHaveAttribute('tabindex', /.*/);
+      expect(await card.evaluate((element) => getComputedStyle(element).cursor)).not.toBe('pointer');
+      await expect(card.locator('[data-project-meta]')).toBeVisible();
+    }
+
+    const mono = await expectShortMonoOnly(main);
+    expect(mono.length).toBeGreaterThan(0);
+
+    const ending = main.locator('section[aria-labelledby="projects-cta-heading"]');
+    await expect(ending.getByRole('heading', { level: 2, name: projectCase.finalHeading, exact: true })).toBeVisible();
+    await expect(ending.getByRole('link', { name: projectCase.finalAction, exact: true })).toHaveAttribute('href', appPathname(projectCase.contact));
+    expect(await backgroundOf(ending)).toBe(IDENTITY_TINT);
+  });
+
+  test(`${projectCase.locale} project detail numbers its groups and keeps limitations in a bounded panel`, async ({ page }) => {
+    await page.goto(appUrl(`${projectCase.detailPrefix}general-reservation-system/`));
+    const main = page.getByRole('main');
+
+    const groups = main.locator('[data-detail-group]');
+    for (const [index, heading] of projectCase.groupHeadings.entries()) {
+      const group = groups.nth(index);
+      await expect(group.getByRole('heading', { level: 2, name: heading, exact: true })).toBeVisible();
+      await expectSequenceMarker(group, String(index + 1).padStart(2, '0'));
+    }
+
+    const limitations = main.locator('[data-detail-limitations]');
+    await expect(limitations.getByRole('heading', { level: 3, name: projectCase.limitationsHeading, exact: true })).toBeVisible();
+    await expect(limitations.getByText(projectCase.publicationScope, { exact: true })).toBeVisible();
+    expect(await limitations.evaluate((element) => getComputedStyle(element).borderTopStyle)).toBe('solid');
+
+    await expectShortMonoOnly(main);
+
+    const ending = main.locator('section[aria-labelledby="detail-cta-heading"]');
+    await expect(ending.getByRole('link', { name: projectCase.finalAction, exact: true })).toHaveAttribute('href', appPathname(projectCase.contact));
+    expect(await backgroundOf(ending)).toBe(IDENTITY_TINT);
+  });
 }
 
 test('MPC education link remains usable without JavaScript', async ({ browser }) => {

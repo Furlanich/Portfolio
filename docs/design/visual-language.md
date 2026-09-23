@@ -519,6 +519,18 @@ The scene is brand illustration and a general explanation of connected systems. 
 
 Services, Projects, Studio, Founder and Contact use the symbol, type, spacing, section numbering, controlled azure fields, editorial layouts and approved evidence media without additional WebGL in v1. No dark theme, portrait, evidence upgrade or new icon system is approved by this revision.
 
+#### Static editorial application (Services and Projects)
+
+These conventions apply VISUAL-IDENTITY-V1 within the existing Services, Projects and VIS-R1 baselines. They change no copy, order, surface alternation, permission or destination.
+
+- **Sequence label:** a decorative (`aria-hidden`) two-digit Plex Mono label in Azure sits above a numbered H2: service sections `01`–`03` (also shown before the service-index links, outside their accessible names) and project-detail groups `01`–`04`. The cross-service principles stay unnumbered, as the Services baseline requires.
+- **Ink rule:** a 2px Ink rule opens each numbered section and the Projects evidence group. The 1px rule role separates rows.
+- **Ruled specification rows:** service groups and the working boundaries use a label column (4/12) and a content column (8/12, max 68ch) at 1024px and wider, stacked below. Boundaries, dependencies and evidence keep visible headings.
+- **Evidence cards:** the Projects cards remain the only bordered comparison group (Surface, 1px rule, 16px radius, content-driven height). Their metadata is Plex Mono, with one value per span and trailing separators. The relationship and limitation form a ruled note, and capabilities are a quiet dot-separated row rather than pills.
+- **Limitations panel:** on project details the limitations and publication scope sit in a bounded neutral panel (Bone on the Surface evidence section).
+- **Endings:** Services, Projects and project details all end on the Action-tint inquiry band inside the page container, with the standard primary action. The earlier full-azure Projects band is retired because PROJECTS-EXPERIENCE and VIS-R1.8 already required Action tint.
+- **Mono limit:** Plex Mono appears only on sequence labels and evidence metadata. `tests/e2e/support/editorial.ts` fails any mono text longer than 64 characters on these pages.
+
 ### Prototype verdict
 
 The [isolated prototype review](../reviews/immersive-homepage-prototype-2026-09-19/index.md) validated the four-state model, direct scroll mapping, static posters and demand rendering. Its original System Instrument composition did not meet the final hierarchy standard. The accepted C2 revision below resolves the production art-direction and hybrid-media boundary. Exact master-mark optical geometry and the authored brand-motion asset remain **OPEN**.
