@@ -2,6 +2,7 @@ import type { HomePageContent } from '@/components/homepage/content-types';
 import { getInstrumentPoster } from '@/lib/immersive-home/media-manifest';
 import { ImmersiveChapter } from './ImmersiveChapter';
 import { ImmersiveEditorialAnchor } from './ImmersiveEditorialAnchor';
+import { ImmersiveEnhancement } from './ImmersiveEnhancement';
 import { ImmersiveStaticArtwork } from './ImmersiveStaticArtwork';
 import styles from './immersive-home.module.css';
 
@@ -10,7 +11,7 @@ interface ImmersiveHomeSequenceProps {
 }
 
 // Complete static C2 sequence: server-rendered proposition, actions and four chapters with
-// decorative posters. Later enhancement may cover the stage but never replaces this document.
+// decorative posters. ImmersiveEnhancement may cover the stage but never replaces this document.
 export function ImmersiveHomeSequence({ content }: ImmersiveHomeSequenceProps) {
   const { instrument } = content;
   const [firstChapter] = instrument.chapters;
@@ -28,6 +29,12 @@ export function ImmersiveHomeSequence({ content }: ImmersiveHomeSequenceProps) {
           poster={getInstrumentPoster(firstChapter.artworkId)}
           className={styles.stageArtwork}
           priority
+        />
+        <ImmersiveEnhancement
+          statusLabel={instrument.statusLabel}
+          pauseLabel={instrument.pauseLabel}
+          resumeLabel={instrument.resumeLabel}
+          sequences={instrument.chapters.map((chapter) => chapter.sequence)}
         />
         {instrument.chapters.map((chapter, index) => (
           <ImmersiveChapter
