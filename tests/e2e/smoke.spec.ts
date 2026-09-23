@@ -38,7 +38,7 @@ const homepageNarrativeCases = [
   {
     locale: 'Spanish',
     route: stableRoutes.home.es,
-    heading: 'Cuando el trabajo queda repartido entre herramientas',
+    heading: 'Cuando lo manual empieza a frenar el negocio',
     servicesHeading: 'Servicios para necesidades concretas',
     audience: 'Para pymes que coordinan pedidos, reservas o atención al cliente, o necesitan mejorar un sistema existente.',
     proofHeading: 'Una responsabilidad técnica clara',
@@ -52,7 +52,7 @@ const homepageNarrativeCases = [
   {
     locale: 'English',
     route: stableRoutes.home.en,
-    heading: 'When work is spread across tools',
+    heading: 'When manual work starts holding the business back',
     servicesHeading: 'Services for concrete business needs',
     audience: 'For small and medium-sized businesses managing orders, bookings or customer service, or improving an existing system.',
     proofHeading: 'Clear technical accountability',

@@ -1,5 +1,14 @@
 import type { Config } from 'tailwindcss';
 
+// VISUAL-IDENTITY-V1 color roles. DESIGN-VISUAL owns the values and their contrast record.
+const identity = {
+  bone: '#F9F6EE',
+  azure: '#004589',
+  ink: '#09243D',
+  muted: '#526473',
+  tint: '#E7EEF5'
+};
+
 const config: Config = {
   content: [
     './app/**/*.{ts,tsx}',
@@ -9,15 +18,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        identity,
         foundation: {
-          canvas: '#F6F7F9',
+          canvas: identity.bone,
           surface: '#FFFFFF',
-          ink: '#0B1F33',
-          muted: '#4C5D6F',
-          action: '#0B57D0',
-          'action-strong': '#0842A0',
-          tint: '#EAF1FF',
-          border: '#D7DEE7'
+          ink: identity.ink,
+          muted: identity.muted,
+          action: identity.azure,
+          'action-strong': identity.ink,
+          tint: identity.tint,
+          border: '#D3D4D2'
         },
         brand: {
           50: '#EEF3FB',
@@ -43,7 +53,8 @@ const config: Config = {
         }
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'Inter', 'IBM Plex Sans', 'Poppins', 'sans-serif']
+        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace']
       },
       boxShadow: {
         soft: '0 10px 30px -15px rgba(15, 17, 21, 0.25)',

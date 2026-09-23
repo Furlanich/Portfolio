@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BrandSignature } from '@/components/brand/BrandSignature';
 import type { FoundationNavigationPaths } from '@/lib/foundation-navigation';
 import { LanguageSwitch } from '@/components/foundation/LanguageSwitch';
 import type {
@@ -21,9 +22,7 @@ export function SiteFooter({ contactActions, founderLinks, labels, paths }: Site
     <footer className="border-t border-foundation-border bg-foundation-surface">
       <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-5 py-12 md:grid-cols-3 md:px-8 lg:px-12">
         <div>
-          <Link href={paths.home} className="text-base font-bold tracking-[0.08em] text-foundation-ink">
-            FURLANICH
-          </Link>
+          <BrandSignature href={paths.home} />
           <p className="mt-4 text-sm leading-6 text-foundation-muted">{labels.location}</p>
         </div>
 

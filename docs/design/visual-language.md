@@ -22,7 +22,7 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-20
+last_verified: 2026-09-23
 ---
 
 # Visual language
@@ -460,11 +460,49 @@ The durable comparison below records the approved candidate beside the two rejec
 
 Bone and azure are the recognizable pair. Full-azure surfaces are reserved for deliberate emphasis. UI gradients, neon and glass remain excluded. A physically lit 3D material may create tonal variation inside the scene without becoming a general interface gradient. Final tokens, interactive states and every foreground/background pair require deterministic contrast verification.
 
+#### Semantic roles in production
+
+`tailwind.config.ts` exposes the five colors as `identity` and maps the shared `foundation` roles onto them, so pages keep their role names while PR3–PR5 migrate their composition:
+
+| Role | Value | Basis |
+| --- | --- | --- |
+| `canvas` | Bone `#F9F6EE` | Page and section ground |
+| `surface` | `#FFFFFF` | Derived. The approved Surface role for the app bar, footer and compact panel; it also keeps the existing section rhythm and field/card grounds separate from Bone until the editorial migration decides otherwise. |
+| `ink` | Ink `#09243D` | Headings and long-form text |
+| `muted` | Muted `#526473` | Secondary text and metadata |
+| `action` | Azure `#004589` | Primary action, links and active state |
+| `action-strong` | Ink `#09243D` | Hover/active state of Azure actions and the outer focus ring |
+| `tint` | Tint `#E7EEF5` | Hover grounds and restrained states |
+| `border` | `#D3D4D2` | Derived rule: Ink at 16% over Bone. Decorative only (1.38:1 on Bone) and never the sole indicator of a control or state. |
+
+Recorded contrast (`scripts/design-tokens.test.mjs`): Ink 14.61:1 on Bone, 15.77:1 on white and 13.48:1 on Tint; Muted 5.67:1 on Bone, 6.12:1 on white and 5.23:1 on Tint; Azure 8.79:1 on Bone, 9.49:1 on white and 8.11:1 on Tint; white on Azure 9.49:1; Bone on Azure 8.79:1; white on Ink 15.77:1. The Ink focus ring is at least 13.48:1 against every ground. The launch palette above remains the historical baseline only.
+
+#### Identity asset files
+
+- `public/brand/furlanich-mark-*.svg` keep the canonical `0 0 256 256` coordinate system with no ground. The file name states the intended ground; the surrounding surface supplies the 1x clear space.
+- `public/brand/furlanich-lockup-*.svg` carry their ground and 1x clear space. The mark is unscaled beside a wordmark outlined from Instrument Sans Bold with cap height `74.6` units, which keeps the G0 lockup study's silhouette-to-cap ratio of about 3.1:1, and a 1.25x silhouette gap. The azure-on-bone lockup sets the wordmark in Ink; the reverse sets both in Bone.
+- `public/favicon.svg` is an Azure square with the Bone mark scaled uniformly (`0.8744`) so 1x clear space surrounds the silhouette. The 16/32 px ICO, 32 px PNG, 180 px Apple touch icon and 512 px icon are rasterized from it.
+- `BrandSignature` renders the azure-on-bone mark at 40 px beside the live 16 px `FURLANICH` wordmark, preserving the lockup ratio. The mark is an inline, `aria-hidden` SVG with the canonical geometry, so the link's accessible name remains `FURLANICH` and page-media contracts that count content images are unaffected.
+
 ### Typography system
 
 Instrument Sans is the primary family for headings, body, navigation and actions. IBM Plex Mono is limited to short sequence labels, section numbers and compact technical metadata. It is not paragraph text, a decorative code texture or a developer-console theme.
 
 Production must self-host only approved weights/subsets through the existing Next.js font boundary, retain license notices and verify Spanish/English glyph coverage. Loading and layout stability remain implementation gates. The earlier Inter requirements remain historical baseline; they no longer define the accepted target identity.
+
+#### Production font files
+
+`app/fonts.ts` loads these files through `next/font/local` with `display: swap`. Only Instrument Sans preloads. `scripts/brand-assets.test.mjs` fails if a shipped file's SHA-256 is missing here, a face is added, or a Spanish/English content character is not covered.
+
+| Shipped file | Source | Processing | Bytes | SHA-256 |
+| --- | --- | --- | --- | --- |
+| `instrument-sans-variable-latin.woff2` | [Instrument/instrument-sans](https://github.com/Instrument/instrument-sans) commit `7fa22308a3d0c94ee2b3cd537a1196b65db34a3e`, `fonts/webfonts/InstrumentSans[wdth,wght].woff2` (SHA-256 `aa72922aafcc0dc18f36ec1d805b0212057dabe8b9d5b8b57f67035aea1b826d`) | fontTools 4.65.0: `wdth` pinned to 100, `wght` limited to 400–700, subset to the Latin range `U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD`, all layout features kept | 38,368 | `7fa7ad123a3be5fcee990b5d100b4179f79f1e2e400f02784c2ccf5e6b7f088e` |
+| `ibm-plex-mono-regular-latin.woff2` | [IBM/plex](https://github.com/IBM/plex) tag `@ibm/plex-mono@2.5.0`, `packages/plex-mono/fonts/split/woff2/IBMPlexMono-Regular-Latin1.woff2` | Unmodified official Latin-1 split | 17,544 | `e8993d946649b9d01abb1ed06d574b19d8ea3e66b5c3948602db335c44c18e56` |
+| `ibm-plex-mono-semibold-latin.woff2` | Same tag, `IBMPlexMono-SemiBold-Latin1.woff2` | Unmodified official Latin-1 split | 17,872 | `b7acd05041ab65f3b7039e218ddd893065e11a07e85ea85019473152a51b6b7d` |
+
+Total added font transfer is 73,784 bytes, of which 38,368 bytes (the preloaded primary face) sit on the critical path. The license texts are retained as `app/fonts/OFL-instrument-sans.txt` (`OFL.txt` at the Instrument commit) and `app/fonts/OFL-ibm-plex.txt` (`packages/plex-mono/LICENSE.txt` at the Plex tag).
+
+The lockup wordmark is outlined from the official static `fonts/ttf/InstrumentSans-Bold.ttf` at the same Instrument commit (SHA-256 `735badeb8b2046cee6f5e1226412ab6c29db04accbca413af03d70e991dce10d`) with the font's pair kerning and `0.08em` tracking. That file is a build input only and is not shipped.
 
 ### Precision Assembly composition
 

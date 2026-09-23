@@ -34,7 +34,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-20
+last_verified: 2026-09-23
 ---
 
 # FURLANICH architecture map
@@ -43,7 +43,7 @@ last_verified: 2026-09-20
 
 The current application is a Next.js 16 App Router site with fourteen static foundation routes: Spanish at the root and English under `/en/`, plus six paired static project-detail artifacts. Locale-specific Server Component trees compose shared semantic foundation components from route-owned content. The paired Privacy routes use a shared server-rendered composition and exact locale-owned demonstration disclosure. Retained founder source remains under `data/`; the obsolete project JSON, project-only types/exports, animated Card primitive, and unapproved legacy project SVGs were retired after Task 4 consumer verification.
 
-Tailwind CSS provides utility styling and the small component primitives. `next/font` loads Inter; `public/` holds static images, including the three approved conceptual project-detail visuals. The site is statically exported with trailing slashes, optional GitHub Pages base path/asset prefix, and unoptimized images. The deployment workflow builds `main` with Node 24 and publishes `out/` to GitHub Pages.
+Tailwind CSS provides utility styling and the small component primitives. `app/fonts.ts` self-hosts Instrument Sans and IBM Plex Mono through `next/font/local` for both locale layouts; `tailwind.config.ts` maps the shared `foundation` roles onto the approved identity palette. `public/brand/` holds the protected Contained Master marks and lockups, and `public/` also holds the favicons and other static images, including the three approved conceptual project-detail visuals. The site is statically exported with trailing slashes, optional GitHub Pages base path/asset prefix, and unoptimized images. The deployment workflow builds `main` with Node 24 and publishes `out/` to GitHub Pages.
 
 Studio and Founder are implemented as separate localized route pairs. Studio navigation points to `/estudio/` and `/en/about/`; Founder remains nested and secondary. Founder uses `Ingeniero de software` / `Software Engineer` as Samuel's general professional descriptor while retaining `Software Developer` as the exact Clever Soft SA employment title and factual completed Computer Science studies wording. The earlier Founder-as-Studio/minimum-profile gap was closed by the [completed Studio/Founder plan](docs/plans/completed/studio-founder-completion.md), including integration PR #40 (`cc18f55`). This factual synchronization addresses MKT-DOC-001; the accepted marketing revisions were delivered through T1–T6 under the [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](docs/plans/completed/marketing-presentation-excellence-v1.md). D03 and the remaining evidence/identity limits stay bounded by their owning records.
 
