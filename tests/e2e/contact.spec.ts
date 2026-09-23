@@ -101,3 +101,67 @@ test('Contact remains readable with JavaScript disabled and does not show a fals
   await expect(page.getByRole('status')).toHaveCount(0);
   await context.close();
 });
+
+function contrastRatio(foreground: string, background: string) {
+  const channel = (value: number) => {
+    const normalized = value / 255;
+    return normalized <= 0.03928 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+  };
+  const luminance = (color: string) => {
+    const [red, green, blue] = (color.match(/\d+(?:\.\d+)?/g) ?? []).slice(0, 3).map(Number);
+    return 0.2126 * channel(red) + 0.7152 * channel(green) + 0.0722 * channel(blue);
+  };
+  const [lighter, darker] = [luminance(foreground), luminance(background)].sort((left, right) => right - left);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+for (const pageCase of cases) {
+  test(pageCase.language + ' Contact field boundaries meet non-text contrast and fallbacks keep their order', async ({ page }) => {
+    await gotoContact(page, pageCase.route, pageCase.language);
+    const main = page.getByRole('main');
+
+    for (const control of await main.locator('form input, form textarea').all()) {
+      const { border, background } = await control.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return { border: style.borderTopColor, background: style.backgroundColor };
+      });
+      expect(contrastRatio(border, background), 'field boundary contrast').toBeGreaterThanOrEqual(3);
+    }
+
+    const hrefs = await main.locator('a[href^="https://wa.me"], a[href^="mailto:"], a[href^="tel:"]').evaluateAll(
+      (links) => links.map((link) => link.getAttribute('href')?.split(':')[0]),
+    );
+    expect(hrefs).toEqual(['https', 'mailto', 'tel']);
+
+    const notice = main.getByRole('heading', { name: pageCase.notice });
+    const firstField = main.locator('#contact-name');
+    expect(await notice.evaluate((heading, field) => Boolean(heading.compareDocumentPosition(field as Node) & Node.DOCUMENT_POSITION_FOLLOWING), await firstField.elementHandle())).toBe(true);
+  });
+
+  test(pageCase.language + ' Contact can be completed with the keyboard alone', async ({ page }) => {
+    await gotoContact(page, pageCase.route, pageCase.language);
+    await expect(page.locator('form[data-contact-hydrated="true"]')).toBeVisible();
+
+    for (let presses = 0; presses < 60; presses += 1) {
+      if (await page.evaluate(() => document.activeElement?.id === 'contact-name')) break;
+      await page.keyboard.press('Tab');
+    }
+    await expect(page.locator('#contact-name')).toBeFocused();
+    await page.keyboard.type('Ada Lovelace');
+    await page.keyboard.press('Tab');
+    await page.keyboard.type('success@example.invalid');
+    await page.keyboard.press('Tab');
+    await page.keyboard.type('Analytical Engines');
+    await page.keyboard.press('Tab');
+    await page.keyboard.type('Please help us scope a product idea.');
+
+    for (let presses = 0; presses < 5; presses += 1) {
+      await page.keyboard.press('Tab');
+      if (await page.evaluate(() => document.activeElement?.getAttribute('type') === 'submit')) break;
+    }
+    await expect(page.getByRole('button', { name: pageCase.submit })).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('heading', { name: pageCase.success })).toBeVisible();
+    await expect(page.locator('[role="status"][tabindex="-1"]')).toBeFocused();
+  });
+}
