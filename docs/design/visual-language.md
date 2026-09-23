@@ -587,6 +587,13 @@ These conventions record how PR5 applies the approved C2 composition without Jav
 - **768px and below:** chapters flow sequentially, with a square poster after each chapter's copy (at most 36rem wide at 768px). There is no pinning or sticky behavior.
 - **Below 390px:** the instrument label and phase status are visually condensed. Headings, descriptions and full-width actions remain.
 
+#### WebGL enhancement
+
+- The scene reuses the poster vocabulary in three dimensions. It has three extruded Azure chevron slabs lit by one ambient and one directional light on Bone, plus small Ink channel tiles and thin Azure route lines. It keeps the protected mark out of the scene.
+- Recognition shows only the intact sculpture. Channel tiles appear as the slabs separate (Fragmentation), move onto four routed spokes with visible routes (Connection), and settle on one ordered line beneath the aligned sculpture (Coordination). The camera travels only a short distance horizontally with progress.
+- From 1024px the scene occupies a sticky 4:5 stage over the poster column, with the phase status and Pause motion control inside its lower edge. Below 1024px it covers only the active chapter's frame; the Pause control stays in that frame and the duplicate status is omitted.
+- Posters stay mounted and are hidden only after the first frame. Any failure removes the canvas and shows them again.
+
 ### Remaining open visual items
 
 The following remain **OPEN** for asset review without changing the approved composition:
