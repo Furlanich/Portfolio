@@ -310,20 +310,20 @@ This PR repairs known divergence only. It introduces no visual system or runtime
 - Modify: `tests/e2e/marketing-projects.spec.ts`
 - Create: `tests/e2e/visual/services-projects.visual.spec.ts`
 
-- [ ] Add browser assertions first for unchanged headings, evidence labels, limitation copy, CTA destinations, source order and noninteractive cards.
-- [ ] Capture red visual baselines only after the expected art direction is implemented; do not bless current snapshots as the target.
-- [ ] Replace repeated bordered-panel rhythm with approved editorial grouping, rules, typography, media framing and selective surfaces. Keep comparison/evidence cards where the boundary is real.
-- [ ] Use Plex Mono only for short service/evidence metadata. Do not turn the pages into a developer console.
-- [ ] Keep project imagery and labels within current permissions. Do not promote MPC or Lab items or remove limitations.
-- [ ] Verify both locales at all five widths, including long English/Spanish wrapping and project-detail page endings.
-- [ ] Commit implementation in two focused commits: `feat(services): apply precision assembly presentation` and `feat(projects): apply evidence-led editorial presentation`.
+- [x] Added browser assertions first for unchanged H2 order, service-index names, CTA destinations, one explicit link per noninteractive card, sequence labels, a bounded limitations panel, Action-tint endings and short-only Plex Mono (`3a599a5`). The six new cases failed; the existing fifteen passed.
+- [x] Captured visual baselines only after the art direction was implemented (`0750a4a`): Services, Projects and the GRS detail at 1440 and 390 px. Windows baselines are committed; Linux baselines follow the controlled Ubuntu run.
+- [x] Replaced the alternating bordered-panel and left-rule rhythm with ink-ruled numbered sections and ruled label/content rows. The Projects evidence cards and the limitations panel keep their real boundaries.
+- [x] Used Plex Mono only for two-digit sequence labels and project metadata; the browser contract caps mono text at 64 characters.
+- [x] Kept project imagery, labels and permissions unchanged. MPC stays Founder-only, the Lab item stays secondary and every limitation remains visible.
+- [x] Verified both locales at 320/390/768/1024/1440 on Services, Projects and all project details, including long titles and detail endings. There is no horizontal overflow at any size.
+- [x] Committed implementation as `feat(services): apply precision assembly presentation` (`6a880ee`) and `feat(projects): apply evidence-led editorial presentation` (`464eefe`).
 
 ### PR3 verification
 
-- [ ] `node --test scripts/commercial-primitives.test.mjs scripts/services-content.test.mjs scripts/projects-publication.test.mjs scripts/project-details.test.mjs`
-- [ ] `npx.cmd playwright test tests/e2e/marketing-services.spec.ts tests/e2e/marketing-projects.spec.ts`
-- [ ] `npm.cmd run validate`
-- [ ] Visual QA at 320, 390, 768, 1024 and 1440 px; inspect cards, proof labels, media crops, CTA prominence and endings.
+- [x] `node --test scripts/commercial-primitives.test.mjs scripts/services-content.test.mjs scripts/projects-publication.test.mjs scripts/project-details.test.mjs`
+- [x] `npx.cmd playwright test tests/e2e/marketing-services.spec.ts tests/e2e/marketing-projects.spec.ts`
+- [x] `npm.cmd run validate`
+- [x] Visual QA at 320, 390, 768, 1024 and 1440 px: cards, proof labels, media crops, CTA prominence and endings.
 
 ---
 
@@ -698,7 +698,7 @@ Repeat build, static export verification and representative browser journeys wit
 - [x] G0 Contained Master optical closure approved: Balanced Contained.
 - [x] G1 bilingual immersive chapter copy approved: Operational Clarity.
 - [x] PR1 marketing-contract reconciliation merged ([PR #65](https://github.com/Furlanich/Portfolio/pull/65)).
-- [ ] PR2 identity foundation merged.
+- [x] PR2 identity foundation merged ([PR #66](https://github.com/Furlanich/Portfolio/pull/66)).
 - [ ] PR3 offer/evidence presentation merged.
 - [ ] PR4 Studio/Founder/utility presentation merged.
 - [ ] PR5 semantic/static C2 homepage merged.
@@ -723,5 +723,9 @@ Repeat build, static export verification and representative browser journeys wit
 - **PR2 chrome ground:** the approved Global app bar baseline specifies the Surface role, and VISUAL-IDENTITY-V1 does not supersede it. Disposition: header, compact panel, language switch and footer stay on Surface (`#FFFFFF`) while page grounds move to Bone. Any move of the chrome to Bone belongs to a later design decision.
 - **PR2 chrome mark rendering:** the task names an image-backed mark, but `verify:static-export` counts every page image to protect the image-free indexes, the single conceptual project visual and the no-portrait Founder rule. An image element in the header and footer broke six of those contracts. Disposition: render the chrome mark as an inline, decorative SVG whose centerlines and stroke construction are asserted equal to the protected master, and leave the export gate unchanged. `public/brand/` remains the canonical file set. No RFC or ADR is required.
 - **PR2 font processing:** Instrument publishes no Latin-only variable WOFF2. Disposition: pin `wdth` to 100, keep `wght` 400–700 and subset the official variable WOFF2 to Latin with fontTools; lockup outlines use the official static Bold TTF as an unshipped build input. Both inputs are hash-recorded in `DESIGN-VISUAL`.
+- **PR2 visual baselines, found in PR3:** PR2 changed fonts and palette site-wide, but its verification did not run `visual-chromium`. The six Studio/Founder baselines therefore fail on `main` (PR #66 CI `browser`), while all functional browser projects passed. Disposition: the Studio/Founder pages and their baselines belong to PR4, which must replace them after human approval of the rendered result. They are not refreshed in PR3.
+- **PR3 primitive scope:** VIS-R1.4 already removed cards from Services, so `CommercialContentCard` and `equal-height-card-grid` are used only by the homepage Services group, which PR5 owns. Disposition: only `CommercialSectionHeading` gains an optional sequence label; the other two primitives are unchanged. No RFC or ADR is required.
+- **PR3 Projects endings:** the Projects index and details ended on a full-azure band, contrary to PROJECTS-EXPERIENCE ("Existing Action-tint inquiry CTA") and VIS-R1.8. Disposition: both return to the Action-tint band used by Services, inside the page container.
+- **PR3 metadata repetition:** The-System's context value restates its maturity ("Laboratorio FURLANICH · …"). Disposition: the metadata renderer splits values on ` · ` and shows adjacent duplicates once. The content record is unchanged.
 - **Observed, pre-existing e2e harness flake:** on a cold `.next/dev` cache, parallel workers that first request a `[projectSlug]` detail route can receive `SyntaxError: Unexpected end of JSON input` from the dev server, and `marketing-navigation.spec.ts` then finds no header links. It reproduces on `origin/main` without PR2 and passes against a warmed server. Disposition: not changed in PR2. A later harness task should warm routes before the suite or run e2e against the static export.
 - **Observed for PR4, pre-existing:** Contact inputs use the decorative rule role for their boundary (1.38:1 on white after PR2; 1.30:1 before). WCAG 1.4.11 expects 3:1 for control boundaries, so PR4 should give fields a compliant boundary rather than reuse the rule.
