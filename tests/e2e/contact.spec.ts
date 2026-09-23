@@ -8,12 +8,41 @@ const cases = [
   { route: stableRoutes.contact.en, heading: 'Tell us what you need to solve.', notice: 'Interactive demonstration', submit: 'Simulate submission', submitting: 'Simulating…', success: 'Demonstration complete.', failure: 'The simulation could not be completed.', retry: 'Try again', language: 'en' },
 ] as const;
 
-async function fillInquiry(page: Page, email = 'success@example.invalid') {
+const inquiry = { name: 'Ada Lovelace', email: 'success@example.invalid', company: 'Analytical Engines', message: 'Please help us scope a product idea.' };
+
+async function fillInquiry(page: Page, email = inquiry.email) {
   await expect(page.locator('form[data-contact-hydrated="true"]')).toBeVisible();
-  await page.getByLabel(/^(Nombre|Name)/).fill('Ada Lovelace');
+  await page.getByLabel(/^(Nombre|Name)/).fill(inquiry.name);
   await page.getByLabel(/^(Correo electrónico|Email)/).fill(email);
-  await page.getByLabel(/^(Empresa|Company)/).fill('Analytical Engines');
-  await page.getByLabel(/^(¿Qué necesitás resolver\?|What do you need to solve\?)/).fill('Please help us scope a product idea.');
+  await page.getByLabel(/^(Empresa|Company)/).fill(inquiry.company);
+  await page.getByLabel(/^(¿Qué necesitás resolver\?|What do you need to solve\?)/).fill(inquiry.message);
+}
+
+type RecordedRequest = { method: string; url: string; body: string | null };
+
+function recordRequests(page: Page) {
+  const requests: RecordedRequest[] = [];
+  page.on('request', (request) => requests.push({ method: request.method(), url: request.url(), body: request.postData() }));
+  return requests;
+}
+
+// ADR-CONTACT-INQUIRY-DEMO-MODE promises zero inquiry transmission, not zero requests: a production
+// export's App Router prefetches route data and probes route documents with same-origin GET and
+// HEAD fetches. Anything that could carry the inquiry (a method with a body, another origin, or a
+// typed value in the URL or body) is flagged.
+function inquiryTransmissions(requests: RecordedRequest[], origin: string) {
+  const values = Object.values(inquiry);
+  const decode = (text: string) => {
+    try {
+      return decodeURIComponent(text.replace(/\+/g, ' '));
+    } catch {
+      return text;
+    }
+  };
+  return requests.filter(({ method, url, body }) => {
+    const texts = [url, body ?? ''].flatMap((text) => [text, decode(text)]);
+    return !['GET', 'HEAD'].includes(method) || new URL(url).origin !== origin || values.some((value) => texts.some((text) => text.includes(value)));
+  });
 }
 
 async function gotoContact(page: Page, route: string, language: string) {
@@ -54,12 +83,9 @@ for (const pageCase of cases) {
     await expect(page.getByLabel(/^(Nombre|Name)/)).toHaveAttribute('aria-invalid', 'true');
   });
 
-  test(pageCase.language + ' Contact simulates success, blocks duplicates, resets values, and sends no request', async ({ page }) => {
+  test(pageCase.language + ' Contact simulates success, blocks duplicates, resets values, and transmits no inquiry', async ({ page }) => {
     await gotoContact(page, pageCase.route, pageCase.language);
-    const requests: string[] = [];
-    page.on('request', (request) => {
-      if (['xhr', 'fetch', 'beacon'].includes(request.resourceType())) requests.push(request.url());
-    });
+    const requests = recordRequests(page);
     await fillInquiry(page);
     const button = page.getByRole('button', { name: pageCase.submit });
     await button.evaluate((element) => {
@@ -71,7 +97,7 @@ for (const pageCase of cases) {
     await expect(page.getByLabel(/^(Correo electrónico|Email)/)).toHaveValue('');
     await expect(page.getByLabel(/^(Empresa|Company)/)).toHaveValue('');
     await expect(page.getByLabel(/^(¿Qué necesitás resolver\?|What do you need to solve\?)/)).toHaveValue('');
-    expect(requests).toEqual([]);
+    expect(inquiryTransmissions(requests, new URL(page.url()).origin)).toEqual([]);
   });
 
   test(pageCase.language + ' Contact preserves values through failure and retry', async ({ page }) => {
@@ -88,6 +114,34 @@ for (const pageCase of cases) {
     await expect(page.getByRole('status')).toContainText(pageCase.success);
   });
 }
+
+test('Contact transmission check flags inquiry submissions but not same-origin router prefetches', async ({ page }) => {
+  await gotoContact(page, stableRoutes.contact.en, 'en');
+  const sink = 'https://inquiry-sink.invalid';
+  await page.route(`${sink}/**`, (route) => route.fulfill({ status: 204 }));
+  await page.route('**/inquiry-probe/**', (route) => route.fulfill({ status: 204 }));
+  const requests = recordRequests(page);
+  await fillInquiry(page);
+  await page.locator('form').evaluate((form, sinkOrigin) => {
+    form.addEventListener('submit', () => {
+      const email = (form.querySelector('input[type="email"]') as HTMLInputElement).value;
+      void fetch(`${sinkOrigin}/formspree`, { method: 'POST', body: new FormData(form as HTMLFormElement) }).catch(() => undefined);
+      navigator.sendBeacon('./inquiry-probe/beacon', '{}');
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', `./inquiry-probe/echo?email=${encodeURIComponent(email)}`);
+      xhr.send();
+      new Image().src = `${sinkOrigin}/pixel.gif`;
+      void fetch('./inquiry-probe/prefetch.txt').catch(() => undefined);
+      void fetch('./inquiry-probe/', { method: 'HEAD' }).catch(() => undefined);
+    });
+  }, sink);
+  await page.getByRole('button', { name: 'Simulate submission' }).click();
+  await expect(page.getByRole('status')).toContainText('Demonstration complete.');
+  await expect.poll(() => requests.filter(({ url }) => /\/inquiry-probe\/(prefetch\.txt)?$/.test(url)).length).toBe(2);
+  await expect
+    .poll(() => inquiryTransmissions(requests, new URL(page.url()).origin).map(({ method, url }) => `${method} ${new URL(url).pathname.split('/').pop()}`).sort())
+    .toEqual(['GET echo', 'GET pixel.gif', 'POST beacon', 'POST formspree']);
+});
 
 test('Contact remains readable with JavaScript disabled and does not show a false success state', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
