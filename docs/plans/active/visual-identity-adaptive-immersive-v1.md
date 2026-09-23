@@ -354,21 +354,21 @@ This PR repairs known divergence only. It introduces no visual system or runtime
 - Replace: `tests/e2e/visual/studio.visual.spec.ts` snapshots
 - Replace: `tests/e2e/visual/founder.visual.spec.ts` snapshots
 
-- [ ] Add or strengthen behavior assertions before presentation changes: exact Studio/Founder order, general professional descriptor, employer title, CV/GitHub/LinkedIn destinations, demo notice, zero-transmission Contact behavior, fallback channel order and Privacy content.
-- [ ] Apply deliberate editorial variation without changing facts or hiding substantive biography/limits behind disclosure controls.
-- [ ] Keep Studio as the operating model and Founder as professional background. Preserve MPC as educational group work only.
-- [ ] Keep Contact frictionless and visibly demonstrative. Do not add submission transport, response promise, storage, analytics or consent for a nonexistent processor.
-- [ ] Preserve field labels, errors, live-region behavior, textarea resizing, first-invalid focus and successful local reset.
-- [ ] Use static brand geometry as a quiet identity motif only where it improves hierarchy; do not introduce another animated scene.
-- [ ] Commit by page family: `feat(studio-founder): apply founder-led editorial presentation` and `feat(contact): apply identity presentation without changing demo behavior`.
+- [x] Strengthened behavior assertions before the presentation changes (`21e2c67`): exact Studio and Founder H2 order, Studio sequence labels, the Founder section H2 scale and mono periods, Contact field-boundary contrast, fallback order, notice-before-fields and keyboard-only completion. The existing specs already cover the descriptor, employer title, CV/GitHub/LinkedIn destinations, zero transmission and Privacy content. Six cases failed first: Studio markers were missing, Founder H2s rendered at 30px and field boundaries measured 1.49:1.
+- [x] Applied editorial variation without changing facts or hiding biography or limits: numbered Studio sections, unnumbered Founder history, and a ruled Contact form area.
+- [x] Kept Studio as the operating model and Founder as professional background. MPC remains educational group work only.
+- [x] Kept Contact frictionless and visibly demonstrative, with no transport, storage, analytics or consent added. The existing approved response expectation is unchanged (see deviation).
+- [x] Preserved field labels, errors, live regions, textarea resizing, first-invalid focus and local reset; the existing Contact suite passes unchanged.
+- [x] Added no additional brand-geometry motif. The header and footer signature already carry the mark, and repeating it inside the pages did not improve hierarchy.
+- [x] Committed by page family: `feat(studio-founder): apply founder-led editorial presentation` (`080c4a1`) and `feat(contact): apply identity presentation without changing demo behavior` (`327d062`).
 
 ### PR4 verification
 
-- [ ] `node --test scripts/studio-content.test.mjs scripts/contact-content.test.mjs scripts/contact-state.test.mjs scripts/privacy-content.test.mjs`
-- [ ] `npx.cmd playwright test tests/e2e/studio-founder.spec.ts tests/e2e/studio-founder-responsive.spec.ts tests/e2e/contact.spec.ts tests/e2e/privacy.spec.ts`
-- [ ] `npm.cmd run test:a11y`
-- [ ] `npm.cmd run validate`
-- [ ] Visual QA at all five widths and 200% zoom; include keyboard-only Contact completion and no-JavaScript fallback links.
+- [x] `node --test scripts/studio-content.test.mjs scripts/contact-content.test.mjs scripts/contact-state.test.mjs scripts/privacy-content.test.mjs`
+- [x] `npx.cmd playwright test tests/e2e/studio-founder.spec.ts tests/e2e/studio-founder-responsive.spec.ts tests/e2e/contact.spec.ts tests/e2e/privacy.spec.ts`
+- [x] `npm.cmd run test:a11y` (16/16)
+- [x] `npm.cmd run validate`
+- [x] Visual QA of Studio, Founder, Contact and Privacy in both locales at 320/390/768/1024/1440, plus a 200% zoom approximation on Contact and Founder, with no horizontal overflow. Keyboard-only Contact completion is automated; the no-JavaScript Contact fallback remains covered by the existing spec.
 
 ---
 
@@ -699,7 +699,7 @@ Repeat build, static export verification and representative browser journeys wit
 - [x] G1 bilingual immersive chapter copy approved: Operational Clarity.
 - [x] PR1 marketing-contract reconciliation merged ([PR #65](https://github.com/Furlanich/Portfolio/pull/65)).
 - [x] PR2 identity foundation merged ([PR #66](https://github.com/Furlanich/Portfolio/pull/66)).
-- [ ] PR3 offer/evidence presentation merged.
+- [x] PR3 offer/evidence presentation merged ([PR #67](https://github.com/Furlanich/Portfolio/pull/67); baselines in [PR #68](https://github.com/Furlanich/Portfolio/pull/68)).
 - [ ] PR4 Studio/Founder/utility presentation merged.
 - [ ] PR5 semantic/static C2 homepage merged.
 - [ ] PR6 direct Three.js enhancement merged.
@@ -727,5 +727,7 @@ Repeat build, static export verification and representative browser journeys wit
 - **PR3 primitive scope:** VIS-R1.4 already removed cards from Services, so `CommercialContentCard` and `equal-height-card-grid` are used only by the homepage Services group, which PR5 owns. Disposition: only `CommercialSectionHeading` gains an optional sequence label; the other two primitives are unchanged. No RFC or ADR is required.
 - **PR3 Projects endings:** the Projects index and details ended on a full-azure band, contrary to PROJECTS-EXPERIENCE ("Existing Action-tint inquiry CTA") and VIS-R1.8. Disposition: both return to the Action-tint band used by Services, inside the page container.
 - **PR3 metadata repetition:** The-System's context value restates its maturity ("Laboratorio FURLANICH · …"). Disposition: the metadata renderer splits values on ` · ` and shows adjacent duplicates once. The content record is unchanged.
+- **PR4 Contact response expectation:** the plan says not to add a response promise, but the existing Contact introduction already shows the APPROVED `CONTACT-RESPONSE-EXPECTATION` ("Respuesta habitual dentro del mismo día hábil…"). The MKT-D03 proposal to omit it in demonstration mode was REJECTED. Disposition: PR4 adds nothing and leaves the approved copy unchanged. Whether a response expectation belongs on a demo-only form remains a product question for its owner.
+- **PR4 Founder numbering:** Studio sections are numbered like Services, but Founder is a professional history, where sequence labels would imply a process. Disposition: Founder uses Ink rules and the section H2 scale without numbering; mono is reserved for periods and education status metadata.
 - **Observed, pre-existing e2e harness flake:** on a cold `.next/dev` cache, parallel workers that first request a `[projectSlug]` detail route can receive `SyntaxError: Unexpected end of JSON input` from the dev server, and `marketing-navigation.spec.ts` then finds no header links. It reproduces on `origin/main` without PR2 and passes against a warmed server. Disposition: not changed in PR2. A later harness task should warm routes before the suite or run e2e against the static export.
-- **Observed for PR4, pre-existing:** Contact inputs use the decorative rule role for their boundary (1.38:1 on white after PR2; 1.30:1 before). WCAG 1.4.11 expects 3:1 for control boundaries, so PR4 should give fields a compliant boundary rather than reuse the rule.
+- **Observed for PR4, pre-existing:** Contact inputs use the decorative rule role for their boundary (1.38:1 on white after PR2; 1.30:1 before). WCAG 1.4.11 expects 3:1 for control boundaries, so PR4 should give fields a compliant boundary rather than reuse the rule. **Resolved in PR4:** fields now use the Muted role (6.12:1), enforced by `tests/e2e/contact.spec.ts`.

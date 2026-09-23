@@ -531,46 +531,11 @@ These conventions apply VISUAL-IDENTITY-V1 within the existing Services, Project
 - **Endings:** Services, Projects and project details all end on the Action-tint inquiry band inside the page container, with the standard primary action. The earlier full-azure Projects band is retired because PROJECTS-EXPERIENCE and VIS-R1.8 already required Action tint.
 - **Mono limit:** Plex Mono appears only on sequence labels and evidence metadata. `tests/e2e/support/editorial.ts` fails any mono text longer than 64 characters on these pages.
 
-### Prototype verdict
+#### Static editorial application (Studio, Founder, Contact and Privacy)
 
-The [isolated prototype review](../reviews/immersive-homepage-prototype-2026-09-19/index.md) validated the four-state model, direct scroll mapping, static posters and demand rendering. Its original System Instrument composition did not meet the final hierarchy standard. The accepted C2 revision below resolves the production art-direction and hybrid-media boundary. Exact master-mark optical geometry and the authored brand-motion asset remain **OPEN**.
+These conventions keep the Studio/Founder and Contact baselines' order, surfaces and facts.
 
-
-## IMMERSIVE-HOME-V1.1 — C2 Adaptive System Instrument — APPROVED
-
-**Approved 2026-09-20.** The repository owner approved [RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1](../rfcs/adaptive-immersive-homepage-production-v1.md) after reviewing the prototype evidence and C2 concept. [ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE](../decisions/adaptive-immersive-homepage.md) owns the runtime. This section supersedes only the earlier immersive scene composition and prototype-dependent media questions. The Contained Master, palette, typography, evidence permissions, commercial copy and other page requirements remain authoritative.
-
-### C2 composition
-
-Wide Home layouts use two dominant zones:
-
-- an editorial anchor occupying approximately 42–46 percent of the stage;
-- one large 4:5 instrument viewport occupying the remaining space.
-
-A thin phase spine belongs to their boundary and never becomes a competing information column. The proposition and primary action remain visually dominant before the visitor interprets the scene.
-
-The nested-arrow geometry supplies alignment, direction, cropping and transition logic. The derived sculpture may separate and reconnect; the protected master mark may not. Labels attach to meaningful operational channels or states. Generic dashboard cards, floating telemetry, particle fields, neon, continuous rotation, elastic motion and ornamental glass are excluded. Transparent structural planes, restrained shadows and physically useful material variation are permitted inside the scene.
-
-### Chapter compositions
-
-1. **Recognition:** bone editorial surface, intact derived sculpture, proposition and primary action.
-2. **Fragmentation:** layers separate into operational planes; orders, bookings, messages and manual tasks become distinct channels.
-3. **Connection:** channels acquire deliberate routes; concentrated azure becomes active; one governed demonstration window may appear.
-4. **Coordination:** inputs resolve into an ordered system; the composition calms and hands into services, approved evidence and contact.
-
-Each chapter has a complete static composition. The visual system changes typography balance, surface, geometry and media framing together rather than animating an isolated object.
-
-### Instrument media
-
-The stage uses one dominant instrument window, normally 4:5 wide and 1:1 compact. One authored video is permitted only in Connection when it materially improves the explanation. The film stays spatially connected to the arrow system, receives a poster and fallback, and never becomes a generic portfolio reel.
-
-Every asset is classified as brand motion, demonstration or project evidence. Higgsfield, Blender and other generated work is brand motion by default. Generated interfaces cannot imply client work, a proprietary platform, outcomes or operating scale. Project media remains subject to PROJECT-EVIDENCE. Essential bilingual copy is HTML, not baked into media.
-
-The exploratory C2 concept image is a review aid only. Its navigation, small captions, glass details, platform and generated interface are not approved production requirements.
-
-### Remaining open visual items
-
-The following remain **OPEN** for asset review without changing the approved composition:
-
-- exact Connection-film shot list and production tool;
-- final poster artwork and video encodes within the accepted budgets.
+- **Studio:** accountability, principles, location and the Founder bridge open with an Ink rule and a decorative `01`–`04` sequence label. The principle blocks themselves stay unnumbered. The collaborator note is a bounded neutral panel (Bone on Surface), and location is a short ruled row.
+- **Founder:** section H2s use the approved 32/40 section scale under full-width Ink rules, without numbering, so the page stays a professional history rather than a sequence. Experience periods, education statuses and the MPC context line are Plex Mono metadata. Professional links form one compact Surface panel in the header transition, with CV as the single strong action.
+- **Contact:** an Ink rule separates the introduction from the 8/4 form area. The demo notice and status surfaces use a 12px radius. Field boundaries use the Muted role (6.12:1 on white), so controls meet WCAG 1.4.11 instead of relying on the decorative rule.
+- **Privacy:** uses the page H1 scale, and an Ink rule opens the policy sections.
