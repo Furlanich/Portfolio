@@ -18,6 +18,7 @@ const serviceCases = [
     principlesAnchor: 'condiciones',
     principles: ['Acuerdo de trabajo', 'Límites comerciales', 'IA solo cuando aporta valor'],
     principlesHeading: 'Qué podés esperar de cualquier servicio',
+    indexLabels: ['Sitios y aplicaciones web', 'WhatsApp e integraciones', 'Mantenimiento y consultoría'],
     finalHeading: 'Contanos qué necesitás resolver',
     work: [
       'Sitio o catálogo: presentar la oferta.',
@@ -50,6 +51,7 @@ const serviceCases = [
     principlesAnchor: 'working-boundaries',
     principles: ['Working agreement', 'Commercial boundaries', 'AI only where it adds value'],
     principlesHeading: 'What you can expect from every service',
+    indexLabels: ['Websites and web applications', 'WhatsApp and integrations', 'Maintenance and consulting'],
     finalHeading: 'Tell us what you need to solve',
     work: [
       'Website or catalogue: present the offer.',
@@ -146,7 +148,7 @@ for (const serviceCase of serviceCases) {
 
     const index = main.getByRole('navigation', { name: serviceCase.indexLabel, exact: true });
     for (const [position, link] of (await index.getByRole('link').all()).entries()) {
-      await expect(link).toHaveAccessibleName(serviceCase.serviceHeadings[position]);
+      await expect(link).toHaveAccessibleName(serviceCase.indexLabels[position]);
     }
 
     const mono = await expectShortMonoOnly(main);

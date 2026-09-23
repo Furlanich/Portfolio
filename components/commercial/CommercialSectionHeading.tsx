@@ -2,15 +2,22 @@ interface CommercialSectionHeadingProps {
   headingId: string;
   heading: string;
   intro?: string;
+  sequence?: string;
 }
 
 export function CommercialSectionHeading({
   headingId,
   heading,
   intro,
+  sequence,
 }: CommercialSectionHeadingProps) {
   return (
     <div className="max-w-[68ch]">
+      {sequence ? (
+        <p data-sequence aria-hidden="true" className="mb-4 font-mono text-sm font-semibold leading-5 text-foundation-action">
+          {sequence}
+        </p>
+      ) : null}
       <h2
         id={headingId}
         className="max-w-[20ch] text-[32px] font-bold leading-[38px] tracking-[-0.015em] text-foundation-ink md:text-[40px] md:leading-[48px]"

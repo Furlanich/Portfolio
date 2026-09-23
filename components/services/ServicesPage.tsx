@@ -33,6 +33,7 @@ export function ServicesPage({ content }: ServicesPageProps) {
             key={service.id}
             content={service}
             anchor={serviceSectionAnchors[service.id][content.locale]}
+            sequence={String(index + 1).padStart(2, '0')}
             actionHref={action.href}
             evidenceHref={evidenceHref}
             surface={index % 2 === 0 ? 'surface' : 'canvas'}
