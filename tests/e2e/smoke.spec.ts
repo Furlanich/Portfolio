@@ -38,6 +38,7 @@ const homepageNarrativeCases = [
   {
     locale: 'Spanish',
     route: stableRoutes.home.es,
+    chapters: ['Reconocer el sistema real', 'Ver dónde se fragmenta', 'Conectar lo que importa', 'Coordinar el trabajo'],
     heading: 'Cuando lo manual empieza a frenar el negocio',
     servicesHeading: 'Servicios para necesidades concretas',
     audience: 'Para pymes que coordinan pedidos, reservas o atención al cliente, o necesitan mejorar un sistema existente.',
@@ -52,6 +53,7 @@ const homepageNarrativeCases = [
   {
     locale: 'English',
     route: stableRoutes.home.en,
+    chapters: ['Recognize the real system', 'See where it fragments', 'Connect what matters', 'Coordinate the work'],
     heading: 'When manual work starts holding the business back',
     servicesHeading: 'Services for concrete business needs',
     audience: 'For small and medium-sized businesses managing orders, bookings or customer service, or improving an existing system.',
@@ -70,8 +72,10 @@ for (const narrativeCase of homepageNarrativeCases) {
     await page.goto(appUrl(narrativeCase.route));
 
     const main = page.getByRole('main');
-    await expect(main.locator('section')).toHaveCount(7);
+    // The hero anchor plus the six MKT-D05 sections; the four instrument chapters precede Problems.
+    await expect(main.locator('section[aria-labelledby="home-heading"], :scope > section')).toHaveCount(7);
     await expect(main.locator('h2')).toHaveText([
+      ...narrativeCase.chapters,
       narrativeCase.heading,
       narrativeCase.servicesHeading,
       narrativeCase.proofHeading,
@@ -85,7 +89,11 @@ for (const narrativeCase of homepageNarrativeCases) {
       appPathname(narrativeCase.projectsPath),
     );
     await expect(main.getByText(narrativeCase.demoStatement, { exact: true })).toBeVisible();
-    await expect(main.locator('img')).toHaveCount(0);
+    // Only the decorative instrument posters may appear: no project imagery or screenshots.
+    for (const image of await main.locator('img').all()) {
+      await expect(image).toHaveAttribute('alt', '');
+      await expect(image).toHaveAttribute('src', /\/brand\/immersive\/(?:recognition|fragmentation|connection|coordination)\.svg$/);
+    }
     await expect(main).not.toContainText('MPC Administración');
     await expect(main).not.toContainText('MPC Administration');
   });

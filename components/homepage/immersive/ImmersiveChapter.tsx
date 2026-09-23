@@ -24,7 +24,7 @@ export function ImmersiveChapter({ chapter, index, total, statusLabel }: Immersi
       <div className={`${styles.chapterText} lg:py-12`}>
         <p className="flex items-center gap-3 font-mono text-[13px] font-semibold leading-5">
           <span data-sequence aria-hidden="true" className="text-foundation-action">{chapter.sequence}</span>
-          <span data-phase-status className="text-foundation-muted max-[389px]:sr-only">{status}</span>
+          <span data-phase-status className="text-foundation-muted max-[389px]:sr-only lg:max-xl:sr-only">{status}</span>
         </p>
         <h2 id={headingId} className="mt-3 max-w-[20ch] text-[28px] font-bold leading-[34px] tracking-[-0.015em] text-foundation-ink md:text-[32px] md:leading-[38px]">{chapter.heading}</h2>
         <p className="mt-4 max-w-[52ch] text-lg leading-7 text-foundation-muted">{chapter.description}</p>
