@@ -17,6 +17,7 @@
     "test:a11y": "playwright test --project=accessibility-chromium",
     "test:frontend": "npm test && npm run test:e2e && npm run build && npm run verify:static-export",
     "verify:static-export": "node scripts/verify-static-export.mjs",
+    "measure:immersive": "node scripts/measure-immersive-production.mjs",
     "typecheck": "tsc --noEmit --incremental false",
     "validate": "npm run docs:check && npm test && npm run lint && npm run typecheck && npm run build"
   },
