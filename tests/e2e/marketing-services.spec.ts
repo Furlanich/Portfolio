@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
+import { IDENTITY_TINT, backgroundOf, expectSequenceMarker, expectShortMonoOnly } from './support/editorial';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 const serviceCases = [
@@ -16,6 +17,8 @@ const serviceCases = [
     evidenceHeading: 'Evidencia disponible',
     principlesAnchor: 'condiciones',
     principles: ['Acuerdo de trabajo', 'Límites comerciales', 'IA solo cuando aporta valor'],
+    principlesHeading: 'Qué podés esperar de cualquier servicio',
+    finalHeading: 'Contanos qué necesitás resolver',
     work: [
       'Sitio o catálogo: presentar la oferta.',
       'Pedidos o reservas: organizar solicitudes e integrar proveedores cuando sea viable.',
@@ -46,6 +49,8 @@ const serviceCases = [
     evidenceHeading: 'Available evidence',
     principlesAnchor: 'working-boundaries',
     principles: ['Working agreement', 'Commercial boundaries', 'AI only where it adds value'],
+    principlesHeading: 'What you can expect from every service',
+    finalHeading: 'Tell us what you need to solve',
     work: [
       'Website or catalogue: present the offer.',
       'Orders or bookings: organize requests and integrate providers where feasible.',
@@ -122,5 +127,30 @@ for (const serviceCase of serviceCases) {
     for (const [index, link] of (await navigation.getByRole('link').all()).entries()) {
       await expect(link).toHaveAttribute('href', appPathname(anchorBase) + '#' + anchors[index]);
     }
+  });
+
+  test(serviceCase.locale + ' Services uses the precision editorial system without changing its order', async ({ page }) => {
+    await page.goto(appUrl(serviceCase.route));
+    const main = page.getByRole('main');
+
+    await expect(main.locator('h2')).toHaveText([
+      ...serviceCase.serviceHeadings,
+      serviceCase.principlesHeading,
+      serviceCase.finalHeading,
+    ]);
+
+    const serviceSections = ['web', 'whatsapp', serviceCase.locale === 'Spanish' ? 'consultoria' : 'consulting'];
+    for (const [index, sectionId] of serviceSections.entries()) {
+      await expectSequenceMarker(main.locator('section#' + sectionId), String(index + 1).padStart(2, '0'));
+    }
+
+    const index = main.getByRole('navigation', { name: serviceCase.indexLabel, exact: true });
+    for (const [position, link] of (await index.getByRole('link').all()).entries()) {
+      await expect(link).toHaveAccessibleName(serviceCase.serviceHeadings[position]);
+    }
+
+    const mono = await expectShortMonoOnly(main);
+    expect(mono).toEqual(expect.arrayContaining(['01', '02', '03']));
+    expect(await backgroundOf(main.locator('section#cta'))).toBe(IDENTITY_TINT);
   });
 }
