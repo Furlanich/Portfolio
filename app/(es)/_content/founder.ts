@@ -4,14 +4,14 @@ export const founderContent = {
   locale: 'es',
   routeId: 'founder',
   header: {
-    context: 'Fundador de FURLANICH · Desarrollador de software full-stack',
+    context: 'Fundador de FURLANICH · Ingeniero de software',
     name: 'Samuel Furlanich',
-    opening: 'Desarrollador de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.',
+    opening: 'Ingeniero de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.',
   },
   biography: {
     heading: 'Biografía profesional',
     paragraphs: [
-      'Samuel Furlanich es desarrollador de software full-stack y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
+      'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
       'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.',
       'También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
     ],

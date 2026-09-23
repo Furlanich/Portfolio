@@ -46,6 +46,14 @@ function assertHomepageContent(content, expected) {
   assert.equal(content.locale, expected.locale);
   assert.equal(content.routeId, 'home');
 
+  assert.equal(content.eyebrow, expected.hero.eyebrow);
+  assert.equal(content.heading, expected.hero.heading);
+  assert.equal(content.description, expected.hero.description);
+  assertAction(content.primaryAction, 'contact', expected.hero.primaryAction);
+  assertAction(content.secondaryAction, 'services', expected.hero.secondaryAction);
+  assert.equal(content.trustLine, expected.hero.trustLine);
+  assert.equal(content.availability, expected.hero.availability);
+
   assert.equal(content.problems.heading, expected.problems.heading);
   assert.equal(content.problems.introduction, expected.problems.introduction);
   assert.equal(content.problems.audienceStatement, expected.problems.audienceStatement);
@@ -90,7 +98,7 @@ function assertHomepageContent(content, expected) {
   assert.equal('secondaryAction' in content.founderSection, false);
 
   assert.equal(content.cta.heading, expected.cta.heading);
-  assert.equal(content.cta.description, expected.cta.description);
+  assert.equal('description' in content.cta, false);
   assert.equal(content.cta.demoStatement, expected.cta.demoStatement);
   assertAction(content.cta.primaryAction, 'contact', expected.cta.primaryAction);
   assert.deepEqual(content.cta.secondaryAction, {
@@ -112,8 +120,19 @@ function assertHomepageContent(content, expected) {
 test('Spanish home content contains the approved complete homepage contract', () => {
   assertHomepageContent(spanish, {
     locale: 'es',
+    hero: {
+      eyebrow: 'Estudio de software a medida',
+      heading: 'Conectá tus sistemas. Simplificá el trabajo diario.',
+      description:
+        'Sitios y aplicaciones web, automatización por WhatsApp e integraciones para coordinar pedidos, reservas y tareas. También mejoramos sistemas existentes.',
+      primaryAction: 'Ver contacto',
+      secondaryAction: 'Ver servicios',
+      trustLine: 'Samuel Furlanich, responsable técnico del estudio.',
+      availability:
+        'Buenos Aires, Argentina. Disponibilidad en español e inglés para Argentina y el exterior.',
+    },
     problems: {
-      heading: 'Cuando el trabajo queda repartido entre herramientas',
+      heading: 'Cuando lo manual empieza a frenar el negocio',
       introduction: 'Cuando el trabajo queda repartido entre herramientas',
       audienceStatement:
         'Para pymes que coordinan pedidos, reservas o atención al cliente, o necesitan mejorar un sistema existente.',
@@ -154,13 +173,11 @@ test('Spanish home content contains the approved complete homepage contract', ()
     },
     cta: {
       heading: '¿Tenés una necesidad concreta o un sistema que necesita atención?',
-      description:
-        'Contanos brevemente qué querés resolver. Samuel revisará personalmente la consulta para determinar si tiene sentido avanzar con una conversación.',
       demoStatement: 'Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario.',
-      primaryAction: 'Contanos sobre tu proyecto',
+      primaryAction: 'Ver contacto',
       secondaryAction: 'Escribir por WhatsApp',
     },
-    primaryAction: 'Contanos sobre tu proyecto',
+    primaryAction: 'Ver contacto',
     secondaryAction: 'Ver servicios',
   });
 });
@@ -168,8 +185,19 @@ test('Spanish home content contains the approved complete homepage contract', ()
 test('English home content contains the approved natural adaptation', () => {
   assertHomepageContent(english, {
     locale: 'en',
+    hero: {
+      eyebrow: 'Custom software studio',
+      heading: 'Connect your systems. Simplify everyday work.',
+      description:
+        'Websites, web applications, WhatsApp automation and integrations for orders, bookings and everyday tasks. We also improve existing systems.',
+      primaryAction: 'Contact options',
+      secondaryAction: 'Explore services',
+      trustLine: 'Samuel Furlanich, the studio’s technical lead.',
+      availability:
+        'Based in Buenos Aires, Argentina. Available in Spanish and English for work in Argentina and internationally.',
+    },
     problems: {
-      heading: 'When work is spread across tools',
+      heading: 'When manual work starts holding the business back',
       introduction: 'When work is spread across tools',
       audienceStatement:
         'For small and medium-sized businesses managing orders, bookings or customer service, or improving an existing system.',
@@ -210,13 +238,11 @@ test('English home content contains the approved natural adaptation', () => {
     },
     cta: {
       heading: 'Do you have a concrete need or a system that needs attention?',
-      description:
-        'Tell us briefly what you need to solve. Samuel will personally review your inquiry to determine whether it makes sense to continue with a conversation.',
       demoStatement: 'Explore the contact options and try the demonstration form. The form does not send inquiries.',
-      primaryAction: 'Tell us about your project',
+      primaryAction: 'Contact options',
       secondaryAction: 'Write on WhatsApp',
     },
-    primaryAction: 'Tell us about your project',
-    secondaryAction: 'View services',
+    primaryAction: 'Contact options',
+    secondaryAction: 'Explore services',
   });
 });

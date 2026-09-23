@@ -3,22 +3,22 @@ import type { HomePageContent } from '../../../components/homepage/content-types
 export const homeContent = {
   locale: 'es',
   routeId: 'home',
-  eyebrow: 'Desarrollo de software a medida para pymes',
-  heading: 'Software práctico para vender, atender y operar mejor.',
+  eyebrow: 'Estudio de software a medida',
+  heading: 'Conectá tus sistemas. Simplificá el trabajo diario.',
   description:
-    'FURLANICH diseña y desarrolla sitios y aplicaciones web comerciales, automatizaciones por WhatsApp e integraciones, y mejora sistemas existentes para organizaciones con necesidades concretas.',
+    'Sitios y aplicaciones web, automatización por WhatsApp e integraciones para coordinar pedidos, reservas y tareas. También mejoramos sistemas existentes.',
   primaryAction: {
-    label: 'Contanos sobre tu proyecto',
+    label: 'Ver contacto',
     routeId: 'contact',
   },
   secondaryAction: {
     label: 'Ver servicios',
     routeId: 'services',
   },
-  trustLine: 'Atención técnica directa · Buenos Aires, Argentina · Proyectos en español e inglés',
-  availability: 'Disponible para proyectos en toda la Argentina y el exterior.',
+  trustLine: 'Samuel Furlanich, responsable técnico del estudio.',
+  availability: 'Buenos Aires, Argentina. Disponibilidad en español e inglés para Argentina y el exterior.',
   problems: {
-    heading: 'Cuando el trabajo queda repartido entre herramientas',
+    heading: 'Cuando lo manual empieza a frenar el negocio',
     introduction: 'Cuando el trabajo queda repartido entre herramientas',
     audienceStatement:
       'Para pymes que coordinan pedidos, reservas o atención al cliente, o necesitan mejorar un sistema existente.',
@@ -103,11 +103,9 @@ export const homeContent = {
   },
   cta: {
     heading: '¿Tenés una necesidad concreta o un sistema que necesita atención?',
-    description:
-      'Contanos brevemente qué querés resolver. Samuel revisará personalmente la consulta para determinar si tiene sentido avanzar con una conversación.',
     demoStatement: 'Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario.',
     primaryAction: {
-      label: 'Contanos sobre tu proyecto',
+      label: 'Ver contacto',
       routeId: 'contact',
     },
     secondaryAction: {
