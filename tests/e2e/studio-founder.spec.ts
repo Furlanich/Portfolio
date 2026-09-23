@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
+import { expectSequenceMarker, expectShortMonoOnly } from './support/editorial';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 const studioCases = [
@@ -298,5 +299,96 @@ for (const integrationCase of integrationCases) {
       'href',
       appPathname(integrationCase.founderRoute),
     );
+  });
+}
+
+const studioEditorialCases = [
+  {
+    locale: 'Spanish',
+    route: stableRoutes.studio.es,
+    headings: [
+      'Modelo de trabajo',
+      'Dirección técnica de principio a fin',
+      'Principios para trabajar con claridad',
+      'Base en Buenos Aires, disponibilidad nacional e internacional',
+      'La persona detrás de la dirección técnica',
+      'Conversemos sobre lo que hoy frena a tu negocio',
+    ],
+  },
+  {
+    locale: 'English',
+    route: stableRoutes.studio.en,
+    headings: [
+      'Operating model',
+      'Technical direction from start to finish',
+      'Principles for clear delivery',
+      'Based in Buenos Aires, available nationally and internationally',
+      'The person behind the technical direction',
+      "Let's talk about what's holding your business back",
+    ],
+  },
+] as const;
+
+for (const studioCase of studioEditorialCases) {
+  test(`${studioCase.locale} Studio keeps its order and numbers its editorial sections`, async ({ page }) => {
+    await page.goto(appUrl(studioCase.route));
+    const main = page.getByRole('main');
+
+    await expect(main.locator('h2')).toHaveText([...studioCase.headings]);
+    const numbered = ['studio-accountability-heading', 'studio-principles-heading', 'studio-location-heading', 'studio-founder-heading'];
+    for (const [index, headingId] of numbered.entries()) {
+      await expectSequenceMarker(main.locator(`section[aria-labelledby="${headingId}"]`), String(index + 1).padStart(2, '0'));
+    }
+    await expectShortMonoOnly(main);
+  });
+}
+
+const founderEditorialCases = [
+  {
+    locale: 'Spanish',
+    route: stableRoutes.founder.es,
+    headings: [
+      'Perfil profesional',
+      'Experiencia profesional',
+      'Biografía profesional',
+      'Formación',
+      'Sistemas que podemos construir',
+      'Trabajo y evidencia técnica',
+      '¿Querés conversar sobre una necesidad de tu negocio?',
+    ],
+  },
+  {
+    locale: 'English',
+    route: stableRoutes.founder.en,
+    headings: [
+      'Professional profile',
+      'Professional experience',
+      'Professional biography',
+      'Education',
+      'Systems we can engineer',
+      'Work and technical evidence',
+      'Want to discuss a business need?',
+    ],
+  },
+] as const;
+
+for (const founderCase of founderEditorialCases) {
+  test(`${founderCase.locale} Founder uses the section heading scale and mono period metadata`, async ({ page }) => {
+    await page.goto(appUrl(founderCase.route));
+    const main = page.getByRole('main');
+
+    await expect(main.locator('h2')).toHaveText([...founderCase.headings]);
+    for (const heading of founderCase.headings.slice(1)) {
+      const size = await main.getByRole('heading', { level: 2, name: heading, exact: true })
+        .evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
+      expect(size, `${heading} uses the approved section H2 scale`).toBeGreaterThanOrEqual(32);
+    }
+
+    const periods = main.locator('[data-founder-period]');
+    await expect(periods).toHaveCount(2);
+    for (const period of await periods.all()) {
+      expect(await period.evaluate((element) => getComputedStyle(element).fontFamily)).toMatch(/plexMono/i);
+    }
+    await expectShortMonoOnly(main);
   });
 }

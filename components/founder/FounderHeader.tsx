@@ -6,7 +6,7 @@ interface FounderHeaderProps {
 
 export function FounderHeader({ content }: FounderHeaderProps) {
   return (
-    <section id="founder-header" aria-labelledby="founder-heading" className="bg-foundation-canvas py-16 md:py-24 lg:py-32">
+    <section id="founder-header" aria-labelledby="founder-heading" className="bg-foundation-canvas pb-10 pt-16 md:pb-12 md:pt-24 lg:pt-32">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
         <div className="max-w-[68ch]">
           <p className="text-sm font-semibold leading-5 text-foundation-action">{content.context}</p>
