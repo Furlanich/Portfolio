@@ -44,3 +44,21 @@ test('the primary navigation matches the compact or wide interaction model', asy
   await expect(menu.locator('xpath=ancestor::details')).not.toHaveAttribute('open', '');
   await expect(navigation).toBeHidden();
 });
+
+for (const route of [stableRoutes.home.es, stableRoutes.home.en]) {
+  test(`instrument posters never overlay chapter copy on ${route}`, async ({ page }) => {
+    await page.goto(appUrl(route));
+    const overlaps = await page.locator('section[data-instrument-chapter]').evaluateAll((chapters) =>
+      chapters.flatMap((chapter) => {
+        const artwork = chapter.querySelector('[data-instrument-artwork]');
+        if (!artwork || getComputedStyle(artwork).display === 'none') return [];
+        const art = artwork.getBoundingClientRect();
+        return [...chapter.querySelectorAll('h2, p')]
+          .map((copy) => copy.getBoundingClientRect())
+          .filter((text) => text.width > 1 && !(text.right <= art.left || text.left >= art.right || text.bottom <= art.top || text.top >= art.bottom))
+          .map(() => chapter.getAttribute('data-instrument-chapter'));
+      }),
+    );
+    expect(overlaps).toEqual([]);
+  });
+}

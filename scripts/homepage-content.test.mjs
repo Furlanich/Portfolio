@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const { homeContent: spanish } = await import('../app/(es)/_content/home.ts');
 const { homeContent: english } = await import('../app/(en)/en/_content/home.ts');
@@ -245,4 +247,68 @@ test('English home content contains the approved natural adaptation', () => {
     primaryAction: 'Contact options',
     secondaryAction: 'Explore services',
   });
+});
+
+const approvedInstrument = {
+  es: {
+    label: 'FURLANICH · Del proceso al sistema',
+    statusLabel: 'ETAPA {current} DE 04',
+    pauseLabel: 'Pausar movimiento',
+    resumeLabel: 'Reanudar movimiento',
+    chapters: [
+      ['recognition', 'Reconocer el sistema real', 'Pedidos, reservas, mensajes y tareas ya conviven en un mismo negocio. El primer paso es entender cómo se relacionan.'],
+      ['fragmentation', 'Ver dónde se fragmenta', 'Cuando la información cambia de canal y se repite, la operación depende de más controles manuales.'],
+      ['connection', 'Conectar lo que importa', 'Una solución bien definida reúne datos, reglas y acciones sin sumar complejidad innecesaria.'],
+      ['coordination', 'Coordinar el trabajo', 'El sistema acompaña el proceso real y deja una base que puede mantenerse y adaptarse cuando cambia el negocio.'],
+    ],
+  },
+  en: {
+    label: 'FURLANICH · From process to system',
+    statusLabel: 'PHASE {current} OF 04',
+    pauseLabel: 'Pause motion',
+    resumeLabel: 'Resume motion',
+    chapters: [
+      ['recognition', 'Recognize the real system', 'Orders, bookings, messages, and tasks already coexist in one business. The first step is understanding how they relate.'],
+      ['fragmentation', 'See where it fragments', 'When information changes channels and is repeated, operations depend on more manual checks.'],
+      ['connection', 'Connect what matters', 'A well-defined solution brings data, rules, and actions together without adding unnecessary complexity.'],
+      ['coordination', 'Coordinate the work', 'The system supports the real process and creates a foundation that can be maintained and adapted as the business changes.'],
+    ],
+  },
+};
+
+for (const [locale, content] of [['es', spanish], ['en', english]]) {
+  test(`${locale} home content owns the exact approved G1 instrument copy`, async () => {
+    const { instrumentMediaManifest } = await import('../lib/immersive-home/media-manifest.ts');
+    const expected = approvedInstrument[locale];
+    const { instrument } = content;
+
+    assert.equal(instrument.label, expected.label);
+    assert.equal(instrument.statusLabel, expected.statusLabel);
+    assert.equal(instrument.pauseLabel, expected.pauseLabel);
+    assert.equal(instrument.resumeLabel, expected.resumeLabel);
+    assert.deepEqual(
+      instrument.chapters.map((chapter) => [chapter.id, chapter.heading, chapter.description]),
+      expected.chapters,
+    );
+    assert.deepEqual(instrument.chapters.map((chapter) => chapter.sequence), ['01', '02', '03', '04']);
+    assert.equal(new Set(instrument.chapters.map((chapter) => chapter.heading)).size, 4);
+
+    const posterIds = new Set(instrumentMediaManifest.map((entry) => entry.id));
+    for (const chapter of instrument.chapters) {
+      assert.equal(chapter.artworkId, `${chapter.id}-poster`);
+      assert.ok(posterIds.has(chapter.artworkId), `${chapter.artworkId} is declared in the media manifest`);
+      assert.doesNotMatch(chapter.heading + chapter.description, /\n/, 'no manual line breaks');
+    }
+  });
+}
+
+test('shared immersive components contain no locale branching or public prose', () => {
+  const directory = path.join(process.cwd(), 'components/homepage/immersive');
+  for (const file of fs.readdirSync(directory).filter((name) => name.endsWith('.tsx'))) {
+    const source = fs.readFileSync(path.join(directory, file), 'utf8');
+    assert.doesNotMatch(source, /locale ===|'es'|'en'/, `${file} has no locale branching`);
+    for (const [, heading] of [...approvedInstrument.es.chapters, ...approvedInstrument.en.chapters]) {
+      assert.equal(source.includes(heading), false, `${file} does not hard-code chapter prose`);
+    }
+  }
 });

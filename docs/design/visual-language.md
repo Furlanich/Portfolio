@@ -577,6 +577,16 @@ Every asset is classified as brand motion, demonstration or project evidence. Hi
 
 The exploratory C2 concept image is a review aid only. Its navigation, small captions, glass details, platform and generated interface are not approved production requirements.
 
+### Static C2 implementation
+
+These conventions record how PR5 applies the approved C2 composition without JavaScript. The derived sculpture and posters are brand motion, not evidence.
+
+- **Posters:** four text-free 800×1000 SVGs share one instrument ground (Bone, a dotted centre axis and edge ticks). The derived sculpture is three extruded chevron slabs, with an Azure face and an underside of Azure mixed 40% with Ink (`#04376B`). Its angle, thickness and construction differ from the Contained Master, and a test fails if the protected centerlines appear. Recognition shows the intact sculpture. Fragmentation separates the slabs among isolated, repeated channel pictograms (order, booking, message, task) with broken muted stubs. Connection regroups them with deliberate Azure routes and nodes. Coordination aligns the sculpture above the four channels on one ordered line. Each subject stays within the central square, so the compact 1:1 crop keeps it whole.
+- **1024px and wider:** the editorial anchor (the protected mark with the instrument label in Plex Mono, then the approved hero) and chapter 01 share the first stage beside a Recognition poster filling both rows. Chapters 02–04 continue as rows whose 4:5 posters abut, so the viewport reads as one persistent instrument. A static phase spine marks the current chapter on the text/stage boundary.
+- **1024–1279px:** the phase status is visually hidden but kept for assistive technology, giving fewer simultaneous labels.
+- **768px and below:** chapters flow sequentially, with a square poster after each chapter's copy (at most 36rem wide at 768px). There is no pinning or sticky behavior.
+- **Below 390px:** the instrument label and phase status are visually condensed. Headings, descriptions and full-width actions remain.
+
 ### Remaining open visual items
 
 The following remain **OPEN** for asset review without changing the approved composition:

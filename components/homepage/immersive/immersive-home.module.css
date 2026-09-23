@@ -1,0 +1,102 @@
+/*
+ * Static C2 stage. Source order is identical at every width:
+ * anchor -> wide Recognition poster -> chapters 01..04.
+ * Below 1024px everything flows in one column and the wide poster is not rendered.
+ * From 1024px the anchor and chapter 01 share the first stage beside the Recognition
+ * poster, and chapters 02..04 continue as rows whose posters abut, so the 4:5 viewport
+ * reads as one persistent instrument without JavaScript.
+ */
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.stageArtwork {
+  display: none;
+}
+
+.chapterArtwork {
+  aspect-ratio: 1 / 1;
+  max-width: 36rem;
+}
+
+.frame {
+  overflow: hidden;
+  border: 1px solid var(--frame-rule);
+  background: var(--frame-ground);
+}
+
+.frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (min-width: 1024px) {
+  .stage {
+    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
+    column-gap: 3rem;
+  }
+
+  .anchor {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .stageArtwork {
+    display: block;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    /* Fill the anchor and chapter 01 rows so the stage column stays continuous. */
+    align-self: stretch;
+    min-height: 32rem;
+  }
+
+  .chapter {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    column-gap: 3rem;
+  }
+
+  .chapter[data-instrument-chapter='recognition'] {
+    grid-column: 1;
+    grid-row: 2;
+    display: block;
+  }
+
+  .chapter[data-instrument-chapter='recognition'] .chapterArtwork {
+    display: none;
+  }
+
+  .chapterText {
+    grid-column: 1;
+  }
+
+  .chapterArtwork {
+    grid-column: 2;
+    max-width: none;
+    aspect-ratio: 4 / 5;
+    margin-top: -1px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* The spine runs along the text/stage boundary of each chapter row. */
+  .chapterText {
+    position: relative;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 2.5rem;
+    border-right: 1px solid var(--frame-rule);
+  }
+
+  .chapter[data-instrument-chapter='recognition'] .chapterText {
+    padding-top: 2.5rem;
+  }
+}

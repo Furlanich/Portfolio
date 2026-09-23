@@ -437,42 +437,42 @@ The route-owned `home.ts` modules own these strings. Shared components contain n
 
 ### Task 5.1 — define the static contract before components
 
-- [ ] Add failing tests for exact approved G1 copy, fixed chapter order/IDs, unique headings, media manifest entries and four static artwork files.
-- [ ] Require every artwork manifest entry to be `brand-motion`, locale-neutral, free of evidence claims and within its byte budget. The first poster must be at most 150 KiB.
-- [ ] Extend static-export verification to require all chapter headings/descriptions and poster URLs in root and `/Portfolio` builds.
-- [ ] Run focused tests and confirm red.
-- [ ] Commit: `test(home): define adaptive instrument static contract`.
+- [x] Added failing tests for the exact approved G1 copy, fixed chapter order and IDs, unique headings, the media manifest and the four static artwork files.
+- [x] Required every manifest entry to be `brand-motion`, locale-neutral, decorative, without evidence claims and within budget. The first poster budget is 150 KiB (actual: 2,258 bytes). Posters must be text-free and must not reuse the protected mark geometry.
+- [x] Extended static-export verification to require every chapter heading and description, in order and before Problems, plus all four poster URLs. The former blanket homepage `<img>` prohibition is replaced by "only the four decorative posters, each with `alt=""`". Verified in root and `/Portfolio` builds.
+- [x] Ran the focused tests and confirmed red: content, manifest and export verification all failed.
+- [x] Commit: `test(home): define adaptive instrument static contract` (`39b839a`).
 
 ### Task 5.2 — render the semantic document first
 
-- [ ] Integrate the approved hero proposition/actions into `ImmersiveEditorialAnchor`; retain one H1 and existing CTA destinations.
-- [ ] Render four document chapters in source order. Each has visible HTML meaning and a static artwork image with stable intrinsic dimensions.
-- [ ] Keep artwork decorative when the adjacent HTML conveys the full meaning; otherwise use the exact G1 caption. Do not duplicate the same accessible name through image and text.
-- [ ] Use the protected mark in the editorial identity area; use visibly related but separate geometry in chapter artwork.
-- [ ] Keep the remaining approved homepage sections and anchors after the immersive sequence.
-- [ ] Run content, static-export and type tests.
-- [ ] Commit: `feat(home): add semantic adaptive instrument sequence`.
+- [x] Integrated the approved hero proposition and actions into `ImmersiveEditorialAnchor`, keeping one H1 and the existing CTA destinations.
+- [x] Rendered four document chapters in source order, each with visible sequence, phase status, heading and description, and an 800×1000 static poster.
+- [x] Kept the artwork decorative (`alt=""`), since the adjacent HTML carries the full meaning. No image repeats a text name.
+- [x] Used the protected mark beside the instrument label in the editorial area; the chapter artwork uses the separate derived slab geometry.
+- [x] Kept the six approved homepage sections and anchors after the sequence.
+- [x] Ran the content, static-export and type tests.
+- [x] Commit: `feat(home): add semantic adaptive instrument sequence` (`a23acfb`).
 
 ### Task 5.3 — implement width-specific static choreography
 
-- [ ] At 1440, compose editorial anchor, integrated phase spine and a persistent-looking 4:5 artwork region without requiring JavaScript.
-- [ ] At 1024, use a compact two-zone composition with fewer simultaneous labels.
-- [ ] At 768, default to sequential copy and artwork. Do not add sticky behavior in this PR.
-- [ ] At 390, present four normal-flow chapters with inline 1:1 artwork and no prolonged pin.
-- [ ] At 320, condense nonessential metadata, preserve headings/actions and favor static artwork.
-- [ ] Ensure 200% zoom collapses to readable flow and artwork never overlays copy.
-- [ ] Create deterministic reduced-motion visual snapshots for both locales at all five widths.
-- [ ] Commit: `feat(home): compose static instrument across five widths`.
+- [x] At 1440, composed the editorial anchor, the static phase spine and a continuous 4:5 stage without JavaScript.
+- [x] At 1024, kept two zones and visually hid the phase status for fewer simultaneous labels.
+- [x] At 768, used sequential copy and artwork with no sticky behavior.
+- [x] At 390, presented four normal-flow chapters with inline 1:1 artwork and no pinning.
+- [x] At 320, condensed the instrument label and status, keeping headings and full-width actions.
+- [x] At 200% zoom (720 CSS px) the page collapses to sequential flow. `responsive.spec.ts` fails if any poster overlays chapter copy at the mobile, tablet, wide and 320 projects.
+- [x] Created ten deterministic reduced-motion baselines (both locales × five widths), stable over two reruns.
+- [x] Commit: `feat(home): compose static instrument across five widths` (`1ee3186`).
 
 ### PR5 verification
 
-- [ ] `node --test scripts/homepage-content.test.mjs scripts/immersive-media-manifest.test.mjs`
-- [ ] `npx.cmd playwright test tests/e2e/immersive-home-static.spec.ts tests/e2e/responsive.spec.ts`
-- [ ] `npm.cmd run build`
-- [ ] `npm.cmd run verify:static-export`
-- [ ] Repeat build and browser verification with `NEXT_PUBLIC_BASE_PATH=/Portfolio`.
-- [ ] Disable JavaScript and confirm the complete bilingual chapter sequence, links and artwork remain usable.
-- [ ] Run visual QA for initial viewport, first scroll, each chapter transition, handoff into Problems and final homepage ending at all five widths.
+- [x] `node --test scripts/homepage-content.test.mjs scripts/immersive-media-manifest.test.mjs`
+- [x] `npx.cmd playwright test tests/e2e/immersive-home-static.spec.ts tests/e2e/responsive.spec.ts`
+- [x] `npm.cmd run build`
+- [x] `npm.cmd run verify:static-export`
+- [x] Repeated the build, export verification and homepage/smoke browser suites with `NEXT_PUBLIC_BASE_PATH=/Portfolio` (25/25); posters resolve under `/Portfolio/brand/immersive/`.
+- [x] Disabled JavaScript: both locales keep the complete chapter sequence, links and loaded posters (automated).
+- [x] Visual QA of the initial viewport, chapter progression, handoff into Problems and ending at 1440/1024/768/390/320.
 
 ---
 
@@ -700,7 +700,7 @@ Repeat build, static export verification and representative browser journeys wit
 - [x] PR1 marketing-contract reconciliation merged ([PR #65](https://github.com/Furlanich/Portfolio/pull/65)).
 - [x] PR2 identity foundation merged ([PR #66](https://github.com/Furlanich/Portfolio/pull/66)).
 - [x] PR3 offer/evidence presentation merged ([PR #67](https://github.com/Furlanich/Portfolio/pull/67); baselines in [PR #68](https://github.com/Furlanich/Portfolio/pull/68)).
-- [ ] PR4 Studio/Founder/utility presentation merged.
+- [x] PR4 Studio/Founder/utility presentation merged ([PR #69](https://github.com/Furlanich/Portfolio/pull/69)).
 - [ ] PR5 semantic/static C2 homepage merged.
 - [ ] PR6 direct Three.js enhancement merged.
 - [ ] Optional G2/PR7 disposition recorded.
@@ -730,5 +730,11 @@ Repeat build, static export verification and representative browser journeys wit
 - **PR4 Contact response expectation:** the plan says not to add a response promise, but the existing Contact introduction already shows the APPROVED `CONTACT-RESPONSE-EXPECTATION` ("Respuesta habitual dentro del mismo día hábil…"). The MKT-D03 proposal to omit it in demonstration mode was REJECTED. Disposition: PR4 adds nothing and leaves the approved copy unchanged. Whether a response expectation belongs on a demo-only form remains a product question for its owner.
 - **PR4 visual baselines:** Windows Studio/Founder baselines were regenerated locally. The Linux ones are PR #69's Ubuntu CI actuals (run `35885447081`; first attempt and retry identical), adopted with the repository owner's approval on 2026-09-23. That CI run otherwise passed 667 tests with only these six baseline failures.
 - **PR4 Founder numbering:** Studio sections are numbered like Services, but Founder is a professional history, where sequence labels would imply a process. Disposition: Founder uses Ink rules and the section H2 scale without numbering; mono is reserved for periods and education status metadata.
+- **PR4 documentation regression, found in PR5:** the PR4 script that recorded Studio/Founder conventions in DESIGN-VISUAL dropped everything after its insertion point, deleting the approved Prototype verdict and IMMERSIVE-HOME-V1.1 sections from `main`. Disposition: restored verbatim from `cf5ffbc` in [PR #70](https://github.com/Furlanich/Portfolio/pull/70), on which PR5 builds; no other file was affected.
+- **PR5 files outside the list:** `tests/e2e/smoke.spec.ts` pinned seven `<section>` elements, the six-H2 list and zero homepage images, all of which the approved sequence changes. It now expects the hero plus six sections, the four chapter H2s before Problems, and only the four decorative posters. `playwright.config.ts` registers `immersive-home-static.spec.ts` on chromium-desktop, since that project lists its specs explicitly. `app/(es)/page.tsx` and `app/(en)/en/page.tsx` drop the unused `paths` prop. No RFC or ADR is required.
+- **PR5 hero migration:** `HomeHero` rendered the route path as screen-reader-only text (`<span class="sr-only">/</span>`), which no requirement asked for. Disposition: removed with `HomeHero`; the anchor keeps every approved string and destination.
+- **PR5 wide stage:** from 1024px the Recognition poster is rendered once as the stage beside the anchor, and once inside chapter 01 for narrower widths (hidden at 1024px and wider). Both are decorative and share one URL, so there is one request and no duplicated accessible name. The export gate therefore allows five homepage images drawn from the four approved posters.
+- **PR5 poster art and baselines:** the derived-slab poster art direction closes the plan's OPEN "final poster artwork" for the static posters; the repository owner approved it on 2026-09-23. The ten Linux homepage baselines are PR #71's Ubuntu CI actuals (run `35897239752`), adopted with owner approval. That run otherwise passed 691 tests.
+- **PR5 pause control:** the G1 pause and resume labels are stored in the route content, but no control is rendered because the static sequence has no motion. PR6 renders it together with the WebGL enhancement.
 - **Observed, pre-existing e2e harness flake:** on a cold `.next/dev` cache, parallel workers that first request a `[projectSlug]` detail route can receive `SyntaxError: Unexpected end of JSON input` from the dev server, and `marketing-navigation.spec.ts` then finds no header links. It reproduces on `origin/main` without PR2 and passes against a warmed server. Disposition: not changed in PR2. A later harness task should warm routes before the suite or run e2e against the static export.
 - **Observed for PR4, pre-existing:** Contact inputs use the decorative rule role for their boundary (1.38:1 on white after PR2; 1.30:1 before). WCAG 1.4.11 expects 3:1 for control boundaries, so PR4 should give fields a compliant boundary rather than reuse the rule. **Resolved in PR4:** fields now use the Muted role (6.12:1), enforced by `tests/e2e/contact.spec.ts`.

@@ -3,6 +3,7 @@ import type {
   ContactAction,
   HomeHeroContent,
 } from '@/components/foundation/content-types';
+import type { HomeInstrumentContent } from '@/lib/immersive-home/types';
 
 export type HomepageItem = {
   title: string;
@@ -51,6 +52,7 @@ export type HomeCtaContent = {
 };
 
 export type HomePageContent = HomeHeroContent & {
+  instrument: HomeInstrumentContent;
   problems: HomeProblemsContent;
   servicesSection: HomeServicesSectionContent;
   proof: HomeProofContent;

@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <main>
-        <CommercialHomepage content={homeContent} paths={paths} />
+        <CommercialHomepage content={homeContent} />
       </main>
       <SiteFooter
         paths={paths}

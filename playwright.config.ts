@@ -40,6 +40,7 @@ export default defineConfig({
       name: 'chromium-desktop',
       testMatch: [
         /smoke\.spec\.ts/,
+        /immersive-home-static\.spec\.ts/,
         /studio-founder\.spec\.ts/,
         /privacy\.spec\.ts/,
         /contact\.spec\.ts/,

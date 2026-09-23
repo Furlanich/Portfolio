@@ -1,8 +1,7 @@
-import type { FoundationNavigationPaths } from '@/lib/foundation-navigation';
 import { homeProcessAnchors } from '@/lib/site-routes';
 import { resolveActionLink } from '@/components/foundation/content-types';
 import type { HomePageContent } from './content-types';
-import { HomeHero } from '@/components/foundation/HomeHero';
+import { ImmersiveHomeSequence } from './immersive/ImmersiveHomeSequence';
 import { HomeProblems } from './HomeProblems';
 import { HomeServices } from './HomeServices';
 import { HomeProof } from './HomeProof';
@@ -12,10 +11,9 @@ import { HomeCta } from './HomeCta';
 
 interface CommercialHomepageProps {
   content: HomePageContent;
-  paths: FoundationNavigationPaths;
 }
 
-export function CommercialHomepage({ content, paths }: CommercialHomepageProps) {
+export function CommercialHomepage({ content }: CommercialHomepageProps) {
   const locale = content.locale;
   const problemsAction = resolveActionLink(content.problems.action, locale);
   const servicesAction = resolveActionLink(content.servicesSection.action, locale);
@@ -26,7 +24,7 @@ export function CommercialHomepage({ content, paths }: CommercialHomepageProps) 
 
   return (
     <>
-      <HomeHero content={content} paths={paths} />
+      <ImmersiveHomeSequence content={content} />
       <HomeProblems content={content.problems} actionHref={problemsAction.href} />
       <HomeServices content={content.servicesSection} actionHref={servicesAction.href} />
       <HomeProof content={content.proof} actionHref={proofAction.href} />
