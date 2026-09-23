@@ -1,0 +1,488 @@
+{
+  "kind": "synthetic lab measurement (not field data)",
+  "journeysPerLocale": 10,
+  "gates": {
+    "lcpP75Ms": 2500,
+    "inpP75Ms": 200
+  },
+  "profiles": {
+    "mobile": {
+      "summary": {
+        "label": "Mobile: 390x844, DPR 3, touch, 4x CPU slowdown, Slow 4G applied (562.5 ms request latency, 1.47 Mbps down)",
+        "journeys": 20,
+        "modes": {
+          "webgl": 20
+        },
+        "lcpP75Ms": 1700,
+        "inpP75Ms": 40,
+        "fcpP75Ms": 1700,
+        "ttfbP75Ms": 628,
+        "clsMax": 0,
+        "lcpElements": [
+          "H1"
+        ]
+      },
+      "journeys": [
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 636,
+          "fcpMs": 1748,
+          "lcpMs": 1748,
+          "lcpElement": "H1",
+          "interactions": 3,
+          "inpMs": 168,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 639,
+          "fcpMs": 1680,
+          "lcpMs": 1680,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 40,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 633,
+          "fcpMs": 1708,
+          "lcpMs": 1708,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 626,
+          "fcpMs": 1712,
+          "lcpMs": 1712,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 96,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 629,
+          "fcpMs": 1572,
+          "lcpMs": 1572,
+          "lcpElement": "H1",
+          "interactions": 3,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 663,
+          "fcpMs": 1692,
+          "lcpMs": 1692,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 627,
+          "fcpMs": 1668,
+          "lcpMs": 1668,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 40,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 626,
+          "fcpMs": 1648,
+          "lcpMs": 1648,
+          "lcpElement": "H1",
+          "interactions": 3,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 626,
+          "fcpMs": 1644,
+          "lcpMs": 1644,
+          "lcpElement": "H1",
+          "interactions": 3,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 626,
+          "fcpMs": 1668,
+          "lcpMs": 1668,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 64,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 627,
+          "fcpMs": 1660,
+          "lcpMs": 1660,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 625,
+          "fcpMs": 1700,
+          "lcpMs": 1700,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 628,
+          "fcpMs": 1696,
+          "lcpMs": 1696,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 625,
+          "fcpMs": 1524,
+          "lcpMs": 1524,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 628,
+          "fcpMs": 1704,
+          "lcpMs": 1704,
+          "lcpElement": "H1",
+          "interactions": 3,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 627,
+          "fcpMs": 1672,
+          "lcpMs": 1672,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 40,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 627,
+          "fcpMs": 1672,
+          "lcpMs": 1672,
+          "lcpElement": "H1",
+          "interactions": 3,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 625,
+          "fcpMs": 1676,
+          "lcpMs": 1676,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 40,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 626,
+          "fcpMs": 1704,
+          "lcpMs": 1704,
+          "lcpElement": "H1",
+          "interactions": 3,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 626,
+          "fcpMs": 1700,
+          "lcpMs": 1700,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        }
+      ]
+    },
+    "desktop": {
+      "summary": {
+        "label": "Desktop: 1440x900, DPR 1, 1x CPU, desktop applied (150 ms request latency, 9.2 Mbps down)",
+        "journeys": 20,
+        "modes": {
+          "webgl": 20
+        },
+        "lcpP75Ms": 440,
+        "inpP75Ms": 24,
+        "fcpP75Ms": 440,
+        "ttfbP75Ms": 165,
+        "clsMax": 0,
+        "lcpElements": [
+          "H1"
+        ]
+      },
+      "journeys": [
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 164,
+          "fcpMs": 452,
+          "lcpMs": 452,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 164,
+          "fcpMs": 436,
+          "lcpMs": 436,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 164,
+          "fcpMs": 432,
+          "lcpMs": 432,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 164,
+          "fcpMs": 440,
+          "lcpMs": 440,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 165,
+          "fcpMs": 432,
+          "lcpMs": 432,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 166,
+          "fcpMs": 440,
+          "lcpMs": 440,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 166,
+          "fcpMs": 444,
+          "lcpMs": 444,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 165,
+          "fcpMs": 436,
+          "lcpMs": 436,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 163,
+          "fcpMs": 440,
+          "lcpMs": 440,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 166,
+          "fcpMs": 436,
+          "lcpMs": 436,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 164,
+          "fcpMs": 436,
+          "lcpMs": 436,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 163,
+          "fcpMs": 436,
+          "lcpMs": 436,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 165,
+          "fcpMs": 440,
+          "lcpMs": 440,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 163,
+          "fcpMs": 444,
+          "lcpMs": 444,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 163,
+          "fcpMs": 440,
+          "lcpMs": 440,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 165,
+          "fcpMs": 436,
+          "lcpMs": 436,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 164,
+          "fcpMs": 440,
+          "lcpMs": 440,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 166,
+          "fcpMs": 444,
+          "lcpMs": 444,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 32,
+          "cls": 0
+        },
+        {
+          "locale": "es",
+          "mode": "webgl",
+          "ttfbMs": 164,
+          "fcpMs": 440,
+          "lcpMs": 440,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        },
+        {
+          "locale": "en",
+          "mode": "webgl",
+          "ttfbMs": 163,
+          "fcpMs": 432,
+          "lcpMs": 432,
+          "lcpElement": "H1",
+          "interactions": 4,
+          "inpMs": 24,
+          "cls": 0
+        }
+      ]
+    }
+  }
+}

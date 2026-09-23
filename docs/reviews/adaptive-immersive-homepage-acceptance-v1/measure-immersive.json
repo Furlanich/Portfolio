@@ -1,0 +1,43 @@
+{
+  "immersiveJs": {
+    "homeTotalBrotliKiB": 268.4,
+    "baselineHomeBrotliKiB": 154.4,
+    "brotliKiB": 114,
+    "lazyRuntime": {
+      "rawKiB": 530.2,
+      "gzipKiB": 130.3,
+      "brotliKiB": 106.7
+    }
+  },
+  "activationMarks": {
+    "immersive:import-start": 458,
+    "immersive:import-end": 672,
+    "immersive:scene-created": 715
+  },
+  "firstPosterKiB": 2.21,
+  "activationToFirstFrameMs": 744,
+  "frameIntervalP95Ms": 16.7,
+  "activationLongTasksMs": [
+    55,
+    73
+  ],
+  "interactionLongTasksMs": [],
+  "cls": 0,
+  "playingVideos": 0,
+  "resources": {
+    "afterTraversal": {
+      "canvases": 1,
+      "listeners": 380,
+      "nodes": 604,
+      "traversals": 20
+    },
+    "afterRemounts": {
+      "canvases": 1,
+      "listeners": 381,
+      "nodes": 605,
+      "remounts": 5
+    }
+  },
+  "headroomKiB": 6,
+  "headroomNote": "below the 15 KiB working target; owner-accepted exception of 6 KiB applies"
+}

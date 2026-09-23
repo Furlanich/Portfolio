@@ -4,9 +4,10 @@ type: testing-guidance
 status: APPROVED
 related:
   - DESIGN-IX-A11Y
+  - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
   - ADR-STATIC-LOCALIZED-ROUTING
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-09-08
+last_verified: 2026-09-23
 ---
 
 # Frontend testing strategy
@@ -20,6 +21,9 @@ Use the lowest stable layer that proves the behavior, then add higher layers onl
 | Playwright plus axe | Automatically detectable accessibility issues on representative routes | `npm run test:a11y` |
 | Visual review | Typography, hierarchy, composition, clipping, imagery, and rendered states against approved design | Follow `visual-qa` and [visual regression policy](visual-regression.md) |
 | Static artifact | Generated routes, trailing slashes, internal links, and `NEXT_PUBLIC_BASE_PATH` output | `npm run verify:static-export` after build |
+| Immersive homepage budgets | ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE JavaScript, poster, frame, long-task, layout-shift, video and lifecycle gates; synthetic lab LCP/INP p75 | `npm run measure:immersive` and `npm run measure:home-vitals` (each builds and serves `out/`) |
+
+The `immersive-chromium` Playwright project renders WebGL through SwiftShader. Its runtime and acceptance specs are regression evidence, not real-device evidence; the constrained Android record stays manual.
 
 Browser QA never replaces static-export verification. Axe and browser automation never establish WCAG conformance; manually review semantics, source order, keyboard use, focus visibility, reflow, target size, contrast, reduced motion, and content meaning.
 

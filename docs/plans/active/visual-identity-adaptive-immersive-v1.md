@@ -15,6 +15,7 @@ related:
   - PAGE-FOUNDER
   - PROJECT-EVIDENCE
   - ADR-STATIC-LOCALIZED-ROUTING
+  - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
 last_verified: 2026-09-23
 ---
 
@@ -604,6 +605,8 @@ This PR is conditional. Omit it when no asset materially improves Connection or 
 
 **Human boundary:** approve the final asset in its review record and review the implementation PR. Tool choice such as Blender or Higgsfield does not confer approval or evidence status.
 
+**Disposition (2026-09-23):** omitted. No Connection film was produced or reviewed, and the repository owner moved from PR6 directly to PR8. Optional asset absent; static chapter closes without an empty frame. The unchecked items above stay unexecuted, and the film's asset decisions remain OPEN for a later governed PR.
+
 ---
 
 ## PR8 — close cross-browser, real-device and implementation acceptance
@@ -620,28 +623,44 @@ This PR is conditional. Omit it when no asset materially improves Connection or 
 
 ### Task 8.1 — run the complete desktop and responsive matrix
 
-- [ ] Both locales: initial viewport, four chapters forward and reverse, resize/orientation, handoff into Problems, final page CTA.
-- [ ] Widths: 320×800, 390×844, 768×1024, 1024×768 and 1440×900.
-- [ ] Modes: normal, reduced motion, Save-Data, no JavaScript, unsupported WebGL, initialization failure, context loss and blocked/absent video.
-- [ ] Input/accessibility: keyboard only, Pause/Resume, visible focus, 200% zoom, source order, screen-reader spot check, color-independent state and representative axe scan.
-- [ ] Deployment: root and `/Portfolio`; static export; direct entry and language switch; no console errors, missing assets or broken fragments.
+- [x] Both locales: initial viewport, four chapters forward and reverse, resize/orientation, handoff into Problems, final page CTA. `tests/e2e/immersive-home-acceptance.spec.ts` in `immersive-chromium`.
+- [x] Widths: 320×800, 390×844, 768×1024, 1024×768 and 1440×900.
+- [x] Modes: normal, reduced motion, Save-Data, no JavaScript, unsupported WebGL, initialization failure, context loss and absent video (no film exists; see the G2 disposition).
+- [ ] Input/accessibility: keyboard only, Pause/Resume, visible focus, 200% zoom, source order, color-independent state and representative axe scan pass. **OPEN:** the real screen-reader spot check needs the owner; the agent checked the enhanced accessibility tree only.
+- [x] Deployment: root and `/Portfolio`; static export; direct entry and language switch; no console errors, missing assets or broken fragments. The complete suite ran against both served exports (see PR8 verification).
 
 ### Task 8.2 — record constrained Android evidence
+
+**OPEN — owner action.** No Android device or `adb` bridge was available to the agent. The [acceptance record](../../reviews/adaptive-immersive-homepage-acceptance-v1/index.md) holds the fields to complete.
 
 - [ ] Use one named lower/mid-range Android device and current Chrome. Record model, OS, browser, memory class, viewport, DPR, network profile and whether battery saver is active.
 - [ ] Cold-load each locale, traverse forward/reverse 20 times, rotate during Connection, background/foreground the tab and leave it idle for five minutes.
 - [ ] Record activation, first-frame, frame interval p95, long tasks, memory trend, thermal observation, video decoder count, input responsiveness and any quality reduction.
-- [ ] Default 768 and compact layouts to sequential flow. Add a short 768 local sticky interval only if this evidence shows no blank-scroll, focus, thermal or comprehension regression; otherwise record the decision to remain sequential.
+- [x] Default 768 and compact layouts to sequential flow. Add a short 768 local sticky interval only if this evidence shows no blank-scroll, focus, thermal or comprehension regression; otherwise record the decision to remain sequential. Recorded: sequential retained in v1; reconsider only with the Android evidence.
 - [ ] Do not claim universal mobile performance from one device. Treat this as the required constrained-device acceptance sample.
 
 ### Task 8.3 — verify production budgets and close documentation
 
-- [ ] Run at least 20 repeatable throttled Chromium journeys, compute lab p75 LCP and INP and label them synthetic rather than field data. Require LCP p75 ≤2.5 s and INP p75 ≤200 ms.
-- [ ] Re-run `measure:immersive` against the final asset set and attach raw JSON plus summarized results to the acceptance record.
-- [ ] Run the entire repository gate: `npm.cmd run validate`, `npm.cmd run test:e2e`, `npm.cmd run test:a11y`, `npm.cmd run verify:static-export`, base-path build/verification and `npm.cmd run measure:immersive`.
-- [ ] Update `ARCHITECTURE.md` with only current implementation facts. Record any deviation that changes architecture in governance before merging.
+- [x] Run at least 20 repeatable throttled Chromium journeys, compute lab p75 LCP and INP and label them synthetic rather than field data. Require LCP p75 ≤2.5 s and INP p75 ≤200 ms. `measure:home-vitals`: 20 mobile and 20 desktop journeys; LCP p75 1,700/440 ms and INP p75 40/24 ms.
+- [x] Re-run `measure:immersive` against the final asset set and attach raw JSON plus summarized results to the acceptance record.
+- [x] Run the entire repository gate: `npm.cmd run validate`, `npm.cmd run test:e2e`, `npm.cmd run test:a11y`, `npm.cmd run verify:static-export`, base-path build/verification and `npm.cmd run measure:immersive`.
+- [x] Update `ARCHITECTURE.md` with only current implementation facts. Record any deviation that changes architecture in governance before merging. No deviation changes architecture.
 - [ ] Mark the plan `APPROVED / COMPLETED` and move it only after every required PR is human-merged and acceptance passes. If PR7 is omitted, record “optional asset absent; static chapter closes without an empty frame.”
-- [ ] Commit: `docs(immersive): record production acceptance`.
+- [x] Commit: `docs(immersive): record production acceptance`.
+
+### PR8 verification
+
+- [x] `npm.cmd run validate`: documentation check, 140/140 Node tests, lint, typecheck and build.
+- [x] `npm.cmd run test:e2e` (dev server warmed first; a cold start exceeded the 120 s `webServer` timeout once): 748 passed, 80 skipped by project, 0 failed.
+- [x] `npm.cmd run test:a11y`: 16/16.
+- [x] Complete Playwright suite against the root export: 730 passed, 18 failed, 80 skipped by project. All 18 are the Contact zero-transmission case (see deviations).
+- [x] Complete Playwright suite against the `/Portfolio` export: 728 passed, the same 18 failures, and two Firefox `browserContext.close` protocol errors that passed on rerun (4/4).
+- [x] `immersive-chromium` against both exports: 41/41 each.
+- [x] `npm.cmd run verify:static-export` at both base paths: 20 routes each.
+- [x] `npm.cmd run measure:immersive`: 114.0 KiB incremental (106.7 KiB lazy runtime), 2.21 KiB first poster, 744 ms to first frame, 16.7 ms rAF p95, no interaction long task, CLS 0, no video, 1 canvas and listeners 380 → 381.
+- [x] Firefox 155 and WebKit 26.6 activate WebGL on both Home routes with one canvas and no page error.
+- [x] Visual QA of both locales at the five widths with WebGL active; one minor OPEN observation (compact Pause control over the sculpture).
+- [ ] Constrained Android evidence and the real screen-reader spot check (owner).
 
 ---
 
@@ -702,8 +721,8 @@ Repeat build, static export verification and representative browser journeys wit
 - [x] PR3 offer/evidence presentation merged ([PR #67](https://github.com/Furlanich/Portfolio/pull/67); baselines in [PR #68](https://github.com/Furlanich/Portfolio/pull/68)).
 - [x] PR4 Studio/Founder/utility presentation merged ([PR #69](https://github.com/Furlanich/Portfolio/pull/69)).
 - [x] PR5 semantic/static C2 homepage merged ([PR #71](https://github.com/Furlanich/Portfolio/pull/71)).
-- [ ] PR6 direct Three.js enhancement merged.
-- [ ] Optional G2/PR7 disposition recorded.
+- [x] PR6 direct Three.js enhancement merged ([PR #72](https://github.com/Furlanich/Portfolio/pull/72)).
+- [x] Optional G2/PR7 disposition recorded: omitted, no film.
 - [ ] PR8 acceptance record merged and plan completed.
 
 ## Important implementation decisions
@@ -739,5 +758,9 @@ Repeat build, static export verification and representative browser journeys wit
 - **PR6 JavaScript budget:** direct Three.js cannot reach the 15 KiB working headroom. The approved build measures 114.0 KiB Brotli (106.7 KiB of it the lazy Three.js runtime, whose `WebGLRenderer` core is the floor; tree-shaking already removes loaders, animation and geometry libraries). Replacing Framer Motion's scroll hooks would reach only 108.8 KiB and would amend the ADR. Work stopped as the plan requires. On 2026-09-23 the repository owner accepted a 114 KiB build with about 6 KiB headroom under the unchanged 120 KiB ADR ceiling. `measure:immersive` enforces that exception, and any further homepage JavaScript needs a new budget decision.
 - **PR6 measurement definitions:** incremental JS is Home's total Brotli JavaScript (HTML-referenced chunks plus the lazy runtime) minus the recorded `main` Home baseline (158,093 bytes at `ff6eadf`). Comparing against a sibling route over-counts shared code that moves between chunks. The ADR gate is an *interaction* task under 50 ms; activation tasks are reported separately (one 50 ms task under SwiftShader after `compileAsync`) and are not gated.
 - **PR6 commits and files:** Tasks 6.2 and 6.3 share one commit because scroll mapping and the pause control live in the same client boundary. Files outside the list: `PauseMotionControl` is shared by both layouts; `tests/e2e/immersive-home-smoke.spec.ts` carries the Firefox/WebKit smoke; `playwright.config.ts` adds the `immersive-chromium` project (SwiftShader flags) because headless Chromium otherwise has no WebGL; `tests/e2e/immersive-home-static.spec.ts` pins reduced motion so it keeps testing the static composition. The overlay is positioned without a React portal because `@types/react-dom` is not a dependency and the plan allows only `three`/`@types/three`.
+- **PR8 files outside the list:** `tests/e2e/immersive-home-acceptance.spec.ts` (registered on `immersive-chromium` in `playwright.config.ts`), `scripts/measure-home-web-vitals.mjs` with the `measure:home-vitals` script, the raw JSON beside the acceptance record, and a `docs/testing/strategy.md` row for the two measurements. The plan requires the lab LCP/INP journeys but names no tool for them. No RFC or ADR is required.
+- **PR8 lab vitals model:** Chrome's CDP throttling does not delay the navigation document, so `measure:home-vitals` charges it one Lighthouse applied request latency plus transfer time at the lab server. A stricter trial that also charged three handshake round trips measured mobile LCP p75 at 2,892 ms. That double-counts connection setup the applied latency already includes; it is recorded so the mobile margin is not overstated.
+- **PR8 Contact zero-transmission case against a production export:** `contact.spec.ts` counts every `fetch` as a possible inquiry transmission. Against a served export, Next's same-origin route prefetches are fetches, so the case fails in every project although no inquiry value leaves the page; under the dev-server harness it passes. Disposition: not changed in PR8. The Contact harness should exclude router prefetches or assert on inquiry values in a separate PR.
+- **PR8 Windows export layout:** a local Windows build writes router segment prefetches as nested directories, while the client and the Linux-built GitHub Pages deployment use dotted file names (200 on the deployed site). Local Windows previews therefore 404 those prefetches. Disposition: production is unaffected; `measure-home-web-vitals.mjs` maps the names locally.
 - **Observed, pre-existing e2e harness flake:** on a cold `.next/dev` cache, parallel workers that first request a `[projectSlug]` detail route can receive `SyntaxError: Unexpected end of JSON input` from the dev server, and `marketing-navigation.spec.ts` then finds no header links. It reproduces on `origin/main` without PR2 and passes against a warmed server. Disposition: not changed in PR2. A later harness task should warm routes before the suite or run e2e against the static export.
 - **Observed for PR4, pre-existing:** Contact inputs use the decorative rule role for their boundary (1.38:1 on white after PR2; 1.30:1 before). WCAG 1.4.11 expects 3:1 for control boundaries, so PR4 should give fields a compliant boundary rather than reuse the rule. **Resolved in PR4:** fields now use the Muted role (6.12:1), enforced by `tests/e2e/contact.spec.ts`.

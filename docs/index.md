@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
@@ -31,7 +32,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-20
+last_verified: 2026-09-23
 ---
 
 # FURLANICH project knowledge
@@ -92,4 +93,4 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 
 ## Visual identity and immersive experience v1 — APPROVED FOR IMPLEMENTATION
 
-[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](rfcs/visual-identity-immersive-experience-v1.md) established the identity and prototype boundary. The approved [throwaway prototype review](reviews/immersive-homepage-prototype-2026-09-19/index.md) records the bilingual five-width matrix, failure behavior, direct Three.js feasibility, React Three Fiber 8 incompatibility and payload evidence. [`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](rfcs/adaptive-immersive-homepage-production-v1.md) approves C2 Adaptive System Instrument, the governed hybrid-media boundary, responsive choreography and production gates. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](decisions/adaptive-immersive-homepage.md) supersedes the earlier prototype ADR. The [G0/G1 review](reviews/contained-master-optical-closure-2026-09-20/index.md) approves Balanced Contained as the exact protected geometry and Operational Clarity as the exact bilingual chapter voice. [`PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1`](plans/active/visual-identity-adaptive-immersive-v1.md) is APPROVED for sequential implementation through human-reviewed Pull Requests.
+[`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](rfcs/visual-identity-immersive-experience-v1.md) established the identity and prototype boundary. The approved [throwaway prototype review](reviews/immersive-homepage-prototype-2026-09-19/index.md) records the bilingual five-width matrix, failure behavior, direct Three.js feasibility, React Three Fiber 8 incompatibility and payload evidence. [`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](rfcs/adaptive-immersive-homepage-production-v1.md) approves C2 Adaptive System Instrument, the governed hybrid-media boundary, responsive choreography and production gates. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](decisions/adaptive-immersive-homepage.md) supersedes the earlier prototype ADR. The [G0/G1 review](reviews/contained-master-optical-closure-2026-09-20/index.md) approves Balanced Contained as the exact protected geometry and Operational Clarity as the exact bilingual chapter voice. [`PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1`](plans/active/visual-identity-adaptive-immersive-v1.md) is APPROVED and delivered the identity, static C2 homepage and direct Three.js enhancement through PRs #65–#72; the optional Connection film (PR7) is omitted. The PR8 [acceptance record](reviews/adaptive-immersive-homepage-acceptance-v1/index.md) is PROPOSED pending constrained Android evidence and a real screen-reader spot check.
