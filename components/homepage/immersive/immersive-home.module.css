@@ -22,6 +22,7 @@
 }
 
 .frame {
+  position: relative;
   overflow: hidden;
   border: 1px solid var(--frame-rule);
   background: var(--frame-ground);
@@ -68,6 +69,19 @@
     display: block;
   }
 
+  /* Explicit rows keep chapters beside the stage track instead of being auto-placed below it. */
+  .chapter[data-instrument-chapter='fragmentation'] {
+    grid-row: 3;
+  }
+
+  .chapter[data-instrument-chapter='connection'] {
+    grid-row: 4;
+  }
+
+  .chapter[data-instrument-chapter='coordination'] {
+    grid-row: 5;
+  }
+
   .chapter[data-instrument-chapter='recognition'] .chapterArtwork {
     display: none;
   }
@@ -98,5 +112,69 @@
 
   .chapter[data-instrument-chapter='recognition'] .chapterText {
     padding-top: 2.5rem;
+  }
+}
+
+/*
+ * Progressive enhancement. The track exists only as a sticky host at wide widths; compact
+ * layouts place the overlay inside the active chapter frame. Posters stay mounted and are
+ * hidden only after the first WebGL frame (data-immersive-mode="webgl").
+ */
+.stage {
+  position: relative;
+}
+
+/* Compact: the track spans the stage so the overlay can sit on the active chapter frame. */
+.enhancementTrack {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.enhancementOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border: 1px solid var(--frame-rule);
+  background: var(--frame-ground);
+}
+
+.enhancementCanvasHost {
+  position: absolute;
+  inset: 0;
+}
+
+.enhancementBar {
+  position: absolute;
+  inset: auto 0.75rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .enhancementTrack {
+    inset: auto;
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .enhancementSticky {
+    position: sticky;
+    top: 6rem;
+    aspect-ratio: 4 / 5;
+    max-height: calc(100vh - 7.5rem);
+    width: 100%;
+  }
+
+  [data-immersive-mode='webgl'] .stageArtwork,
+  [data-immersive-mode='webgl'] .chapterArtwork {
+    visibility: hidden;
   }
 }

@@ -2,6 +2,9 @@ import { expect, test, type Page } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
+// The static composition is the complete design; reduced motion keeps it deterministic here.
+test.use({ reducedMotion: 'reduce' });
+
 const homeCases = [
   {
     locale: 'Spanish',

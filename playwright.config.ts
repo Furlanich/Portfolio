@@ -101,6 +101,16 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
+      // WebGL in headless Chromium needs the software (SwiftShader) backend.
+      name: 'immersive-chromium',
+      testMatch: /immersive-home\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1440, height: 900 },
+        launchOptions: { args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] },
+      },
+    },
+    {
       name: 'visual-chromium',
       snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}-{platform}{ext}',
       testMatch: /visual\/.*\.visual\.spec\.ts/,
