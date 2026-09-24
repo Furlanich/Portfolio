@@ -140,3 +140,5 @@ The decision was accepted through [RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
 ## Date and status
 
 **APPROVED — 2026-09-20.** The repository owner explicitly approved the complete written RFC. This ADR records that accepted decision and supersedes ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE. It authorizes a versioned implementation plan, not production implementation, release, provider activation, evidence upgrades, legal/SEO work, additional WebGL routes or a React-major migration.
+
+**SUPERSEDED — 2026-09-24** by [ADR-SKY-CHART-HOMEPAGE-RUNTIME](sky-chart-homepage-runtime.md), recorded after the repository owner approved and merged Governance PR #77 (`RFC-SKY-CHART-VISUAL-SYSTEM-V2`); this record remains historical.
