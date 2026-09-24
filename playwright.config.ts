@@ -47,22 +47,24 @@ export default defineConfig({
         /marketing-navigation\.spec\.ts/,
         /marketing-projects\.spec\.ts/,
         /marketing-services\.spec\.ts/,
+        /app-bar\.spec\.ts/,
+        /home-sections\.spec\.ts/,
       ],
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'firefox-desktop',
-      testMatch: [/smoke\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/],
+      testMatch: [/smoke\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/, /app-bar\.spec\.ts/, /home-sections\.spec\.ts/],
       use: { ...devices['Desktop Firefox'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'webkit-desktop',
-      testMatch: [/smoke\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/],
+      testMatch: [/smoke\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/, /app-bar\.spec\.ts/, /home-sections\.spec\.ts/],
       use: { ...devices['Desktop Safari'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'mobile-chromium',
-      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/],
+      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/, /app-bar\.spec\.ts/, /home-sections\.spec\.ts/],
       use: {
         browserName: 'chromium',
         viewport: { width: 390, height: 844 },
@@ -72,12 +74,12 @@ export default defineConfig({
     },
     {
       name: 'mobile-webkit',
-      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/],
+      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/, /app-bar\.spec\.ts/],
       use: { ...devices['iPhone 13'] },
     },
     {
       name: 'tablet-chromium',
-      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/],
+      testMatch: [/responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/, /app-bar\.spec\.ts/, /home-sections\.spec\.ts/],
       use: { ...devices['Desktop Chrome'], viewport: { width: 1024, height: 768 } },
     },
     {
@@ -87,12 +89,12 @@ export default defineConfig({
     },
     {
       name: 'compact-320-chromium',
-      testMatch: [/studio-founder-responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/],
+      testMatch: [/studio-founder-responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/, /app-bar\.spec\.ts/, /home-sections\.spec\.ts/],
       use: { ...devices['Desktop Chrome'], viewport: { width: 320, height: 800 } },
     },
     {
       name: 'tablet-portrait-chromium',
-      testMatch: [/studio-founder-responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/],
+      testMatch: [/studio-founder-responsive\.spec\.ts/, /privacy\.spec\.ts/, /contact\.spec\.ts/, /marketing-navigation\.spec\.ts/, /marketing-projects\.spec\.ts/, /marketing-services\.spec\.ts/, /app-bar\.spec\.ts/],
       use: { ...devices['Desktop Chrome'], viewport: { width: 768, height: 1024 } },
     },
     {
@@ -103,7 +105,7 @@ export default defineConfig({
     {
       // WebGL in headless Chromium needs the software (SwiftShader) backend.
       name: 'immersive-chromium',
-      testMatch: [/immersive-home\.spec\.ts/, /immersive-home-acceptance\.spec\.ts/],
+      testMatch: [/immersive-home\.spec\.ts/, /immersive-home-acceptance\.spec\.ts/, /sky-chart-acceptance\.spec\.ts/],
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 900 },

@@ -99,8 +99,13 @@ test('registers the future Wave 2/3 Playwright specs in their required projects'
       const end = source.indexOf('\n    },', start);
       assert.ok(end !== -1, `project ${projectName} block not closed as expected`);
       const block = source.slice(start, end);
-      const specPattern = new RegExp(`/${spec.replace(/\./g, '\\.')}/`);
-      assert.match(block, specPattern, `${projectName} testMatch missing ${spec}`);
+      // Look for the literal regex-literal text (e.g. /app-bar\.spec\.ts/) as written in
+      // playwright.config.ts, not an interpreted regular expression.
+      const literalSpec = spec.split('.').join('\\.');
+      assert.ok(
+        block.includes(`/${literalSpec}/`),
+        `${projectName} testMatch missing /${literalSpec}/`,
+      );
     }
   }
 });

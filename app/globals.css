@@ -4,12 +4,36 @@
 
 :root {
   color-scheme: light;
+
+  /* SKY-CHART-V2 D-04 environmental palette, mirrored from tailwind.config.ts `sky`. */
+  --sky-abyss: #06121F;
+  --sky-deep: #0A1E33;
+  --sky-field: #0F2A45;
+  --sky-haze: #17385A;
+  --sky-lit: #6FA8E0;
+  --sky-glow: #9CC4EC;
+  --sky-text-2: #B9C3CC;
+  --sky-mist: #8FA3B6;
+  --sky-plate: rgba(10,30,51,.74);
+  --sky-plate-line: rgba(249,246,238,.13);
+  --sky-sheet: rgba(249,246,238,.9);
+  --sky-sheet-line: rgba(9,36,61,.12);
+  --sky-sheet-grid: rgba(0,69,137,.07);
+
+  /* SKY-CHART-V2 motion tokens (section 9 / D-11-D-22). */
+  --ease-out: cubic-bezier(.23,1,.32,1);
+  --dur-1: 120ms;
+  --dur-2: 160ms;
+  --dur-3: 240ms;
+
+  /* SKY-CHART-V2 D-10 layout tokens. Global: the App Bar renders on every route. */
+  --app-bar-height: 84px;
 }
 
 html {
   background: #F9F6EE;
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 96px;
 }
 
 body {
@@ -44,5 +68,60 @@ a {
   *::before,
   *::after {
     transition-duration: 0s !important;
+  }
+}
+
+/*
+ * SKY-CHART-V2 D-07 material fallbacks for the two translucent chart surfaces
+ * (D-05 atlas plate, D-06 plotting sheet). Reusable global classes so every consumer of
+ * the two materials -- components/surfaces now, the App Bar's own atlas-plate fill later --
+ * shares one fallback implementation instead of repeating the three media conditions.
+ */
+.sky-plate-material {
+  background-color: var(--sky-plate);
+  backdrop-filter: blur(14px) saturate(120%);
+}
+
+.sky-plate-material-solid {
+  background-color: rgba(10,30,51,.88);
+  backdrop-filter: none;
+}
+
+.sky-sheet-material {
+  background-color: var(--sky-sheet);
+  backdrop-filter: blur(10px) saturate(110%);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .sky-plate-material {
+    background-color: rgba(10,30,51,.92);
+    backdrop-filter: none;
+  }
+
+  .sky-sheet-material {
+    background-color: rgba(249,246,238,.96);
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .sky-plate-material,
+  .sky-plate-material-solid {
+    background-color: #0D243C;
+    backdrop-filter: none;
+  }
+
+  .sky-sheet-material {
+    background-color: #F9F6EE;
+    backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .sky-plate-material,
+  .sky-plate-material-solid,
+  .sky-sheet-material {
+    border-color: CanvasText;
+    background-image: none;
   }
 }

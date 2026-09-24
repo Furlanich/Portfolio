@@ -9,6 +9,33 @@ const identity = {
   tint: '#E7EEF5'
 };
 
+// SKY-CHART-V2 D-04 environmental palette (Home and the App Bar only). DESIGN-VISUAL
+// SKY-CHART-V2 owns the values and the contrast record asserted by
+// scripts/design-tokens.test.mjs, which imports this object directly rather than
+// duplicating its hex/rgba values.
+export const sky = {
+  abyss: '#06121F',
+  deep: '#0A1E33',
+  field: '#0F2A45',
+  haze: '#17385A',
+  lit: '#6FA8E0',
+  glow: '#9CC4EC',
+  'text-2': '#B9C3CC',
+  mist: '#8FA3B6',
+  plate: 'rgba(10,30,51,.74)',
+  'plate-line': 'rgba(249,246,238,.13)',
+  sheet: 'rgba(249,246,238,.9)',
+  'sheet-line': 'rgba(9,36,61,.12)',
+  'sheet-grid': 'rgba(0,69,137,.07)'
+};
+
+export const chart = {
+  'context-dark': '#5E7185',
+  'signal-dark': '#9CC4EC',
+  'context-light': '#8FA3B6',
+  'signal-light': '#004589'
+};
+
 const config: Config = {
   content: [
     './app/**/*.{ts,tsx}',
@@ -19,6 +46,8 @@ const config: Config = {
     extend: {
       colors: {
         identity,
+        sky,
+        chart,
         foundation: {
           canvas: identity.bone,
           surface: '#FFFFFF',
@@ -55,6 +84,16 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace']
+      },
+      // SKY-CHART-V2 D-09 type tokens (Home only). Families and the mono character
+      // limit are unchanged; `uppercase`/`text-wrap: balance` are applied by consumers.
+      fontSize: {
+        'display-1': ['clamp(44px, 7.2vw, 96px)', { lineHeight: '0.98', letterSpacing: '-0.025em', fontWeight: '700' }],
+        'display-2': ['clamp(32px, 4.2vw, 56px)', { lineHeight: '1.04', letterSpacing: '-0.02em', fontWeight: '700' }],
+        'display-3': ['clamp(28px, 3vw, 40px)', { lineHeight: '1.1', letterSpacing: '-0.015em', fontWeight: '700' }],
+        lead: ['clamp(18px, 1.6vw, 21px)', { lineHeight: '1.55' }],
+        'body-lg': ['19px', { lineHeight: '1.6' }],
+        label: ['12px', { lineHeight: '1', letterSpacing: '0.08em' }]
       },
       boxShadow: {
         soft: '0 10px 30px -15px rgba(15, 17, 21, 0.25)',

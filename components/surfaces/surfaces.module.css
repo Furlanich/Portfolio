@@ -1,0 +1,79 @@
+/*
+ * SKY-CHART-V2 D-05/D-06 surface shape: registration geometry, padding, radius and shadow.
+ * Fill and backdrop-filter (D-07 fallbacks) come from the reusable .sky-plate-material /
+ * .sky-plate-material-solid / .sky-sheet-material classes in app/globals.css, so every
+ * consumer of the two chart materials shares one fallback implementation.
+ */
+
+.atlasPlate {
+  position: relative;
+  border: 1px solid var(--sky-plate-line);
+  border-radius: 18px;
+  padding: clamp(24px, 3vw, 40px);
+  box-shadow:
+    inset 0 1px 0 rgba(249, 246, 238, 0.06),
+    0 30px 60px -30px rgba(0, 0, 0, 0.6);
+}
+
+.atlasPlateTick {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(156, 196, 236, 0.55);
+  border-right: none;
+  border-bottom: none;
+  pointer-events: none;
+}
+
+.atlasPlateTickEnd {
+  top: auto;
+  left: auto;
+  bottom: 10px;
+  right: 10px;
+  border-top: none;
+  border-left: none;
+  border-right: 1px solid rgba(156, 196, 236, 0.55);
+  border-bottom: 1px solid rgba(156, 196, 236, 0.55);
+}
+
+.atlasPlateNumber {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--sky-mist);
+}
+
+.plottingSheet {
+  position: relative;
+  background-image:
+    repeating-linear-gradient(0deg, var(--sky-sheet-grid) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(90deg, var(--sky-sheet-grid) 0 1px, transparent 1px 24px);
+  border: 1px solid var(--sky-sheet-line);
+  border-radius: 6px;
+  padding: clamp(22px, 2.6vw, 34px);
+  box-shadow: 0 28px 60px -34px rgba(0, 0, 0, 0.75);
+}
+
+.plottingSheetCrease {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(225deg, transparent 49.3%, rgba(0, 69, 137, 0.45) 50%, transparent 50.9%);
+  pointer-events: none;
+}
+
+.plottingSheetBearing {
+  position: absolute;
+  top: 10px;
+  right: 46px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  /* Brand Azure (identity.azure), the approved D-06 bearing-label color. */
+  color: #004589;
+}
