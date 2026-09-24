@@ -112,6 +112,34 @@ test('each phase contributes exactly one tier-1 node', () => {
   }
 });
 
+test('frameForProgress treats a non-finite progress as 0 instead of propagating NaN', () => {
+  const base = frameForProgress(0, { width: 1440, heroBottom: 0 });
+  assert.equal(frameForProgress(Number.NaN, { width: 1440, heroBottom: 0 }).yaw, base.yaw);
+  assert.equal(frameForProgress(Number.POSITIVE_INFINITY, { width: 1440, heroBottom: 0 }).yaw, base.yaw);
+});
+
+test('frameForProgress clamps out-of-range progress to 0..1', () => {
+  assert.equal(frameForProgress(2, { width: 1440, heroBottom: 0 }).yaw, frameForProgress(1, { width: 1440, heroBottom: 0 }).yaw);
+  assert.equal(frameForProgress(-5, { width: 1440, heroBottom: 0 }).yaw, frameForProgress(0, { width: 1440, heroBottom: 0 }).yaw);
+});
+
+test('recedeFactor returns 0 for a non-positive or non-finite viewport height instead of NaN or an inverted ratio', () => {
+  assert.equal(recedeFactor(-50, 0), 0, 'a zero viewport height must not flip the ratio positive');
+  assert.equal(recedeFactor(100, -10), 0, 'a negative viewport height must not flip the ratio positive');
+  assert.equal(recedeFactor(100, Number.NaN), 0, 'a non-finite viewport height must not propagate NaN');
+});
+
+test('the hero mask stays at its safe value of 1 for a non-positive or non-finite viewport height', () => {
+  assert.equal(frameForProgress(0.5, { width: 390, vh: 0, heroBottom: 100 }).heroMask, 1);
+  assert.equal(frameForProgress(0.5, { width: 390, vh: -10, heroBottom: 100 }).heroMask, 1);
+  assert.equal(frameForProgress(0.5, { width: 390, vh: Number.NaN, heroBottom: 100 }).heroMask, 1);
+});
+
+test('the hero mask fails safe to 0 below 768px when heroBottom is omitted', () => {
+  assert.equal(frameForProgress(0.5, { width: 390 }).heroMask, 0, 'compact width without a measured hero must hide, not show');
+  assert.equal(frameForProgress(0.5, { width: 1440 }).heroMask, 1, 'wide widths never depend on heroBottom');
+});
+
 test('node yaw and pitch match Appendix B for a spot check of nodes', () => {
   const byId = Object.fromEntries(SKY_CHART_NODES.map((node) => [node.id, node]));
   assert.deepEqual(
