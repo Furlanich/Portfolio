@@ -20,12 +20,15 @@ export const homeContent = {
   instrument: {
     label: 'FURLANICH · Del proceso al sistema',
     statusLabel: 'ETAPA {current} DE 04',
+    plateLabel: 'Lámina {current}/04',
+    coordinates: "34°36'S · 58°22'W",
     pauseLabel: 'Pausar movimiento',
     resumeLabel: 'Reanudar movimiento',
     chapters: [
       {
         id: 'recognition',
         sequence: '01',
+        kicker: 'Reconocer',
         heading: 'Reconocer el sistema real',
         description:
           'Pedidos, reservas, mensajes y tareas ya conviven en un mismo negocio. El primer paso es entender cómo se relacionan.',
@@ -34,6 +37,7 @@ export const homeContent = {
       {
         id: 'fragmentation',
         sequence: '02',
+        kicker: 'Fragmentar',
         heading: 'Ver dónde se fragmenta',
         description:
           'Cuando la información cambia de canal y se repite, la operación depende de más controles manuales.',
@@ -42,6 +46,7 @@ export const homeContent = {
       {
         id: 'connection',
         sequence: '03',
+        kicker: 'Conectar',
         heading: 'Conectar lo que importa',
         description:
           'Una solución bien definida reúne datos, reglas y acciones sin sumar complejidad innecesaria.',
@@ -50,12 +55,35 @@ export const homeContent = {
       {
         id: 'coordination',
         sequence: '04',
+        kicker: 'Coordinar',
         heading: 'Coordinar el trabajo',
         description:
           'El sistema acompaña el proceso real y deja una base que puede mantenerse y adaptarse cuando cambia el negocio.',
         artworkId: 'coordination-poster',
       },
     ],
+    nodes: {
+      orders: 'Pedidos',
+      bookings: 'Reservas',
+      messages: 'Mensajes',
+      tasks: 'Tareas',
+      understand: 'Entender',
+      process: 'Proceso',
+      constraints: 'Restricciones',
+      diagnosis: 'Diagnóstico',
+      define: 'Definir',
+      scope: 'Alcance',
+      responsibilities: 'Responsabilidades',
+      'validation-criteria': 'Criterios de validación',
+      'build-review': 'Construir y revisar',
+      integrate: 'Integrar',
+      'technical-review': 'Revisión técnica',
+      'functional-tests': 'Pruebas funcionales',
+      'hand-over': 'Entregar',
+      documentation: 'Documentación',
+      'journeys-validated': 'Recorridos validados',
+      maintain: 'Mantener',
+    },
   },
   problems: {
     heading: 'Cuando lo manual empieza a frenar el negocio',
@@ -73,6 +101,7 @@ export const homeContent = {
     },
   },
   servicesSection: {
+    kicker: 'Servicios',
     heading: 'Servicios para necesidades concretas',
     introduction: 'Construir, conectar o mejorar, según el problema.',
     services: [
@@ -80,16 +109,19 @@ export const homeContent = {
         title: 'Sitios y aplicaciones web comerciales',
         description:
           'Soluciones web para presentar, vender o gestionar servicios: sitios profesionales, catálogos, pedidos, reservas, portales para clientes e integraciones con medios de pago.',
+        category: 'Construir',
       },
       {
         title: 'Automatización por WhatsApp e integraciones',
         description:
           'Flujos para responder consultas, registrar pedidos, gestionar reservas, enviar confirmaciones y conectar WhatsApp con otras herramientas del negocio.',
+        category: 'Conectar',
       },
       {
         title: 'Mantenimiento y consultoría de software',
         description:
           'Diagnóstico y mejora de sistemas existentes para resolver problemas, reducir riesgos y definir un camino técnico mantenible.',
+        category: 'Mejorar',
       },
     ],
     action: {
@@ -97,16 +129,61 @@ export const homeContent = {
       routeId: 'services',
     },
   },
+  impact: {
+    kicker: 'Fijar la posición',
+    heading: 'Menos lugares que revisar para saber en qué estado está un pedido',
+    introduction:
+      'Un escenario ilustrativo, no un resultado de clientes. Un navegante fija su posición con varias marcaciones; cuando las fuentes no coinciden, la posición se vuelve una zona de duda.',
+    illustrativeTag: 'Escenario ilustrativo',
+    toggle: {
+      groupLabel: 'Escenario',
+      separateLabel: 'Fuentes separadas',
+      connectedLabel: 'Registro conectado',
+      announcement: 'Mostrando: {state}',
+    },
+    figure: {
+      title: 'Dónde está un pedido, según sus fuentes',
+      separateDescription:
+        'Cinco marcaciones desde un chat de WhatsApp, un cuaderno de pedidos, una planilla, un correo y una llamada se cruzan en lugares distintos y dejan una zona de duda.',
+      connectedDescription:
+        'Todas las fuentes leen un mismo registro conectado, así que todas las marcaciones coinciden en un punto exacto.',
+      doubtLabel: 'Zona de duda',
+      fixLabel: 'Posición exacta',
+    },
+    sources: [
+      { id: 'whatsapp', name: 'Chat de WhatsApp', note: '“Confirmado” en el chat' },
+      { id: 'book', name: 'Cuaderno de pedidos', note: 'Anotado, todavía sin pagar' },
+      { id: 'spreadsheet', name: 'Planilla', note: 'Actualizada ayer a la tarde' },
+      { id: 'email', name: 'Correo', note: 'El cliente pidió cambiar la fecha' },
+      { id: 'call', name: 'Llamada', note: 'Prometido para el viernes' },
+    ],
+    connectedNoteTemplate: '{source}: lee el registro conectado',
+    counts: {
+      title: 'Lugares revisados para confirmar un pedido',
+      separateLabel: 'Fuentes separadas',
+      connectedLabel: 'Registro conectado',
+      caption:
+        'Los números salen de este ejemplo: un chat de WhatsApp, un cuaderno de pedidos, una planilla, un correo y una llamada. No son mediciones.',
+    },
+  },
   proof: {
+    kicker: 'Responsabilidad técnica',
     heading: 'Una responsabilidad técnica clara',
     introduction:
       'Samuel participa en la definición del problema, las decisiones técnicas y la revisión del trabajo. El alcance y las validaciones se acuerdan según cada necesidad.',
+    logLabel: 'Dónde se aplica la responsabilidad',
+    log: [
+      { term: 'Definir', text: 'Problema y alcance acordados' },
+      { term: 'Decidir', text: 'Decisiones técnicas a cargo de Samuel' },
+      { term: 'Revisar', text: 'Trabajo revisado antes de la entrega' },
+    ],
     action: {
       label: 'Ver proyectos y sus límites',
       routeId: 'projects',
     },
   },
   process: {
+    kicker: 'Proceso',
     heading: 'Cómo trabajamos',
     steps: [
       {
@@ -134,6 +211,7 @@ export const homeContent = {
     },
   },
   founderSection: {
+    kicker: 'Fundador',
     heading: 'Responsabilidad técnica directa',
     biography: 'Samuel Furlanich dirige FURLANICH. Conocé su experiencia y formación.',
     action: {
@@ -153,5 +231,15 @@ export const homeContent = {
       kind: 'whatsapp',
       href: 'https://wa.me/5491150117565',
     },
+  },
+  readout: {
+    home: 'Inicio',
+    problems: 'Problemas',
+    services: 'Servicios',
+    impact: 'Posición',
+    proof: 'Responsabilidad',
+    process: 'Proceso',
+    founder: 'Fundador',
+    contact: 'Contacto',
   },
 } satisfies HomePageContent;
