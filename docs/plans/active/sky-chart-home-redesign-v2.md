@@ -68,7 +68,7 @@ Facts verified on `main` at `36ab1bf`:
   - `measure:immersive` and `measure:home-vitals`.
 - **Visual baselines** are element screenshots of `main` or `[data-instrument]`, per platform. Windows baselines are captured locally. Linux baselines are adopted from Ubuntu CI `actual` artifacts after owner approval, because Docker/WSL is unavailable on the owner's machine (precedent: PR #67).
 - **Deferred items from the previous plan:** constrained-Android evidence, a real screen-reader spot check and the compact Pause-control placement. This plan closes all three (Tasks 7 and 11).
-- **Prerequisite — resolved:** the canonical gate was red on `36ab1bf` (vendored-skill front matter from `f43938f`, and a stale Claude Code worktree scanned by the docs validator). The owner merged the fix as PR #76 (`d324e83`: “skip Claude Code worktree checkouts”, “integrity-lock vendored design Skills”). `npm run docs:check` now passes, with 282 Markdown files and 37 Skills, and so does `npm run skills:check`.
+- **Prerequisite — resolved:** the canonical gate was red on `36ab1bf` (vendored-skill front matter from `f43938f`, and a stale Claude Code worktree scanned by the docs validator). The owner merged the fix as PR #76 (`d324e83`: “skip Claude Code worktree checkouts”, “integrity-lock vendored design Skills”). `npm run docs:check` and `npm run skills:check` now pass on `main`.
 - **Figma mirror (Gate F) — completed 2026-09-23:** [FURLANICH · Sky Chart v2](https://www.figma.com/design/V6FD6Sq3gqqxeMw5Si7Dnx). Pages:
   - Foundations: 23 colour variables, 15 layout variables, 11 text styles.
   - Components: Button set, bone-on-azure mark tile, active star, three cocked-hat glyphs, Atlas plate, Plotting sheet, Pause pill, App bar set (Docked, Home top, Compact), compact menu panel.
@@ -295,9 +295,9 @@ They are shown by `EnvironmentGround` with `background-size: cover` and `backgro
 
 Visibility: the pill is shown only while the chapter span is in view. It gets the `hidden` attribute while the hero's bottom edge is below 60% of the viewport, and again under the D-24 recede rule. At 390px the Figma mirror showed the pill covering the hero trust row. Hiding it during the hero never removes a focusable control while motion is visible: the canvas shows no chapter motion before Chapter 1.
 
-**D-27 Compact hero label mask.** Below 768px, tier-2 input labels, their dots and their links render with opacity 0 while the hero's bottom edge is below 60% of the viewport. They follow the normal reveal once the hero has scrolled past that line. At ≥768px the D-03 left scrim already separates labels from hero text, so no mask applies. This rule comes from the Gate F mirror: at 390px, *Pedidos* and *Reservas* collided with the H1 and lede. It is implemented in `frameForProgress` (Task 4) as `inputOpacity × heroMask`, with `heroMask = width < 768 ? clamp((0.6·vh − heroBottom) / (0.2·vh), 0, 1) : 1`.
-
 **D-26 Copy.** Only the strings in Appendix A are new. Every other string is existing approved content.
+
+**D-27 Compact hero label mask.** Below 768px, tier-2 input labels, their dots and their links render with opacity 0 while the hero's bottom edge is below 60% of the viewport. They follow the normal reveal once the hero has scrolled past that line. At ≥768px the D-03 left scrim already separates labels from hero text, so no mask applies. This rule comes from the Gate F mirror: at 390px, *Pedidos* and *Reservas* collided with the H1 and lede. It is implemented in `frameForProgress` (Task 4) as `inputOpacity × heroMask`, with `heroMask = width < 768 ? clamp((0.6·vh − heroBottom) / (0.2·vh), 0, 1) : 1`.
 
 ## 7. Technical decisions
 
@@ -316,7 +316,7 @@ Visibility: the pill is shown only while the chapter span is in view. It gets th
 
 ## 8. Architecture impact
 
-- **Superseded by a new ADR (Task 2):** `ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`'s C2 composition coupling, the four-poster fallback and the framed canvas stage. The new ADR (working id `ADR-SKY-CHART-HOMEPAGE-RUNTIME`) keeps its gates, budgets, direct Three.js, the Framer Motion boundary, demand rendering, one-shot initialization and session context-loss handling. It adds: the full-viewport fixed canvas portal, sprite text labels, recede and suspend, and the locale-neutral poster pair.
+- **Superseded by a new ADR (Task 2):** `ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`'s C2 composition coupling, the four-poster fallback and the framed canvas stage. The new ADR (working id `ADR-SKY-CHART-HOMEPAGE-RUNTIME`) keeps its gates, budgets, direct Three.js, the Framer Motion boundary, demand rendering, one-shot initialization and session context-loss handling. It adds: the full-viewport fixed canvas portal, sprite text labels, recede and suspend, and the locale-neutral poster pair. It also records two removals: the derived Azure chevron sculpture is no longer part of the scene, and the permission for one optional Connection film is withdrawn. All budgets are retained, including the main-thread interaction task <50 ms.
 - **Unchanged:** routing, static export, localization, content ownership (`app/**/_content/*.ts`), the Contact demonstration, evidence publication.
 - **New client leaves:** `AppBarBehavior` (every route) and `PositionFixToggle` (Home). `ImmersiveEnhancement` stays Home's only WebGL boundary.
 
@@ -436,6 +436,7 @@ Content has no entrance animation or scroll reveal. Every animation uses only `o
 | Layout shift from the enhancement | 0 | Playwright `PerformanceObserver` |
 | Backdrop-filter surfaces per viewport | ≤3 (App Bar excluded) | E2E DOM scan at each section |
 | Idle rendering | 0 frames after settle | Debug hook frame counter |
+| Main-thread interaction task (retained ADR gate) | <50 ms | `measure:immersive` long-task observer |
 
 Loading order: HTML and CSS first, then fonts (Instrument preloaded). After `load`, near the viewport and past the gates, `three` and the runtime load in one dynamic chunk. The posters use CSS `background-image` and are not preloaded.
 
@@ -566,6 +567,17 @@ Every packet also inherits these rules:
   7. The Home card rules for radius and shadow.
   8. The exclusion of “floating telemetry, particle fields” (textual process stars and ≤520 dim field stars are allowed; continuous rotation remains excluded).
   9. The new HOME-IMPACT section.
+  10. The commercial homepage section baseline's “Do not introduce gradients, glass effects, decorative shadows, or additional accent colors for these sections”. Home sections use the two materials and the D-02, D-03, D-06 and D-19 gradients; no accent hue outside the D-04 blues is added.
+  11. The Home section rhythm (64/80/96px) and the Home type scale (hero H1 and section H2 sizes). D-09 and D-10 replace them on Home only.
+  12. The Home grid rules: equal content-driven card tracks and the per-section column counts in DESIGN-VISUAL and DESIGN-IX-A11Y. D-13, D-14 and D-17 replace them on Home.
+  13. VISUAL-IDENTITY-V1's “cards remain reserved for genuine comparison, bounded evidence and controls”. On Home, chapters, Proof, Process and Founder use atlas plates.
+  14. **The derived Azure sculpture as the scene's identity element** (VISUAL-IDENTITY-V1 Precision Assembly, IMMERSIVE-HOME-V1.1 WebGL enhancement, ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE). The star-atlas scene has no sculpture. The protected mark stays in the App Bar and brand assets. The RFC must ask the owner to accept this removal explicitly.
+  15. The Action-tint final CTA band on Home. D-19's dawn band replaces it; other pages keep their Action-tint endings.
+  16. The Pause control placed “beside instrument status” and the IMMERSIVE-HOME-V1.1 responsive choreography table. D-25 and the section 10 responsive rules replace them.
+  17. The ADR's permission for one optional Connection film, which is withdrawn (section 5). All ADR budgets, including the main-thread interaction task <50 ms, are retained.
+  18. PAGE-HOME's approved section order and narrative. `impact` is inserted between Services and Proof.
+
+  The RFC must quote each rule accurately, from the record and section that actually own it. It must also state that the App Bar keeps the approved prohibition on hiding, translating or animating based on scroll direction; the Home dock transition, keyed to scroll position, is the only scroll-linked change. The RFC must not claim that nothing outside the list changes. It must name any further conflict it finds rather than assert completeness.
 
   Also: add the RFC to `docs/rfcs/index.md`, commit the review folder and this plan, and add the plan under Active in `docs/plans/index.md`.
 - **Dependencies:** none. **Wave:** 0.
@@ -581,7 +593,7 @@ Every packet also inherits these rules:
 - **Evidence:** the docs-check output, and a link to the reference prototype and screenshots.
 - **Documentation impact:** RFC and plan indexes.
 - **Reviewer:** Claude Sonnet 5 (supersession completeness), then the owner.
-- **Acceptance:** the RFC lists all nine supersessions and the runtime changes; validate is green; the owner approves or requests changes (gate G1).
+- **Acceptance:** the RFC lists all eighteen supersessions, each with an accurate citation, plus the runtime changes; it makes no blanket completeness claim; validate is green; the owner approves or requests changes (gate G1).
 - **Receipt:** Appendix D, with the TDD block marked N/A.
 
 ### Gate F – Figma design library (non-PR, optional)
@@ -600,7 +612,8 @@ Every packet also inherits these rules:
   - Create `docs/decisions/sky-chart-homepage-runtime.md` (`id: ADR-SKY-CHART-HOMEPAGE-RUNTIME`, `supersedes: ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`), carrying section 8's retained and added boundaries and section 14's gates.
   - Add a status note to the superseded ADR.
   - Add APPROVED sections `SKY-CHART-V2` to DESIGN-VISUAL (D-01 to D-27) and DESIGN-IX-A11Y (D-22 to D-25 and D-27, plus sections 11 and 13).
-  - Add `HOME-IMPACT` and Appendix A's strings to PAGE-HOME.
+  - Add `HOME-IMPACT` and Appendix A's strings to PAGE-HOME, and update its approved section order.
+  - In DESIGN-VISUAL and DESIGN-IX-A11Y, mark every Home rule named by supersession items 10–16 as superseded on Home by `SKY-CHART-V2`, keeping the original text as history. In the new ADR, record the sculpture removal and the withdrawn Connection-film permission (items 14 and 17).
   - Update the status register.
   - Set this plan's `status` to APPROVED.
   - Record the Figma URL if Gate F has run.
@@ -1182,3 +1195,4 @@ Documentation impact: <none | records>
 ## Deviations discovered during execution
 
 - **Task 1 provider substitution (2026-09-23).** Task 1 was dispatched from a Claude Code orchestrator that cannot route work to GPT-6 Luna. Because the task is documentation-only and low-risk, Claude Sonnet 5 implements it. To keep implementation and review separate, the reviewer is an independent Claude Opus 5.5 agent with a fresh context, followed by the owner. The routing for Tasks 2–12 in section 18 is unchanged; the orchestrator re-evaluates the same constraint at each dispatch.
+- **Supersession list incomplete (2026-09-24, found by the Task 1 independent review).** The plan's original nine-item list for Task 1 missed approved Home rules that the D-rules change. The biggest omission was the removal of the derived Azure sculpture. The RFC had turned that gap into a “nothing outside it changes” assurance. The orchestrator extended the Task 1 packet to eighteen items, banned completeness claims, and extended Task 2's scope and section 8 to match. It also restored the retained ADR main-thread gate in section 14, reordered D-26 before D-27, and removed a working-tree-dependent file count from section 3. No design decision changed; the plan now states consequences it previously left implicit.
