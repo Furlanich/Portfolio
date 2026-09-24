@@ -605,6 +605,29 @@ test('N-A1: the source list renders visible numeral spans (1-5, source order) wi
   );
 });
 
+// H1 (harness nit, round 3 approve-ready follow-up): the CSS Module stub's
+// Proxy answered every property access, including '__esModule', with
+// String(prop) -- a truthy string. Under esModuleInterop, TypeScript's
+// __importDefault helper checks `mod.__esModule` to decide whether to wrap
+// a required module as `{ default: mod }`; since the stub's '__esModule'
+// read back as a truthy string, the helper treated it as already-an-ES-
+// module and skipped wrapping, so `styles` inside the compiled component
+// ended up bound to the stub itself, not `{ default: stub }`. Every
+// `styles.x` reference in the source actually compiles to `stub.default.x`,
+// which resolved to `"default".x` (a property read on the *string*
+// "default", not the intended class name) -- i.e. always undefined. This
+// never showed up in the numeral-spans test above because it only checks
+// the numeral *text*, not its class attribute.
+test('H1: the CSS Module stub yields real class names, not "undefined" (esModuleInterop safe)', () => {
+  const html = renderPositionFixFigureMarkup();
+
+  assert.match(
+    html,
+    /<span aria-hidden="true" class="sourceNumber">/,
+    `expects the numeral span's class to be "sourceNumber", not "undefined"; got: ${html}`,
+  );
+});
+
 test('N-A1: .sourceList sets list-style: none (nothing left for ::marker to suppress) and no stale ::marker rule remains', () => {
   const css = readSource(cssPath);
   const sourceListBlock = css.match(/\.sourceList\s*\{[^}]*\}/);
