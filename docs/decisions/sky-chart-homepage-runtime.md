@@ -52,7 +52,8 @@ These boundaries carry over unchanged from `ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE` and
 - Static export, locale routes, trailing slashes, GitHub Pages and the optional base path remain unchanged.
 - Native scroll stays reversible and is never captured or replaced.
 - The page paints semantic content and a stable static fallback before loading Three.js — now the D-23 environment poster pair rather than the four chapter posters, but the ordering guarantee itself is unchanged.
-- Every authored asset follows the approved media manifest and is classified as brand motion, demonstration or project evidence; generated media cannot imply client work, a proprietary platform, outcomes or operating scale.
+- Every authored asset follows the approved media manifest and is classified as brand motion, demonstration or project evidence.
+- Generated media is brand motion by default and cannot imply client work, a proprietary platform, outcomes or operating scale.
 - React-major migration, React Three Fiber 9, GSAP, Drei, post-processing, model downloads and additional WebGL routes all require separate evidence and governance.
 
 ### Added boundaries

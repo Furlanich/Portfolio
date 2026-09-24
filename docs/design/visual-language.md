@@ -668,11 +668,11 @@ Complete values:
 - **Docked state** (the default, and the only state without JS). Fill `rgba(10,30,51,.82)`, `backdrop-filter: blur(16px) saturate(125%)`, border `sky.plate-line`. Without `backdrop-filter` support the fill is `.94`.
 - **Home undocked state.** Only after JavaScript sets `data-docked="false"` while `scrollY ≤ 24`. Transparent fill and border.
 - **Brand.** `BrandSignature variant="on-dark"`: a `32px` Azure tile (radius `7px`) with the Bone protected mark at `22px` and a Bone `16px`/700/`0.08em` wordmark.
-- **Readout** (Home only, `≥1024px`, `aria-hidden`). Mono `12px` `sky.lit`, `14px` left padding with a `sky.plate-line` left rule, min width `18ch`.
-- **Links** (`≥1024px`). `14px`/600 `sky.text-2`, Bone on hover, `44px` targets. The active link is Bone with a `7px` four-point star in `sky.glow`, centred `4px` from the bottom.
+- **Readout** (Home only, `≥1024px`, `aria-hidden`). Mono `12px` `sky.lit`, `14px` left padding with a `sky.plate-line` left rule, min width `18ch`. Text is `{NN} · {name}`, taken from the `data-readout` of the last section whose top is above 40% of the viewport.
+- **Links** (`≥1024px`). `14px`/600 `sky.text-2`, Bone on hover, `44px` targets. The active link is Bone with a `7px` four-point star `clip-path: polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)` in `sky.glow`, centred `4px` from the bottom.
 - **Language switch.** Mono `12px`, `1px` `sky.plate-line` border, `8px` radius, `44px`.
 - **CTA.** The primary action at `48px`.
-- **Below `1024px`.** Brand, language switch and a `44×44` menu `<summary>`. The compact panel is `min(calc(100vw - 40px), 24rem)` wide, fill `rgba(10,30,51,.96)` without blur, `14px` radius, `8px` padding, `4px` gap, `44px` links and a full-width `48px` CTA; it opens and closes instantly.
+- **Below `1024px`.** Brand, language switch and a `44×44` menu `<summary>` with a Bone icon. The panel keeps the approved centring and width `min(calc(100vw - 40px), 24rem)`, fill `rgba(10,30,51,.96)` without blur, `14px` radius, `8px` padding, `4px` gap, `44px` links and a full-width `48px` CTA. It opens and closes instantly (no animation) and Escape behaviour is unchanged.
 - **Active state.** A route link gets `aria-current="page"` when the normalized pathname matches. On Home, the Process link gets `aria-current="location"` while `#proceso`/`#process` crosses the 40% line.
 - **Never** hide, translate or auto-collapse on scroll.
 
