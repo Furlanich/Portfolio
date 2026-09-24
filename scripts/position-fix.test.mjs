@@ -85,9 +85,13 @@ function transpileToCommonJs(filePath) {
 function loadTranspiledModule(filePath, resolveMap) {
   const mod = new Module(filePath);
   mod.filename = filePath;
-  mod.paths = Module._nodeModulePaths(path.dirname(filePath));
+  // H2 (harness nit): resolve anything outside resolveMap through the
+  // public Module.createRequire API, scoped to this file's own location,
+  // instead of the private Module._nodeModulePaths / mod.constructor._load
+  // internals (undocumented, version-fragile).
+  const nodeRequire = Module.createRequire(filePath);
   mod.require = (request) =>
-    Object.prototype.hasOwnProperty.call(resolveMap, request) ? resolveMap[request] : mod.constructor._load(request, mod, false);
+    Object.prototype.hasOwnProperty.call(resolveMap, request) ? resolveMap[request] : nodeRequire(request);
   mod._compile(transpileToCommonJs(filePath), filePath);
   return mod.exports;
 }
@@ -127,7 +131,19 @@ function renderPositionFixFigureMarkup() {
 
   // CSS Modules have no meaning outside a bundler; stub each class name to
   // itself so rendered `class="..."` attributes stay legible in assertions.
-  const cssStub = new Proxy({}, { get: (_target, prop) => String(prop) });
+  //
+  // H1 (harness nit): '__esModule' must read back falsy. TypeScript's
+  // esModuleInterop wraps a plain CommonJS require as `{ default: mod }`
+  // only when `mod.__esModule` is falsy; a Proxy that answers *every*
+  // property (including '__esModule') with a truthy string defeats that
+  // check, so the component ends up reading `stub.default.x` instead of
+  // `stub.x` -- and `stub.default` (itself trapped by the Proxy) resolves
+  // to the *string* "default", whose `.x` is always undefined. Every
+  // className in the component would silently go missing.
+  const cssStub = new Proxy(
+    {},
+    { get: (_target, prop) => (prop === '__esModule' ? undefined : String(prop)) },
+  );
 
   const figureModule = loadTranspiledModule(figurePath, {
     '@/lib/impact/position-fix': libModule,
