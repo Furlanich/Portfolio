@@ -14,6 +14,9 @@ const {
   getSeparateLines,
   getConnectedLines,
   counts,
+  computeCounts,
+  fixLabelUnitForWidth,
+  renderedFixLabelPx,
 } = await import('../lib/impact/position-fix.ts');
 
 const componentsDir = path.join(process.cwd(), 'components/homepage/impact');
@@ -34,6 +37,15 @@ test('counts are computed from SOURCES, never hard-coded', () => {
   assert.equal(counts.separate, SOURCES.length);
   assert.equal(counts.separate, 5);
   assert.equal(counts.connected, 1);
+});
+
+test('N4: counts are driven by source-array length, not a hard-coded number (mutation check)', () => {
+  // Proves computeCounts (and therefore the exported `counts`) really reads
+  // .length, rather than someone having hard-coded `separate: 5`: a mutated
+  // copy of SOURCES must change the result.
+  assert.deepEqual(computeCounts(SOURCES.slice(0, 3)), { separate: 3, connected: 1 });
+  assert.deepEqual(computeCounts([]), { separate: 0, connected: 1 });
+  assert.deepEqual(computeCounts(SOURCES), counts);
 });
 
 test('the five source ids are whatsapp, book, spreadsheet, email, call in that fixed order', () => {
@@ -153,6 +165,59 @@ test('the toggle hides the inactive SVG with the native hidden attribute', () =>
   assert.match(source, /\bhidden(=|\s|})/);
 });
 
+// B1 (independent review round 1): real progressive enhancement. Deep dynamic
+// behaviour (what an actual browser paints before vs. after hydration, and
+// after a click) needs a real DOM, which this Node-only test suite does not
+// have (no jsdom/browser here, matching every other test in this file). These
+// tests are the static-analysis proxy the review asked for; the PR
+// description lists what Task 9's tests/e2e/home-sections.spec.ts must still
+// verify live in a browser.
+test('B1: no <button> is ever rendered before the toggle has mounted', () => {
+  const source = fs.readFileSync(togglePath, 'utf8');
+
+  assert.match(source, /useState\(false\)/, 'expects a `mounted` flag defaulting to false');
+  assert.match(source, /\{\s*mounted\s*&&/, 'expects the button group to be gated on `mounted`');
+
+  const gateIndex = source.search(/\{\s*mounted\s*&&/);
+  const firstButtonIndex = source.indexOf('<button');
+  assert.ok(gateIndex !== -1 && firstButtonIndex !== -1, 'expects both a mounted gate and a <button>');
+  assert.ok(gateIndex < firstButtonIndex, 'expects <button> to appear only inside the mounted-gated block');
+});
+
+test('B1: mounting (not a click) applies the initial "separate" selection', () => {
+  const source = fs.readFileSync(togglePath, 'utf8');
+
+  assert.match(
+    source,
+    /useEffect\(\s*\(\)\s*=>\s*\{[\s\S]*?setMounted\(true\)[\s\S]*?\},\s*\[\]\)/,
+    'expects a mount-only effect (empty dependency array) that flips `mounted` to true',
+  );
+  assert.match(source, /INITIAL_MODE\s*[:=][^;]*'separate'/, 'expects the fixed initial selection to be "separate"');
+  assert.match(
+    source,
+    /useState<PositionFixMode>\(INITIAL_MODE\)/,
+    '`selected` should start at INITIAL_MODE directly, not at null',
+  );
+});
+
+test('B1: neither figure is hidden before mount, so both stay visible and stacked without JS', () => {
+  const source = fs.readFileSync(togglePath, 'utf8');
+  // Only `hiddenLayer` should be nullable now: it starts at null (nothing
+  // hidden pre-mount) and only the mount effect / select() ever give it a
+  // real mode. `selected` is asserted separately to start at INITIAL_MODE.
+  const nullableDeclarations = source.match(/useState<PositionFixMode \| null>\(null\)/g) ?? [];
+  assert.equal(nullableDeclarations.length, 1, 'expects exactly one nullable PositionFixMode state (hiddenLayer)');
+});
+
+test('B1: the pressed state always matches what is visible once mounted', () => {
+  const source = fs.readFileSync(togglePath, 'utf8');
+  // Both buttons key off the same non-nullable `selected` value directly
+  // (no `!== 'connected'` fallback-to-true heuristic for the unmounted case,
+  // now that the group only renders post-mount).
+  assert.match(source, /aria-pressed=\{selected === 'separate'\}/);
+  assert.match(source, /aria-pressed=\{selected === 'connected'\}/);
+});
+
 test('no forbidden metric/case-study/testimonial identifiers appear anywhere in the owned component or lib sources', () => {
   const forbidden = /metric-card|case-study|testimonial/i;
   const geometrySource = fs.readFileSync(path.join(process.cwd(), 'lib/impact/position-fix.ts'), 'utf8');
@@ -163,15 +228,37 @@ test('no forbidden metric/case-study/testimonial identifiers appear anywhere in 
   }
 });
 
-test('honesty rule: no duration, currency or "x faster"-shaped literals in JSX text of the owned sources', () => {
-  // A bare "%" is not scanned here: ImpactCounts legitimately uses it as a CSS
-  // width unit for the decorative, aria-hidden proportional bar (D-15 / section
-  // 12), not as a displayed statistic. Content copy itself (where a stray "%"
-  // would be a real honesty violation) is owned and tested by Task 4
-  // (scripts/homepage-content.test.mjs asserts no string contains "%").
+// N1 (independent review round 1): the original honesty guard banned any "%"
+// character anywhere in source, which is too broad — ImpactCounts legitimately
+// computes a CSS width percentage in JS for its decorative, aria-hidden bar
+// (D-15 / section 12), never displays it as text. Scoped to rendered JSX text
+// nodes only (the ">...<" pattern), where a literal percentage or duration
+// really would be a false statistic. Content-string checks (Task 4's copy)
+// stay owned by Task 4's scripts/homepage-content.test.mjs.
+test('honesty rule: no visible percentage or duration claim in rendered JSX text', () => {
+  const percentInText = />[^<{]*\d\s*%[^<]*</;
+  const durationInText = />[^<{]*\b\d+\s*(ms|s|sec|seconds?|min|mins?|minutes?|hours?|hrs?|days?|weeks?|months?|years?)\b[^<]*</i;
+
+  for (const { name, source } of readAllComponentSources()) {
+    assert.doesNotMatch(source, percentInText, `${name} renders a visible percentage`);
+    assert.doesNotMatch(source, durationInText, `${name} renders a visible duration`);
+  }
+});
+
+test('honesty rule: no currency or "x faster"-shaped literals anywhere in the owned sources', () => {
   const forbidden = /x faster|\$\d|\bUSD\b|\bEUR\b/;
   for (const { name, source } of readAllComponentSources()) {
     assert.doesNotMatch(source, forbidden, `${name} contains a forbidden literal`);
+  }
+});
+
+// N3 (independent review round 1): use the @/ path alias instead of a
+// relative ../../../ climb, matching the rest of the codebase's convention.
+test('N3: imports lib/impact/position-fix via the @/ path alias', () => {
+  for (const { name, source } of readAllComponentSources()) {
+    if (!/lib\/impact\/position-fix/.test(source)) continue;
+    assert.doesNotMatch(source, /\.\.\/.*lib\/impact\/position-fix/, `${name} should not use a relative import`);
+    assert.match(source, /@\/lib\/impact\/position-fix/, `${name} should import via @/lib/impact/position-fix`);
   }
 });
 
@@ -182,6 +269,19 @@ test('the chart pair uses the exact D-04 chart tokens, with the token name recor
   assert.match(css, /chart\.context-light/i);
   assert.match(css, /#004589/i, 'chart.signal-light');
   assert.match(css, /chart\.signal-light/i);
+});
+
+// S2 (independent review round 1): use the shared next/font/local variables
+// (app/fonts.ts) instead of literal family names, so the figure picks up the
+// site's actual loaded fonts rather than whatever "IBM Plex Mono"/"Instrument
+// Sans" happens to resolve to outside next/font's font-loading strategy.
+test('S2: no literal font-family names; uses the shared --font-mono / --font-sans variables', () => {
+  const css = fs.readFileSync(cssPath, 'utf8');
+
+  assert.doesNotMatch(css, /'IBM Plex Mono'/);
+  assert.doesNotMatch(css, /'Instrument Sans'/);
+  assert.match(css, /var\(--font-mono\),\s*ui-monospace,\s*monospace/);
+  assert.match(css, /var\(--font-sans\),\s*ui-sans-serif,\s*system-ui,\s*sans-serif/);
 });
 
 test('ImpactCounts renders a title, two proportional rows and a caption, computed from counts', () => {
@@ -202,11 +302,71 @@ test('the crossfade is 240ms opacity plus a 2px blur with the approved easing, i
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
 });
 
-test('fixLabel font size is 12 user units at >=768px and 24 below', () => {
-  const css = fs.readFileSync(cssPath, 'utf8');
-  const fixLabelBlocks = [...css.matchAll(/\.fixLabel\s*\{[^}]*\}/g)].map((match) => match[0]);
+// S1 (independent review round 1): stable height during the crossfade, and a
+// real fade-in (not an instant snap once `hidden` is removed).
+test('S1: both figure layers share one grid cell so the figure height stays stable', () => {
+  const toggleSource = fs.readFileSync(togglePath, 'utf8');
+  assert.match(toggleSource, /styles\.layerStack/, 'expects a grid container wrapping both .layer divs');
 
-  assert.ok(fixLabelBlocks.some((block) => /font-size:\s*24px/.test(block)), 'expects a 24px default (below 768px)');
-  const mediaBlocks = [...css.matchAll(/@media[^{]*768px[^{]*\{[\s\S]*?\.fixLabel\s*\{[^}]*font-size:\s*12px/g)];
-  assert.ok(mediaBlocks.length > 0, 'expects a >=768px media query setting .fixLabel to 12px');
+  const css = fs.readFileSync(cssPath, 'utf8');
+  const layerStackBlock = css.match(/\.layerStack\s*\{[^}]*\}/);
+  assert.ok(layerStackBlock, 'expects a .layerStack rule');
+  assert.match(layerStackBlock[0], /display:\s*grid/);
+
+  const layerBlock = css.match(/\.layer\s*\{[^}]*\}/);
+  assert.ok(layerBlock, 'expects a .layer rule');
+  assert.match(layerBlock[0], /grid-area:\s*1\s*\/\s*1/, 'expects both layers stacked on the same grid cell');
+});
+
+test('S1: the incoming layer has a real starting style to fade in from', () => {
+  const css = fs.readFileSync(cssPath, 'utf8');
+  assert.match(css, /@starting-style/);
+
+  const startingBlock = css.match(/@starting-style\s*\{[\s\S]*?\.layer\[data-fade=(['"])in\1\][^}]*\{[^}]*\}/);
+  assert.ok(startingBlock, 'expects @starting-style to declare the faded-out start for .layer[data-fade="in"]');
+  assert.match(startingBlock[0], /opacity:\s*0/);
+  assert.match(startingBlock[0], /blur\(2px\)/);
+});
+
+// S4 (independent review round 1): replaced the two-step viewport media query
+// with a container-query ladder, since a viewport-width breakpoint is wrong
+// once the figure sits in a narrower grid column than the viewport. The pure
+// helpers are the test seam: they prove the chosen unit/width pairs never
+// render below the 12px legibility floor, independent of any CSS engine.
+test('S4: the fixLabel ladder keeps the rendered label size >= 12px at every width', () => {
+  for (const width of [300, 399, 400, 499, 500, 599, 600, 900]) {
+    const unit = fixLabelUnitForWidth(width);
+    assert.ok(unit !== null, `expected a visible unit at width ${width}`);
+    const renderedPx = renderedFixLabelPx(width, unit);
+    assert.ok(renderedPx >= 12, `width ${width} renders .fixLabel at ${renderedPx}px, below the 12px floor`);
+  }
+});
+
+test('S4: labels are hidden (not just tiny) below the 300px container-width floor', () => {
+  assert.equal(fixLabelUnitForWidth(299), null);
+  assert.equal(fixLabelUnitForWidth(0), null);
+});
+
+test('S4: the CSS declares an inline-size container and a matching @container ladder for .fixLabel', () => {
+  const css = fs.readFileSync(cssPath, 'utf8');
+
+  assert.match(css, /container-type:\s*inline-size/);
+  assert.match(css, /@container[^{]*max-width:\s*299(\.9+)?px[^{]*\{[^}]*\.fixLabel\s*\{[^}]*display:\s*none/s);
+
+  for (const width of [300, 400, 500, 600]) {
+    assert.match(
+      css,
+      new RegExp(`@container[^{]*min-width:\\s*${width}px`),
+      `expects an @container rule starting at ${width}px`,
+    );
+  }
+
+  // The old viewport-width media query is gone, replaced by the container ladder.
+  assert.doesNotMatch(css, /@media \(min-width: 768px\)/);
+});
+
+test('S4: PositionFixFigure wraps each chart SVG in the inline-size container', () => {
+  const source = fs.readFileSync(figurePath, 'utf8');
+  const wrapperCount = (source.match(/styles\.chartWrapper/g) ?? []).length;
+  assert.equal(wrapperCount, 2, 'expects both the separate and connected SVGs wrapped in .chartWrapper');
 });

@@ -94,14 +94,65 @@ export function getConnectedLines(): PositionFixLine[] {
   }));
 }
 
+export interface PositionFixCounts {
+  readonly separate: number;
+  readonly connected: number;
+}
+
 /**
- * Counts shown by ImpactCounts. Always computed from SOURCES so the displayed
- * numbers cannot drift from the geometry (the honesty rule in plan section 12).
+ * Drives the counts shown by ImpactCounts from a sources array's length,
+ * rather than a hard-coded number, so the displayed numbers cannot drift
+ * from the geometry (the honesty rule in plan section 12). Exported as its
+ * own function (not inlined into `counts` below) so a test can prove the
+ * count genuinely tracks array length by calling it on a mutated copy of
+ * SOURCES, instead of only checking the fixed value 5.
  */
-export const counts = {
-  separate: SOURCES.length,
-  connected: 1,
-} as const;
+export function computeCounts(sources: readonly PositionFixSourcePoint[]): PositionFixCounts {
+  return {
+    separate: sources.length,
+    connected: 1,
+  };
+}
+
+/** Counts shown by ImpactCounts, computed from the real SOURCES list. */
+export const counts: PositionFixCounts = computeCounts(SOURCES);
+
+/**
+ * S4 (independent review round 1): container-query ladder for on-chart SVG
+ * text labels (.fixLabel). Below 300px container width the in-SVG labels are
+ * hidden (display: none) and the visible source list below the figure carries
+ * them instead; from 300px the label's SVG user-unit font-size steps down as
+ * the container narrows, so the *rendered* pixel size (unit * width / 600,
+ * since the SVG's viewBox width is 600 and it scales to fill its container)
+ * never drops below 12px. Mirrored by hand in position-fix.module.css's
+ * `@container` rules, since CSS cannot read this table directly; this table
+ * and renderedFixLabelPx are the test seam that proves the chosen steps hold
+ * the >=12px floor at every width (scripts/position-fix.test.mjs).
+ */
+export const FIX_LABEL_BREAKPOINTS: readonly { readonly minWidth: number; readonly unit: number | null }[] = [
+  { minWidth: 600, unit: 12 },
+  { minWidth: 500, unit: 15 },
+  { minWidth: 400, unit: 18 },
+  { minWidth: 300, unit: 24 },
+  { minWidth: 0, unit: null }, // below 300px: hidden; the source list is the accessible/visible equivalent
+];
+
+/** The .fixLabel SVG font-size (in user units), or null when it should be hidden, for a given container width. */
+export function fixLabelUnitForWidth(width: number): number | null {
+  const band = FIX_LABEL_BREAKPOINTS.find((candidate) => width >= candidate.minWidth);
+  return band ? band.unit : null;
+}
+
+/**
+ * The rendered on-screen pixel size of a .fixLabel set at `unit` SVG user
+ * units, once the (viewBox width 600) SVG is scaled to fill a container of
+ * `width` CSS pixels. Pure "test seam" per the independent review: it takes
+ * the unit directly rather than looking it up, so a test can pair it with
+ * fixLabelUnitForWidth and assert the floor holds at each breakpoint.
+ */
+export function renderedFixLabelPx(width: number, unit: number): number {
+  return (unit * width) / POSITION_FIX_VIEW_BOX.width;
+}
 
 /** One source's display content (bilingual, supplied by the page). */
 export interface PositionFixSourceContent {
