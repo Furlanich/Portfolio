@@ -67,8 +67,82 @@ test('implements the D-07 material fallbacks for backdrop-filter, reduced transp
   assert.match(combined, /@media \(forced-colors: active\)/);
 });
 
-test('registers the future Wave 2/3 Playwright specs in their required projects', () => {
+test('keeps the D-07 forced-colors override in surfaces.module.css so it wins over the plate/sheet border and background-image', () => {
+  // app/globals.css loads before component-level CSS Modules, so a forced-colors override
+  // declared only in globals.css (equal specificity, earlier in the cascade) is silently
+  // beaten by surfaces.module.css's unconditional .atlasPlate border and .plottingSheet
+  // background-image rules. The override must live in surfaces.module.css itself, after
+  // the base rules it corrects, so normal cascade order lets it win.
+  const moduleCss = read('components/surfaces/surfaces.module.css');
+  const atlasPlateBaseIndex = moduleCss.indexOf('.atlasPlate {');
+  const plottingSheetBaseIndex = moduleCss.indexOf('.plottingSheet {');
+  const forcedColorsIndex = moduleCss.indexOf('@media (forced-colors: active)');
+
+  assert.ok(atlasPlateBaseIndex !== -1, '.atlasPlate base rule missing');
+  assert.ok(plottingSheetBaseIndex !== -1, '.plottingSheet base rule missing');
+  assert.ok(forcedColorsIndex !== -1, 'surfaces.module.css has no forced-colors block');
+  assert.ok(atlasPlateBaseIndex < forcedColorsIndex, '.atlasPlate must be declared before the forced-colors override');
+  assert.ok(plottingSheetBaseIndex < forcedColorsIndex, '.plottingSheet must be declared before the forced-colors override');
+
+  const forcedColorsBlock = moduleCss.slice(forcedColorsIndex);
+  assert.match(forcedColorsBlock, /\.atlasPlate[\s\S]*\{[^}]*border:\s*1px solid CanvasText;/);
+  assert.match(forcedColorsBlock, /\.plottingSheet[\s\S]*\{[^}]*border:\s*1px solid CanvasText;/);
+  assert.match(forcedColorsBlock, /background-image:\s*none;/);
+  assert.match(forcedColorsBlock, /\.plottingSheetCrease/, 'the corner crease gradient must also be cleared');
+});
+
+test('drops the ineffective global forced-colors override now that surfaces.module.css owns it', () => {
+  const css = read('app/globals.css');
+  assert.doesNotMatch(css, /@media \(forced-colors: active\)/);
+});
+
+test('gives AtlasPlate and PlottingSheet default D-05/D-06 text colors so consumers inherit them', () => {
+  const css = read('components/surfaces/surfaces.module.css');
+
+  const atlasPlateRule = css.match(/\.atlasPlate\s*\{([^}]*)\}/s);
+  assert.ok(atlasPlateRule, '.atlasPlate base rule missing');
+  assert.match(
+    atlasPlateRule[1],
+    /color:\s*var\(--sky-text-2\);/,
+    'AtlasPlate body text must default to sky.text-2 (D-05)',
+  );
+
+  assert.match(
+    css,
+    /\.atlasPlate\s+:where\([^)]*h1[^)]*\)\s*\{[^}]*color:\s*#F9F6EE;/s,
+    'AtlasPlate headings must default to Bone (D-05)',
+  );
+
+  const plottingSheetRule = css.match(/\.plottingSheet\s*\{([^}]*)\}/s);
+  assert.ok(plottingSheetRule, '.plottingSheet base rule missing');
+  assert.match(
+    plottingSheetRule[1],
+    /color:\s*#09243D;/,
+    'PlottingSheet text must default to Ink (D-06)',
+  );
+});
+
+test('registers the future Wave 2/3 Playwright specs in exactly their required projects', () => {
   const source = read('playwright.config.ts');
+
+  // Every project currently defined in playwright.config.ts. Kept as an explicit list (not
+  // derived from the file) so this test independently proves both presence in the required
+  // projects AND absence from every other one, rather than only ever checking a subset.
+  const ALL_PROJECTS = [
+    'chromium-desktop',
+    'firefox-desktop',
+    'webkit-desktop',
+    'mobile-chromium',
+    'mobile-webkit',
+    'tablet-chromium',
+    'wide-chromium',
+    'compact-320-chromium',
+    'tablet-portrait-chromium',
+    'accessibility-chromium',
+    'immersive-chromium',
+    'visual-chromium',
+  ];
+
   const registrations = {
     'app-bar.spec.ts': [
       'chromium-desktop',
@@ -91,21 +165,29 @@ test('registers the future Wave 2/3 Playwright specs in their required projects'
     'sky-chart-acceptance.spec.ts': ['immersive-chromium'],
   };
 
-  for (const [spec, projects] of Object.entries(registrations)) {
-    for (const projectName of projects) {
-      const marker = `name: '${projectName}',`;
-      const start = source.indexOf(marker);
-      assert.ok(start !== -1, `project ${projectName} not found in playwright.config.ts`);
-      const end = source.indexOf('\n    },', start);
-      assert.ok(end !== -1, `project ${projectName} block not closed as expected`);
-      const block = source.slice(start, end);
-      // Look for the literal regex-literal text (e.g. /app-bar\.spec\.ts/) as written in
-      // playwright.config.ts, not an interpreted regular expression.
-      const literalSpec = spec.split('.').join('\\.');
-      assert.ok(
-        block.includes(`/${literalSpec}/`),
-        `${projectName} testMatch missing /${literalSpec}/`,
-      );
+  function projectBlock(projectName) {
+    const marker = `name: '${projectName}',`;
+    const start = source.indexOf(marker);
+    assert.ok(start !== -1, `project ${projectName} not found in playwright.config.ts`);
+    const end = source.indexOf('\n    },', start);
+    assert.ok(end !== -1, `project ${projectName} block not closed as expected`);
+    return source.slice(start, end);
+  }
+
+  for (const [spec, requiredProjects] of Object.entries(registrations)) {
+    // Look for the literal regex-literal text (e.g. /app-bar\.spec\.ts/) as written in
+    // playwright.config.ts, not an interpreted regular expression.
+    const literalSpec = spec.split('.').join('\\.');
+    const needle = `/${literalSpec}/`;
+    const requiredSet = new Set(requiredProjects);
+
+    for (const projectName of ALL_PROJECTS) {
+      const block = projectBlock(projectName);
+      if (requiredSet.has(projectName)) {
+        assert.ok(block.includes(needle), `${projectName} testMatch missing ${needle}`);
+      } else {
+        assert.ok(!block.includes(needle), `${projectName} testMatch must not include ${needle}`);
+      }
     }
   }
 });

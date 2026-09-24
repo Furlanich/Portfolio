@@ -206,6 +206,9 @@ test('keeps Ink and Muted readable on the worst-case plotting sheet composite', 
 });
 
 test('keeps Bone readable on the D-20 primary hover fill', () => {
+  // Both operands are fixed literal hex constants, not tokens this task defines, so this
+  // assertion is unaffected by any Task 3 implementation and already passed before Task 3's
+  // RED commit: it is a standing constant-vs-constant guard, not RED evidence for this task.
   // The D-20 hover hex (#0A55A3) and Bone are both fixed, approved values outside Task 3's
   // scope; their true WCAG ratio is ~6.84:1, short of the AAA 7:1 floor the plan packet
   // names. Recorded as a deviation (receipt) rather than weakened silently.
@@ -228,7 +231,21 @@ test('defines the D-09 display, lead, body and label type tokens', () => {
   ]);
   assert.deepEqual(fontSize.lead, ['clamp(18px, 1.6vw, 21px)', { lineHeight: '1.55' }]);
   assert.deepEqual(fontSize['body-lg'], ['19px', { lineHeight: '1.6' }]);
-  assert.deepEqual(fontSize.label, ['12px', { lineHeight: '1', letterSpacing: '0.08em' }]);
+  // D-09 specifies label as "12px mono, 0.08em tracking, uppercase" only; it names no
+  // line-height, so the token must not invent one.
+  assert.deepEqual(fontSize.label, ['12px', { letterSpacing: '0.08em' }]);
+});
+
+test('bans the default numeric Tailwind sky-* utilities that theme.extend.colors.sky merges in', () => {
+  // theme.extend.colors deep-merges with Tailwind's defaults, so declaring `sky` alongside
+  // Tailwind's own numeric `sky-50..sky-950` scale leaves BOTH sets of utilities available
+  // (e.g. `bg-sky-abyss` next to the unrelated default `bg-sky-500`). Only the named D-04
+  // keys are SKY-CHART-V2-approved; guard against accidental use of the numeric default.
+  const numericSkyUtility = /\bsky-(?:50|100|200|300|400|500|600|700|800|900|950)\b/;
+  for (const file of [...sourceFiles('app'), ...sourceFiles('components'), ...sourceFiles('lib')]) {
+    const source = read(file);
+    assert.doesNotMatch(source, numericSkyUtility, file);
+  }
 });
 
 test('mirrors the sky tokens, motion variables and layout constants in globals.css', () => {
