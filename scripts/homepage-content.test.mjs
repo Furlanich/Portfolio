@@ -312,3 +312,286 @@ test('shared immersive components contain no locale branching or public prose', 
     }
   }
 });
+
+// --- Sky Chart Task 4: content-type contracts (PLAN-SKY-CHART-HOME-REDESIGN-V2 Appendix A/B) ---
+
+const SOURCE_ID_ORDER = ['whatsapp', 'book', 'spreadsheet', 'email', 'call'];
+
+// Appendix B, id -> [English, Spanish] label, in table order.
+const NODE_LABELS = {
+  orders: ['Orders', 'Pedidos'],
+  bookings: ['Bookings', 'Reservas'],
+  messages: ['Messages', 'Mensajes'],
+  tasks: ['Tasks', 'Tareas'],
+  understand: ['Understand', 'Entender'],
+  process: ['Process', 'Proceso'],
+  constraints: ['Constraints', 'Restricciones'],
+  diagnosis: ['Diagnosis', 'Diagnóstico'],
+  define: ['Define', 'Definir'],
+  scope: ['Scope', 'Alcance'],
+  responsibilities: ['Responsibilities', 'Responsabilidades'],
+  'validation-criteria': ['Validation criteria', 'Criterios de validación'],
+  'build-review': ['Build & review', 'Construir y revisar'],
+  integrate: ['Integrate', 'Integrar'],
+  'technical-review': ['Technical review', 'Revisión técnica'],
+  'functional-tests': ['Functional tests', 'Pruebas funcionales'],
+  'hand-over': ['Hand over', 'Entregar'],
+  documentation: ['Documentation', 'Documentación'],
+  'journeys-validated': ['Journeys validated', 'Recorridos validados'],
+  maintain: ['Maintain', 'Mantener'],
+};
+
+const APPENDIX_A = {
+  es: {
+    coordinates: '34°36′S · 58°22′W',
+    plateLabel: 'Lámina {current}/04',
+    chapterKickers: ['Reconocer', 'Fragmentar', 'Conectar', 'Coordinar'],
+    servicesKicker: 'Servicios',
+    serviceCategories: ['Construir', 'Conectar', 'Mejorar'],
+    proofKicker: 'Responsabilidad técnica',
+    proofLogLabel: 'Dónde se aplica la responsabilidad',
+    proofLog: [
+      { term: 'Definir', text: 'Problema y alcance acordados' },
+      { term: 'Decidir', text: 'Decisiones técnicas a cargo de Samuel' },
+      { term: 'Revisar', text: 'Trabajo revisado antes de la entrega' },
+    ],
+    processKicker: 'Proceso',
+    founderKicker: 'Fundador',
+    readout: {
+      home: 'Inicio',
+      problems: 'Problemas',
+      services: 'Servicios',
+      impact: 'Posición',
+      proof: 'Responsabilidad',
+      process: 'Proceso',
+      founder: 'Fundador',
+      contact: 'Contacto',
+    },
+    impact: {
+      kicker: 'Fijar la posición',
+      heading: 'Menos lugares que revisar para saber en qué estado está un pedido',
+      introduction:
+        'Un escenario ilustrativo, no un resultado de clientes. Un navegante fija su posición con varias marcaciones; cuando las fuentes no coinciden, la posición se vuelve una zona de duda.',
+      illustrativeTag: 'Escenario ilustrativo',
+      toggle: {
+        groupLabel: 'Escenario',
+        separateLabel: 'Fuentes separadas',
+        connectedLabel: 'Registro conectado',
+        announcement: 'Mostrando: {state}',
+      },
+      figure: {
+        title: 'Dónde está un pedido, según sus fuentes',
+        separateDescription:
+          'Cinco marcaciones desde un chat de WhatsApp, un cuaderno de pedidos, una planilla, un correo y una llamada se cruzan en lugares distintos y dejan una zona de duda.',
+        connectedDescription:
+          'Todas las fuentes leen un mismo registro conectado, así que todas las marcaciones coinciden en un punto exacto.',
+        doubtLabel: 'Zona de duda',
+        fixLabel: 'Posición exacta',
+      },
+      sources: [
+        { id: 'whatsapp', name: 'Chat de WhatsApp', note: '“Confirmado” en el chat' },
+        { id: 'book', name: 'Cuaderno de pedidos', note: 'Anotado, todavía sin pagar' },
+        { id: 'spreadsheet', name: 'Planilla', note: 'Actualizada ayer a la tarde' },
+        { id: 'email', name: 'Correo', note: 'El cliente pidió cambiar la fecha' },
+        { id: 'call', name: 'Llamada', note: 'Prometido para el viernes' },
+      ],
+      connectedNoteTemplate: '{source}: lee el registro conectado',
+      counts: {
+        title: 'Lugares revisados para confirmar un pedido',
+        separateLabel: 'Fuentes separadas',
+        connectedLabel: 'Registro conectado',
+        caption:
+          'Los números salen de este ejemplo: un chat de WhatsApp, un cuaderno de pedidos, una planilla, un correo y una llamada. No son mediciones.',
+      },
+    },
+  },
+  en: {
+    coordinates: '34°36′S · 58°22′W',
+    plateLabel: 'Plate {current}/04',
+    chapterKickers: ['Recognize', 'Fragment', 'Connect', 'Coordinate'],
+    servicesKicker: 'Services',
+    serviceCategories: ['Build', 'Connect', 'Improve'],
+    proofKicker: 'Accountability',
+    proofLogLabel: 'Where accountability applies',
+    proofLog: [
+      { term: 'Define', text: 'Problem and scope agreed' },
+      { term: 'Decide', text: 'Technical decisions led by Samuel' },
+      { term: 'Review', text: 'Work reviewed before handover' },
+    ],
+    processKicker: 'Process',
+    founderKicker: 'Founder',
+    readout: {
+      home: 'Home',
+      problems: 'Problems',
+      services: 'Services',
+      impact: 'Position fix',
+      proof: 'Accountability',
+      process: 'Process',
+      founder: 'Founder',
+      contact: 'Contact',
+    },
+    impact: {
+      kicker: 'Position fix',
+      heading: 'Fewer places to check before you know where an order stands',
+      introduction:
+        'An illustrative scenario, not a client result. A navigator fixes a position from several bearings; when the sources disagree, the fix becomes an area of doubt.',
+      illustrativeTag: 'Illustrative scenario',
+      toggle: {
+        groupLabel: 'Scenario',
+        separateLabel: 'Separate sources',
+        connectedLabel: 'Connected record',
+        announcement: 'Showing: {state}',
+      },
+      figure: {
+        title: 'Where one order stands, according to its sources',
+        separateDescription:
+          'Five bearings from a WhatsApp thread, a paper order book, a spreadsheet, an email and a phone call cross in different places, leaving an area of doubt.',
+        connectedDescription: 'Every source reads one connected record, so all bearings meet at one exact point.',
+        doubtLabel: 'Area of doubt',
+        fixLabel: 'Exact fix',
+      },
+      sources: [
+        { id: 'whatsapp', name: 'WhatsApp thread', note: '“Confirmed” in the chat' },
+        { id: 'book', name: 'Paper order book', note: 'Written down, not yet paid' },
+        { id: 'spreadsheet', name: 'Spreadsheet', note: 'Updated yesterday evening' },
+        { id: 'email', name: 'Email', note: 'Customer asked to change the date' },
+        { id: 'call', name: 'Phone call', note: 'Promised for Friday' },
+      ],
+      connectedNoteTemplate: '{source}: reads the connected record',
+      counts: {
+        title: 'Places checked to confirm one order',
+        separateLabel: 'Separate sources',
+        connectedLabel: 'Connected record',
+        caption:
+          'Counts come from this example: a WhatsApp thread, a paper order book, a spreadsheet, an email and a phone call. They are not measurements.',
+      },
+    },
+  },
+};
+
+function collectLeafPaths(value, prefix = '') {
+  if (Array.isArray(value)) {
+    return value.flatMap((item, index) => collectLeafPaths(item, `${prefix}[${index}]`));
+  }
+  if (value && typeof value === 'object') {
+    return Object.keys(value)
+      .sort()
+      .flatMap((key) => collectLeafPaths(value[key], prefix ? `${prefix}.${key}` : key));
+  }
+  return [prefix];
+}
+
+function monoLabels(content) {
+  return [
+    content.instrument.coordinates,
+    content.instrument.plateLabel,
+    content.instrument.statusLabel,
+    ...content.instrument.chapters.map((chapter) => chapter.kicker),
+    ...Object.values(content.instrument.nodes),
+    content.servicesSection.kicker,
+    ...content.servicesSection.services.map((service) => service.category),
+    content.proof.kicker,
+    content.proof.logLabel,
+    ...content.proof.log.map((entry) => entry.term),
+    content.process.kicker,
+    content.founderSection.kicker,
+    content.impact.kicker,
+    content.impact.illustrativeTag,
+    content.impact.toggle.groupLabel,
+    content.impact.toggle.separateLabel,
+    content.impact.toggle.connectedLabel,
+    content.impact.figure.doubtLabel,
+    content.impact.figure.fixLabel,
+    ...Object.values(content.readout),
+  ];
+}
+
+function collectAllStrings(value, out = []) {
+  if (typeof value === 'string') {
+    out.push(value);
+  } else if (Array.isArray(value)) {
+    for (const item of value) collectAllStrings(item, out);
+  } else if (value && typeof value === 'object') {
+    for (const key of Object.keys(value)) collectAllStrings(value[key], out);
+  }
+  return out;
+}
+
+test('Spanish and English home content declare an identical set of leaf keys', () => {
+  assert.deepEqual(collectLeafPaths(spanish).sort(), collectLeafPaths(english).sort());
+});
+
+for (const [locale, content] of [['es', spanish], ['en', english]]) {
+  test(`${locale} instrument content carries the Appendix A plate label, coordinates and chapter kickers`, () => {
+    const expected = APPENDIX_A[locale];
+    assert.equal(content.instrument.coordinates, expected.coordinates);
+    assert.equal(content.instrument.plateLabel, expected.plateLabel);
+    assert.deepEqual(
+      content.instrument.chapters.map((chapter) => chapter.kicker),
+      expected.chapterKickers,
+    );
+  });
+
+  test(`${locale} instrument content exposes all 20 Appendix B node labels`, () => {
+    const nodeIds = Object.keys(NODE_LABELS);
+    assert.equal(Object.keys(content.instrument.nodes).length, 20);
+    for (const id of nodeIds) {
+      const [en, es] = NODE_LABELS[id];
+      assert.equal(content.instrument.nodes[id], locale === 'en' ? en : es, `node ${id}`);
+    }
+  });
+
+  test(`${locale} servicesSection carries a kicker and a category per service, in order`, () => {
+    const expected = APPENDIX_A[locale];
+    assert.equal(content.servicesSection.kicker, expected.servicesKicker);
+    assert.deepEqual(
+      content.servicesSection.services.map((service) => service.category),
+      expected.serviceCategories,
+    );
+  });
+
+  test(`${locale} proof carries a kicker, a log label and exactly three log entries`, () => {
+    const expected = APPENDIX_A[locale];
+    assert.equal(content.proof.kicker, expected.proofKicker);
+    assert.equal(content.proof.logLabel, expected.proofLogLabel);
+    assert.deepEqual(content.proof.log, expected.proofLog);
+  });
+
+  test(`${locale} process and founderSection carry the Appendix A kicker`, () => {
+    const expected = APPENDIX_A[locale];
+    assert.equal(content.process.kicker, expected.processKicker);
+    assert.equal(content.founderSection.kicker, expected.founderKicker);
+  });
+
+  test(`${locale} readout carries one label per App Bar destination`, () => {
+    assert.deepEqual(content.readout, APPENDIX_A[locale].readout);
+  });
+
+  test(`${locale} impact section matches Appendix A exactly, with 5 sources in fixed id order`, () => {
+    assert.deepEqual(content.impact, APPENDIX_A[locale].impact);
+    assert.deepEqual(
+      content.impact.sources.map((source) => source.id),
+      SOURCE_ID_ORDER,
+    );
+  });
+
+  test(`${locale} impact placeholders {current}, {source} and {state} are present`, () => {
+    assert.match(content.instrument.plateLabel, /\{current\}/);
+    assert.match(content.impact.connectedNoteTemplate, /\{source\}/);
+    assert.match(content.impact.toggle.announcement, /\{state\}/);
+  });
+
+  test(`${locale} every mono/label string is at most 64 characters`, () => {
+    for (const label of monoLabels(content)) {
+      assert.ok(label.length <= 64, `"${label}" is ${label.length} characters`);
+    }
+  });
+
+  test(`${locale} content contains no percentage, "x faster" or currency figure`, () => {
+    for (const value of collectAllStrings(content)) {
+      assert.doesNotMatch(value, /%/, value);
+      assert.doesNotMatch(value, /x faster/i, value);
+      assert.doesNotMatch(value, /[$€£¥]/, value);
+    }
+  });
+}
