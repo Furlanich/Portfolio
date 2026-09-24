@@ -42,6 +42,7 @@ const homepageNarrativeCases = [
     heading: 'Cuando lo manual empieza a frenar el negocio',
     servicesHeading: 'Servicios para necesidades concretas',
     audience: 'Para pymes que coordinan pedidos, reservas o atención al cliente, o necesitan mejorar un sistema existente.',
+    impactHeading: 'Menos lugares que revisar para saber en qué estado está un pedido',
     proofHeading: 'Una responsabilidad técnica clara',
     proofAction: 'Ver proyectos y sus límites',
     processHeading: 'Cómo trabajamos',
@@ -57,6 +58,7 @@ const homepageNarrativeCases = [
     heading: 'When manual work starts holding the business back',
     servicesHeading: 'Services for concrete business needs',
     audience: 'For small and medium-sized businesses managing orders, bookings or customer service, or improving an existing system.',
+    impactHeading: 'Fewer places to check before you know where an order stands',
     proofHeading: 'Clear technical accountability',
     proofAction: 'Explore projects and their limitations',
     processHeading: 'How we work',
@@ -72,12 +74,14 @@ for (const narrativeCase of homepageNarrativeCases) {
     await page.goto(appUrl(narrativeCase.route));
 
     const main = page.getByRole('main');
-    // The hero anchor plus the six MKT-D05 sections; the four instrument chapters precede Problems.
-    await expect(main.locator('section[aria-labelledby="home-heading"], :scope > section')).toHaveCount(7);
+    // The hero anchor plus the seven Home sections (Problems, Services, Position fix,
+    // Proof, Process, Founder, Dawn CTA); the four instrument chapters precede Problems.
+    await expect(main.locator('section[aria-labelledby="home-heading"], :scope > section')).toHaveCount(8);
     await expect(main.locator('h2')).toHaveText([
       ...narrativeCase.chapters,
       narrativeCase.heading,
       narrativeCase.servicesHeading,
+      narrativeCase.impactHeading,
       narrativeCase.proofHeading,
       narrativeCase.processHeading,
       narrativeCase.founderHeading,
