@@ -17,6 +17,9 @@ const {
   computeCounts,
   fixLabelUnitForWidth,
   renderedFixLabelPx,
+  markerNumberForSourceId,
+  MARKER_NUMBER_UNIT,
+  MARKER_NUMBER_MIN_EXPECTED_WIDTH,
 } = await import('../lib/impact/position-fix.ts');
 
 const componentsDir = path.join(process.cwd(), 'components/homepage/impact');
@@ -381,4 +384,56 @@ test('S4: PositionFixFigure wraps each chart SVG in the inline-size container', 
   const source = fs.readFileSync(figurePath, 'utf8');
   const wrapperCount = (source.match(/styles\.chartWrapper/g) ?? []).length;
   assert.equal(wrapperCount, 2, 'expects both the separate and connected SVGs wrapped in .chartWrapper');
+});
+
+// S4 amendment (orchestrator decision, plan SHA 5b8a8e5): below 300px the
+// full-name label is replaced by a numeral key (1-5), not hidden outright.
+test('S4-amendment: numeral keys are assigned in fixed source order (whatsapp=1 ... call=5)', () => {
+  assert.deepEqual(
+    SOURCE_IDS.map((id) => markerNumberForSourceId(id)),
+    [1, 2, 3, 4, 5],
+  );
+});
+
+test('S4-amendment: the numeral key renders >= 12px at the narrowest expected figure width', () => {
+  const renderedPx = renderedFixLabelPx(MARKER_NUMBER_MIN_EXPECTED_WIDTH, MARKER_NUMBER_UNIT);
+  assert.ok(
+    renderedPx >= 12,
+    `${MARKER_NUMBER_MIN_EXPECTED_WIDTH}px numeral renders at ${renderedPx}px, below the 12px floor`,
+  );
+});
+
+test('S4-amendment: full-name labels are hidden and numeral keys shown below the 300px floor', () => {
+  const css = fs.readFileSync(cssPath, 'utf8');
+  const belowFloorBlock = css.match(/@container[^{]*max-width:\s*299(\.\d+)?px[^{]*\{[\s\S]*?\n\}\n/);
+
+  assert.ok(belowFloorBlock, 'expects the below-300px @container block');
+  assert.match(belowFloorBlock[0], /\.fixLabel\s*\{[^}]*display:\s*none/, 'full labels hidden below 300px');
+  assert.match(belowFloorBlock[0], /\.markerNumber\s*\{[^}]*display:\s*inline/, 'numerals shown below 300px');
+
+  // Numerals are hidden by default (>= 300px): the *first* .markerNumber
+  // rule in document order is expected to be the plain, top-level one
+  // (declared before any @container block), setting display: none.
+  const allMarkerNumberBlocks = [...css.matchAll(/\.markerNumber\s*\{[^}]*\}/g)];
+  assert.ok(allMarkerNumberBlocks.length >= 2, 'expects a default rule plus the below-300px override');
+  assert.match(allMarkerNumberBlocks[0][0], /display:\s*none/, 'expects the first (default) .markerNumber rule to hide it');
+});
+
+test('S4-amendment: the visible source list is an ordered list, at every width', () => {
+  const source = fs.readFileSync(figurePath, 'utf8');
+  assert.match(source, /<ol[^>]*>/);
+  assert.doesNotMatch(source, /<ul[^>]*>/);
+});
+
+test('S4-amendment: doubt/exact-fix labels have a visible caption fallback below the figures', () => {
+  const source = fs.readFileSync(figurePath, 'utf8');
+  assert.match(source, /styles\.chartCaption/);
+  assert.match(source, /content\.figure\.separateDescription/);
+  assert.match(source, /content\.figure\.connectedDescription/);
+});
+
+test('S4-amendment: each marker renders a decorative numeral key alongside its name label', () => {
+  const source = fs.readFileSync(figurePath, 'utf8');
+  assert.match(source, /markerNumberForSourceId/);
+  assert.match(source, /styles\.markerNumber/);
 });

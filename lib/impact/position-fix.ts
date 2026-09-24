@@ -118,23 +118,25 @@ export function computeCounts(sources: readonly PositionFixSourcePoint[]): Posit
 export const counts: PositionFixCounts = computeCounts(SOURCES);
 
 /**
- * S4 (independent review round 1): container-query ladder for on-chart SVG
- * text labels (.fixLabel). Below 300px container width the in-SVG labels are
- * hidden (display: none) and the visible source list below the figure carries
- * them instead; from 300px the label's SVG user-unit font-size steps down as
- * the container narrows, so the *rendered* pixel size (unit * width / 600,
- * since the SVG's viewBox width is 600 and it scales to fill its container)
- * never drops below 12px. Mirrored by hand in position-fix.module.css's
- * `@container` rules, since CSS cannot read this table directly; this table
- * and renderedFixLabelPx are the test seam that proves the chosen steps hold
- * the >=12px floor at every width (scripts/position-fix.test.mjs).
+ * S4 (independent review round 1, amended by the orchestrator): container-
+ * query ladder for on-chart SVG text labels (.fixLabel: source names, "area
+ * of doubt", "exact fix"). From 300px the label's SVG user-unit font-size
+ * steps down as the container narrows, so the *rendered* pixel size
+ * (unit * width / 600, since the SVG's viewBox width is 600 and it scales to
+ * fill its container) never drops below 12px. Below 300px the full-name
+ * label is hidden (unit: null) and replaced by a numeral key (see
+ * MARKER_NUMBER_UNIT below), not by nothing. Mirrored by hand in
+ * position-fix.module.css's `@container` rules, since CSS cannot read this
+ * table directly; this table and renderedFixLabelPx are the test seam that
+ * proves the chosen steps hold the >=12px floor at every width
+ * (scripts/position-fix.test.mjs).
  */
 export const FIX_LABEL_BREAKPOINTS: readonly { readonly minWidth: number; readonly unit: number | null }[] = [
   { minWidth: 600, unit: 12 },
   { minWidth: 500, unit: 15 },
   { minWidth: 400, unit: 18 },
   { minWidth: 300, unit: 24 },
-  { minWidth: 0, unit: null }, // below 300px: hidden; the source list is the accessible/visible equivalent
+  { minWidth: 0, unit: null }, // below 300px: the full-name .fixLabel is hidden; a .markerNumber key replaces it
 ];
 
 /** The .fixLabel SVG font-size (in user units), or null when it should be hidden, for a given container width. */
@@ -144,14 +146,44 @@ export function fixLabelUnitForWidth(width: number): number | null {
 }
 
 /**
- * The rendered on-screen pixel size of a .fixLabel set at `unit` SVG user
- * units, once the (viewBox width 600) SVG is scaled to fill a container of
- * `width` CSS pixels. Pure "test seam" per the independent review: it takes
- * the unit directly rather than looking it up, so a test can pair it with
- * fixLabelUnitForWidth and assert the floor holds at each breakpoint.
+ * The rendered on-screen pixel size of a .fixLabel (or .markerNumber) set at
+ * `unit` SVG user units, once the (viewBox width 600) SVG is scaled to fill
+ * a container of `width` CSS pixels. Pure "test seam" per the independent
+ * review: it takes the unit directly rather than looking it up, so a test
+ * can pair it with fixLabelUnitForWidth and assert the floor holds at each
+ * breakpoint.
  */
 export function renderedFixLabelPx(width: number, unit: number): number {
   return (unit * width) / POSITION_FIX_VIEW_BOX.width;
+}
+
+/**
+ * S4 amendment (orchestrator decision, plan SHA 5b8a8e5): below the 300px
+ * container-width floor, source markers show a numeral key (1-5, in fixed
+ * SOURCES order) instead of hiding their label outright. The figure is
+ * expected to render at roughly 236px wide inside a 320px viewport (the
+ * narrowest width this design targets); renderedFixLabelPx(236,
+ * MARKER_NUMBER_UNIT) must stay >=12px. 32 user units clears that floor
+ * (~12.19px at 236px) with a documented safety margin over the ~30.51-unit
+ * value that would land exactly on 12px, in case the figure renders a few
+ * pixels narrower than 236px in practice.
+ */
+export const MARKER_NUMBER_UNIT = 32;
+
+/** The narrowest container width (px) this figure is designed for: roughly the SVG's width inside a 320px viewport. */
+export const MARKER_NUMBER_MIN_EXPECTED_WIDTH = 236;
+
+/**
+ * The numeral key (1-5) shown beside a source's marker below the 300px
+ * floor, in fixed SOURCES/SOURCE_IDS order (whatsapp=1 ... call=5). These
+ * are decorative duplicates of the visible source <ol>'s own numbering
+ * (both the SVG's numeral text and the list's implicit ordinal are driven
+ * by the same SOURCE_IDS order, so they can never disagree); the SVG's
+ * role="img" name/description (its <title>/<desc>) carry the accessible
+ * meaning, not this numeral glyph.
+ */
+export function markerNumberForSourceId(id: PositionFixSourceId): number {
+  return SOURCE_IDS.indexOf(id) + 1;
 }
 
 /** One source's display content (bilingual, supplied by the page). */
