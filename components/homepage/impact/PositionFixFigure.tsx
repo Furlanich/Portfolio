@@ -5,6 +5,7 @@ import {
   SOURCES,
   getConnectedLines,
   getSeparateLines,
+  markerNumberForSourceId,
   type PositionFixContent,
   type PositionFixSourcePoint,
 } from '@/lib/impact/position-fix';
@@ -38,23 +39,36 @@ interface SourceMarkerProps {
  * and are never reachable by keyboard focus, satisfying the "pointer-only,
  * not focusable" rule without extra client-side pointer-tracking script; the
  * visible source list below is the accessible equivalent either way.
+ *
+ * S4 amendment: below the 300px container-width floor the full-name .fixLabel
+ * is hidden (CSS) and this also renders a .markerNumber numeral key (1-5, in
+ * fixed SOURCES order) at the same position, shown only in that narrow band.
+ * The numeral is a decorative duplicate of the visible source <ol>'s own
+ * numbering; it is aria-hidden because the SVG's role="img" name/description
+ * (title/desc) already carry the accessible meaning.
  */
 function SourceMarker({ point, name, tooltip, markerClassName }: SourceMarkerProps) {
   const anchorStart = point.x < POSITION_FIX_VIEW_BOX.width / 2;
-  const alignTop = point.y < POSITION_FIX_VIEW_BOX.height / 2;
+  const anchorX = point.x + (anchorStart ? -10 : 10);
+  const anchorY = point.y + (point.y < POSITION_FIX_VIEW_BOX.height / 2 ? -12 : 22);
+  const textAnchor = anchorStart ? 'start' : 'end';
 
   return (
     <g>
       <circle cx={point.x} cy={point.y} r={6} className={markerClassName}>
         <title>{tooltip}</title>
       </circle>
-      <text
-        x={point.x + (anchorStart ? -10 : 10)}
-        y={point.y + (alignTop ? -12 : 22)}
-        textAnchor={anchorStart ? 'start' : 'end'}
-        className={`${styles.fixLabel} ${styles.labelInk}`}
-      >
+      <text x={anchorX} y={anchorY} textAnchor={textAnchor} className={`${styles.fixLabel} ${styles.labelInk}`}>
         {name}
+      </text>
+      <text
+        x={anchorX}
+        y={anchorY}
+        textAnchor={textAnchor}
+        className={`${styles.markerNumber} ${styles.labelInk}`}
+        aria-hidden="true"
+      >
+        {markerNumberForSourceId(point.id)}
       </text>
     </g>
   );
@@ -156,6 +170,7 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
           {content.figure.doubtLabel}
         </text>
       </svg>
+      <p className={styles.chartCaption}>{content.figure.separateDescription}</p>
     </div>
   );
 
@@ -187,6 +202,7 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
           {content.figure.fixLabel}
         </text>
       </svg>
+      <p className={styles.chartCaption}>{content.figure.connectedDescription}</p>
     </div>
   );
 
@@ -201,14 +217,14 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
         separateContent={separateSvg}
         connectedContent={connectedSvg}
       />
-      <ul className={styles.sourceList}>
+      <ol className={styles.sourceList}>
         {content.sources.map((source) => (
           <li key={source.id}>
             <span className={styles.sourceName}>{source.name}</span>
             <span className={styles.sourceNote}>{source.note}</span>
           </li>
         ))}
-      </ul>
+      </ol>
     </figure>
   );
 }

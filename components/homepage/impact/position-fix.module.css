@@ -103,6 +103,24 @@
   container-type: inline-size;
 }
 
+/*
+ * S4 amendment: visible fallback for the "area of doubt" / "exact fix"
+ * labels, which are hidden on-chart below the 300px floor along with every
+ * other .fixLabel. Rather than trying to fit arbitrary-length localized
+ * strings ("Zona de duda", "Posición exacta", ...) into the chart at a
+ * guaranteed-legible size at every width, this caption (the figure's own
+ * separate/connectedDescription, which already appears in the SVG's <desc>)
+ * is always rendered as ordinary visible text under each chart. It is kept
+ * visible at every width, not just below 300px, so there is a single
+ * unconditional rule to test rather than a second width-dependent fallback.
+ */
+.chartCaption {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #526473; /* D-06 Muted */
+}
+
 .chart {
   width: 100%;
   height: auto;
@@ -176,9 +194,28 @@
   font-size: 24px;
 }
 
+/*
+ * S4 amendment (orchestrator decision, plan SHA 5b8a8e5): below 300px the
+ * full-name .fixLabel is replaced by a numeral key (1-5, matching the
+ * visible source <ol>'s own numbering), not hidden outright. 32 user units
+ * (lib/impact/position-fix.ts's MARKER_NUMBER_UNIT) keeps it >=12px at the
+ * ~236px width this figure is expected to render at inside a 320px
+ * viewport.
+ */
+.markerNumber {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 32px;
+  display: none;
+}
+
 @container (max-width: 299.98px) {
   .fixLabel {
-    display: none; /* the visible source list below the figure carries the label text instead */
+    display: none; /* the visible source <ol> below the figure carries the full name and note instead */
+  }
+
+  .markerNumber {
+    display: inline; /* a decorative duplicate of the <ol>'s own numbering; the SVG's title/desc carry the accessible meaning */
   }
 }
 

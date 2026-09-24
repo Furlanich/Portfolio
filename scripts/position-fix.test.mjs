@@ -150,7 +150,9 @@ test('both SVGs declare role="img" with a title and a description', () => {
 
 test('the figure renders a visible source list as the text equivalent', () => {
   const source = fs.readFileSync(figurePath, 'utf8');
-  assert.match(source, /<ul[^>]*>/);
+  // An <ol>, not a <ul>, per the S4 amendment: the list's own numbering must
+  // match the SVG's decorative numeral keys (see the S4-amendment tests below).
+  assert.match(source, /<ol[^>]*>/);
   assert.match(source, /sources\.map/);
 });
 
