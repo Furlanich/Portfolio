@@ -13,7 +13,10 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-STATIC-LOCALIZED-ROUTING
-last_verified: 2026-09-20
+  - RFC-SKY-CHART-VISUAL-SYSTEM-V2
+  - PLAN-SKY-CHART-HOME-REDESIGN-V2
+  - REVIEW-SKY-CHART-DIRECTION-2026-09-23
+last_verified: 2026-09-23
 ---
 
 # RFCs
@@ -29,6 +32,10 @@ An RFC is a consequential product or architectural proposal that requires agreem
 - [`RFC-HOMEPAGE-FOUNDATION-STATIC-ROUTING`](homepage-foundation-static-localized-routing.md): approved in [Governance PR #6](https://github.com/Furlanich/Portfolio/pull/6). It selects explicit locale route trees and locale-specific root layouts for static Spanish root routes and English `/en/` routes while preserving GitHub Pages and build-time base-path compatibility.
 
 Do not create status directories until the number of RFCs or their lifecycle makes the additional structure useful.
+
+## Proposed Sky Chart visual system
+
+- [RFC-SKY-CHART-VISUAL-SYSTEM-V2](sky-chart-visual-system-v2.md): proposed Sky Chart Home and App Bar redesign (a navigator's star atlas environment, atlas-plate and plotting-sheet materials, a floating chart-header App Bar, and the new HOME-IMPACT section). It lists eighteen PROPOSED supersessions of DESIGN-VISUAL, DESIGN-IX-A11Y, VISUAL-IDENTITY-V1, IMMERSIVE-HOME-V1.1, ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE and PAGE-HOME boundaries — including an explicit ask to remove the derived Azure sculpture from the scene — and requests the owner's gate G1 decision from [PLAN-SKY-CHART-HOME-REDESIGN-V2](../plans/active/sky-chart-home-redesign-v2.md). Direction evidence: [REVIEW-SKY-CHART-DIRECTION-2026-09-23](../reviews/sky-chart-direction-2026-09-23/index.md). No implementation is authorized by this RFC.
 
 ## Proposed marketing decision closure
 

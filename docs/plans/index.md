@@ -27,7 +27,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-None.
+- [PLAN-SKY-CHART-HOME-REDESIGN-V2](active/sky-chart-home-redesign-v2.md): **PROPOSED**. Sky Chart Home and App Bar redesign in twelve task/PR packets across five waves. It opens with a Governance RFC (Task 1) and needs owner approval before any implementation task starts. Direction evidence: [REVIEW-SKY-CHART-DIRECTION-2026-09-23](../reviews/sky-chart-direction-2026-09-23/index.md).
 
 ## Completed
 
