@@ -13,6 +13,13 @@ const identity = {
 // SKY-CHART-V2 owns the values and the contrast record asserted by
 // scripts/design-tokens.test.mjs, which imports this object directly rather than
 // duplicating its hex/rgba values.
+//
+// NOTE: `theme.extend.colors` deep-merges with Tailwind's default theme, so declaring
+// `colors.sky` here does not replace Tailwind's own numeric `sky-50`..`sky-950` scale --
+// both sets of utilities exist side by side (e.g. `bg-sky-abyss` next to the unrelated
+// default `bg-sky-500`). Only the named keys below (`sky.abyss`, `sky.deep`, ...) are
+// SKY-CHART-V2-approved; numeric `sky-<number>` utilities are unapproved Tailwind defaults
+// and scripts/design-tokens.test.mjs bans their use under app/, components/ and lib/.
 export const sky = {
   abyss: '#06121F',
   deep: '#0A1E33',
@@ -93,7 +100,8 @@ const config: Config = {
         'display-3': ['clamp(28px, 3vw, 40px)', { lineHeight: '1.1', letterSpacing: '-0.015em', fontWeight: '700' }],
         lead: ['clamp(18px, 1.6vw, 21px)', { lineHeight: '1.55' }],
         'body-lg': ['19px', { lineHeight: '1.6' }],
-        label: ['12px', { lineHeight: '1', letterSpacing: '0.08em' }]
+        // D-09 specifies "12px mono, 0.08em tracking, uppercase" only; no line-height.
+        label: ['12px', { letterSpacing: '0.08em' }]
       },
       boxShadow: {
         soft: '0 10px 30px -15px rgba(15, 17, 21, 0.25)',

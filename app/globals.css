@@ -117,11 +117,10 @@ a {
   }
 }
 
-@media (forced-colors: active) {
-  .sky-plate-material,
-  .sky-plate-material-solid,
-  .sky-sheet-material {
-    border-color: CanvasText;
-    background-image: none;
-  }
-}
+/*
+ * D-07's forced-colors override (border: 1px solid CanvasText; no background images) lives
+ * in components/surfaces/surfaces.module.css instead of here. This global stylesheet loads
+ * before component-level CSS Modules, so a forced-colors rule declared at this equal
+ * specificity would always be beaten by the module's own unconditional .atlasPlate border
+ * and .plottingSheet background-image declarations, which come later in the cascade.
+ */
