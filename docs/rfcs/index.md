@@ -35,7 +35,7 @@ Do not create status directories until the number of RFCs or their lifecycle mak
 
 ## Proposed Sky Chart visual system
 
-- [RFC-SKY-CHART-VISUAL-SYSTEM-V2](sky-chart-visual-system-v2.md): proposed Sky Chart Home and App Bar redesign (a navigator's star atlas environment, atlas-plate and plotting-sheet materials, a floating chart-header App Bar, and the new HOME-IMPACT section). It lists nine PROPOSED supersessions of DESIGN-VISUAL, DESIGN-IX-A11Y and IMMERSIVE-HOME-V1.1 boundaries and requests the owner's gate G1 decision from [PLAN-SKY-CHART-HOME-REDESIGN-V2](../plans/active/sky-chart-home-redesign-v2.md). Direction evidence: [REVIEW-SKY-CHART-DIRECTION-2026-09-23](../reviews/sky-chart-direction-2026-09-23/index.md). No implementation is authorized by this RFC.
+- [RFC-SKY-CHART-VISUAL-SYSTEM-V2](sky-chart-visual-system-v2.md): proposed Sky Chart Home and App Bar redesign (a navigator's star atlas environment, atlas-plate and plotting-sheet materials, a floating chart-header App Bar, and the new HOME-IMPACT section). It lists eighteen PROPOSED supersessions of DESIGN-VISUAL, DESIGN-IX-A11Y, VISUAL-IDENTITY-V1, IMMERSIVE-HOME-V1.1, ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE and PAGE-HOME boundaries — including an explicit ask to remove the derived Azure sculpture from the scene — and requests the owner's gate G1 decision from [PLAN-SKY-CHART-HOME-REDESIGN-V2](../plans/active/sky-chart-home-redesign-v2.md). Direction evidence: [REVIEW-SKY-CHART-DIRECTION-2026-09-23](../reviews/sky-chart-direction-2026-09-23/index.md). No implementation is authorized by this RFC.
 
 ## Proposed marketing decision closure
 
