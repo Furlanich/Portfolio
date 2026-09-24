@@ -129,10 +129,11 @@ test('recedeFactor returns 0 for a non-positive or non-finite viewport height in
   assert.equal(recedeFactor(100, Number.NaN), 0, 'a non-finite viewport height must not propagate NaN');
 });
 
-test('the hero mask stays at its safe value of 1 for a non-positive or non-finite viewport height', () => {
-  assert.equal(frameForProgress(0.5, { width: 390, vh: 0, heroBottom: 100 }).heroMask, 1);
-  assert.equal(frameForProgress(0.5, { width: 390, vh: -10, heroBottom: 100 }).heroMask, 1);
-  assert.equal(frameForProgress(0.5, { width: 390, vh: Number.NaN, heroBottom: 100 }).heroMask, 1);
+test('the hero mask fails safe to 0 below 768px for a non-positive or non-finite viewport height', () => {
+  assert.equal(frameForProgress(0.5, { width: 390, vh: 0, heroBottom: 100 }).heroMask, 0, 'hidden is the D-27 safe default, same as a missing heroBottom');
+  assert.equal(frameForProgress(0.5, { width: 390, vh: -10, heroBottom: 100 }).heroMask, 0);
+  assert.equal(frameForProgress(0.5, { width: 390, vh: Number.NaN, heroBottom: 100 }).heroMask, 0);
+  assert.equal(frameForProgress(0.5, { width: 1440, vh: Number.NaN, heroBottom: 100 }).heroMask, 1, 'the mask stays 1 at >=768px regardless of vh');
 });
 
 test('the hero mask fails safe to 0 below 768px when heroBottom is omitted', () => {
