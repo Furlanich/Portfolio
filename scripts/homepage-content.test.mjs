@@ -343,7 +343,7 @@ const NODE_LABELS = {
 
 const APPENDIX_A = {
   es: {
-    coordinates: '34°36′S · 58°22′W',
+    coordinates: '34°36’S · 58°22’W',
     plateLabel: 'Lámina {current}/04',
     chapterKickers: ['Reconocer', 'Fragmentar', 'Conectar', 'Coordinar'],
     servicesKicker: 'Servicios',
@@ -406,7 +406,7 @@ const APPENDIX_A = {
     },
   },
   en: {
-    coordinates: '34°36′S · 58°22′W',
+    coordinates: '34°36’S · 58°22’W',
     plateLabel: 'Plate {current}/04',
     chapterKickers: ['Recognize', 'Fragment', 'Connect', 'Coordinate'],
     servicesKicker: 'Services',

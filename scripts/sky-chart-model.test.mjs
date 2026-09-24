@@ -6,6 +6,10 @@ const { SKY_CHART_NODES, GROUP_REVEAL, frameForProgress, recedeFactor, labelOpac
 
 const PHASE_GROUPS = ['understand', 'define', 'build-review', 'hand-over'];
 
+function assertClose(actual, expected, message) {
+  assert.ok(Math.abs(actual - expected) < 1e-9, `${message}: expected ${expected}, got ${actual}`);
+}
+
 test('yaw combines the wide/compact offset with the scroll ramp', () => {
   assert.equal(frameForProgress(0, { width: 1440 }).yaw, 16, 'wide at t=0');
   assert.equal(frameForProgress(0, { width: 768 }).yaw, 34, 'compact at t=0');
@@ -14,7 +18,7 @@ test('yaw combines the wide/compact offset with the scroll ramp', () => {
 
 test('group opacity reveals Define across its 0.12-wide ramp', () => {
   assert.equal(frameForProgress(0.27, { width: 1440 }).groupOpacity.define, 0, 'before the ramp starts');
-  assert.equal(frameForProgress(0.42, { width: 1440 }).groupOpacity.define, 1, 'after the ramp settles');
+  assertClose(frameForProgress(0.42, { width: 1440 }).groupOpacity.define, 1, 'after the ramp settles');
 });
 
 test('link fraction stays at its rails outside the 0.30-0.85 ramp', () => {
@@ -27,7 +31,7 @@ test('link fraction stays at its rails outside the 0.30-0.85 ramp', () => {
 test('recede factor interpolates from settled to fully receded', () => {
   const vh = 900;
   assert.equal(recedeFactor(0.55 * vh, vh), 0);
-  assert.equal(recedeFactor(0.3 * vh, vh), 0.5);
+  assertClose(recedeFactor(0.3 * vh, vh), 0.5, 'midpoint');
   assert.equal(recedeFactor(0.05 * vh, vh), 1);
 });
 
