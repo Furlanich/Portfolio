@@ -236,9 +236,20 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
         separateContent={separateSvg}
         connectedContent={connectedSvg}
       />
-      <ol className={styles.sourceList}>
+      {/* N-A1 (independent review round 3): the numeral prefix is an explicit
+          span, not CSS ::marker (which never painted: .sourceList li below
+          is display: flex, and ::marker only renders on display: list-item).
+          aria-hidden since it duplicates the <ol>'s own implicit numbering
+          (role="list" below keeps that numbering exposed to assistive tech
+          that would otherwise drop it on a styleless list); the number
+          itself comes from markerNumberForSourceId, the same fixed-order
+          function the SVG's numeral keys use, so the two can never disagree. */}
+      <ol className={styles.sourceList} role="list">
         {content.sources.map((source) => (
           <li key={source.id}>
+            <span aria-hidden="true" className={styles.sourceNumber}>
+              {markerNumberForSourceId(source.id)}.
+            </span>
             <span className={styles.sourceName}>{source.name}</span>
             <span className={styles.sourceNote}>{source.note}</span>
           </li>

@@ -611,7 +611,13 @@ test('N-A1: .sourceList sets list-style: none (nothing left for ::marker to supp
 
   assert.ok(sourceListBlock, 'expects a .sourceList rule');
   assert.match(sourceListBlock[0], /list-style:\s*none/, 'expects list-style: none now that numbers are explicit spans');
-  assert.doesNotMatch(css, /::marker/, 'the ineffective li::marker rule should be removed, not left as dead CSS');
+  // A real rule (selector immediately followed by "{"), not a prose mention
+  // of the pseudo-element inside an explanatory comment above.
+  assert.doesNotMatch(
+    css,
+    /::marker\s*\{/,
+    'the ineffective li::marker rule should be removed, not left as dead CSS',
+  );
 });
 
 // NEW-1 (independent review round 3, nit): lock in that the numeral <text>

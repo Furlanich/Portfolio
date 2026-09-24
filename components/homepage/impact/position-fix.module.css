@@ -267,32 +267,42 @@
 
 /*
  * The visible source list: the accessible text equivalent of the chart, and
- * (N-A1, independent review round 2) the sighted equivalent of the SVG's
- * decorative numeral keys below the 300px floor. list-style stays visible
- * (decimal, not none) so its own ordinal numbering is always shown and
- * always matches the numerals; `list-style: none` would also risk some
- * assistive tech dropping the <ol>'s list semantics.
+ * (N-A1) the sighted equivalent of the SVG's decorative numeral keys below
+ * the 300px floor.
+ *
+ * N-A1 (independent review round 3, corrected): round 2 relied on
+ * `.sourceList li::marker` plus `list-style: decimal` for the visible
+ * numbering. But `::marker` only paints on `display: list-item` elements,
+ * and `.sourceList li` below is `display: flex` (needed for its own
+ * name/note layout) -- so `::marker` never actually rendered anything;
+ * headless Chromium confirmed no number was drawn. The numbers are now
+ * explicit <span> elements in PositionFixFigure's markup (independent of
+ * any list-style/::marker behaviour), so list-style goes back to `none`
+ * (there's nothing left for a marker to suppress or duplicate), with
+ * `role="list"` on the <ol> to keep list semantics for assistive tech that
+ * drops them on a styleless list (notably Safari/VoiceOver).
  */
 .sourceList {
   display: grid;
   gap: 10px;
   margin: 20px 0 0;
   padding: 0;
-  list-style: decimal inside;
-}
-
-.sourceList li::marker {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-weight: 600;
-  color: #09243d; /* D-06 Ink */
+  list-style: none;
 }
 
 .sourceList li {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   gap: 6px;
   font-size: 14px;
   line-height: 1.5;
+}
+
+.sourceNumber {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 600;
+  color: #09243d; /* D-06 Ink */
 }
 
 .sourceName {
