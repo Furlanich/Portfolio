@@ -1,23 +1,27 @@
 ---
 id: REVIEW-SKY-CHART-DIRECTION-2026-09-23
 type: design-review
-status: PROPOSED
+status: APPROVED
 related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
+  - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
+  - RFC-SKY-CHART-VISUAL-SYSTEM-V2
   - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
   - PAGE-HOME
   - PROJECT-EVIDENCE
-last_verified: 2026-09-23
+last_verified: 2026-09-24
 ---
 
 # Sky Chart direction review — Home and App Bar redesign
 
 ## Status
 
-**PROPOSED.** This record preserves the Stage 1 design discovery and the owner's direction choice. It approves no implementation. The redesign conflicts with approved design and runtime records, so it requires the Governance PR described in [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../../plans/active/sky-chart-home-redesign-v2.md).
+**APPROVED.** This record preserves the Stage 1 design discovery and the owner's direction choice. [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../../rfcs/sky-chart-visual-system-v2.md), the Governance PR this direction required, passed gate G1: the repository owner approved and merged it as Governance PR #77 (merge commit `70168e9`) on 2026-09-24. [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../../decisions/sky-chart-homepage-runtime.md) and the approved `DESIGN-VISUAL`/`DESIGN-IX-A11Y`/`PAGE-HOME` sections record the accepted decision; [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../../plans/active/sky-chart-home-redesign-v2.md) carries implementation.
+
+**Figma mirror (Gate F).** A non-normative Figma mirror of this direction exists at [`https://www.figma.com/design/V6FD6Sq3gqqxeMw5Si7Dnx`](https://www.figma.com/design/V6FD6Sq3gqqxeMw5Si7Dnx), covering Foundations (colour/layout variables, text styles), Components (Button set, bone-on-azure mark tile, active star, cocked-hat glyphs, Atlas plate, Plotting sheet, Pause pill, App bar set, compact menu panel) and Home frames at 1440×EN and 390×ES. If it disagrees with the plan, the plan wins, and implementation never waits on it.
 
 ## Owner disposition — 2026-09-23
 

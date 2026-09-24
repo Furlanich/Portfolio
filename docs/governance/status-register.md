@@ -36,7 +36,11 @@ related:
   - PROJECT-EVIDENCE
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-23
+  - RFC-SKY-CHART-VISUAL-SYSTEM-V2
+  - ADR-SKY-CHART-HOMEPAGE-RUNTIME
+  - PLAN-SKY-CHART-HOME-REDESIGN-V2
+  - REVIEW-SKY-CHART-DIRECTION-2026-09-23
+last_verified: 2026-09-24
 ---
 
 # Product knowledge status register
@@ -85,6 +89,14 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - The approved [`RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY`](../rfcs/homepage-hero-implementation-boundary.md) requires the homepage-foundation prerequisites to be resolved and planned before application implementation begins; it does not approve the remaining OPEN product or architecture choices.
 - The public process is Understand/Diagnose, Define Scope, Build/Validate, and Implement/Support.
 - AI is not a standalone homepage marketing section.
+
+### Sky Chart Home and App Bar redesign decision closure
+
+- On 2026-09-23 the owner reviewed three prototyped Home/App-Bar directions and chose Direction A · Sky Chart, recorded in [`REVIEW-SKY-CHART-DIRECTION-2026-09-23`](../reviews/sky-chart-direction-2026-09-23/index.md). [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md) is **APPROVED**: the owner approved and merged Governance PR #77 (merge commit `70168e9`) on 2026-09-24, accepting the star-atlas environment, the atlas-plate/plotting-sheet materials, the floating chart-header App Bar, eighteen bounded supersessions of `DESIGN-VISUAL`/`DESIGN-IX-A11Y`/`VISUAL-IDENTITY-V1`/`IMMERSIVE-HOME-V1.1`/`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`/`PAGE-HOME` boundaries, the removal of the derived Azure sculpture from the Home scene, and the withdrawal of the ADR's optional Connection-film permission.
+- [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md) is **APPROVED** and supersedes [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](../decisions/adaptive-immersive-homepage.md); it keeps the retained runtime boundaries (semantic-first, Home-only WebGL, direct Three.js, the Framer Motion progress boundary, demand rendering, one-shot initialization, session context-loss handling, static fallback) and adds the full-viewport fixed canvas portal, `CanvasTexture` sprite labels with explicit font loading, recede/suspend, and the locale-neutral poster pair.
+- The approved `SKY-CHART-V2` design sections in [`DESIGN-VISUAL`](../design/visual-language.md#sky-chart-v2-sky-chart-home-and-app-bar-approved) and [`DESIGN-IX-A11Y`](../design/interaction-responsive-accessibility.md#sky-chart-v2-sky-chart-home-and-app-bar-approved) record D-01 to D-27, mark every superseded rule inline within its stated boundary, and keep the original text as history.
+- The new `HOME-IMPACT` ("Position fix") section is **APPROVED** in [`PAGE-HOME`](../product/pages/home.md#home-impact), inserted between `HOME-SERVICES` and `HOME-PROOF`. It is an illustrative-only scenario with counts derived from a fixed five-source example; it invents no metric, duration, currency figure or client claim.
+- [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) is **APPROVED** (Task 2 / PR 2 merged); Wave 1 implementation (Tasks 3–5) unlocks once checkpoint W0 passes. No implementation code is authorized by this decision-closure PR.
 
 ### Commercial homepage completion decision closure
 

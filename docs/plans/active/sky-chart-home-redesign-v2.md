@@ -1,7 +1,7 @@
 ---
 id: PLAN-SKY-CHART-HOME-REDESIGN-V2
 type: execution-plan
-status: PROPOSED
+status: APPROVED
 plan_status: ACTIVE
 related:
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
@@ -23,7 +23,7 @@ last_verified: 2026-09-23
 
 # Sky Chart Home and App Bar redesign — implementation plan v2
 
-> **Status: PROPOSED.** The owner has chosen the direction, but the plan changes APPROVED design and runtime records. Task 1 carries it to human review in a Governance PR. No implementation task may start until the gate G1 approval and Task 2 are merged. Task 2 changes this document's `status` to APPROVED.
+> **Status: APPROVED.** Gate G1 was passed when the repository owner approved and merged [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../../rfcs/sky-chart-visual-system-v2.md) as Governance PR #77 (merge commit `70168e9`) on 2026-09-24. This Task 2 / PR 2 records the accepted decision in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../../decisions/sky-chart-homepage-runtime.md) and the approved `DESIGN-VISUAL`/`DESIGN-IX-A11Y`/`PAGE-HOME` sections, and sets this document's `status` to APPROVED. Implementation Wave 1 (Tasks 3, 4, 5) unlocks once this PR merges and checkpoint W0 (section 25) passes.
 
 ## 1. Plan metadata
 
