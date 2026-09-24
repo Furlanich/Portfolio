@@ -3,6 +3,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const EXCLUDED_DIRECTORIES = new Set(['.git', '.next', '.worktrees', 'node_modules', 'out']);
+// Root-relative checkouts of other branches. `.claude` itself holds tracked
+// agent documents that remain subject to validation.
+const EXCLUDED_PATHS = new Set(['.claude/worktrees']);
 const ALLOWED_STATUSES = new Set(['APPROVED', 'PROPOSED', 'OPEN', 'REJECTED']);
 
 function relativePath(rootDir, filePath) {
@@ -19,6 +22,7 @@ export async function collectMarkdownFiles(rootDir) {
     for (const entry of entries) {
       if (entry.isDirectory() && EXCLUDED_DIRECTORIES.has(entry.name)) continue;
       const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory() && EXCLUDED_PATHS.has(relativePath(root, entryPath))) continue;
       if (entry.isDirectory()) {
         await visit(entryPath);
       } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.md')) {

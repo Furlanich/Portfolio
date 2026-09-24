@@ -64,6 +64,570 @@
           "sha256": "2befe7fc55bcadaa3d97dd9e8efeb633d2561c0ebe74c5a8b17c4d9e7e4520b3"
         }
       ]
+    },
+    {
+      "name": "animate",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/animate/RECIPES.md",
+          "sha256": "21ff63d84391db8d96ecdf9170095f55a42c836ccc36fd3269c4772bab031ba2"
+        },
+        {
+          "path": ".agents/skills/animate/SKILL.md",
+          "sha256": "b8ede161270458e6ae2e45e8a1985373515d4c63de5568ddb0f9012d7634356c"
+        }
+      ]
+    },
+    {
+      "name": "animate-expo",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/animate-expo/RECIPES.md",
+          "sha256": "1193cb71334da2e2341778dd92bec9ac79d989cb07fd55d661f324ed5871e718"
+        },
+        {
+          "path": ".agents/skills/animate-expo/SKILL.md",
+          "sha256": "9a01a91701e6563c67677dde6b66ab30f066a5341d42c21a90ba51d99679274a"
+        }
+      ]
+    },
+    {
+      "name": "animation-vocabulary",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/animation-vocabulary/SKILL.md",
+          "sha256": "40d2b27adfdfeb0570a9f20e7d0255109d9233c50603878bcd0dcd04c923fd94"
+        }
+      ]
+    },
+    {
+      "name": "apple-design",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/apple-design/SKILL.md",
+          "sha256": "77bb63b7043bb93aca2ff4ab040c249484eef35682bb6ff7163433c31d30adc7"
+        }
+      ]
+    },
+    {
+      "name": "ask-sonner",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/ask-sonner/API.md",
+          "sha256": "4bb06f482c5757529e3d7a672a30fbeed42d24919a63e2571384a9ce1549aa7f"
+        },
+        {
+          "path": ".agents/skills/ask-sonner/SKILL.md",
+          "sha256": "39f3ee185b3aa2cf70a689052ff078953ce7ba5915ed7a9391d232e9d4dcf57f"
+        }
+      ]
+    },
+    {
+      "name": "brandkit",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/brandkit/SKILL.md",
+          "sha256": "b0c4837e1bd140ca816ae54948754ddd2ac1e2a4d3619363777a80caf00b2ede"
+        }
+      ]
+    },
+    {
+      "name": "design-taste-frontend",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/design-taste-frontend/SKILL.md",
+          "sha256": "aa194351b246b8b4799099d4ed7b033d29eab6e6e3d58d8d2172978be7b3ec89"
+        }
+      ]
+    },
+    {
+      "name": "emil-design-eng",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/emil-design-eng/SKILL.md",
+          "sha256": "ffbe68e6007fb42cb8149f089b400a1ca007d59ba23e8948e2be4476f3175939"
+        }
+      ]
+    },
+    {
+      "name": "find-animation-opportunities",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/find-animation-opportunities/SKILL.md",
+          "sha256": "d52a377819b84a71930f0c822cfe2849f40301605a2d5c7eccbfa3b257700df2"
+        }
+      ]
+    },
+    {
+      "name": "full-output-enforcement",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/full-output-enforcement/SKILL.md",
+          "sha256": "e5bf48b1ae561511439cf71672209a10a88cee0968cc925909ff861dfa0a96a7"
+        }
+      ]
+    },
+    {
+      "name": "gpt-taste",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/gpt-taste/SKILL.md",
+          "sha256": "2e64c269953f2656c21bf5a0fa6b4568e82fe0c72b36e8f84758e090349966a5"
+        }
+      ]
+    },
+    {
+      "name": "high-end-visual-design",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/high-end-visual-design/SKILL.md",
+          "sha256": "e1e32f5e2d420872c6c7332b53d5ff7721946766b78c4822b424c2d512c8fdbc"
+        }
+      ]
+    },
+    {
+      "name": "image-to-code",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/image-to-code/SKILL.md",
+          "sha256": "4c060a8064a8b13380bc2ef3d6e6a1d0b1e316aa093cd9807d0ce9e4eeb037fa"
+        }
+      ]
+    },
+    {
+      "name": "imagegen-frontend-mobile",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/imagegen-frontend-mobile/SKILL.md",
+          "sha256": "8a33389979f3074fa0926678e266ad2eb9234624472254469fc1ad916b9caa24"
+        }
+      ]
+    },
+    {
+      "name": "imagegen-frontend-web",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/imagegen-frontend-web/SKILL.md",
+          "sha256": "6b5c2256522fdba1e3313eafa3d743b960a7b13ec029d3e6586e04b23327c1f8"
+        }
+      ]
+    },
+    {
+      "name": "impeccable",
+      "source": "https://github.com/pbakaus/impeccable",
+      "revision": "cd12f8660e2dde57b9615c8a6b8ea674101f9cfc",
+      "license": "Apache-2.0",
+      "files": [
+        {
+          "path": ".agents/skills/impeccable/SKILL.md",
+          "sha256": "38c2e839e130008b6da814ab9c16f3fcbbedfdf721a9638eebd31a9e65341a7a"
+        },
+        {
+          "path": ".agents/skills/impeccable/agents/impeccable_asset_producer.toml",
+          "sha256": "37080ea5e5b381adb7eae7a427231b0ad0dee0f0916fc1d6b673b7101a5b425b"
+        },
+        {
+          "path": ".agents/skills/impeccable/agents/impeccable_documenter.toml",
+          "sha256": "2feb3768125ba6469c92a50d516727e6d42f44579165ddfd33409948e2a3803d"
+        },
+        {
+          "path": ".agents/skills/impeccable/agents/impeccable_finish_reviewer.toml",
+          "sha256": "869fa5390b84bfd00d072f5280a9002ea3e3936edf5985241be641a87f03ff7b"
+        },
+        {
+          "path": ".agents/skills/impeccable/agents/impeccable_manual_edit_applier.toml",
+          "sha256": "6c9ce3e27ec4520ead001da3aad2a2ebba481c4e5cd22873db8890259ee579fe"
+        },
+        {
+          "path": ".agents/skills/impeccable/agents/openai.yaml",
+          "sha256": "cbd8bd68fa00935dd0f179adb169252629cf7ee443ea9dc7db77e7ef2cf77446"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/adapt.md",
+          "sha256": "bead87679caad7c537dd7c04c3bb78be56ac7eec279ad6aad7322f48ff2df2d9"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/adapt.native.md",
+          "sha256": "6acc0bf221a4ddc6e5c6438348920b2ca2393b29c4314dbde2cdc23f2b1a9639"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/android.md",
+          "sha256": "058f81f256134841875fd3183e06b37a023de0c877fd2b9eecd97011640791fe"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/animate.md",
+          "sha256": "d658c48ffbe0031e8e3b318996cad6ceafe29e40aa50d5bb25e4bf1d6839dc7c"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/audit.md",
+          "sha256": "910461b1c1f8216155165955c860a884a1e2f557cb38f21ef512ea90ef6503c2"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/audit.native.md",
+          "sha256": "960cb922bc934adbf9192e9428ff6bec1f382038166f02a785939c93b7391067"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/bolder.md",
+          "sha256": "f964506c0fae87b3c2c1db7016ddc9be9ef970bbcf5548d684b997b5d5991586"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/clarify.md",
+          "sha256": "173dd66abe65633910dcb04a51f40d6ff2a793f87088f022a02fc4cad24dd133"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/colorize.md",
+          "sha256": "bc5f71f1129d0f2c310d913d07c8dc609a1d25644121bd78c308f42d52a0b9e9"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/craft-floor.md",
+          "sha256": "e802e4f7bdc89050a9c0f2ca506e1d493a2316e6e810c0336c57aa073717ef3e"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/craft.md",
+          "sha256": "9205e222bc6565b37fb504ceec93233c2d2a456802b69d16e6b1c44723907c4c"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/critique.md",
+          "sha256": "cb8caddbb3919e5bf7f252143b519fb16db28a244642d937b186cb89962d9201"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/degraded/asset-producer.md",
+          "sha256": "a8547c8565979894f0c07f92a96ac2a38e681a31fbf155ffeefc7566e185d9c2"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/degraded/documenter.md",
+          "sha256": "bcc05ea92faebb5c74037a9d4263a5ce9a56f5ab07c8ab3c59ee704d8cade745"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/degraded/finish-reviewer.md",
+          "sha256": "5f24c5a97b4ffcabc7c432b064cfdd04c7a2ad52f52e765be648dc0aadab8f38"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/degraded/manual-edit-applier.md",
+          "sha256": "5fae7f8a2fc3ddd49ad0a413446dc44daedef5b6b7de5eb935bd2fbfad646d58"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/delight.md",
+          "sha256": "098a891028ce59c212b747d3c70468dd750aff7053a703d1336045ed31e0da7c"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/distill.md",
+          "sha256": "ea8432c90c30ecb0426662a681ead5c0941113079704e1a766cda09e85b15b4f"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/doctor.md",
+          "sha256": "a98b397cedeeaa1da57f3395b3d9b6c1fc477f4247fb9dc13e4da3da588283ff"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/document.md",
+          "sha256": "3673248740bcdd1122ccc610093ba2fe52f3943a61ce0b7170b74dc49e5b6098"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/extract.md",
+          "sha256": "31b90048c0b540daec46762a10c2b6b6434737a89af005054d8b848d829d003b"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/harden.md",
+          "sha256": "b31ff29c7a1ea979c6d039f7e8d17007410697ab49536690dca109f0af3f20f8"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/hooks.md",
+          "sha256": "12fefe52d80d25014e5f7e2f9b278275a675653d3d99ae8f0ecf344cdb9abbe6"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/init.md",
+          "sha256": "bb069b43c09109d7031b0374e31955749fec657b252d39782f11e8985aca2b51"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/ios.md",
+          "sha256": "40c87038b5f75147a5952a96237acf312a327bf70c1bcd8e0a5f064625ae9668"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/layout.md",
+          "sha256": "0bc7d7971b3edf2acd0580e847458dc6d84129d90715b452799ace3bed815c7c"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/live-setup.md",
+          "sha256": "2b5b2fbf5f658f34ea1997fb1aeebe01604d05187f75c6a4f1f55a5bc78520a4"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/live.md",
+          "sha256": "68c5636a7858dd0b5137a9229c15e25fdc2ee40a0f8a4e9d809f78e809256262"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/new-work.md",
+          "sha256": "85b9c2d051de94ee9129c58be111946f73035ca62bbd2a3936f4fa48768fe5cf"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/onboard.md",
+          "sha256": "ef2dde00030580ed2765cbf7be9b2ea4a6f64cb915b804fd6f6abcf38051c7b9"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/operate.md",
+          "sha256": "a9d2203acd45ca33a13d5c68b02b23ed512425ac15f0e8438318ed124b43729d"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/optimize.md",
+          "sha256": "f672ef8251a3ed4051a053d30819664951b17540b2899acd27d20e500c234abc"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/overdrive.md",
+          "sha256": "fce6688138d2ceb1e3d2cde5231f54b1d8dc8748b4c95a7919aa83b6f924cf96"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/polish.md",
+          "sha256": "81666fc7f783b4e3514db6554e713dc0479bd9cdedb06e93d15f8b579aae869a"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/quieter.md",
+          "sha256": "190a4e642ca362d7499f3c3ab123e21f18f75457d11f072b545a183f296e6495"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/routing.md",
+          "sha256": "ef0b8eca20e1321cf7216fd0bda41ce54b0cca197cfd1b075eb51f3436f59059"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/shape.md",
+          "sha256": "a55f016c046cb6a27c55bd7f346375aeb506a755c4fbca19a5f92dbd42309c23"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/typeset.md",
+          "sha256": "442749aed338f51c1a3ccfb182c6ade9b74b90590b67984062ac94a5b100e914"
+        },
+        {
+          "path": ".agents/skills/impeccable/reference/visualize.md",
+          "sha256": "896da399bafcffb0623bdd81bb18709d6eab25c9d5917e739c8798f31ff0d076"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/VERSION",
+          "sha256": "800cf1c0392b24de7c0a1c6ea6778ecb433dec71c49a150bce96a98477527b2f"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/command-metadata.json",
+          "sha256": "6bdbc3f745ceee15e10b050f109ce42bbeb53ab3c3b5239257de1d596654dee7"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/data/font-index-failures.json",
+          "sha256": "835f19a0a3812f3652dd6979a2ce5597f654fd01f26e1b420b92d5f42b997ce4"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/data/font-index.json",
+          "sha256": "47edbdfaf27073c47033d1ac7dfee881be49e2dcbda7671d1157300481dde6da"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/impeccable",
+          "sha256": "39d9600489073e227e4f4d55c451ce4252a6632ed7ae37923efbbcbc91f16d07"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/impeccable.cmd",
+          "sha256": "759bab1d8adc071fdde2efcf6e2157aa4026f3c2b4f3c342a8070bf328011616"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/live-browser-dom.js",
+          "sha256": "de1b7404f4cdfd7b515196afb17b74b1980f0bc88cb8681ae93a76ca48ec7bdb"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/live-browser-ignores.js",
+          "sha256": "c1cb6877ca99a0c1b38ba0c7d59f32702d3022f6821d8045f7133f7c40b6362f"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/live-browser-session.js",
+          "sha256": "edddeb3fad88adec9a055b1bf9d5c75418cbe97a13b1a7f6765e73249e482563"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/live-browser.js",
+          "sha256": "7af0a8665057c83b39bca2c8c7427ef2343734f70d4128c377113a6726a1e3b1"
+        },
+        {
+          "path": ".agents/skills/impeccable/scripts/modern-screenshot.umd.js",
+          "sha256": "bb36665889124a0b6e15f16045265737449c3bdcf2712cdb08af3cfa01563e2b"
+        }
+      ]
+    },
+    {
+      "name": "improve-animations",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/improve-animations/AUDIT.md",
+          "sha256": "551c8473e20e5f4774680bc24d45e1c68e50992582720905c6b077756b7b5a55"
+        },
+        {
+          "path": ".agents/skills/improve-animations/PLAN-TEMPLATE.md",
+          "sha256": "0a08ac8e23fd2082d7ffb86aeed7b789de77328c3cf874b16f1a755f2ef0a6ad"
+        },
+        {
+          "path": ".agents/skills/improve-animations/SKILL.md",
+          "sha256": "73962447464433476343e2c12cd08ab39cc99a9e5f3c118c5fb54ed897574ef6"
+        }
+      ]
+    },
+    {
+      "name": "industrial-brutalist-ui",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/industrial-brutalist-ui/SKILL.md",
+          "sha256": "fffbaac8597f07679e9d87145533567658aedba3b5eca6f16a7075a333048caa"
+        }
+      ]
+    },
+    {
+      "name": "minimalist-ui",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/minimalist-ui/SKILL.md",
+          "sha256": "36bc7328f085405f43b476938e62460fa573bf7e984e949e072bcf014831a44c"
+        }
+      ]
+    },
+    {
+      "name": "mobile-native",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/mobile-native/SKILL.md",
+          "sha256": "888b7651d66d66dbac4e72b7c554638eb19bd971d686d6cbdf030a5ef3788f55"
+        }
+      ]
+    },
+    {
+      "name": "pick-ui-library",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/pick-ui-library/SKILL.md",
+          "sha256": "675fdce308683256ed617351a9b74d23457a5fbd0a562d9831b9c764b8c5e682"
+        }
+      ]
+    },
+    {
+      "name": "prototype",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/prototype/PICKER.md",
+          "sha256": "31a55eec94715cc79942e91e172e539e3031dcd5e2e5ee7c1446cf2caee960a6"
+        },
+        {
+          "path": ".agents/skills/prototype/SKILL.md",
+          "sha256": "bba39c955eb1871c5a02733976ceec5d0324198e0812e667604756489c89f7b9"
+        }
+      ]
+    },
+    {
+      "name": "redesign-existing-projects",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/redesign-existing-projects/SKILL.md",
+          "sha256": "98ad3e5b051bfb71b2795f7e8a6aa0d32b51ee095606c098a4b2822ac07926c9"
+        }
+      ]
+    },
+    {
+      "name": "review-animations",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/review-animations/SKILL.md",
+          "sha256": "6ff590d29e436766135aa3d137be1fac2a867165c7257fc315b189361f1873af"
+        },
+        {
+          "path": ".agents/skills/review-animations/STANDARDS.md",
+          "sha256": "e7d3605034acda54ca13e43aec9e64d65b53de20f75b11b8d694e373012fbe07"
+        }
+      ]
+    },
+    {
+      "name": "stitch-design-taste",
+      "source": "https://github.com/Leonxlnx/taste-skill",
+      "revision": "c184364c58658b2f131b4ae8bd3d206cabb3deee",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/stitch-design-taste/DESIGN.md",
+          "sha256": "0ab6740c4ebb1966dbceddb823a66d4bf027e960efbd73faca56cbf8370ae2ad"
+        },
+        {
+          "path": ".agents/skills/stitch-design-taste/SKILL.md",
+          "sha256": "46bdb08fee2dded38b6ba0a051230a502d6ac6e4044afd47592cb40c256028b5"
+        }
+      ]
+    },
+    {
+      "name": "write-swift",
+      "source": "https://github.com/emilkowalski/skill",
+      "revision": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "license": "MIT",
+      "files": [
+        {
+          "path": ".agents/skills/write-swift/SKILL.md",
+          "sha256": "16a4b6adb74e338e55e704ce5753ad54d825438b8a63930eeaede9f3c04c9447"
+        }
+      ]
     }
   ]
 }
