@@ -1,30 +1,52 @@
 import Link from 'next/link';
-import type { HomeServicesSectionContent } from './content-types';
-import { CommercialContentCard } from '../commercial/CommercialContentCard';
-import { CommercialSectionHeading } from '../commercial/CommercialSectionHeading';
-import { commercialEqualHeightCardGridClassName } from '../commercial/equal-height-card-grid';
+import { AtlasPlate } from '../surfaces/AtlasPlate';
+import type { HomeReadoutContent, HomeServicesSectionContent } from './content-types';
+import { HomeSection, ghostActionOnDarkClassName, homeHeadingClassName, homeIntroClassName } from './HomeSection';
 
 interface HomeServicesProps {
   content: HomeServicesSectionContent;
+  readout: HomeReadoutContent['services'];
   actionHref: string;
 }
 
-export function HomeServices({ content, actionHref }: HomeServicesProps) {
+/**
+ * SKY-CHART-V2 D-14 Services: a catalogue of atlas plates. The first (lead) plate spans
+ * two rows and bottom-aligns its content in a 7fr/5fr grid at >=1024; below that the
+ * plates form a single column.
+ */
+export function HomeServices({ content, readout, actionHref }: HomeServicesProps) {
   return (
-    <section id="services" aria-labelledby="services-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
-      <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <CommercialSectionHeading headingId="services-heading" heading={content.heading} intro={content.introduction} />
-        <ul className={`mt-8 ${commercialEqualHeightCardGridClassName} lg:grid-cols-3`}>
-          {content.services.map((item) => (
-            <li key={item.title}>
-              <CommercialContentCard title={item.title} description={item.description} />
-            </li>
-          ))}
-        </ul>
-        <Link href={actionHref} className="mt-8 inline-flex min-h-12 w-auto items-center justify-center rounded-[10px] border border-foundation-action bg-foundation-surface px-6 text-base font-semibold text-foundation-action transition-colors duration-[160ms] ease-out hover:bg-foundation-tint hover:text-foundation-action-strong max-[479px]:w-full">
-          {content.action.label}
-        </Link>
+    <HomeSection id="services" ariaLabelledBy="services-heading" readout={readout} kicker={content.kicker}>
+      <h2 id="services-heading" className={`${homeHeadingClassName} text-white`}>
+        {content.heading}
+      </h2>
+      <p className={`${homeIntroClassName} text-sky-text-2`}>{content.introduction}</p>
+      <div className="mt-12 grid gap-5 lg:grid-cols-[7fr_5fr]">
+        {content.services.map((item, index) => {
+          const isLead = index === 0;
+          return (
+            <AtlasPlate
+              key={item.title}
+              as="article"
+              plateNumber={`Cat. S·0${index + 1}`}
+              className={isLead ? 'flex flex-col justify-end lg:row-span-2 lg:min-h-[420px]' : ''}
+            >
+              <p className="font-mono text-label uppercase text-sky-lit">{item.category}</p>
+              <h3
+                className={`mt-8 max-w-[20ch] font-bold leading-[1.15] text-white ${
+                  isLead ? 'text-[clamp(28px,3.2vw,44px)]' : 'text-[clamp(22px,2.2vw,30px)]'
+                }`}
+              >
+                {item.title}
+              </h3>
+              <p className="mt-3 leading-[1.6] text-sky-text-2">{item.description}</p>
+            </AtlasPlate>
+          );
+        })}
       </div>
-    </section>
+      <Link href={actionHref} className={`${ghostActionOnDarkClassName} mt-8`}>
+        {content.action.label}
+      </Link>
+    </HomeSection>
   );
 }

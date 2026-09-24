@@ -1,21 +1,53 @@
 import Link from 'next/link';
-import type { HomeProofContent } from './content-types';
-import { CommercialSectionHeading } from '../commercial/CommercialSectionHeading';
+import { AtlasPlate } from '../surfaces/AtlasPlate';
+import type { HomeProofContent, HomeReadoutContent } from './content-types';
+import {
+  HomeSection,
+  ghostActionOnDarkClassName,
+  homeHeadingClassName,
+  homeIntroClassName,
+  homeKickerClassName,
+} from './HomeSection';
 
 interface HomeProofProps {
   content: HomeProofContent;
+  readout: HomeReadoutContent['proof'];
   actionHref: string;
 }
 
-export function HomeProof({ content, actionHref }: HomeProofProps) {
+/**
+ * SKY-CHART-V2 D-16 Proof: a 7fr/5fr grid, end-aligned at >=1024. The left column
+ * carries the kicker/heading/introduction/action; the right column is an atlas plate
+ * holding the accountability log as a `<ul>` with an accessible name.
+ */
+export function HomeProof({ content, readout, actionHref }: HomeProofProps) {
   return (
-    <section id="proof" aria-labelledby="proof-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
-      <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <CommercialSectionHeading headingId="proof-heading" heading={content.heading} intro={content.introduction} />
-        <Link href={actionHref} className="mt-8 inline-flex min-h-12 w-auto items-center justify-center rounded-[10px] border border-foundation-action bg-foundation-surface px-6 text-base font-semibold text-foundation-action transition-colors duration-[160ms] ease-out hover:bg-foundation-tint hover:text-foundation-action-strong max-[479px]:w-full">
-          {content.action.label}
-        </Link>
+    <HomeSection id="proof" ariaLabelledBy="proof-heading" readout={readout}>
+      <div className="grid gap-10 lg:grid-cols-[7fr_5fr] lg:items-end">
+        <div>
+          <p className={homeKickerClassName}>{content.kicker}</p>
+          <h2 id="proof-heading" className={`${homeHeadingClassName} text-white`}>
+            {content.heading}
+          </h2>
+          <p className={`${homeIntroClassName} text-sky-text-2`}>{content.introduction}</p>
+          <Link href={actionHref} className={`${ghostActionOnDarkClassName} mt-8`}>
+            {content.action.label}
+          </Link>
+        </div>
+        <AtlasPlate as="div" plateNumber="Log">
+          <ul aria-label={content.logLabel} role="list" className="m-0 grid list-none gap-0 p-0">
+            {content.log.map((entry) => (
+              <li
+                key={entry.term}
+                className="grid grid-cols-[9ch_1fr] gap-2.5 border-t border-sky-plate-line py-2.5 font-mono text-[13px] leading-[1.5] text-sky-text-2"
+              >
+                <span className="text-sky-lit">{entry.term}</span>
+                <span>{entry.text}</span>
+              </li>
+            ))}
+          </ul>
+        </AtlasPlate>
       </div>
-    </section>
+    </HomeSection>
   );
 }
