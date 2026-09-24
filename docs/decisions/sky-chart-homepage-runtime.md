@@ -50,6 +50,10 @@ These boundaries carry over unchanged from `ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE` and
 - Context loss marks the session flag, disposes every geometry/material/texture and the renderer, and reverts to the static path for the remainder of the session.
 - Reduced motion, Save-Data, no JavaScript, unsupported WebGL, initialization failure and context loss all retain a complete static fallback with no interrupting error.
 - Static export, locale routes, trailing slashes, GitHub Pages and the optional base path remain unchanged.
+- Native scroll stays reversible and is never captured or replaced.
+- The page paints semantic content and a stable static fallback before loading Three.js — now the D-23 environment poster pair rather than the four chapter posters, but the ordering guarantee itself is unchanged.
+- Every authored asset follows the approved media manifest and is classified as brand motion, demonstration or project evidence; generated media cannot imply client work, a proprietary platform, outcomes or operating scale.
+- React-major migration, React Three Fiber 9, GSAP, Drei, post-processing, model downloads and additional WebGL routes all require separate evidence and governance.
 
 ### Added boundaries
 
@@ -60,7 +64,7 @@ These boundaries carry over unchanged from `ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE` and
 
 ### Removed
 
-- **The derived Azure chevron sculpture and its Ink channel-tile labels** are removed from the scene. The star-atlas environment's named-star vocabulary is the scene's identity element instead. The protected Contained Master mark stays out of the scene in both the prior and the current architecture; it now appears only in the App Bar and brand assets, in the approved bone-on-azure variant. This removal was surfaced to the owner as a distinct gate G1 decision (`RFC-SKY-CHART-VISUAL-SYSTEM-V2` supersession item 14) and was explicitly accepted.
+- **The derived Azure chevron sculpture and its Ink channel tiles** are removed from the scene. The star-atlas environment's named-star vocabulary is the scene's identity element instead. The protected Contained Master mark stays out of the scene in both the prior and the current architecture; it now appears only in the App Bar and brand assets, in the approved bone-on-azure variant. This removal was surfaced to the owner as a distinct gate G1 decision (`RFC-SKY-CHART-VISUAL-SYSTEM-V2` supersession item 14) and was explicitly accepted.
 - **The four static chapter posters, the framed instrument stage and `PhaseSpine`** are removed, replaced by the full-viewport environment, atlas-plate chapters and the poster pair above (`RFC-SKY-CHART-VISUAL-SYSTEM-V2` supersession item 3).
 - **The ADR's permission for one optional authored Connection film is withdrawn.** The sky-chart runtime carries no video surface. Reintroducing video on Home requires a new governance decision; this ADR does not pre-authorize one (`RFC-SKY-CHART-VISUAL-SYSTEM-V2` supersession item 17).
 
@@ -92,7 +96,7 @@ The star-atlas environment is a bounded restyling of an already-accepted runtime
 
 Withdrawing the Connection-film permission removes a budget and governance surface (compact/wide renditions, one-active-video limit, captioning) that the resolved direction does not use; the star-atlas scene has no chapter that calls for authored video. Keeping the withdrawal explicit, rather than silently letting it lapse, preserves the rule that a later video surface needs its own governance decision instead of reviving an unused permission by omission.
 
-Removing the derived sculpture follows directly from the resolved world: a navigator's star atlas has no chevron-slab identity object, and duplicating both an abstract sculpture and a named-star field would contradict the approved principle that ordinary ideas use editorial composition rather than competing decorative objects.
+Removing the derived sculpture records the owner's explicit gate G1 decision, made on the RFC's direct request (`RFC-SKY-CHART-VISUAL-SYSTEM-V2` supersession item 14): the RFC asked the owner to accept the sculpture's removal as a distinct part of the G1 decision, separate from the other supersessions, and the owner accepted it when approving and merging Governance PR #77. This ADR records that accepted removal; it does not supply a design rationale the owner was not asked to weigh.
 
 ## Consequences
 
@@ -134,8 +138,8 @@ The decision was accepted through [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky
 
 ## Related product requirements
 
-- [`DESIGN-VISUAL`](../design/visual-language.md#sky-chart-v2-sky-chart-home-and-app-bar-approved) `SKY-CHART-V2` owns the environment, material, typography, spacing and App Bar visual rules (D-01 to D-27).
-- [`DESIGN-IX-A11Y`](../design/interaction-responsive-accessibility.md#sky-chart-v2-sky-chart-home-and-app-bar-approved) `SKY-CHART-V2` owns the App Bar, recede/suspend, poster-fallback and Pause-control interaction and accessibility rules (D-22 to D-25, D-27).
+- [`DESIGN-VISUAL`](../design/visual-language.md#sky-chart-v2-sky-chart-home-and-app-bar-approved) `SKY-CHART-V2` records the environment, material, typography, spacing and App Bar visual rules, including the complete D-04 token table and D-22 App Bar values. The remaining numeric detail of D-01 to D-27 is incorporated by reference from `PLAN-SKY-CHART-HOME-REDESIGN-V2` section 6, which stays the single normative source for exact dimensions.
+- [`DESIGN-IX-A11Y`](../design/interaction-responsive-accessibility.md#sky-chart-v2-sky-chart-home-and-app-bar-approved) `SKY-CHART-V2` records the App Bar, recede/suspend, poster-fallback and Pause-control interaction and accessibility rules (D-22 to D-25, D-27), on the same incorporated-by-reference basis.
 - [`PAGE-HOME`](../product/pages/home.md) owns localized commercial copy, the approved section order including `HOME-IMPACT`, and CTA destinations.
 - [`PROJECT-EVIDENCE`](../product/project-evidence.md) owns project-media permissions, unaffected by this ADR.
 - [`ADR-STATIC-LOCALIZED-ROUTING`](static-localized-routing.md) remains authoritative for static export, routes and base-path behavior.

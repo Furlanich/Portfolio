@@ -18,7 +18,7 @@ related:
   - TEST-VISUAL-REGRESSION
   - PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1
   - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
-last_verified: 2026-09-23
+last_verified: 2026-09-24
 ---
 
 # Sky Chart Home and App Bar redesign — implementation plan v2

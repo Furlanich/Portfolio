@@ -37,7 +37,24 @@ The full inquiry form lives on `PAGE-CONTACT`, not the homepage.
 
 ## Section order
 
-*This list predates two later revisions and is retained only as history; it is not the current approved order.* [`MKT-D05-HOME`](#mkt-d05-home-consolidated-narrative-approved-revision-1) (2026-09-16) already retired the standalone `HOME-AUDIENCES` presentation, preserving its relevant audience meaning inside Problems and Services. `SKY-CHART-V2` (2026-09-24, approved via Governance PR #77) inserts [`HOME-IMPACT`](#home-impact) between Services and Proof. The current approved order is:
+*This list predates two later revisions and is retained unchanged as history; it is not the current approved order.* [`MKT-D05-HOME`](#mkt-d05-home-consolidated-narrative-approved-revision-1) (2026-09-16) already retired the standalone `HOME-AUDIENCES` presentation below, preserving its relevant audience meaning inside Problems and Services.
+
+```text
+HOME-HERO
+HOME-PROBLEMS
+HOME-SERVICES
+HOME-AUDIENCES
+HOME-PROOF
+HOME-PROCESS
+HOME-FOUNDER
+HOME-CTA
+```
+
+There is no dedicated AI section.
+
+### Current approved order (SKY-CHART-V2)
+
+`SKY-CHART-V2` (2026-09-24, approved via Governance PR #77) inserts [`HOME-IMPACT`](#home-impact) between Services and Proof, on top of MKT-D05-HOME's retirement of the standalone `HOME-AUDIENCES` presentation above:
 
 ```text
 HOME-HERO
@@ -49,8 +66,6 @@ HOME-PROCESS
 HOME-FOUNDER
 HOME-CTA
 ```
-
-There is no dedicated AI section.
 
 ## Initiative 2 decision closure — APPROVED
 
@@ -282,7 +297,7 @@ The source ids, in fixed order, are `whatsapp`, `book`, `spreadsheet`, `email` a
 | `impact.figure.connectedDescription` | Todas las fuentes leen un mismo registro conectado, así que todas las marcaciones coinciden en un punto exacto. | Every source reads one connected record, so all bearings meet at one exact point. |
 | `impact.figure.doubtLabel` | Zona de duda | Area of doubt |
 | `impact.figure.fixLabel` | Posición exacta | Exact fix |
-| `impact.sources` (id: name — note) | `whatsapp`: Chat de WhatsApp — "Confirmado" en el chat · `book`: Cuaderno de pedidos — Anotado, todavía sin pagar · `spreadsheet`: Planilla — Actualizada ayer a la tarde · `email`: Correo — El cliente pidió cambiar la fecha · `call`: Llamada — Prometido para el viernes | `whatsapp`: WhatsApp thread — "Confirmed" in the chat · `book`: Paper order book — Written down, not yet paid · `spreadsheet`: Spreadsheet — Updated yesterday evening · `email`: Email — Customer asked to change the date · `call`: Phone call — Promised for Friday |
+| `impact.sources` (id: name — note) | `whatsapp`: Chat de WhatsApp — “Confirmado” en el chat · `book`: Cuaderno de pedidos — Anotado, todavía sin pagar · `spreadsheet`: Planilla — Actualizada ayer a la tarde · `email`: Correo — El cliente pidió cambiar la fecha · `call`: Llamada — Prometido para el viernes | `whatsapp`: WhatsApp thread — “Confirmed” in the chat · `book`: Paper order book — Written down, not yet paid · `spreadsheet`: Spreadsheet — Updated yesterday evening · `email`: Email — Customer asked to change the date · `call`: Phone call — Promised for Friday |
 | `impact.connectedNoteTemplate` | {source}: lee el registro conectado | {source}: reads the connected record |
 | `impact.counts.title` | Lugares revisados para confirmar un pedido | Places checked to confirm one order |
 | `impact.counts.separateLabel` / `connectedLabel` | Fuentes separadas / Registro conectado | Separate sources / Connected record |

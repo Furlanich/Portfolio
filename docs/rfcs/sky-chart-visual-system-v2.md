@@ -112,6 +112,6 @@ Approval unlocks Task 2 (decision closure: the superseding ADR, the approved `DE
 
 ## Status
 
-**PROPOSED — awaiting the owner's gate G1 decision.** Record the outcome here and link the resulting ADR (`ADR-SKY-CHART-HOMEPAGE-RUNTIME`, created by Task 2) once approved.
+*Historical draft state, superseded by the outcome below:* ~~PROPOSED — awaiting the owner's gate G1 decision. Record the outcome here and link the resulting ADR (`ADR-SKY-CHART-HOMEPAGE-RUNTIME`, created by Task 2) once approved.~~
 
 **APPROVED — 2026-09-24.** The repository owner approved and merged this RFC as Governance PR #77 (merge commit `70168e9`), accepting the Sky Chart · Direction A environment, atlas-plate and plotting-sheet material system, floating chart-header App Bar, all eighteen supersessions listed above (including item 14's explicit removal of the derived Azure sculpture), the runtime-change summary, and the new copy referenced from plan Appendix A. Task 2 / PR 2 records the accepted decision in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md) and the approved `DESIGN-VISUAL`/`DESIGN-IX-A11Y`/`PAGE-HOME` sections, and sets `PLAN-SKY-CHART-HOME-REDESIGN-V2`'s status to `APPROVED`. This approval does not itself authorize any implementation PR, dependency change, or release step.

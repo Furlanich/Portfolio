@@ -462,7 +462,7 @@ The durable comparison below records the approved candidate beside the two rejec
 | Muted | `#526473` | Secondary text and metadata |
 | Tint | `#E7EEF5` | Quiet separation and restrained states |
 
-Bone and azure are the recognizable pair. Full-azure surfaces are reserved for deliberate emphasis. UI gradients, neon and glass remain excluded. *On Home and the global App Bar only, this exclusion is superseded by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 1), which introduces the atlas-plate and plotting-sheet translucent materials and their gradients; neon remains excluded everywhere.* A physically lit 3D material may create tonal variation inside the scene without becoming a general interface gradient. Final tokens, interactive states and every foreground/background pair require deterministic contrast verification.
+Bone and azure are the recognizable pair. Full-azure surfaces are reserved for deliberate emphasis. UI gradients, neon and glass remain excluded. *On Home and the global App Bar only, this exclusion is superseded by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 1), which introduces the atlas-plate and plotting-sheet translucent materials and the D-02 ground, D-03 scrim, D-06 plotting-sheet grid/crease and D-19 dawn-CTA gradients; neon remains excluded everywhere.* A physically lit 3D material may create tonal variation inside the scene without becoming a general interface gradient. Final tokens, interactive states and every foreground/background pair require deterministic contrast verification.
 
 #### Semantic roles in production
 
@@ -579,7 +579,7 @@ Each chapter has a complete static composition. The visual system changes typogr
 
 ### Instrument media
 
-The stage uses one dominant instrument window, normally 4:5 wide and 1:1 compact. One authored video is permitted only in Connection when it materially improves the explanation. The film stays spatially connected to the arrow system, receives a poster and fallback, and never becomes a generic portfolio reel.
+The stage uses one dominant instrument window, normally 4:5 wide and 1:1 compact. One authored video is permitted only in Connection when it materially improves the explanation. The film stays spatially connected to the arrow system, receives a poster and fallback, and never becomes a generic portfolio reel. *This permission is WITHDRAWN by [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 17, accepted at gate G1): the sky-chart runtime carries no video surface. This text remains as history of what was approved before the withdrawal.*
 
 Every asset is classified as brand motion, demonstration or project evidence. Higgsfield, Blender and other generated work is brand motion by default. Generated interfaces cannot imply client work, a proprietary platform, outcomes or operating scale. Project media remains subject to PROJECT-EVIDENCE. Essential bilingual copy is HTML, not baked into media.
 
@@ -609,19 +609,40 @@ The following remain **OPEN** for asset review without changing the approved com
 - exact Connection-film shot list and production tool;
 - final poster artwork and video encodes within the accepted budgets.
 
+*Both film-related items above are closed, not merely deferred, by the item-17 withdrawal recorded in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md): there is no Connection-film shot list, production tool or video encode to produce. Only the environment poster artwork (D-23) remains a live open item, tracked by [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) Task 10.*
+
 ## SKY-CHART-V2 — Sky Chart Home and App Bar — APPROVED
 
 **APPROVED — 2026-09-24.** Recorded after the repository owner approved and merged [Governance PR #77](https://github.com/Furlanich/Portfolio/pull/77) (merge commit `70168e9`), accepting [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md) and its eighteen bounded supersessions. This section is the approved design record for the Sky Chart star-atlas environment on Home and the floating chart-header App Bar on every route. It supersedes `IMMERSIVE-HOME-V1.1`'s C2 composition and the other approved-record boundaries named below, each within the stated scope; everywhere else, `VISUAL-IDENTITY-V1` and this document's other sections remain authoritative unchanged.
 
-The complete normative specification is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) section 6, design decisions D-01 through D-27, together with Appendices A–C. This section records the approved rules concisely and links to the plan for exact numeric values rather than duplicating its tables; where a later implementation PR and the plan disagree, the plan wins.
+The complete normative specification is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) section 6, design decisions D-01 through D-27, together with Appendices A–C. This section records the approved rules and, for D-04 and D-22, their complete values; the remaining numeric detail of plan section 6 not restated below (exact dimensions, offsets, shadow and typography specifications, and Appendices A–C) is incorporated by reference as an APPROVED design requirement of this section, through `PLAN-SKY-CHART-HOME-REDESIGN-V2` wherever that plan file currently lives (`docs/plans/active/` while the plan executes, `docs/plans/completed/` once Task 12 closes it). Where a later implementation PR and the plan disagree, the plan wins.
 
 ### Environment and materials (D-01 to D-10)
 
 - **Layer model (Home only, D-01).** Back to front: an environment ground (`−3`), the fixed full-viewport WebGL canvas portaled to `document.body` (`−2`), a fixed contrast scrim (`−1`), transparent content (plates and sheets, `auto`), and the sticky App Bar (`50`). No ancestor of the fixed layers may create a stacking context above `body`.
-- **Ground and scrim (D-02, D-03).** A fixed radial ground gradient and a directional scrim, both opaque under the dawn CTA and footer. The scrim's opacity follows the D-24 recede factor.
-- **Palette (D-04).** New `sky.*` and `chart.*` color tokens, used only on Home and the App Bar. Brand Azure and Bone keep their approved roles; Azure is never text on a `sky.*` ground. Every pairing is asserted by `scripts/design-tokens.test.mjs`, including worst-case translucent composites.
+- **Ground and scrim (D-02, D-03).** A fixed radial ground gradient and a directional scrim. The dawn CTA and footer are opaque Bone surfaces that cover the ground and scrim beneath them. The scrim's opacity follows the D-24 recede factor.
+- **Palette (D-04).** `sky.*` and `chart.*` color tokens, used only on Home and the App Bar. Brand Azure and Bone keep their approved roles; Azure is never text on a `sky.*` ground. Primary actions stay Azure with Bone text (8.79:1); the hover state is `#0A55A3`. Every pairing is asserted by `scripts/design-tokens.test.mjs`, including worst-case translucent composites.
+
+  | Token | Value | Allowed use |
+  | --- | --- | --- |
+  | `sky.abyss` | `#06121F` | Ground vignette |
+  | `sky.deep` | `#0A1E33` | Primary ground |
+  | `sky.field` | `#0F2A45` | Raised ground |
+  | `sky.haze` | `#17385A` | Atmosphere only; never under text below 18.66px bold or 24px regular |
+  | `sky.lit` | `#6FA8E0` | Links, kickers and active lines on dark (≥4.5:1 on abyss, deep and field) |
+  | `sky.glow` | `#9CC4EC` | Focus ring and active glyph on dark |
+  | `sky.text-2` | `#B9C3CC` | Secondary text on dark and on atlas plates |
+  | `sky.mist` | `#8FA3B6` | Metadata on **opaque** dark only |
+  | `sky.plate` | `rgba(10,30,51,.74)` | Atlas plate fill |
+  | `sky.plate-line` | `rgba(249,246,238,.13)` | Atlas plate border and rules |
+  | `sky.sheet` | `rgba(249,246,238,.9)` | Plotting sheet fill |
+  | `sky.sheet-line` | `rgba(9,36,61,.12)` | Plotting sheet border |
+  | `sky.sheet-grid` | `rgba(0,69,137,.07)` | Plotting grid lines |
+  | `chart.context-dark` / `chart.signal-dark` | `#5E7185` / `#9CC4EC` | Chart pair on dark |
+  | `chart.context-light` / `chart.signal-light` | `#8FA3B6` / `#004589` | Chart pair on sheets; direct labels are mandatory |
+
 - **Atlas plate (D-05) and plotting sheet (D-06).** Two translucent chart materials: a dark atlas plate with registration ticks and an optional plate number, used for chapters, Services, Proof, Process and Founder; and a bone plotting sheet with a plotting grid, bearing label and corner crease, used for Problems and the new Position fix section. Both define `@supports`, reduced-transparency and forced-colors fallbacks (D-07) and count toward a three-surface `backdrop-filter` budget per viewport, App Bar excluded (D-08).
-- **Type and spacing (D-09, D-10).** New `display-1`/`display-2`/`display-3`/`lead`/`body-lg`/`label` `fontSize` tokens and Home-specific section padding, chapter gaps and an `--app-bar-height` custom property, used only on Home.
+- **Type and spacing (D-09, D-10).** New `display-1`/`display-2`/`display-3`/`lead`/`body-lg`/`label` `fontSize` tokens and Home-specific section padding and chapter gaps, used only on Home. The `--app-bar-height` custom property and `scroll-padding-top: 96px` apply globally, wherever the App Bar renders (`app/globals.css`), not only on Home.
 
 ### Section compositions (D-11 to D-19)
 
@@ -638,17 +659,32 @@ The complete normative specification is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../p
 
 ### App Bar (D-22)
 
-On every route, the shared header becomes a floating "chart header" in atlas-plate material: sticky, `top: 0`, normal document flow, and never hiding, translating or animating based on scroll direction — all retained from the prior Surface/Border treatment (see the item 4 markers above). On Home only, it starts transparent and docks to the atlas-plate fill once `scrollY > 24`; that dock transition is the sole scroll-linked change. `BrandSignature` moves to the approved `variant="on-dark"` bone-on-azure tile on the App Bar.
+On every route, the shared header becomes a floating "chart header" in atlas-plate material: sticky, `top: 0`, normal document flow, and never hiding, translating or animating based on scroll direction — all retained from the prior Surface/Border treatment (see the item 4 markers above). On Home only, it starts transparent and docks to the atlas-plate fill once `scrollY > 24`; that dock transition is the sole scroll-linked change, over `240ms` with `--ease-out`. `BrandSignature` moves to the approved `variant="on-dark"` bone-on-azure tile on the App Bar.
+
+Complete values:
+
+- **Structure.** `div#site-top` is kept. `header[data-app-bar]` is sticky, `top: 0`, `z-index: 50`, `10px`/`12px` outer padding, in normal flow.
+- **Inner container.** Max `1200px`, flex, `16px` gap, padding `8px 8px 8px 16px`, `14px` radius, `1px` border.
+- **Docked state** (the default, and the only state without JS). Fill `rgba(10,30,51,.82)`, `backdrop-filter: blur(16px) saturate(125%)`, border `sky.plate-line`. Without `backdrop-filter` support the fill is `.94`.
+- **Home undocked state.** Only after JavaScript sets `data-docked="false"` while `scrollY ≤ 24`. Transparent fill and border.
+- **Brand.** `BrandSignature variant="on-dark"`: a `32px` Azure tile (radius `7px`) with the Bone protected mark at `22px` and a Bone `16px`/700/`0.08em` wordmark.
+- **Readout** (Home only, `≥1024px`, `aria-hidden`). Mono `12px` `sky.lit`, `14px` left padding with a `sky.plate-line` left rule, min width `18ch`.
+- **Links** (`≥1024px`). `14px`/600 `sky.text-2`, Bone on hover, `44px` targets. The active link is Bone with a `7px` four-point star in `sky.glow`, centred `4px` from the bottom.
+- **Language switch.** Mono `12px`, `1px` `sky.plate-line` border, `8px` radius, `44px`.
+- **CTA.** The primary action at `48px`.
+- **Below `1024px`.** Brand, language switch and a `44×44` menu `<summary>`. The compact panel is `min(calc(100vw - 40px), 24rem)` wide, fill `rgba(10,30,51,.96)` without blur, `14px` radius, `8px` padding, `4px` gap, `44px` links and a full-width `48px` CTA; it opens and closes instantly.
+- **Active state.** A route link gets `aria-current="page"` when the normalized pathname matches. On Home, the Process link gets `aria-current="location"` while `#proceso`/`#process` crosses the 40% line.
+- **Never** hide, translate or auto-collapse on scroll.
 
 ### Runtime-adjacent static rules (D-23, D-24)
 
 - **Environment static poster (D-23).** A locale-neutral WebP poster pair is the complete static, reduced-motion, no-JS, WebGL-unavailable, failure and context-loss composition, shown by `EnvironmentGround`.
-- **Recede (D-24).** Canvas and scrim opacity, and label opacity, fall toward zero after the chapters; rendering is suspended while fully receded.
+- **Recede (D-24).** After the chapters, canvas and scrim opacity floor at `0.16` (`1 − 0.84k`); label opacity continues to `0`. Rendering is suspended while fully receded (`k = 1`).
 
 D-25 (Pause control), D-27 (compact hero label mask) and the accessibility consequences of D-01–D-24 are recorded in [`DESIGN-IX-A11Y` `SKY-CHART-V2`](interaction-responsive-accessibility.md#sky-chart-v2-sky-chart-home-and-app-bar-approved). D-26 (copy) is recorded in [`PAGE-HOME`](../product/pages/home.md#home-impact) and plan Appendix A.
 
 ### Scope and supersession boundary
 
-This section and its inline markers above supersede, only within the stated boundary: `VISUAL-IDENTITY-V1`'s UI-gradient/neon/glass exclusion (item 1, Home and App Bar only; neon stays excluded); the light-only/no-dark-theme deferral (item 2, Home environment only; not a site theme); `IMMERSIVE-HOME-V1.1`'s C2 composition (item 3, chapters and copy retained); the Global app bar Surface/Border treatment (item 4, every route, sticky/normal-flow/no-hide retained); the viewport-height-hero prohibition (item 5, Home only); the Canvas/Surface section alternation (item 6, Home only); the card radius/shadow rule (item 7, Home's card-equivalents only; Projects and the Services index panel unaffected); the telemetry/particle-field exclusion (item 8, to the stated extent only); the no-gradients/no-accent-color section rule (item 10, Home only); the Home section rhythm and type scale (item 11, Home only); the Home grid/column rules (item 12, Home only); the card-vs-editorial-composition rule (item 13, Home only); the derived Azure sculpture as the scene's identity element (item 14, an explicit owner decision); and the Action-tint final CTA on Home (item 15, Home only; every other page keeps it). Item 9 (the new `HOME-IMPACT` section) is an addition, not a supersession, recorded in `PAGE-HOME`. Item 17 (the withdrawn Connection-film permission) is recorded in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md), not as a marker here, because this document's `IMMERSIVE-HOME-V1.1` "Instrument media" text remains an accurate historical description of what was approved before the withdrawal. Item 18 (the `PAGE-HOME` section order) is recorded in `PAGE-HOME`.
+This section and its inline markers above supersede, only within the stated boundary: `VISUAL-IDENTITY-V1`'s UI-gradient/neon/glass exclusion (item 1, Home and App Bar only; neon stays excluded); the light-only/no-dark-theme deferral (item 2, Home environment only; not a site theme); `IMMERSIVE-HOME-V1.1`'s C2 composition (item 3, chapters and copy retained); the Global app bar Surface/Border treatment (item 4, every route, sticky/normal-flow/no-hide retained); the viewport-height-hero prohibition (item 5, Home only); the Canvas/Surface section alternation (item 6, Home only); the card radius/shadow rule (item 7, Home's card-equivalents only; Projects and the Services index panel unaffected); the telemetry/particle-field exclusion (item 8, to the stated extent only); the no-gradients/no-accent-color section rule (item 10, Home only); the Home section rhythm and type scale (item 11, Home only); the Home grid/column rules (item 12, Home only); the card-vs-editorial-composition rule (item 13, Home only); the derived Azure sculpture as the scene's identity element (item 14, an explicit owner decision); and the Action-tint final CTA on Home (item 15, Home only; every other page keeps it). Item 9 (the new `HOME-IMPACT` section) is an addition, not a supersession, recorded in `PAGE-HOME`. Item 17 (the withdrawn Connection-film permission) is primarily recorded in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md); it is also marked above at `IMMERSIVE-HOME-V1.1`'s "Instrument media" and "Remaining open visual items" text, which otherwise remains an accurate historical description of what was approved before the withdrawal. Item 18 (the `PAGE-HOME` section order) is recorded in `PAGE-HOME`.
 
 Outside these named boundaries, `VISUAL-IDENTITY-V1`, the commercial homepage section baseline, and every other approved section of this document remain authoritative unchanged, including for Services, Projects, Studio, Founder, Contact and Privacy.
