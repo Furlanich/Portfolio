@@ -93,16 +93,16 @@ function safeProgress(value: number): number {
  * D-27: below 768px, tier-2 input labels are masked while the hero still fills most of the
  * viewport, and fade in once its bottom edge crosses 60% of the viewport height.
  *
- * Guards: a non-positive or non-finite `vh` cannot be measured meaningfully, so the mask
- * fails safe to 1 (fully shown) rather than propagate NaN or an inverted ratio. A missing or
- * non-finite `heroBottom` (JS callers are not compile-checked against the required type
- * above) fails safe the other way, to 0 (hidden), so a caller that forgot to measure the
- * hero never accidentally unmasks labels that may still collide with it.
+ * Guards: hidden (0) is the safe default below 768px, since an unmeasurable state must never
+ * risk showing a label that could still collide with the hero. A non-positive or non-finite
+ * `vh`, or a missing or non-finite `heroBottom` (JS callers are not compile-checked against
+ * the required type above), therefore both fail safe to 0 rather than propagate NaN, an
+ * inverted ratio, or silently unmask labels the caller never actually measured. At >=768px
+ * the mask always stays 1, since D-27 does not apply there.
  */
 function heroMaskFor(width: number, vh: number, heroBottom: number): number {
   if (width >= 768) return 1;
-  if (!Number.isFinite(vh) || vh <= 0) return 1;
-  if (!Number.isFinite(heroBottom)) return 0;
+  if (!Number.isFinite(vh) || vh <= 0 || !Number.isFinite(heroBottom)) return 0;
   return clamp((0.6 * vh - heroBottom) / (0.2 * vh));
 }
 
