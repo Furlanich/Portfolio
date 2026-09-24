@@ -14,7 +14,7 @@
   border: 1px dashed currentColor;
   border-radius: 999px;
   padding: 5px 12px;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -43,7 +43,7 @@
   border-radius: 8px;
   background: none;
   cursor: pointer;
-  font: 600 14px 'Instrument Sans', sans-serif;
+  font: 600 14px var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   color: #526473; /* D-06 Muted */
   transition: background-color 160ms ease, color 160ms ease;
 }
@@ -59,9 +59,28 @@
   outline-offset: 3px;
 }
 
+/* S1 (independent review round 1): both figure layers share one grid cell so
+   the figure never changes height while the outgoing layer is still fading
+   out and the incoming one is fading in. */
+.layerStack {
+  display: grid;
+}
+
 /* Crossfade: opacity plus a 2px blur, 240ms, the approved easing (D- section 11). */
 .layer {
+  grid-area: 1 / 1;
   transition: opacity 240ms cubic-bezier(.23, 1, .32, 1), filter 240ms cubic-bezier(.23, 1, .32, 1);
+}
+
+/* The incoming layer was `hidden` (not rendered at all) the moment before;
+   @starting-style gives the browser a real "faded out" point to transition
+   from once it appears, so the fade-in actually animates instead of
+   snapping straight to opacity 1 on first paint. */
+@starting-style {
+  .layer[data-fade='in'] {
+    opacity: 0;
+    filter: blur(2px);
+  }
 }
 
 .layer[data-fade='out'] {
@@ -78,6 +97,10 @@
   .layer {
     transition-duration: 0s;
   }
+}
+
+.chartWrapper {
+  container-type: inline-size;
 }
 
 .chart {
@@ -138,14 +161,46 @@
   background: #004589; /* chart.signal-light */
 }
 
-/* On-chart SVG text labels (source names, "area of doubt", "exact fix"):
-   12 user units at >=768px, 24 below, so labels stay legible on phones. */
+/*
+ * S4 (independent review round 1): on-chart SVG text labels (source names,
+ * "area of doubt", "exact fix") respond to the SVG wrapper's own container
+ * width (.chartWrapper has container-type: inline-size above), not the
+ * viewport, since the figure can sit in a column narrower than the viewport.
+ * The unit/width pairs below match lib/impact/position-fix.ts's
+ * FIX_LABEL_BREAKPOINTS exactly (mirrored by hand: CSS can't read that table
+ * directly); renderedFixLabelPx proves each pair keeps the rendered label at
+ * or above the 12px legibility floor (unit * width / 600, the viewBox width).
+ */
 .fixLabel {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 24px;
 }
 
-@media (min-width: 768px) {
+@container (max-width: 299.98px) {
+  .fixLabel {
+    display: none; /* the visible source list below the figure carries the label text instead */
+  }
+}
+
+@container (min-width: 300px) and (max-width: 399.98px) {
+  .fixLabel {
+    font-size: 24px;
+  }
+}
+
+@container (min-width: 400px) and (max-width: 499.98px) {
+  .fixLabel {
+    font-size: 18px;
+  }
+}
+
+@container (min-width: 500px) and (max-width: 599.98px) {
+  .fixLabel {
+    font-size: 15px;
+  }
+}
+
+@container (min-width: 600px) {
   .fixLabel {
     font-size: 12px;
   }
@@ -202,7 +257,7 @@
 
 .countsTitle {
   margin: 0;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 14px;
   color: #09243d; /* D-06 Ink */
 }

@@ -175,7 +175,15 @@ test('the toggle hides the inactive SVG with the native hidden attribute', () =>
 test('B1: no <button> is ever rendered before the toggle has mounted', () => {
   const source = fs.readFileSync(togglePath, 'utf8');
 
-  assert.match(source, /useState\(false\)/, 'expects a `mounted` flag defaulting to false');
+  // Mount detection uses useSyncExternalStore's server/client snapshots
+  // (false on the server and on the first client render, true after), not
+  // useState(false) + useEffect(() => setMounted(true), []): that pattern
+  // calls setState synchronously inside an effect, which the
+  // react-hooks/set-state-in-effect lint rule flags. Either mechanism yields
+  // the same false-until-mounted value; what matters here is that the button
+  // group is gated on it.
+  assert.match(source, /useSyncExternalStore/, 'expects a hydration-safe mounted flag');
+  assert.match(source, /getServerSnapshot\s*=\s*\(\)\s*=>\s*false/, 'expects the server/pre-hydration snapshot to be false');
   assert.match(source, /\{\s*mounted\s*&&/, 'expects the button group to be gated on `mounted`');
 
   const gateIndex = source.search(/\{\s*mounted\s*&&/);
@@ -184,29 +192,33 @@ test('B1: no <button> is ever rendered before the toggle has mounted', () => {
   assert.ok(gateIndex < firstButtonIndex, 'expects <button> to appear only inside the mounted-gated block');
 });
 
-test('B1: mounting (not a click) applies the initial "separate" selection', () => {
+test('B1: the initial "separate" selection is in effect once mounted, without a click', () => {
   const source = fs.readFileSync(togglePath, 'utf8');
 
-  assert.match(
-    source,
-    /useEffect\(\s*\(\)\s*=>\s*\{[\s\S]*?setMounted\(true\)[\s\S]*?\},\s*\[\]\)/,
-    'expects a mount-only effect (empty dependency array) that flips `mounted` to true',
-  );
   assert.match(source, /INITIAL_MODE\s*[:=][^;]*'separate'/, 'expects the fixed initial selection to be "separate"');
   assert.match(
     source,
     /useState<PositionFixMode>\(INITIAL_MODE\)/,
     '`selected` should start at INITIAL_MODE directly, not at null',
   );
+  // No setState call should run inside a useEffect body (the fix for the
+  // react-hooks/set-state-in-effect violation this replaced): the effective
+  // hidden layer is derived from `mounted` and `selected` in render instead.
+  assert.doesNotMatch(source, /useEffect\(\s*\(\)\s*=>\s*\{[^}]*set[A-Z]/, 'expects no setState call inside a useEffect body');
 });
 
 test('B1: neither figure is hidden before mount, so both stay visible and stacked without JS', () => {
   const source = fs.readFileSync(togglePath, 'utf8');
   // Only `hiddenLayer` should be nullable now: it starts at null (nothing
-  // hidden pre-mount) and only the mount effect / select() ever give it a
-  // real mode. `selected` is asserted separately to start at INITIAL_MODE.
+  // hidden pre-mount, and no click has happened yet post-mount either).
+  // `selected` is asserted separately to start at INITIAL_MODE.
   const nullableDeclarations = source.match(/useState<PositionFixMode \| null>\(null\)/g) ?? [];
   assert.equal(nullableDeclarations.length, 1, 'expects exactly one nullable PositionFixMode state (hiddenLayer)');
+  assert.match(
+    source,
+    /effectiveHiddenLayer[^=]*=\s*!mounted\s*\n?\s*\?\s*null/,
+    'expects the effective hidden layer to be null whenever `mounted` is false',
+  );
 });
 
 test('B1: the pressed state always matches what is visible once mounted', () => {
@@ -351,7 +363,7 @@ test('S4: the CSS declares an inline-size container and a matching @container la
   const css = fs.readFileSync(cssPath, 'utf8');
 
   assert.match(css, /container-type:\s*inline-size/);
-  assert.match(css, /@container[^{]*max-width:\s*299(\.9+)?px[^{]*\{[^}]*\.fixLabel\s*\{[^}]*display:\s*none/s);
+  assert.match(css, /@container[^{]*max-width:\s*299(\.\d+)?px[^{]*\{[^}]*\.fixLabel\s*\{[^}]*display:\s*none/s);
 
   for (const width of [300, 400, 500, 600]) {
     assert.match(

@@ -7,9 +7,18 @@ import {
   getSeparateLines,
   type PositionFixContent,
   type PositionFixSourcePoint,
-} from '../../../lib/impact/position-fix';
+} from '@/lib/impact/position-fix';
 import { PositionFixToggle } from './PositionFixToggle';
 import styles from './position-fix.module.css';
+
+/*
+ * N2 (independent review round 1): the SVG ids below (`position-fix-*-title`
+ * / `-desc`) are static, not generated per instance. That is safe today
+ * because PositionFixFigure is rendered at most once per page (Task 9 mounts
+ * exactly one HomeImpact section on Home). If a future task ever needs a
+ * second instance on the same page, add an `idPrefix` prop and interpolate
+ * it into these ids rather than relying on this single-instance assumption.
+ */
 
 interface PositionFixFigureProps {
   content: PositionFixContent;
@@ -114,67 +123,71 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
   const connectedLines = getConnectedLines();
 
   const separateSvg = (
-    <svg
-      viewBox={`0 0 ${POSITION_FIX_VIEW_BOX.width} ${POSITION_FIX_VIEW_BOX.height}`}
-      role="img"
-      aria-labelledby="position-fix-separate-title"
-      aria-describedby="position-fix-separate-desc"
-      className={styles.chart}
-    >
-      <title id="position-fix-separate-title">{content.figure.title}</title>
-      <desc id="position-fix-separate-desc">{content.figure.separateDescription}</desc>
-      <SourceLines lines={separateLines} lineClassName={styles.lineContext} />
-      <ellipse
-        cx={DOUBT_ELLIPSE.cx}
-        cy={DOUBT_ELLIPSE.cy}
-        rx={DOUBT_ELLIPSE.rx}
-        ry={DOUBT_ELLIPSE.ry}
-        strokeDasharray="3 5"
-        className={styles.doubtEllipse}
-      />
-      <SourceMarkers
-        sourceById={sourceById}
-        markerClassName={styles.markerContext}
-        tooltipFor={(name, note) => `${name}: ${note}`}
-      />
-      <text
-        x={DOUBT_ELLIPSE.cx}
-        y={DOUBT_ELLIPSE.cy + DOUBT_ELLIPSE.ry + 24}
-        textAnchor="middle"
-        className={`${styles.fixLabel} ${styles.labelMuted}`}
+    <div className={styles.chartWrapper}>
+      <svg
+        viewBox={`0 0 ${POSITION_FIX_VIEW_BOX.width} ${POSITION_FIX_VIEW_BOX.height}`}
+        role="img"
+        aria-labelledby="position-fix-separate-title"
+        aria-describedby="position-fix-separate-desc"
+        className={styles.chart}
       >
-        {content.figure.doubtLabel}
-      </text>
-    </svg>
+        <title id="position-fix-separate-title">{content.figure.title}</title>
+        <desc id="position-fix-separate-desc">{content.figure.separateDescription}</desc>
+        <SourceLines lines={separateLines} lineClassName={styles.lineContext} />
+        <ellipse
+          cx={DOUBT_ELLIPSE.cx}
+          cy={DOUBT_ELLIPSE.cy}
+          rx={DOUBT_ELLIPSE.rx}
+          ry={DOUBT_ELLIPSE.ry}
+          strokeDasharray="3 5"
+          className={styles.doubtEllipse}
+        />
+        <SourceMarkers
+          sourceById={sourceById}
+          markerClassName={styles.markerContext}
+          tooltipFor={(name, note) => `${name}: ${note}`}
+        />
+        <text
+          x={DOUBT_ELLIPSE.cx}
+          y={DOUBT_ELLIPSE.cy + DOUBT_ELLIPSE.ry + 24}
+          textAnchor="middle"
+          className={`${styles.fixLabel} ${styles.labelMuted}`}
+        >
+          {content.figure.doubtLabel}
+        </text>
+      </svg>
+    </div>
   );
 
   const connectedSvg = (
-    <svg
-      viewBox={`0 0 ${POSITION_FIX_VIEW_BOX.width} ${POSITION_FIX_VIEW_BOX.height}`}
-      role="img"
-      aria-labelledby="position-fix-connected-title"
-      aria-describedby="position-fix-connected-desc"
-      className={styles.chart}
-    >
-      <title id="position-fix-connected-title">{content.figure.title}</title>
-      <desc id="position-fix-connected-desc">{content.figure.connectedDescription}</desc>
-      <SourceLines lines={connectedLines} lineClassName={styles.lineSignal} />
-      <circle cx={EXACT_FIX.x} cy={EXACT_FIX.y} r={13} className={styles.fixRing} />
-      <circle cx={EXACT_FIX.x} cy={EXACT_FIX.y} r={5} className={styles.fixDot} />
-      <SourceMarkers
-        sourceById={sourceById}
-        markerClassName={styles.markerSignal}
-        tooltipFor={(name) => content.connectedNoteTemplate.replace('{source}', name)}
-      />
-      <text
-        x={EXACT_FIX.x}
-        y={EXACT_FIX.y + 40}
-        textAnchor="middle"
-        className={`${styles.fixLabel} ${styles.labelSignal}`}
+    <div className={styles.chartWrapper}>
+      <svg
+        viewBox={`0 0 ${POSITION_FIX_VIEW_BOX.width} ${POSITION_FIX_VIEW_BOX.height}`}
+        role="img"
+        aria-labelledby="position-fix-connected-title"
+        aria-describedby="position-fix-connected-desc"
+        className={styles.chart}
       >
-        {content.figure.fixLabel}
-      </text>
-    </svg>
+        <title id="position-fix-connected-title">{content.figure.title}</title>
+        <desc id="position-fix-connected-desc">{content.figure.connectedDescription}</desc>
+        <SourceLines lines={connectedLines} lineClassName={styles.lineSignal} />
+        <circle cx={EXACT_FIX.x} cy={EXACT_FIX.y} r={13} className={styles.fixRing} />
+        <circle cx={EXACT_FIX.x} cy={EXACT_FIX.y} r={5} className={styles.fixDot} />
+        <SourceMarkers
+          sourceById={sourceById}
+          markerClassName={styles.markerSignal}
+          tooltipFor={(name) => content.connectedNoteTemplate.replace('{source}', name)}
+        />
+        <text
+          x={EXACT_FIX.x}
+          y={EXACT_FIX.y + 40}
+          textAnchor="middle"
+          className={`${styles.fixLabel} ${styles.labelSignal}`}
+        >
+          {content.figure.fixLabel}
+        </text>
+      </svg>
+    </div>
   );
 
   return (

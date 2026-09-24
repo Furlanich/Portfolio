@@ -1,4 +1,4 @@
-import { counts } from '../../../lib/impact/position-fix';
+import { counts } from '@/lib/impact/position-fix';
 import styles from './position-fix.module.css';
 
 const MAX_COUNT = Math.max(counts.separate, counts.connected);
