@@ -72,20 +72,37 @@ export type FrameOptions = {
   width: number;
   /** Viewport height in CSS pixels, used only by the D-27 hero mask below 768px. */
   vh?: number;
-  /** The hero element's bottom edge, in the same pixel space as `vh`. */
-  heroBottom?: number;
+  /**
+   * The hero element's bottom edge, in the same pixel space as `vh`. Required: below 768px
+   * this drives whether tier-2 input labels are visible (D-27), so a caller that has not
+   * measured it yet must not be able to silently unmask them by omission.
+   */
+  heroBottom: number;
 };
 
 function clamp(value: number, min = 0, max = 1): number {
   return Math.min(max, Math.max(min, value));
 }
 
+/** Clamps scroll progress to 0..1, treating a non-finite value as 0. */
+function safeProgress(value: number): number {
+  return Number.isFinite(value) ? clamp(value) : 0;
+}
+
 /**
  * D-27: below 768px, tier-2 input labels are masked while the hero still fills most of the
  * viewport, and fade in once its bottom edge crosses 60% of the viewport height.
+ *
+ * Guards: a non-positive or non-finite `vh` cannot be measured meaningfully, so the mask
+ * fails safe to 1 (fully shown) rather than propagate NaN or an inverted ratio. A missing or
+ * non-finite `heroBottom` (JS callers are not compile-checked against the required type
+ * above) fails safe the other way, to 0 (hidden), so a caller that forgot to measure the
+ * hero never accidentally unmasks labels that may still collide with it.
  */
 function heroMaskFor(width: number, vh: number, heroBottom: number): number {
   if (width >= 768) return 1;
+  if (!Number.isFinite(vh) || vh <= 0) return 1;
+  if (!Number.isFinite(heroBottom)) return 0;
   return clamp((0.6 * vh - heroBottom) / (0.2 * vh));
 }
 
@@ -93,8 +110,9 @@ function heroMaskFor(width: number, vh: number, heroBottom: number): number {
  * Pure per-frame mapping from scroll progress `t` (0..1) to the Sky Chart camera and reveal
  * state (plan section 10; D-27 for the compact hero mask).
  */
-export function frameForProgress(t: number, options: FrameOptions): SkyChartFrame {
-  const { width, vh = 800, heroBottom = Number.NEGATIVE_INFINITY } = options;
+export function frameForProgress(rawT: number, options: FrameOptions): SkyChartFrame {
+  const { width, vh = 800, heroBottom } = options;
+  const t = safeProgress(rawT);
   const wide = width >= 1024;
 
   const yaw = 34 + 146 * t - (wide ? 18 : 0);
@@ -119,9 +137,12 @@ export function frameForProgress(t: number, options: FrameOptions): SkyChartFram
 
 /**
  * D-24 recede factor: 0 while the chapters are still settled in view, ramping to 1 as their
- * bottom edge rises from 0.55·vh to 0.05·vh.
+ * bottom edge rises from 0.55·vh to 0.05·vh. A non-positive or non-finite `vh` cannot be
+ * measured meaningfully, so this fails safe to 0 (not receded) rather than propagate NaN or,
+ * worse, an inverted ratio from dividing by a zero or negative height.
  */
 export function recedeFactor(chaptersBottom: number, vh: number): number {
+  if (!Number.isFinite(vh) || vh <= 0) return 0;
   return clamp((0.55 * vh - chaptersBottom) / (0.5 * vh));
 }
 
