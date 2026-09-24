@@ -1,0 +1,248 @@
+/*
+ * Position-fix illustrative visualization (HOME-IMPACT).
+ * See docs/plans/active/sky-chart-home-redesign-v2.md section 12 and D-04/D-06/D-21.
+ *
+ * Task 3 (components/surfaces/**, tailwind.config.ts, app/globals.css) has not
+ * merged yet, so the D-04/D-06 colors below are literal hex values, each tied
+ * to its token name in a comment. Replace with the Tailwind/CSS-custom-property
+ * tokens once Task 3 lands (tracked as a deviation in the PR description).
+ */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border: 1px dashed currentColor;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #526473; /* D-06 Muted */
+}
+
+.figure {
+  margin: 0;
+}
+
+/* Segmented control (toggle). Rendered by PositionFixToggle, styled here so
+   Task 5 owns one source of the visual contract for this figure. */
+.seg {
+  display: inline-flex;
+  border: 1px solid rgba(9, 36, 61, 0.12); /* sky.sheet-line */
+  border-radius: 10px;
+  padding: 3px;
+  margin: 16px 0 8px;
+  background: rgba(231, 238, 245, 0.9);
+}
+
+.segButton {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  font: 600 14px 'Instrument Sans', sans-serif;
+  color: #526473; /* D-06 Muted */
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.segButton[aria-pressed='true'] {
+  background: #ffffff;
+  color: #09243d; /* D-06 Ink */
+  box-shadow: 0 1px 0 rgba(9, 36, 61, 0.08);
+}
+
+.segButton:focus-visible {
+  outline: 3px solid #09243d; /* D-21 focus, sheet context */
+  outline-offset: 3px;
+}
+
+/* Crossfade: opacity plus a 2px blur, 240ms, the approved easing (D- section 11). */
+.layer {
+  transition: opacity 240ms cubic-bezier(.23, 1, .32, 1), filter 240ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.layer[data-fade='out'] {
+  opacity: 0;
+  filter: blur(2px);
+}
+
+.layer[data-fade='in'] {
+  opacity: 1;
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer {
+    transition-duration: 0s;
+  }
+}
+
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Chart pair (D-04). Separate state uses chart.context-light lines with Muted
+   markers; connected state uses chart.signal-light lines with Azure markers. */
+.lineContext {
+  stroke: #8fa3b6; /* chart.context-light */
+}
+
+.lineSignal {
+  stroke: #004589; /* chart.signal-light (also Brand Azure) */
+}
+
+.markerContext {
+  fill: #526473; /* D-06 Muted: separate-state source marker */
+}
+
+.markerSignal {
+  fill: #004589; /* chart.signal-light: connected-state source marker */
+}
+
+.doubtEllipse {
+  fill: rgba(82, 100, 115, 0.12); /* D-06 Muted, low opacity */
+  stroke: #526473; /* D-06 Muted */
+}
+
+.fixRing {
+  fill: rgba(0, 69, 137, 0.12); /* chart.signal-light, low opacity */
+  stroke: #004589; /* chart.signal-light */
+}
+
+.fixDot {
+  fill: #004589; /* chart.signal-light */
+}
+
+.labelInk {
+  fill: #09243d; /* D-06 Ink */
+}
+
+.labelMuted {
+  fill: #526473; /* D-06 Muted */
+}
+
+.labelSignal {
+  fill: #004589; /* chart.signal-light */
+}
+
+.barContext {
+  background: #8fa3b6; /* chart.context-light */
+}
+
+.barSignal {
+  background: #004589; /* chart.signal-light */
+}
+
+/* On-chart SVG text labels (source names, "area of doubt", "exact fix"):
+   12 user units at >=768px, 24 below, so labels stay legible on phones. */
+.fixLabel {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 24px;
+}
+
+@media (min-width: 768px) {
+  .fixLabel {
+    font-size: 12px;
+  }
+}
+
+.liveRegion {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The visible source list: the accessible text equivalent of the chart. */
+.sourceList {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sourceList li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sourceName {
+  font-weight: 600;
+  color: #09243d; /* D-06 Ink */
+}
+
+.sourceNote {
+  color: #526473; /* D-06 Muted */
+}
+
+.sourceNote::before {
+  content: '\2014';
+  margin-right: 6px;
+  color: #526473; /* D-06 Muted */
+}
+
+/* ImpactCounts */
+.counts {
+  display: block;
+}
+
+.countsTitle {
+  margin: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  color: #09243d; /* D-06 Ink */
+}
+
+.bars {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: 12ch 1fr 3ch;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #09243d; /* D-06 Ink */
+}
+
+.track {
+  position: relative;
+  height: 14px;
+  border-radius: 0 4px 4px 0;
+  background: rgba(231, 238, 245, 0.95);
+}
+
+.barValue {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.barRow b {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.countsCaption {
+  margin: 20px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #526473; /* D-06 Muted */
+}
