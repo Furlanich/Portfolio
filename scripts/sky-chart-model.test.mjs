@@ -16,7 +16,7 @@ test('yaw combines the wide/compact offset with the scroll ramp', () => {
   assert.equal(frameForProgress(1, { width: 1440 }).yaw, 162, 'wide at t=1');
 });
 
-test('group opacity reveals Define across its 0.12-wide ramp', () => {
+test('group opacity reveals Define across its 0.14-wide ramp', () => {
   assert.equal(frameForProgress(0.27, { width: 1440 }).groupOpacity.define, 0, 'before the ramp starts');
   assertClose(frameForProgress(0.42, { width: 1440 }).groupOpacity.define, 1, 'after the ramp settles');
 });

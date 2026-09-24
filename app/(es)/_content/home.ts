@@ -21,7 +21,7 @@ export const homeContent = {
     label: 'FURLANICH · Del proceso al sistema',
     statusLabel: 'ETAPA {current} DE 04',
     plateLabel: 'Lámina {current}/04',
-    coordinates: '34°36’S · 58°22’W',
+    coordinates: "34°36'S · 58°22'W",
     pauseLabel: 'Pausar movimiento',
     resumeLabel: 'Reanudar movimiento',
     chapters: [

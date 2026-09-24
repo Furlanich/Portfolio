@@ -16,7 +16,7 @@ export type SkyChartNodeDefinition = {
 
 /**
  * Reveal threshold `g` for each group, read by `frameForProgress`: a group's opacity ramps
- * from 0 to 1 across the 0.12-wide window ending at `t = g + 0.12` (plan section 10).
+ * from 0 to 1 across the 0.14-wide window from `t = g - 0.12` to `t = g + 0.02` (plan section 10).
  */
 export const GROUP_REVEAL: Record<SkyChartGroupId, number> = {
   inputs: 0,

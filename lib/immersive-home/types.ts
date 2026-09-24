@@ -43,7 +43,11 @@ export type HomeInstrumentContent = {
   statusLabel: string;
   /** Decorative atlas-plate number; `{current}` is replaced by the zero-padded chapter sequence. */
   plateLabel: string;
-  /** Decorative coordinate readout, e.g. `34°36′S · 58°22′W`. */
+  /**
+   * Decorative coordinate readout, e.g. `34°36'S · 58°22'W`. Uses the ASCII apostrophe
+   * (U+0027) as the plain-text minute mark, not U+2032 PRIME: the shipped primary font
+   * subset only covers U+0000-00FF (see `scripts/brand-assets.test.mjs`).
+   */
   coordinates: string;
   pauseLabel: string;
   resumeLabel: string;
