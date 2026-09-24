@@ -1,33 +1,41 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMotionValueEvent, useReducedMotion, useScroll } from 'framer-motion';
 import { chooseImmersiveMode, chooseRenderQuality } from '@/lib/immersive-home/capability';
+import { progressFromChapterRects } from '@/lib/immersive-home/state';
 import {
-  isMaterialChange,
-  mapProgressToInstrumentState,
-  progressFromChapterRects,
-  type InstrumentState,
-} from '@/lib/immersive-home/state';
-import type { InstrumentSceneHandle } from './runtime/create-instrument-scene';
+  frameForProgress,
+  labelOpacityMultiplier,
+  recedeFactor,
+  SKY_CHART_NODES,
+  type SkyChartFrame,
+} from '@/lib/immersive-home/sky-chart-model';
+import type { SkyChartNodeId } from '@/lib/immersive-home/types';
+import type { SkyChartSceneHandle } from './runtime/create-sky-chart-scene';
+import { SkyChartController } from './runtime/sky-chart-controller';
 import { PauseMotionControl } from './PauseMotionControl';
-import styles from './immersive-home.module.css';
 
 interface ImmersiveEnhancementProps {
+  /** Localized labels for the 20 Sky Chart scene nodes, keyed by node id. */
+  labels: Record<SkyChartNodeId, string>;
+  /** Decorative per-chapter plate number template; not consumed here (Task 8's `ImmersiveChapter`
+   * owns the D-12 plate number). Accepted to match the agreed call-site signature. */
+  plateLabel?: string;
+  locale: string;
   statusLabel: string;
   pauseLabel: string;
   resumeLabel: string;
   sequences: readonly string[];
 }
 
-type FrameBox = Pick<CSSProperties, 'top' | 'left' | 'width' | 'height'>;
-
 const CHAPTER_IDS = ['recognition', 'fragmentation', 'connection', 'coordination'] as const;
-const CONTEXT_LOST_KEY = 'furlanich:instrument-context-lost';
-const WIDE_QUERY = '(min-width: 1024px)';
+const CONTEXT_LOST_KEY = 'furlanich:sky-chart-context-lost';
 let sessionContextLost = false;
+let sceneDisposeCount = 0;
 
-function readSessionContextLost() {
+function readSessionContextLost(): boolean {
   if (sessionContextLost) return true;
   try {
     return window.sessionStorage.getItem(CONTEXT_LOST_KEY) === '1';
@@ -36,7 +44,7 @@ function readSessionContextLost() {
   }
 }
 
-function markSessionContextLost() {
+function markSessionContextLost(): void {
   sessionContextLost = true;
   try {
     window.sessionStorage.setItem(CONTEXT_LOST_KEY, '1');
@@ -45,7 +53,7 @@ function markSessionContextLost() {
   }
 }
 
-function webglAvailable() {
+function webglAvailable(): boolean {
   try {
     return Boolean(document.createElement('canvas').getContext('webgl2'));
   } catch {
@@ -53,7 +61,7 @@ function webglAvailable() {
   }
 }
 
-function afterLoad(callback: () => void) {
+function afterLoad(callback: () => void): () => void {
   if (document.readyState === 'complete') {
     callback();
     return () => undefined;
@@ -62,35 +70,57 @@ function afterLoad(callback: () => void) {
   return () => window.removeEventListener('load', callback);
 }
 
+type Measurement = { width: number; vh: number; heroBottom: number };
+
+type DebugHook = {
+  frame: SkyChartFrame | null;
+  labelCount: number;
+  labels: readonly string[];
+  disposeCount: number;
+  /** Incremented once per rendered frame; used to assert demand rendering stops when settled. */
+  renderCount: number;
+};
+
 /**
- * The homepage's only client boundary. It leaves the server-rendered static instrument
- * untouched unless every capability gate passes, then loads the Three.js runtime once and
- * renders on demand from native scroll. Any failure returns quietly to the static posters.
- *
- * Wide layouts show the scene in a sticky 4:5 stage over the poster column. Compact layouts
- * lay the same overlay over the active chapter's own frame, so nothing is pinned.
+ * The homepage's only client boundary. It leaves the server-rendered static environment
+ * untouched unless every capability gate passes, then loads the Three.js Sky Chart runtime
+ * once and renders on demand from native scroll. Any failure returns quietly to the static
+ * poster pair. The canvas is portaled to `document.body`, fixed at z-index -2 (plan D-01, T-04).
  */
-export function ImmersiveEnhancement({ statusLabel, pauseLabel, resumeLabel, sequences }: ImmersiveEnhancementProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const canvasHostRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<InstrumentSceneHandle | null>(null);
+export function ImmersiveEnhancement({
+  labels,
+  locale,
+  statusLabel,
+  pauseLabel,
+  resumeLabel,
+  sequences,
+}: ImmersiveEnhancementProps) {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const portalHostRef = useRef<HTMLDivElement | null>(null);
+  const sceneRef = useRef<SkyChartSceneHandle | null>(null);
+  const controllerRef = useRef<SkyChartController | null>(null);
   const attemptedRef = useRef(false);
-  const lastStateRef = useRef<InstrumentState | undefined>(undefined);
-  const frameRef = useRef(0);
+  const disposedRef = useRef(false);
+  const measurementRef = useRef<Measurement>({ width: 0, vh: 0, heroBottom: 0 });
+  const lastRecedeRef = useRef(-1);
+  const chapterIndexRef = useRef(0);
   const pausedRef = useRef(false);
+  const debugRef = useRef<DebugHook | null>(null);
 
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
   const [active, setActive] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [wide, setWide] = useState(false);
   const [chapterIndex, setChapterIndex] = useState(0);
-  const [frameBox, setFrameBox] = useState<FrameBox | null>(null);
+  const [pauseHidden, setPauseHidden] = useState(true);
 
-  const root = useCallback(() => trackRef.current?.closest<HTMLElement>('[data-instrument]') ?? null, []);
+  const root = useCallback(() => anchorRef.current?.closest<HTMLElement>('[data-instrument]') ?? null, []);
   const chapters = useCallback(
     () => Array.from(root()?.querySelectorAll<HTMLElement>('section[data-instrument-chapter]') ?? []),
+    [root],
+  );
+  const chaptersContainer = useCallback(
+    () => root()?.querySelector<HTMLElement>('[data-instrument-chapters]') ?? null,
     [root],
   );
 
@@ -100,42 +130,83 @@ export function ImmersiveEnhancement({ statusLabel, pauseLabel, resumeLabel, seq
   }, [root]);
 
   const teardown = useCallback(() => {
-    cancelAnimationFrame(frameRef.current);
-    sceneRef.current?.dispose();
+    controllerRef.current?.dispose();
+    controllerRef.current = null;
+    if (sceneRef.current && !disposedRef.current) {
+      disposedRef.current = true;
+      sceneRef.current.dispose();
+      sceneDisposeCount += 1;
+      if (debugRef.current) debugRef.current.disposeCount = sceneDisposeCount;
+    }
     sceneRef.current = null;
-    lastStateRef.current = undefined;
     setMode('static');
     setActive(false);
   }, [setMode]);
 
-  const readState = useCallback(() => {
+  // Reads chapter/chapters-container geometry and returns everything a frame or a recede
+  // decision needs. `heroBottom` (D-27) is the top of the chapters container: the hero section
+  // sits immediately above it in document flow, so its bottom edge coincides with that point.
+  const measure = useCallback(() => {
+    const width = window.innerWidth;
+    const vh = window.innerHeight;
+    const containerRect = chaptersContainer()?.getBoundingClientRect() ?? null;
+    const heroBottom = containerRect?.top ?? 0;
+    const chaptersBottom = containerRect?.bottom ?? 0;
     const rects = chapters().map((chapter) => chapter.getBoundingClientRect());
-    const progress = progressFromChapterRects(rects, window.innerHeight);
-    const state = mapProgressToInstrumentState(progress);
-    return { progress, state, index: CHAPTER_IDS.indexOf(state.chapter) };
-  }, [chapters]);
+    const progress = progressFromChapterRects(rects, vh);
+    measurementRef.current = { width, vh, heroBottom };
+    return { progress, chaptersBottom, vh, heroBottom, width };
+  }, [chapters, chaptersContainer]);
 
-  // Compact placement: the overlay covers the active chapter's frame inside the track.
-  const measureFrame = useCallback((index: number) => {
-    const track = trackRef.current;
-    const frame = chapters()[index]?.querySelector<HTMLElement>('[data-instrument-artwork]');
-    if (!track || !frame) return;
-    const trackBounds = track.getBoundingClientRect();
-    const bounds = frame.getBoundingClientRect();
-    setFrameBox({ top: bounds.top - trackBounds.top, left: bounds.left - trackBounds.left, width: bounds.width, height: bounds.height });
-  }, [chapters]);
+  const applyRecede = useCallback((chaptersBottom: number, vh: number) => {
+    const k = recedeFactor(chaptersBottom, vh);
+    const element = root();
+    if (element) element.dataset.recede = String(k);
+    if (sceneRef.current) sceneRef.current.canvas.style.opacity = String(1 - 0.84 * k);
+    if (k !== lastRecedeRef.current) {
+      lastRecedeRef.current = k;
+      sceneRef.current?.setLabelOpacity(labelOpacityMultiplier(k));
+    }
+    return k;
+  }, [root]);
 
-  const renderIfChanged = useCallback((force = false) => {
-    if (!sceneRef.current || pausedRef.current) return;
-    const { progress, state, index } = readState();
-    setChapterIndex(index);
-    if (!force && !isMaterialChange(lastStateRef.current, state)) return;
-    lastStateRef.current = state;
-    cancelAnimationFrame(frameRef.current);
-    frameRef.current = requestAnimationFrame(() => sceneRef.current?.render(state, progress));
-  }, [readState]);
+  const updatePauseVisibility = useCallback((heroBottom: number, vh: number, chaptersBottom: number) => {
+    const hidden = heroBottom < 0.6 * vh || chaptersBottom < 0.3 * vh;
+    setPauseHidden((previous) => (previous === hidden ? previous : hidden));
+  }, []);
 
-  // One-shot activation behind every capability gate, after the page and first poster load.
+  const handleRender = useCallback((t: number) => {
+    const index = Math.min(CHAPTER_IDS.length - 1, Math.floor(t * CHAPTER_IDS.length));
+    const element = root();
+    if (element) element.dataset.renderedChapter = CHAPTER_IDS[index];
+    if (chapterIndexRef.current !== index) {
+      chapterIndexRef.current = index;
+      setChapterIndex(index);
+    }
+    if (debugRef.current) {
+      const frame = frameForProgress(t, measurementRef.current);
+      const visible = SKY_CHART_NODES.filter((node) => frame.visibleTiers.includes(node.tier));
+      debugRef.current.frame = frame;
+      debugRef.current.labelCount = visible.length;
+      debugRef.current.labels = visible.map((node) => labels[node.id]);
+      debugRef.current.renderCount += 1;
+    }
+  }, [labels, root]);
+
+  const tick = useCallback((immediate = false) => {
+    if (pausedRef.current || !controllerRef.current) return;
+    const { progress, chaptersBottom, vh, heroBottom } = measure();
+    const k = applyRecede(chaptersBottom, vh);
+    updatePauseVisibility(heroBottom, vh, chaptersBottom);
+    // D-24: rendering is suspended while k=1. A large, sudden scroll (or a fast native jump,
+    // as in `scrollIntoViewIfNeeded`) can otherwise leave the eased camera converging toward
+    // its target for another second even after the environment is fully receded, which would
+    // render extra frames the recede rule says must not happen. Snapping immediately once fully
+    // receded closes that gap; short of full recede the normal damped ease still applies.
+    controllerRef.current.setTarget(progress, immediate || k >= 1);
+  }, [applyRecede, measure, updatePauseVisibility]);
+
+  // One-shot activation behind every capability gate, after the page and first paint load.
   useEffect(() => {
     if (reducedMotion === null || attemptedRef.current) return;
     const element = root();
@@ -162,27 +233,40 @@ export function ImmersiveEnhancement({ statusLabel, pauseLabel, resumeLabel, seq
         if (mode !== 'webgl') return;
         try {
           performance.mark('immersive:import-start');
-          const { createInstrumentScene } = await import('./runtime/create-instrument-scene');
+          const { createSkyChartScene } = await import('./runtime/create-sky-chart-scene');
           performance.mark('immersive:import-end');
           if (cancelled) return;
-          sceneRef.current = createInstrumentScene({
+          const scene = createSkyChartScene({
             quality: chooseRenderQuality({
               viewportWidth: window.innerWidth,
               devicePixelRatio: window.devicePixelRatio,
               hardwareConcurrency: navigator.hardwareConcurrency ?? 0,
             }),
+            locale,
+            nodeLabels: labels,
             onContextLost: () => {
               markSessionContextLost();
               teardown();
             },
           });
-          await sceneRef.current.prepare();
-          if (cancelled) return;
+          disposedRef.current = false;
+          sceneRef.current = scene;
+          await scene.prepare();
+          if (cancelled) {
+            scene.dispose();
+            sceneRef.current = null;
+            return;
+          }
           performance.mark('immersive:scene-created');
-          const { index } = readState();
-          setChapterIndex(index);
-          setWide(window.matchMedia(WIDE_QUERY).matches);
-          measureFrame(index);
+          controllerRef.current = new SkyChartController({
+            scene,
+            mapFrame: (t) => frameForProgress(t, measurementRef.current),
+            onRender: handleRender,
+          });
+          if (process.env.NODE_ENV !== 'production') {
+            debugRef.current = { frame: null, labelCount: 0, labels: [], disposeCount: sceneDisposeCount, renderCount: 0 };
+            (window as typeof window & { __FURLANICH_SKY_CHART__?: DebugHook }).__FURLANICH_SKY_CHART__ = debugRef.current;
+          }
           setActive(true);
         } catch {
           teardown();
@@ -196,80 +280,86 @@ export function ImmersiveEnhancement({ statusLabel, pauseLabel, resumeLabel, seq
       observer.disconnect();
       removeLoad();
     };
-  }, [measureFrame, readState, reducedMotion, root, setMode, teardown]);
+  }, [handleRender, labels, locale, reducedMotion, root, setMode, teardown]);
 
-  // Attach the canvas to the mounted overlay, size it, and only then hide the posters it covers.
-  useLayoutEffect(() => {
-    const scene = sceneRef.current;
-    const canvasHost = canvasHostRef.current;
-    if (!active || !scene || !canvasHost) return;
-    if (scene.canvas.parentElement !== canvasHost) canvasHost.appendChild(scene.canvas);
-    const bounds = canvasHost.getBoundingClientRect();
-    scene.resize(bounds.width, bounds.height);
-    renderIfChanged(true);
+  // Mount the canvas, size it from the document, render the first frame, then flip the mode
+  // attribute so the static poster hides only once the canvas has something to show.
+  useEffect(() => {
+    if (!active || !sceneRef.current) return;
+    const { width, vh } = measure();
+    sceneRef.current.resize(width, vh);
+    tick(true);
     const frame = requestAnimationFrame(() => setMode(sceneRef.current ? 'webgl' : 'static'));
     return () => cancelAnimationFrame(frame);
-  }, [active, wide, frameBox, renderIfChanged, setMode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
 
   // Resize and orientation changes recompute from the document and never replay the sequence.
   useEffect(() => {
     if (!active) return;
     const element = root();
-    if (!element) return;
+    if (!element || !sceneRef.current) return;
     const resizeObserver = new ResizeObserver(() => {
-      setWide(window.matchMedia(WIDE_QUERY).matches);
-      if (!pausedRef.current) measureFrame(readState().index);
-      renderIfChanged(true);
+      const { width, vh } = measure();
+      sceneRef.current?.resize(width, vh);
+      tick(true);
     });
     resizeObserver.observe(element);
     return () => resizeObserver.disconnect();
-  }, [active, measureFrame, readState, renderIfChanged, root]);
+  }, [active, measure, root, tick]);
 
-  // Compact layouts follow the active chapter unless paused or the control holds focus.
-  useEffect(() => {
-    if (!active || wide || pausedRef.current) return;
-    if (overlayRef.current?.contains(document.activeElement)) return;
-    measureFrame(chapterIndex);
-  }, [active, chapterIndex, measureFrame, wide]);
-
-  useMotionValueEvent(scrollY, 'change', () => renderIfChanged());
+  useMotionValueEvent(scrollY, 'change', () => tick());
 
   useEffect(() => () => {
-    cancelAnimationFrame(frameRef.current);
-    sceneRef.current?.dispose();
+    controllerRef.current?.dispose();
+    controllerRef.current = null;
+    if (sceneRef.current && !disposedRef.current) {
+      disposedRef.current = true;
+      sceneRef.current.dispose();
+      sceneDisposeCount += 1;
+    }
     sceneRef.current = null;
   }, []);
 
-  const togglePaused = () => {
+  const togglePaused = useCallback(() => {
     const next = !pausedRef.current;
     pausedRef.current = next;
     setPaused(next);
+    controllerRef.current?.setPaused(next);
     if (!next) {
-      measureFrame(readState().index);
-      renderIfChanged(true);
+      const { progress } = measure();
+      controllerRef.current?.resume(progress);
     }
-  };
+  }, [measure]);
 
-  const status = statusLabel.replace('{current}', sequences[chapterIndex] ?? sequences[0]);
-  const overlay = (
-    <div
-      ref={overlayRef}
-      data-instrument-overlay
-      data-rendered-chapter={CHAPTER_IDS[chapterIndex]}
-      className={styles.enhancementOverlay}
-      style={wide ? undefined : frameBox ?? undefined}
-    >
-      <div ref={canvasHostRef} className={styles.enhancementCanvasHost} />
-      <div className={styles.enhancementBar}>
-        <span aria-hidden="true" className="hidden font-mono text-[13px] font-semibold leading-5 text-foundation-muted lg:inline">{status}</span>
-        <PauseMotionControl paused={paused} pauseLabel={pauseLabel} resumeLabel={resumeLabel} onToggle={togglePaused} />
-      </div>
-    </div>
-  );
+  const phaseLabel = statusLabel.replace('{current}', sequences[chapterIndex] ?? sequences[0] ?? '');
 
   return (
-    <div ref={trackRef} data-instrument-track className={styles.enhancementTrack}>
-      {active ? (wide ? <div className={styles.enhancementSticky}>{overlay}</div> : overlay) : null}
-    </div>
+    <>
+      <span ref={anchorRef} aria-hidden="true" hidden />
+      {active
+        ? createPortal(
+            <div
+              ref={(node) => {
+                portalHostRef.current = node;
+                if (node && sceneRef.current && sceneRef.current.canvas.parentElement !== node) {
+                  node.appendChild(sceneRef.current.canvas);
+                }
+              }}
+            />,
+            document.body,
+          )
+        : null}
+      {active ? (
+        <PauseMotionControl
+          paused={paused}
+          hidden={pauseHidden}
+          pauseLabel={pauseLabel}
+          resumeLabel={resumeLabel}
+          phaseLabel={phaseLabel}
+          onToggle={togglePaused}
+        />
+      ) : null}
+    </>
   );
 }

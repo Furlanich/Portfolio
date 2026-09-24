@@ -31,6 +31,9 @@ export function ImmersiveHomeSequence({ content }: ImmersiveHomeSequenceProps) {
           priority
         />
         <ImmersiveEnhancement
+          labels={instrument.nodes}
+          plateLabel={instrument.plateLabel}
+          locale={content.locale}
           statusLabel={instrument.statusLabel}
           pauseLabel={instrument.pauseLabel}
           resumeLabel={instrument.resumeLabel}
