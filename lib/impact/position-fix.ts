@@ -164,7 +164,7 @@ export function renderedFixLabelPx(width: number, unit: number): number {
  * expected to render at roughly 236px wide inside a 320px viewport (the
  * narrowest width this design targets); renderedFixLabelPx(236,
  * MARKER_NUMBER_UNIT) must stay >=12px. 32 user units clears that floor
- * (~12.19px at 236px) with a documented safety margin over the ~30.51-unit
+ * (~12.59px at 236px) with a documented safety margin over the ~30.51-unit
  * value that would land exactly on 12px, in case the figure renders a few
  * pixels narrower than 236px in practice.
  */
@@ -184,6 +184,76 @@ export const MARKER_NUMBER_MIN_EXPECTED_WIDTH = 236;
  */
 export function markerNumberForSourceId(id: PositionFixSourceId): number {
   return SOURCE_IDS.indexOf(id) + 1;
+}
+
+/** Radius (SVG user units) of a source's marker circle (matches the `r={6}` on each <circle> in PositionFixFigure). */
+export const MARKER_RADIUS = 6;
+
+/**
+ * Baseline offset (SVG user units) for a numeral placed above its marker
+ * (top-half sources). Smaller in magnitude than the name label's -12: with
+ * the numeral's much larger 32-unit font, -12 would push its ascent above
+ * y=0 for `book` (y=34, the top marker closest to the viewBox edge). -8
+ * keeps every top numeral clear of both its own marker circle and y=0
+ * (verified by the N-A2 test in scripts/position-fix.test.mjs).
+ */
+export const MARKER_NUMBER_TOP_OFFSET = -8;
+
+/**
+ * Baseline offset (SVG user units) for a numeral placed below its marker
+ * (bottom-half sources: email, call). 22 (the offset the name label already
+ * uses) is too small for the much larger 32-unit numeral: its ascent alone
+ * reaches back up past the marker circle (independent review round 2,
+ * N-A2). 32 clears it with a documented margin (see markerNumberVerticalExtent's
+ * test in scripts/position-fix.test.mjs).
+ */
+export const MARKER_NUMBER_BOTTOM_OFFSET = 32;
+
+export interface MarkerNumberAnchor {
+  readonly x: number;
+  readonly y: number;
+  readonly textAnchor: 'start' | 'end';
+}
+
+/**
+ * Anchor (x, y baseline, text-anchor) for a source's decorative numeral key,
+ * placed clear of its own marker circle. Horizontal offset matches the name
+ * label's (+-10 units, away from the chart center); vertical offset differs
+ * per MARKER_NUMBER_TOP_OFFSET / MARKER_NUMBER_BOTTOM_OFFSET above.
+ */
+export function markerNumberAnchor(point: PositionFixSourcePoint): MarkerNumberAnchor {
+  const anchorStart = point.x < POSITION_FIX_VIEW_BOX.width / 2;
+  const alignTop = point.y < POSITION_FIX_VIEW_BOX.height / 2;
+
+  return {
+    x: point.x + (anchorStart ? -10 : 10),
+    y: point.y + (alignTop ? MARKER_NUMBER_TOP_OFFSET : MARKER_NUMBER_BOTTOM_OFFSET),
+    textAnchor: anchorStart ? 'start' : 'end',
+  };
+}
+
+/**
+ * Conservative overestimate of a single mono digit glyph's ascent, as a
+ * fraction of its font-size (typical mono-digit cap-height/ascent runs
+ * ~0.7-0.75 of the em size; 0.75 keeps a safety margin without being so
+ * large it manufactures a false collision). Digits 1-5 have no descender,
+ * so the glyph's bottom edge is the baseline itself; this ratio only needs
+ * to bound the top edge for the marker-circle-clearance test below.
+ */
+const NUMERAL_ASCENT_RATIO = 0.75;
+
+/**
+ * The numeral glyph's approximate vertical extent (SVG user units) at a
+ * source's marker, using the conservative ascent estimate above and no
+ * descent. Pure "test seam" per the independent review: proves the numeral's
+ * bounding box never overlaps its own marker circle, at every source.
+ */
+export function markerNumberVerticalExtent(point: PositionFixSourcePoint): { top: number; bottom: number } {
+  const anchor = markerNumberAnchor(point);
+  return {
+    top: anchor.y - MARKER_NUMBER_UNIT * NUMERAL_ASCENT_RATIO,
+    bottom: anchor.y,
+  };
 }
 
 /** One source's display content (bilingual, supplied by the page). */

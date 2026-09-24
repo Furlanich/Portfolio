@@ -20,6 +20,8 @@ const {
   markerNumberForSourceId,
   MARKER_NUMBER_UNIT,
   MARKER_NUMBER_MIN_EXPECTED_WIDTH,
+  MARKER_RADIUS,
+  markerNumberVerticalExtent,
 } = await import('../lib/impact/position-fix.ts');
 
 const componentsDir = path.join(process.cwd(), 'components/homepage/impact');
@@ -163,6 +165,30 @@ test('the toggle uses aria-pressed buttons, a polite live region and role="group
   assert.match(source, /role="group"/);
   assert.match(source, /aria-pressed=/);
   assert.match(source, /aria-live="polite"/);
+});
+
+// N-S1 (independent review round 2, should-fix): the live region used to
+// fill in as soon as `mounted` became true, so a screen reader would
+// announce "Showing: Separate sources" on page load even though the user
+// never touched the toggle. It must start empty and only be set from an
+// actual click, inside select().
+test('N-S1: the live-region announcement starts empty and is only set from a click', () => {
+  const source = fs.readFileSync(togglePath, 'utf8');
+
+  assert.doesNotMatch(
+    source,
+    /const announcement = mounted\s*\n?\s*\?/,
+    'announcement must not be derived from `mounted` alone',
+  );
+  assert.match(source, /useState\(['"]{2}\)/, 'expects announcement state to start as an empty string');
+
+  const selectBody = source.match(/function select\([^)]*\)\s*\{[\s\S]*?\n {2}\}/);
+  assert.ok(selectBody, 'expects a select() function');
+  assert.match(
+    selectBody[0],
+    /setAnnouncement\(/,
+    'expects select() to be the place that sets the announcement text',
+  );
 });
 
 test('the toggle hides the inactive SVG with the native hidden attribute', () => {
@@ -345,6 +371,30 @@ test('S1: the incoming layer has a real starting style to fade in from', () => {
   assert.match(startingBlock[0], /blur\(2px\)/);
 });
 
+// N-B1 (independent review round 2, blocking): `.layer { grid-area: 1/1 }`
+// applied unconditionally means a no-JS or pre-hydration render stacks both
+// SVGs (and captions) in the same grid cell, overlapping each other — that
+// breaks the "without JS both SVGs show stacked [vertically]" contract and
+// flashes overlapping charts before hydration. The grid-cell sharing must be
+// scoped to only apply once mounted.
+test('N-B1: layers only share a grid cell once mounted; unmounted, they flow vertically', () => {
+  const toggleSource = fs.readFileSync(togglePath, 'utf8');
+  assert.match(
+    toggleSource,
+    /data-enhanced=\{mounted\s*\|\|\s*undefined\}/,
+    'expects the layer-stack container to carry a data-enhanced attribute only once mounted',
+  );
+
+  const css = fs.readFileSync(cssPath, 'utf8');
+  // The unconditional .layer { grid-area: 1/1 } rule must be gone...
+  const unconditionalGridArea = css.match(/^\.layer\s*\{[^}]*\}/m);
+  assert.ok(unconditionalGridArea, 'expects a base .layer rule');
+  assert.doesNotMatch(unconditionalGridArea[0], /grid-area/, '.layer itself must not set grid-area unconditionally');
+
+  // ...and scoped instead to .layerStack[data-enhanced] > .layer.
+  assert.match(css, /\.layerStack\[data-enhanced\]\s*>\s*\.layer\s*\{[^}]*grid-area:\s*1\s*\/\s*1/);
+});
+
 // S4 (independent review round 1): replaced the two-step viewport media query
 // with a container-query ladder, since a viewport-width breakpoint is wrong
 // once the figure sits in a narrower grid column than the viewport. The pure
@@ -427,6 +477,20 @@ test('S4-amendment: the visible source list is an ordered list, at every width',
   assert.doesNotMatch(source, /<ul[^>]*>/);
 });
 
+// N-A1 (independent review round 2, blocking): `list-style: none` hid the
+// <ol>'s own numbering, so sighted readers had no way to match the SVG's
+// numeral keys (1-5, below 300px) to names in the list, and removing the
+// marker risks some assistive tech dropping list semantics. The numbering
+// must be visible at every width.
+test('N-A1: the source list shows its own ordinal numbering (not list-style: none)', () => {
+  const css = fs.readFileSync(cssPath, 'utf8');
+  const sourceListBlock = css.match(/\.sourceList\s*\{[^}]*\}/);
+
+  assert.ok(sourceListBlock, 'expects a .sourceList rule');
+  assert.doesNotMatch(sourceListBlock[0], /list-style:\s*none/, 'expects visible ordinals, not list-style: none');
+  assert.match(sourceListBlock[0], /list-style:\s*decimal/, 'expects a decimal list-style so numbering stays visible');
+});
+
 test('S4-amendment: doubt/exact-fix labels have a visible caption fallback below the figures', () => {
   const source = fs.readFileSync(figurePath, 'utf8');
   assert.match(source, /styles\.chartCaption/);
@@ -438,4 +502,24 @@ test('S4-amendment: each marker renders a decorative numeral key alongside its n
   const source = fs.readFileSync(figurePath, 'utf8');
   assert.match(source, /markerNumberForSourceId/);
   assert.match(source, /styles\.markerNumber/);
+});
+
+// N-A2 (independent review round 2, should-fix): bottom-half numerals (email,
+// call) collided with their own marker circle at the old +22 baseline offset.
+// Pure geometry test, independent of any rendered CSS: at every source, the
+// numeral's approximate vertical extent must not overlap the marker circle's
+// vertical extent, and must stay inside the raw viewBox.
+test('N-A2: every numeral clears its own marker circle and stays inside the viewBox', () => {
+  for (const point of SOURCES) {
+    const { top, bottom } = markerNumberVerticalExtent(point);
+    const circleTop = point.y - MARKER_RADIUS;
+    const circleBottom = point.y + MARKER_RADIUS;
+
+    const overlapsCircle = bottom > circleTop && top < circleBottom;
+    assert.ok(
+      !overlapsCircle,
+      `${point.id}: numeral extent [${top}, ${bottom}] overlaps its marker circle [${circleTop}, ${circleBottom}]`,
+    );
+    assert.ok(top >= 0 && bottom <= POSITION_FIX_VIEW_BOX.height, `${point.id}: numeral extent [${top}, ${bottom}] escapes the viewBox`);
+  }
 });
