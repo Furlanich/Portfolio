@@ -75,6 +75,39 @@ function SourceLines({
   );
 }
 
+/**
+ * Shared per-state marker loop (REFACTOR): resolves each SOURCES point to its
+ * content by id and renders a SourceMarker, so the separate and connected
+ * SVGs only differ by their marker class and tooltip text.
+ */
+function SourceMarkers({
+  sourceById,
+  markerClassName,
+  tooltipFor,
+}: {
+  sourceById: Map<PositionFixSourcePoint['id'], PositionFixContent['sources'][number]>;
+  markerClassName: string;
+  tooltipFor: (name: string, note: string) => string;
+}) {
+  return (
+    <>
+      {SOURCES.map((point) => {
+        const source = sourceById.get(point.id);
+        if (!source) return null;
+        return (
+          <SourceMarker
+            key={point.id}
+            point={point}
+            name={source.name}
+            tooltip={tooltipFor(source.name, source.note)}
+            markerClassName={markerClassName}
+          />
+        );
+      })}
+    </>
+  );
+}
+
 export function PositionFixFigure({ content }: PositionFixFigureProps) {
   const sourceById = new Map(content.sources.map((source) => [source.id, source]));
   const separateLines = getSeparateLines();
@@ -99,19 +132,11 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
         strokeDasharray="3 5"
         className={styles.doubtEllipse}
       />
-      {SOURCES.map((point) => {
-        const source = sourceById.get(point.id);
-        if (!source) return null;
-        return (
-          <SourceMarker
-            key={point.id}
-            point={point}
-            name={source.name}
-            tooltip={`${source.name}: ${source.note}`}
-            markerClassName={styles.markerContext}
-          />
-        );
-      })}
+      <SourceMarkers
+        sourceById={sourceById}
+        markerClassName={styles.markerContext}
+        tooltipFor={(name, note) => `${name}: ${note}`}
+      />
       <text
         x={DOUBT_ELLIPSE.cx}
         y={DOUBT_ELLIPSE.cy + DOUBT_ELLIPSE.ry + 24}
@@ -136,19 +161,11 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
       <SourceLines lines={connectedLines} lineClassName={styles.lineSignal} />
       <circle cx={EXACT_FIX.x} cy={EXACT_FIX.y} r={13} className={styles.fixRing} />
       <circle cx={EXACT_FIX.x} cy={EXACT_FIX.y} r={5} className={styles.fixDot} />
-      {SOURCES.map((point) => {
-        const source = sourceById.get(point.id);
-        if (!source) return null;
-        return (
-          <SourceMarker
-            key={point.id}
-            point={point}
-            name={source.name}
-            tooltip={content.connectedNoteTemplate.replace('{source}', source.name)}
-            markerClassName={styles.markerSignal}
-          />
-        );
-      })}
+      <SourceMarkers
+        sourceById={sourceById}
+        markerClassName={styles.markerSignal}
+        tooltipFor={(name) => content.connectedNoteTemplate.replace('{source}', name)}
+      />
       <text
         x={EXACT_FIX.x}
         y={EXACT_FIX.y + 40}
