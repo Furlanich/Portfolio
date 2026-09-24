@@ -15,7 +15,10 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-20
+  - RFC-SKY-CHART-VISUAL-SYSTEM-V2
+  - ADR-SKY-CHART-HOMEPAGE-RUNTIME
+  - PLAN-SKY-CHART-HOME-REDESIGN-V2
+last_verified: 2026-09-24
 ---
 
 # Spanish homepage
@@ -34,11 +37,13 @@ The full inquiry form lives on `PAGE-CONTACT`, not the homepage.
 
 ## Section order
 
+*This list predates two later revisions and is retained only as history; it is not the current approved order.* [`MKT-D05-HOME`](#mkt-d05-home-consolidated-narrative-approved-revision-1) (2026-09-16) already retired the standalone `HOME-AUDIENCES` presentation, preserving its relevant audience meaning inside Problems and Services. `SKY-CHART-V2` (2026-09-24, approved via Governance PR #77) inserts [`HOME-IMPACT`](#home-impact) between Services and Proof. The current approved order is:
+
 ```text
 HOME-HERO
 HOME-PROBLEMS
 HOME-SERVICES
-HOME-AUDIENCES
+HOME-IMPACT
 HOME-PROOF
 HOME-PROCESS
 HOME-FOUNDER
@@ -243,6 +248,69 @@ The homepage summary is implementation-ready without duplicating the detailed bo
 > Diagnosis and improvement of existing systems to solve problems, reduce risk, and define a maintainable technical path.
 
 **Section CTA:** `View all services` → `/en/services/`
+
+## HOME-IMPACT
+
+**Status:** **APPROVED** in Spanish and English. Recorded after the repository owner approved and merged Governance PR #77 (`RFC-SKY-CHART-VISUAL-SYSTEM-V2`, supersession items 9 and 18) on 2026-09-24.
+
+**Objective:** Give a new, honest, illustrative business-impact visualization — the "Position fix" idea — without inventing evidence. It is an addition to the approved narrative, not a claim of prior client results.
+
+**Placement:** Between `HOME-SERVICES` and `HOME-PROOF`, id `impact` in both locales, heading id `impact-heading`. See the updated [Section order](#section-order) and [`MKT-D05-HOME`](#mkt-d05-home-consolidated-narrative-approved-revision-1).
+
+**Illustrative-only rules** (from `PLAN-SKY-CHART-HOME-REDESIGN-V2` section 12): every visual in this section carries a visible "Illustrative scenario" tag. The counts shown (5 separate sources, 1 connected record) are computed from the fixed example source list below, not measured from any client engagement. No percentage, duration, currency figure or client name appears anywhere in this section. The static-export forbidden-pattern check continues to reject `metric-card`, `case-study` and `testimonial` identifiers here.
+
+**Composition:** a figure comparing five separate operational sources (a WhatsApp thread, a paper order book, a spreadsheet, an email and a phone call) against one connected record, presented as a "separate sources" and "connected record" toggle plus a visible source list (the accessible text equivalent) and a two-row count comparison. Design specification: [`DESIGN-VISUAL`](../../design/visual-language.md#sky-chart-v2-sky-chart-home-and-app-bar-approved) `SKY-CHART-V2` D-15; geometry and component contracts: `PLAN-SKY-CHART-HOME-REDESIGN-V2` section 12.
+
+**Evidence:** Illustrative only; no client, metric, duration or currency claim. This section does not upgrade or replace the `HOME-PROOF` evidence-integrity standard.
+
+### HOME-IMPACT bilingual content
+
+The source ids, in fixed order, are `whatsapp`, `book`, `spreadsheet`, `email` and `call`.
+
+| Key | Spanish | English |
+| --- | --- | --- |
+| `impact.kicker` | Fijar la posición | Position fix |
+| `impact.heading` | Menos lugares que revisar para saber en qué estado está un pedido | Fewer places to check before you know where an order stands |
+| `impact.introduction` | Un escenario ilustrativo, no un resultado de clientes. Un navegante fija su posición con varias marcaciones; cuando las fuentes no coinciden, la posición se vuelve una zona de duda. | An illustrative scenario, not a client result. A navigator fixes a position from several bearings; when the sources disagree, the fix becomes an area of doubt. |
+| `impact.illustrativeTag` | Escenario ilustrativo | Illustrative scenario |
+| `impact.toggle.groupLabel` | Escenario | Scenario |
+| `impact.toggle.separateLabel` | Fuentes separadas | Separate sources |
+| `impact.toggle.connectedLabel` | Registro conectado | Connected record |
+| `impact.toggle.announcement` | Mostrando: {state} | Showing: {state} |
+| `impact.figure.title` | Dónde está un pedido, según sus fuentes | Where one order stands, according to its sources |
+| `impact.figure.separateDescription` | Cinco marcaciones desde un chat de WhatsApp, un cuaderno de pedidos, una planilla, un correo y una llamada se cruzan en lugares distintos y dejan una zona de duda. | Five bearings from a WhatsApp thread, a paper order book, a spreadsheet, an email and a phone call cross in different places, leaving an area of doubt. |
+| `impact.figure.connectedDescription` | Todas las fuentes leen un mismo registro conectado, así que todas las marcaciones coinciden en un punto exacto. | Every source reads one connected record, so all bearings meet at one exact point. |
+| `impact.figure.doubtLabel` | Zona de duda | Area of doubt |
+| `impact.figure.fixLabel` | Posición exacta | Exact fix |
+| `impact.sources` (id: name — note) | `whatsapp`: Chat de WhatsApp — "Confirmado" en el chat · `book`: Cuaderno de pedidos — Anotado, todavía sin pagar · `spreadsheet`: Planilla — Actualizada ayer a la tarde · `email`: Correo — El cliente pidió cambiar la fecha · `call`: Llamada — Prometido para el viernes | `whatsapp`: WhatsApp thread — "Confirmed" in the chat · `book`: Paper order book — Written down, not yet paid · `spreadsheet`: Spreadsheet — Updated yesterday evening · `email`: Email — Customer asked to change the date · `call`: Phone call — Promised for Friday |
+| `impact.connectedNoteTemplate` | {source}: lee el registro conectado | {source}: reads the connected record |
+| `impact.counts.title` | Lugares revisados para confirmar un pedido | Places checked to confirm one order |
+| `impact.counts.separateLabel` / `connectedLabel` | Fuentes separadas / Registro conectado | Separate sources / Connected record |
+| `impact.counts.caption` | Los números salen de este ejemplo: un chat de WhatsApp, un cuaderno de pedidos, una planilla, un correo y una llamada. No son mediciones. | Counts come from this example: a WhatsApp thread, a paper order book, a spreadsheet, an email and a phone call. They are not measurements. |
+
+Counts derived from the fixed example above: `counts.separate` = 5, `counts.connected` = 1.
+
+### Other new SKY-CHART-V2 bilingual strings
+
+These new keys support the App Bar readout, the four chapters, and the Services/Proof/Process/Founder kickers introduced alongside `HOME-IMPACT`; they are recorded here because Appendix A of `PLAN-SKY-CHART-HOME-REDESIGN-V2` is their single source and this is the owning product record for new Home/App-Bar copy. Mono labels marked *(decorative)* are rendered `aria-hidden`.
+
+| Key | Spanish | English |
+| --- | --- | --- |
+| `instrument.coordinates` *(decorative)* | 34°36′S · 58°22′W | 34°36′S · 58°22′W |
+| `instrument.plateLabel` *(decorative)* | Lámina {current}/04 | Plate {current}/04 |
+| `instrument.statusLabel` *(decorative)* | Lámina {current} de 04 | Plate {current} of 04 |
+| `instrument.chapters[].kicker` | Reconocer · Fragmentar · Conectar · Coordinar | Recognize · Fragment · Connect · Coordinate |
+| `servicesSection.kicker` | Servicios | Services |
+| `servicesSection.services[].category` | Construir · Conectar · Mejorar | Build · Connect · Improve |
+| `proof.kicker` | Responsabilidad técnica | Accountability |
+| `proof.logLabel` | Dónde se aplica la responsabilidad | Where accountability applies |
+| `proof.log` | Definir: Problema y alcance acordados · Decidir: Decisiones técnicas a cargo de Samuel · Revisar: Trabajo revisado antes de la entrega | Define: Problem and scope agreed · Decide: Technical decisions led by Samuel · Review: Work reviewed before handover |
+| `process.kicker` | Proceso | Process |
+| `founderSection.kicker` | Fundador | Founder |
+| `readout` | Inicio · Problemas · Servicios · Posición · Responsabilidad · Proceso · Fundador · Contacto | Home · Problems · Services · Position fix · Accountability · Process · Founder · Contact |
+| `instrument.nodes` | See Appendix B of `PLAN-SKY-CHART-HOME-REDESIGN-V2` (20 scene node labels, bilingual, by fixed id) | See Appendix B of `PLAN-SKY-CHART-HOME-REDESIGN-V2` (20 scene node labels, bilingual, by fixed id) |
+
+Every other Home and App Bar string is existing approved content; D-26 confirms no approved copy changes.
 
 ## HOME-AUDIENCES
 
@@ -483,6 +551,7 @@ Across the page, technology names remain outside the first-pass hierarchy, no re
 | --- | --- | --- | --- | --- | --- |
 | `HOME-PROBLEMS` | **APPROVED** | **APPROVED** | **APPROVED** | Relevance statements; project evidence not required | **YES** |
 | `HOME-SERVICES` | **APPROVED** | **APPROVED** | **APPROVED** | Offer scope approved; no case-study claim | **YES** |
+| `HOME-IMPACT` | **APPROVED** | **APPROVED** | **APPROVED** | Illustrative scenario only; counts derived from the fixed example, no metric or client claim | **YES** |
 | `HOME-AUDIENCES` | **APPROVED** | **APPROVED** | **APPROVED** | Target contexts only; specialization claims forbidden | **YES** |
 | `HOME-PROOF` | **APPROVED** fallback; project cards **OPEN** | **APPROVED** fallback | **APPROVED** fallback | Founder accountability and integrity rules only; no approved project card | **YES — fallback only** |
 | `HOME-PROCESS` | **APPROVED** | **APPROVED** | **APPROVED** | Approved operating process; no certification claim | **YES** |
@@ -526,6 +595,8 @@ Current text below is an excerpt from the deployed baseline audited on 2026-09-1
 **Revision 1: APPROVED under D05.** Human reviewer: project owner (user). Date: 2026-09-16. Source: explicit disposition in the decision-review task. The user supplied “D05 - APPROVED”. This accepts the Home consolidation and bilingual content structure, subject to the D04 evidence boundary and the D03 rejection.
 
 Accepted source order under D05: global demo notice → HOME-HERO → HOME-PROBLEMS (with audience context) → HOME-SERVICES → HOME-PROOF → HOME-PROCESS → HOME-FOUNDER → HOME-CTA. Retire only the standalone HOME-AUDIENCES presentation; preserve its relevant audience meaning in Problems and Services. Retain stable process fragments. No project card or project name is added to Home.
+
+**Updated 2026-09-24 by `SKY-CHART-V2`** (approved via Governance PR #77, RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 18): [`HOME-IMPACT`](#home-impact) is inserted between `HOME-SERVICES` and `HOME-PROOF`, giving global demo notice → HOME-HERO → HOME-PROBLEMS → HOME-SERVICES → **HOME-IMPACT** → HOME-PROOF → HOME-PROCESS → HOME-FOUNDER → HOME-CTA. Every other approved section and its narrative purpose stays unchanged.
 
 | Section / current ES and EN | Accepted Spanish | Accepted English | Role / retained boundary |
 | --- | --- | --- | --- |
