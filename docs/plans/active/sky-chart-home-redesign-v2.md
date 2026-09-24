@@ -1,7 +1,7 @@
 ---
 id: PLAN-SKY-CHART-HOME-REDESIGN-V2
 type: execution-plan
-status: PROPOSED
+status: APPROVED
 plan_status: ACTIVE
 related:
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
@@ -18,12 +18,12 @@ related:
   - TEST-VISUAL-REGRESSION
   - PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1
   - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
-last_verified: 2026-09-23
+last_verified: 2026-09-24
 ---
 
 # Sky Chart Home and App Bar redesign — implementation plan v2
 
-> **Status: PROPOSED.** The owner has chosen the direction, but the plan changes APPROVED design and runtime records. Task 1 carries it to human review in a Governance PR. No implementation task may start until the gate G1 approval and Task 2 are merged. Task 2 changes this document's `status` to APPROVED.
+> **Status: APPROVED.** Gate G1 was passed when the repository owner approved and merged [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../../rfcs/sky-chart-visual-system-v2.md) as Governance PR #77 (merge commit `70168e9`) on 2026-09-24. This Task 2 / PR 2 records the accepted decision in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../../decisions/sky-chart-homepage-runtime.md) and the approved `DESIGN-VISUAL`/`DESIGN-IX-A11Y`/`PAGE-HOME` sections, and sets this document's `status` to APPROVED. Implementation Wave 1 (Tasks 3, 4, 5) unlocks once this PR merges and checkpoint W0 (section 25) passes.
 
 ## 1. Plan metadata
 
@@ -1186,7 +1186,8 @@ Documentation impact: <none | records>
 
 - 2026-09-23 — Plan authored after owner selection of Direction A with plotting-sheet personalization.
 - 2026-09-23 — Prerequisite met: the owner merged PR #76 and the canonical gate is green.
-- 2026-09-23 — Gate F complete: [Figma mirror](https://www.figma.com/design/V6FD6Sq3gqqxeMw5Si7Dnx), built with the Figma MCP (`figma-use`, `figma-generate-library`, `figma-generate-design`) in 7 write calls. Findings folded into the plan: D-25 (Pause hidden during the hero) and the new D-27 (compact hero label mask). Task 2 records the file URL in the review. Awaiting Task 1.
+- 2026-09-23 — Gate F complete: [Figma mirror](https://www.figma.com/design/V6FD6Sq3gqqxeMw5Si7Dnx), built with the Figma MCP (`figma-use`, `figma-generate-library`, `figma-generate-design`) in 7 write calls. Findings folded into the plan: D-25 (Pause hidden during the hero) and the new D-27 (compact hero label mask). Task 2 records the file URL in the review.
+- 2026-09-24 — Task 1 complete and gate G1 passed. Governance PR #77 (`RFC-SKY-CHART-VISUAL-SYSTEM-V2`, 18 supersession items) went through two independent review rounds (CHANGES REQUESTED, then minor). The owner merged it as `70168e9`. That accepts the redesign and its three explicit decisions: removing the derived Azure sculpture, adding HOME-IMPACT, and withdrawing the optional Connection film. Checkpoint W0 is pending Task 2.
 
 ## Important implementation decisions
 
@@ -1196,3 +1197,4 @@ Documentation impact: <none | records>
 
 - **Task 1 provider substitution (2026-09-23).** Task 1 was dispatched from a Claude Code orchestrator that cannot route work to GPT-6 Luna. Because the task is documentation-only and low-risk, Claude Sonnet 5 implements it. To keep implementation and review separate, the reviewer is an independent Claude Opus 5.5 agent with a fresh context, followed by the owner. The routing for Tasks 2–12 in section 18 is unchanged; the orchestrator re-evaluates the same constraint at each dispatch.
 - **Supersession list incomplete (2026-09-24, found by the Task 1 independent review).** The plan's original nine-item list for Task 1 missed approved Home rules that the D-rules change. The biggest omission was the removal of the derived Azure sculpture. The RFC had turned that gap into a “nothing outside it changes” assurance. The orchestrator extended the Task 1 packet to eighteen items, banned completeness claims, and extended Task 2's scope and section 8 to match. It also restored the retained ADR main-thread gate in section 14, reordered D-26 before D-27, and removed a working-tree-dependent file count from section 3. Apart from one item, the plan now only states consequences it had left implicit. The exception is the withdrawal of the ADR's optional Connection-film permission (item 17). That is a real architecture decision, surfaced to the owner at G1 rather than taken by the plan. The second review round also aligned Task 2's scope with the whole supersession list and relabelled the film in section 30.
+- **Task 2 provider substitution and RFC lock transfer (2026-09-24).** The GPT-6 Luna constraint still applies, so Claude Sonnet 5 implements Task 2 under the same Task 1 arrangement, and an independent Claude Opus 5.5 agent reviews it. Following repository convention for accepted RFCs, Task 2 also takes a lock transfer for `docs/rfcs/sky-chart-visual-system-v2.md`, `docs/rfcs/index.md` and `docs/reviews/sky-chart-direction-2026-09-23/index.md`, limited to recording acceptance (status APPROVED plus a dated approval line) and, for the review record, the Gate F Figma URL. Task 1 has merged.

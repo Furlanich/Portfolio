@@ -20,7 +20,11 @@ related:
   - PAGE-FOUNDER
   - PROJECTS-EXPERIENCE-CLOSURE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-20
+  - RFC-SKY-CHART-VISUAL-SYSTEM-V2
+  - ADR-SKY-CHART-HOMEPAGE-RUNTIME
+  - PLAN-SKY-CHART-HOME-REDESIGN-V2
+  - REVIEW-SKY-CHART-DIRECTION-2026-09-23
+last_verified: 2026-09-24
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -38,7 +42,7 @@ last_verified: 2026-09-20
 
 ## Global app-bar behavior — APPROVED
 
-- The shared site header remains a sticky app bar at the top of the viewport while scrolling in either direction. It stays in normal document flow, uses the approved Surface and Border treatment, and does not hide or translate on scroll.
+- The shared site header remains a sticky app bar at the top of the viewport while scrolling in either direction. It stays in normal document flow, uses the approved Surface and Border treatment, and does not hide or translate on scroll. *The Surface/Border fill is superseded on every route by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved)'s atlas-plate chart-header material (D-22; RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 4). The sticky, normal-flow and no-hide/no-translate rules are retained unchanged, including on Home; the Home dock transition keyed to `scrollY` is the only scroll-linked change D-22 introduces.*
 - At compact and medium widths below `1024px`, the primary navigation links and CTA collapse behind a native disclosure control with an accessible name and an associated navigation panel. The disclosure remains keyboard operable and does not require client-side JavaScript.
 - At wide widths of `1024px` and above, the same navigation links and CTA render inline beside the brand and language switch.
 - The disclosure trigger and every navigation action remain at least `44px` in both dimensions; the primary CTA remains at least `48px` high. Focus indication uses the approved visible treatment.
@@ -92,13 +96,13 @@ These requirements extend the foundation baseline to `HOME-PROBLEMS` through `HO
 
 - The entire localized homepage remains usable without horizontal scrolling at `320px` CSS viewport width.
 - Every section keeps one DOM/source order at every width. CSS grid placement must not reorder cards, steps, copy, or actions for assistive technology.
-- Problems and Audiences use one column compact and two columns from medium upward.
-- Services uses one column at compact and medium widths and three columns at wide widths.
-- Process uses one column compact, two columns medium, and four columns wide. Decorative connectors disappear whenever the sequence wraps and are never required to understand the order.
+- Problems and Audiences use one column compact and two columns from medium upward. *Superseded on Home only by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) D-13's plotting-sheet cascade (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 12); Audiences content is already retired into Problems and Services per `PAGE-HOME`.*
+- Services uses one column at compact and medium widths and three columns at wide widths. *Superseded on Home only by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) D-14's catalogue plates (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 12).*
+- Process uses one column compact, two columns medium, and four columns wide. Decorative connectors disappear whenever the sequence wraps and are never required to understand the order. *Superseded on Home only by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) D-17's ecliptic composition (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 12).*
 - Proof fallback remains one content panel at every width. A future approved project-card set uses one column compact, two columns medium, and up to three columns wide.
 - Founder uses one column compact/medium and a two-part text-led layout wide. Heading, biography, primary action, then secondary action remain the reading order.
 - Section and final-CTA action groups follow the existing CTA rule: full-width stacking below `480px`, then inline wrapping when space permits. Actions must not overlap or require horizontal scrolling.
-- Homepage Problems, Services, and Audiences cards use equal content-driven grid tracks within each repeated group and grow together from the tallest card. Cards do not truncate public copy; no fixed pixel height, line clamping, clipping, or false reading order is introduced.
+- Homepage Problems, Services, and Audiences cards use equal content-driven grid tracks within each repeated group and grow together from the tallest card. Cards do not truncate public copy; no fixed pixel height, line clamping, clipping, or false reading order is introduced. *Superseded on Home only by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) D-13, D-14 and D-17 (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 12); non-Home grids are unaffected.*
 - Long Spanish and English words, URLs, and translated CTA labels must wrap safely inside their containers.
 
 ### Semantics and reading hierarchy
@@ -369,21 +373,25 @@ The [prototype review](../reviews/immersive-homepage-prototype-2026-09-19/index.
 
 **Approved 2026-09-20.** This revision implements the accepted requirements in [RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1](../rfcs/adaptive-immersive-homepage-production-v1.md) and [ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE](../decisions/adaptive-immersive-homepage.md). It supersedes the earlier React Three Fiber candidate, single-poster reduced-motion detail, responsive composition table and OPEN performance thresholds. The semantic-first and native-scroll requirements remain.
 
+*The C2 two-zone composition, the four static chapter posters and the phase spine are superseded on Home by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 3); the optional Connection video is separately withdrawn (item 17, marked below). The chapters, their meaning, the "Progressive structure and media lifecycle" section's HTML-before-Three.js painting order, one-shot initialization and context-loss handling, and the "Scroll and motion control" section's no-idle-loop rendering and reversible native scroll are NOT superseded and remain in force; see `ADR-SKY-CHART-HOMEPAGE-RUNTIME` for the retained runtime boundaries.*
+
 ### Progressive structure and media lifecycle
 
 The server-rendered page owns localized copy, actions, chapter descriptions, captions, protected identity and stable static artwork. Direct Three.js and one optional native Connection video are progressive enhancements.
 
-The page paints meaningful HTML and the Recognition poster before loading Three.js. The Connection film is requested only as its chapter approaches the viewport, pauses when inactive and retains its poster. No more than one video decodes or plays. Save-Data, reduced motion, no JavaScript, unsupported WebGL and initialization failure use the static path. Context loss removes the canvas for the session. Initialization is attempted once.
+The page paints meaningful HTML and the Recognition poster before loading Three.js. The Connection film is requested only as its chapter approaches the viewport, pauses when inactive and retains its poster. No more than one video decodes or plays. Save-Data, reduced motion, no JavaScript, unsupported WebGL and initialization failure use the static path. Context loss removes the canvas for the session. Initialization is attempted once. *The Connection-film sentences are WITHDRAWN by [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 17, accepted at gate G1): the sky-chart runtime carries no video surface. The rule that the page paints HTML before loading Three.js stays in force; the thing painted first is now the D-23 environment poster pair, not the Recognition poster. Save-Data/reduced-motion/no-JS/unsupported-WebGL/initialization-failure behavior, context loss and one-shot initialization also remain in force unchanged.*
 
 ### Scroll and motion control
 
 Native progress maps to four stable reversible chapters: Recognition, Fragmentation, Connection and Coordination. Reverse scrolling follows the same paths. Geometry, video and surface transitions settle when scrolling stops; no idle render loop continues.
 
-A visible **Pause motion** control beside instrument status pauses WebGL updates and active video without changing the chapter. It is keyboard operable, exposes its state, has a visible focus indicator and supplements rather than replaces `prefers-reduced-motion`.
+A visible **Pause motion** control beside instrument status pauses WebGL updates and active video without changing the chapter. It is keyboard operable, exposes its state, has a visible focus indicator and supplements rather than replaces `prefers-reduced-motion`. *Superseded on Home by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) D-25 (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 16): the control moves to a fixed viewport corner, shown only while the chapter span is in view, with the phase readout hidden below 768px instead of shown beside a duplicated status. Its keyboard operability, `aria-pressed` state and supplementary role beside `prefers-reduced-motion` are retained.*
 
 Reduced motion presents static chapter compositions with immediate state changes and no autoplay. No audio autoplays.
 
 ### Responsive choreography
+
+*This five-width table is superseded on Home by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 16): the plan's section 10 scene mapping and D-11–D-19 layout rules replace it.*
 
 | Width | Required composition | Media behavior |
 | ---: | --- | --- |
@@ -397,7 +405,7 @@ Resize preserves the active chapter and document position. It cannot restart med
 
 ### Accessibility and failure contract
 
-The canvas is decorative, excluded from the accessibility tree, unfocusable and unable to own scroll or pointer interaction. Chapter meaning appears in HTML. Meaningful video receives an adjacent caption and transcript; decorative brand film is hidden from assistive technology and contains no essential information. Color is never the only state signal.
+The canvas is decorative, excluded from the accessibility tree, unfocusable and unable to own scroll or pointer interaction. Chapter meaning appears in HTML. Meaningful video receives an adjacent caption and transcript *(moot on Home: WITHDRAWN by item 17, below)*; decorative brand film is hidden from assistive technology and contains no essential information. Color is never the only state signal.
 
 | Condition | Required result |
 | --- | --- |
@@ -405,10 +413,12 @@ The canvas is decorative, excluded from the accessibility tree, unfocusable and 
 | Dynamic import failure | Current static composition remains |
 | WebGL unsupported | Static chapter compositions |
 | Context loss | Canvas removed for the session; current poster remains |
-| Video blocked or failed | Poster and HTML caption remain |
+| Video blocked or failed *(WITHDRAWN, item 17)* | Poster and HTML caption remain |
 | Slow connection | Poster remains without interruption |
 | Resize during transition | State recalculates from document position |
 | Optional asset absent | Chapter closes without an empty frame |
+
+*The video-specific caption/transcript sentence above and the "Video blocked or failed" row are WITHDRAWN by [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 17, accepted at gate G1): the sky-chart runtime carries no video surface, so no condition can produce a blocked or failed video. Every other row and the rest of this paragraph remain in force unchanged.*
 
 ### Production gates
 
@@ -416,9 +426,9 @@ The canvas is decorative, excluded from the accessibility tree, unfocusable and 
 | --- | ---: |
 | Incremental immersive JavaScript | ≤120 KiB Brotli |
 | First poster | ≤150 KiB |
-| Compact Connection-video rendition | ≤1.2 MB |
-| Wide Connection-video rendition | ≤2.5 MB |
-| Simultaneously playing videos | 1 |
+| Compact Connection-video rendition *(WITHDRAWN, see below)* | ≤1.2 MB |
+| Wide Connection-video rendition *(WITHDRAWN, see below)* | ≤2.5 MB |
+| Simultaneously playing videos *(WITHDRAWN, see below)* | 1 |
 | Canvas device-pixel ratio | ≤1.5 wide; ≤1.25 compact |
 | Scroll frame interval p95 | ≤20 ms |
 | Main-thread interaction task | <50 ms |
@@ -426,6 +436,40 @@ The canvas is decorative, excluded from the accessibility tree, unfocusable and 
 | LCP p75 | ≤2.5 seconds |
 | INP p75 | ≤200 ms |
 
+*The three video rows above are WITHDRAWN by [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 17, accepted at gate G1): the sky-chart runtime carries no video surface, so no Connection-video budget applies. Every other gate in this table is retained and restated, with its current values, in `ADR-SKY-CHART-HOMEPAGE-RUNTIME`'s production gates table.*
+
 The prototype bundle is not accepted merely because it fell below the JavaScript ceiling by only 3,173 bytes (about 3.1 KiB). Production must create meaningful headroom or return to governance before exceeding the ceiling.
 
-Acceptance evidence covers both locales, all five widths, forward/reverse traversal, resize and orientation change, keyboard/focus, 200 percent zoom, reduced motion, Save-Data, no JavaScript, unavailable WebGL, initialization failure, context loss, blocked media, root and optional base paths, static export, layout stability, a constrained Android device and repeated traversal for memory and thermal behavior.
+Acceptance evidence covers both locales, all five widths, forward/reverse traversal, resize and orientation change, keyboard/focus, 200 percent zoom, reduced motion, Save-Data, no JavaScript, unavailable WebGL, initialization failure, context loss, blocked media *(moot on Home: WITHDRAWN by item 17, above)*, root and optional base paths, static export, layout stability, a constrained Android device and repeated traversal for memory and thermal behavior.
+
+## SKY-CHART-V2 — Sky Chart Home and App Bar — APPROVED
+
+**APPROVED — 2026-09-24.** Recorded after the repository owner approved and merged [Governance PR #77](https://github.com/Furlanich/Portfolio/pull/77) (merge commit `70168e9`), accepting [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md). This section is the approved interaction, responsive and accessibility record for the Sky Chart App Bar (every route) and the Home environment. The complete normative specification is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) sections 6 (D-22 to D-25, D-27), 11 (animation and motion architecture) and 13 (accessibility strategy); this section records the approved rules concisely and links to the plan for exact numeric values.
+
+### App Bar behavior (D-22)
+
+On every localized route the App Bar keeps the approved prohibition on hiding, translating or animating based on scroll direction, stays sticky at `top: 0` in normal document flow, and reuses the approved target-size, focus and disclosure rules (see the item 4 markers above). On Home only, it docks from a transparent top state to the atlas-plate fill once `scrollY > 24`; that is the sole scroll-linked change. At ≥1024px, Home shows a decorative mono readout naming the current section, and the Process link receives `aria-current="location"` while its fragment is in view; other routes receive ordinary `aria-current="page"`. Below 1024px the existing native disclosure panel is retained, restyled to the atlas-plate material, with unchanged open/close and Escape behavior.
+
+### Environment fallback and recede (D-23, D-24)
+
+The canvas, ground, scrim, glyphs, bearings, plate numbers, readout, decorative arc and Bayer letters are all `aria-hidden`; all meaning stays in HTML in the approved source order. The locale-neutral static poster pair (D-23) is the complete fallback for reduced motion, Save-Data, no JavaScript, unsupported WebGL, initialization failure and context loss, matching the existing `IMMERSIVE-HOME-V1.1` failure contract. The recede/suspend behavior (D-24) adds a new idle condition — rendering stops while fully receded, in addition to stopping when scroll progress settles — and is itself decorative; no focusable control or meaning depends on it.
+
+### Pause control (D-25)
+
+The Pause motion control (see the item 16 marker above) is fixed at the viewport corner, shown only while the chapter span is in view, and hidden with the `hidden` attribute during the hero and under the D-24 recede rule. Hiding it during the hero never removes a focusable control while motion is visible, because the canvas shows no chapter motion before Chapter 1. It remains keyboard operable, exposes `aria-pressed`, and keeps a visible focus indicator, supplementing rather than replacing `prefers-reduced-motion`.
+
+### Compact hero label mask (D-27)
+
+Below 768px, tier-2 scene input labels and their links render at opacity 0 while the hero's bottom edge is below 60% of the viewport, following the normal reveal once the hero has scrolled past that line. This is an addition (found at Gate F, where labels collided with the H1 and lede at 390px), not a supersession of an existing rule: at ≥768px the D-03 scrim already separates labels from hero text, so no mask applies there.
+
+### Motion architecture (plan section 11)
+
+Every Home animation uses only `opacity`, `filter` or `transform`: the scene's scroll-driven bearing sweep and reveals settle when input stops; the recede/scrim transition and the App Bar dock use short CSS transitions; the Position fix toggle crossfades; hover stays color-only at 160ms. Content has no entrance animation or scroll reveal. Under reduced motion, the scene is not initialized (the static poster shows), and every other transition becomes instant.
+
+### Accessibility strategy (plan section 13)
+
+Heading hierarchy and landmark count are unchanged. Keyboard tab order is App Bar, hero actions, Problems action, Services action, the Position fix toggle buttons, Proof action, Process action, Founder action, CTA actions, then the Pause control when present, in the approved source order; focus is always visible and the sticky bar never hides a focused element (`scroll-padding-top: 96px`). Every text pair introduced by `SKY-CHART-V2` (design-visual D-04 to D-06 and D-19) is asserted by `scripts/design-tokens.test.mjs`, including worst-case translucent composites. Forced colors and reduced transparency follow `DESIGN-VISUAL` D-07. Zoom and reflow: 320px with no horizontal scroll, and 200% text zoom with content growth; the hero exceeds `100svh` when needed rather than clipping content. Targets stay at least 44px, with 48px for the primary CTA. A real NVDA + Firefox check and a VoiceOver iOS spot check close the previous plan's deferred screen-reader item (Task 11 manual QA).
+
+### Scope and supersession boundary
+
+This section and its inline markers above supersede, only within the stated boundary: the `IMMERSIVE-HOME-V1.1` C2 two-zone composition, the four static chapter posters and the phase spine (item 3, Home only; see the header marker above); the Global app-bar Surface/Border fill (item 4, every route; sticky/normal-flow/no-hide retained); the Home column-count and equal-track rules for Problems, Services and Process (item 12, Home only); the optional Connection-video permission (item 17, withdrawn, marked below); and the Pause control's placement plus the `IMMERSIVE-HOME-V1.1` five-width responsive-choreography table (item 16, Home only; the control's keyboard operability, `aria-pressed` state and supplementary role are retained). Item 3 does **not** supersede "Progressive structure and media lifecycle"'s painting-before-Three.js order, one-shot initialization or context-loss handling; nor "Scroll and motion control"'s no-idle-loop rendering and reversible native scroll; nor the "Accessibility and failure contract" or "Production gates" sections outside the video-specific rows marked below. The chapters and their meaning are retained. D-27 is a new addition, not a supersession. Outside these named boundaries, this document's other approved sections remain authoritative unchanged, including for Services, Projects, Studio, Founder, Contact and Privacy.

@@ -15,7 +15,9 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-23
+  - PLAN-SKY-CHART-HOME-REDESIGN-V2
+  - ADR-SKY-CHART-HOMEPAGE-RUNTIME
+last_verified: 2026-09-24
 ---
 
 # Execution plans
@@ -27,7 +29,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [PLAN-SKY-CHART-HOME-REDESIGN-V2](active/sky-chart-home-redesign-v2.md): **PROPOSED**. Sky Chart Home and App Bar redesign in twelve task/PR packets across five waves. It opens with a Governance RFC (Task 1) and needs owner approval before any implementation task starts. Direction evidence: [REVIEW-SKY-CHART-DIRECTION-2026-09-23](../reviews/sky-chart-direction-2026-09-23/index.md).
+- [PLAN-SKY-CHART-HOME-REDESIGN-V2](active/sky-chart-home-redesign-v2.md): **APPROVED**. Sky Chart Home and App Bar redesign in twelve task/PR packets across five waves. Gate G1 passed when the owner approved and merged [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md) as Governance PR #77 (`70168e9`); Task 2 / PR 2 recorded [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md) and the approved design/product sections. Implementation Wave 1 unlocks once checkpoint W0 passes. Direction evidence: [REVIEW-SKY-CHART-DIRECTION-2026-09-23](../reviews/sky-chart-direction-2026-09-23/index.md).
 
 ## Completed
 
