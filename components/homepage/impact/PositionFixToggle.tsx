@@ -69,6 +69,10 @@ export function PositionFixToggle({
   const mounted = useMounted();
   const [selected, setSelected] = useState<PositionFixMode>(INITIAL_MODE);
   const [hiddenLayer, setHiddenLayer] = useState<PositionFixMode | null>(null);
+  // N-S1 (independent review round 2): starts empty, and only select() ever
+  // sets it, so a screen reader never announces anything on page load --
+  // only in response to an actual click.
+  const [announcement, setAnnouncement] = useState('');
   const hideTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(
@@ -82,6 +86,7 @@ export function PositionFixToggle({
     if (selected === mode) return;
 
     setSelected(mode);
+    setAnnouncement(announcementTemplate.replace('{state}', mode === 'separate' ? separateLabel : connectedLabel));
     // Reveal both layers immediately: the incoming one starts from the
     // faded-out/blurred point declared by the @starting-style rule in
     // position-fix.module.css (it was `hidden`, i.e. not rendered at all,
@@ -111,10 +116,6 @@ export function PositionFixToggle({
     ? null
     : (hiddenLayer ?? (selected === 'separate' ? 'connected' : 'separate'));
 
-  const announcement = mounted
-    ? announcementTemplate.replace('{state}', selected === 'separate' ? separateLabel : connectedLabel)
-    : '';
-
   return (
     <>
       {mounted && (
@@ -138,7 +139,12 @@ export function PositionFixToggle({
         </div>
       )}
 
-      <div className={styles.layerStack}>
+      {/* N-B1 (independent review round 2): data-enhanced only appears once
+          mounted, so a no-JS/pre-hydration render keeps the CSS default
+          (both layers flow vertically, in source order) instead of the
+          enhanced single-grid-cell crossfade stacking, which would overlap
+          the two SVGs (and their captions) before any JS has run. */}
+      <div className={styles.layerStack} data-enhanced={mounted || undefined}>
         <div
           className={styles.layer}
           data-fade={!mounted ? undefined : selected === 'separate' ? 'in' : 'out'}

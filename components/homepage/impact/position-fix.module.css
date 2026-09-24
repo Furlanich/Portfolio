@@ -61,14 +61,24 @@
 
 /* S1 (independent review round 1): both figure layers share one grid cell so
    the figure never changes height while the outgoing layer is still fading
-   out and the incoming one is fading in. */
+   out and the incoming one is fading in. N-B1 (independent review round 2):
+   that grid-cell sharing must only apply once PositionFixToggle has
+   mounted. Applied unconditionally, a no-JS or pre-hydration render would
+   stack both SVGs (and their captions) in the same cell, drawn on top of
+   each other -- breaking the "without JS both SVGs show stacked [in source
+   order, i.e. flowing vertically]" contract. Without `data-enhanced`, the
+   grid falls back to its default single-column auto-flow, which places
+   each child in its own row (vertically stacked, not overlapping). */
 .layerStack {
   display: grid;
 }
 
+.layerStack[data-enhanced] > .layer {
+  grid-area: 1 / 1;
+}
+
 /* Crossfade: opacity plus a 2px blur, 240ms, the approved easing (D- section 11). */
 .layer {
-  grid-area: 1 / 1;
   transition: opacity 240ms cubic-bezier(.23, 1, .32, 1), filter 240ms cubic-bezier(.23, 1, .32, 1);
 }
 
@@ -255,13 +265,26 @@
   border: 0;
 }
 
-/* The visible source list: the accessible text equivalent of the chart. */
+/*
+ * The visible source list: the accessible text equivalent of the chart, and
+ * (N-A1, independent review round 2) the sighted equivalent of the SVG's
+ * decorative numeral keys below the 300px floor. list-style stays visible
+ * (decimal, not none) so its own ordinal numbering is always shown and
+ * always matches the numerals; `list-style: none` would also risk some
+ * assistive tech dropping the <ol>'s list semantics.
+ */
 .sourceList {
   display: grid;
   gap: 10px;
   margin: 20px 0 0;
   padding: 0;
-  list-style: none;
+  list-style: decimal inside;
+}
+
+.sourceList li::marker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 600;
+  color: #09243d; /* D-06 Ink */
 }
 
 .sourceList li {

@@ -5,6 +5,7 @@ import {
   SOURCES,
   getConnectedLines,
   getSeparateLines,
+  markerNumberAnchor,
   markerNumberForSourceId,
   type PositionFixContent,
   type PositionFixSourcePoint,
@@ -42,16 +43,24 @@ interface SourceMarkerProps {
  *
  * S4 amendment: below the 300px container-width floor the full-name .fixLabel
  * is hidden (CSS) and this also renders a .markerNumber numeral key (1-5, in
- * fixed SOURCES order) at the same position, shown only in that narrow band.
- * The numeral is a decorative duplicate of the visible source <ol>'s own
- * numbering; it is aria-hidden because the SVG's role="img" name/description
- * (title/desc) already carry the accessible meaning.
+ * fixed SOURCES order), shown only in that narrow band. The numeral is a
+ * decorative duplicate of the visible source <ol>'s own numbering; it is
+ * aria-hidden because the SVG's role="img" name/description (title/desc)
+ * already carry the accessible meaning.
+ *
+ * N-A2 (independent review round 2): the numeral no longer shares the name
+ * label's anchor. At the numeral's much larger 32-unit font size, the name
+ * label's offsets put its ascent inside the marker circle (bottom markers)
+ * or past y=0 (`book`, the top marker closest to the viewBox edge). Its
+ * position comes from lib/impact/position-fix.ts's markerNumberAnchor,
+ * which scripts/position-fix.test.mjs proves stays clear of both.
  */
 function SourceMarker({ point, name, tooltip, markerClassName }: SourceMarkerProps) {
   const anchorStart = point.x < POSITION_FIX_VIEW_BOX.width / 2;
   const anchorX = point.x + (anchorStart ? -10 : 10);
   const anchorY = point.y + (point.y < POSITION_FIX_VIEW_BOX.height / 2 ? -12 : 22);
   const textAnchor = anchorStart ? 'start' : 'end';
+  const numberAnchor = markerNumberAnchor(point);
 
   return (
     <g>
@@ -62,9 +71,9 @@ function SourceMarker({ point, name, tooltip, markerClassName }: SourceMarkerPro
         {name}
       </text>
       <text
-        x={anchorX}
-        y={anchorY}
-        textAnchor={textAnchor}
+        x={numberAnchor.x}
+        y={numberAnchor.y}
+        textAnchor={numberAnchor.textAnchor}
         className={`${styles.markerNumber} ${styles.labelInk}`}
         aria-hidden="true"
       >
@@ -142,10 +151,16 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
         viewBox={`0 0 ${POSITION_FIX_VIEW_BOX.width} ${POSITION_FIX_VIEW_BOX.height}`}
         role="img"
         aria-labelledby="position-fix-separate-title"
-        aria-describedby="position-fix-separate-desc"
+        aria-describedby="position-fix-separate-caption"
         className={styles.chart}
       >
         <title id="position-fix-separate-title">{content.figure.title}</title>
+        {/* Nit (d, independent review round 2): aria-describedby points at the
+            visible .chartCaption <p> below (same text), not this <desc>, so
+            a screen reader isn't handed two separate description strings for
+            one image. <desc> stays as the SVG's own native description --
+            already present regardless of JS, so it needs no separate no-JS
+            fallback. */}
         <desc id="position-fix-separate-desc">{content.figure.separateDescription}</desc>
         <SourceLines lines={separateLines} lineClassName={styles.lineContext} />
         <ellipse
@@ -170,7 +185,9 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
           {content.figure.doubtLabel}
         </text>
       </svg>
-      <p className={styles.chartCaption}>{content.figure.separateDescription}</p>
+      <p id="position-fix-separate-caption" className={styles.chartCaption}>
+        {content.figure.separateDescription}
+      </p>
     </div>
   );
 
@@ -180,7 +197,7 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
         viewBox={`0 0 ${POSITION_FIX_VIEW_BOX.width} ${POSITION_FIX_VIEW_BOX.height}`}
         role="img"
         aria-labelledby="position-fix-connected-title"
-        aria-describedby="position-fix-connected-desc"
+        aria-describedby="position-fix-connected-caption"
         className={styles.chart}
       >
         <title id="position-fix-connected-title">{content.figure.title}</title>
@@ -202,7 +219,9 @@ export function PositionFixFigure({ content }: PositionFixFigureProps) {
           {content.figure.fixLabel}
         </text>
       </svg>
-      <p className={styles.chartCaption}>{content.figure.connectedDescription}</p>
+      <p id="position-fix-connected-caption" className={styles.chartCaption}>
+        {content.figure.connectedDescription}
+      </p>
     </div>
   );
 
