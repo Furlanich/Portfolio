@@ -290,6 +290,36 @@ test('ships only the approved font faces with provenance recorded in DESIGN-VISU
   }
 });
 
+test('BrandSignature on-dark variant renders the D-22 bone-on-azure App Bar tile', () => {
+  const signature = read('components/brand/BrandSignature.tsx');
+
+  assert.match(signature, /variant\?:\s*'on-light'\s*\|\s*'on-dark'/, 'the default variant is unchanged for any other consumer');
+  assert.match(signature, /variant === 'on-dark'/);
+  assert.match(signature, /data-app-bar-brand/, 'lets AppBarBehavior find the App Bar\'s own home link');
+
+  // 32px Azure tile (radius 7px) holding the Bone protected mark at 22px.
+  assert.match(signature, /h-8 w-8[^"]*rounded-\[7px\][^"]*bg-foundation-action/);
+  assert.match(signature, /width=\{22\}\s+height=\{22\}/);
+  assert.match(
+    signature,
+    /stroke="#F9F6EE" strokeWidth=\{30\} strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit=\{4\}/,
+    'the on-dark mark inverts to the Bone layer color; geometry stays canonical',
+  );
+
+  // The on-dark branch keeps the same three canonical chevron centerlines as the default variant.
+  const onDarkSection = signature.slice(signature.indexOf("variant === 'on-dark'"));
+  assert.deepEqual(
+    [...onDarkSection.matchAll(/<polyline points="([^"]+)" \/>/g)].slice(0, 3).map((match) => match[1]),
+    ['30,102 128,28 226,102', '30,166 128,92 226,166', '30,230 128,156 226,230'],
+  );
+
+  // Bone 16px/700/0.08em wordmark; the accessible name stays "FURLANICH" (visible text, no
+  // aria-label override).
+  assert.match(onDarkSection, /text-base font-bold tracking-\[0\.08em\] text-white/);
+  assert.match(onDarkSection, /<span>FURLANICH<\/span>/);
+  assert.doesNotMatch(onDarkSection, /aria-label="FURLANICH"/);
+});
+
 test('covers every Spanish and English content character in the primary face', () => {
   const primary = cmapCodePoints(readWoff2Tables(readBytes(fontFiles[0].file)).get('cmap'));
   const missing = [...localeContentCharacters()].filter((character) => !primary.has(character.codePointAt(0)));
