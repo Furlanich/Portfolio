@@ -613,7 +613,7 @@ Every packet also inherits these rules:
   - Add a status note to the superseded ADR.
   - Add APPROVED sections `SKY-CHART-V2` to DESIGN-VISUAL (D-01 to D-27) and DESIGN-IX-A11Y (D-22 to D-25 and D-27, plus sections 11 and 13).
   - Add `HOME-IMPACT` and Appendix A's strings to PAGE-HOME, and update its approved section order.
-  - In DESIGN-VISUAL and DESIGN-IX-A11Y, mark every Home rule named by supersession items 10–16 as superseded on Home by `SKY-CHART-V2`, keeping the original text as history. In the new ADR, record the sculpture removal and the withdrawn Connection-film permission (items 14 and 17).
+  - In DESIGN-VISUAL and DESIGN-IX-A11Y, mark every rule named anywhere in the supersession list (items 1–8, the item-3 C2 sections, and items 10–16) as superseded by `SKY-CHART-V2` within its stated boundary, keeping the original text as history. In the new ADR, record the sculpture removal and the withdrawn Connection-film permission (items 14 and 17).
   - Update the status register.
   - Set this plan's `status` to APPROVED.
   - Record the Figma URL if Gate F has run.
@@ -1079,7 +1079,7 @@ Performed after W3. Results are recorded honestly in Task 12's acceptance record
 - **RISK — Figma drift.** The mirror is a snapshot of this plan (Gate F). If implementation changes a D-rule through an approved deviation, update Figma in one batched call, or record the drift in the acceptance review.
 - **OPEN — Press-scale feedback** (Emil Kowalski recommendation). Not adopted, because it conflicts with the approved no-scale rule; it would need a separate design decision.
 - **DEFERRED — Services, Projects, Studio, Founder, Contact and Privacy restyling** into the new materials. They get only the App Bar.
-- **DEFERRED — Connection film and any video.**
+- **WITHDRAWN (proposed, decided at G1) — the Connection film and any video.** The runtime ADR's permission for one optional film is withdrawn (supersession item 17). Reintroducing video requires a new governance decision.
 - **RISK — Linux baselines** depend on CI actuals and owner approval (T-11).
 - **RISK — Spanish strings are ~30% longer.** Every layout test runs in both locales; if a string wraps badly, the fix is a layout change, never shrinking type below the D-09 minimums.
 
@@ -1195,4 +1195,4 @@ Documentation impact: <none | records>
 ## Deviations discovered during execution
 
 - **Task 1 provider substitution (2026-09-23).** Task 1 was dispatched from a Claude Code orchestrator that cannot route work to GPT-6 Luna. Because the task is documentation-only and low-risk, Claude Sonnet 5 implements it. To keep implementation and review separate, the reviewer is an independent Claude Opus 5.5 agent with a fresh context, followed by the owner. The routing for Tasks 2–12 in section 18 is unchanged; the orchestrator re-evaluates the same constraint at each dispatch.
-- **Supersession list incomplete (2026-09-24, found by the Task 1 independent review).** The plan's original nine-item list for Task 1 missed approved Home rules that the D-rules change. The biggest omission was the removal of the derived Azure sculpture. The RFC had turned that gap into a “nothing outside it changes” assurance. The orchestrator extended the Task 1 packet to eighteen items, banned completeness claims, and extended Task 2's scope and section 8 to match. It also restored the retained ADR main-thread gate in section 14, reordered D-26 before D-27, and removed a working-tree-dependent file count from section 3. No design decision changed; the plan now states consequences it previously left implicit.
+- **Supersession list incomplete (2026-09-24, found by the Task 1 independent review).** The plan's original nine-item list for Task 1 missed approved Home rules that the D-rules change. The biggest omission was the removal of the derived Azure sculpture. The RFC had turned that gap into a “nothing outside it changes” assurance. The orchestrator extended the Task 1 packet to eighteen items, banned completeness claims, and extended Task 2's scope and section 8 to match. It also restored the retained ADR main-thread gate in section 14, reordered D-26 before D-27, and removed a working-tree-dependent file count from section 3. Apart from one item, the plan now only states consequences it had left implicit. The exception is the withdrawal of the ADR's optional Connection-film permission (item 17). That is a real architecture decision, surfaced to the owner at G1 rather than taken by the plan. The second review round also aligned Task 2's scope with the whole supersession list and relabelled the film in section 30.
