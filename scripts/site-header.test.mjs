@@ -124,8 +124,29 @@ test('AppBarBehavior sets up a rAF-throttled scroll listener and an Intersection
 test('AppBarBehavior computes aria-current from a normalized pathname, ignoring the Process hash link', () => {
   const source = fs.readFileSync(appBarBehaviorPath, 'utf8');
 
-  assert.match(source, /function normalizeAppBarPath/);
+  assert.match(source, /import \{ normalizeAppBarPath \} from '\.\/app-bar-path'/);
   assert.match(source, /setAttribute\('aria-current', 'page'\)/);
   assert.match(source, /setAttribute\('aria-current', 'location'\)/);
   assert.match(source, /isProcessLink/);
+});
+
+// REFACTOR: normalizeAppBarPath is extracted from AppBarBehavior.tsx into its own
+// DOM-free, plain .ts module (components/foundation/app-bar-path.ts) so it can be unit
+// tested directly with node --test -- AppBarBehavior.tsx itself cannot be imported here
+// because JSX is not type-strippable by Node's built-in TypeScript support.
+test('normalizeAppBarPath ignores a trailing slash and a configured base path', async () => {
+  const { normalizeAppBarPath } = await import('../components/foundation/app-bar-path.ts');
+
+  assert.equal(normalizeAppBarPath('/'), '/');
+  assert.equal(normalizeAppBarPath(''), '/');
+  assert.equal(normalizeAppBarPath('/en/services/'), '/en/services');
+  assert.equal(normalizeAppBarPath('/en/services'), '/en/services');
+  assert.equal(normalizeAppBarPath('en/services/'), '/en/services');
+  assert.equal(normalizeAppBarPath('/base/en/services/', '/base'), '/en/services');
+  assert.equal(normalizeAppBarPath('/base/', '/base'), '/');
+  assert.equal(
+    normalizeAppBarPath('/en/services/', ''),
+    normalizeAppBarPath('/en/services'),
+    'a route link and the current location normalize to the same value regardless of a trailing slash',
+  );
 });
