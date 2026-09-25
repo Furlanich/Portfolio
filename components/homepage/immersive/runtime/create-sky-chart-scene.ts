@@ -106,6 +106,7 @@ export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost
   const labels: LabelEntry[] = [];
   let lastFrame: SkyChartFrame | null = null;
   let labelOpacityScale = 1;
+  let disposed = false;
 
   const handleContextLost = () => onContextLost();
   canvas.addEventListener('webglcontextlost', handleContextLost);
@@ -157,6 +158,14 @@ export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost
       renderer.render(scene, camera);
     },
     dispose() {
+      // Idempotent: an in-flight activation can race an unmount (the outer React cleanup effect
+      // disposes synchronously; the async activation callback then resumes and, seeing
+      // `cancelled`, disposes again). A second three.js `renderer.dispose()` on already-freed
+      // internal state can throw, which would otherwise cascade into a second, throwing
+      // `onContextLost` -> teardown -> dispose call. Guarding here keeps every caller's
+      // dispose-on-cancellation logic simple and safe to call more than once.
+      if (disposed) return;
+      disposed = true;
       canvas.removeEventListener('webglcontextlost', handleContextLost);
       const geometries: BufferGeometry[] = [graticuleGeometry, starsGeometry, linkGeometry];
       const materials: Material[] = [graticuleMaterial, starsMaterial, linkMaterial, ...labels.map((entry) => entry.material)];
