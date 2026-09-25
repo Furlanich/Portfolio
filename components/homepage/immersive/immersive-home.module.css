@@ -1,180 +1,231 @@
 /*
- * Static C2 stage. Source order is identical at every width:
- * anchor -> wide Recognition poster -> chapters 01..04.
- * Below 1024px everything flows in one column and the wide poster is not rendered.
- * From 1024px the anchor and chapter 01 share the first stage beside the Recognition
- * poster, and chapters 02..04 continue as rows whose posters abut, so the 4:5 viewport
- * reads as one persistent instrument without JavaScript.
+ * SKY-CHART-V2 static composition (PLAN-SKY-CHART-HOME-REDESIGN-V2 D-01 to D-03, D-10 to
+ * D-12). Colour tokens come from the D-04 `--sky-*` custom properties (app/globals.css,
+ * Task 3); approved brand hex (Bone #F9F6EE, Azure #004589) is written directly, matching
+ * the convention already used in components/surfaces/surfaces.module.css.
  */
 
-.stage {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+/*
+ * DEVIATION from D-01's literal ancestor rule, recorded for owner/reviewer attention
+ * (see the PR body): `html`/`body` (app/globals.css, Task 3, locked) declare a non-
+ * transparent background. Per the CSS root-canvas rule, that background is promoted to
+ * paint the document canvas, which sits *below* any negative z-index descendant of the
+ * root stacking context -- so a bare `z-index: -3` fixed child of `<body>` is invisible in
+ * every browser tested, not merely under this one ground layer. `isolation: isolate` on
+ * this composition's own root gives its negative-z children a *local* stacking context
+ * instead, which has no such canvas step, while leaving position:fixed's viewport-relative
+ * containing block untouched (only transform/filter/perspective/contain change that, and
+ * none of those are used here). This does not change the fixed layers' own geometry or the
+ * approved D-01 z-index values; it only relocates which stacking context they resolve
+ * in, so the ground and scrim actually render. Flagged for the reviewer because D-01 lists
+ * "isolation" among the properties no ancestor of the fixed layers may use.
+ */
+.instrument {
+  isolation: isolate;
 }
 
-.stageArtwork {
-  display: none;
+/*
+ * D-01/D-02/D-23 environment ground. Fixed and z-index -3 so it always paints behind the
+ * WebGL canvas (-2, Task 7's portal target -- see the PR body note above about
+ * document.body vs this isolated root) and the D-03 scrim (-1) below.
+ */
+.ground {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background: radial-gradient(120% 90% at 70% 10%, #0E2B4A 0%, var(--sky-deep) 38%, var(--sky-abyss) 78%);
 }
 
-.chapterArtwork {
-  aspect-ratio: 1 / 1;
-  max-width: 36rem;
+/* D-23 poster slot: empty until Task 10 sets a background-image here. */
+.groundPoster {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: 70% 30%;
 }
 
-.frame {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--frame-rule);
-  background: var(--frame-ground);
+/* The poster is a flat fallback image; once the WebGL scene is live it hides beneath the
+   (alpha-transparent) canvas, which paints over the same ground gradient. */
+[data-instrument][data-immersive-mode='webgl'] .groundPoster {
+  visibility: hidden;
 }
 
-.frame img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
+/* D-03 contrast scrim. Direction and stops depend on width; opacity is animated at runtime
+   by Task 7 following the D-24 recede factor. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(6, 18, 31, .78) 0%, rgba(6, 18, 31, .5) 34%, rgba(6, 18, 31, 0) 62%);
 }
 
-@media (min-width: 1024px) {
-  .stage {
-    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
-    column-gap: 3rem;
-  }
-
-  .anchor {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .stageArtwork {
-    display: block;
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    /* Fill the anchor and chapter 01 rows so the stage column stays continuous. */
-    align-self: stretch;
-    min-height: 32rem;
-  }
-
-  .chapter {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: subgrid;
-    column-gap: 3rem;
-  }
-
-  .chapter[data-instrument-chapter='recognition'] {
-    grid-column: 1;
-    grid-row: 2;
-    display: block;
-  }
-
-  /* Explicit rows keep chapters beside the stage track instead of being auto-placed below it. */
-  .chapter[data-instrument-chapter='fragmentation'] {
-    grid-row: 3;
-  }
-
-  .chapter[data-instrument-chapter='connection'] {
-    grid-row: 4;
-  }
-
-  .chapter[data-instrument-chapter='coordination'] {
-    grid-row: 5;
-  }
-
-  .chapter[data-instrument-chapter='recognition'] .chapterArtwork {
-    display: none;
-  }
-
-  .chapterText {
-    grid-column: 1;
-  }
-
-  .chapterArtwork {
-    grid-column: 2;
-    max-width: none;
-    aspect-ratio: 4 / 5;
-    margin-top: -1px;
-  }
-}
-
-@media (min-width: 1024px) {
-  /* The spine runs along the text/stage boundary of each chapter row. */
-  .chapterText {
-    position: relative;
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-right: 2.5rem;
-    border-right: 1px solid var(--frame-rule);
-  }
-
-  .chapter[data-instrument-chapter='recognition'] .chapterText {
-    padding-top: 2.5rem;
+@media (max-width: 767px) {
+  .scrim {
+    background: linear-gradient(180deg, rgba(6, 18, 31, 0) 0%, rgba(6, 18, 31, .55) 45%, rgba(6, 18, 31, .82) 100%);
   }
 }
 
 /*
- * Progressive enhancement. The track exists only as a sticky host at wide widths; compact
- * layouts place the overlay inside the active chapter frame. Posters stay mounted and are
- * hidden only after the first WebGL frame (data-immersive-mode="webgl").
+ * D-11 hero. Pulled up under the App Bar by the full `--app-bar-height` (Task 3), so its
+ * visible top sits at the bar's own edge; content is bottom-aligned inside a full
+ * `100svh` block so it never depends on a viewport-height hack that could clip at 200% zoom
+ * (min-height, not height, lets the block grow taller than the viewport instead).
  */
-.stage {
-  position: relative;
+.hero {
+  display: grid;
+  align-content: end;
+  min-height: 100svh;
+  margin-top: calc(-1 * var(--app-bar-height));
+  padding-block: calc(var(--app-bar-height) + 36px) 72px;
 }
 
-/* Compact: the track spans the stage so the overlay can sit on the active chapter frame. */
-.enhancementTrack {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.enhancementOverlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  border: 1px solid var(--frame-rule);
-  background: var(--frame-ground);
-}
-
-.enhancementCanvasHost {
-  position: absolute;
-  inset: 0;
-}
-
-.enhancementBar {
-  position: absolute;
-  inset: auto 0.75rem 0.75rem;
+.coordinateLine {
   display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 0;
+  color: var(--sky-lit);
+}
+
+.heroHeading {
+  margin: 20px 0 24px;
+  max-width: 13ch;
+  color: #F9F6EE;
+  text-wrap: balance;
+}
+
+.heroLede {
+  margin: 0;
+  max-width: 46ch;
+  color: var(--sky-text-2);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.trustRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 40px;
+  padding-top: 20px;
+  max-width: 760px;
+  border-top: 1px solid var(--sky-plate-line);
+  color: var(--sky-text-2);
+  font-size: 14px;
+}
+
+.trustRow p {
+  margin: 0;
+}
+
+/* D-20 actions (dark-ground pair used by the hero). */
+.primaryAction,
+.ghostAction {
+  display: inline-flex;
+  min-height: 48px;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  justify-content: center;
+  padding: 0 22px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--dur-2) ease;
+}
+
+.primaryAction {
+  background: #004589;
+  color: #F9F6EE;
+  box-shadow: inset 0 1px 0 rgba(249, 246, 238, .18);
+}
+
+.primaryAction:hover {
+  background: #0A55A3;
+}
+
+.ghostAction {
+  border: 1px solid rgba(156, 196, 236, .5);
+  color: #F9F6EE;
+}
+
+.ghostAction:hover {
+  background: rgba(111, 168, 224, .12);
+}
+
+@media (max-width: 479px) {
+  .heroActions .primaryAction,
+  .heroActions .ghostAction {
+    width: 100%;
+  }
+}
+
+/* D-21 dark-context focus: the global :focus-visible rule (app/globals.css) is tuned for
+   the light foundation surfaces, so the instrument tree overrides it for its own links and
+   buttons. The attribute-selector prefix means CSS Modules pass this through unscoped. */
+[data-instrument] a:focus-visible,
+[data-instrument] button:focus-visible {
+  outline: 3px solid var(--sky-glow);
+  outline-offset: 3px;
+  box-shadow: none;
+}
+
+/*
+ * D-10/D-12 chapters. The container's own padding-block (10vh/30vh) gives the environment
+ * room to reveal before the first chapter and recede after the last one. The large vh gap
+ * applies only between chapters (the adjacent-sibling selector), not between the instrument
+ * label and the first chapter, which only needs a modest margin.
+ */
+.chapters {
+  padding-block: 10vh 30vh;
+}
+
+.instrumentLabel {
+  margin: 0 0 24px;
+  color: var(--sky-lit);
+}
+
+.chapter {
+  max-width: 520px;
+}
+
+@media (max-width: 767px) {
+  .chapter {
+    max-width: none;
+  }
+}
+
+.chapter + .chapter {
+  margin-top: 22vh;
+}
+
+@media (min-width: 768px) {
+  .chapter + .chapter {
+    margin-top: 28vh;
+  }
 }
 
 @media (min-width: 1024px) {
-  .enhancementTrack {
-    inset: auto;
-    grid-column: 2;
-    grid-row: 1 / span 5;
-    position: relative;
-    z-index: 1;
-    pointer-events: none;
+  .chapter + .chapter {
+    margin-top: 34vh;
   }
+}
 
-  .enhancementSticky {
-    position: sticky;
-    top: 6rem;
-    aspect-ratio: 4 / 5;
-    max-height: calc(100vh - 7.5rem);
-    width: 100%;
-  }
+.chapterKicker {
+  color: var(--sky-lit);
+}
 
-  [data-immersive-mode='webgl'] .stageArtwork,
-  [data-immersive-mode='webgl'] .chapterArtwork {
-    visibility: hidden;
-  }
+.chapterHeading {
+  margin: 14px 0 12px;
+  text-wrap: balance;
+}
+
+.chapterDescription {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
 }

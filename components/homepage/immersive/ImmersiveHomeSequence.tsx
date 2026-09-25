@@ -1,51 +1,50 @@
 import type { HomePageContent } from '@/components/homepage/content-types';
-import { getInstrumentPoster } from '@/lib/immersive-home/media-manifest';
+import { EnvironmentGround } from './EnvironmentGround';
 import { ImmersiveChapter } from './ImmersiveChapter';
 import { ImmersiveEditorialAnchor } from './ImmersiveEditorialAnchor';
 import { ImmersiveEnhancement } from './ImmersiveEnhancement';
-import { ImmersiveStaticArtwork } from './ImmersiveStaticArtwork';
 import styles from './immersive-home.module.css';
 
 interface ImmersiveHomeSequenceProps {
   content: HomePageContent;
 }
 
-// Complete static C2 sequence: server-rendered proposition, actions and four chapters with
-// decorative posters. ImmersiveEnhancement may cover the stage but never replaces this document.
+/**
+ * The complete static Sky Chart composition (PLAN-SKY-CHART-HOME-REDESIGN-V2 D-01, D-10 to
+ * D-12): a full-viewport environment behind a bottom-aligned hero and four atlas-plate
+ * chapters. ImmersiveEnhancement may layer a WebGL scene over the environment ground, but
+ * this document is the complete experience without it.
+ */
 export function ImmersiveHomeSequence({ content }: ImmersiveHomeSequenceProps) {
-  const { instrument } = content;
-  const [firstChapter] = instrument.chapters;
+  const { instrument, readout } = content;
 
   return (
-    <div
-      data-instrument
-      className="bg-foundation-canvas [--frame-ground:theme(colors.foundation.canvas)] [--frame-rule:theme(colors.foundation.border)]"
-    >
-      <div className={`${styles.stage} mx-auto w-full max-w-[1200px] px-5 pt-12 md:px-8 md:pt-16 lg:px-12 lg:pb-24 lg:pt-24`}>
-        <section aria-labelledby="home-heading" className={`${styles.anchor} pb-12 md:pb-16 lg:pb-0`}>
-          <ImmersiveEditorialAnchor content={content} instrumentLabel={instrument.label} />
-        </section>
-        <ImmersiveStaticArtwork
-          poster={getInstrumentPoster(firstChapter.artworkId)}
-          className={styles.stageArtwork}
-          priority
-        />
-        <ImmersiveEnhancement
-          statusLabel={instrument.statusLabel}
-          pauseLabel={instrument.pauseLabel}
-          resumeLabel={instrument.resumeLabel}
-          sequences={instrument.chapters.map((chapter) => chapter.sequence)}
-        />
-        {instrument.chapters.map((chapter, index) => (
-          <ImmersiveChapter
-            key={chapter.id}
-            chapter={chapter}
-            index={index}
-            total={instrument.chapters.length}
-            statusLabel={instrument.statusLabel}
-          />
+    <div data-instrument className={styles.instrument}>
+      <EnvironmentGround />
+      <section aria-labelledby="home-heading" data-readout={readout.home} className={styles.hero}>
+        <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
+          <ImmersiveEditorialAnchor content={content} coordinates={instrument.coordinates} />
+        </div>
+      </section>
+      <div
+        data-instrument-chapters
+        className={`${styles.chapters} mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12`}
+      >
+        <p className={`${styles.instrumentLabel} font-mono text-label uppercase`}>{instrument.label}</p>
+        {instrument.chapters.map((chapter) => (
+          <ImmersiveChapter key={chapter.id} chapter={chapter} plateLabel={instrument.plateLabel} readout={readout.home} />
         ))}
       </div>
+      {/*
+        Rendered last so the Pause control (inside, when active) is the next stop after the
+        chapters' own focusable content, per D-25's keyboard order.
+      */}
+      <ImmersiveEnhancement
+        statusLabel={instrument.statusLabel}
+        pauseLabel={instrument.pauseLabel}
+        resumeLabel={instrument.resumeLabel}
+        sequences={instrument.chapters.map((chapter) => chapter.sequence)}
+      />
     </div>
   );
 }

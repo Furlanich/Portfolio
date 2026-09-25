@@ -74,15 +74,6 @@ const founderRequirements = {
     mpcHref: '/en/work/mpc-administracion/',
   },
 };
-// Four decorative brand-motion posters from lib/immersive-home/media-manifest.ts. They are
-// the only images the homepage may render, and each must carry an empty alternative text.
-const homepagePosters = [
-  '/brand/immersive/recognition.svg',
-  '/brand/immersive/fragmentation.svg',
-  '/brand/immersive/connection.svg',
-  '/brand/immersive/coordination.svg',
-];
-
 const homepageRequirements = {
   'index.html': {
     chapters: [
@@ -868,20 +859,14 @@ for (const { artifact, html } of allHtml) {
     failures.push(`${artifact.file}: instrument chapters must precede Problems`);
   }
 
-  const expectedPosters = homepagePosters.map((poster) => expectedHref(poster));
+  // SKY-CHART-V2 Task 8: the four chapter posters are gone (D-12). The environment ground
+  // (D-01/D-23) is the only decorative homepage layer, and it must be part of the document.
+  if (!/\bdata-environment-ground(?:="[^"]*")?[\s>]/.test(html)) {
+    failures.push(`${artifact.file}: missing EnvironmentGround (no data-environment-ground layer)`);
+  }
   for (const image of html.match(/<img\b[^>]*>/gi) ?? []) {
     const src = image.match(/\ssrc="([^"]+)"/)?.[1];
-    if (!expectedPosters.includes(src)) {
-      failures.push(`${artifact.file}: unexpected homepage image ${src}`);
-    }
-    if (!/\salt=""/.test(image)) {
-      failures.push(`${artifact.file}: homepage poster ${src} must be decorative (alt="")`);
-    }
-  }
-  for (const poster of expectedPosters) {
-    if (!html.includes(`src="${poster}"`)) {
-      failures.push(`${artifact.file}: missing instrument poster ${poster}`);
-    }
+    failures.push(`${artifact.file}: unexpected homepage image ${src}`);
   }
 
   let previousSectionPosition = -1;
