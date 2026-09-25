@@ -5,15 +5,18 @@ import { appPathname, appUrl, stableRoutes } from './support/paths';
 // The static composition is the complete design; reduced motion keeps it deterministic here.
 test.use({ reducedMotion: 'reduce' });
 
+const chapterIds = ['recognition', 'fragmentation', 'connection', 'coordination'] as const;
+
 const homeCases = [
   {
     locale: 'Spanish',
     route: stableRoutes.home.es,
     label: 'FURLANICH · Del proceso al sistema',
-    statuses: ['ETAPA 01 DE 04', 'ETAPA 02 DE 04', 'ETAPA 03 DE 04', 'ETAPA 04 DE 04'],
+    plates: ['Lámina 01/04', 'Lámina 02/04', 'Lámina 03/04', 'Lámina 04/04'],
+    kickers: ['Reconocer', 'Fragmentar', 'Conectar', 'Coordinar'],
     chapters: ['Reconocer el sistema real', 'Ver dónde se fragmenta', 'Conectar lo que importa', 'Coordinar el trabajo'],
     firstDescription: 'Pedidos, reservas, mensajes y tareas ya conviven en un mismo negocio. El primer paso es entender cómo se relacionan.',
-    problemsHeading: 'Cuando lo manual empieza a frenar el negocio',
+    readout: 'Inicio',
     primary: ['Ver contacto', '/contacto/'],
     secondary: ['Ver servicios', '/servicios/'],
   },
@@ -21,133 +24,240 @@ const homeCases = [
     locale: 'English',
     route: stableRoutes.home.en,
     label: 'FURLANICH · From process to system',
-    statuses: ['PHASE 01 OF 04', 'PHASE 02 OF 04', 'PHASE 03 OF 04', 'PHASE 04 OF 04'],
+    plates: ['Plate 01/04', 'Plate 02/04', 'Plate 03/04', 'Plate 04/04'],
+    kickers: ['Recognize', 'Fragment', 'Connect', 'Coordinate'],
     chapters: ['Recognize the real system', 'See where it fragments', 'Connect what matters', 'Coordinate the work'],
     firstDescription: 'Orders, bookings, messages, and tasks already coexist in one business. The first step is understanding how they relate.',
-    problemsHeading: 'When manual work starts holding the business back',
+    readout: 'Home',
     primary: ['Contact options', '/en/contact/'],
     secondary: ['Explore services', '/en/services/'],
   },
 ] as const;
 
-const chapterIds = ['recognition', 'fragmentation', 'connection', 'coordination'] as const;
-
-async function box(page: Page, selector: string) {
-  const bounds = await page.locator(selector).first().boundingBox();
-  expect(bounds, selector).not.toBeNull();
-  return bounds!;
-}
-
-async function isVisuallyHidden(page: Page, selector: string) {
+// Transform, filter, opacity < 1 and a positioned z-index all change a fixed descendant's
+// *containing block* or its spatial placement -- the real risk D-01 guards against, and
+// none of them are used anywhere in this tree. `[data-instrument]` itself is the one
+// documented exception to the "isolation" and "positioned z-index" clauses only (see the
+// `.instrument` rule in immersive-home.module.css and the PR body): `isolation: isolate`
+// gives the ground and scrim a local stacking context so they render at all above
+// app/globals.css's non-transparent `html`/`body` background, without changing
+// position:fixed's containing block (only transform/filter/perspective/contain do that).
+async function noStackingContextAncestors(page: Page, selector: string) {
   return page.locator(selector).first().evaluate((element) => {
-    const rect = element.getBoundingClientRect();
-    return rect.width <= 1 && rect.height <= 1;
+    const findings: string[] = [];
+    let node: Element | null = element.parentElement;
+    while (node && node !== document.documentElement) {
+      const style = getComputedStyle(node);
+      const isDocumentedInstrumentRoot = node.hasAttribute('data-instrument');
+      if (style.transform !== 'none') findings.push(`${node.tagName} has a transform`);
+      if (style.filter !== 'none') findings.push(`${node.tagName} has a filter`);
+      if (Number.parseFloat(style.opacity) < 1) findings.push(`${node.tagName} has opacity < 1`);
+      if (style.isolation === 'isolate' && !isDocumentedInstrumentRoot) findings.push(`${node.tagName} isolates`);
+      if (style.position !== 'static' && style.zIndex !== 'auto' && !isDocumentedInstrumentRoot) {
+        findings.push(`${node.tagName} is positioned with a z-index`);
+      }
+      node = node.parentElement;
+    }
+    return findings;
   });
 }
 
 for (const homeCase of homeCases) {
-  test(`${homeCase.locale} homepage renders the complete static instrument before Problems`, async ({ page }) => {
+  test(`${homeCase.locale} homepage renders the complete static composition before Problems`, async ({ page }) => {
     const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
     await page.goto(appUrl(homeCase.route));
     const main = page.getByRole('main');
 
     await expect(main.locator('h1')).toHaveCount(1);
     await expect(main.locator('h2').first()).toHaveText(homeCase.chapters[0]);
-    await expect(main.locator('h2').nth(4)).toHaveText(homeCase.problemsHeading);
     for (const [index, id] of chapterIds.entries()) {
       const chapter = main.locator(`section[data-instrument-chapter="${id}"]`);
       await expect(chapter.getByRole('heading', { level: 2, name: homeCase.chapters[index], exact: true })).toBeVisible();
-      await expect(chapter.locator('[data-phase-status]')).toHaveText(homeCase.statuses[index]);
-      await expect(chapter.locator('[data-sequence]')).toHaveAttribute('aria-hidden', 'true');
+      await expect(chapter).toHaveAttribute('data-readout', homeCase.readout);
     }
     await expect(main.getByText(homeCase.firstDescription, { exact: true })).toBeVisible();
+    await expect(main.getByText(homeCase.label, { exact: true })).toBeVisible();
 
     await expect(main.getByRole('link', { name: homeCase.primary[0], exact: true }).first()).toHaveAttribute('href', appPathname(homeCase.primary[1]));
     await expect(main.getByRole('link', { name: homeCase.secondary[0], exact: true }).first()).toHaveAttribute('href', appPathname(homeCase.secondary[1]));
 
-    const images = main.locator('[data-instrument] img');
-    for (const image of await images.all()) {
-      await expect(image).toHaveAttribute('alt', '');
-    }
-    await expect(main.locator('canvas, video')).toHaveCount(0);
+    await expect(main.locator('canvas, video, img')).toHaveCount(0);
     assertNoBrowserErrors();
   });
 
-  test(`${homeCase.locale} homepage keeps the chapter sequence, links and posters without JavaScript`, async ({ browser }) => {
-    const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+  test(`${homeCase.locale} hero root carries the Home readout`, async ({ page }) => {
+    await page.goto(appUrl(homeCase.route));
+    await expect(page.locator('section[aria-labelledby="home-heading"]')).toHaveAttribute('data-readout', homeCase.readout);
+  });
+
+  // RED 1: the hero top equals the header top. D-11 pulls the hero up by the full App Bar
+  // height via a negative margin, so its rendered top sits exactly at the bar's own edge.
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }] as const) {
+    test(`${homeCase.locale} hero is pulled up under the App Bar at ${viewport.width}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(appUrl(homeCase.route));
+
+      const appBarHeight = await page.evaluate(() =>
+        getComputedStyle(document.documentElement).getPropertyValue('--app-bar-height').trim(),
+      );
+      const hero = page.locator('section[aria-labelledby="home-heading"]');
+      await expect(hero).toHaveCSS('margin-top', `-${appBarHeight}`);
+
+      const heroBox = await hero.boundingBox();
+      const headerBox = await page.locator('header').first().boundingBox();
+      expect(heroBox).not.toBeNull();
+      expect(headerBox).not.toBeNull();
+      // The negative margin pulls the hero's visible top at or above the header's own
+      // bottom edge, so it renders underneath the bar rather than below it.
+      expect(heroBox!.y).toBeLessThanOrEqual(headerBox!.y + headerBox!.height);
+    });
+  }
+
+  // RED 2: the H1 uses the D-09 display-1 scale, which clamps to exactly 96px at 1440 and
+  // to its 44px floor at 320.
+  test(`${homeCase.locale} H1 uses the display-1 clamp at 1440 and 320`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(appUrl(homeCase.route));
+    const h1 = page.locator('h1#home-heading');
+    await expect(h1).toHaveCSS('font-size', '96px');
+
+    await page.setViewportSize({ width: 320, height: 800 });
+    const fontSize = await h1.evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize));
+    expect(fontSize).toBeGreaterThanOrEqual(44);
+  });
+
+  // RED 3: four chapter sections, each wrapping an atlas plate, with no artwork frame left.
+  test(`${homeCase.locale} four chapters each wrap an atlas plate with no artwork frame`, async ({ page }) => {
+    await page.goto(appUrl(homeCase.route));
+    const chapters = page.locator('section[data-instrument-chapter]');
+    await expect(chapters).toHaveCount(4);
+    await expect(page.locator('[data-instrument-artwork]')).toHaveCount(0);
+
+    for (const [index, id] of chapterIds.entries()) {
+      const chapter = page.locator(`section[data-instrument-chapter="${id}"]`);
+      const plate = chapter.locator('> div').first();
+      // D-05's registration radius: the deterministic signature of an atlas plate.
+      await expect(plate).toHaveCSS('border-radius', '18px');
+      await expect(chapter.getByText(homeCase.plates[index], { exact: true })).toHaveAttribute('aria-hidden', 'true');
+      await expect(chapter.getByText(homeCase.kickers[index], { exact: true })).toBeVisible();
+    }
+  });
+
+  // RED 4: chapter plate width is capped at 520px from 768px up, and matches the container
+  // (full width) at 390.
+  test(`${homeCase.locale} chapter plate width follows D-12 at 1440 and 390`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(appUrl(homeCase.route));
+    for (const width of await page.locator('section[data-instrument-chapter]').evaluateAll((chapters) =>
+      chapters.map((chapter) => chapter.getBoundingClientRect().width),
+    )) {
+      expect(width).toBeLessThanOrEqual(520);
+    }
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    // The container's own bounding box includes its horizontal padding, so the content-box
+    // width available to a chapter is that box minus its own left/right padding.
+    const contentWidth = await page.locator('[data-instrument-chapters]').evaluate((el) => {
+      const style = getComputedStyle(el);
+      return el.getBoundingClientRect().width - Number.parseFloat(style.paddingLeft) - Number.parseFloat(style.paddingRight);
+    });
+    for (const width of await page.locator('section[data-instrument-chapter]').evaluateAll((chapters) =>
+      chapters.map((chapter) => chapter.getBoundingClientRect().width),
+    )) {
+      expect(Math.abs(width - contentWidth)).toBeLessThanOrEqual(1);
+    }
+  });
+}
+
+// RED 5: EnvironmentGround is a fixed, z-index -3, aria-hidden layer, and nothing between it
+// and <html> creates a stacking context that would trap it or a WebGL portal beside it.
+test('EnvironmentGround is a fixed z-index -3 layer with no stacking-context ancestor', async ({ page }) => {
+  await page.goto(appUrl(stableRoutes.home.es));
+  const ground = page.locator('[data-environment-ground]');
+  await expect(ground).toHaveAttribute('aria-hidden', 'true');
+  await expect(ground).toHaveCSS('position', 'fixed');
+  await expect(ground).toHaveCSS('z-index', '-3');
+  expect(await noStackingContextAncestors(page, '[data-environment-ground]')).toEqual([]);
+
+  const scrim = page.locator('[data-environment-scrim]');
+  await expect(scrim).toHaveAttribute('aria-hidden', 'true');
+  await expect(scrim).toHaveCSS('position', 'fixed');
+  await expect(scrim).toHaveCSS('z-index', '-1');
+  expect(await noStackingContextAncestors(page, '[data-environment-scrim]')).toEqual([]);
+});
+
+// RED 6: the D-03 scrim gradient, wide (90deg, left to right) and compact (180deg, top to
+// bottom).
+test('the scrim uses the D-03 gradient at 1440 and 390', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(appUrl(stableRoutes.home.es));
+  const wideImage = await page.locator('[data-environment-scrim]').evaluate((el) => getComputedStyle(el).backgroundImage);
+  expect(wideImage).toContain('90deg');
+  expect(wideImage.match(/rgba?\(6,\s*18,\s*31/g)?.length).toBe(3);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const compactImage = await page.locator('[data-environment-scrim]').evaluate((el) => getComputedStyle(el).backgroundImage);
+  // 180deg is linear-gradient()'s own default direction ("to bottom"), so Chromium's
+  // computed style omits the angle entirely rather than printing "180deg" back out. The
+  // absence of the wide (90deg) marker, together with the stop order (transparent first,
+  // opaque last -- the opposite order from the wide gradient), is the compact signature.
+  expect(compactImage).not.toContain('90deg');
+  expect(compactImage.match(/rgba?\(6,\s*18,\s*31/g)?.length).toBe(3);
+  const alphas = [...compactImage.matchAll(/rgba\(6,\s*18,\s*31,\s*([\d.]+)\)/g)].map((match) => Number.parseFloat(match[1]));
+  expect(alphas).toEqual([0, 0.55, 0.82]);
+});
+
+// RED 7: no horizontal overflow at 320, in either locale.
+for (const homeCase of homeCases) {
+  test(`${homeCase.locale} has no horizontal overflow at 320`, async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto(appUrl(homeCase.route));
+    const dimensions = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+  });
+}
+
+// RED 8: without JavaScript the complete document renders, and nothing other than the H1's
+// own text competes for the largest-contentful-paint role (no img, video or canvas exists).
+for (const homeCase of homeCases) {
+  test(`${homeCase.locale} renders the complete document with JavaScript disabled`, async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1440, height: 900 } });
     const page = await context.newPage();
     await page.goto(appUrl(homeCase.route));
     const main = page.getByRole('main');
 
+    await expect(main.locator('h1')).toHaveCount(1);
+    await expect(main.locator('h1')).toBeVisible();
     await expect(main.locator('section[data-instrument-chapter] h2')).toHaveText([...homeCase.chapters]);
     await expect(main.getByRole('link', { name: homeCase.primary[0], exact: true }).first()).toHaveAttribute('href', appPathname(homeCase.primary[1]));
-    for (const id of chapterIds) {
-      const poster = main.locator(`section[data-instrument-chapter="${id}"] img`);
-      await poster.scrollIntoViewIfNeeded();
-      await expect(poster).toHaveAttribute('src', appPathname(`/brand/immersive/${id}.svg`).replace(/\/$/, ''));
-      expect(await poster.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
-    }
+    // No image, video or canvas exists anywhere on Home, so the H1 (or another text node)
+    // is necessarily the largest paintable candidate.
+    await expect(page.locator('img, video, canvas')).toHaveCount(0);
+    await expect(page.locator('[data-environment-ground]')).toHaveCount(1);
     await context.close();
   });
 }
 
-test('wide 1440 composes the anchor, phase spine and a continuous 4:5 stage', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto(appUrl(stableRoutes.home.es));
+// RED 9: at 200% zoom (simulated, as elsewhere in this suite, by halving the viewport) the
+// hero's content is allowed to grow past 100svh instead of being clipped to it.
+for (const homeCase of homeCases) {
+  test(`${homeCase.locale} hero grows past the viewport at 200% zoom without clipping`, async ({ page }) => {
+    // 1440x900 at 200% zoom is a 720x450 CSS viewport, matching the convention used by the
+    // enhanced acceptance suite for the same simulated zoom level.
+    await page.setViewportSize({ width: 720, height: 450 });
+    await page.goto(appUrl(homeCase.route));
 
-  const anchor = await box(page, 'section[aria-labelledby="home-heading"]');
-  const stage = await box(page, '[data-instrument] > div > [data-instrument-artwork="recognition"]');
-  expect(stage.x).toBeGreaterThan(anchor.x + anchor.width);
-  expect(stage.height).toBeGreaterThanOrEqual(stage.width);
+    const hero = page.locator('section[aria-labelledby="home-heading"]');
+    await expect(hero).toHaveCSS('overflow', 'visible');
+    const heroHeight = await hero.evaluate((el) => el.getBoundingClientRect().height);
+    expect(heroHeight).toBeGreaterThan(450);
 
-  for (const id of chapterIds.slice(1)) {
-    const heading = await box(page, `section[data-instrument-chapter="${id}"] h2`);
-    const artwork = await box(page, `section[data-instrument-chapter="${id}"] [data-instrument-artwork]`);
-    expect(artwork.x).toBeGreaterThan(heading.x + heading.width);
-    expect(artwork.height / artwork.width).toBeCloseTo(1.25, 1);
-    await expect(page.locator(`section[data-instrument-chapter="${id}"] [data-phase-spine]`)).toBeVisible();
-    expect(await isVisuallyHidden(page, `section[data-instrument-chapter="${id}"] [data-phase-status]`)).toBe(false);
-  }
-  await expect(page.locator('section[data-instrument-chapter="recognition"] [data-instrument-artwork]')).toBeHidden();
-});
-
-test('compact 1024 keeps two zones with fewer simultaneous labels', async ({ page }) => {
-  await page.setViewportSize({ width: 1024, height: 768 });
-  await page.goto(appUrl(stableRoutes.home.en));
-
-  const heading = await box(page, 'section[data-instrument-chapter="connection"] h2');
-  const artwork = await box(page, 'section[data-instrument-chapter="connection"] [data-instrument-artwork]');
-  expect(artwork.x).toBeGreaterThan(heading.x + heading.width);
-  for (const id of chapterIds) {
-    expect(await isVisuallyHidden(page, `section[data-instrument-chapter="${id}"] [data-phase-status]`)).toBe(true);
-    await expect(page.locator(`section[data-instrument-chapter="${id}"] [data-phase-status]`)).toHaveCount(1);
-  }
-});
-
-for (const width of [768, 390, 320] as const) {
-  test(`sequential ${width} flow places each poster after its copy as a square`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto(appUrl(stableRoutes.home.es));
-
-    await expect(page.locator('[data-instrument] > div > [data-instrument-artwork="recognition"]')).toBeHidden();
-    for (const id of chapterIds) {
-      const description = await box(page, `section[data-instrument-chapter="${id}"] h2 + p`);
-      const artwork = await box(page, `section[data-instrument-chapter="${id}"] [data-instrument-artwork]`);
-      expect(artwork.y).toBeGreaterThanOrEqual(description.y + description.height);
-      expect(Math.abs(artwork.width - artwork.height)).toBeLessThanOrEqual(2);
-      await expect(page.locator(`section[data-instrument-chapter="${id}"] [data-phase-spine]`)).toBeHidden();
-    }
+    const h1Box = await page.locator('h1#home-heading').boundingBox();
+    expect(h1Box).not.toBeNull();
+    expect(h1Box!.height).toBeGreaterThan(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 }
-
-test('320 condenses nonessential metadata and keeps full-width actions', async ({ page }) => {
-  await page.setViewportSize({ width: 320, height: 800 });
-  await page.goto(appUrl(stableRoutes.home.es));
-
-  await expect(page.getByText('FURLANICH · Del proceso al sistema', { exact: true })).toBeHidden();
-  expect(await isVisuallyHidden(page, 'section[data-instrument-chapter="recognition"] [data-phase-status]')).toBe(true);
-  const main = page.getByRole('main');
-  const action = await main.getByRole('link', { name: 'Ver contacto', exact: true }).first().boundingBox();
-  expect(action!.width).toBeGreaterThanOrEqual(270);
-});

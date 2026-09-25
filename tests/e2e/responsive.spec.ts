@@ -46,19 +46,19 @@ test('the primary navigation matches the compact or wide interaction model', asy
 });
 
 for (const route of [stableRoutes.home.es, stableRoutes.home.en]) {
-  test(`instrument posters never overlay chapter copy on ${route}`, async ({ page }) => {
+  test(`instrument chapter plates respect the D-12 width rule on ${route}`, async ({ page }) => {
     await page.goto(appUrl(route));
-    const overlaps = await page.locator('section[data-instrument-chapter]').evaluateAll((chapters) =>
-      chapters.flatMap((chapter) => {
-        const artwork = chapter.querySelector('[data-instrument-artwork]');
-        if (!artwork || getComputedStyle(artwork).display === 'none') return [];
-        const art = artwork.getBoundingClientRect();
-        return [...chapter.querySelectorAll('h2, p')]
-          .map((copy) => copy.getBoundingClientRect())
-          .filter((text) => text.width > 1 && !(text.right <= art.left || text.left >= art.right || text.bottom <= art.top || text.top >= art.bottom))
-          .map(() => chapter.getAttribute('data-instrument-chapter'));
-      }),
+    const width = page.viewportSize()?.width ?? 0;
+    const chapterWidths = await page.locator('section[data-instrument-chapter]').evaluateAll((chapters) =>
+      chapters.map((chapter) => chapter.getBoundingClientRect().width),
     );
-    expect(overlaps).toEqual([]);
+
+    expect(chapterWidths).toHaveLength(4);
+    for (const chapterWidth of chapterWidths) {
+      // Every chapter plate fits inside the viewport: full width below 768px, capped at
+      // 520px from 768px up (D-12). A plate never grows past its own viewport either way.
+      expect(chapterWidth).toBeGreaterThan(0);
+      expect(chapterWidth).toBeLessThanOrEqual(width >= 768 ? 520 : width);
+    }
   });
 }
