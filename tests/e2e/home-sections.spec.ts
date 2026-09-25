@@ -335,6 +335,9 @@ for (const testCase of CASES) {
 
     test('keyboard tab order follows Problems, Services, Position fix toggle, Proof, Process, Founder, CTA', async ({ page }) => {
       await page.goto(appUrl(testCase.route));
+      // PositionFixToggle only renders its <button>s after client-side hydration
+      // (progressive enhancement); wait for it so this check does not race hydration.
+      await page.locator('#impact [role="group"] button').first().waitFor();
 
       function firstFocusableSelector(id: string): string {
         return `#${id} a, #${id} button`;
