@@ -107,7 +107,9 @@ test.describe('6. target sizes', () => {
     await page.goto(appUrl(stableRoutes.home.es));
     const banner = page.getByRole('banner');
 
-    const navLinks = await banner.locator('[data-app-bar-nav-link]').all();
+    // PrimaryNavigationItems renders twice (desktop nav + the compact disclosure panel);
+    // only the currently-visible copy should be measured.
+    const navLinks = await banner.locator('[data-app-bar-nav-link]:visible').all();
     expect(navLinks.length).toBeGreaterThan(0);
     for (const link of navLinks) {
       const box = await link.boundingBox();

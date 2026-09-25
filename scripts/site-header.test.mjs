@@ -64,8 +64,15 @@ test('renders the SKY-CHART-V2 App Bar on the atlas-plate material, docked by de
   assert.match(source, /data-app-bar-surface/);
   // Docked is the default and the only state reachable without JavaScript (D-22): the fill,
   // blur and border classes below must be unconditional base classes, not gated behind any
-  // `data-docked` variant.
-  assert.match(source, /data-app-bar-surface"[\s\S]{0,40}className="[^"]*bg-\[rgba\(10,30,51,\.82\)\][^"]*backdrop-blur-\[16px\][^"]*backdrop-saturate-\[125%\][^"]*border-sky-plate-line[^"]*"/);
+  // `data-docked` variant. Pull out the surface element's own className (not the whole file)
+  // so each required token is asserted precisely, regardless of class order.
+  const surfaceMatch = source.match(/data-app-bar-surface[\s\S]{0,40}className="([^"]*)"/);
+  assert.ok(surfaceMatch, 'the [data-app-bar-surface] element has a className');
+  const surfaceClasses = surfaceMatch[1];
+  assert.match(surfaceClasses, /bg-\[rgba\(10,30,51,\.82\)\]/, 'D-22 docked fill');
+  assert.match(surfaceClasses, /backdrop-blur-\[16px\]/);
+  assert.match(surfaceClasses, /backdrop-saturate-\[125%\]/);
+  assert.match(surfaceClasses, /border-sky-plate-line/);
   assert.match(source, /data-\[docked=false\]:bg-transparent/, 'Home-only transparent override (D-22 undocked state)');
   assert.match(source, /data-\[docked=false\]:border-transparent/);
   assert.match(source, /focus-visible:\[outline:3px_solid_#9CC4EC\]/, 'D-21 dark-context focus ring');
