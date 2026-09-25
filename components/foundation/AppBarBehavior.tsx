@@ -1,29 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
+import { normalizeAppBarPath } from './app-bar-path';
 
 // SKY-CHART-V2 D-22. A client leaf: it renders nothing and only reaches into the DOM that
 // SiteHeader (a server component) already rendered. Kept dependency-free and small (budget:
 // <=3 KiB Brotli) so the shared header stays cheap on every route.
 const DOCK_SCROLL_THRESHOLD = 24;
 const READOUT_LINE_RATIO = 0.4;
-
-// Compares a browser-resolved pathname (window.location.pathname, or an anchor's own
-// .pathname DOM property -- both already carry any configured Next.js basePath) against
-// another such pathname, ignoring a trailing slash and, defensively, a configured base path
-// prefix if one is still present.
-function normalizeAppBarPath(pathname: string, basePath = ''): string {
-  let value = pathname || '/';
-
-  const trimmedBasePath = basePath.replace(/\/+$/, '');
-  if (trimmedBasePath && value.startsWith(trimmedBasePath)) {
-    value = value.slice(trimmedBasePath.length) || '/';
-  }
-
-  if (!value.startsWith('/')) value = `/${value}`;
-
-  return value.length > 1 ? value.replace(/\/+$/, '') || '/' : '/';
-}
 
 function isProcessLink(link: HTMLAnchorElement): boolean {
   return link.hash === '#process' || link.hash === '#proceso';
