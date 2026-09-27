@@ -19,7 +19,7 @@ export function ImmersiveHomeSequence({ content }: ImmersiveHomeSequenceProps) {
   const { instrument, readout } = content;
 
   return (
-    <div data-instrument className={styles.instrument}>
+    <div data-instrument>
       <EnvironmentGround />
       <section aria-labelledby="home-heading" data-readout={readout.home} className={styles.hero}>
         <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">

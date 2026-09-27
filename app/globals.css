@@ -36,11 +36,22 @@ html {
   scroll-padding-top: 96px;
 }
 
+/*
+ * SKY-CHART-V2 Task 8 lock transfer (L-02, narrow): `body` carries no `background` of its
+ * own. Per the CSS root-canvas rule, when `html` declares a non-transparent background (kept
+ * above, unchanged) and `body` does not, `html`'s value is what becomes the document canvas
+ * background -- painted below any negative z-index descendant of the root stacking context.
+ * With `body` also declaring #F9F6EE, that colour was promoted to the canvas instead (the
+ * two are equal, so no page's visible colour changed), which made Home's D-01 fixed,
+ * negative z-index environment ground (z -3) and scrim (z -1) fully invisible: any content
+ * at a negative z-index in the root stacking context paints below the canvas, not above it.
+ * Every other page keeps the same rendered background, because `html`'s background covers
+ * the same area `body`'s background used to.
+ */
 body {
   margin: 0;
   min-height: 100%;
   overflow-x: clip;
-  background: #F9F6EE;
   color: #09243D;
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }

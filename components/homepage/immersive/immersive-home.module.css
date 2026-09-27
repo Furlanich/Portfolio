@@ -6,28 +6,14 @@
  */
 
 /*
- * DEVIATION from D-01's literal ancestor rule, recorded for owner/reviewer attention
- * (see the PR body): `html`/`body` (app/globals.css, Task 3, locked) declare a non-
- * transparent background. Per the CSS root-canvas rule, that background is promoted to
- * paint the document canvas, which sits *below* any negative z-index descendant of the
- * root stacking context -- so a bare `z-index: -3` fixed child of `<body>` is invisible in
- * every browser tested, not merely under this one ground layer. `isolation: isolate` on
- * this composition's own root gives its negative-z children a *local* stacking context
- * instead, which has no such canvas step, while leaving position:fixed's viewport-relative
- * containing block untouched (only transform/filter/perspective/contain change that, and
- * none of those are used here). This does not change the fixed layers' own geometry or the
- * approved D-01 z-index values; it only relocates which stacking context they resolve
- * in, so the ground and scrim actually render. Flagged for the reviewer because D-01 lists
- * "isolation" among the properties no ancestor of the fixed layers may use.
- */
-.instrument {
-  isolation: isolate;
-}
-
-/*
  * D-01/D-02/D-23 environment ground. Fixed and z-index -3 so it always paints behind the
- * WebGL canvas (-2, Task 7's portal target -- see the PR body note above about
- * document.body vs this isolated root) and the D-03 scrim (-1) below.
+ * WebGL canvas (-2, Task 7's portal to document.body) and the D-03 scrim (-1) below. This
+ * file declares no rule on any ancestor of these two layers that would create a stacking
+ * context (no transform, filter, opacity < 1, isolation or positioned z-index), per D-01.
+ * Rendering this ground actually visible above the root stacking context's canvas layer
+ * required a narrow lock transfer on app/globals.css (L-02): only `body`'s own
+ * `background: #F9F6EE` is removed there, so `html`'s background (unchanged) is what the
+ * CSS root-canvas rule promotes -- see that file's comment and the PR body for the reasoning.
  */
 .ground {
   position: fixed;

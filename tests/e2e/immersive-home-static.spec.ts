@@ -1,3 +1,4 @@
+import { inflateSync } from 'node:zlib';
 import { expect, test, type Page } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
@@ -34,32 +35,74 @@ const homeCases = [
   },
 ] as const;
 
-// Transform, filter, opacity < 1 and a positioned z-index all change a fixed descendant's
-// *containing block* or its spatial placement -- the real risk D-01 guards against, and
-// none of them are used anywhere in this tree. `[data-instrument]` itself is the one
-// documented exception to the "isolation" and "positioned z-index" clauses only (see the
-// `.instrument` rule in immersive-home.module.css and the PR body): `isolation: isolate`
-// gives the ground and scrim a local stacking context so they render at all above
-// app/globals.css's non-transparent `html`/`body` background, without changing
-// position:fixed's containing block (only transform/filter/perspective/contain do that).
+// D-01: no ancestor of the fixed ground/scrim layers may create a stacking context.
+// Transform, filter, opacity < 1, isolation and a positioned z-index all qualify, and none
+// of them are used anywhere in this tree.
 async function noStackingContextAncestors(page: Page, selector: string) {
   return page.locator(selector).first().evaluate((element) => {
     const findings: string[] = [];
     let node: Element | null = element.parentElement;
     while (node && node !== document.documentElement) {
       const style = getComputedStyle(node);
-      const isDocumentedInstrumentRoot = node.hasAttribute('data-instrument');
       if (style.transform !== 'none') findings.push(`${node.tagName} has a transform`);
       if (style.filter !== 'none') findings.push(`${node.tagName} has a filter`);
       if (Number.parseFloat(style.opacity) < 1) findings.push(`${node.tagName} has opacity < 1`);
-      if (style.isolation === 'isolate' && !isDocumentedInstrumentRoot) findings.push(`${node.tagName} isolates`);
-      if (style.position !== 'static' && style.zIndex !== 'auto' && !isDocumentedInstrumentRoot) {
+      if (style.isolation === 'isolate') findings.push(`${node.tagName} isolates`);
+      if (style.position !== 'static' && style.zIndex !== 'auto') {
         findings.push(`${node.tagName} is positioned with a z-index`);
       }
       node = node.parentElement;
     }
     return findings;
   });
+}
+
+// Decodes the single pixel of a 1x1 PNG buffer (as produced by `page.screenshot({ clip })`
+// with `width: 1, height: 1`). For the very first pixel of a PNG's first scanline, every
+// filter type (None/Sub/Up/Average/Paeth) reconstructs to "no change" -- their left, above
+// and upper-left neighbours are all defined as 0 at that position -- so the raw inflated
+// bytes right after the one filter-type byte are already the final channel values. This
+// intentionally does not generalize to other pixel positions.
+function readSinglePixelPng(png: Buffer): { r: number; g: number; b: number } {
+  let offset = 8; // skip the fixed 8-byte PNG signature
+  let colorType = -1;
+  const idatParts: Buffer[] = [];
+  while (offset < png.length) {
+    const length = png.readUInt32BE(offset);
+    const type = png.toString('ascii', offset + 4, offset + 8);
+    const data = png.subarray(offset + 8, offset + 8 + length);
+    if (type === 'IHDR') colorType = data.readUInt8(9);
+    else if (type === 'IDAT') idatParts.push(data);
+    else if (type === 'IEND') break;
+    offset += 12 + length;
+  }
+  if (colorType !== 6 && colorType !== 2) {
+    throw new Error(`Unsupported PNG colorType ${colorType} for single-pixel sampling`);
+  }
+  const raw = inflateSync(Buffer.concat(idatParts));
+  return { r: raw[1], g: raw[2], b: raw[3] };
+}
+
+// A point that is reliably part of the environment (not covered by any content), at any
+// viewport width: the vertical gap the D-10 chapter spacing leaves between two chapter
+// plates. Scrolls so that gap sits in the current viewport, then returns its viewport-
+// relative midpoint, matching the coordinate space `page.screenshot({ clip })` expects.
+async function pointBetweenChapters(page: Page): Promise<{ x: number; y: number }> {
+  const initial = await page.evaluate(() => {
+    const [first, second] = [...document.querySelectorAll('section[data-instrument-chapter]')];
+    const firstRect = first.getBoundingClientRect();
+    const secondRect = second.getBoundingClientRect();
+    return {
+      x: firstRect.left + 10,
+      documentMidY: window.scrollY + (firstRect.bottom + secondRect.top) / 2,
+    };
+  });
+  await page.evaluate((targetY) => window.scrollTo(0, Math.max(0, targetY - window.innerHeight / 2)), initial.documentMidY);
+  const y = await page.evaluate(
+    (targetDocumentY) => targetDocumentY - window.scrollY,
+    initial.documentMidY,
+  );
+  return { x: initial.x, y };
 }
 
 for (const homeCase of homeCases) {
@@ -185,6 +228,36 @@ test('EnvironmentGround is a fixed z-index -3 layer with no stacking-context anc
   await expect(scrim).toHaveCSS('z-index', '-1');
   expect(await noStackingContextAncestors(page, '[data-environment-scrim]')).toEqual([]);
 });
+
+// `body` must carry no background of its own (app/globals.css, Task 8 lock transfer L-02):
+// otherwise the CSS root-canvas rule promotes it to paint the document canvas, which sits
+// below any negative z-index descendant of the root stacking context and hides the
+// environment ground and scrim entirely, regardless of their own (correct) CSS.
+test('body has no background colour of its own', async ({ page }) => {
+  await page.goto(appUrl(stableRoutes.home.es));
+  const bodyBackground = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  expect(bodyBackground).toBe('rgba(0, 0, 0, 0)');
+});
+
+// The ground is not just declared correctly (RED 5): it must actually be the pixel that
+// paints in an area no content covers, at both a wide and a compact width. This is the
+// direct regression test for the root-canvas occlusion above -- without the app/globals.css
+// fix it fails here even though every `getComputedStyle` assertion on `.ground` passes.
+for (const width of [1440, 390] as const) {
+  test(`the environment ground actually paints (not the Bone canvas) at ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
+    await page.goto(appUrl(stableRoutes.home.es));
+    const point = await pointBetweenChapters(page);
+    const png = await page.screenshot({ clip: { x: point.x, y: point.y, width: 1, height: 1 } });
+    const pixel = readSinglePixelPng(png);
+    // Bone (#F9F6EE) is (249, 246, 238); the D-02 night ground is dark navy in every stop
+    // (#06121F.. #0E2B4A). A generous per-channel threshold well below Bone's darkest
+    // channel (238) keeps this robust to anti-aliasing at the sampled point.
+    expect(pixel.r, JSON.stringify(pixel)).toBeLessThan(200);
+    expect(pixel.g, JSON.stringify(pixel)).toBeLessThan(200);
+    expect(pixel.b, JSON.stringify(pixel)).toBeLessThan(200);
+  });
+}
 
 // RED 6: the D-03 scrim gradient, wide (90deg, left to right) and compact (180deg, top to
 // bottom).
