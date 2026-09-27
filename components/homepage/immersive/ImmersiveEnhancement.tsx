@@ -179,7 +179,11 @@ export function ImmersiveEnhancement({
   }, [root]);
 
   const updatePauseVisibility = useCallback((heroBottom: number, vh: number, chaptersBottom: number) => {
-    const hidden = heroBottom < 0.6 * vh || chaptersBottom < 0.3 * vh;
+    // D-25: hidden while the hero's bottom edge is still below (further down than) the 60% line
+    // -- i.e. heroBottom is large, the same "hero still fills the viewport" direction as the
+    // D-27 heroMaskFor rule -- or once the chapter span has receded past the 30% line.
+    // +Infinity (hero not found) fails safe to hidden, matching heroMaskFor's own fail-safe.
+    const hidden = heroBottom > 0.6 * vh || chaptersBottom < 0.3 * vh;
     setPauseHidden((previous) => (previous === hidden ? previous : hidden));
   }, []);
 
