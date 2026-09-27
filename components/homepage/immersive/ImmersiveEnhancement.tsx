@@ -170,7 +170,15 @@ export function ImmersiveEnhancement({
     const k = recedeFactor(chaptersBottom, vh);
     const element = root();
     if (element) element.dataset.recede = String(k);
-    if (sceneRef.current) sceneRef.current.canvas.style.opacity = String(1 - 0.84 * k);
+    // D-24: "Canvas and scrim opacity: 1 - 0.84k." EnvironmentGround's `.scrim` (Task 8) leaves
+    // this to be animated at runtime here; the canvas opacity is this scene's own inline style.
+    const opacity = String(1 - 0.84 * k);
+    if (sceneRef.current) sceneRef.current.canvas.style.opacity = opacity;
+    const scrim = element?.querySelector<HTMLElement>('[data-environment-scrim]');
+    if (scrim) {
+      scrim.style.transition = 'opacity 240ms linear';
+      scrim.style.opacity = opacity;
+    }
     if (k !== lastRecedeRef.current) {
       lastRecedeRef.current = k;
       sceneRef.current?.setLabelOpacity(labelOpacityMultiplier(k));
