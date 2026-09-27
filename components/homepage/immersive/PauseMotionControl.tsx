@@ -22,7 +22,10 @@ export function PauseMotionControl({ paused, hidden, pauseLabel, resumeLabel, ph
       className="sky-plate-material-solid pointer-events-none fixed z-40 flex items-center gap-2.5 rounded-xl border border-sky-plate-line py-1.5 pl-3.5 pr-1.5"
       style={{ right: 16, bottom: 'calc(16px + env(safe-area-inset-bottom))' }}
     >
-      <span aria-hidden="true" className="hidden font-mono text-xs text-sky-text-2 md:inline">
+      {/* D-09 `label` token (12px mono, 0.08em tracking, uppercase) -- the reference renders this
+          readout as "PLATE 01 OF 04"; `uppercase` is a CSS transform, so `phaseLabel`'s own text
+          (`Plate 01 of 04`) stays mixed-case in the DOM for any consumer that reads it as text. */}
+      <span aria-hidden="true" className="hidden font-mono text-label uppercase text-sky-text-2 md:inline">
         {phaseLabel}
       </span>
       <button
