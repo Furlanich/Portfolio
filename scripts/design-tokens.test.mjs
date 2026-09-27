@@ -151,7 +151,9 @@ test('grounds the global canvas, text, selection and focus in the identity roles
     assert.equal(css.toUpperCase().includes(legacy), false, `globals.css still uses ${legacy}`);
   }
   assert.match(css, /html \{\s*background: #F9F6EE;/);
-  assert.match(css, /body \{[^}]*background: #F9F6EE;[^}]*color: #09243D;[^}]*font-family: var\(--font-sans\), ui-sans-serif, system-ui, sans-serif;/s);
+  assert.match(css, /body \{[^}]*color: #09243D;[^}]*font-family: var\(--font-sans\), ui-sans-serif, system-ui, sans-serif;/s);
+  // html alone paints the Bone canvas; a body background would cover Home's negative-z ground (D-01).
+  assert.doesNotMatch(css.match(/(?:^|\n)body \{[^}]*\}/)?.[0] ?? '', /background/);
   assert.match(css, /::selection \{\s*background: #E7EEF5;/);
   assert.match(css, /:focus-visible \{\s*outline: 3px solid #09243D;\s*outline-offset: 2px;\s*box-shadow: 0 0 0 5px #F9F6EE;/);
 });
