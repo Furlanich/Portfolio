@@ -40,6 +40,9 @@ export function ImmersiveHomeSequence({ content }: ImmersiveHomeSequenceProps) {
         chapters' own focusable content, per D-25's keyboard order.
       */}
       <ImmersiveEnhancement
+        labels={instrument.nodes}
+        plateLabel={instrument.plateLabel}
+        locale={content.locale}
         statusLabel={instrument.statusLabel}
         pauseLabel={instrument.pauseLabel}
         resumeLabel={instrument.resumeLabel}
