@@ -76,6 +76,20 @@ test('renders the SKY-CHART-V2 App Bar on the atlas-plate material, docked by de
   assert.match(source, /data-\[docked=false\]:bg-transparent/, 'Home-only transparent override (D-22 undocked state)');
   assert.match(source, /data-\[docked=false\]:border-transparent/);
   assert.match(source, /focus-visible:\[outline:3px_solid_#9CC4EC\]/, 'D-21 dark-context focus ring');
+
+  // D-22/D-07: without backdrop-filter support the docked fill is .94, not .82. Tailwind's
+  // arbitrary `supports-[...]` variant expresses this without touching app/globals.css,
+  // which Task 3 owns and locks (L-02).
+  assert.match(
+    surfaceClasses,
+    /supports-\[not_\(backdrop-filter:blur\(1px\)\)\]:bg-\[rgba\(10,30,51,\.94\)\]/,
+    'D-07 no-backdrop-filter fallback fill (.94)',
+  );
+  assert.match(
+    surfaceClasses,
+    /data-\[docked=false\]:supports-\[not_\(backdrop-filter:blur\(1px\)\)\]:bg-transparent/,
+    'the Home-top transparent state still wins over the .94 fallback fill',
+  );
 });
 
 test('renders the Home-only decorative readout and marks route links for AppBarBehavior', () => {
