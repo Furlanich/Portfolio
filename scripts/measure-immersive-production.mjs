@@ -131,6 +131,7 @@ try {
     await page.locator('header').getByRole('link', { name: 'Servicios', exact: true }).first().click();
     await page.waitForURL('**/servicios/');
     await page.goBack();
+    await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForFunction(() => document.querySelector('[data-instrument]')?.dataset.immersiveMode === 'webgl', null, { timeout: 30_000 });
     await page.waitForTimeout(800);
   };
