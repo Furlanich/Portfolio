@@ -35,22 +35,51 @@ const homeCases = [
   },
 ] as const;
 
-// D-01: no ancestor of the fixed ground/scrim layers may create a stacking context.
-// Transform, filter, opacity < 1, isolation and a positioned z-index all qualify, and none
-// of them are used anywhere in this tree.
+// D-01: no ancestor of the fixed ground/scrim layers may create a stacking context. This
+// checks every CSS mechanism that creates one: transform (and the individual translate/
+// rotate/scale properties), filter, backdrop-filter, opacity < 1, isolation, mix-blend-mode,
+// clip-path, mask/mask-image, a container-type, a paint/layout/strict/content `contain`
+// value, a `will-change` naming any of those, position: fixed or sticky (which always
+// creates one, regardless of z-index), a positioned element with a non-auto z-index, and a
+// non-auto z-index on a flex or grid child (which creates one without `position` at all).
+// None of them are used anywhere in this tree.
 async function noStackingContextAncestors(page: Page, selector: string) {
   return page.locator(selector).first().evaluate((element) => {
+    // Defined inside the callback: `page.evaluate` serializes only the function body, not its
+    // enclosing closure, so module-level constants are not visible in the browser context.
+    const stackingWillChange = /\b(transform|opacity|filter|backdrop-filter|perspective|clip-path|mask(?:-image)?|isolation|position|contain)\b/;
+    const stackingContain = /\b(paint|layout|strict|content)\b/;
+
     const findings: string[] = [];
     let node: Element | null = element.parentElement;
     while (node && node !== document.documentElement) {
       const style = getComputedStyle(node);
+      const parentDisplay = node.parentElement ? getComputedStyle(node.parentElement).display : '';
+
       if (style.transform !== 'none') findings.push(`${node.tagName} has a transform`);
+      if (style.translate !== 'none') findings.push(`${node.tagName} has a translate`);
+      if (style.rotate !== 'none') findings.push(`${node.tagName} has a rotate`);
+      if (style.scale !== 'none') findings.push(`${node.tagName} has a scale`);
       if (style.filter !== 'none') findings.push(`${node.tagName} has a filter`);
+      if (style.backdropFilter && style.backdropFilter !== 'none') findings.push(`${node.tagName} has a backdrop-filter`);
       if (Number.parseFloat(style.opacity) < 1) findings.push(`${node.tagName} has opacity < 1`);
       if (style.isolation === 'isolate') findings.push(`${node.tagName} isolates`);
+      if (style.mixBlendMode && style.mixBlendMode !== 'normal') findings.push(`${node.tagName} has a mix-blend-mode`);
+      if (style.clipPath && style.clipPath !== 'none') findings.push(`${node.tagName} has a clip-path`);
+      if (style.maskImage && style.maskImage !== 'none') findings.push(`${node.tagName} has a mask-image`);
+      if (style.containerType && style.containerType !== 'normal') findings.push(`${node.tagName} has a container-type`);
+      if (style.contain && stackingContain.test(style.contain)) findings.push(`${node.tagName} has a stacking contain value`);
+      if (style.willChange && stackingWillChange.test(style.willChange)) findings.push(`${node.tagName} has a stacking will-change`);
+      if (style.position === 'fixed' || style.position === 'sticky') {
+        findings.push(`${node.tagName} is position: ${style.position}`);
+      }
       if (style.position !== 'static' && style.zIndex !== 'auto') {
         findings.push(`${node.tagName} is positioned with a z-index`);
       }
+      if (style.zIndex !== 'auto' && (parentDisplay === 'flex' || parentDisplay === 'grid')) {
+        findings.push(`${node.tagName} has a z-index as a flex/grid child`);
+      }
+
       node = node.parentElement;
     }
     return findings;
@@ -125,6 +154,18 @@ for (const homeCase of homeCases) {
     await expect(main.getByRole('link', { name: homeCase.secondary[0], exact: true }).first()).toHaveAttribute('href', appPathname(homeCase.secondary[1]));
 
     await expect(main.locator('canvas, video, img')).toHaveCount(0);
+
+    // The test title claims the chapters render "before Problems": prove the DOM order, not
+    // just that both exist. Problems is HomeProblems.tsx's own `#problems` (not owned by
+    // Task 8), so this only reads it by id rather than asserting anything about its content.
+    const chaptersPrecedeProblems = await page.evaluate((lastChapterId) => {
+      const lastChapter = document.querySelector(`section[data-instrument-chapter="${lastChapterId}"]`);
+      const problems = document.querySelector('#problems');
+      if (!lastChapter || !problems) return false;
+      return Boolean(lastChapter.compareDocumentPosition(problems) & Node.DOCUMENT_POSITION_FOLLOWING);
+    }, chapterIds[chapterIds.length - 1]);
+    expect(chaptersPrecedeProblems, 'the last chapter must precede #problems in the DOM').toBe(true);
+
     assertNoBrowserErrors();
   });
 
@@ -135,6 +176,15 @@ for (const homeCase of homeCases) {
 
   // RED 1: the hero top equals the header top. D-11 pulls the hero up by the full App Bar
   // height via a negative margin, so its rendered top sits exactly at the bar's own edge.
+  //
+  // DEVIATION: this only asserts the margin-top formula and that the hero's top is at or
+  // above the header's bottom edge, not literal top-to-top equality. The header here is the
+  // pre-Task-6 header (Task 8 merges before Task 6 in the plan's Wave 2 order), so its
+  // rendered height is not yet the approved 84px `--app-bar-height`; asserting equality now
+  // would either be vacuously true against the wrong header height or fail for a reason that
+  // has nothing to do with this task's own D-11 work. Task 11 (integration hardening, after
+  // Task 6 merges) is the right place to assert `|heroTop - headerTop| <= 1` against the real
+  // 84px bar.
   for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }] as const) {
     test(`${homeCase.locale} hero is pulled up under the App Bar at ${viewport.width}`, async ({ page }) => {
       await page.setViewportSize(viewport);
@@ -155,6 +205,23 @@ for (const homeCase of homeCases) {
       expect(heroBox!.y).toBeLessThanOrEqual(headerBox!.y + headerBox!.height);
     });
   }
+
+  // N7: below 480px the hero actions are full width (D-11), which also forces them onto
+  // separate rows since they no longer fit side by side in the flex-wrap row.
+  test(`${homeCase.locale} hero actions are full width below 480`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(appUrl(homeCase.route));
+    const primary = page.getByRole('link', { name: homeCase.primary[0], exact: true }).first();
+    const secondary = page.getByRole('link', { name: homeCase.secondary[0], exact: true }).first();
+    const actionsWidth = await primary.evaluate((el) => el.parentElement!.getBoundingClientRect().width);
+    const primaryBox = await primary.boundingBox();
+    const secondaryBox = await secondary.boundingBox();
+    expect(primaryBox).not.toBeNull();
+    expect(secondaryBox).not.toBeNull();
+    expect(Math.abs(primaryBox!.width - actionsWidth)).toBeLessThanOrEqual(1);
+    expect(Math.abs(secondaryBox!.width - actionsWidth)).toBeLessThanOrEqual(1);
+    expect(secondaryBox!.y).toBeGreaterThan(primaryBox!.y + primaryBox!.height / 2);
+  });
 
   // RED 2: the H1 uses the D-09 display-1 scale, which clamps to exactly 96px at 1440 and
   // to its 44px floor at 320.
@@ -186,15 +253,17 @@ for (const homeCase of homeCases) {
     }
   });
 
-  // RED 4: chapter plate width is capped at 520px from 768px up, and matches the container
-  // (full width) at 390.
-  test(`${homeCase.locale} chapter plate width follows D-12 at 1440 and 390`, async ({ page }) => {
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto(appUrl(homeCase.route));
-    for (const width of await page.locator('section[data-instrument-chapter]').evaluateAll((chapters) =>
-      chapters.map((chapter) => chapter.getBoundingClientRect().width),
-    )) {
-      expect(width).toBeLessThanOrEqual(520);
+  // RED 4: chapter plate width is capped at 520px from 768px up (checked at 1440, 1024 and
+  // 768, D-12's own breakpoint), and matches the container (full width) at 390.
+  test(`${homeCase.locale} chapter plate width follows D-12 at 1440, 1024, 768 and 390`, async ({ page }) => {
+    for (const width of [1440, 1024, 768] as const) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(appUrl(homeCase.route));
+      for (const chapterWidth of await page.locator('section[data-instrument-chapter]').evaluateAll((chapters) =>
+        chapters.map((chapter) => chapter.getBoundingClientRect().width),
+      )) {
+        expect(chapterWidth, `width ${width}`).toBeLessThanOrEqual(520);
+      }
     }
 
     await page.setViewportSize({ width: 390, height: 844 });
@@ -262,41 +331,54 @@ test('html keeps the Bone canvas on non-Home routes', async ({ page }) => {
 // paints in an area no content covers, at both a wide and a compact width. This is the
 // direct regression test for the root-canvas occlusion above -- without the app/globals.css
 // fix it fails here even though every `getComputedStyle` assertion on `.ground` passes.
+//
+// The Bone-exclusion threshold alone is not enough any more: `html` itself is now dark
+// (#0E2B4A, the N1 fix below) on Home, so a *missing* ground would also sample as "not Bone"
+// at this point. The differential half hides the ground and re-samples the same point,
+// asserting the pixel changes materially -- that only happens if a real ground layer was
+// covering `html`'s flat colour with its own (different, gradient) colour in the first place.
 for (const width of [1440, 390] as const) {
   test(`the environment ground actually paints (not the Bone canvas) at ${width}`, async ({ page }) => {
     await page.setViewportSize({ width, height: width === 1440 ? 900 : 844 });
     await page.goto(appUrl(stableRoutes.home.es));
     const point = await pointBetweenChapters(page);
-    const png = await page.screenshot({ clip: { x: point.x, y: point.y, width: 1, height: 1 } });
-    const pixel = readSinglePixelPng(png);
+    const clip = { x: point.x, y: point.y, width: 1, height: 1 };
+
+    const shown = readSinglePixelPng(await page.screenshot({ clip }));
     // Bone (#F9F6EE) is (249, 246, 238); the D-02 night ground is dark navy in every stop
     // (#06121F.. #0E2B4A). A generous per-channel threshold well below Bone's darkest
     // channel (238) keeps this robust to anti-aliasing at the sampled point.
-    expect(pixel.r, JSON.stringify(pixel)).toBeLessThan(200);
-    expect(pixel.g, JSON.stringify(pixel)).toBeLessThan(200);
-    expect(pixel.b, JSON.stringify(pixel)).toBeLessThan(200);
+    expect(shown.r, JSON.stringify(shown)).toBeLessThan(200);
+    expect(shown.g, JSON.stringify(shown)).toBeLessThan(200);
+    expect(shown.b, JSON.stringify(shown)).toBeLessThan(200);
+
+    await page.locator('[data-environment-ground]').evaluate((element) => {
+      (element as HTMLElement).style.visibility = 'hidden';
+    });
+    const hidden = readSinglePixelPng(await page.screenshot({ clip }));
+    const delta = Math.abs(shown.r - hidden.r) + Math.abs(shown.g - hidden.g) + Math.abs(shown.b - hidden.b);
+    // The sampled point can land near the gradient's darkest stop (close to html's own
+    // #0E2B4A fallback), so the real observed delta is modest (high teens) even when the
+    // ground is genuinely painting; anti-aliasing noise alone is a few units. 8 sits clearly
+    // above noise and below every real delta measured during development.
+    expect(delta, `shown ${JSON.stringify(shown)} vs hidden ${JSON.stringify(hidden)}`).toBeGreaterThan(8);
   });
 }
 
-// RED 6: the D-03 scrim gradient, wide (90deg, left to right) and compact (180deg, top to
-// bottom).
-test('the scrim uses the D-03 gradient at 1440 and 390', async ({ page }) => {
+// RED 6: the full D-03 scrim gradient string, wide (90deg, left to right) and compact
+// (linear-gradient()'s own default "to bottom" direction, so Chromium's computed style omits
+// the angle rather than printing "180deg" back out), including every stop's alpha and
+// position. An exact match (not a substring/count check) so a wrong stop, a wrong position or
+// a swapped alpha order all fail this test, not just a missing or extra colour.
+test('the scrim uses the full D-03 gradient string at 1440 and 390', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(appUrl(stableRoutes.home.es));
   const wideImage = await page.locator('[data-environment-scrim]').evaluate((el) => getComputedStyle(el).backgroundImage);
-  expect(wideImage).toContain('90deg');
-  expect(wideImage.match(/rgba?\(6,\s*18,\s*31/g)?.length).toBe(3);
+  expect(wideImage).toBe('linear-gradient(90deg, rgba(6, 18, 31, 0.78) 0%, rgba(6, 18, 31, 0.5) 34%, rgba(6, 18, 31, 0) 62%)');
 
   await page.setViewportSize({ width: 390, height: 844 });
   const compactImage = await page.locator('[data-environment-scrim]').evaluate((el) => getComputedStyle(el).backgroundImage);
-  // 180deg is linear-gradient()'s own default direction ("to bottom"), so Chromium's
-  // computed style omits the angle entirely rather than printing "180deg" back out. The
-  // absence of the wide (90deg) marker, together with the stop order (transparent first,
-  // opaque last -- the opposite order from the wide gradient), is the compact signature.
-  expect(compactImage).not.toContain('90deg');
-  expect(compactImage.match(/rgba?\(6,\s*18,\s*31/g)?.length).toBe(3);
-  const alphas = [...compactImage.matchAll(/rgba\(6,\s*18,\s*31,\s*([\d.]+)\)/g)].map((match) => Number.parseFloat(match[1]));
-  expect(alphas).toEqual([0, 0.55, 0.82]);
+  expect(compactImage).toBe('linear-gradient(rgba(6, 18, 31, 0) 0%, rgba(6, 18, 31, 0.55) 45%, rgba(6, 18, 31, 0.82) 100%)');
 });
 
 // RED 7: no horizontal overflow at 320, in either locale.
@@ -330,6 +412,34 @@ for (const homeCase of homeCases) {
     await expect(page.locator('img, video, canvas')).toHaveCount(0);
     await expect(page.locator('[data-environment-ground]')).toHaveCount(1);
     await context.close();
+  });
+}
+
+// RED 8 (JS-enabled complement): directly confirm the H1 is the LCP element with a real
+// `PerformanceObserver`, rather than only inferring it from "no other candidate exists".
+for (const homeCase of homeCases) {
+  test(`${homeCase.locale} H1 is the reported Largest Contentful Paint element`, async ({ page }) => {
+    await page.goto(appUrl(homeCase.route));
+    const lcpTag = await page.evaluate(
+      () =>
+        new Promise<string | null>((resolve) => {
+          let lastTag: string | null = null;
+          const observer = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              const element = (entry as PerformanceEntry & { element?: Element }).element;
+              if (element) lastTag = `${element.tagName}#${element.id}`;
+            }
+          });
+          observer.observe({ type: 'largest-contentful-paint', buffered: true });
+          // LCP reporting stops on user input; none occurs here, so a short wait after
+          // `load` is enough to collect the buffered entry without racing it.
+          setTimeout(() => {
+            observer.disconnect();
+            resolve(lastTag);
+          }, 500);
+        }),
+    );
+    expect(lcpTag).toBe('H1#home-heading');
   });
 }
 

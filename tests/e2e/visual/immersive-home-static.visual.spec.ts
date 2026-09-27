@@ -20,11 +20,6 @@ for (const locale of locales) {
       await page.setViewportSize(viewport);
       await page.goto(appUrl(locale.route));
       await page.locator('nextjs-portal').evaluateAll((portals) => portals.forEach((portal) => portal.remove()));
-      // Lazy posters below the fold must be decoded before a full-element capture.
-      await page.locator('[data-instrument] img').evaluateAll(async (images) => {
-        for (const image of images as HTMLImageElement[]) image.loading = 'eager';
-        await Promise.all((images as HTMLImageElement[]).map((image) => image.decode().catch(() => undefined)));
-      });
       await page.evaluate(() => document.fonts.ready);
       await expect(page.locator('[data-instrument]')).toHaveScreenshot(`instrument-${locale.name}-${viewport.width}.png`, {
         animations: 'disabled',
