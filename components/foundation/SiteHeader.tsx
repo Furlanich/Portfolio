@@ -70,14 +70,14 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
           atlas-plate "chart header" itself (max 1200px, 16px gap, 14px radius, 1px border).
           The docked fill/border below is the default and the only state reachable without
           JavaScript (D-22); AppBarBehavior only ever adds `data-docked="false"` on Home.
-          The `.94` no-backdrop-filter fallback fill from D-22/D-07 is not reproduced here:
-          it would need a new rule in app/globals.css, which Task 3 owns and locks (L-02).
-          Recorded as a visual-only exception; browsers without backdrop-filter support see
-          the `.82` fill without blur instead of `.94`.
+          The D-22/D-07 `.94` no-backdrop-filter fallback fill uses Tailwind's arbitrary
+          `supports-[...]` variant rather than a new app/globals.css rule (Task 3 owns and
+          locks that file, L-02); the Home-top transparent override is stacked on top of it
+          so `data-docked="false"` still wins in browsers without backdrop-filter support.
         */}
         <div
           data-app-bar-surface
-          className="relative mx-auto flex w-full max-w-[1200px] items-center gap-4 rounded-[14px] border border-sky-plate-line bg-[rgba(10,30,51,.82)] py-2 pl-4 pr-2 backdrop-blur-[16px] backdrop-saturate-[125%] transition-[background-color,border-color] duration-[var(--dur-3)] ease-[var(--ease-out)] data-[docked=false]:border-transparent data-[docked=false]:bg-transparent data-[docked=false]:backdrop-blur-none data-[docked=false]:backdrop-saturate-100"
+          className="relative mx-auto flex w-full max-w-[1200px] items-center gap-4 rounded-[14px] border border-sky-plate-line bg-[rgba(10,30,51,.82)] py-2 pl-4 pr-2 backdrop-blur-[16px] backdrop-saturate-[125%] transition-[background-color,border-color] duration-[var(--dur-3)] ease-[var(--ease-out)] supports-[not_(backdrop-filter:blur(1px))]:bg-[rgba(10,30,51,.94)] data-[docked=false]:border-transparent data-[docked=false]:bg-transparent data-[docked=false]:backdrop-blur-none data-[docked=false]:backdrop-saturate-100 data-[docked=false]:supports-[not_(backdrop-filter:blur(1px))]:bg-transparent"
         >
           <BrandSignature href={`${paths.home}#site-top`} variant="on-dark" />
 
