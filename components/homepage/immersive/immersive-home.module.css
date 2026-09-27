@@ -107,13 +107,21 @@
   margin-top: 32px;
 }
 
+/*
+ * Fidelity fix (orchestrator's side-by-side review against sky-chart-reference.html at
+ * 1440): D-11 does not specify a trust-row max-width; the reference's 760px cap was never an
+ * approved requirement. The approved English availability sentence is longer than the
+ * reference's shortened placeholder and wrapped inside that cap, and since the hero is
+ * bottom-aligned, the extra line lifted the H1 well above the reference's position. Spanning
+ * the hero container instead (no max-width of its own) lets both locales fit on one line at
+ * 1440, while still wrapping naturally at narrower widths.
+ */
 .trustRow {
   display: flex;
   flex-wrap: wrap;
   gap: 28px;
   margin-top: 40px;
   padding-top: 20px;
-  max-width: 760px;
   border-top: 1px solid var(--sky-plate-line);
   color: var(--sky-text-2);
   font-size: 14px;

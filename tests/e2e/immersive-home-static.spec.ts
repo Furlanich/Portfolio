@@ -223,6 +223,30 @@ for (const homeCase of homeCases) {
     expect(secondaryBox!.y).toBeGreaterThan(primaryBox!.y + primaryBox!.height / 2);
   });
 
+  // Fidelity finding (orchestrator's side-by-side against sky-chart-reference.html at 1440):
+  // D-11 does not specify a trust-row max-width; the reference prototype's 760px was never an
+  // approved requirement. The approved English availability sentence is longer than the
+  // reference's shortened placeholder and wrapped to a second line inside that 760px cap.
+  // Because the hero is bottom-aligned, the extra line lifted the H1 about 50px higher than
+  // the reference, colliding with the runtime's node labels ("Simplify"/"Orders",
+  // "Messages"/trust text). Both locales must fit the trust line and availability sentence on
+  // one row at 1440.
+  test(`${homeCase.locale} trust row items share one row at 1440`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(appUrl(homeCase.route));
+    const tops = await page.evaluate(() => {
+      const hero = document.querySelector('section[aria-labelledby="home-heading"]')!;
+      return [...hero.querySelectorAll('p')].slice(-2).map((p) => p.getBoundingClientRect().top);
+    });
+    expect(tops).toHaveLength(2);
+    expect(Math.abs(tops[0] - tops[1]), JSON.stringify(tops)).toBeLessThanOrEqual(2);
+
+    // The reference prototype's H1 bottom sits at roughly 460px in this same 1440x900 frame;
+    // wrapping the trust row to two lines pushed it noticeably higher than that.
+    const h1Bottom = await page.locator('h1#home-heading').evaluate((el) => el.getBoundingClientRect().bottom);
+    expect(h1Bottom).toBeGreaterThanOrEqual(460);
+  });
+
   // RED 2: the H1 uses the D-09 display-1 scale, which clamps to exactly 96px at 1440 and
   // to its 44px floor at 320.
   test(`${homeCase.locale} H1 uses the display-1 clamp at 1440 and 320`, async ({ page }) => {
