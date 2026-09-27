@@ -252,7 +252,7 @@ test('English home content contains the approved natural adaptation', () => {
 const approvedInstrument = {
   es: {
     label: 'FURLANICH · Del proceso al sistema',
-    statusLabel: 'ETAPA {current} DE 04',
+    statusLabel: 'Lámina {current} de 04',
     pauseLabel: 'Pausar movimiento',
     resumeLabel: 'Reanudar movimiento',
     chapters: [
@@ -264,7 +264,7 @@ const approvedInstrument = {
   },
   en: {
     label: 'FURLANICH · From process to system',
-    statusLabel: 'PHASE {current} OF 04',
+    statusLabel: 'Plate {current} of 04',
     pauseLabel: 'Pause motion',
     resumeLabel: 'Resume motion',
     chapters: [

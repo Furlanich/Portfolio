@@ -36,11 +36,18 @@ html {
   scroll-padding-top: 96px;
 }
 
+/*
+ * SKY-CHART-V2 Task 8 lock transfer (L-02, narrow): `body` carries no `background` of its
+ * own. If it did, that background would paint as an ordinary block background above every
+ * negative z-index layer of the root stacking context, hiding Home's fixed D-01 ground
+ * (z -3) and scrim (z -1) regardless of their own correct CSS. With `body` transparent,
+ * `html`'s background (kept, unchanged) paints only the document canvas below them, so every
+ * other page's rendered background is unchanged.
+ */
 body {
   margin: 0;
   min-height: 100%;
   overflow-x: clip;
-  background: #F9F6EE;
   color: #09243D;
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }

@@ -19,7 +19,7 @@ export const homeContent = {
   availability: 'Based in Buenos Aires, Argentina. Available in Spanish and English for work in Argentina and internationally.',
   instrument: {
     label: 'FURLANICH · From process to system',
-    statusLabel: 'PHASE {current} OF 04',
+    statusLabel: 'Plate {current} of 04',
     plateLabel: 'Plate {current}/04',
     coordinates: "34°36'S · 58°22'W",
     pauseLabel: 'Pause motion',

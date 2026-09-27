@@ -19,7 +19,7 @@ export const homeContent = {
   availability: 'Buenos Aires, Argentina. Disponibilidad en español e inglés para Argentina y el exterior.',
   instrument: {
     label: 'FURLANICH · Del proceso al sistema',
-    statusLabel: 'ETAPA {current} DE 04',
+    statusLabel: 'Lámina {current} de 04',
     plateLabel: 'Lámina {current}/04',
     coordinates: "34°36'S · 58°22'W",
     pauseLabel: 'Pausar movimiento',
