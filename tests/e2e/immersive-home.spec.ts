@@ -280,10 +280,13 @@ test.describe('lifecycle', () => {
     await expect(page.locator('canvas')).toHaveCount(0);
 
     await page.goBack();
-    // Reactivation recreates the WebGL context right after the previous one was force-lost on
-    // unmount; under load (software rendering, a busy machine) that reclaim can take noticeably
-    // longer than a first activation, so this one gets a wider budget than `expectActive`'s
-    // default -- the assertion itself (mode reaches 'webgl') is unchanged.
+    // Root-caused via scripts/measure-immersive-production.mjs's identical remount cycle: the
+    // scroll position the browser restores on `goBack()` is not guaranteed to leave
+    // `[data-instrument]` near the viewport (observed scrollY up to ~4900px with the root fully
+    // outside the viewport), and the T-04 near-viewport gate then correctly, quietly stays
+    // static -- not a runtime bug. Scrolling to the top guarantees the precondition the gate
+    // requires; `expectActive`'s wider budget is kept as a smaller safety margin on top.
+    await page.evaluate(() => window.scrollTo(0, 0));
     await expectActive(page, 40_000);
     await expect(page.locator('canvas[data-sky-chart-canvas]')).toHaveCount(1);
     const laterDisposeCount = (await debugHook(page))?.disposeCount ?? -2;
