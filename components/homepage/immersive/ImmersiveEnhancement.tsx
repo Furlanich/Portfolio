@@ -123,6 +123,13 @@ export function ImmersiveEnhancement({
     () => root()?.querySelector<HTMLElement>('[data-instrument-chapters]') ?? null,
     [root],
   );
+  // D-25/D-27's "hero's bottom edge" (plan Progress, 2026-09-25 orchestrator decision): the
+  // hero section itself, not a proxy. Works unchanged before and after Task 8, since both mark
+  // the hero with `aria-labelledby="home-heading"`.
+  const hero = useCallback(
+    () => root()?.querySelector<HTMLElement>('section[aria-labelledby="home-heading"]') ?? null,
+    [root],
+  );
 
   const setMode = useCallback((mode: 'static' | 'webgl') => {
     const element = root();
@@ -143,20 +150,21 @@ export function ImmersiveEnhancement({
     setActive(false);
   }, [setMode]);
 
-  // Reads chapter/chapters-container geometry and returns everything a frame or a recede
-  // decision needs. `heroBottom` (D-27) is the top of the chapters container: the hero section
-  // sits immediately above it in document flow, so its bottom edge coincides with that point.
+  // Reads hero/chapter/chapters-container geometry and returns everything a frame or a recede
+  // decision needs. `heroBottom` (D-25, D-27) is the hero section's own bottom edge. If the hero
+  // cannot be found, +Infinity keeps `heroMaskFor`'s fail-safe: an unmeasurable state must hide
+  // (mask 0) below 768px rather than risk showing a label that could still collide with it.
   const measure = useCallback(() => {
     const width = window.innerWidth;
     const vh = window.innerHeight;
+    const heroBottom = hero()?.getBoundingClientRect().bottom ?? Number.POSITIVE_INFINITY;
     const containerRect = chaptersContainer()?.getBoundingClientRect() ?? null;
-    const heroBottom = containerRect?.top ?? 0;
     const chaptersBottom = containerRect?.bottom ?? 0;
     const rects = chapters().map((chapter) => chapter.getBoundingClientRect());
     const progress = progressFromChapterRects(rects, vh);
     measurementRef.current = { width, vh, heroBottom };
     return { progress, chaptersBottom, vh, heroBottom, width };
-  }, [chapters, chaptersContainer]);
+  }, [chapters, chaptersContainer, hero]);
 
   const applyRecede = useCallback((chaptersBottom: number, vh: number) => {
     const k = recedeFactor(chaptersBottom, vh);
