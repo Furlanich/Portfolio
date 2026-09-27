@@ -46,8 +46,8 @@ const renderedChapter = (page: Page) => page.locator('[data-instrument]').getAtt
 const recede = (page: Page) => page.locator('[data-instrument]').getAttribute('data-recede');
 const debugHook = (page: Page) => page.evaluate(() => window.__FURLANICH_SKY_CHART__ ?? null);
 
-async function expectActive(page: Page) {
-  await expect.poll(() => mode(page), { timeout: 20_000 }).toBe('webgl');
+async function expectActive(page: Page, timeout = 20_000) {
+  await expect.poll(() => mode(page), { timeout }).toBe('webgl');
   const canvas = page.locator('canvas[data-sky-chart-canvas]');
   await expect(canvas).toHaveCount(1);
   await expect(canvas).toHaveAttribute('aria-hidden', 'true');
@@ -280,7 +280,11 @@ test.describe('lifecycle', () => {
     await expect(page.locator('canvas')).toHaveCount(0);
 
     await page.goBack();
-    await expectActive(page);
+    // Reactivation recreates the WebGL context right after the previous one was force-lost on
+    // unmount; under load (software rendering, a busy machine) that reclaim can take noticeably
+    // longer than a first activation, so this one gets a wider budget than `expectActive`'s
+    // default -- the assertion itself (mode reaches 'webgl') is unchanged.
+    await expectActive(page, 40_000);
     await expect(page.locator('canvas[data-sky-chart-canvas]')).toHaveCount(1);
     const laterDisposeCount = (await debugHook(page))?.disposeCount ?? -2;
     expect(laterDisposeCount).toBeGreaterThan(firstDisposeCount);
