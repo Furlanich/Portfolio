@@ -118,9 +118,13 @@ test.describe('Sky Chart runtime', () => {
     await expectActive(page);
     await centreChapter(page, 'fragmentation');
     await expect.poll(() => renderedChapter(page)).toBe('fragmentation');
-    await page.waitForTimeout(1_000);
+    // The T-06 damped ease takes a real, variable number of frames to converge -- observed up
+    // to ~2.5s under this environment's software SwiftShader renderer, with occasional
+    // multi-hundred-ms scheduling stalls that a short equality-poll could mistake for settling.
+    // 4s comfortably covers the observed worst case before "first" is read at all.
+    await page.waitForTimeout(4_000);
     const first = (await debugHook(page))?.renderCount ?? -1;
-    await page.waitForTimeout(1_000);
+    await page.waitForTimeout(1_500);
     const second = (await debugHook(page))?.renderCount ?? -2;
     expect(second, 'no idle loop: the render count must not grow once settled').toBe(first);
   });

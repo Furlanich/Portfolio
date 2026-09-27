@@ -62,9 +62,11 @@ for (const locale of ['es', 'en'] as const) {
     });
     await expect(page.locator('[data-pause-motion-pill]')).not.toHaveAttribute('hidden', '');
 
-    // Tab from the hero's own last action; the chapters (D-12 atlas plates) contribute no
-    // focusable element, so Pause must be the very next stop.
-    const heroActions = page.getByRole('main').getByRole('link');
+    // Tab from the hero's own last action, scoped to the hero section itself (D-11): the rest
+    // of Home has its own actions further down the page, so an unscoped "last link in main"
+    // would land on one of those instead of the hero's. The chapters (D-12 atlas plates)
+    // contribute no focusable element, so Pause must be the very next stop after the hero.
+    const heroActions = page.locator('section[aria-labelledby="home-heading"]').getByRole('link');
     const lastHeroAction = heroActions.last();
     await lastHeroAction.focus();
     await page.keyboard.press('Tab');
