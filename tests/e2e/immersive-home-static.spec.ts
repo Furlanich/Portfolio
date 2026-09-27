@@ -229,14 +229,33 @@ test('EnvironmentGround is a fixed z-index -3 layer with no stacking-context anc
   expect(await noStackingContextAncestors(page, '[data-environment-scrim]')).toEqual([]);
 });
 
-// `body` must carry no background of its own (app/globals.css, Task 8 lock transfer L-02):
-// otherwise the CSS root-canvas rule promotes it to paint the document canvas, which sits
-// below any negative z-index descendant of the root stacking context and hides the
-// environment ground and scrim entirely, regardless of their own (correct) CSS.
+// `body` carries no background of its own (app/globals.css, Task 8 lock transfer L-02). If
+// it did, that background would paint as an ordinary block background above every negative
+// z-index layer of the root stacking context, hiding the ground and scrim regardless of
+// their own (correct) CSS. With `body` transparent, `html`'s background only paints the
+// document canvas, and the ground and scrim render above it.
 test('body has no background colour of its own', async ({ page }) => {
   await page.goto(appUrl(stableRoutes.home.es));
   const bodyBackground = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
   expect(bodyBackground).toBe('rgba(0, 0, 0, 0)');
+});
+
+// On Home only, `html` takes the lightest D-02 ground stop (#0E2B4A) instead of Bone: a safe
+// fallback if the ground ever failed to paint, and a conservative background for tools (axe)
+// that cannot see the fixed ground layer and fall back to `html`'s own background. Every
+// other route keeps the approved Bone canvas untouched.
+for (const route of [stableRoutes.home.es, stableRoutes.home.en]) {
+  test(`html takes the D-02 ground colour on Home (${route})`, async ({ page }) => {
+    await page.goto(appUrl(route));
+    const htmlBackground = await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
+    expect(htmlBackground).toBe('rgb(14, 43, 74)');
+  });
+}
+
+test('html keeps the Bone canvas on non-Home routes', async ({ page }) => {
+  await page.goto(appUrl(stableRoutes.services.en));
+  const htmlBackground = await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
+  expect(htmlBackground).toBe('rgb(249, 246, 238)');
 });
 
 // The ground is not just declared correctly (RED 5): it must actually be the pixel that

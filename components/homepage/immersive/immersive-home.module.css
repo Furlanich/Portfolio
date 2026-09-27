@@ -10,11 +10,25 @@
  * WebGL canvas (-2, Task 7's portal to document.body) and the D-03 scrim (-1) below. This
  * file declares no rule on any ancestor of these two layers that would create a stacking
  * context (no transform, filter, opacity < 1, isolation or positioned z-index), per D-01.
- * Rendering this ground actually visible above the root stacking context's canvas layer
- * required a narrow lock transfer on app/globals.css (L-02): only `body`'s own
- * `background: #F9F6EE` is removed there, so `html`'s background (unchanged) is what the
- * CSS root-canvas rule promotes -- see that file's comment and the PR body for the reasoning.
+ * Rendering this ground actually visible required a narrow lock transfer on app/globals.css
+ * (L-02): `body` carried its own `background: #F9F6EE`, which painted as an ordinary block
+ * background above every negative z-index layer of the root stacking context (this ground
+ * included), regardless of the ground's own correct CSS. That line is now removed there, so
+ * `html`'s background (see the `:has()` rule below for Home) paints only the document canvas,
+ * below this ground -- see that file's comment and the PR body for the full reasoning.
  */
+/*
+ * On Home only, `html` takes the lightest D-02 ground stop (#0E2B4A) instead of Bone. This
+ * is a safe fallback if the ground ever failed to paint, and it also gives tools that cannot
+ * see this fixed, non-ancestor layer (axe-core's static contrast analysis, most notably) a
+ * conservative dark background to compute against instead of Bone. Scoped with a CSS-Modules-
+ * pure `:has()` keyed to the ground itself, so no other route (whose document never renders
+ * `.ground`) is affected; `html`'s own `background: #F9F6EE` in app/globals.css is unchanged.
+ */
+:global(html):has(.ground) {
+  background: #0E2B4A;
+}
+
 .ground {
   position: fixed;
   inset: 0;
