@@ -151,16 +151,32 @@ test.describe('Sky Chart runtime', () => {
   });
 
   test('the frame counter stops increasing once scrolling settles (demand rendering)', async ({ page }) => {
+    test.slow(); // CI's software SwiftShader renderer can take several seconds to damp to a stop
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.en.route));
     await expectActive(page);
     await centreChapter(page, 'fragmentation');
     await expect.poll(() => renderedChapter(page)).toBe('fragmentation');
-    // The T-06 damped ease takes a real, variable number of frames to converge -- observed up
-    // to ~2.5s under this environment's software SwiftShader renderer, with occasional
-    // multi-hundred-ms scheduling stalls that a short equality-poll could mistake for settling.
-    // 4s comfortably covers the observed worst case before "first" is read at all.
-    await page.waitForTimeout(4_000);
+
+    // The T-06 damped ease (`t += (target - t) * 0.12`, snaps below |delta| 0.0005) takes a real,
+    // variable number of frames to converge. From a fresh centre (delta ~0.3) that is ~50 frames,
+    // which under CI's ~117ms SwiftShader frame interval is ~6s -- longer than a fixed window can
+    // reliably cover. Poll until two renderCount reads 1.5s apart agree (a generous 20s budget),
+    // then re-confirm the count stays put for one further 1.5s window. An idle loop that never
+    // stops still fails: the poll times out because no two consecutive reads ever match.
+    let previousCount: number | null = null;
+    await expect
+      .poll(
+        async () => {
+          const current = (await debugHook(page))?.renderCount ?? null;
+          const stable = previousCount !== null && current === previousCount;
+          previousCount = current;
+          return stable;
+        },
+        { timeout: 20_000, intervals: [1_500] },
+      )
+      .toBe(true);
+
     const first = (await debugHook(page))?.renderCount ?? -1;
     await page.waitForTimeout(1_500);
     const second = (await debugHook(page))?.renderCount ?? -2;
@@ -225,8 +241,12 @@ test.describe('Sky Chart runtime', () => {
     await page.locator('#services').scrollIntoViewIfNeeded();
     await page.waitForTimeout(300);
     await expect.poll(() => recede(page)).toBe('1');
-    const scrimOpacity = await page.locator('[data-environment-scrim]').evaluate((el) => getComputedStyle(el).opacity);
-    expect(Number(scrimOpacity)).toBeLessThan(0.3);
+    // The scrim's opacity animates through an inline CSS transition, so a single read at a fixed
+    // delay can land mid-transition (observed 0.883 and 0.650, both well above the 0.3 gate).
+    // Poll the computed value instead of reading it once; the < 0.3 threshold is unchanged.
+    await expect
+      .poll(() => page.locator('[data-environment-scrim]').evaluate((el) => Number(getComputedStyle(el).opacity)))
+      .toBeLessThan(0.3);
     await expect(page.locator('[data-pause-motion-pill]')).toBeHidden();
 
     // The camera itself must not have moved: rendered chapter stays at the frozen fragmentation.
