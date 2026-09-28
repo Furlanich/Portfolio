@@ -13,7 +13,7 @@ related:
   - PROJECT-EVIDENCE
   - ADR-STATIC-LOCALIZED-ROUTING
 supersedes: ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
-last_verified: 2026-09-24
+last_verified: 2026-09-28
 ---
 
 # Sky Chart homepage runtime
@@ -46,7 +46,7 @@ These boundaries carry over unchanged from `ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE` and
 - Direct Three.js (`three@0.186.0`) is the accepted renderer; React Three Fiber remains out of scope.
 - Framer Motion remains the scroll-progress and reduced-motion boundary; no new orchestration runtime is added.
 - Rendering is demand-driven: each animation frame damps toward the target and stops when settled (plan T-06). There is no idle render loop.
-- Initialization is attempted once, after the existing capability gates in order: reduced motion, Save-Data, WebGL2, the session context-loss flag, near-viewport, then `load`.
+- Initialization is attempted once, after the existing capability gates in order: reduced motion, Save-Data, WebGL2, a hardware-accelerated renderer (amended 2026-09-28; see below), the session context-loss flag, near-viewport, then `load`.
 - Context loss marks the session flag, disposes every geometry/material/texture and the renderer, and reverts to the static path for the remainder of the session.
 - Reduced motion, Save-Data, no JavaScript, unsupported WebGL, initialization failure and context loss all retain a complete static fallback with no interrupting error.
 - Static export, locale routes, trailing slashes, GitHub Pages and the optional base path remain unchanged.
@@ -81,13 +81,13 @@ Every gate below is a ceiling, restated unchanged from `ADR-ADAPTIVE-IMMERSIVE-H
 | Canvas device-pixel ratio | ≤1.5 wide; ≤1.25 compact or constrained | Unit test plus debug hook |
 | Draw calls per frame | ≤28 (1 graticule + 1 stars + 1 links + ≤20 sprites + margin) | Debug hook `renderer.info.render.calls` |
 | Label textures | ≤20, each ≤1024×64 | Debug hook |
-| Scroll frame interval p95 | ≤20 ms | `measure:immersive` |
+| Scroll frame interval p95 | ≤20 ms | Hardware-accelerated GPU: plan section 26 real-device protocol or a hardware-GPU runner (amended 2026-09-28). `measure:immersive` reports it as advisory under SwiftShader |
 | LCP p75 (synthetic lab) | ≤2.5 s; the LCP element must be the H1 | `measure:home-vitals` |
 | INP p75 | ≤200 ms | `measure:home-vitals` |
 | Layout shift from the enhancement | 0 | Playwright `PerformanceObserver` |
 | Backdrop-filter surfaces per viewport | ≤3 (App Bar excluded) | E2E DOM scan at each section |
 | Idle rendering | 0 frames after settle | Debug hook frame counter |
-| Main-thread interaction task (retained ADR gate) | <50 ms | `measure:immersive` long-task observer |
+| Main-thread interaction task (retained ADR gate) | <50 ms | Hardware-accelerated GPU, as the frame interval (amended 2026-09-28). `measure:immersive` long-task observer is advisory under SwiftShader |
 
 The budgets are acceptance ceilings for the implementation plan's Tasks 3–11. They do not themselves approve any prototype bundle, media encode or measured result; each task's PR records its own measurement against them.
 
@@ -145,6 +145,16 @@ The decision was accepted through [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky
 - [`PROJECT-EVIDENCE`](../product/project-evidence.md) owns project-media permissions, unaffected by this ADR.
 - [`ADR-STATIC-LOCALIZED-ROUTING`](static-localized-routing.md) remains authoritative for static export, routes and base-path behavior.
 
+## Amendment 2026-09-28: software renderers and hardware-GPU frame measurement
+
+The PR #83 independent review measured the runtime on a quiet machine under SwiftShader. It found a frame-interval p95 of 100–117 ms and interaction long tasks of 56–279 ms, against the ≤20 ms and <50 ms ceilings. The runtime's own JavaScript stays at or below 2 ms per frame. Controlled experiments placed the cost in compositing a full-viewport, per-frame-changing WebGL layer beneath the full-viewport scrim and backdrop-filter plates, which a software rasterizer cannot sustain. The owner decided the following on 2026-09-28. Every limit in the table above is unchanged; no budget is raised.
+
+- **Software renderers fail the capability gate.** When the WebGL2 renderer string (the unmasked renderer where the browser exposes it) identifies a software rasterizer, such as SwiftShader, llvmpipe, softpipe or the Microsoft Basic Render Driver, the visitor keeps the complete static composition. This is quiet, like every other gate.
+- **Frame timing is measured on hardware.** The scroll frame-interval p95 and main-thread interaction-task gates are acceptance gates on hardware-accelerated GPUs: the plan's real-device protocol, or a hardware-GPU runner. `measure:immersive` keeps SwiftShader and keeps gating the JavaScript budget, layout shift and the canvas and listener lifecycle counts. It reaches the runtime only through an explicit, test-only software-renderer override, and it records its frame numbers as advisory.
+- **Records.** `PLAN-SKY-CHART-HOME-REDESIGN-V2` sections 10 and 14 and its Deviations record the same decision. Task 7's follow-up implements it test-first.
+
 ## Date and status
 
 **APPROVED — 2026-09-24.** Recorded after the repository owner approved and merged Governance PR #77 (`RFC-SKY-CHART-VISUAL-SYSTEM-V2`, merge commit `70168e9`), which accepted the Sky Chart runtime-change summary, the removal of the derived Azure sculpture, and the withdrawal of the optional Connection-film permission. This ADR authorizes execution of `PLAN-SKY-CHART-HOME-REDESIGN-V2` (Waves 1–4), not release, provider activation, evidence upgrades, legal/SEO work, additional WebGL routes or a React-major migration.
+
+**AMENDED — 2026-09-28.** By owner decision, recorded in the amendment section above and in the plan's Deviations: a software-renderer capability gate, and frame-time gates measured on hardware GPUs. Limits are unchanged.
