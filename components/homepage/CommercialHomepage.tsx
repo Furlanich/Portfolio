@@ -4,6 +4,7 @@ import type { HomePageContent } from './content-types';
 import { ImmersiveHomeSequence } from './immersive/ImmersiveHomeSequence';
 import { HomeProblems } from './HomeProblems';
 import { HomeServices } from './HomeServices';
+import { HomeImpact } from './HomeImpact';
 import { HomeProof } from './HomeProof';
 import { HomeProcess } from './HomeProcess';
 import { HomeFounder } from './HomeFounder';
@@ -25,12 +26,18 @@ export function CommercialHomepage({ content }: CommercialHomepageProps) {
   return (
     <>
       <ImmersiveHomeSequence content={content} />
-      <HomeProblems content={content.problems} actionHref={problemsAction.href} />
-      <HomeServices content={content.servicesSection} actionHref={servicesAction.href} />
-      <HomeProof content={content.proof} actionHref={proofAction.href} />
-      <HomeProcess content={content.process} anchorId={homeProcessAnchors[content.locale]} actionHref={processAction.href} />
-      <HomeFounder content={content.founderSection} actionHref={founderAction.href} />
-      <HomeCta content={content.cta} actionHref={ctaAction.href} />
+      <HomeProblems content={content.problems} readout={content.readout.problems} actionHref={problemsAction.href} />
+      <HomeServices content={content.servicesSection} readout={content.readout.services} actionHref={servicesAction.href} />
+      <HomeImpact content={content.impact} readout={content.readout.impact} />
+      <HomeProof content={content.proof} readout={content.readout.proof} actionHref={proofAction.href} />
+      <HomeProcess
+        content={content.process}
+        anchorId={homeProcessAnchors[content.locale]}
+        readout={content.readout.process}
+        actionHref={processAction.href}
+      />
+      <HomeFounder content={content.founderSection} readout={content.readout.founder} actionHref={founderAction.href} />
+      <HomeCta content={content.cta} readout={content.readout.contact} actionHref={ctaAction.href} />
     </>
   );
 }

@@ -1,26 +1,37 @@
 import Link from 'next/link';
-import type { HomeFounderSectionContent } from './content-types';
-import { CommercialSectionHeading } from '../commercial/CommercialSectionHeading';
+import type { HomeFounderSectionContent, HomeReadoutContent } from './content-types';
+import {
+  HomeSection,
+  ghostActionOnDarkClassName,
+  homeHeadingClassName,
+  homeIntroClassName,
+  homeKickerClassName,
+} from './HomeSection';
 
 interface HomeFounderProps {
   content: HomeFounderSectionContent;
+  readout: HomeReadoutContent['founder'];
   actionHref: string;
 }
 
-export function HomeFounder({ content, actionHref }: HomeFounderProps) {
+/** SKY-CHART-V2 D-18 Founder: an 8fr/4fr grid, end-aligned at >=1024. */
+export function HomeFounder({ content, readout, actionHref }: HomeFounderProps) {
   return (
-    <section id="founder" aria-labelledby="founder-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
-      <div className="mx-auto grid w-full max-w-[1200px] gap-8 px-5 md:px-8 lg:grid-cols-12 lg:gap-12 lg:px-12">
-        <div className="min-w-0 lg:col-span-8">
-          <CommercialSectionHeading headingId="founder-heading" heading={content.heading} />
-          <p className="mt-6 max-w-[68ch] text-lg leading-7 text-foundation-muted lg:text-xl lg:leading-8">{content.biography}</p>
+    <HomeSection id="founder" ariaLabelledBy="founder-heading" readout={readout}>
+      <div className="grid gap-8 lg:grid-cols-[8fr_4fr] lg:items-end">
+        <div className="min-w-0">
+          <p className={homeKickerClassName}>{content.kicker}</p>
+          <h2 id="founder-heading" className={`${homeHeadingClassName} text-white`}>
+            {content.heading}
+          </h2>
+          <p className={`${homeIntroClassName} text-sky-text-2`}>{content.biography}</p>
         </div>
-        <div className="flex flex-col items-start gap-4 lg:col-span-4 lg:justify-end">
-          <Link href={actionHref} className="inline-flex min-h-12 w-auto items-center justify-center rounded-[10px] border border-foundation-action bg-foundation-surface px-6 text-base font-semibold text-foundation-action transition-colors duration-[160ms] ease-out hover:bg-foundation-tint hover:text-foundation-action-strong max-[479px]:w-full">
+        <div className="flex lg:justify-end">
+          <Link href={actionHref} className={`${ghostActionOnDarkClassName}`}>
             {content.action.label}
           </Link>
         </div>
       </div>
-    </section>
+    </HomeSection>
   );
 }
