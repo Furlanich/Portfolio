@@ -150,16 +150,41 @@ test('AppBarBehavior computes aria-current from a normalized pathname, ignoring 
 // it is derived here: the position of each distinct data-readout value's first appearance
 // in document order. That reproduces the reference prototype's fixed `secs` array (Home 00,
 // Problems 01, Services 02, Position fix 03, ...) without hardcoding section ids/labels.
-test('AppBarBehavior numbers the readout by first appearance of each distinct data-readout value', () => {
+//
+// This runs the extracted pure functions directly (buildReadoutIndex/formatReadout in
+// components/foundation/app-bar-readout.ts) rather than pattern-matching AppBarBehavior.tsx's
+// source text, per the PR #89 review (GPT-5.6 Luna, BLOCKING 3): a source-regex assertion
+// would keep passing even if the formatting logic were subtly wrong.
+test('AppBarBehavior numbers the readout by first appearance of each distinct data-readout value', async () => {
+  const { buildReadoutIndex, formatReadout } = await import('../components/foundation/app-bar-readout.ts');
+
+  // The hero and all four chapters render the same "Home" readout value (D-12); the real
+  // document order for a Home page is hero, four chapters, then the seven restyled sections
+  // in CommercialHomepage's render order (Problems, Services, Position fix, Proof, Process,
+  // Founder, Contact).
+  const en = ['Home', 'Home', 'Home', 'Home', 'Home', 'Problems', 'Services', 'Position fix', 'Accountability', 'Process', 'Founder', 'Contact'];
+  const es = ['Inicio', 'Inicio', 'Inicio', 'Inicio', 'Inicio', 'Problemas', 'Servicios', 'Posición', 'Responsabilidad', 'Proceso', 'Fundador', 'Contacto'];
+
+  const enIndex = buildReadoutIndex(en);
+  const esIndex = buildReadoutIndex(es);
+
+  assert.equal(formatReadout('Home', enIndex), '00 · Home');
+  assert.equal(formatReadout('Position fix', enIndex), '03 · Position fix');
+  assert.equal(formatReadout('Contact', enIndex), '07 · Contact');
+  assert.equal(formatReadout('Inicio', esIndex), '00 · Inicio');
+  assert.equal(formatReadout('Posición', esIndex), '03 · Posición');
+  assert.equal(formatReadout('Contacto', esIndex), '07 · Contacto');
+
+  // A repeated value keeps its first-seen index, not a later one.
+  assert.equal(buildReadoutIndex(en).get('Home'), 0);
+  assert.equal([...buildReadoutIndex(en).keys()].filter((key) => key === 'Home').length, 1);
+});
+
+test('AppBarBehavior.tsx uses the extracted app-bar-readout helpers, not inline logic', () => {
   const source = fs.readFileSync(appBarBehaviorPath, 'utf8');
 
-  assert.match(source, /readoutOrder/, 'a first-appearance index map keyed by the data-readout value');
-  assert.match(source, /padStart\(2, ?'0'\)/, 'the index renders zero-padded to two digits');
-  assert.match(
-    source,
-    /`\$\{[^}]*padStart\(2, ?'0'\)\} · \$\{[^}]*\}`/,
-    'the readout text is formatted "{NN} · {name}"',
-  );
+  assert.match(source, /import \{ buildReadoutIndex, formatReadout \} from '\.\/app-bar-readout'/);
+  assert.doesNotMatch(source, /padStart\(2, ?'0'\)/, 'the zero-padding now lives in app-bar-readout.ts, not inline');
 });
 
 // REFACTOR: normalizeAppBarPath is extracted from AppBarBehavior.tsx into its own
