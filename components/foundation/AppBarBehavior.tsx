@@ -67,6 +67,17 @@ export function AppBarBehavior() {
     if (isHome && readoutEl && readoutSections.length > 0) {
       const processLinks = navLinks.filter(isProcessLink);
 
+      // D-22: "Text is `{NN} · {name}`". `[data-readout]` only carries the plain name (the
+      // hero and all four chapters share "Home"), so the two-digit index is not read off the
+      // DOM -- it is the position of each distinct value's first appearance in document
+      // order. That reproduces the reference prototype's fixed `secs` array (Home 00,
+      // Problems 01, Services 02, Position fix 03, ...) without hardcoding section ids.
+      const readoutOrder = new Map<string, number>();
+      for (const section of readoutSections) {
+        const value = section.dataset.readout ?? '';
+        if (!readoutOrder.has(value)) readoutOrder.set(value, readoutOrder.size);
+      }
+
       const updateReadout = () => {
         const line = window.innerHeight * READOUT_LINE_RATIO;
         let current: HTMLElement | null = null;
@@ -74,7 +85,13 @@ export function AppBarBehavior() {
           if (section.getBoundingClientRect().top <= line) current = section;
         }
 
-        readoutEl.textContent = current?.dataset.readout ?? '';
+        if (current) {
+          const value = current.dataset.readout ?? '';
+          const index = readoutOrder.get(value) ?? 0;
+          readoutEl.textContent = `${String(index).padStart(2, '0')} · ${value}`;
+        } else {
+          readoutEl.textContent = '';
+        }
 
         const isProcessCurrent = Boolean(current && (current.id === 'process' || current.id === 'proceso'));
         for (const link of processLinks) {

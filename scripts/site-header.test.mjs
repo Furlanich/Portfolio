@@ -144,6 +144,24 @@ test('AppBarBehavior computes aria-current from a normalized pathname, ignoring 
   assert.match(source, /isProcessLink/);
 });
 
+// D-22: "Text is `{NN} · {name}`". `[data-readout]` sections (rendered by Tasks 8/9) only
+// carry the plain name (e.g. "Position fix"); several sections share the same name (the
+// hero and all four chapters are "Home"). So the two-digit index is not read off the DOM,
+// it is derived here: the position of each distinct data-readout value's first appearance
+// in document order. That reproduces the reference prototype's fixed `secs` array (Home 00,
+// Problems 01, Services 02, Position fix 03, ...) without hardcoding section ids/labels.
+test('AppBarBehavior numbers the readout by first appearance of each distinct data-readout value', () => {
+  const source = fs.readFileSync(appBarBehaviorPath, 'utf8');
+
+  assert.match(source, /readoutOrder/, 'a first-appearance index map keyed by the data-readout value');
+  assert.match(source, /padStart\(2, ?'0'\)/, 'the index renders zero-padded to two digits');
+  assert.match(
+    source,
+    /`\$\{[^}]*padStart\(2, ?'0'\)\} · \$\{[^}]*\}`/,
+    'the readout text is formatted "{NN} · {name}"',
+  );
+});
+
 // REFACTOR: normalizeAppBarPath is extracted from AppBarBehavior.tsx into its own
 // DOM-free, plain .ts module (components/foundation/app-bar-path.ts) so it can be unit
 // tested directly with node --test -- AppBarBehavior.tsx itself cannot be imported here
