@@ -1,11 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { appUrl, stableRoutes } from './support/paths';
-
-test.skip(
-  true,
-  'Static-only hotfix (owner decision 2026-09-28): the Sky Chart runtime is not mounted. The Task 7 follow-up restores it and removes this skip.',
-);
+import { observeUnexpectedBrowserErrors } from './support/console-errors';
 
 // Task 7 acceptance matrix (PLAN-SKY-CHART-HOME-REDESIGN-V2 section 21). Scoped to the four RED
 // items this task's packet lists: keyboard order past the chapters, the D-25 Pause visibility

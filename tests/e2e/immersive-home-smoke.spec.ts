@@ -1,11 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { appUrl, stableRoutes } from './support/paths';
 
-test.skip(
-  true,
-  'Static-only hotfix (owner decision 2026-09-28): the Sky Chart runtime is not mounted. The Task 7 follow-up restores it and removes this skip.',
-);
-
 // Cross-engine smoke: whichever mode the engine reaches, the semantic Sky Chart composition
 // stays whole and activation or fallback produces no browser errors.
 for (const route of [stableRoutes.home.es, stableRoutes.home.en]) {

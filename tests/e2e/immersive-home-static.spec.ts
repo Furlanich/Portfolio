@@ -322,25 +322,6 @@ test('EnvironmentGround is a fixed z-index -3 layer with no stacking-context anc
   expect(await noStackingContextAncestors(page, '[data-environment-scrim]')).toEqual([]);
 });
 
-// Static-only hotfix (owner decision, 2026-09-28): the WebGL enhancement is not mounted until
-// the Task 7 follow-up fixes the Pause visibility, Pause/recede and performance findings of
-// the PR #83 review. Motion is allowed and WebGL is available here, so a mounted runtime would
-// activate; Home must still stay static. The Task 7 follow-up removes this block.
-test.describe('static-only hotfix', () => {
-  test.use({ reducedMotion: 'no-preference' });
-
-  for (const route of [stableRoutes.home.es, stableRoutes.home.en]) {
-    test(`Home never mounts the WebGL canvas (${route})`, async ({ page }) => {
-      await page.goto(appUrl(route));
-      await page.waitForLoadState('load');
-      await page.mouse.wheel(0, 1200);
-      await page.waitForTimeout(3000);
-      await expect(page.locator('canvas')).toHaveCount(0);
-      expect(await page.locator('[data-instrument]').getAttribute('data-immersive-mode')).not.toBe('webgl');
-    });
-  }
-});
-
 // `body` carries no background of its own (app/globals.css, Task 8 lock transfer L-02). If
 // it did, that background would paint as an ordinary block background above every negative
 // z-index layer of the root stacking context, hiding the ground and scrim regardless of
