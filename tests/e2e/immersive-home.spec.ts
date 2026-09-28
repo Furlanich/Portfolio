@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { appUrl, stableRoutes } from './support/paths';
+import { appPathname, appUrl, stableRoutes } from './support/paths';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
 
 // Sky Chart runtime (PLAN-SKY-CHART-HOME-REDESIGN-V2 Task 7). The DOM contract this file reads
@@ -7,11 +7,16 @@ import { observeUnexpectedBrowserErrors } from './support/console-errors';
 // `section[data-instrument-chapter]` elements and their `[data-instrument-chapters]` container.
 // This runtime sets the root's `data-immersive-mode`, `data-rendered-chapter` and `data-recede`,
 // and creates the canvas with `data-sky-chart-canvas`, portaled to `document.body`.
+//
+// B1 (PR #83 review, amended ADR 2026-09-28): SwiftShader is a software renderer and now fails
+// the capability gate on its own. Every test below that expects `webgl` mode sets the
+// explicit test-only override before navigating; the "software renderer gate" tests exercise
+// the un-overridden behaviour directly.
 
 const CHAPTERS = ['recognition', 'fragmentation', 'connection', 'coordination'] as const;
 const labels = {
-  es: { route: stableRoutes.home.es, pause: 'Pausar movimiento', resume: 'Reanudar movimiento' },
-  en: { route: stableRoutes.home.en, pause: 'Pause motion', resume: 'Resume motion' },
+  es: { route: stableRoutes.home.es, other: stableRoutes.home.en, pause: 'Pausar movimiento', resume: 'Reanudar movimiento', switchLabel: 'Ver sitio en inglés' },
+  en: { route: stableRoutes.home.en, other: stableRoutes.home.es, pause: 'Pause motion', resume: 'Resume motion', switchLabel: 'View site in Spanish' },
 } as const;
 
 // Kept byte-identical across every spec file that reads this hook: TypeScript's global
@@ -34,12 +39,23 @@ type SkyChartDebugHook = {
   labels: readonly string[];
   disposeCount: number;
   renderCount: number;
+  drawCalls: number;
+  pixelRatio: number;
+  labelTextureSizes: readonly [number, number][];
+  labelOpacities: Record<string, number>;
 };
 
 declare global {
   interface Window {
     __FURLANICH_SKY_CHART__?: SkyChartDebugHook;
+    __SKY_CHART_ALLOW_SOFTWARE_RENDERER__?: boolean;
   }
+}
+
+async function allowSoftwareRenderer(page: Page) {
+  await page.addInitScript(() => {
+    window.__SKY_CHART_ALLOW_SOFTWARE_RENDERER__ = true;
+  });
 }
 
 const mode = (page: Page) => page.locator('[data-instrument]').getAttribute('data-immersive-mode');
@@ -71,6 +87,10 @@ async function centreChapter(page: Page, chapter: (typeof CHAPTERS)[number]) {
 }
 
 test.describe('Sky Chart runtime', () => {
+  test.beforeEach(async ({ page }) => {
+    await allowSoftwareRenderer(page);
+  });
+
   for (const locale of ['es', 'en'] as const) {
     test(`${locale} activates a portaled canvas in webgl mode`, async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 900 });
@@ -101,6 +121,23 @@ test.describe('Sky Chart runtime', () => {
     const hook = await debugHook(page);
     expect(hook?.labels).toContain('Pedidos');
     expect(hook?.labels).toContain('Entregar');
+  });
+
+  // N7: the plan's performance gates (draw calls <=28, label textures <=20 of <=1024x64, DPR
+  // caps) are asserted directly through the debug hook the runtime already exposes.
+  test('N7: draw calls stay within budget, textures are <=1024x64, and DPR matches the quality cap', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(appUrl(labels.en.route));
+    await expectActive(page);
+    await expect.poll(async () => (await debugHook(page))?.labelCount).toBe(20);
+    const hook = await debugHook(page);
+    expect(hook?.drawCalls, 'draw calls: 1 graticule + 1 stars + 1 links + <=20 sprites + margin').toBeLessThanOrEqual(28);
+    expect(hook?.labelTextureSizes).toHaveLength(20);
+    for (const [width, height] of hook?.labelTextureSizes ?? []) {
+      expect(width).toBeLessThanOrEqual(1024);
+      expect(height).toBeLessThanOrEqual(64);
+    }
+    expect(hook?.pixelRatio).toBeLessThanOrEqual(1.5);
   });
 
   test('scrolling forward and back gives the expected rendered chapter and reverses', async ({ page }) => {
@@ -168,6 +205,31 @@ test.describe('Sky Chart runtime', () => {
     await expect.poll(() => renderedChapter(page)).toBe('coordination');
   });
 
+  // B3: while paused, recede and Pause visibility must keep tracking scroll -- only the camera
+  // target freezes. Paused at Services (fully receded) must show recede=1 and low opacity;
+  // paused at the top must keep the pill hidden over the hero.
+  test('B3: while paused, recede and the pill visibility keep updating with scroll', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(appUrl(labels.en.route));
+    await expectActive(page);
+    await centreChapter(page, 'fragmentation');
+    await expect.poll(() => renderedChapter(page)).toBe('fragmentation');
+
+    const pause = page.getByRole('button', { name: labels.en.pause });
+    await pause.click();
+    await expect(pause).toHaveAttribute('data-state', 'paused');
+
+    await page.locator('#services').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
+    await expect.poll(() => recede(page)).toBe('1');
+    const scrimOpacity = await page.locator('[data-environment-scrim]').evaluate((el) => getComputedStyle(el).opacity);
+    expect(Number(scrimOpacity)).toBeLessThan(0.3);
+    await expect(page.locator('[data-pause-motion-pill]')).toBeHidden();
+
+    // The camera itself must not have moved: rendered chapter stays at the frozen fragmentation.
+    expect(await renderedChapter(page)).toBe('fragmentation');
+  });
+
   test('resize keeps the active chapter instead of replaying the sequence', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.es.route));
@@ -180,12 +242,52 @@ test.describe('Sky Chart runtime', () => {
     await expect.poll(() => renderedChapter(page)).toBe('connection');
     await expect(page.locator('canvas[data-sky-chart-canvas]')).toHaveCount(1);
   });
+
+  // N6: language-switch reactivation, restored from the pre-rewrite acceptance matrix.
+  for (const locale of ['es', 'en'] as const) {
+    const copy = labels[locale];
+    test(`${locale} language switch reactivates cleanly with no console error or failed asset`, async ({ page }) => {
+      const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
+      const failedAssets: string[] = [];
+      page.on('response', (response) => {
+        if (response.status() >= 400) failedAssets.push(`${response.status()} ${response.url()}`);
+      });
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(appUrl(copy.route));
+      await expectActive(page);
+
+      await page.getByRole('banner').getByRole('link', { name: copy.switchLabel }).click();
+      await page.waitForURL(`**${appPathname(copy.other)}`);
+      await expectActive(page);
+      await expect(page.locator('canvas')).toHaveCount(1);
+
+      expect(failedAssets, 'missing or failed assets').toEqual([]);
+      assertNoBrowserErrors();
+    });
+  }
+
+  // N6: the optional Connection film stays withdrawn (ADR-SKY-CHART-HOMEPAGE-RUNTIME); no
+  // video element or media request anywhere on the activated page.
+  test('no video element or media request appears anywhere on the activated page', async ({ page }) => {
+    const media: string[] = [];
+    page.on('request', (request) => {
+      if (request.resourceType() === 'media' || /\.(mp4|webm|mov)(\?|$)/.test(request.url())) media.push(request.url());
+    });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(appUrl(labels.es.route));
+    await expectActive(page);
+    await centreChapter(page, 'connection');
+    await expect.poll(() => renderedChapter(page)).toBe('connection');
+    await expect(page.locator('video')).toHaveCount(0);
+    expect(media).toEqual([]);
+  });
 });
 
 test.describe('static fallbacks', () => {
   test('reduced motion never initializes the canvas', async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();
+    await allowSoftwareRenderer(page);
     await page.goto(appUrl(labels.es.route));
     await expectStatic(page);
     await expect(page.getByRole('button', { name: labels.es.pause })).toHaveCount(0);
@@ -193,6 +295,7 @@ test.describe('static fallbacks', () => {
   });
 
   test('Save-Data keeps the static composition', async ({ page }) => {
+    await allowSoftwareRenderer(page);
     await page.addInitScript(() => {
       Object.defineProperty(navigator, 'connection', { value: { saveData: true }, configurable: true });
     });
@@ -201,6 +304,7 @@ test.describe('static fallbacks', () => {
   });
 
   test('missing WebGL keeps the static composition', async ({ page }) => {
+    await allowSoftwareRenderer(page);
     await page.addInitScript(() => {
       const original = HTMLCanvasElement.prototype.getContext;
       HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
@@ -213,8 +317,8 @@ test.describe('static fallbacks', () => {
   });
 
   test('a renderer that fails after the capability probe returns quietly to static', async ({ page }) => {
-    const uncaught: string[] = [];
-    page.on('pageerror', (error) => uncaught.push(error.message));
+    const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
+    await allowSoftwareRenderer(page);
     await page.addInitScript(() => {
       const original = HTMLCanvasElement.prototype.getContext;
       let probes = 0;
@@ -225,12 +329,12 @@ test.describe('static fallbacks', () => {
     });
     await page.goto(appUrl(labels.en.route));
     await expectStatic(page);
-    expect(uncaught).toEqual([]);
+    assertNoBrowserErrors();
   });
 
   test('a failed runtime import returns quietly to static', async ({ page }) => {
-    const uncaught: string[] = [];
-    page.on('pageerror', (error) => uncaught.push(error.message));
+    const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
+    await allowSoftwareRenderer(page);
     await page.route('**/_next/static/chunks/**', async (route) => {
       const response = await route.fetch();
       const body = await response.text();
@@ -239,12 +343,12 @@ test.describe('static fallbacks', () => {
     });
     await page.goto(appUrl(labels.es.route));
     await expectStatic(page);
-    expect(uncaught).toEqual([]);
+    assertNoBrowserErrors();
   });
 
   test('forced context loss removes the canvas for the rest of the session, with no console error', async ({ page }) => {
-    const uncaught: string[] = [];
-    page.on('pageerror', (error) => uncaught.push(error.message));
+    const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
+    await allowSoftwareRenderer(page);
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.es.route));
     await expectActive(page);
@@ -256,7 +360,7 @@ test.describe('static fallbacks', () => {
 
     await page.reload();
     await expectStatic(page);
-    expect(uncaught).toEqual([]);
+    assertNoBrowserErrors();
   });
 
   test('no JavaScript keeps the complete static document', async ({ browser }) => {
@@ -267,10 +371,34 @@ test.describe('static fallbacks', () => {
     await expect(page.locator('canvas')).toHaveCount(0);
     await context.close();
   });
+
+  // B1 (amended ADR 2026-09-28): SwiftShader is a software renderer. Without the test-only
+  // override it fails the capability gate like every other gate, quietly; with the override it
+  // activates as normal. This is the direct evidence for the gate itself, separate from every
+  // other test above which sets the override to keep testing the runtime's own behaviour.
+  test.describe('software renderer gate', () => {
+    test('under SwiftShader, without the override, Home stays static with no console error', async ({ page }) => {
+      const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
+      await page.goto(appUrl(labels.es.route));
+      await expectStatic(page);
+      assertNoBrowserErrors();
+    });
+
+    test('under SwiftShader, with the override, Home activates', async ({ page }) => {
+      await allowSoftwareRenderer(page);
+      await page.goto(appUrl(labels.es.route));
+      await expectActive(page);
+    });
+  });
 });
 
 test.describe('lifecycle', () => {
+  test.beforeEach(async ({ page }) => {
+    await allowSoftwareRenderer(page);
+  });
+
   test('client navigation away and back leaves one canvas and disposes exactly once each way', async ({ page }) => {
+    test.slow(); // reactivation recreates the WebGL context; a slow environment needs the room
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(stableRoutes.home.en));
     await expectActive(page);
