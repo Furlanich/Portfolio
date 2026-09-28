@@ -1259,3 +1259,25 @@ Documentation impact: <none | records>
     - (a) The ≤20 ms p95 and <50 ms long-task gates are measured on hardware-accelerated GPUs: the section 26 manual protocol on real devices, plus any hardware-GPU runner. They are no longer measured on SwiftShader.
   - **What `measure:immersive` still gates.** It keeps SwiftShader and still enforces the JS budget (≤120 KiB), CLS, and the canvas and listener lifecycle counts. It reaches the runtime through an explicit test-only override of the software gate. It records its frame numbers as advisory only.
   - **Records and implementation.** The Task 7 follow-up amends `ADR-SKY-CHART-HOMEPAGE-RUNTIME` (capability gates and performance measurement) and sections 10 and 14 of this plan. It then implements the gate and the harness override, test-first.
+- **Task 7 follow-up scope and decisions (2026-09-28, from the PR #83 review).** The follow-up branch `codex/sky-chart-task-7-followup` starts from the hotfix. It reverts the hotfix (restoring the element and removing the skips and hotfix tests), then fixes the following, each test-first:
+  - **Blocking:**
+    - B2: `hidden` must actually hide the Pause pill. Assert `toBeHidden`/`toBeVisible`, and check keyboard reachability at scrollY 0.
+    - B3: while paused, keep measuring, recede and pill visibility running; skip only the camera target.
+    - B1: the software-renderer gate and test-only override from the amended ADR.
+  - **Should-fix:**
+    - N1: the webkit smoke test must poll until mode and canvas agree.
+    - N2: the lifecycle test timeout.
+    - N5: create the WebGL2 context directly, return quietly when it is null, and restore the console-error assertions.
+    - N7: expose draw calls, pixel ratio and label-texture sizes on the debug hook.
+    - N8: route recede-band label renders through the controller.
+    - N9: stop activation if context loss happens during `prepare()`.
+    - N10: observe `documentElement` for resize.
+    - N11: release the probe context.
+    - N4: correct the claim that the `react-dom` shim is scoped. The shim is global. Keep it and record that it must be deleted once `@types/react-dom` is approved; adding that package is an L-01 owner decision.
+  - The follow-up also records every fix commit that had no RED test first as a deviation.
+  - **Decisions taken here, for the owner to confirm in the follow-up PR:**
+    - **(N12) Pause tab position.** DESIGN-IX-A11Y and section 13 put Pause last, after the CTA actions. But D-25 hides Pause whenever the page has receded, which is always the case by the CTA, so a last position is unreachable. Pause therefore stays right after the chapters' last focusable element, which is the only position consistent with D-25. Task 12 corrects the tab-order sentence in both records.
+    - **(N13) Recede without the canvas.** Section 11 says recede is instant under reduced motion. But only the runtime writes scrim opacity, so no static path ever recedes. In every static path that has JavaScript (reduced motion, Save-Data, no WebGL2, the software gate and failures), `ImmersiveEnhancement` applies the D-24 scrim recede instantly, with no canvas and no transition. Without JavaScript the scrim stays static.
+    - **(N14) Hero text exclusion.** At ≥768px, tier-2 labels whose projected rectangle intersects the hero's text column fade to opacity 0 while the hero is in view. This extends D-27's mask from "below 768" to "wherever a label would overlap hero text". The reference itself places Messages against the trust row.
+    - **(N6) Coverage removed by the rewrite.** The rewrite dropped several checks. Task 7 restores the cheap ones in its own specs: axe in the paused state; language-switch reactivation with console and asset checks; the no-video check; the smoke `h2` count. Task 11 restores the multi-viewport journey, rotation during Connect and 200% zoom in `sky-chart-acceptance.spec.ts`.
+  - **Lock transfer.** `scripts/measure-immersive-production.mjs` is extended to cover three things: setting the software-renderer override through `addInitScript`; the `remount()` race fix (re-issuing `scrollTo(0, 0)` inside the wait predicate while `scrollY > 0`); and reporting frame and long-task numbers as advisory, not failures. The JS-budget, CLS and lifecycle gates are unchanged.
