@@ -201,9 +201,27 @@ test('normalizeAppBarPath ignores a trailing slash and a configured base path', 
   assert.equal(normalizeAppBarPath('en/services/'), '/en/services');
   assert.equal(normalizeAppBarPath('/base/en/services/', '/base'), '/en/services');
   assert.equal(normalizeAppBarPath('/base/', '/base'), '/');
+  assert.equal(normalizeAppBarPath('/base', '/base'), '/', 'the base path alone, with no trailing slash, is also the root');
   assert.equal(
     normalizeAppBarPath('/en/services/', ''),
     normalizeAppBarPath('/en/services'),
     'a route link and the current location normalize to the same value regardless of a trailing slash',
   );
+});
+
+// PR #89 review (GPT-5.6 Luna, NON-BLOCKING): stripping the base path with a bare
+// `startsWith` also matches a longer sibling segment ("/baseball" starts with "/base"),
+// which would wrongly treat /baseball/services as based and mangle it to /ball/services.
+// The base path must be followed by a segment boundary -- either nothing (the base path is
+// the whole pathname) or a "/" -- before it is stripped.
+test('normalizeAppBarPath only strips the base path at a segment boundary', async () => {
+  const { normalizeAppBarPath } = await import('../components/foundation/app-bar-path.ts');
+
+  assert.equal(
+    normalizeAppBarPath('/baseball/services/', '/base'),
+    '/baseball/services',
+    'a sibling segment that merely starts with the base path is not stripped',
+  );
+  assert.equal(normalizeAppBarPath('/basement', '/base'), '/basement');
+  assert.equal(normalizeAppBarPath('/base/services/', '/base'), '/services', 'the real base path is still stripped');
 });
