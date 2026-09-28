@@ -92,6 +92,52 @@ test('renders the SKY-CHART-V2 App Bar on the atlas-plate material, docked by de
   );
 });
 
+// PR #89 review (GPT-5.6 Luna, BLOCKING 1): app/globals.css's `@media
+// (prefers-reduced-transparency: reduce)` and components/surfaces/surfaces.module.css's
+// `@media (forced-colors: active)` rules only target `.sky-plate-material`,
+// `.atlasPlate` and `.plottingSheet` -- neither file's selectors reach the App Bar, whose
+// docked fill lives entirely in SiteHeader.tsx's own Tailwind classes. Both files are
+// outside this task's owned paths (app/globals.css is Task 3's L-02 lock; surfaces.module.css
+// is Task 3's), so the App Bar's own D-07 fallbacks are added here as Tailwind arbitrary
+// variants on the surface element, mirroring the plate material's values (D-07: opaque
+// #0D243C, no blur, under reduced transparency; a CanvasText border and no custom background
+// under forced colors).
+//
+// Decision (documented, per the review's "decide and document"): both overrides use `!`
+// (Tailwind's `!important`) and are NOT scoped to `data-[docked=...]`, so they win
+// unconditionally, including over the Home-top transparent override. Reduced transparency
+// exists so translucent, blurred surfaces don't reduce legibility; a *fully* transparent bar
+// (today's Home-top state) lets more of the environment bleed through unfiltered than the
+// docked blur does, so it is not exempted -- reduced-transparency users always get the opaque,
+// unblurred bar, at every scroll position. Forced-colors users likewise always get a visible
+// CanvasText boundary and no custom background, matching D-07's plate treatment, since the
+// system palette should own every state of this surface.
+test('the App Bar surface has its own D-07 reduced-transparency and forced-colors fallbacks', () => {
+  const source = readSiteHeader();
+  const surfaceMatch = source.match(/data-app-bar-surface[\s\S]{0,600}className="([^"]*)"/);
+  assert.ok(surfaceMatch, 'the [data-app-bar-surface] element has a className');
+  const surfaceClasses = surfaceMatch[1];
+
+  assert.match(
+    surfaceClasses,
+    /\[@media\(prefers-reduced-transparency:reduce\)\]:!bg-\[#0D243C\]/,
+    'D-07 opaque reduced-transparency fill, matching the plate material value',
+  );
+  assert.match(
+    surfaceClasses,
+    /\[@media\(prefers-reduced-transparency:reduce\)\]:!backdrop-blur-none/,
+    'no blur under reduced transparency',
+  );
+  assert.doesNotMatch(
+    source.match(/data-app-bar-surface[\s\S]{0,600}className="[^"]*"/)[0],
+    /data-\[docked=false\]:\[@media\(prefers-reduced-transparency:reduce\)\]/,
+    'the reduced-transparency override is unconditional (important), not scoped to a dock state',
+  );
+
+  assert.match(surfaceClasses, /forced-colors:!border-\[CanvasText\]/, 'D-07 forced-colors border');
+  assert.match(surfaceClasses, /forced-colors:!bg-transparent/, 'no custom background under forced colors');
+});
+
 test('renders the Home-only decorative readout and marks route links for AppBarBehavior', () => {
   const source = readSiteHeader();
 

@@ -173,3 +173,52 @@ test.describe('9. no console errors', () => {
     });
   }
 });
+
+test.describe('10. D-07 reduced-transparency and forced-colors fallbacks', () => {
+  test('forced colors: the surface gets a CanvasText border and no custom background, docked and at Home top', async ({ page }) => {
+    await page.emulateMedia({ forcedColors: 'active' });
+    await page.goto(appUrl(stableRoutes.services.en));
+    await page.evaluate(() => {
+      const probe = document.createElement('div');
+      probe.id = 'canvas-text-probe';
+      probe.style.color = 'CanvasText';
+      probe.style.position = 'fixed';
+      probe.style.top = '-9999px';
+      document.body.appendChild(probe);
+    });
+    const canvasText = await page.evaluate(
+      () => getComputedStyle(document.getElementById('canvas-text-probe')!).color,
+    );
+
+    const dockedBorder = await page.locator(surface).evaluate((el) => getComputedStyle(el).borderColor);
+    const dockedBackground = await page.locator(surface).evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(dockedBorder).toBe(canvasText);
+    expect(dockedBackground).toBe('rgba(0, 0, 0, 0)');
+
+    // The Home-top transparent state also gets the CanvasText border and stays backgroundless.
+    await page.goto(appUrl(stableRoutes.home.en));
+    const topBorder = await page.locator(surface).evaluate((el) => getComputedStyle(el).borderColor);
+    const topBackground = await page.locator(surface).evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(topBorder).toBe(canvasText);
+    expect(topBackground).toBe('rgba(0, 0, 0, 0)');
+  });
+
+  // Playwright's page.emulateMedia() has no `reducedTransparency` option (unlike
+  // `forcedColors`/`reducedMotion`/`colorScheme`), so this goes through Chromium's own
+  // DevTools protocol, which does support the feature directly.
+  test('reduced transparency: the surface is opaque #0D243C with no blur, even at Home top', async ({ page }) => {
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('Emulation.setEmulatedMedia', {
+      features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }],
+    });
+
+    await page.goto(appUrl(stableRoutes.home.en));
+    await expect(page.locator(surface)).toHaveCSS('background-color', 'rgb(13, 36, 60)');
+    await expect(page.locator(surface)).toHaveCSS('backdrop-filter', 'none');
+
+    // Scrolling (docked) must not change the reduced-transparency fill -- it already won.
+    await page.evaluate(() => window.scrollTo(0, 200));
+    await expect(page.locator(surface)).toHaveCSS('background-color', 'rgb(13, 36, 60)');
+    await expect(page.locator(surface)).toHaveCSS('backdrop-filter', 'none');
+  });
+});
