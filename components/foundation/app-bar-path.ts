@@ -11,8 +11,11 @@
 export function normalizeAppBarPath(pathname: string, basePath = ''): string {
   let value = pathname || '/';
 
+  // A bare `startsWith` would also match a longer sibling segment ("/baseball" starts with
+  // "/base"), so the base path is only stripped at a segment boundary: it must be the whole
+  // pathname, or be immediately followed by "/".
   const trimmedBasePath = basePath.replace(/\/+$/, '');
-  if (trimmedBasePath && value.startsWith(trimmedBasePath)) {
+  if (trimmedBasePath && (value === trimmedBasePath || value.startsWith(`${trimmedBasePath}/`))) {
     value = value.slice(trimmedBasePath.length) || '/';
   }
 
