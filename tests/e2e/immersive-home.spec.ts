@@ -250,6 +250,7 @@ test.describe('Sky Chart runtime', () => {
   for (const locale of ['es', 'en'] as const) {
     const copy = labels[locale];
     test(`${locale} language switch reactivates cleanly with no console error or failed asset`, async ({ page }) => {
+      test.slow(); // N2: reactivation recreates the WebGL context; a slow environment needs the room
       const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
       const failedAssets: string[] = [];
       page.on('response', (response) => {
