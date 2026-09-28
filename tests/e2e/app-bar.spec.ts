@@ -190,17 +190,23 @@ test.describe('10. D-07 reduced-transparency and forced-colors fallbacks', () =>
       () => getComputedStyle(document.getElementById('canvas-text-probe')!).color,
     );
 
+    // Forced-colors mode substitutes the color channels of a fully transparent background
+    // too (Chromium resolves Tailwind's `bg-transparent` to `rgba(255, 255, 255, 0)` here,
+    // not `rgba(0, 0, 0, 0)`), so only the alpha channel -- the part that actually determines
+    // whether a custom background paints -- is asserted, not the exact RGB triple.
+    const zeroAlphaRgba = /^rgba\(\d+, \d+, \d+, 0\)$/;
+
     const dockedBorder = await page.locator(surface).evaluate((el) => getComputedStyle(el).borderColor);
     const dockedBackground = await page.locator(surface).evaluate((el) => getComputedStyle(el).backgroundColor);
     expect(dockedBorder).toBe(canvasText);
-    expect(dockedBackground).toBe('rgba(0, 0, 0, 0)');
+    expect(dockedBackground).toMatch(zeroAlphaRgba);
 
     // The Home-top transparent state also gets the CanvasText border and stays backgroundless.
     await page.goto(appUrl(stableRoutes.home.en));
     const topBorder = await page.locator(surface).evaluate((el) => getComputedStyle(el).borderColor);
     const topBackground = await page.locator(surface).evaluate((el) => getComputedStyle(el).backgroundColor);
     expect(topBorder).toBe(canvasText);
-    expect(topBackground).toBe('rgba(0, 0, 0, 0)');
+    expect(topBackground).toMatch(zeroAlphaRgba);
   });
 
   // Playwright's page.emulateMedia() has no `reducedTransparency` option (unlike

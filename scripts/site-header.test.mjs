@@ -125,8 +125,11 @@ test('the App Bar surface has its own D-07 reduced-transparency and forced-color
   );
   assert.match(
     surfaceClasses,
-    /\[@media\(prefers-reduced-transparency:reduce\)\]:!backdrop-blur-none/,
-    'no blur under reduced transparency',
+    /\[@media\(prefers-reduced-transparency:reduce\)\]:!\[backdrop-filter:none\]/,
+    'no blur under reduced transparency -- a raw arbitrary-property override, not the ' +
+      'composable backdrop-blur-*/backdrop-saturate-* utilities, since those compose into a ' +
+      'single backdrop-filter via --tw-backdrop-* custom properties and backdrop-blur-none ' +
+      'alone leaves any other backdrop-saturate-* utility contributing a non-"none" value',
   );
   assert.doesNotMatch(
     source.match(/data-app-bar-surface[\s\S]{0,600}className="[^"]*"/)[0],

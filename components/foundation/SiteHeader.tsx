@@ -74,10 +74,24 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
           `supports-[...]` variant rather than a new app/globals.css rule (Task 3 owns and
           locks that file, L-02); the Home-top transparent override is stacked on top of it
           so `data-docked="false"` still wins in browsers without backdrop-filter support.
+
+          D-07 also fallbacks for `prefers-reduced-transparency: reduce` (opaque #0D243C, no
+          blur -- the plate material's own reduced-transparency value, app/globals.css) and
+          `forced-colors: active` (a CanvasText border, no custom background -- the plate
+          material's own forced-colors value, components/surfaces/surfaces.module.css).
+          Neither file's selectors reach this element (both are Task 3's; app/globals.css is
+          additionally locked, L-02), so both fallbacks are repeated here as arbitrary
+          variants, `!` (important) and NOT scoped to `data-[docked=...]`, so they win
+          unconditionally -- including over the Home-top transparent override above. Decision:
+          reduced transparency exists to keep translucent, blurred surfaces from hurting
+          legibility, and a *fully* transparent bar lets more of the environment bleed through
+          unfiltered than the docked blur does, so it is not exempted; forced-colors users
+          likewise always get the CanvasText boundary and no custom background, at every
+          scroll position.
         */}
         <div
           data-app-bar-surface
-          className="relative mx-auto flex w-full max-w-[1200px] items-center gap-4 rounded-[14px] border border-sky-plate-line bg-[rgba(10,30,51,.82)] py-2 pl-4 pr-2 backdrop-blur-[16px] backdrop-saturate-[125%] transition-[background-color,border-color] duration-[var(--dur-3)] ease-[var(--ease-out)] supports-[not_(backdrop-filter:blur(1px))]:bg-[rgba(10,30,51,.94)] data-[docked=false]:border-transparent data-[docked=false]:bg-transparent data-[docked=false]:backdrop-blur-none data-[docked=false]:backdrop-saturate-100 data-[docked=false]:supports-[not_(backdrop-filter:blur(1px))]:bg-transparent"
+          className="relative mx-auto flex w-full max-w-[1200px] items-center gap-4 rounded-[14px] border border-sky-plate-line bg-[rgba(10,30,51,.82)] py-2 pl-4 pr-2 backdrop-blur-[16px] backdrop-saturate-[125%] transition-[background-color,border-color] duration-[var(--dur-3)] ease-[var(--ease-out)] supports-[not_(backdrop-filter:blur(1px))]:bg-[rgba(10,30,51,.94)] data-[docked=false]:border-transparent data-[docked=false]:bg-transparent data-[docked=false]:backdrop-blur-none data-[docked=false]:backdrop-saturate-100 data-[docked=false]:supports-[not_(backdrop-filter:blur(1px))]:bg-transparent [@media(prefers-reduced-transparency:reduce)]:!bg-[#0D243C] [@media(prefers-reduced-transparency:reduce)]:![backdrop-filter:none] forced-colors:!border-[CanvasText] forced-colors:!bg-transparent forced-colors:![backdrop-filter:none]"
         >
           <BrandSignature href={`${paths.home}#site-top`} variant="on-dark" />
 
