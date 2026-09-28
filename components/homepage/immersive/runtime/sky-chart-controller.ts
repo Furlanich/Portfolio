@@ -27,6 +27,7 @@ export class SkyChartController {
   private frameHandle = 0;
   private paused = false;
   private hasRendered = false;
+  private labelOpacityScale = 1;
 
   constructor(options: SkyChartControllerOptions) {
     this.options = options;
@@ -68,6 +69,20 @@ export class SkyChartController {
     this.schedule();
   }
 
+  /**
+   * N8: the caller (recede) routes every label-opacity-scale change through here instead of
+   * calling the scene directly, so it shares the controller's pause gate and render accounting.
+   * B3/N8: while paused, the scale is stored but nothing renders -- Pause must freeze every
+   * visible change, not only the camera. The stored scale is applied (without an extra render)
+   * the moment the controller un-pauses, so the next real render already reflects it.
+   */
+  setLabelOpacityScale(multiplier: number): void {
+    this.labelOpacityScale = multiplier;
+    if (this.paused) return;
+    this.options.scene.setLabelOpacity(multiplier);
+    this.options.onRender?.(this.t);
+  }
+
   setPaused(paused: boolean): void {
     this.paused = paused;
     if (paused) {
@@ -79,6 +94,9 @@ export class SkyChartController {
   /** Resumes and immediately recalculates from the given fresh target (D-25: "Resume recalculates"). */
   resume(target: number): void {
     this.paused = false;
+    // Apply any label-opacity scale that changed while paused (stored, not rendered per B3/N8)
+    // before the camera-position render below, so the very next frame is fully correct.
+    this.options.scene.setLabelOpacity(this.labelOpacityScale);
     this.setTarget(target, true);
   }
 

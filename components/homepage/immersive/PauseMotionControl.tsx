@@ -19,7 +19,12 @@ export function PauseMotionControl({ paused, hidden, pauseLabel, resumeLabel, ph
     <div
       data-pause-motion-pill
       hidden={hidden}
-      className="sky-plate-material-solid pointer-events-none fixed z-40 flex items-center gap-2.5 rounded-xl border border-sky-plate-line py-1.5 pl-3.5 pr-1.5"
+      // B2: Tailwind's `.flex{display:flex}` outranks preflight's `[hidden]{display:none}` when
+      // both apply unconditionally (equal specificity, `.flex` later in source order), so the
+      // pill stayed visible -- and keyboard-reachable -- over the hero and after full recede.
+      // Making `flex` conditional on `!hidden` means the two declarations never target the
+      // element at the same time.
+      className={`sky-plate-material-solid pointer-events-none fixed z-40 items-center gap-2.5 rounded-xl border border-sky-plate-line py-1.5 pl-3.5 pr-1.5 ${hidden ? 'hidden' : 'flex'}`}
       style={{ right: 16, bottom: 'calc(16px + env(safe-area-inset-bottom))' }}
     >
       {/* D-09 `label` token (12px mono, 0.08em tracking, uppercase) -- the reference renders this

@@ -3,6 +3,7 @@ import {
   PerspectiveCamera,
   Points,
   Scene,
+  Vector3,
   WebGLRenderer,
   type BufferGeometry,
   type CanvasTexture,
@@ -30,6 +31,15 @@ import {
 } from './sky-chart-geometry';
 import { createLabelSprite, loadSkyChartFonts } from './sky-chart-labels';
 
+export type HeroExclusionRect = { left: number; top: number; right: number; bottom: number };
+
+export type SkyChartDebugInfo = {
+  drawCalls: number;
+  pixelRatio: number;
+  labelTextureSizes: readonly [number, number][];
+  labelOpacities: Record<string, number>;
+};
+
 export type SkyChartSceneHandle = {
   canvas: HTMLCanvasElement;
   /** Awaits label fonts (T-03), builds label sprites, then compiles shaders without blocking. */
@@ -38,6 +48,11 @@ export type SkyChartSceneHandle = {
   render(frame: SkyChartFrame): void;
   /** Rescales every label sprite's current opacity by `multiplier` (D-24 recede) and renders once. */
   setLabelOpacity(multiplier: number): void;
+  /** N14: tier-2 labels whose projected screen position falls inside `rect` fade to 0 while
+   * `active` (>=768px and the hero is in view). `null` rect or `active=false` clears it. */
+  setHeroExclusion(rect: HeroExclusionRect | null, active: boolean): void;
+  /** N7: draw calls, pixel ratio and label-texture sizes for the debug hook and its tests. */
+  getDebugInfo(): SkyChartDebugInfo;
   dispose(): void;
 };
 
@@ -62,6 +77,7 @@ const FOV_COMPACT = 70;
 const CAMERA_NEAR = 0.1;
 const CAMERA_FAR = 200;
 const TIER_3_OPACITY_FACTOR = 0.8;
+const HERO_EXCLUSION_TIER = 2;
 
 function opacityFor(node: SkyChartNodeDefinition, frame: SkyChartFrame): number {
   const base = node.group === 'inputs' ? frame.inputOpacity : frame.groupOpacity[node.group];
@@ -72,8 +88,13 @@ function opacityFor(node: SkyChartNodeDefinition, frame: SkyChartFrame): number 
  * Creates the demand-rendered Sky Chart environment (plan section 10). Nodes, the graticule and
  * field stars are fixed in space at creation; only the camera's look direction, link draw range
  * and label opacity change per frame. Never runs an idle loop -- callers render only when the
- * mapped frame changes, and it never registers a renderer animation-loop callback. Throws when WebGL cannot be
- * initialized, matching the prior instrument runtime's fail-closed contract.
+ * mapped frame changes, and it never registers a renderer animation-loop callback.
+ *
+ * N5: this factory creates the WebGL2 context itself (rather than letting `WebGLRenderer` try
+ * and fail internally, which logs `THREE.WebGLRenderer: Error creating WebGL context.` via
+ * `console.error`) and passes it to `WebGLRenderer`'s `context` option. When the context cannot
+ * be created, it throws a plain `Error` with no console side effect, matching the prior
+ * instrument runtime's fail-closed contract -- the caller's try/catch returns quietly to static.
  */
 export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost }: CreateOptions): SkyChartSceneHandle {
   const canvas = document.createElement('canvas');
@@ -82,7 +103,10 @@ export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost
   canvas.dataset.skyChartCanvas = '';
   canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:-2;display:block;pointer-events:none;transition:opacity 240ms linear;';
 
-  const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' });
+  const context = canvas.getContext('webgl2', { antialias: true, alpha: true, powerPreference: 'low-power' }) as WebGL2RenderingContext | null;
+  if (!context) throw new Error('sky-chart: WebGL2 context unavailable');
+
+  const renderer = new WebGLRenderer({ canvas, context, antialias: true, alpha: true, powerPreference: 'low-power' });
   renderer.setPixelRatio(quality.pixelRatio);
 
   const scene = new Scene();
@@ -107,9 +131,27 @@ export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost
   let lastFrame: SkyChartFrame | null = null;
   let labelOpacityScale = 1;
   let disposed = false;
+  let viewportWidth = 1;
+  let viewportHeight = 1;
+  let heroRect: HeroExclusionRect | null = null;
+  let heroExclusionActive = false;
+  const projectionScratch = new Vector3();
 
   const handleContextLost = () => onContextLost();
   canvas.addEventListener('webglcontextlost', handleContextLost);
+
+  function projectToScreen(position: Vector3): { x: number; y: number } {
+    projectionScratch.copy(position).project(camera);
+    return {
+      x: ((projectionScratch.x + 1) / 2) * viewportWidth,
+      y: ((1 - projectionScratch.y) / 2) * viewportHeight,
+    };
+  }
+
+  function intersectsHero(x: number, y: number): boolean {
+    if (!heroRect) return false;
+    return x >= heroRect.left && x <= heroRect.right && y >= heroRect.top && y <= heroRect.bottom;
+  }
 
   function applyFrame(frame: SkyChartFrame) {
     const direction = directionFromDegrees(frame.yaw, frame.pitch);
@@ -121,7 +163,20 @@ export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost
     for (const entry of labels) {
       const visible = frame.visibleTiers.includes(entry.node.tier);
       entry.sprite.visible = visible;
-      if (visible) entry.material.opacity = opacityFor(entry.node, frame) * labelOpacityScale;
+      if (!visible) {
+        entry.material.opacity = 0;
+        continue;
+      }
+      let opacity = opacityFor(entry.node, frame) * labelOpacityScale;
+      // N14: at >=768px, a tier-2 label whose projected position falls over the hero's text
+      // column fades to 0 while the hero is in view (extends D-27's mask from "below 768" to
+      // "wherever a label would overlap hero text" -- the reference places Messages against
+      // the trust row this way).
+      if (heroExclusionActive && entry.node.tier === HERO_EXCLUSION_TIER) {
+        const screen = projectToScreen(entry.sprite.position);
+        if (intersectsHero(screen.x, screen.y)) opacity = 0;
+      }
+      entry.material.opacity = opacity;
     }
   }
 
@@ -145,6 +200,8 @@ export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost
       camera.aspect = width / height;
       camera.fov = width >= WIDE_MIN_WIDTH ? FOV_WIDE : FOV_COMPACT;
       camera.updateProjectionMatrix();
+      viewportWidth = width;
+      viewportHeight = height;
     },
     render(frame) {
       lastFrame = frame;
@@ -156,6 +213,18 @@ export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost
       if (!lastFrame) return;
       applyFrame(lastFrame);
       renderer.render(scene, camera);
+    },
+    setHeroExclusion(rect, active) {
+      heroRect = rect;
+      heroExclusionActive = active;
+    },
+    getDebugInfo() {
+      return {
+        drawCalls: renderer.info.render.calls,
+        pixelRatio: renderer.getPixelRatio(),
+        labelTextureSizes: labels.map((entry) => [entry.texture.image.width as number, entry.texture.image.height as number] as const),
+        labelOpacities: Object.fromEntries(labels.map((entry) => [entry.node.id, entry.material.opacity])),
+      };
     },
     dispose() {
       // Idempotent: an in-flight activation can race an unmount (the outer React cleanup effect
