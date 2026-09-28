@@ -129,3 +129,157 @@ test('the App Bar readout token is never touched here: capability.ts only export
   assert.match(capability, /export function chooseRenderQuality/);
   assert.doesNotMatch(capability, /'use client'/);
 });
+
+// --- Task 7 follow-up (PR #83 review): B1 software-renderer capability gate -----------------
+
+const { chooseImmersiveMode, isSoftwareRenderer } = await import('../lib/immersive-home/capability.ts');
+
+const ELIGIBLE = {
+  reducedMotion: false,
+  saveData: false,
+  webglAvailable: true,
+  nearViewport: true,
+  sessionContextLost: false,
+  softwareRenderer: false,
+};
+
+test('B1: a software renderer fails the capability gate like every other gate', () => {
+  assert.equal(chooseImmersiveMode(ELIGIBLE), 'webgl');
+  assert.equal(chooseImmersiveMode({ ...ELIGIBLE, softwareRenderer: true }), 'static');
+});
+
+test('B1: isSoftwareRenderer matches every named software rasterizer, case-insensitively', () => {
+  for (const rendererString of [
+    'Google SwiftShader',
+    'llvmpipe (LLVM 15.0.0, 256 bits)',
+    'softpipe',
+    'Microsoft Basic Render Driver',
+    'ANGLE (SwiftShader Device)',
+    'SOFTWARE RASTERIZER',
+  ]) {
+    assert.equal(isSoftwareRenderer(rendererString), true, rendererString);
+  }
+});
+
+test('B1: isSoftwareRenderer does not flag a real hardware GPU string', () => {
+  for (const rendererString of [
+    'ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Direct3D11 vs_5_0 ps_5_0)',
+    'Apple M1',
+    'AMD Radeon Pro 5500M OpenGL Engine',
+  ]) {
+    assert.equal(isSoftwareRenderer(rendererString), false, rendererString);
+  }
+});
+
+test('B1: the runtime detects the renderer string via WEBGL_debug_renderer_info, with a plain RENDERER fallback, and respects the test-only override', () => {
+  const enhancement = read(ENHANCEMENT);
+  assert.match(enhancement, /WEBGL_debug_renderer_info/);
+  assert.match(enhancement, /UNMASKED_RENDERER_WEBGL/);
+  assert.match(enhancement, /__SKY_CHART_ALLOW_SOFTWARE_RENDERER__/);
+});
+
+// --- N5: create the WebGL2 context directly; no THREE-internal console.error on failure -----
+
+test('N5: the capability probe and the scene each create their own WebGL2 context explicitly, and the scene passes it into WebGLRenderer', () => {
+  const enhancement = read(ENHANCEMENT);
+  assert.match(enhancement, /getContext\('webgl2'/);
+  const scene = read(CREATE_SCENE);
+  assert.match(scene, /canvas\.getContext\('webgl2'/);
+  assert.match(scene, /new WebGLRenderer\(\{[^}]*\bcontext\b/s);
+});
+
+// --- N7: debug hook exposes draw calls, pixel ratio and label-texture sizes -----------------
+
+test('N7: the scene exposes draw calls, pixel ratio and label-texture sizes for the debug hook', () => {
+  const scene = read(CREATE_SCENE);
+  assert.match(scene, /renderer\.info\.render\.calls/);
+  assert.match(scene, /getPixelRatio\(/);
+  assert.match(scene, /getDebugInfo/);
+});
+
+test('N7: the enhancement debug hook forwards drawCalls, pixelRatio and labelTextureSizes', () => {
+  const enhancement = read(ENHANCEMENT);
+  assert.match(enhancement, /drawCalls/);
+  assert.match(enhancement, /pixelRatio/);
+  assert.match(enhancement, /labelTextureSizes/);
+});
+
+// --- N9: stop activation if context loss happens during prepare() ---------------------------
+
+test('N9: activation checks the scene is still the current one after prepare() resolves, not only `cancelled`', () => {
+  const enhancement = read(ENHANCEMENT);
+  const gateEffect = enhancement.slice(enhancement.indexOf('await scene.prepare()'), enhancement.indexOf('performance.mark(\'immersive:scene-created\')'));
+  assert.match(gateEffect, /sceneRef\.current !== scene/);
+});
+
+// --- N10: ResizeObserver watches document.documentElement, not the instrument root ----------
+
+test('N10: the resize effect observes document.documentElement (plan section 10), not [data-instrument]', () => {
+  const enhancement = read(ENHANCEMENT);
+  assert.match(enhancement, /resizeObserver\.observe\(document\.documentElement\)/);
+});
+
+// --- N11: release the probe context ----------------------------------------------------------
+
+test('N11: the capability probe releases its WebGL2 context via WEBGL_lose_context', () => {
+  const enhancement = read(ENHANCEMENT);
+  const probe = enhancement.slice(enhancement.indexOf('function probeWebgl'), enhancement.indexOf('function probeWebgl') + 900);
+  assert.match(probe, /WEBGL_lose_context/);
+  assert.match(probe, /loseContext\(\)/);
+});
+
+// --- N4: the react-dom shim is a project-wide declaration, not scoped -----------------------
+
+test('N4: the react-dom shim comment states it is project-wide and must be deleted once @types/react-dom is approved', () => {
+  const shim = read(`${RUNTIME_DIR}/react-dom-shim.d.ts`);
+  assert.match(shim, /project-wide/i);
+  assert.doesNotMatch(shim, /scoped inside `?runtime\/?`?/i);
+  assert.match(shim, /delete(d)? once `?@types\/react-dom`? is approved/i);
+});
+
+// --- B2: hidden must actually hide the Pause pill (Tailwind flex must not win over [hidden]) -
+
+test('B2: PauseMotionControl never combines the hidden attribute with a display utility class', () => {
+  const pause = read('components/homepage/immersive/PauseMotionControl.tsx');
+  // The old bug: `hidden={hidden}` alongside an unconditional `flex` class, which preflight's
+  // `[hidden]{display:none}` loses to Tailwind's `.flex{display:flex}` on specificity ties
+  // broken by source order. The fix must make `flex` conditional on `!hidden`.
+  assert.doesNotMatch(pause, /className="sky-plate-material-solid pointer-events-none fixed z-40 flex/);
+  assert.match(pause, /hidden \? 'hidden' : /);
+});
+
+// --- B3 / N8: tick() always measures/recedes/updates the pill while paused; label-opacity ----
+// --- renders are routed through the controller, which skips rendering while paused ----------
+
+test('B3: tick() only skips the controller target while paused, not the recede/pill-visibility measurement', () => {
+  const enhancement = read(ENHANCEMENT);
+  const tickFn = enhancement.slice(enhancement.indexOf('const tick = useCallback'), enhancement.indexOf('}, [applyRecede, measure, updatePauseVisibility]);'));
+  // measure/applyRecede/updatePauseVisibility must run unconditionally (no early return before them)
+  assert.doesNotMatch(tickFn.split('measure()')[0], /pausedRef\.current/, 'measure() must not be gated by pausedRef before it runs');
+  assert.match(tickFn, /if \(pausedRef\.current\) return;[\s\S]*controllerRef\.current\.setTarget/);
+});
+
+test('N8: label-opacity scale changes are routed through the controller, which stores the scale without rendering while paused', () => {
+  const controller = read(CONTROLLER);
+  assert.match(controller, /setLabelOpacityScale/);
+  const enhancement = read(ENHANCEMENT);
+  assert.match(enhancement, /controllerRef\.current\?\.setLabelOpacityScale/);
+  assert.doesNotMatch(enhancement, /sceneRef\.current\?\.setLabelOpacity\(/);
+});
+
+// --- N13: recede applies instantly (no canvas, no transition) on every static-with-JS path --
+
+test('N13: a static-with-JS path still applies the D-24 scrim recede, instantly and without a canvas', () => {
+  const enhancement = read(ENHANCEMENT);
+  assert.match(enhancement, /applyStaticRecede/);
+  assert.match(enhancement, /transition = 'none'/);
+});
+
+// --- N14: tier-2 labels fade out where they would overlap the hero's text column, >=768px ---
+
+test('N14: the scene supports a hero-exclusion rectangle that fades tier-2 labels to 0 where they project over it', () => {
+  const scene = read(CREATE_SCENE);
+  assert.match(scene, /setHeroExclusion/);
+  const enhancement = read(ENHANCEMENT);
+  assert.match(enhancement, /setHeroExclusion/);
+});

@@ -61,6 +61,13 @@ try {
   await cdp.send('Performance.enable');
   const homeUrls = [];
   page.on('request', (request) => homeUrls.push(request.url()));
+  // B1 lock transfer (amended ADR 2026-09-28, plan Deviations "Task 7 follow-up scope and
+  // decisions"): SwiftShader is a software renderer and now fails the capability gate on its
+  // own. This measurement is explicitly about SwiftShader (it is the only renderer available
+  // here), so it sets the same test-only override the Playwright specs use.
+  await page.addInitScript(() => {
+    window.__SKY_CHART_ALLOW_SOFTWARE_RENDERER__ = true;
+  });
   await page.addInitScript(() => {
     window.__immersive = { longTasks: [], shifts: [], frames: [] };
     new PerformanceObserver((list) => list.getEntries().forEach((entry) => window.__immersive.longTasks.push({ start: entry.startTime, duration: entry.duration }))).observe({ type: 'longtask', buffered: true });
@@ -132,7 +139,15 @@ try {
     await page.waitForURL('**/servicios/');
     await page.goBack();
     await page.evaluate(() => window.scrollTo(0, 0));
-    await page.waitForFunction(() => document.querySelector('[data-instrument]')?.dataset.immersiveMode === 'webgl', null, { timeout: 30_000 });
+    // N3 lock transfer: Next's own back-navigation scroll restoration can still land *after*
+    // this first scrollTo(0, 0) (it is not guaranteed to have applied by the time goBack()'s
+    // promise resolves), pulling the page back down and away from [data-instrument] again. The
+    // wait predicate re-issues scrollTo(0, 0) on every poll while scrollY > 0, so it keeps
+    // winning that race until the runtime's near-viewport gate can actually see the root.
+    await page.waitForFunction(() => {
+      if (window.scrollY > 0) window.scrollTo(0, 0);
+      return document.querySelector('[data-instrument]')?.dataset.immersiveMode === 'webgl';
+    }, null, { timeout: 30_000 });
     await page.waitForTimeout(800);
   };
   // One warm-up remount so router and prefetch listeners are already established.
@@ -149,9 +164,15 @@ try {
   if (report.immersiveJs.brotliKiB > GATES.immersiveBrotliKiB) failures.push(`immersive JS ${report.immersiveJs.brotliKiB} KiB Brotli exceeds ${GATES.immersiveBrotliKiB} KiB`);
   if (headroom < Math.min(GATES.workingHeadroomKiB, ACCEPTED_HEADROOM_KiB)) failures.push(`headroom ${report.headroomKiB} KiB is below the accepted ${ACCEPTED_HEADROOM_KiB} KiB`);
   if (report.firstPosterKiB > GATES.firstPosterKiB) failures.push(`first poster ${report.firstPosterKiB} KiB exceeds ${GATES.firstPosterKiB} KiB`);
-  if (report.frameIntervalP95Ms > GATES.frameIntervalP95Ms) failures.push(`frame interval p95 ${report.frameIntervalP95Ms} ms exceeds ${GATES.frameIntervalP95Ms} ms`);
+  // N3 / amended ADR 2026-09-28: frame-interval p95 and main-thread interaction-task numbers
+  // are acceptance gates on hardware-accelerated GPUs only (the plan's real-device protocol, or
+  // a hardware-GPU runner) -- not here, under SwiftShader. Reported as advisory, never failures.
   const longestInteraction = Math.max(0, ...report.interactionLongTasksMs);
-  if (longestInteraction >= GATES.longTaskMs) failures.push(`interaction main-thread task of ${longestInteraction} ms reaches ${GATES.longTaskMs} ms`);
+  report.advisory = {
+    note: 'frameIntervalP95Ms and the interaction long-task numbers are advisory under SwiftShader (amended ADR 2026-09-28); they gate only on hardware-accelerated GPUs.',
+    frameIntervalP95Ms: report.frameIntervalP95Ms,
+    longestInteractionTaskMs: longestInteraction,
+  };
   if (report.cls > GATES.cls) failures.push(`layout shift ${report.cls} during activation/scroll`);
   if (report.playingVideos > GATES.playingVideos) failures.push(`${report.playingVideos} videos playing`);
   if (afterRemounts.canvases > 1) failures.push(`${afterRemounts.canvases} canvases after remounts`);

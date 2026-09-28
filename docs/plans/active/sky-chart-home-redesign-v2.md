@@ -378,6 +378,7 @@ Legacy `brand/ink/paper` scales are untouched (still consumed by `components/cor
   - Group reveal: `clamp((t − g + 0.12) / 0.14)`, with g = 0 (inputs), 0.22 (Understand), 0.40 (Define), 0.58 (Build & review), 0.74 (Hand over).
   - Input label opacity: `max(0.9 − 0.4·t, 0.5)`.
   - Tier visibility: all tiers at ≥1024; tiers 1–2 at 360–1023; tier 1 only below 360.
+- **Capability gate (amended 2026-09-28):** a software rasterizer (SwiftShader, llvmpipe, softpipe, Microsoft Basic Render Driver), identified from the WebGL2 renderer string, fails the gates like reduced motion does. Only an explicit test-only override bypasses it, for Playwright and `measure:immersive` under SwiftShader. See the Deviations entry of that date.
 - **Lifecycle:** create once after the gates, `prepare()` via `compileAsync`, mount, resize, first render, then set `data-immersive-mode="webgl"` (the poster hides). Resize comes from a `ResizeObserver` on `documentElement` and recalculates from the document. Unmount calls `cancelAnimationFrame` and `dispose()`, which disposes every geometry, material and texture, calls `renderer.dispose()` and `forceContextLoss()`, and removes the canvas.
 - **Failure paths:** context loss marks the session flag, disposes and reverts to static. An import or initialization error reverts to static quietly.
 - **Testing seams:** pure mapping in `lib/immersive-home/state.ts`. DOM hooks: `data-immersive-mode`, `data-rendered-chapter`, `data-sky-chart-canvas`, `data-recede`. The `window.__FURLANICH_SKY_CHART__` debug hook is test-only, gated by `process.env.NODE_ENV !== 'production'`, and exposes `{frame, labelCount, disposeCount}`.
@@ -430,13 +431,13 @@ Content has no entrance animation or scroll reveal. Every animation uses only `o
 | Canvas DPR | ≤1.5 wide, ≤1.25 compact or constrained | Unit test plus debug hook |
 | Draw calls per frame | ≤28 (1 graticule + 1 stars + 1 links + ≤20 sprites + margin) | Debug hook `renderer.info.render.calls` |
 | Label textures | ≤20, each ≤1024×64 | Debug hook |
-| Scroll frame interval p95 | ≤20 ms | `measure:immersive` |
+| Scroll frame interval p95 | ≤20 ms | Hardware-accelerated GPU, via the section 26 device protocol or a hardware-GPU runner (amended 2026-09-28); advisory in `measure:immersive` under SwiftShader |
 | LCP p75 (synthetic lab) | ≤2.5 s; the LCP element must be the H1 | `measure:home-vitals` |
 | INP p75 | ≤200 ms | `measure:home-vitals` |
 | Layout shift from the enhancement | 0 | Playwright `PerformanceObserver` |
 | Backdrop-filter surfaces per viewport | ≤3 (App Bar excluded) | E2E DOM scan at each section |
 | Idle rendering | 0 frames after settle | Debug hook frame counter |
-| Main-thread interaction task (retained ADR gate) | <50 ms | `measure:immersive` long-task observer |
+| Main-thread interaction task (retained ADR gate) | <50 ms | Hardware-accelerated GPU, as the frame interval (amended 2026-09-28); advisory in `measure:immersive` under SwiftShader |
 
 Loading order: HTML and CSS first, then fonts (Instrument preloaded). After `load`, near the viewport and past the gates, `three` and the runtime load in one dynamic chunk. The posters use CSS `background-image` and are not preloaded.
 
@@ -1258,3 +1259,25 @@ Documentation impact: <none | records>
     - (a) The ≤20 ms p95 and <50 ms long-task gates are measured on hardware-accelerated GPUs: the section 26 manual protocol on real devices, plus any hardware-GPU runner. They are no longer measured on SwiftShader.
   - **What `measure:immersive` still gates.** It keeps SwiftShader and still enforces the JS budget (≤120 KiB), CLS, and the canvas and listener lifecycle counts. It reaches the runtime through an explicit test-only override of the software gate. It records its frame numbers as advisory only.
   - **Records and implementation.** The Task 7 follow-up amends `ADR-SKY-CHART-HOMEPAGE-RUNTIME` (capability gates and performance measurement) and sections 10 and 14 of this plan. It then implements the gate and the harness override, test-first.
+- **Task 7 follow-up scope and decisions (2026-09-28, from the PR #83 review).** The follow-up branch `codex/sky-chart-task-7-followup` starts from the hotfix. It reverts the hotfix (restoring the element and removing the skips and hotfix tests), then fixes the following, each test-first:
+  - **Blocking:**
+    - B2: `hidden` must actually hide the Pause pill. Assert `toBeHidden`/`toBeVisible`, and check keyboard reachability at scrollY 0.
+    - B3: while paused, keep measuring, recede and pill visibility running; skip only the camera target.
+    - B1: the software-renderer gate and test-only override from the amended ADR.
+  - **Should-fix:**
+    - N1: the webkit smoke test must poll until mode and canvas agree.
+    - N2: the lifecycle test timeout.
+    - N5: create the WebGL2 context directly, return quietly when it is null, and restore the console-error assertions.
+    - N7: expose draw calls, pixel ratio and label-texture sizes on the debug hook.
+    - N8: route recede-band label renders through the controller.
+    - N9: stop activation if context loss happens during `prepare()`.
+    - N10: observe `documentElement` for resize.
+    - N11: release the probe context.
+    - N4: correct the claim that the `react-dom` shim is scoped. The shim is global. Keep it and record that it must be deleted once `@types/react-dom` is approved; adding that package is an L-01 owner decision.
+  - The follow-up also records every fix commit that had no RED test first as a deviation.
+  - **Decisions taken here, for the owner to confirm in the follow-up PR:**
+    - **(N12) Pause tab position.** DESIGN-IX-A11Y and section 13 put Pause last, after the CTA actions. But D-25 hides Pause whenever the page has receded, which is always the case by the CTA, so a last position is unreachable. Pause therefore stays right after the chapters' last focusable element, which is the only position consistent with D-25. Task 12 corrects the tab-order sentence in both records.
+    - **(N13) Recede without the canvas.** Section 11 says recede is instant under reduced motion. But only the runtime writes scrim opacity, so no static path ever recedes. In every static path that has JavaScript (reduced motion, Save-Data, no WebGL2, the software gate and failures), `ImmersiveEnhancement` applies the D-24 scrim recede instantly, with no canvas and no transition. Without JavaScript the scrim stays static.
+    - **(N14) Hero text exclusion.** At ≥768px, tier-2 labels whose projected rectangle intersects the hero's text column fade to opacity 0 while the hero is in view. This extends D-27's mask from "below 768" to "wherever a label would overlap hero text". The reference itself places Messages against the trust row.
+    - **(N6) Coverage removed by the rewrite.** The rewrite dropped several checks. Task 7 restores the cheap ones in its own specs: axe in the paused state; language-switch reactivation with console and asset checks; the no-video check; the smoke `h2` count. Task 11 restores the multi-viewport journey, rotation during Connect and 200% zoom in `sky-chart-acceptance.spec.ts`.
+  - **Lock transfer.** `scripts/measure-immersive-production.mjs` is extended to cover three things: setting the software-renderer override through `addInitScript`; the `remount()` race fix (re-issuing `scrollTo(0, 0)` inside the wait predicate while `scrollY > 0`); and reporting frame and long-task numbers as advisory, not failures. The JS-budget, CLS and lifecycle gates are unchanged.

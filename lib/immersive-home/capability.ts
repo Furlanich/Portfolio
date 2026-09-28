@@ -6,6 +6,10 @@ export type CapabilityInput = {
   webglAvailable: boolean;
   nearViewport: boolean;
   sessionContextLost: boolean;
+  /** B1 (amended ADR 2026-09-28): a software rasterizer (SwiftShader, llvmpipe, softpipe, the
+   * Microsoft Basic Render Driver) fails the gate like every other gate. The caller is
+   * responsible for folding the explicit test-only override into this flag before calling. */
+  softwareRenderer: boolean;
 };
 
 export type RenderQualityInput = {
@@ -28,10 +32,26 @@ const STAR_COUNT_CONSTRAINED = 160;
 
 /** Every failed gate keeps the complete static composition; WebGL is only an enhancement. */
 export function chooseImmersiveMode(input: CapabilityInput): ImmersiveMode {
-  if (input.reducedMotion || input.saveData || !input.webglAvailable || input.sessionContextLost || !input.nearViewport) {
+  if (
+    input.reducedMotion ||
+    input.saveData ||
+    !input.webglAvailable ||
+    input.sessionContextLost ||
+    !input.nearViewport ||
+    input.softwareRenderer
+  ) {
     return 'static';
   }
   return 'webgl';
+}
+
+// B1: named software rasterizers (amended ADR 2026-09-28, section 10). Matched case-insensitively
+// against the WebGL2 unmasked renderer string (WEBGL_debug_renderer_info), or plain RENDERER
+// where the browser does not expose the unmasked extension.
+const SOFTWARE_RENDERER_PATTERN = /swiftshader|llvmpipe|softpipe|software|basic render/i;
+
+export function isSoftwareRenderer(rendererString: string): boolean {
+  return SOFTWARE_RENDERER_PATTERN.test(rendererString);
 }
 
 /**
