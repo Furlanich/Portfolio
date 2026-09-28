@@ -211,8 +211,11 @@ test.describe('10. D-07 reduced-transparency and forced-colors fallbacks', () =>
 
   // Playwright's page.emulateMedia() has no `reducedTransparency` option (unlike
   // `forcedColors`/`reducedMotion`/`colorScheme`), so this goes through Chromium's own
-  // DevTools protocol, which does support the feature directly.
-  test('reduced transparency: the surface is opaque #0D243C with no blur, even at Home top', async ({ page }) => {
+  // DevTools protocol, which does support the feature directly. newCDPSession is Chromium-only
+  // (throws on Firefox/WebKit), matching the existing forced-colors skip convention in
+  // tests/e2e/home-sections.spec.ts.
+  test('reduced transparency: the surface is opaque #0D243C with no blur, even at Home top', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'CDP media-feature emulation is only supported in Chromium');
     const cdp = await page.context().newCDPSession(page);
     await cdp.send('Emulation.setEmulatedMedia', {
       features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }],
