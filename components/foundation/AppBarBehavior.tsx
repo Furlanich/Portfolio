@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { normalizeAppBarPath } from './app-bar-path';
+import { buildReadoutIndex, formatReadout } from './app-bar-readout';
 
 // SKY-CHART-V2 D-22. A client leaf: it renders nothing and only reaches into the DOM that
 // SiteHeader (a server component) already rendered. Kept dependency-free and small (budget:
@@ -67,16 +68,9 @@ export function AppBarBehavior() {
     if (isHome && readoutEl && readoutSections.length > 0) {
       const processLinks = navLinks.filter(isProcessLink);
 
-      // D-22: "Text is `{NN} · {name}`". `[data-readout]` only carries the plain name (the
-      // hero and all four chapters share "Home"), so the two-digit index is not read off the
-      // DOM -- it is the position of each distinct value's first appearance in document
-      // order. That reproduces the reference prototype's fixed `secs` array (Home 00,
-      // Problems 01, Services 02, Position fix 03, ...) without hardcoding section ids.
-      const readoutOrder = new Map<string, number>();
-      for (const section of readoutSections) {
-        const value = section.dataset.readout ?? '';
-        if (!readoutOrder.has(value)) readoutOrder.set(value, readoutOrder.size);
-      }
+      // D-22 readout numbering (see app-bar-readout.ts): the two-digit index is the position
+      // of each distinct data-readout value's first appearance in document order.
+      const readoutIndex = buildReadoutIndex(readoutSections.map((section) => section.dataset.readout ?? ''));
 
       const updateReadout = () => {
         const line = window.innerHeight * READOUT_LINE_RATIO;
@@ -85,13 +79,7 @@ export function AppBarBehavior() {
           if (section.getBoundingClientRect().top <= line) current = section;
         }
 
-        if (current) {
-          const value = current.dataset.readout ?? '';
-          const index = readoutOrder.get(value) ?? 0;
-          readoutEl.textContent = `${String(index).padStart(2, '0')} · ${value}`;
-        } else {
-          readoutEl.textContent = '';
-        }
+        readoutEl.textContent = current ? formatReadout(current.dataset.readout ?? '', readoutIndex) : '';
 
         const isProcessCurrent = Boolean(current && (current.id === 'process' || current.id === 'proceso'));
         for (const link of processLinks) {
