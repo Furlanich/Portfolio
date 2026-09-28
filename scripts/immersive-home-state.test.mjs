@@ -117,7 +117,13 @@ test('caps device-pixel ratio and reduces detail by width and capability', () =>
   assert.equal(wide.pixelRatio, 1.5);
   assert.equal(compact.pixelRatio, 1.25);
   assert.equal(chooseRenderQuality({ viewportWidth: 1440, devicePixelRatio: 1, hardwareConcurrency: 8 }).pixelRatio, 1);
-  assert.ok(compact.signalCount < wide.signalCount, 'compact renders fewer signals');
-  assert.ok(constrained.signalCount < wide.signalCount, 'low concurrency renders fewer signals at any width');
+  // T-07 (lock transfer, plan Progress 2026-09-25): field-star count is 520 wide, 260 compact,
+  // and 160 only when compact AND constrained. A wide-but-constrained device keeps the wide
+  // count and only loses resolution -- the old "less detail at any width" rule is superseded.
+  const compactConstrained = chooseRenderQuality({ viewportWidth: 390, devicePixelRatio: 3, hardwareConcurrency: 2 });
+  assert.equal(wide.starCount, 520, 'wide renders the full field-star count');
+  assert.equal(compact.starCount, 260, 'compact reduces the field-star count');
+  assert.equal(compactConstrained.starCount, 160, 'compact and constrained reduces it further');
+  assert.equal(constrained.starCount, 520, 'wide and constrained keeps the wide field-star count');
   assert.equal(constrained.pixelRatio, 1.25, 'low concurrency also lowers resolution');
 });
