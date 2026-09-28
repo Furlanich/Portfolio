@@ -1,6 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
 import { appUrl, stableRoutes } from './support/paths';
 
+test.skip(
+  true,
+  'Static-only hotfix (owner decision 2026-09-28): the Sky Chart runtime is not mounted. The Task 7 follow-up restores it and removes this skip.',
+);
+
 // Sky Chart runtime (PLAN-SKY-CHART-HOME-REDESIGN-V2 Task 7). The DOM contract this file reads
 // is produced by Task 8's static composition: root `[data-instrument]`, four
 // `section[data-instrument-chapter]` elements and their `[data-instrument-chapters]` container.
