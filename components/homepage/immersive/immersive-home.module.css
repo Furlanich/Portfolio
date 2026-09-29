@@ -36,12 +36,39 @@
   background: radial-gradient(120% 90% at 70% 10%, #0E2B4A 0%, var(--sky-deep) 38%, var(--sky-abyss) 78%);
 }
 
-/* D-23 poster slot: empty until Task 10 sets a background-image here. */
+/*
+ * D-23 environment poster: the locale-neutral WebP still of the resolved scene (graticule,
+ * field stars and links, no labels), painted over the D-02 ground gradient beneath it. The
+ * URLs arrive as custom properties from EnvironmentGround (base-path aware). The plain
+ * `var()` declaration is the baseline; `image-set()` with a WebP type filter replaces it
+ * wherever supported. It shows in every static path (reduced motion, no JavaScript, WebGL
+ * failure, the software-renderer gate, context loss) and is never preloaded.
+ */
 .groundPoster {
   position: absolute;
   inset: 0;
+  background-repeat: no-repeat;
   background-size: cover;
   background-position: 70% 30%;
+  background-image: var(--environment-poster-wide);
+}
+
+@supports (background-image: image-set(url('x.webp') type('image/webp'))) {
+  .groundPoster {
+    background-image: image-set(var(--environment-poster-wide) type('image/webp'));
+  }
+}
+
+@media (max-width: 767px) {
+  .groundPoster {
+    background-image: var(--environment-poster-compact);
+  }
+
+  @supports (background-image: image-set(url('x.webp') type('image/webp'))) {
+    .groundPoster {
+      background-image: image-set(var(--environment-poster-compact) type('image/webp'));
+    }
+  }
 }
 
 /* The poster is a flat fallback image; once the WebGL scene is live it hides beneath the
