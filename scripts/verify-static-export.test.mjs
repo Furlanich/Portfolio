@@ -34,13 +34,14 @@ function homeSections({ content, processId }) {
   ];
 }
 
-function homeHtml(locale, transform = (sections) => sections) {
+function homeHtml(locale, transform = (sections) => sections, tags = 2) {
   const { content, lang } = locale;
+  const tagMarkup = Array.from({ length: tags }, () => `<span>${content.impact.illustrativeTag}</span>`).join('');
   const chapters = content.instrument.chapters
     .map((chapter) => `<section data-instrument-chapter="${chapter.id}"><h2>${chapter.heading}</h2><p>${chapter.description}</p></section>`)
     .join('');
   const sections = transform(homeSections(locale))
-    .map(([id, headingId, heading]) => `<section id="${id}" aria-labelledby="${headingId}"><h2 id="${headingId}">${heading}</h2></section>`)
+    .map(([id, headingId, heading]) => `<section id="${id}" aria-labelledby="${headingId}"><h2 id="${headingId}">${heading}</h2>${id === 'impact' ? tagMarkup : ''}</section>`)
     .join('');
   return [
     `<!doctype html><html lang="${lang}"><body>`,
@@ -50,13 +51,13 @@ function homeHtml(locale, transform = (sections) => sections) {
   ].join('');
 }
 
-function runVerifier(transform) {
+function runVerifier(transform, tags) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'verify-static-export-'));
   try {
     for (const locale of Object.values(locales)) {
       const target = path.join(directory, locale.file);
       fs.mkdirSync(path.dirname(target), { recursive: true });
-      fs.writeFileSync(target, homeHtml(locale, transform));
+      fs.writeFileSync(target, homeHtml(locale, transform, tags));
     }
     const result = spawnSync(process.execPath, [verifier], {
       env: { ...process.env, STATIC_EXPORT_DIR: directory, NEXT_PUBLIC_BASE_PATH: '' },
@@ -97,4 +98,10 @@ test('Home export with impact after Proof reports the order violation', () => {
 test('Home export whose impact heading text differs from the approved copy fails', () => {
   const output = runVerifier((sections) => sections.map((entry) => (entry[0] === 'impact' ? [entry[0], entry[1], 'Impacto medido'] : entry)));
   assert.match(output, /missing visible homepage heading "(?:Menos lugares|Fewer places)/);
+});
+
+test('Home export whose impact section lacks the two visible illustrative tags fails', () => {
+  const output = runVerifier(undefined, 1);
+  assert.match(output, /impact section must show the illustrative-scenario tag twice/);
+  assert.doesNotMatch(runVerifier(undefined, 2), /illustrative-scenario tag/);
 });

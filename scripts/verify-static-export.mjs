@@ -78,6 +78,7 @@ const founderRequirements = {
 };
 const homepageRequirements = {
   'index.html': {
+    illustrativeTag: 'Escenario ilustrativo',
     chapters: [
       ['Reconocer el sistema real', 'Pedidos, reservas, mensajes y tareas ya conviven en un mismo negocio. El primer paso es entender cómo se relacionan.'],
       ['Ver dónde se fragmenta', 'Cuando la información cambia de canal y se repite, la operación depende de más controles manuales.'],
@@ -87,6 +88,7 @@ const homepageRequirements = {
     sections: [
       ['problems', 'problems-heading', 'Cuando el trabajo queda repartido entre herramientas'],
       ['services', 'services-heading', 'Servicios para necesidades concretas'],
+      ['impact', 'impact-heading', 'Menos lugares que revisar para saber en qué estado está un pedido'],
       ['proof', 'proof-heading', 'Una responsabilidad técnica clara'],
       ['proceso', 'proceso-heading', 'Cómo trabajamos'],
       ['founder', 'founder-heading', 'Responsabilidad técnica directa'],
@@ -108,6 +110,7 @@ const homepageRequirements = {
     ],
   },
   'en/index.html': {
+    illustrativeTag: 'Illustrative scenario',
     chapters: [
       ['Recognize the real system', 'Orders, bookings, messages, and tasks already coexist in one business. The first step is understanding how they relate.'],
       ['See where it fragments', 'When information changes channels and is repeated, operations depend on more manual checks.'],
@@ -117,6 +120,7 @@ const homepageRequirements = {
     sections: [
       ['problems', 'problems-heading', 'When work is spread across tools'],
       ['services', 'services-heading', 'Services for concrete business needs'],
+      ['impact', 'impact-heading', 'Fewer places to check before you know where an order stands'],
       ['proof', 'proof-heading', 'Clear technical accountability'],
       ['process', 'process-heading', 'How we work'],
       ['founder', 'founder-heading', 'Direct technical responsibility'],
@@ -927,6 +931,14 @@ for (const { artifact, html } of allHtml) {
     } else if (!html.includes(heading)) {
       failures.push(`${artifact.file}: missing visible homepage heading "${heading}"`);
     }
+  }
+
+  // HOME-IMPACT honesty rule (plan section 12): the Position fix section shows its visible
+  // "Illustrative scenario" tag twice (figure and counts). Counted inside the section itself,
+  // because the RSC payload elsewhere in the document repeats every string.
+  const impactSection = html.match(/<section\b[^>]*\bid="impact"[\s\S]*?<\/section>/)?.[0] ?? '';
+  if (impactSection && countMatches(impactSection, new RegExp(escapeRegExp(requirement.illustrativeTag), 'g')) < 2) {
+    failures.push(`${artifact.file}: impact section must show the illustrative-scenario tag twice`);
   }
 
   for (const reference of requirement.requiredReferences) {
