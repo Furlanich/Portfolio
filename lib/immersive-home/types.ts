@@ -11,7 +11,6 @@ export type InstrumentChapterContent = {
   kicker: string;
   heading: string;
   description: string;
-  artworkId: string;
 };
 
 /** The 20 Sky Chart scene node ids (`PLAN-SKY-CHART-HOME-REDESIGN-V2` Appendix B). */
@@ -59,18 +58,4 @@ export type HomeInstrumentContent = {
   ];
   /** Labels for the 20 Sky Chart scene nodes, keyed by `SkyChartNodeId`. */
   nodes: Record<SkyChartNodeId, string>;
-};
-
-export type InstrumentMediaEntry = {
-  id: string;
-  chapter: InstrumentChapterId;
-  kind: 'poster';
-  src: string;
-  width: number;
-  height: number;
-  classification: 'brand-motion';
-  locale: 'neutral';
-  evidence: false;
-  decorative: true;
-  maxBytes: number;
 };
