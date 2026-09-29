@@ -323,12 +323,16 @@ test.describe('keyboard', () => {
         .evaluate((element) => (element as HTMLElement).focus({ preventScroll: true }));
       await page.keyboard.press('Tab');
       await expect(page.getByRole('button', { name: HOME[locale].pause })).toBeFocused();
+      // Reverse first, while the pill is still shown: Shift+Tab returns to the hero's last action.
+      await page.keyboard.press('Shift+Tab');
+      expect(await page.evaluate(() => Boolean((document.activeElement as HTMLElement).closest('section[aria-labelledby="home-heading"]')))).toBe(true);
+      await page.keyboard.press('Tab');
+      await expect(page.getByRole('button', { name: HOME[locale].pause })).toBeFocused();
+      // Forward: the very next stop is the Problems action. (Tabbing there scrolls the page past
+      // the chapters, which hides Pause again, so nothing may follow this step.)
       await page.keyboard.press('Tab');
       const next = await page.evaluate(() => (document.activeElement as HTMLElement).closest('section[id]')?.id ?? null);
       expect(next).toBe('problems');
-      // And reverse.
-      await page.keyboard.press('Shift+Tab');
-      await expect(page.getByRole('button', { name: HOME[locale].pause })).toBeFocused();
     });
   }
 });
