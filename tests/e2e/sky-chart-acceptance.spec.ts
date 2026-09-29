@@ -403,7 +403,9 @@ test.describe('resize and orientation', () => {
       }
       // A resize re-measures; it never tears the scene down and recreates it.
       expect((await debugHook(page))?.disposeCount).toBe(disposeBefore);
-      expect((await layoutShiftReport(page)).fromEnhancement).toBe(0);
+      // Resizing the viewport reflows the page itself, and those shifts land after the runtime import;
+      // only a shift whose source is the canvas, scrim or Pause pill can be the enhancement's.
+      expect((await layoutShiftReport(page)).fromEnhancementSources).toBe(0);
       assertNoBrowserErrors();
     });
 

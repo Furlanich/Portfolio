@@ -194,6 +194,8 @@ export type LayoutShiftReport = {
   total: number;
   /** Shifts at or after the runtime's `immersive:import-start` mark, or with a source inside the canvas, scrim or Pause pill. */
   fromEnhancement: number;
+  /** Only shifts with a source inside the canvas, scrim or Pause pill (no time-based attribution). */
+  fromEnhancementSources: number;
   entries: { value: number; time: number; enhancement: boolean; sources: string[] }[];
   importStart: number | null;
 };
@@ -205,7 +207,8 @@ export async function layoutShiftReport(page: Page): Promise<LayoutShiftReport> 
     const fromEnhancement = entries
       .filter((entry) => entry.enhancement || (importStart !== null && entry.time >= importStart))
       .reduce((sum, entry) => sum + entry.value, 0);
-    return { total: entries.reduce((sum, entry) => sum + entry.value, 0), fromEnhancement, entries: [...entries], importStart };
+    const fromEnhancementSources = entries.filter((entry) => entry.enhancement).reduce((sum, entry) => sum + entry.value, 0);
+    return { total: entries.reduce((sum, entry) => sum + entry.value, 0), fromEnhancement, fromEnhancementSources, entries: [...entries], importStart };
   });
 }
 
