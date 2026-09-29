@@ -1,9 +1,11 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { dirname, extname, join, relative } from 'node:path';
+import { dirname, extname, join, relative, resolve } from 'node:path';
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
-const outputRoot = join(projectRoot, '..', 'out');
+// STATIC_EXPORT_DIR lets `scripts/verify-static-export.test.mjs` run this verifier against a fixture
+// export; it is unset for `npm run verify:static-export`, which always checks the real `out/`.
+const outputRoot = process.env.STATIC_EXPORT_DIR ? resolve(process.env.STATIC_EXPORT_DIR) : join(projectRoot, '..', 'out');
 const configuredBasePath = (process.env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/$/, '');
 
 const artifacts = [
