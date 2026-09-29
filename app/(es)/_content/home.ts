@@ -32,7 +32,6 @@ export const homeContent = {
         heading: 'Reconocer el sistema real',
         description:
           'Pedidos, reservas, mensajes y tareas ya conviven en un mismo negocio. El primer paso es entender cómo se relacionan.',
-        artworkId: 'recognition-poster',
       },
       {
         id: 'fragmentation',
@@ -41,7 +40,6 @@ export const homeContent = {
         heading: 'Ver dónde se fragmenta',
         description:
           'Cuando la información cambia de canal y se repite, la operación depende de más controles manuales.',
-        artworkId: 'fragmentation-poster',
       },
       {
         id: 'connection',
@@ -50,7 +48,6 @@ export const homeContent = {
         heading: 'Conectar lo que importa',
         description:
           'Una solución bien definida reúne datos, reglas y acciones sin sumar complejidad innecesaria.',
-        artworkId: 'connection-poster',
       },
       {
         id: 'coordination',
@@ -59,7 +56,6 @@ export const homeContent = {
         heading: 'Coordinar el trabajo',
         description:
           'El sistema acompaña el proceso real y deja una base que puede mantenerse y adaptarse cuando cambia el negocio.',
-        artworkId: 'coordination-poster',
       },
     ],
     nodes: {

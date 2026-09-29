@@ -93,11 +93,9 @@ for (const narrativeCase of homepageNarrativeCases) {
       appPathname(narrativeCase.projectsPath),
     );
     await expect(main.getByText(narrativeCase.demoStatement, { exact: true })).toBeVisible();
-    // Only the decorative instrument posters may appear: no project imagery or screenshots.
-    for (const image of await main.locator('img').all()) {
-      await expect(image).toHaveAttribute('alt', '');
-      await expect(image).toHaveAttribute('src', /\/brand\/immersive\/(?:recognition|fragmentation|connection|coordination)\.svg$/);
-    }
+    // Home carries no <img> at all: the environment poster is a CSS background (D-23), and no
+    // project imagery or screenshots appear here.
+    await expect(main.locator('img')).toHaveCount(0);
     await expect(main).not.toContainText('MPC Administración');
     await expect(main).not.toContainText('MPC Administration');
   });
