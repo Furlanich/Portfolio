@@ -14,11 +14,12 @@ import {
 } from 'three';
 import {
   SKY_CHART_NODES,
+  frameForProgress,
   type SkyChartFrame,
   type SkyChartNodeDefinition,
 } from '@/lib/immersive-home/sky-chart-model';
 import type { SkyChartNodeId } from '@/lib/immersive-home/types';
-import type { RenderQuality } from '@/lib/immersive-home/capability';
+import { chooseRenderQuality, type RenderQuality } from '@/lib/immersive-home/capability';
 import { disposeSkyChartScene } from './dispose-sky-chart-scene';
 import {
   createFieldStarsGeometry,
@@ -79,6 +80,19 @@ const CAMERA_FAR = 200;
 const TIER_3_OPACITY_FACTOR = 0.8;
 const HERO_EXCLUSION_TIER = 2;
 
+/**
+ * D-23 poster mode. `scripts/render-sky-chart-posters.mjs` sets `window.__FURLANICH_SKY_CHART_POSTER__`
+ * before load so the scene renders the resolved state (t = 1, no labels) at DPR 1 with a
+ * readable drawing buffer, which the script then encodes as the static WebP posters. The
+ * `NODE_ENV` test lets the bundler drop this branch, and the flag name, from production builds.
+ */
+function isPosterMode(): boolean {
+  return (
+    process.env.NODE_ENV !== 'production' &&
+    Boolean((window as typeof window & { __FURLANICH_SKY_CHART_POSTER__?: boolean }).__FURLANICH_SKY_CHART_POSTER__)
+  );
+}
+
 function opacityFor(node: SkyChartNodeDefinition, frame: SkyChartFrame): number {
   const base = node.group === 'inputs' ? frame.inputOpacity : frame.groupOpacity[node.group];
   return node.tier === 3 ? base * TIER_3_OPACITY_FACTOR : base;
@@ -96,14 +110,25 @@ function opacityFor(node: SkyChartNodeDefinition, frame: SkyChartFrame): number 
  * be created, it throws a plain `Error` with no console side effect, matching the prior
  * instrument runtime's fail-closed contract -- the caller's try/catch returns quietly to static.
  */
-export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost }: CreateOptions): SkyChartSceneHandle {
+export function createSkyChartScene({ quality: requestedQuality, locale, nodeLabels, onContextLost }: CreateOptions): SkyChartSceneHandle {
+  const posterMode = isPosterMode();
+  // Poster mode is reproducible: DPR 1 and the unconstrained star count for the viewport width,
+  // whatever machine renders the stills.
+  const quality = posterMode
+    ? chooseRenderQuality({ viewportWidth: window.innerWidth, devicePixelRatio: 1, hardwareConcurrency: 0 })
+    : requestedQuality;
   const canvas = document.createElement('canvas');
   canvas.setAttribute('aria-hidden', 'true');
   canvas.tabIndex = -1;
   canvas.dataset.skyChartCanvas = '';
   canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:-2;display:block;pointer-events:none;transition:opacity 240ms linear;';
 
-  const context = canvas.getContext('webgl2', { antialias: true, alpha: true, powerPreference: 'low-power' }) as WebGL2RenderingContext | null;
+  const context = canvas.getContext('webgl2', {
+    antialias: true,
+    alpha: true,
+    powerPreference: 'low-power',
+    preserveDrawingBuffer: posterMode,
+  }) as WebGL2RenderingContext | null;
   if (!context) throw new Error('sky-chart: WebGL2 context unavailable');
 
   const renderer = new WebGLRenderer({ canvas, context, antialias: true, alpha: true, powerPreference: 'low-power' });
@@ -153,7 +178,10 @@ export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost
     return x >= heroRect.left && x <= heroRect.right && y >= heroRect.top && y <= heroRect.bottom;
   }
 
-  function applyFrame(frame: SkyChartFrame) {
+  function applyFrame(requestedFrame: SkyChartFrame) {
+    const frame = posterMode
+      ? frameForProgress(1, { width: viewportWidth, vh: viewportHeight, heroBottom: 0 })
+      : requestedFrame;
     const direction = directionFromDegrees(frame.yaw, frame.pitch);
     camera.lookAt(direction.x, direction.y, direction.z);
 
@@ -161,7 +189,7 @@ export function createSkyChartScene({ quality, locale, nodeLabels, onContextLost
     links.geometry.setDrawRange(0, drawCount);
 
     for (const entry of labels) {
-      const visible = frame.visibleTiers.includes(entry.node.tier);
+      const visible = !posterMode && frame.visibleTiers.includes(entry.node.tier);
       entry.sprite.visible = visible;
       if (!visible) {
         entry.material.opacity = 0;
