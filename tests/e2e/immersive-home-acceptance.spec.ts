@@ -72,9 +72,10 @@ for (const locale of ['es', 'en'] as const) {
     // scroll to the first chapter first -- a real visitor tabs after having scrolled, not before.
     await page.evaluate(() => {
       const rect = document.querySelector('section[data-instrument-chapter]')!.getBoundingClientRect();
-      window.scrollBy(0, rect.top);
+      // `html` has `scroll-behavior: smooth`; an instant jump keeps the position deterministic.
+      window.scrollBy({ top: rect.top, behavior: 'instant' });
     });
-    await expect(page.locator('[data-pause-motion-pill]')).toBeVisible();
+    await expect(page.locator('[data-pause-motion-pill]')).toBeVisible({ timeout: 10_000 });
 
     // Tab from the hero's own last action, scoped to the hero section itself (D-11): the rest
     // of Home has its own actions further down the page, so an unscoped "last link in main"
@@ -82,7 +83,11 @@ for (const locale of ['es', 'en'] as const) {
     // contribute no focusable element, so Pause must be the very next stop after the hero.
     const heroActions = page.locator('section[aria-labelledby="home-heading"]').getByRole('link');
     const lastHeroAction = heroActions.last();
-    await lastHeroAction.focus();
+    // Focus without scrolling: a plain focus() scrolls the hero back into view, which (D-25)
+    // re-hides the pill and makes the next Tab race the runtime's visibility update. A
+    // visitor who scrolled to the chapters and then presses Tab never jumps back up first.
+    await lastHeroAction.evaluate((element) => (element as HTMLElement).focus({ preventScroll: true }));
+    await expect(page.locator('[data-pause-motion-pill]')).toBeVisible();
     await page.keyboard.press('Tab');
     const pause = page.getByRole('button', { name: copy.pause });
     await expect(pause).toBeFocused();
