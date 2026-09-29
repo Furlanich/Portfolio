@@ -14,6 +14,7 @@
 // to the static path, so the documented test-only override is set as well.
 import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import net from 'node:net';
 import path from 'node:path';
 import { chromium } from 'playwright';
 
@@ -30,9 +31,34 @@ const POSTERS = [
 ];
 const QUALITY_STEPS = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1];
 
+// Resolves true when something already accepts connections on the port.
+function isPortInUse(portNumber) {
+  return new Promise((resolve) => {
+    const socket = net.connect({ host: '127.0.0.1', port: portNumber });
+    socket.once('connect', () => {
+      socket.destroy();
+      resolve(true);
+    });
+    socket.once('error', () => resolve(false));
+  });
+}
+
+// The child's exit state, set by the 'exit' listener below. A dev server that dies before it is
+// ready must abort the run with its exit code and stderr, not be waited on until the timeout.
+let serverExit = null;
+let serverStderr = '';
+
 async function waitForServer(url, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
   for (;;) {
+    if (serverExit) {
+      throw new Error(
+        `next dev exited before it was ready (code ${serverExit.code}, signal ${serverExit.signal})` +
+          (serverStderr.trim() ? `
+stderr:
+${serverStderr.trim()}` : ''),
+      );
+    }
     try {
       const response = await fetch(url);
       if (response.ok) return;
@@ -50,11 +76,26 @@ function stopServer(server) {
   else server.kill('SIGTERM');
 }
 
+// Never reuse whatever already answers: a stale server or another project's dev server would
+// silently produce the wrong render.
+if (await isPortInUse(port)) {
+  console.error(`Port ${port} is already in use. Stop that server (or set PLAYWRIGHT_PORT) and run again.`);
+  process.exit(1);
+}
+
 const nextBin = path.join(root, 'node_modules/next/dist/bin/next');
 const server = spawn(process.execPath, [nextBin, 'dev', '--hostname', '127.0.0.1', '--port', String(port)], {
   cwd: root,
-  stdio: ['ignore', 'ignore', 'inherit'],
-  env: { ...process.env, NEXT_PUBLIC_BASE_PATH: '', JITI_CACHE: process.env.JITI_CACHE ?? 'false' },
+  stdio: ['ignore', 'ignore', 'pipe'],
+  // NODE_ENV is forced: an inherited production value would break the dev-only poster hook.
+  env: { ...process.env, NODE_ENV: 'development', NEXT_PUBLIC_BASE_PATH: '', JITI_CACHE: process.env.JITI_CACHE ?? 'false' },
+});
+server.stderr.on('data', (chunk) => {
+  process.stderr.write(chunk);
+  serverStderr = (serverStderr + chunk.toString()).slice(-4000);
+});
+server.on('exit', (code, signal) => {
+  serverExit = { code, signal };
 });
 process.on('exit', () => stopServer(server));
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => process.exit(130));
