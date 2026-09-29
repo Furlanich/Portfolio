@@ -19,8 +19,9 @@
 // app/fonts.ts and the layouts, which need an owner decision; plan PR 11, escalation E2); above
 // "poor" it fails. The
 // ADR's gate, "layout shift from the enhancement = 0", is measured separately: only shifts at or
-// after the runtime's `immersive:import-start` mark, or with a source inside the canvas, scrim or
-// Pause pill, count toward it. The enhanced variant also reports the runtime's draw calls per
+// after the runtime's `immersive:import-start` mark and not within 500 ms of a web font finishing,
+// or with a source inside the canvas, scrim or Pause pill, count toward it (on a throttled network
+// the fonts arrive after the import has started). The enhanced variant also reports the runtime's draw calls per
 // frame, label textures and idle frames, and the backdrop-filter surface count, all observed in
 // the production build through tests/e2e/support/production-instrumentation.mjs.
 import { execSync } from 'node:child_process';
@@ -206,7 +207,7 @@ async function journey(browser, profile, locale, variant) {
     inpMs: Math.round(Math.max(0, ...byInteraction.values())),
     clsWholePage: layoutShift.wholePage,
     clsFromEnhancement: layoutShift.fromEnhancement,
-    clsBeforeImport: layoutShift.beforeImport,
+    clsNotFromEnhancement: layoutShift.notFromEnhancement,
     backdropMax: backdrop.max,
     backdropSweepMax: backdrop.sweep.max,
     webgl,
@@ -241,7 +242,7 @@ try {
         ttfbP75Ms: percentile(journeys.map((item) => item.ttfbMs), 75),
         clsWholePageMax: max(journeys.map((item) => item.clsWholePage)),
         clsFromEnhancementMax: max(journeys.map((item) => item.clsFromEnhancement)),
-        clsFontSwapSources: [...new Set(journeys.flatMap((item) => item.clsBeforeImport.flatMap((shift) => shift.sources)))],
+        clsFontSwapSources: [...new Set(journeys.flatMap((item) => item.clsNotFromEnhancement.flatMap((shift) => shift.sources)))],
         backdropSurfacesAtSectionsMax: max(journeys.map((item) => item.backdropMax)),
         backdropSurfacesSweepMax: max(journeys.map((item) => item.backdropSweepMax)),
         lcpElements: [...new Set(journeys.map((item) => item.lcpElement))],

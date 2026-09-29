@@ -18,8 +18,8 @@
 //     production, so tests/e2e/support/production-instrumentation.mjs observes the WebGL calls
 //     and the DOM instead.
 //   - Layout shift *from the enhancement* = 0. Shifts are attributed to the enhancement when they
-//     happen at or after `immersive:import-start`, or have a source inside the canvas, scrim or
-//     Pause pill. The whole-page total (the font-swap reflow of the App Bar and hero text at first
+//     happen at or after `immersive:import-start` (and not within 500 ms of a web font finishing), or
+//     have a source inside the canvas, scrim or Pause pill. The whole-page total (the font-swap reflow of the App Bar and hero text at first
 //     paint, before the runtime import) is reported and judged under `measure:home-vitals` against
 //     the web-vitals CLS threshold.
 //   - Canvas and listener lifecycle counts across remounts.

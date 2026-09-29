@@ -11,9 +11,10 @@
 //                             (the runtime's `CanvasTexture` label sprites), with their sizes
 //   - idle rendering        : `clear` calls (= rendered frames) in a window after rendering settles
 //   - backdrop surfaces     : `backdrop-filter` surfaces intersecting the viewport (DOM scan)
-//   - layout shift          : shifts attributed to the enhancement (after `immersive:import-start`,
-//                             or with a source inside the canvas, scrim or Pause pill) versus the
-//                             whole-page total (font-swap reflow before the runtime import)
+//   - layout shift          : shifts attributed to the enhancement (a source inside the canvas, scrim
+//                             or Pause pill, or any shift after `immersive:import-start` that is not
+//                             within 500 ms of a web font finishing loading) versus the whole-page
+//                             total (the font-swap reflow of the App Bar and hero text)
 
 /** Serialized into the page by `addInitScript`; must stay self-contained. */
 export function installInstrumentation() {
@@ -26,8 +27,12 @@ export function installInstrumentation() {
     textures: [],
     bound: null,
     shifts: [],
+    fontsDoneAt: [],
   };
   window.__inst = inst;
+  // A web font arriving late reflows text; on a throttled network that happens after the runtime
+  // import has started, so time alone cannot attribute a shift to the enhancement.
+  document.fonts?.addEventListener('loadingdone', () => inst.fontsDoneAt.push(performance.now()));
 
   const proto = window.WebGL2RenderingContext?.prototype;
   if (proto) {
@@ -208,13 +213,14 @@ export async function readLayoutShifts(page) {
   return page.evaluate(() => {
     const importStart = performance.getEntriesByName('immersive:import-start')[0]?.startTime ?? null;
     const shifts = window.__inst.shifts;
-    const fromEnhancement = shifts.filter((shift) => shift.enhancement || (importStart !== null && shift.time >= importStart));
+    const nearFontSwap = (shift) => window.__inst.fontsDoneAt.some((doneAt) => shift.time >= doneAt - 50 && shift.time <= doneAt + 500);
+    const fromEnhancement = shifts.filter((shift) => shift.enhancement || (importStart !== null && shift.time >= importStart && !nearFontSwap(shift)));
     const sum = (list) => list.reduce((total, shift) => total + shift.value, 0);
     return {
       importStartMs: importStart === null ? null : Math.round(importStart),
       wholePage: +sum(shifts).toFixed(4),
       fromEnhancement: +sum(fromEnhancement).toFixed(4),
-      beforeImport: shifts.filter((shift) => !fromEnhancement.includes(shift)).map((shift) => ({ value: +shift.value.toFixed(4), atMs: Math.round(shift.time), sources: shift.sources })),
+      notFromEnhancement: shifts.filter((shift) => !fromEnhancement.includes(shift)).map((shift) => ({ value: +shift.value.toFixed(4), atMs: Math.round(shift.time), sources: shift.sources })),
     };
   });
 }
