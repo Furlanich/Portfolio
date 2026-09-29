@@ -23,6 +23,13 @@ import {
 // explicit test-only override before navigating; the "software renderer gate" tests exercise
 // the un-overridden behaviour directly.
 
+// Playwright's page-video recorder plus SwiftShader compositing the canvas can hang a full-page
+// navigation ("until load" never fires) when two such pages navigate at once: reproduced on Windows
+// with the config's `video: 'retain-on-failure'`, gone with video off, and serial runs are
+// unaffected. `use({ video })` must be top-level, so the whole file records screenshots and traces
+// (on first retry) but no video.
+test.use({ video: 'off' });
+
 const labels = {
   es: { route: stableRoutes.home.es, other: stableRoutes.home.en, pause: 'Pausar movimiento', resume: 'Reanudar movimiento', switchLabel: 'Ver sitio en inglés' },
   en: { route: stableRoutes.home.en, other: stableRoutes.home.es, pause: 'Pause motion', resume: 'Resume motion', switchLabel: 'View site in Spanish' },
@@ -227,28 +234,33 @@ test.describe('Sky Chart runtime', () => {
   });
 
   // N6: language-switch reactivation, restored from the pre-rewrite acceptance matrix.
-  for (const locale of ['es', 'en'] as const) {
-    const copy = labels[locale];
-    test(`${locale} language switch reactivates cleanly with no console error or failed asset`, async ({ page }) => {
-      test.slow(); // N2: reactivation recreates the WebGL context; a slow environment needs the room
-      const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
-      const failedAssets: string[] = [];
-      page.on('response', (response) => {
-        if (response.status() >= 400) failedAssets.push(`${response.status()} ${response.url()}`);
+  test.describe('language switch', () => {
+    for (const locale of ['es', 'en'] as const) {
+      const copy = labels[locale];
+      test(`${locale} language switch reactivates cleanly with no console error or failed asset`, async ({ page }) => {
+        test.slow(); // N2: reactivation recreates the WebGL context; a slow environment needs the room
+        const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
+        const failedAssets: string[] = [];
+        page.on('response', (response) => {
+          if (response.status() >= 400) failedAssets.push(`${response.status()} ${response.url()}`);
+        });
+        await page.setViewportSize({ width: 1440, height: 900 });
+        await page.goto(appUrl(copy.route));
+        await expectActive(page);
+        // Start waiting before the click: under parallel load the navigation can commit (or be
+        // superseded) before a wait registered afterwards runs, which surfaced as net::ERR_ABORTED.
+        await Promise.all([
+          page.waitForURL(`**${appPathname(copy.other)}`),
+          page.getByRole('banner').getByRole('link', { name: copy.switchLabel }).click(),
+        ]);
+        await expectActive(page);
+        await expect(page.locator('canvas')).toHaveCount(1);
+
+        expect(failedAssets, 'missing or failed assets').toEqual([]);
+        assertNoBrowserErrors();
       });
-      await page.setViewportSize({ width: 1440, height: 900 });
-      await page.goto(appUrl(copy.route));
-      await expectActive(page);
-
-      await page.getByRole('banner').getByRole('link', { name: copy.switchLabel }).click();
-      await page.waitForURL(`**${appPathname(copy.other)}`);
-      await expectActive(page);
-      await expect(page.locator('canvas')).toHaveCount(1);
-
-      expect(failedAssets, 'missing or failed assets').toEqual([]);
-      assertNoBrowserErrors();
-    });
-  }
+    }
+  });
 
   // N6: the optional Connection film stays withdrawn (ADR-SKY-CHART-HOMEPAGE-RUNTIME); no
   // video element or media request anywhere on the activated page.

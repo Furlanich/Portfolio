@@ -37,6 +37,13 @@ import {
 // Polling, never fixed waits: SwiftShader frames take ~100-180 ms and the T-06 camera eases over
 // dozens of frames, so every eased value is polled.
 
+// Playwright's page-video recorder plus SwiftShader compositing the canvas can hang a full-page
+// navigation ("until load" never fires) when two such pages navigate at once: reproduced on Windows
+// with the config's `video: 'retain-on-failure'`, gone with video off, and serial runs are
+// unaffected. `use({ video })` must be top-level, so the whole file records screenshots and traces
+// (on first retry) but no video.
+test.use({ video: 'off' });
+
 const basePath = normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH ?? '');
 /** Poll budget for eased values and runtime state: SwiftShader frames are 100-180 ms, and two workers share the CPU. */
 const EASE = { timeout: 20_000 } as const;
@@ -323,13 +330,19 @@ test.describe('keyboard', () => {
         .evaluate((element) => (element as HTMLElement).focus({ preventScroll: true }));
       await page.keyboard.press('Tab');
       await expect(page.getByRole('button', { name: HOME[locale].pause })).toBeFocused();
-      // Reverse first, while the pill is still shown: Shift+Tab returns to the hero's last action.
-      await page.keyboard.press('Shift+Tab');
-      expect(await page.evaluate(() => Boolean((document.activeElement as HTMLElement).closest('section[aria-labelledby="home-heading"]')))).toBe(true);
-      await page.keyboard.press('Tab');
-      await expect(page.getByRole('button', { name: HOME[locale].pause })).toBeFocused();
-      // Forward: the very next stop is the Problems action. (Tabbing there scrolls the page past
-      // the chapters, which hides Pause again, so nothing may follow this step.)
+      // Document order pins the reverse direction without moving focus (Shift+Tab would scroll the
+      // hero back into view, which hides the pill again): hero < last chapter < Pause < Problems.
+      const order = await page.evaluate(() => {
+        const follows = (a: Element, b: Element) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+        const chapters = document.querySelectorAll('section[data-instrument-chapter]');
+        const pause = document.querySelector('[data-pause-motion-pill]')!;
+        return {
+          afterChapters: follows(chapters[chapters.length - 1], pause),
+          beforeProblems: follows(pause, document.getElementById('problems')!),
+        };
+      });
+      expect(order).toEqual({ afterChapters: true, beforeProblems: true });
+      // Forward: the very next stop is the Problems action.
       await page.keyboard.press('Tab');
       const next = await page.evaluate(() => (document.activeElement as HTMLElement).closest('section[id]')?.id ?? null);
       expect(next).toBe('problems');
@@ -814,8 +827,10 @@ test.describe('base path', () => {
       expect(poster).toContain(`${basePath}/brand/sky-chart/environment-compact.webp`);
 
       // The language switch lands on the other locale's Home under the same base path.
-      await page.getByRole('banner').getByRole('link', { name: HOME[locale].switchLabel }).click();
-      await page.waitForURL(`**${appPathname(HOME[locale].other)}`);
+      await Promise.all([
+        page.waitForURL(`**${appPathname(HOME[locale].other)}`),
+        page.getByRole('banner').getByRole('link', { name: HOME[locale].switchLabel }).click(),
+      ]);
       await expectActive(page);
 
       expect(failed, 'no failed request').toEqual([]);
