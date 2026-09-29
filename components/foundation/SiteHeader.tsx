@@ -63,7 +63,7 @@ export function SiteHeader({ locale, paths, labels }: SiteHeaderProps) {
   return (
     <>
       <div id="site-top" aria-hidden="true" />
-      <header data-app-bar className="sticky top-0 z-50 px-3 py-[10px]">
+      <header data-app-bar className="sticky top-0 z-50 h-[var(--app-bar-height)] px-3 py-[10px]">
         {/*
           SKY-CHART-V2 D-22 structure: `header[data-app-bar]` is the full-width sticky
           positioner (outer 10px/12px padding); `[data-app-bar-surface]` is the floating
