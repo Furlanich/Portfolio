@@ -119,8 +119,20 @@ export async function readWebglMetrics(page) {
   });
 }
 
-/** Waits until no frame has been rendered for `quietMs`, then counts frames in the next `windowMs`. */
-export async function measureIdleFrames(page, { quietMs = 1500, windowMs = 2000, timeout = 30_000 } = {}) {
+/**
+ * Waits until no frame has been rendered for `quietMs`, then counts frames in the next `windowMs`.
+ * `reacted` names the DOM state that proves the page has responded to the scroll that preceded the
+ * call (a scroll event is delivered a frame later, so "quiet" alone can be true before the runtime
+ * has even started): `{ attribute: 'data-recede', value: '1' }` or `{ attribute: 'data-rendered-chapter', value: 'connection' }`.
+ */
+export async function measureIdleFrames(page, { quietMs = 1500, windowMs = 2000, timeout = 30_000, reacted = null } = {}) {
+  if (reacted) {
+    await page.waitForFunction(
+      ({ attribute, value }) => document.querySelector('[data-instrument]')?.getAttribute(attribute) === value,
+      reacted,
+      { timeout, polling: 100 },
+    );
+  }
   await page.waitForFunction(
     (quiet) => performance.now() - window.__inst.lastRenderAt > quiet,
     quietMs,
@@ -133,9 +145,13 @@ export async function measureIdleFrames(page, { quietMs = 1500, windowMs = 2000,
 }
 
 /**
- * Sweeps the page in half-viewport steps and returns the worst `backdrop-filter` surface count
- * (App Bar excluded). A surface that ends above the sticky App Bar's bottom edge is entirely
- * behind it and is not counted.
+ * Backdrop-filter surfaces intersecting the viewport (App Bar excluded; a surface that ends above
+ * the sticky App Bar's bottom edge is entirely behind it and is not counted), measured two ways:
+ *   - `atSections`: every Home section aligned under the App Bar and centred. This is the section 14
+ *     gate ("E2E DOM scan at each section").
+ *   - `sweep`: every half-viewport of scroll. D-08 says "no viewport", and between two sections the
+ *     viewport straddles both, so the sweep's worst case can exceed the gate (plan PR 11, escalation
+ *     E1). It is reported, not gated.
  */
 export async function sweepBackdropSurfaces(page) {
   return page.evaluate(async () => {
@@ -152,21 +168,38 @@ export async function sweepBackdropSurfaces(page) {
       }
       return surfaces;
     };
+    const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+
+    let atSectionsMax = 0;
+    const atSections = {};
+    for (const section of document.querySelectorAll('main > section[id]')) {
+      const rect = section.getBoundingClientRect();
+      window.scrollBy({ top: rect.top - 96, behavior: 'instant' });
+      await nextFrame();
+      const aligned = count();
+      const centred = section.getBoundingClientRect();
+      window.scrollBy({ top: centred.top + centred.height / 2 - window.innerHeight / 2, behavior: 'instant' });
+      await nextFrame();
+      const centredCount = count();
+      atSections[section.id] = { aligned, centred: centredCount };
+      atSectionsMax = Math.max(atSectionsMax, aligned, centredCount);
+    }
+
     const height = document.documentElement.scrollHeight;
     const step = Math.floor(window.innerHeight / 2);
-    let max = 0;
-    let at = 0;
+    let sweepMax = 0;
+    let sweepAt = 0;
     for (let y = 0; y < height; y += step) {
       window.scrollTo({ top: y, behavior: 'instant' });
-      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await nextFrame();
       const surfaces = count();
-      if (surfaces > max) {
-        max = surfaces;
-        at = y;
+      if (surfaces > sweepMax) {
+        sweepMax = surfaces;
+        sweepAt = y;
       }
     }
     window.scrollTo({ top: 0, behavior: 'instant' });
-    return { max, atScrollY: at, steps: Math.ceil(height / step) };
+    return { max: atSectionsMax, atSections, sweep: { max: sweepMax, atScrollY: sweepAt, steps: Math.ceil(height / step) } };
   });
 }
 
