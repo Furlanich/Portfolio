@@ -91,7 +91,7 @@ try {
     lazyRuntime: { rawKiB: +(runtime.raw / KIB).toFixed(1), gzipKiB: +(runtime.gzip / KIB).toFixed(1), brotliKiB: +(runtime.brotli / KIB).toFixed(1) },
   };
   report.activationMarks = await page.evaluate(() => Object.fromEntries(performance.getEntriesByType('mark').filter((mark) => mark.name.startsWith('immersive:')).map((mark) => [mark.name, Math.round(mark.startTime)])));
-  report.firstPosterKiB = +(fs.statSync(path.join(outDir, 'brand/immersive/recognition.svg')).size / KIB).toFixed(2);
+  report.firstPosterKiB = +(fs.statSync(path.join(outDir, 'brand/sky-chart/environment-wide.webp')).size / KIB).toFixed(2);
   report.activationToFirstFrameMs = Math.round(activatedAt);
 
   // Scripted native scroll through the sequence and back, sampling animation frames.

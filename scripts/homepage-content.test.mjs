@@ -278,7 +278,6 @@ const approvedInstrument = {
 
 for (const [locale, content] of [['es', spanish], ['en', english]]) {
   test(`${locale} home content owns the exact approved G1 instrument copy`, async () => {
-    const { instrumentMediaManifest } = await import('../lib/immersive-home/media-manifest.ts');
     const expected = approvedInstrument[locale];
     const { instrument } = content;
 
@@ -293,10 +292,8 @@ for (const [locale, content] of [['es', spanish], ['en', english]]) {
     assert.deepEqual(instrument.chapters.map((chapter) => chapter.sequence), ['01', '02', '03', '04']);
     assert.equal(new Set(instrument.chapters.map((chapter) => chapter.heading)).size, 4);
 
-    const posterIds = new Set(instrumentMediaManifest.map((entry) => entry.id));
     for (const chapter of instrument.chapters) {
       assert.equal(chapter.artworkId, `${chapter.id}-poster`);
-      assert.ok(posterIds.has(chapter.artworkId), `${chapter.artworkId} is declared in the media manifest`);
       assert.doesNotMatch(chapter.heading + chapter.description, /\n/, 'no manual line breaks');
     }
   });

@@ -1,7 +1,7 @@
 import { inflateSync } from 'node:zlib';
-import { expect, test, type Page } from '@playwright/test';
+import { chromium, expect, test, type Page } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
-import { appPathname, appUrl, stableRoutes } from './support/paths';
+import { appPathname, appUrl, normalizeBasePath, stableRoutes } from './support/paths';
 
 // The static composition is the complete design; reduced motion keeps it deterministic here.
 test.use({ reducedMotion: 'reduce' });
@@ -487,3 +487,62 @@ for (const homeCase of homeCases) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 }
+
+// D-23 / Task 10: the environment poster is the final static art in every static path. It is a
+// decorative CSS background (no alt) that switches from the wide to the compact WebP below 768px
+// and carries the optional deployment base path in its URL. The whole file runs under reduced
+// motion, which is itself one of the static paths.
+const posterBasePath = normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH ?? '');
+const posterCases = [
+  { width: 1440, height: 900, served: 'environment-wide.webp', other: 'environment-compact.webp' },
+  { width: 390, height: 844, served: 'environment-compact.webp', other: 'environment-wide.webp' },
+] as const;
+
+for (const posterCase of posterCases) {
+  test(`the environment poster layer serves ${posterCase.served} at ${posterCase.width} in static mode`, async ({ page }) => {
+    await page.setViewportSize({ width: posterCase.width, height: posterCase.height });
+    await page.goto(appUrl(stableRoutes.home.es));
+    const poster = page.locator('[data-environment-poster]');
+    await expect(poster).toHaveCount(1);
+    await expect(poster).toHaveAttribute('aria-hidden', 'true');
+
+    const backgroundImage = await poster.evaluate((element) => getComputedStyle(element).backgroundImage);
+    expect(backgroundImage).toContain(posterCase.served);
+    expect(backgroundImage).not.toContain(posterCase.other);
+    expect(backgroundImage).toContain(`${posterBasePath}/brand/sky-chart/${posterCase.served}`);
+    await expect(poster).toHaveCSS('background-size', 'cover');
+    await expect(poster).toHaveCSS('background-position', '70% 30%');
+
+    // Static mode shows the poster; it never hides in reduced motion.
+    await expect(poster).toHaveCSS('visibility', 'visible');
+
+    // The URL the layer asks for is a real WebP.
+    const url = backgroundImage.match(/url\("([^"]+)"\)/)?.[1];
+    expect(url, backgroundImage).toBeTruthy();
+    const response = await page.request.get(url!);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('image/webp');
+  });
+}
+
+// Once the WebGL scene has painted its first frame the poster hides beneath the canvas. The
+// software-renderer gate sends headless Chromium's SwiftShader to static, so this test uses the
+// documented test-only override, the SwiftShader launch flags (a worker-scoped option that a
+// describe block cannot set, hence its own browser) and reduced motion off.
+test('the poster hides once data-immersive-mode is webgl', async ({ baseURL }) => {
+  const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+  try {
+    const context = await browser.newContext({ baseURL, reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+    const page = await context.newPage();
+    await page.addInitScript(() => {
+      (window as typeof window & { __SKY_CHART_ALLOW_SOFTWARE_RENDERER__?: boolean }).__SKY_CHART_ALLOW_SOFTWARE_RENDERER__ = true;
+    });
+    await page.goto(appUrl(stableRoutes.home.es));
+    const poster = page.locator('[data-environment-poster]');
+    await expect(poster).toHaveCSS('visibility', 'visible');
+    await expect.poll(() => page.locator('[data-instrument]').getAttribute('data-immersive-mode'), { timeout: 20_000 }).toBe('webgl');
+    await expect(poster).toHaveCSS('visibility', 'hidden');
+  } finally {
+    await browser.close();
+  }
+});

@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, extname, join, relative } from 'node:path';
 
@@ -791,6 +791,32 @@ async function collectTextFiles(directory) {
 const failures = [];
 const allHtml = [];
 
+// SKY-CHART-V2 D-23 / Task 10: the two environment posters are the static fallback art and must
+// ship in the export; the chapter posters they replaced must not.
+const requiredPosters = [
+  { file: 'brand/sky-chart/environment-wide.webp', maxBytes: 150 * 1024 },
+  { file: 'brand/sky-chart/environment-compact.webp', maxBytes: 80 * 1024 },
+];
+for (const poster of requiredPosters) {
+  try {
+    const bytes = await readFile(join(outputRoot, poster.file));
+    if (bytes.toString('ascii', 0, 4) !== 'RIFF' || bytes.toString('ascii', 8, 12) !== 'WEBP') {
+      failures.push(`${poster.file}: not a WebP file`);
+    } else if (bytes.length > poster.maxBytes) {
+      failures.push(`${poster.file}: ${bytes.length} bytes exceeds its ${poster.maxBytes}-byte budget`);
+    }
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    failures.push(`missing static poster: ${poster.file}`);
+  }
+}
+try {
+  await stat(join(outputRoot, 'brand/immersive'));
+  failures.push('brand/immersive: the retired chapter posters must not be exported');
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+}
+
 for (const artifact of artifacts) {
   const filePath = join(outputRoot, artifact.file);
 
@@ -821,6 +847,9 @@ for (const filePath of exportedTextFiles) {
   const file = relative(outputRoot, filePath);
   if (/Busesfy|ChronoApp|Documancer|FOUNDER-ONLY|BLOCKED-|PROJECT-(?:GRS|THE-SYSTEM|MPC-ADMIN)/i.test(source)) {
     failures.push(`${file}: blocked, private, retired, or internal project identity leaked into exported payload`);
+  }
+  if (/brand\/immersive\//.test(source)) {
+    failures.push(`${file}: references the retired brand/immersive chapter posters`);
   }
   if (/(?:Busesfy|MPC-Administracion|AI-Scheduler|GRS|Documancer|atlas|pulse|vertex)\.svg/i.test(source)) {
     failures.push(`${file}: retired legacy project asset name leaked into exported payload`);
@@ -863,6 +892,13 @@ for (const { artifact, html } of allHtml) {
   // (D-01/D-23) is the only decorative homepage layer, and it must be part of the document.
   if (!/\bdata-environment-ground(?:="[^"]*")?[\s>]/.test(html)) {
     failures.push(`${artifact.file}: missing EnvironmentGround (no data-environment-ground layer)`);
+  }
+  // D-23: the poster layer carries both WebP URLs, with the deployment base path applied.
+  for (const poster of requiredPosters) {
+    const posterUrl = new RegExp(`url\\((?:&quot;|")${escapeRegExp(configuredBasePath)}/${escapeRegExp(poster.file)}(?:&quot;|")\\)`);
+    if (!posterUrl.test(html)) {
+      failures.push(`${artifact.file}: the environment poster layer does not reference ${configuredBasePath}/${poster.file}`);
+    }
   }
   for (const image of html.match(/<img\b[^>]*>/gi) ?? []) {
     const src = image.match(/\ssrc="([^"]+)"/)?.[1];
