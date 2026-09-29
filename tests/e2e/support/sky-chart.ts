@@ -148,10 +148,13 @@ export async function expectIdleAfterSettle(page: Page, { timeout = 30_000, inte
 
 /**
  * D-08: backdrop-filter surfaces intersecting the viewport, the App Bar excluded. Counts every
- * element in `main` (plates and sheets are the only content surfaces that use the filter).
+ * element in `main` (plates and sheets are the only content surfaces that use the filter). "In the
+ * viewport" means visible below the sticky App Bar: a surface that ends above the bar's bottom edge
+ * is entirely behind it and is not counted.
  */
 export async function countBackdropSurfaces(page: Page): Promise<number> {
   return page.evaluate(() => {
+    const appBarBottom = document.querySelector('[data-app-bar-surface]')?.getBoundingClientRect().bottom ?? 0;
     let count = 0;
     for (const element of Array.from(document.querySelectorAll<HTMLElement>('main *'))) {
       if (element.closest('[data-app-bar]')) continue;
@@ -159,7 +162,7 @@ export async function countBackdropSurfaces(page: Page): Promise<number> {
       const filter = style.backdropFilter || (style as unknown as { webkitBackdropFilter?: string }).webkitBackdropFilter;
       if (!filter || filter === 'none') continue;
       const rect = element.getBoundingClientRect();
-      if (rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth) count += 1;
+      if (rect.bottom > appBarBottom && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth) count += 1;
     }
     return count;
   });

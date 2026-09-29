@@ -1,6 +1,16 @@
 import { expect, test, type Page } from '@playwright/test';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
+import {
+  CHAPTERS,
+  allowSoftwareRenderer,
+  centreChapter,
+  debugHook,
+  expectActive,
+  instrumentMode,
+  recedeValue,
+  renderedChapter,
+} from './support/sky-chart';
 
 // Sky Chart runtime (PLAN-SKY-CHART-HOME-REDESIGN-V2 Task 7). The DOM contract this file reads
 // is produced by Task 8's static composition: root `[data-instrument]`, four
@@ -13,77 +23,22 @@ import { observeUnexpectedBrowserErrors } from './support/console-errors';
 // explicit test-only override before navigating; the "software renderer gate" tests exercise
 // the un-overridden behaviour directly.
 
-const CHAPTERS = ['recognition', 'fragmentation', 'connection', 'coordination'] as const;
 const labels = {
   es: { route: stableRoutes.home.es, other: stableRoutes.home.en, pause: 'Pausar movimiento', resume: 'Reanudar movimiento', switchLabel: 'Ver sitio en inglés' },
   en: { route: stableRoutes.home.en, other: stableRoutes.home.es, pause: 'Pause motion', resume: 'Resume motion', switchLabel: 'View site in Spanish' },
 } as const;
 
-// Kept byte-identical across every spec file that reads this hook: TypeScript's global
-// augmentation merging requires every `declare global` for the same property to agree on its
-// exact type, and `tests/e2e/support/**` (where a single shared declaration would otherwise
-// live) is Task 11's owned path, not Task 7's.
-type SkyChartDebugFrame = {
-  yaw: number;
-  pitch: number;
-  groupOpacity: Record<string, number>;
-  linkFraction: number;
-  inputOpacity: number;
-  visibleTiers: readonly number[];
-  heroMask: number;
-};
-
-type SkyChartDebugHook = {
-  frame: SkyChartDebugFrame | null;
-  labelCount: number;
-  labels: readonly string[];
-  disposeCount: number;
-  renderCount: number;
-  drawCalls: number;
-  pixelRatio: number;
-  labelTextureSizes: readonly [number, number][];
-  labelOpacities: Record<string, number>;
-};
-
-declare global {
-  interface Window {
-    __FURLANICH_SKY_CHART__?: SkyChartDebugHook;
-    __SKY_CHART_ALLOW_SOFTWARE_RENDERER__?: boolean;
-  }
-}
-
-async function allowSoftwareRenderer(page: Page) {
-  await page.addInitScript(() => {
-    window.__SKY_CHART_ALLOW_SOFTWARE_RENDERER__ = true;
-  });
-}
-
-const mode = (page: Page) => page.locator('[data-instrument]').getAttribute('data-immersive-mode');
-const renderedChapter = (page: Page) => page.locator('[data-instrument]').getAttribute('data-rendered-chapter');
-const recede = (page: Page) => page.locator('[data-instrument]').getAttribute('data-recede');
-const debugHook = (page: Page) => page.evaluate(() => window.__FURLANICH_SKY_CHART__ ?? null);
-
-async function expectActive(page: Page, timeout = 20_000) {
-  await expect.poll(() => mode(page), { timeout }).toBe('webgl');
-  const canvas = page.locator('canvas[data-sky-chart-canvas]');
-  await expect(canvas).toHaveCount(1);
-  await expect(canvas).toHaveAttribute('aria-hidden', 'true');
-  await expect(canvas).toHaveAttribute('tabindex', '-1');
-  expect(await canvas.evaluate((element) => getComputedStyle(element).pointerEvents)).toBe('none');
-}
+const mode = instrumentMode;
+const recede = recedeValue;
+// Polling budget for eased values: SwiftShader frames are 100-180 ms and parallel workers share
+// the CPU, so a fixed 5 s default flakes under load (plan W2 follow-up 3). Thresholds unchanged.
+const EASE = { timeout: 20_000 } as const;
 
 async function expectStatic(page: Page) {
   await page.waitForLoadState('load');
   await page.waitForTimeout(1_500);
   expect(await mode(page)).toBe('static');
   await expect(page.locator('canvas')).toHaveCount(0);
-}
-
-async function centreChapter(page: Page, chapter: (typeof CHAPTERS)[number]) {
-  await page.evaluate((id) => {
-    const rect = document.querySelector(`section[data-instrument-chapter="${id}"]`)!.getBoundingClientRect();
-    window.scrollBy(0, rect.top + rect.height / 2 - window.innerHeight / 2);
-  }, chapter);
 }
 
 test.describe('Sky Chart runtime', () => {
@@ -107,7 +62,7 @@ test.describe('Sky Chart runtime', () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.en.route));
     await expectActive(page);
-    await expect.poll(async () => (await debugHook(page))?.labelCount).toBe(20);
+    await expect.poll(async () => (await debugHook(page))?.labelCount, EASE).toBe(20);
     const hook = await debugHook(page);
     expect(hook?.labels).toContain('Orders');
     expect(hook?.labels).toContain('Hand over');
@@ -117,7 +72,7 @@ test.describe('Sky Chart runtime', () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.es.route));
     await expectActive(page);
-    await expect.poll(async () => (await debugHook(page))?.labelCount).toBe(20);
+    await expect.poll(async () => (await debugHook(page))?.labelCount, EASE).toBe(20);
     const hook = await debugHook(page);
     expect(hook?.labels).toContain('Pedidos');
     expect(hook?.labels).toContain('Entregar');
@@ -129,7 +84,7 @@ test.describe('Sky Chart runtime', () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.en.route));
     await expectActive(page);
-    await expect.poll(async () => (await debugHook(page))?.labelCount).toBe(20);
+    await expect.poll(async () => (await debugHook(page))?.labelCount, EASE).toBe(20);
     const hook = await debugHook(page);
     expect(hook?.drawCalls, 'draw calls: 1 graticule + 1 stars + 1 links + <=20 sprites + margin').toBeLessThanOrEqual(28);
     expect(hook?.labelTextureSizes).toHaveLength(20);
@@ -141,12 +96,13 @@ test.describe('Sky Chart runtime', () => {
   });
 
   test('scrolling forward and back gives the expected rendered chapter and reverses', async ({ page }) => {
+    test.slow(); // load-sensitive: software rendering shares the CPU with parallel workers
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.es.route));
     await expectActive(page);
     for (const chapter of [...CHAPTERS, ...[...CHAPTERS].reverse()]) {
       await centreChapter(page, chapter);
-      await expect.poll(() => renderedChapter(page)).toBe(chapter);
+      await expect.poll(() => renderedChapter(page), EASE).toBe(chapter);
     }
   });
 
@@ -156,7 +112,7 @@ test.describe('Sky Chart runtime', () => {
     await page.goto(appUrl(labels.en.route));
     await expectActive(page);
     await centreChapter(page, 'fragmentation');
-    await expect.poll(() => renderedChapter(page)).toBe('fragmentation');
+    await expect.poll(() => renderedChapter(page), EASE).toBe('fragmentation');
 
     // The T-06 damped ease (`t += (target - t) * 0.12`, snaps below |delta| 0.0005) takes a real,
     // variable number of frames to converge. From a fresh centre (delta ~0.3) that is ~50 frames,
@@ -184,12 +140,13 @@ test.describe('Sky Chart runtime', () => {
   });
 
   test('recede reaches 1 and rendering stops while a later section is in view', async ({ page }) => {
+    test.slow(); // load-sensitive: software rendering shares the CPU with parallel workers
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.es.route));
     await expectActive(page);
     await page.locator('#services').scrollIntoViewIfNeeded();
     await page.waitForTimeout(300);
-    await expect.poll(() => recede(page)).toBe('1');
+    await expect.poll(() => recede(page), EASE).toBe('1');
     const before = (await debugHook(page))?.renderCount ?? -1;
     await page.mouse.wheel(0, 200);
     await page.waitForTimeout(500);
@@ -198,11 +155,12 @@ test.describe('Sky Chart runtime', () => {
   });
 
   test('Pause freezes the frame and Resume recalculates from the document', async ({ page }) => {
+    test.slow(); // load-sensitive: software rendering shares the CPU with parallel workers
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.en.route));
     await expectActive(page);
     await centreChapter(page, 'fragmentation');
-    await expect.poll(() => renderedChapter(page)).toBe('fragmentation');
+    await expect.poll(() => renderedChapter(page), EASE).toBe('fragmentation');
 
     const pause = page.getByRole('button', { name: labels.en.pause });
     await pause.focus();
@@ -218,18 +176,19 @@ test.describe('Sky Chart runtime', () => {
 
     await resume.click();
     await expect(page.getByRole('button', { name: labels.en.pause })).toHaveAttribute('data-state', 'playing');
-    await expect.poll(() => renderedChapter(page)).toBe('coordination');
+    await expect.poll(() => renderedChapter(page), EASE).toBe('coordination');
   });
 
   // B3: while paused, recede and Pause visibility must keep tracking scroll -- only the camera
   // target freezes. Paused at Services (fully receded) must show recede=1 and low opacity;
   // paused at the top must keep the pill hidden over the hero.
   test('B3: while paused, recede and the pill visibility keep updating with scroll', async ({ page }) => {
+    test.slow(); // load-sensitive: software rendering shares the CPU with parallel workers
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.en.route));
     await expectActive(page);
     await centreChapter(page, 'fragmentation');
-    await expect.poll(() => renderedChapter(page)).toBe('fragmentation');
+    await expect.poll(() => renderedChapter(page), EASE).toBe('fragmentation');
 
     const pause = page.getByRole('button', { name: labels.en.pause });
     await pause.click();
@@ -240,7 +199,7 @@ test.describe('Sky Chart runtime', () => {
 
     await page.locator('#services').scrollIntoViewIfNeeded();
     await page.waitForTimeout(300);
-    await expect.poll(() => recede(page)).toBe('1');
+    await expect.poll(() => recede(page), EASE).toBe('1');
     // The scrim's opacity animates through an inline CSS transition, so a single read at a fixed
     // delay can land mid-transition (observed 0.883 and 0.650, both well above the 0.3 gate).
     // Poll the computed value instead of reading it once; the < 0.3 threshold is unchanged.
@@ -254,15 +213,16 @@ test.describe('Sky Chart runtime', () => {
   });
 
   test('resize keeps the active chapter instead of replaying the sequence', async ({ page }) => {
+    test.slow(); // load-sensitive: software rendering shares the CPU with parallel workers
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appUrl(labels.es.route));
     await expectActive(page);
     await centreChapter(page, 'connection');
-    await expect.poll(() => renderedChapter(page)).toBe('connection');
+    await expect.poll(() => renderedChapter(page), EASE).toBe('connection');
 
     await page.setViewportSize({ width: 390, height: 844 });
     await centreChapter(page, 'connection');
-    await expect.poll(() => renderedChapter(page)).toBe('connection');
+    await expect.poll(() => renderedChapter(page), EASE).toBe('connection');
     await expect(page.locator('canvas[data-sky-chart-canvas]')).toHaveCount(1);
   });
 
@@ -293,6 +253,7 @@ test.describe('Sky Chart runtime', () => {
   // N6: the optional Connection film stays withdrawn (ADR-SKY-CHART-HOMEPAGE-RUNTIME); no
   // video element or media request anywhere on the activated page.
   test('no video element or media request appears anywhere on the activated page', async ({ page }) => {
+    test.slow(); // load-sensitive: software rendering shares the CPU with parallel workers
     const media: string[] = [];
     page.on('request', (request) => {
       if (request.resourceType() === 'media' || /\.(mp4|webm|mov)(\?|$)/.test(request.url())) media.push(request.url());
@@ -301,7 +262,7 @@ test.describe('Sky Chart runtime', () => {
     await page.goto(appUrl(labels.es.route));
     await expectActive(page);
     await centreChapter(page, 'connection');
-    await expect.poll(() => renderedChapter(page)).toBe('connection');
+    await expect.poll(() => renderedChapter(page), EASE).toBe('connection');
     await expect(page.locator('video')).toHaveCount(0);
     expect(media).toEqual([]);
   });
@@ -365,10 +326,15 @@ test.describe('static fallbacks', () => {
     page.on('pageerror', (error) => uncaught.push(error.message));
     await allowSoftwareRenderer(page);
     await page.route('**/_next/static/chunks/**', async (route) => {
-      const response = await route.fetch();
-      const body = await response.text();
-      if (body.includes('webglcontextlost')) return route.abort();
-      return route.fulfill({ response, body });
+      try {
+        const response = await route.fetch();
+        const body = await response.text();
+        if (body.includes('webglcontextlost')) return await route.abort();
+        return await route.fulfill({ response, body });
+      } catch {
+        // A request still in flight when the page or test closes is disposed by Playwright.
+        return route.abort().catch(() => undefined);
+      }
     });
     await page.goto(appUrl(labels.es.route));
     await expectStatic(page);
@@ -376,6 +342,7 @@ test.describe('static fallbacks', () => {
   });
 
   test('forced context loss removes the canvas for the rest of the session, with no console error', async ({ page }) => {
+    test.slow(); // load-sensitive: software rendering shares the CPU with parallel workers
     const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
     await allowSoftwareRenderer(page);
     await page.setViewportSize({ width: 1440, height: 900 });

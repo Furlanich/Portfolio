@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
+import { gotoResilient } from './support/navigation';
 
 const navigationLabels = {
   es: {
@@ -61,7 +62,7 @@ for (const route of allRoutes) {
   test('renders one predictable Contact action and four navigation subjects on ' + route, async ({ page }, testInfo) => {
     test.skip(!desktopNavigationProjects.has(testInfo.project.name), 'desktop navigation is covered by the compact disclosure tests on narrow projects');
     const labels = localeFor(route);
-    await page.goto(appUrl(route));
+    await gotoResilient(page, appUrl(route));
 
     const header = page.getByRole('banner');
     const navigation = header.getByRole('navigation', { name: labels.navigation });
@@ -85,7 +86,7 @@ for (const route of detailRoutes) {
       ? route.replace('/en/work/', '/proyectos/')
       : route.replace('/proyectos/', '/en/work/');
 
-    await page.goto(appUrl(route));
+    await gotoResilient(page, appUrl(route));
 
     const footer = page.locator('footer');
     const languageSwitch = footer.locator('a[hreflang="' + labels.alternate + '"]');
