@@ -3,6 +3,8 @@ id: IA-SITE
 type: information-architecture
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
+  - RFC-SPF-REDESIGN-V1
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - PAGE-HOME
@@ -14,7 +16,7 @@ related:
   - PAGE-PRIVACY
   - CONTENT-LOCALIZATION
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-19
+last_verified: 2026-09-30
 ---
 
 # Information architecture
@@ -220,3 +222,32 @@ Exact direct-channel action wording is owned by D03. Other navigation labels abo
 ## Execution dependency clarification — 2026-09-17
 
 The [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/marketing-presentation-excellence-v1.md) records the T1–T6 delivery of accepted D06-IA work. D03 remains REJECTED: the Global notice explanation row is not executable, and direct-channel wording remains the existing Contact baseline. Stable navigation labels, footer grouping, locale equivalence and owner-approved page endings do not adopt the rejected global notice or Contact replacements.
+
+## SPF-V1 proposed Footer copy and route retirement
+
+**APPROVED by the owner — 2026-09-30, Revision 5 written specification and copy.** The owner requested definitive deletion of all three ES/EN project-detail pairs, with no compatibility pages or redirects; MPC stays on Founder; GRS and The-System are complete index dossiers. Footer copy/composition and the bounded route/runtime supersessions are approved. The actual route tree is still unchanged. See the [connected-studio specification](../design/services-projects-footer-v1.md) and [accepted RFC](../rfcs/services-projects-footer-redesign-v1.md).
+
+The target route set retains `/proyectos/` and `/en/work/`. GRS/The-System dossier fragments are `general-reservation-system` and `the-system` in both locales. Services evidence uses the index plus the GRS fragment. Language switching preserves a matching known dossier fragment; unknown fragments fall back to the equivalent index route. No new redirect/rewriting/hosting architecture is selected.
+
+MPC on Founder uses `https://github.com/Furlanich/MilkyPantsCheese-Administracion-` with “Ver código fuente” / “View source code”, preserving its 2021 educational, group and fictional-business context and current-runtime/relationship limitations. Retire its unused detail-only image only after proving consumer absence. Keep reusable GRS/The-System assets, stable evidence IDs, internal item records, immutable ADRs and historical review/plan evidence. Active route generation, navigation, content, locale helpers and verification must contain no link to a retired detail destination; negative absence checks may name them.
+
+### Proposed Footer wording
+
+**APPROVED — 2026-09-30.** The historical heading is retained for traceability.
+
+| Field | Spanish | English |
+| --- | --- | --- |
+| Conclusion headline | Dale un próximo paso a tu proyecto. | Give your project a next step. |
+| Conclusion introduction | Contanos qué necesitás construir, conectar o mejorar. Samuel Furlanich es el responsable técnico directo. | Tell us what you need to build, connect or improve. Samuel Furlanich is the directly accountable technical lead. |
+| WhatsApp action | Escribinos por WhatsApp | Write on WhatsApp |
+| Direct contact heading | Contacto directo | Direct contact |
+| Contact-route action | Información de contacto | Contact information |
+| Location/accountability | Buenos Aires, Argentina · Estudio liderado por su fundador | Buenos Aires, Argentina · Founder-led studio |
+| Privacy action | Privacidad | Privacy |
+| Navigation group 1 | Explorar | Explore |
+| Navigation group 2 | Responsabilidad directa | Direct accountability |
+| Pause background | Pausar fondo | Pause background |
+| Resume background | Reanudar fondo | Resume background |
+| Focused control after fallback | Fondo estático | Static background |
+
+Existing navigation labels and direct-channel values remain those approved in D06-IA. The contact hierarchy is WhatsApp first, followed by email, phone and the localized Contact route. Footer copy proposes a direct-channel invitation; it does not activate the simulated form, promise a response/SLA, adopt the rejected D03 notice/form redesign or introduce a context-prefill feature. Copyright stays `© {build year} FURLANICH`; locale controls use equivalent page routes. On Projects, retain a recognized dossier fragment during locale changes.

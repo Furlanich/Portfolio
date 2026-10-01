@@ -1,0 +1,50 @@
+[
+  {
+    "width": 1440,
+    "lang": "es",
+    "surface": "services",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "lang": "es",
+    "surface": "projects",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "lang": "en",
+    "surface": "services",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "lang": "en",
+    "surface": "projects",
+    "violations": []
+  },
+  {
+    "width": 320,
+    "lang": "es",
+    "surface": "services",
+    "violations": []
+  },
+  {
+    "width": 320,
+    "lang": "es",
+    "surface": "projects",
+    "violations": []
+  },
+  {
+    "width": 320,
+    "lang": "en",
+    "surface": "services",
+    "violations": []
+  },
+  {
+    "width": 320,
+    "lang": "en",
+    "surface": "projects",
+    "violations": []
+  }
+]

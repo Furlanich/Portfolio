@@ -1,0 +1,183 @@
+{
+  "errors": [],
+  "results": [
+    {
+      "hover": {
+        "transform": "matrix(1, 0, 0, 1, 0, -3)",
+        "border": "rgb(111, 168, 224)"
+      }
+    },
+    {
+      "keyboardAnchor": {
+        "hash": "#web",
+        "targetY": 108.015625,
+        "canvasTabIndex": -1
+      }
+    },
+    {
+      "mobileScene": {
+        "surface": "services",
+        "status": "live",
+        "frames": 70,
+        "progress": 0,
+        "chapter": -1,
+        "drawCalls": 7,
+        "dpr": 1,
+        "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "contexts": 1,
+        "worldX": 0.9018688925026094,
+        "nodeCoordinates": [
+          [
+            -3.6,
+            3.02,
+            -1.8
+          ],
+          [
+            -0.675,
+            3.643,
+            -0.276
+          ],
+          [
+            2.956,
+            2.411,
+            -1.095
+          ],
+          [
+            -3.232,
+            -0.008,
+            0.614
+          ],
+          [
+            -0.271,
+            0.611,
+            -0.751
+          ],
+          [
+            3.444,
+            0.015,
+            0.731
+          ],
+          [
+            -2.924,
+            -2.727,
+            -1.497
+          ],
+          [
+            0.203,
+            -3.462,
+            0.408
+          ],
+          [
+            3.527,
+            -2.818,
+            -2.119
+          ]
+        ],
+        "connectionLengths": [
+          71,
+          62,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "phase": 0
+      }
+    },
+    {
+      "contextLoss": {
+        "canvases": 0,
+        "sessionSuppressed": true,
+        "dossiers": 2
+      }
+    },
+    {
+      "lossRouteSwitch": {
+        "canvases": 0,
+        "chapters": 3
+      }
+    },
+    {
+      "kind": "saveData",
+      "fallback": {
+        "canvases": 0,
+        "dossiers": 2,
+        "h1": "Trabajo que podés examinar."
+      }
+    },
+    {
+      "kind": "noWebGL",
+      "fallback": {
+        "canvases": 0,
+        "dossiers": 2,
+        "h1": "Trabajo que podés examinar."
+      }
+    },
+    {
+      "kind": "moduleFailure",
+      "fallback": {
+        "canvases": 0,
+        "dossiers": 2,
+        "h1": "Trabajo que podés examinar."
+      }
+    },
+    {
+      "kind": "defaultSoftware",
+      "fallback": {
+        "canvases": 0,
+        "dossiers": 2,
+        "h1": "Trabajo que podés examinar."
+      }
+    },
+    {
+      "initialReduced": {
+        "threeRequests": 0,
+        "canvases": 0
+      }
+    },
+    {
+      "noJS": {
+        "lang": "es",
+        "surface": "services",
+        "h1": 1,
+        "chapters": 3,
+        "canvases": 0,
+        "overflow": false
+      }
+    },
+    {
+      "noJS": {
+        "lang": "es",
+        "surface": "projects",
+        "h1": 1,
+        "chapters": 2,
+        "canvases": 0,
+        "overflow": false
+      }
+    },
+    {
+      "noJS": {
+        "lang": "en",
+        "surface": "services",
+        "h1": 1,
+        "chapters": 3,
+        "canvases": 0,
+        "overflow": false
+      }
+    },
+    {
+      "noJS": {
+        "lang": "en",
+        "surface": "projects",
+        "h1": 1,
+        "chapters": 2,
+        "canvases": 0,
+        "overflow": false
+      }
+    }
+  ]
+}

@@ -3,16 +3,21 @@ id: PROJECT-INVENTORY
 type: product-record
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - PROJECT-EVIDENCE
   - PAGE-PROJECTS
   - PAGE-PROJECT-DETAIL
   - SERVICE-WEB
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-last_verified: 2026-09-16
+last_verified: 2026-09-30
 ---
 
 # Project evidence inventory
+
+## Current presentation target — APPROVED 2026-09-30
+
+The [SPF-V1 specification](../../design/services-projects-footer-v1.md) supersedes the card/detail columns below as placement targets: GRS and The-System become complete index dossiers; MPC remains Founder-only educational context with its approved source action; all six localized detail destinations retire without redirects. The three READY evidence states, maturity/relationship/publication limits and Home ineligibility remain unchanged. The table below preserves prior launch approval, not new route authorization. No production cleanup is performed in this planning session.
 
 This directory contains the item-level evidence records governed by [PROJECT-EVIDENCE](../project-evidence.md). A public repository, reachable URL, legacy portfolio entry, or stored screenshot is evidence to audit; none of those facts grants publication permission or proves production delivery by itself.
 

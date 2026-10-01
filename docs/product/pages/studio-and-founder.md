@@ -3,6 +3,8 @@ id: PAGE-STUDIO
 type: page-spec
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
+  - RFC-SPF-REDESIGN-V1
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - PAGE-FOUNDER
@@ -15,10 +17,14 @@ related:
   - DESIGN-IX-A11Y
   - PAGE-PROJECTS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-19
+last_verified: 2026-09-30
 ---
 
 # Studio and founder pages
+
+## SPF-V1 Founder alignment — target decision approved, presentation proposed
+
+**APPROVED — 2026-09-30.** The owner approved Revision 5 and its linked copy, including MPC on Founder and definitive retirement of all localized project-detail routes. The [approved connected-studio design](../../design/services-projects-footer-v1.md) preserves MPC's existing 2021 educational, group and fictional-business context, relationship limitations and unverified-current-runtime qualification. Replace its detail-page action with “Ver código fuente” / “View source code” to the already approved `https://github.com/Furlanich/MilkyPantsCheese-Administracion-`. No sole-author, client, production or FURLANICH-delivery claim is added. Application routes and this action remain unchanged in the design/planning session. Other Founder/Studio requirements remain operative.
 
 ## PAGE-STUDIO responsibility — APPROVED
 
