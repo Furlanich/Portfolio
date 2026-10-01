@@ -3,6 +3,10 @@ id: GOV-STATUS
 type: decision-register
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
+  - RFC-SPF-REDESIGN-V1
+  - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
+  - PLAN-SPF-V1
   - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
@@ -40,10 +44,14 @@ related:
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
-last_verified: 2026-09-24
+last_verified: 2026-09-30
 ---
 
 # Product knowledge status register
+
+## Services, Projects and Footer — 2026-09-30
+
+**APPROVED:** [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) Revision 5 and linked exact bilingual copy, Atlas hierarchy, complete dossiers, definitive six-URL retirement, MPC on Founder, simplified capable-phone live field, protected whole-mark Azure Footer and bounded [RFC-SPF-REDESIGN-V1](../rfcs/services-projects-footer-redesign-v1.md)/[runtime ADR](../decisions/connected-studio-page-runtime.md) exceptions. Owner explicitly authorized ADE v2 planning/independent review and approved the plan's [Sonnet/Luna/Sol model routing](../plans/active/services-projects-footer-v1.md#model-routing). **PROPOSED:** [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md), awaiting human approval after independent Sol round3 found no issues; the prior Luna review resolved both original findings. Production is unchanged; human governance/implementation merges remain mandatory. Physical-device, cross-browser, screen-reader and production budget acceptance remain implementation gates, not prototype-derived PASS.
 
 This register summarizes status. Detailed requirements remain authoritative in their owning documents.
 

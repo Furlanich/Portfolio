@@ -3,6 +3,8 @@ id: DESIGN-VISUAL
 type: design-spec
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
+  - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
@@ -26,10 +28,14 @@ related:
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
-last_verified: 2026-09-24
+last_verified: 2026-09-30
 ---
 
 # Visual language
+
+## Services, Projects and Footer exception — APPROVED 2026-09-30
+
+[DESIGN-SPF-V1](services-projects-footer-v1.md) and its linked exact ES/EN copy were approved after Revision 5 exploration. Its bounded supersession table governs Atlas Services, complete inline dossiers with the two permitted conceptual images, connected deep-chart backgrounds and the whole protected-mark Azure Footer. For these named surfaces only, it replaces earlier light/card/detail-only placement and static-motion constraints. Home/App Bar, protected mark geometry, evidence limits and every requirement outside that table remain authoritative. [ADR-CONNECTED-STUDIO-PAGE-RUNTIME](../decisions/connected-studio-page-runtime.md) records the partial runtime extension. Production is unimplemented in this design/planning session; historical sections below retain the earlier baseline.
 
 ## Approved communication principles
 
