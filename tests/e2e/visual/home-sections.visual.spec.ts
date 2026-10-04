@@ -14,6 +14,11 @@ import { appUrl, stableRoutes } from '../support/paths';
 // the viewport is taken in tiles, and the bar would land at a different offset inside each tile;
 // the bar has its own baselines (studio, founder and services-projects) and its own assertions
 // (`app-bar.spec.ts`).
+//
+// The fixed D-23 poster is hidden too (the D-02 ground gradient stays). These sections are
+// transparent, so each capture would otherwise contain whichever slice of the viewport-fixed
+// poster sits behind it, and any height change above a section would re-baseline every section
+// below it. The poster has its own coverage in `immersive-home-static.visual.spec.ts`.
 
 const locales = [
   { name: 'spanish', route: stableRoutes.home.es, processId: 'proceso' },
@@ -35,7 +40,7 @@ for (const locale of locales) {
         await page.setViewportSize(viewport);
         await page.goto(appUrl(locale.route));
         await page.locator('nextjs-portal').evaluateAll((portals) => portals.forEach((portal) => portal.remove()));
-        await page.addStyleTag({ content: 'header[data-app-bar] { visibility: hidden !important; }' });
+        await page.addStyleTag({ content: 'header[data-app-bar] { visibility: hidden !important; } [data-environment-poster] { display: none !important; }' });
         await page.evaluate(() => document.fonts.ready);
         // The Position fix toggle upgrades after hydration; capture only once it has.
         await page.locator('#impact [role="group"] button').first().waitFor();
