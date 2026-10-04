@@ -170,12 +170,13 @@ test.describe('journey matrix', () => {
 // Backdrop-filter budget (D-08; section 14: "<=3 per viewport, App Bar excluded", measured by an
 // "E2E DOM scan at each section"), with the enhancement on.
 //
-//   - The GATE scans each section aligned under the App Bar and centred, at every width.
-//   - The SWEEP scans every half-viewport of scroll. D-08 says "no viewport may intersect more than
-//     three", and between two sections the viewport straddles both: Problems' three sheets plus
-//     Services' plates, or Services' plates plus Position fix's two sheets, reach 4-5 surfaces for a
-//     few hundred pixels of scroll. That transient overshoot is recorded as an owner decision in the
-//     PR (escalation E1); the sweep pins today's worst case so it cannot grow unnoticed.
+//   - The GATE (the per-section gate, owner decision E1, 2026-10-04: D-08 is reworded to it) scans
+//     each section aligned under the App Bar and centred, at every width, and allows at most 3.
+//   - The SWEEP is INFORMATIONAL, a regression guard and not a gate. It scans every half-viewport of
+//     scroll; between two sections the viewport straddles both (Problems' three sheets plus Services'
+//     plates, or Services' plates plus Position fix's two sheets), so a few hundred pixels of scroll
+//     can reach 4-5 surfaces. The sweep is capped at 5 only so that count cannot grow unnoticed; it
+//     says nothing about D-08.
 // ---------------------------------------------------------------------------------------------
 const TRANSIENT_BACKDROP_CEILING = 5;
 
@@ -203,7 +204,7 @@ test.describe('backdrop-filter budget', () => {
         expect(seen, 'the scan actually sees the surfaces').toBeGreaterThan(0);
       });
 
-      test(`${locale} at ${label(viewport)}: the transient count between sections never exceeds the recorded worst case`, async ({ page }, testInfo) => {
+      test(`${locale} at ${label(viewport)}: informational sweep: the transient count between sections stays within the regression cap of 5`, async ({ page }, testInfo) => {
         await allowSoftwareRenderer(page);
         await page.setViewportSize(viewport);
         await gotoHome(page, locale);
