@@ -35,7 +35,8 @@ export default defineConfig({
     reuseExistingServer: !isCI,
     timeout: 120_000,
   },
-  projects: [
+  // TEMPORARY (throwaway branch, never merged): visual-chromium only, to capture Linux baselines for PR #92.
+  projects: ([
     {
       name: 'chromium-desktop',
       testMatch: [
@@ -126,5 +127,5 @@ export default defineConfig({
         viewport: { width: 1440, height: 900 },
       },
     },
-  ],
+  ] as const).filter((project) => project.name === 'visual-chromium'),
 });
