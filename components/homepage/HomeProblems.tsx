@@ -85,7 +85,7 @@ export function HomeProblems({ content, readout, actionHref }: HomeProblemsProps
               >
                 <CockedHatGlyph linesPath={sheet.linesPath} trianglePath={sheet.trianglePath} />
                 <div>
-                  <span aria-hidden="true" className="font-mono text-[15px] text-foundation-action">
+                  <span aria-hidden="true" data-bayer-letter className="font-[Georgia,'Times_New_Roman','Noto_Serif',serif] text-[17px] leading-none text-foundation-action">
                     {sheet.letter}
                   </span>
                   <p className="mt-1.5 text-[clamp(19px,1.7vw,23px)] leading-[1.35] text-foundation-ink">{situation}</p>
