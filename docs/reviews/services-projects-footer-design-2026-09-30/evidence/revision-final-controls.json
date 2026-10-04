@@ -1,0 +1,14 @@
+{
+  "enhancementLayoutMovement": 0,
+  "focusedFallback": {
+    "focus": "pause-scene",
+    "label": "Static background",
+    "inactive": "true",
+    "canvases": 0
+  },
+  "retainedBoundaries": {
+    "specific": 3,
+    "commercial": "Commercial boundaries",
+    "items": 5
+  }
+}

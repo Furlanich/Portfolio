@@ -3,6 +3,7 @@ id: PROJECTS-EXPERIENCE-CLOSURE
 type: product-design-spec
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - PROJECT-EVIDENCE
   - PAGE-PROJECTS
@@ -11,10 +12,14 @@ related:
   - CONTENT-LOCALIZATION
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
-last_verified: 2026-09-16
+last_verified: 2026-09-30
 ---
 
 # Projects and evidence experience
+
+## Current target supersession — APPROVED 2026-09-30
+
+[DESIGN-SPF-V1](../../design/services-projects-footer-v1.md) and the exact [Projects SPF-V1 copy](../pages/projects.md#spf-v1-proposed-projects-copy-and-inline-presentation) govern the two complete index dossiers, conceptual-image placement, six retired detail destinations and optional labeled background. MPC remains accurate educational context on Founder. This narrowly replaces the earlier card/detail composition and decorative-motion restrictions below, retaining all source, relationship, maturity, limitations and publication guardrails. The prior launch copy/delivered baseline remains historical; the target is not yet implemented.
 
 This record closes the product, content, layout, imagery, filtering, detail-page, accessibility, and performance decisions for the Projects experience. The inventory authorizes a public bilingual Projects index with three limited, image-free cards and three paired summary-only detail pages. The fail-closed content contract remains the publication boundary; only item records explicitly marked `READY` or `READY-SUMMARY-ONLY` may enter its public manifest.
 

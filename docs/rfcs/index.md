@@ -3,6 +3,8 @@ id: RFC-INDEX
 type: rfc-index
 status: APPROVED
 related:
+  - RFC-SPF-REDESIGN-V1
+  - DESIGN-SPF-V1
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
@@ -17,10 +19,14 @@ related:
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
-last_verified: 2026-09-24
+last_verified: 2026-09-30
 ---
 
 # RFCs
+
+## Proposed connected studio redesign
+
+- [RFC-SPF-REDESIGN-V1](services-projects-footer-redesign-v1.md): **APPROVED — 2026-09-30** with [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) and its exact linked bilingual copy. Atlas Services, two complete inline Projects dossiers, definitive retirement of six localized detail destinations, MPC on Founder, optional connected background WebGL and protected-mark Azure Footer. ADE v2 planning/independent review are authorized; production remains unchanged. Governance PR, plan approval and human merges remain required; historical ADRs/evidence are preserved.
 
 An RFC is a consequential product or architectural proposal that requires agreement before implementation. Keep the RFC in this directory and use [the template](template.md). Give it a stable ID, an explicit `PROPOSED`, `APPROVED`, or `REJECTED` status, and links to the affected requirements.
 

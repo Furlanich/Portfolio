@@ -3,13 +3,16 @@ id: PROJECT-MPC-ADMIN
 type: project-evidence-record
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - PROJECT-EVIDENCE
   - SERVICE-WEB
-last_verified: 2026-09-16
+last_verified: 2026-09-30
 ---
 
 # MPC Administración
+
+**Placement supersession — APPROVED 2026-09-30:** [SPF-V1](../../design/services-projects-footer-v1.md) keeps MPC on Founder with its approved external source action and retires both detail URLs without redirects. Preserve 2021 educational/group/fictional-business context, evidence status, relationship and current-runtime limits; no client, sole-author or FURLANICH-delivery claim. Remove its public concept only after consumer absence; provenance below stays historical. Implementation is pending.
 
 ## Identity and decision
 

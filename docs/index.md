@@ -3,6 +3,11 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - PLAN-SPF-V1
+  - REVIEW-SPF-PLAN-2026-09-30
+  - DESIGN-SPF-V1
+  - RFC-SPF-REDESIGN-V1
+  - REVIEW-SPF-DESIGN-2026-09-30
   - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
@@ -32,7 +37,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-23
+last_verified: 2026-09-30
 ---
 
 # FURLANICH project knowledge
@@ -67,6 +72,10 @@ Front matter records the overall governance status of a document. In mixed-statu
 - [Domain glossary](../CONTEXT.md): canonical project-specific terminology.
 
 ## Current documentation stage
+
+The [Services/Projects/Footer design](design/services-projects-footer-v1.md) follows the merged Sky Chart Home/App Bar and the [Aureon comparison](reviews/aureon-comparison-2026-09-29.md). Its [review package](reviews/services-projects-footer-design-2026-09-30/index.md) contains three alternatives and the approved Revision 5 field: localized capability words, slow idle rotation and rapid fluid connections from the first scroll. On 2026-09-30 the owner approved the written specification and linked ES/EN copy, then authorized ADE v2 planning and independent review. [RFC-SPF-REDESIGN-V1](rfcs/services-projects-footer-redesign-v1.md) records the accepted narrow runtime/IA supersessions. Production remains unchanged; human plan approval and PR merges remain mandatory. Historical implementation descriptions below remain records of delivered baselines; they do not assert that route retirement is deployed.
+
+[PLAN-SPF-V1](plans/active/services-projects-footer-v1.md) is the ADE v2 handoff, **PROPOSED for human plan approval**, with [owner-approved Sonnet/Luna/Sol routing](plans/active/services-projects-footer-v1.md#model-routing). [Historical Luna review](reviews/services-projects-footer-plan-review-2026-09-30.md) verified the author's corrections in round2; independent GPT-6.1 Sol round3 reviewed the routing revision with no findings. Execution begins only after reviewed-plan approval and the human-merged Governance PR; physical-device and production acceptance remain required implementation gates.
 
 Stage A preserves product and design knowledge, and Stage B adds the lightweight engineering harness. Stage C accepted the homepage-foundation localized-routing architecture in [`ADR-STATIC-LOCALIZED-ROUTING`](decisions/static-localized-routing.md); [`PLAN-HOMEPAGE-FOUNDATION`](plans/completed/homepage-foundation.md) records its completed four-PR delivery.
 

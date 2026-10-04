@@ -3,6 +3,7 @@ id: ADR-INDEX
 type: adr-index
 status: APPROVED
 related:
+  - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - GOV-ENGINEERING-LIFECYCLE
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
@@ -11,7 +12,7 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-CONTACT-INQUIRY-PIPELINE
-last_verified: 2026-09-24
+last_verified: 2026-09-30
 ---
 
 # Architecture decision records
@@ -19,6 +20,8 @@ last_verified: 2026-09-24
 An ADR records a consequential architectural decision after it is accepted. Use [the template](template.md). Accepted ADRs use `APPROVED` status and remain immutable historical records. A changed decision gets a new ADR whose `supersedes` metadata identifies the earlier record; do not rewrite the earlier decision.
 
 ## Approved
+
+- [ADR-CONNECTED-STUDIO-PAGE-RUNTIME](connected-studio-page-runtime.md): **APPROVED decision intent — 2026-09-30**, after Revision 5 design/copy approval. Separate optional connected backgrounds on Services/Projects, complete index dossiers, six detail URLs retired and protected-mark Azure Footer. Partially extends Home-only WebGL scope; Home's own demand-only contract remains unchanged. Production is unimplemented; human governance/plan/PR gates remain required.
 
 - [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](sky-chart-homepage-runtime.md): the Sky Chart star-atlas environment restyle of the Home runtime — full-viewport fixed canvas portaled to `document.body`, `CanvasTexture` sprite text labels with explicit font loading, recede/suspend, and a locale-neutral static poster pair, keeping direct demand-rendered Three.js, the Framer Motion progress boundary and every retained production gate. It removes the derived Azure sculpture from the scene and withdraws the ADR's optional Connection-video permission. It supersedes ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE.
 

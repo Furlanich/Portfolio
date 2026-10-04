@@ -1,0 +1,18 @@
+{
+  "enhancementLayoutMovement": 0,
+  "captionOverlapsPause": false,
+  "normalPauseClickStopped": true,
+  "pausedRouteChangeFrames": 1,
+  "hiddenEventStopped": true,
+  "focusedFallback": {
+    "focus": "pause-scene",
+    "label": "Static background",
+    "inactive": "true",
+    "canvases": 0
+  },
+  "retainedBoundaries": {
+    "specific": 3,
+    "commercial": "Commercial boundaries",
+    "items": 5
+  }
+}

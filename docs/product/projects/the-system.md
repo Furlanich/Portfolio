@@ -3,13 +3,16 @@ id: PROJECT-THE-SYSTEM
 type: project-evidence-record
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - PROJECT-EVIDENCE
   - SERVICE-WEB
-last_verified: 2026-09-16
+last_verified: 2026-09-30
 ---
 
 # The-System
+
+**Placement supersession — APPROVED 2026-09-30:** [SPF-V1](../../design/services-projects-footer-v1.md) moves the complete permitted Lab/RPG story and exact conceptual illustration/caption to the Projects index dossier, fragment `the-system`. Both detail URLs retire; evidence scope, limitations, non-operational subscription model and unverified-current-runtime facts remain unchanged. Existing detail copy below remains source material/history; implementation is pending.
 
 ## Identity and decision
 
