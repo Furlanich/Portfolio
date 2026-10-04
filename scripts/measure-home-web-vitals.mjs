@@ -42,6 +42,7 @@ const root = process.cwd();
 const outDir = path.join(root, 'out');
 const argument = (name) => process.argv.find((value) => value.startsWith(`--${name}=`))?.split('=')[1];
 const JOURNEYS_PER_LOCALE = Number(argument('journeys') ?? 10);
+const ONLY_PROFILE = argument('profile'); // e.g. --profile=mobile
 const ENHANCED_JOURNEYS_PER_LOCALE = Number(argument('enhanced-journeys') ?? 5);
 // clsWholePageGood and clsWholePagePoor are the web-vitals CLS thresholds; clsFromEnhancement is the ADR gate.
 const GATES = { lcpP75Ms: 2500, inpP75Ms: 200, clsWholePageGood: 0.1, clsWholePagePoor: 0.25, clsFromEnhancement: 0, drawCallsPerFrame: 28, labelTextures: 20, idleFrames: 0, backdropSurfaces: 3 };
@@ -208,6 +209,7 @@ async function journey(browser, profile, locale, variant) {
     clsWholePage: layoutShift.wholePage,
     clsFromEnhancement: layoutShift.fromEnhancement,
     clsNotFromEnhancement: layoutShift.notFromEnhancement,
+    clsEnhancementDetail: layoutShift.enhancementDetail,
     backdropMax: backdrop.max,
     backdropSweepMax: backdrop.sweep.max,
     webgl,
@@ -221,6 +223,7 @@ const warnings = [];
 const max = (values) => Math.max(0, ...values);
 try {
   for (const [name, profile] of Object.entries(PROFILES)) {
+    if (ONLY_PROFILE && ONLY_PROFILE !== name) continue;
     report.profiles[name] = {};
     for (const variant of ['static', 'enhanced']) {
       const runs = variant === 'static' ? JOURNEYS_PER_LOCALE : ENHANCED_JOURNEYS_PER_LOCALE;

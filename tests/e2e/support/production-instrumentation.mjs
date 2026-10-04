@@ -220,6 +220,7 @@ export async function readLayoutShifts(page) {
       importStartMs: importStart === null ? null : Math.round(importStart),
       wholePage: +sum(shifts).toFixed(4),
       fromEnhancement: +sum(fromEnhancement).toFixed(4),
+      enhancementDetail: fromEnhancement.map((shift) => ({ value: +shift.value.toFixed(5), atMs: Math.round(shift.time), sources: shift.sources, sourceInEnhancement: shift.enhancement })),
       notFromEnhancement: shifts.filter((shift) => !fromEnhancement.includes(shift)).map((shift) => ({ value: +shift.value.toFixed(4), atMs: Math.round(shift.time), sources: shift.sources })),
     };
   });
