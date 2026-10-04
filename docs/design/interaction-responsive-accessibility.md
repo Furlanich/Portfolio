@@ -3,6 +3,8 @@ id: DESIGN-IX-A11Y
 type: design-spec
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
+  - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
   - REVIEW-IMMERSIVE-HOMEPAGE-PROTOTYPE-2026-09-19
@@ -24,10 +26,14 @@ related:
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
-last_verified: 2026-09-24
+last_verified: 2026-09-30
 ---
 
 # Interaction, responsive behavior, and accessibility
+
+## Connected-page exception — APPROVED 2026-09-30
+
+For Services/Projects and the shared Footer, [DESIGN-SPF-V1](services-projects-footer-v1.md) governs the accepted Revision 5 native-scroll, capped idle rotation, immediate connection response, accessible Pause/fallback, responsive/phone/occlusion behavior and known dossier-fragment locale navigation. It narrowly supersedes the earlier Home-only signature-motion and static Services/Projects rules. Home's demand-only controller remains unchanged. Complete server content, commercial/evidence boundaries, keyboard/focus, reduced motion, forced colors, static/failure parity and performance gates remain mandatory. Production acceptance is not established by prototype checks.
 
 ## Approved target behavior
 

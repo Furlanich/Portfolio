@@ -1,0 +1,185 @@
+{
+  "errors": [],
+  "results": [
+    {
+      "hover": {
+        "transform": "matrix(1, 0, 0, 1, 0, -3)",
+        "border": "rgb(111, 168, 224)"
+      }
+    },
+    {
+      "keyboardAnchor": {
+        "hash": "#web",
+        "targetY": 108.015625,
+        "canvasTabIndex": -1
+      }
+    },
+    {
+      "mobileScene": {
+        "surface": "services",
+        "status": "live",
+        "frames": 80,
+        "contexts": 1,
+        "drawCalls": 6,
+        "progress": 0.17123176694931097,
+        "chapter": -1,
+        "phase": 0.17123179822567008,
+        "worldX": 0,
+        "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "dpr": 1,
+        "nodeCount": 8,
+        "connectionCount": 13,
+        "labels": [
+          "Sitios web",
+          "Apps",
+          "Chatbots",
+          "Agentes",
+          "Automatización",
+          "Consultoría",
+          "Soporte",
+          "Modernización"
+        ],
+        "displayedProgress": 0.17123179822567008,
+        "activity": 0.00027626039782181197,
+        "rotation": 1.3795642729230686,
+        "nodeCoordinates": [
+          [
+            -2.0201,
+            4.7343,
+            0.1856
+          ],
+          [
+            1.9833,
+            4.0347,
+            1.3227
+          ],
+          [
+            -2.5153,
+            1.1941,
+            -1.2148
+          ],
+          [
+            2.1082,
+            1.4219,
+            -0.0817
+          ],
+          [
+            -1.9232,
+            -0.7673,
+            1.0151
+          ],
+          [
+            2.1584,
+            -0.7932,
+            -1.4295
+          ],
+          [
+            -1.8315,
+            -4.1447,
+            -0.1024
+          ],
+          [
+            1.9312,
+            -4.0656,
+            1.132
+          ]
+        ],
+        "activeConnections": 6,
+        "completeConnections": 1,
+        "motionState": "slow-rotation",
+        "fpsTarget": 20
+      }
+    },
+    {
+      "contextLoss": {
+        "canvases": 0,
+        "sessionSuppressed": true,
+        "dossiers": 2
+      }
+    },
+    {
+      "lossRouteSwitch": {
+        "canvases": 0,
+        "chapters": 3
+      }
+    },
+    {
+      "kind": "saveData",
+      "fallback": {
+        "canvases": 0,
+        "dossiers": 2,
+        "h1": "Trabajo que podés examinar."
+      }
+    },
+    {
+      "kind": "noWebGL",
+      "fallback": {
+        "canvases": 0,
+        "dossiers": 2,
+        "h1": "Trabajo que podés examinar."
+      }
+    },
+    {
+      "kind": "moduleFailure",
+      "fallback": {
+        "canvases": 0,
+        "dossiers": 2,
+        "h1": "Trabajo que podés examinar."
+      }
+    },
+    {
+      "kind": "defaultSoftware",
+      "fallback": {
+        "canvases": 0,
+        "dossiers": 2,
+        "h1": "Trabajo que podés examinar."
+      }
+    },
+    {
+      "initialReduced": {
+        "threeRequests": 0,
+        "canvases": 0
+      }
+    },
+    {
+      "noJS": {
+        "lang": "es",
+        "surface": "services",
+        "h1": 1,
+        "chapters": 3,
+        "canvases": 0,
+        "overflow": false
+      }
+    },
+    {
+      "noJS": {
+        "lang": "es",
+        "surface": "projects",
+        "h1": 1,
+        "chapters": 2,
+        "canvases": 0,
+        "overflow": false
+      }
+    },
+    {
+      "noJS": {
+        "lang": "en",
+        "surface": "services",
+        "h1": 1,
+        "chapters": 3,
+        "canvases": 0,
+        "overflow": false
+      }
+    },
+    {
+      "noJS": {
+        "lang": "en",
+        "surface": "projects",
+        "h1": 1,
+        "chapters": 2,
+        "canvases": 0,
+        "overflow": false
+      }
+    }
+  ]
+}

@@ -3,6 +3,8 @@ id: DESIGN-INDEX
 type: design-index
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
+  - RFC-SPF-REDESIGN-V1
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - ADR-PROGRESSIVE-IMMERSIVE-HOMEPAGE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
@@ -14,10 +16,16 @@ related:
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - PROJECTS-EXPERIENCE-CLOSURE
-last_verified: 2026-09-19
+last_verified: 2026-09-30
 ---
 
 # Design documentation
+
+## Services, Projects and Footer — proposed connected studio
+
+[DESIGN-SPF-V1](services-projects-footer-v1.md) is **APPROVED — 2026-09-30**, including linked ES/EN copy, Atlas Services, complete inline Projects dossiers, connected scroll backgrounds and protected-mark Azure Footer. [RFC-SPF-REDESIGN-V1](../rfcs/services-projects-footer-redesign-v1.md) records the accepted narrow runtime/route/placement supersessions. [Design exploration](../reviews/services-projects-footer-design-2026-09-30/index.md) records three alternatives and the approved Revision 5 field: localized node words, slow idle rotation and rapid fluid connections from the first scroll. The owner authorized ADE v2 planning and independent review; production remains unchanged.
+
+The written-spec gate is closed for the bounded SPF-V1 supersessions. Earlier approved baselines remain operative where SPF-V1 does not set a target. SPF-V1 preserves the approved Sky Chart Home/App Bar and does not record Home manual acceptance as complete.
 
 The homepage-foundation, complete commercial-homepage, Services, Projects/Evidence, Studio/Founder, and Contact baselines are approved. Visual Identity v1 also approves the core mark, palette, typography and signature homepage motion direction for prototype validation. Optical refinement, measured activation thresholds and design-system details outside the named v1 scope remain OPEN. These documents distinguish approved requirements, existing implementation and later decisions.
 

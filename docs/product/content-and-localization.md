@@ -3,6 +3,7 @@ id: CONTENT-LOCALIZATION
 type: content-strategy
 status: PROPOSED
 related:
+  - DESIGN-SPF-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - BRAND-POSITIONING
   - IA-SITE
@@ -16,10 +17,14 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-16
+last_verified: 2026-09-30
 ---
 
 # Content and localization
+
+## Connected-page copy and fragments — APPROVED 2026-09-30
+
+[DESIGN-SPF-V1](../design/services-projects-footer-v1.md) and linked owning SPF-V1 tables approve the exact Services/Projects/Footer ES/EN copy and eight capability words. Preserve the three family IDs and existing localized service/process fragments. Projects locale switching retains only recognized `general-reservation-system` or `the-system` fragments; unknown fragments use the equivalent index. Both dossier languages retain complete permitted evidence/limitations/concept captions; MPC's Founder action uses the approved source. No inferred translation or publication permission is added. Document-wide PROPOSED status remains unchanged for unrelated open content strategy.
 
 ## Language priority — APPROVED
 

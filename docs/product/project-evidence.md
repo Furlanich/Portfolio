@@ -3,6 +3,7 @@ id: PROJECT-EVIDENCE
 type: product-spec
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - PAGE-PROJECTS
   - PAGE-PROJECT-DETAIL
@@ -11,10 +12,14 @@ related:
   - SERVICE-WHATSAPP
   - SERVICE-CONSULTING
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-last_verified: 2026-09-16
+last_verified: 2026-09-30
 ---
 
 # Project evidence inventory
+
+## Placement and route supersession — APPROVED 2026-09-30
+
+[DESIGN-SPF-V1](../design/services-projects-footer-v1.md) and the owning [Projects SPF-V1 block](pages/projects.md#spf-v1-proposed-projects-copy-and-inline-presentation) replace the card/detail navigation target with complete GRS and The-System index dossiers, stable fragments and definitive retirement of all six localized detail URLs. Their exact approved conceptual assets/captions may appear in those dossiers. MPC retains its evidence status and educational/group/fictional context on Founder with the approved source action. This changes placement, not permission, maturity, authorship, current execution or Home eligibility. Other guardrails remain effective; historical detail rules below record the prior baseline. Implementation/cleanup is pending the reviewed plan and human merges.
 
 ## Purpose
 

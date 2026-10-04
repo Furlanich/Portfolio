@@ -3,6 +3,8 @@ id: PAGE-SERVICES
 type: page-spec
 status: APPROVED
 related:
+  - DESIGN-SPF-V1
+  - RFC-SPF-REDESIGN-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - AUDIENCES-SERVICES
   - SERVICE-WEB
@@ -17,7 +19,7 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-SERVICES-EXPERIENCE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-16
+last_verified: 2026-09-30
 ---
 
 # Services page
@@ -785,3 +787,80 @@ Place the service-specific boundary before that service's evidence/CTA. Keep sha
 The complete existing approved **Límites comerciales / Commercial boundaries** block remains visible verbatim after the new shared-working summary: price/timing after scoping; no metric/fixed-time/continuous-availability guarantee; external hosting/domain/license/payment/messaging/API/subscription costs; client-authorized content/data/access/accounts/decisions/validation; separate maintenance/scope-change/support agreements; inquiry response versus support SLA; and contract-specific payment/acceptance/ownership/warranty/liability subject to review. This task does not rewrite legal/commercial terms. The summary is introductory, not a substitute for that retained block. The six old principle cards are consolidated into starting-point, fit, shared-working and boundary prose; direct technical responsibility and proportionate maintainability/documentation remain in the shared content.
 
 **Decision D05-SERVICES recorded:** scan order, replacements and boundary coverage are APPROVED together. The approximately 900–1,200-word review target remains a validation guide, not a mandate to cut necessary disclosures. Exact full-page assembly and content-driven height require implementation review. No price, timeline, free assessment, client result or support SLA is introduced.
+
+## SPF-V1 proposed Services copy
+
+**APPROVED — 2026-09-30, Revision 5.** Exact target wording for the [approved connected-studio design specification](../../design/services-projects-footer-v1.md). The owner approved the written design/copy and authorized ADE v2 planning. Earlier wording records the delivered baseline where superseded; the target remains unimplemented. No fixed package, fee, free assessment, support SLA, verified-client result or fully autonomous AI offering is added. Keep the three service IDs and all four localized fragments, including `condiciones` / `working-boundaries`. Existing commercial, publication and authorized-access boundaries remain effective.
+
+| Field | Spanish | English |
+| --- | --- | --- |
+| H1 | Software para que el trabajo avance. | Software that moves work forward. |
+| Introduction | Sitios, aplicaciones e integraciones para resolver necesidades concretas. Empezamos por el problema y acordamos qué construir, conectar o mejorar. | Websites, applications and integrations for concrete needs. We start with the problem and agree what to build, connect or improve. |
+| Service-index action | Encontrá tu punto de partida | Find your starting point |
+| Service 1: family | Sitios y aplicaciones web | Websites and web applications |
+| Service 1: chapter headline | Una interfaz clara para el negocio. | A clear interface for the business. |
+| Service 1: outcome | Un sitio comercial, un portal o una aplicación según el problema. | A business website, portal or application shaped around the problem. |
+| Service 1: delivery | Un sitio o aplicación, recorridos acordados y documentación proporcional al alcance. | A website or application, agreed journeys and documentation proportionate to scope. |
+| Service 1: evidence | Evidencia disponible: prototipo de reservas, con código público y ejecución actual no revalidada. | Available evidence: reservation prototype, with public code and current execution not revalidated. |
+| Service 1: Contact action | Contanos qué necesitás resolver | Tell us what you need to solve |
+| Service 1: catalogue summary | Una presencia clara. Una operación más simple. | A clear presence. Simpler operations. |
+| Service 1: Situaciones habituales | Publicar una oferta; gestionar reservas o pedidos; coordinar información en una aplicación. | Publish an offer; manage bookings or orders; coordinate information in an application. |
+| Service 1: Punto de partida | El objetivo, los recorridos principales y los datos necesarios. | The objective, main journeys and data required. |
+| Service 1: Alcance acordado | Hosting, licencias e integraciones se definen según lo que el proyecto necesita. | Hosting, licenses and integrations are defined around the project’s needs. |
+| Service 2: family | Integraciones y automatización | Integrations and automation |
+| Service 2: chapter headline | Las herramientas dejan de trabajar aisladas. | Tools stop working in isolation. |
+| Service 2: outcome | Flujos y datos conectados para reducir traspasos manuales. | Connected workflows and data to reduce manual handoffs. |
+| Service 2: delivery | Un flujo integrado, sus límites y una forma acordada de comprobarlo. | An integrated workflow, its boundaries and an agreed way to check it. |
+| Service 2: evidence | No se publica actualmente un caso verificado de este servicio. El modelo de fondo es ilustrativo. | No verified case is currently published for this service. The background model is illustrative. |
+| Service 2: Contact action | Contanos qué necesitás resolver | Tell us what you need to solve |
+| Service 2: catalogue summary | Menos traspasos manuales. | Fewer manual handoffs. |
+| Service 2: Situaciones habituales | Información que se copia entre herramientas; pedidos o consultas que se pierden entre mensajes. | Information copied between tools; orders or questions lost between messages. |
+| Service 2: Punto de partida | Mapear el flujo actual y comprobar acceso a herramientas, APIs y datos. | Map the existing workflow and check access to tools, APIs and data. |
+| Service 2: Alcance acordado | WhatsApp requiere un proveedor habilitado y aprobaciones. Definimos qué se automatiza y dónde interviene una persona. | WhatsApp requires an eligible provider and approvals. Define what is automated and where a person takes over. |
+| Service 3: family | Mejora de software existente | Improve existing software |
+| Service 3: chapter headline | Un sistema que puede seguir evolucionando. | A system that can keep evolving. |
+| Service 3: outcome | Diagnóstico, mantenimiento y modernización con prioridades claras. | Diagnosis, maintenance and modernization with clear priorities. |
+| Service 3: delivery | Un diagnóstico acotado, mejoras priorizadas y próximos pasos acordados. | A bounded diagnosis, prioritized improvements and agreed next steps. |
+| Service 3: evidence | No se publica actualmente un caso verificado de este servicio. El modelo de fondo es ilustrativo. | No verified case is currently published for this service. The background model is illustrative. |
+| Service 3: Contact action | Contanos qué necesitás resolver | Tell us what you need to solve |
+| Service 3: catalogue summary | Mejorá lo que ya tenés. | Build on what you already have. |
+| Service 3: Situaciones habituales | Errores recurrentes, tareas lentas, software heredado o una integración que necesita continuidad. | Recurring errors, slow tasks, legacy software or an integration that needs continuity. |
+| Service 3: Punto de partida | Revisar el código, el entorno y el problema. Acordar primero una intervención acotada. | Review the code, environment and problem. Agree on a bounded intervention first. |
+| Service 3: Alcance acordado | Definimos prioridades, responsabilidades y una modalidad de soporte o mantenimiento adecuada. | Define priorities, responsibilities and a suitable support or maintenance arrangement. |
+| Working principles heading | Alcance claro. Entregas revisables. | Clear scope. Reviewable delivery. |
+| Working principle 1 | Definimos responsabilidades, recorridos y criterios de aceptación antes de construir. | Agree on responsibilities, journeys and acceptance criteria before building. |
+| Working principle 2 | La documentación y el traspaso son proporcionales al alcance. Mantenimiento y soporte se acuerdan de forma explícita. | Documentation and handover are proportionate to scope. Maintenance and support are agreed explicitly. |
+| Working principle 3 | IA cuando aporta una función concreta, con sus límites y supervisión definidos. No es una promesa de automatización total. | AI where it serves a specific function, with defined limits and oversight. It is not a promise of total automation. |
+| Catalogue action | Explorar el servicio | Explore the service |
+| Delivery label | Qué recibís | What you receive |
+| GRS evidence action | Examinar el prototipo de reservas | Examine the reservation prototype |
+| Scene caption | Capacidades conectadas · modelo ilustrativo | Connected capabilities · illustrative model |
+
+All service inquiry actions retain the localized Contact destination and its current demonstration disclosure. The GRS evidence action changes to the complete Projects-index dossier anchor; it never points to a retired detail URL. Backend/API work belongs within application/integration scope; consulting, maintenance and support describe engagement fit rather than additional equal catalogue cards.
+
+Retain the approved D05 compressed service boundaries verbatim before each evidence/action, with “Ver condiciones de trabajo” / “Read working boundaries” linked to the localized working-boundaries fragment. Retain the approved shared working agreement, AI/ERP scope and the full existing **Límites comerciales / Commercial boundaries** block visibly after the three proposed principle paragraphs. The short proposed wording above adds scan hierarchy; it does not replace these approved disclosures.
+
+### Revision 5 capability words — proposed exact localized copy
+
+**APPROVED — 2026-09-30.** The historical heading slug is retained for links.
+
+The owner requested capability words on every scene node and specifically named the eight English examples below. These are vocabulary within the three families, not a replacement eight-card service hierarchy. A semantic legend renders the same words, in this order, separated by ` · `; graphic labels are decorative. Both Services and Projects use the same localized vocabulary. The scene's connections do not claim delivered customer systems or project-specific capabilities.
+
+| Spanish node word | English node word |
+| --- | --- |
+| Sitios web | Websites |
+| Apps | Apps |
+| Chatbots | Chatbots |
+| Agentes | Agents |
+| Automatización | Automation |
+| Consultoría | Consulting |
+| Soporte | Support |
+| Modernización | Modernization |
+
+Retain the existing AI/ERP note and add this explicit scope sentence visibly in shared working boundaries:
+
+| Spanish | English |
+| --- | --- |
+| Chatbots y agentes se evalúan con alcance, datos, proveedores, costos, límites y supervisión humana acordados. | Chatbots and agents are evaluated with agreed scope, data, providers, costs, limits and human oversight. |
+
+The approved Revision 5 motion/label refinement supersedes the prior no-idle/no-label prototype candidate. No production wording or behavior has changed in the design/planning session.
