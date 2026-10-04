@@ -927,17 +927,35 @@ test.describe('web-font swap', () => {
     return release;
   }
 
-  /** Text-box widths of every mono element in the App Bar and the hero (the readout, the coordinate line, the language switch). */
-  async function monoTextWidths(page: Page) {
+  /**
+   * What a font swap can shift: the line boxes of every mono element in the App Bar and the hero
+   * (the readout, the coordinate line, the language switch), and the App Bar, hero and H1 boxes.
+   * A fallback face that is a few percent wider without wrapping differently shifts nothing, so
+   * line counts, heights and box positions are compared, not raw text widths: those depend on
+   * which fallback faces the machine has installed (Courier New on Windows and macOS matches
+   * Plex Mono's 0.6em advance exactly; CI's Linux fallback is about 2% wider).
+   */
+  async function swapGeometry(page: Page) {
     return page.evaluate(() => {
+      const box = (element: Element | null) => {
+        const rect = element?.getBoundingClientRect();
+        return rect ? { top: rect.top, height: rect.height } : null;
+      };
       const roots = document.querySelectorAll('header[data-app-bar], section[aria-labelledby="home-heading"]');
-      return [...roots].flatMap((root) =>
+      const mono = [...roots].flatMap((root) =>
         [...root.querySelectorAll('.font-mono, [data-app-bar-readout]')].map((element) => {
           const range = document.createRange();
           range.selectNodeContents(element);
-          return { text: (element.textContent ?? '').trim().slice(0, 28), width: range.getBoundingClientRect().width };
+          const lines = new Set([...range.getClientRects()].filter((rect) => rect.width > 0).map((rect) => Math.round(rect.top))).size;
+          return { text: (element.textContent ?? '').trim().slice(0, 28), lines, height: element.getBoundingClientRect().height };
         }),
       );
+      return {
+        mono,
+        appBar: box(document.querySelector('header[data-app-bar]')),
+        hero: box(document.querySelector('section[aria-labelledby="home-heading"]')),
+        heading: box(document.querySelector('#home-heading')),
+      };
     });
   }
 
@@ -949,7 +967,7 @@ test.describe('web-font swap', () => {
 
   for (const locale of LOCALES) {
     for (const viewport of VIEWPORTS) {
-      test(`${locale} at ${label(viewport)}: the swap to the loaded fonts moves the mono text by <= 1px and the page by CLS < ${CLS_GOOD}`, async ({ page }) => {
+      test(`${locale} at ${label(viewport)}: the swap to the loaded fonts re-wraps no mono text, keeps the App Bar still, and keeps CLS < ${CLS_GOOD}`, async ({ page }) => {
         await page.setViewportSize(viewport);
         await observeLayoutShifts(page);
         const release = await holdWebFonts(page);
@@ -958,7 +976,7 @@ test.describe('web-font swap', () => {
         await expect(page.locator('#home-heading')).toBeVisible();
         // The readout (>= 1024px) is revealed by hydration, which does not wait for fonts; measure after it.
         if (viewport.width >= 1024) await expect(page.locator('[data-app-bar-readout][data-home="true"]')).toBeVisible(EASE);
-        const fallbackWidths = await monoTextWidths(page);
+        const fallback = await swapGeometry(page);
         expect((await faceStatuses(page)).filter((face) => face.status === 'loaded'), 'no web font loaded before the release').toHaveLength(0);
 
         release();
@@ -970,12 +988,23 @@ test.describe('web-font swap', () => {
           .toBe(true);
         await page.evaluate(() => document.fonts.ready.then(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))));
 
-        const loadedWidths = await monoTextWidths(page);
-        expect(loadedWidths.length, 'the mono elements measured before and after the swap match').toBe(fallbackWidths.length);
-        expect(loadedWidths.length, 'the App Bar and hero have mono text').toBeGreaterThan(0);
-        loadedWidths.forEach((loaded, index) => {
-          expect(Math.abs(loaded.width - fallbackWidths[index].width), `"${loaded.text}" fallback ${fallbackWidths[index].width} vs loaded ${loaded.width}`).toBeLessThanOrEqual(1);
+        const loaded = await swapGeometry(page);
+        expect(loaded.mono.length, 'the mono elements measured before and after the swap match').toBe(fallback.mono.length);
+        expect(loaded.mono.length, 'the App Bar and hero have mono text').toBeGreaterThan(0);
+        loaded.mono.forEach((element, index) => {
+          const before = fallback.mono[index];
+          expect(element.lines, `"${element.text}" wraps to ${before.lines} line(s) in the fallback and ${element.lines} once loaded`).toBe(before.lines);
+          expect(Math.abs(element.height - before.height), `"${element.text}" height ${before.height} -> ${element.height}`).toBeLessThanOrEqual(1);
         });
+        // The hero and H1 are not compared: the Instrument Sans swap re-wraps the H1 where its
+        // `ch`-based max-width differs between faces (reported under measure:home-vitals; E2 limited
+        // the fix to font metrics). CLS below still bounds that shift.
+        for (const key of ['appBar'] as const) {
+          const before = fallback[key]!;
+          const after = loaded[key]!;
+          expect(Math.abs(after.top - before.top), `${key} top ${before.top} -> ${after.top}`).toBeLessThanOrEqual(1);
+          expect(Math.abs(after.height - before.height), `${key} height ${before.height} -> ${after.height}`).toBeLessThanOrEqual(1);
+        }
 
         const report = await layoutShiftReport(page);
         expect(report.fromEnhancementSources, 'the enhancement is off, so no shift has a source in it').toBe(0);
