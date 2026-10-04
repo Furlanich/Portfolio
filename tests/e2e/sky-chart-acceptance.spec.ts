@@ -904,3 +904,80 @@ test.describe('console', () => {
   }
 });
 
+
+// ---------------------------------------------------------------------------------------------
+// Web-font swap (plan PR 11, owner decision E2, 2026-10-04). The font files are held back so the
+// page paints in the fallback faces, then released; whatever moves when they arrive is the swap's
+// layout shift. The enhancement is off here (no software-renderer override), so every shift is
+// the page's own. `measure:home-vitals` judges the same effect on a throttled network.
+// ---------------------------------------------------------------------------------------------
+test.describe('web-font swap', () => {
+  /** web-vitals "good" CLS. The throttled mobile lab profile measured 0.178 before the fallback fix. */
+  const CLS_GOOD = 0.1;
+
+  /** Holds every web-font request until the returned function is called. */
+  async function holdWebFonts(page: Page) {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => (release = resolve));
+    await page.route(/\.woff2(\?.*)?$/, async (route) => {
+      await gate;
+      await route.continue().catch(() => undefined);
+    });
+    return release;
+  }
+
+  /** Text-box widths of every mono element in the App Bar and the hero (the readout, the coordinate line, the language switch). */
+  async function monoTextWidths(page: Page) {
+    return page.evaluate(() => {
+      const roots = document.querySelectorAll('header[data-app-bar], section[aria-labelledby="home-heading"]');
+      return [...roots].flatMap((root) =>
+        [...root.querySelectorAll('.font-mono, [data-app-bar-readout]')].map((element) => {
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          return { text: (element.textContent ?? '').trim().slice(0, 28), width: range.getBoundingClientRect().width };
+        }),
+      );
+    });
+  }
+
+  /** The web-font faces; the metric-adjusted `Fallback` faces are local() fonts and are always loaded. */
+  const faceStatuses = (page: Page) =>
+    page.evaluate(() =>
+      [...document.fonts].filter((face) => !face.family.includes('Fallback')).map((face) => ({ family: face.family, status: face.status })),
+    );
+
+  for (const locale of LOCALES) {
+    for (const viewport of VIEWPORTS) {
+      test(`${locale} at ${label(viewport)}: the swap to the loaded fonts moves the mono text by <= 1px and the page by CLS < ${CLS_GOOD}`, async ({ page }) => {
+        await page.setViewportSize(viewport);
+        await observeLayoutShifts(page);
+        const release = await holdWebFonts(page);
+        // The held preload keeps the load event pending, so only the document is awaited.
+        await page.goto(appUrl(HOME[locale].route), { waitUntil: 'domcontentloaded' });
+        await expect(page.locator('#home-heading')).toBeVisible();
+        const fallbackWidths = await monoTextWidths(page);
+        expect((await faceStatuses(page)).filter((face) => face.status === 'loaded'), 'no web font loaded before the release').toHaveLength(0);
+
+        release();
+        await expect
+          .poll(async () => {
+            const faces = await faceStatuses(page);
+            return ['instrumentSans', 'plexMono'].every((family) => faces.some((face) => face.family.includes(family) && face.status === 'loaded'));
+          }, EASE)
+          .toBe(true);
+        await page.evaluate(() => document.fonts.ready.then(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))));
+
+        const loadedWidths = await monoTextWidths(page);
+        expect(loadedWidths.length, 'the mono elements measured before and after the swap match').toBe(fallbackWidths.length);
+        expect(loadedWidths.length, 'the App Bar and hero have mono text').toBeGreaterThan(0);
+        loadedWidths.forEach((loaded, index) => {
+          expect(Math.abs(loaded.width - fallbackWidths[index].width), `"${loaded.text}" fallback ${fallbackWidths[index].width} vs loaded ${loaded.width}`).toBeLessThanOrEqual(1);
+        });
+
+        const report = await layoutShiftReport(page);
+        expect(report.fromEnhancementSources, 'the enhancement is off, so no shift has a source in it').toBe(0);
+        expect(report.total, `font-swap CLS ${report.total} from ${JSON.stringify(report.entries.map((entry) => entry.sources))}`).toBeLessThan(CLS_GOOD);
+      });
+    }
+  }
+});
