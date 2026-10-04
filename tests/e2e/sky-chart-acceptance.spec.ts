@@ -956,6 +956,8 @@ test.describe('web-font swap', () => {
         // The held preload keeps the load event pending, so only the document is awaited.
         await page.goto(appUrl(HOME[locale].route), { waitUntil: 'domcontentloaded' });
         await expect(page.locator('#home-heading')).toBeVisible();
+        // The readout (>= 1024px) is revealed by hydration, which does not wait for fonts; measure after it.
+        if (viewport.width >= 1024) await expect(page.locator('[data-app-bar-readout][data-home="true"]')).toBeVisible(EASE);
         const fallbackWidths = await monoTextWidths(page);
         expect((await faceStatuses(page)).filter((face) => face.status === 'loaded'), 'no web font loaded before the release').toHaveLength(0);
 
