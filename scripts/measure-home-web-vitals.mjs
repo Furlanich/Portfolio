@@ -13,17 +13,17 @@
 //                WebGL layer is not representative of INP on a hardware GPU (amended ADR
 //                2026-09-28); the hardware-GPU figure comes from the section 26 device protocol.
 //
-// Layout shift is judged here as a whole-page metric against the web-vitals thresholds (good <=0.1,
-// poor >0.25), including the font-swap reflow of the App Bar and hero text when the web fonts
-// arrive after first paint. A rating above "good" is a WARNING (font-fallback tuning lives in
-// app/fonts.ts and the layouts, which need an owner decision; plan PR 11, escalation E2); above
-// "poor" it fails. The
+// Layout shift is judged here as a whole-page metric and GATED at the web-vitals "good" line
+// (<=0.1), including any font-swap reflow of the App Bar and hero text when the web fonts arrive
+// after first paint on a throttled network. The fallback faces in app/fonts.ts are metric-matched so
+// the swap is nearly width-neutral (plan PR 11, owner decision E2, 2026-10-04: 0.178 before). The
 // ADR's gate, "layout shift from the enhancement = 0", is measured separately: only shifts at or
-// after the runtime's `immersive:import-start` mark and not within 500 ms of a web font finishing,
-// or with a source inside the canvas, scrim or Pause pill, count toward it (on a throttled network
-// the fonts arrive after the import has started). The enhanced variant also reports the runtime's draw calls per
-// frame, label textures and idle frames, and the backdrop-filter surface count, all observed in
-// the production build through tests/e2e/support/production-instrumentation.mjs.
+// after the runtime's `immersive:import-start` mark that are not while a web font is loading (or
+// within 500 ms of it finishing), or with a source inside the canvas, scrim or Pause pill, count
+// toward it (on a throttled network the fonts arrive after the import has started). The enhanced
+// variant also reports the runtime's draw calls per frame, label textures and idle frames, and the
+// backdrop-filter surface count, all observed in the production build through
+// tests/e2e/support/production-instrumentation.mjs.
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import http from 'node:http';
@@ -44,8 +44,8 @@ const argument = (name) => process.argv.find((value) => value.startsWith(`--${na
 const JOURNEYS_PER_LOCALE = Number(argument('journeys') ?? 10);
 const ONLY_PROFILE = argument('profile'); // e.g. --profile=mobile
 const ENHANCED_JOURNEYS_PER_LOCALE = Number(argument('enhanced-journeys') ?? 5);
-// clsWholePageGood and clsWholePagePoor are the web-vitals CLS thresholds; clsFromEnhancement is the ADR gate.
-const GATES = { lcpP75Ms: 2500, inpP75Ms: 200, clsWholePageGood: 0.1, clsWholePagePoor: 0.25, clsFromEnhancement: 0, drawCallsPerFrame: 28, labelTextures: 20, idleFrames: 0, backdropSurfaces: 3 };
+// clsWholePage is the web-vitals "good" CLS threshold (a gate); clsFromEnhancement is the ADR gate.
+const GATES = { lcpP75Ms: 2500, inpP75Ms: 200, clsWholePage: 0.1, clsFromEnhancement: 0, drawCallsPerFrame: 28, labelTextures: 20, idleFrames: 0, backdropSurfaces: 3 };
 
 // Lighthouse "devtools" (applied) throttling presets. Their request latency already includes the
 // 3.75x RTT multiplier that stands in for connection setup, so every request, including the
@@ -219,7 +219,6 @@ async function journey(browser, profile, locale, variant) {
 const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const report = { kind: 'synthetic lab measurement (not field data)', journeysPerLocale: { static: JOURNEYS_PER_LOCALE, enhanced: ENHANCED_JOURNEYS_PER_LOCALE }, gates: GATES, profiles: {} };
 const failures = [];
-const warnings = [];
 const max = (values) => Math.max(0, ...values);
 try {
   for (const [name, profile] of Object.entries(PROFILES)) {
@@ -265,9 +264,8 @@ try {
       if (summary.lcpP75Ms > GATES.lcpP75Ms) failures.push(`${tag}: LCP p75 ${summary.lcpP75Ms} ms exceeds ${GATES.lcpP75Ms} ms`);
       if (journeys.some((item) => item.lcpElement !== 'H1')) failures.push(`${tag}: the LCP element is not the H1 (${summary.lcpElements.join(', ')})`);
       if (variant === 'static' && summary.inpP75Ms > GATES.inpP75Ms) failures.push(`${tag}: INP p75 ${summary.inpP75Ms} ms exceeds ${GATES.inpP75Ms} ms`);
-      summary.clsWholePageRating = summary.clsWholePageMax <= GATES.clsWholePageGood ? 'good' : summary.clsWholePageMax <= GATES.clsWholePagePoor ? 'needs improvement' : 'poor';
-      if (summary.clsWholePageRating === 'needs improvement') warnings.push(`${tag}: whole-page CLS ${summary.clsWholePageMax} is above the web-vitals "good" threshold ${GATES.clsWholePageGood} (font-swap reflow; sources: ${summary.clsFontSwapSources.join(', ')})`);
-      if (summary.clsWholePageRating === 'poor') failures.push(`${tag}: whole-page CLS ${summary.clsWholePageMax} exceeds the web-vitals "poor" threshold ${GATES.clsWholePagePoor}`);
+      summary.clsWholePageRating = summary.clsWholePageMax <= GATES.clsWholePage ? 'good' : summary.clsWholePageMax <= 0.25 ? 'needs improvement' : 'poor';
+      if (summary.clsWholePageMax > GATES.clsWholePage) failures.push(`${tag}: whole-page CLS ${summary.clsWholePageMax} exceeds the web-vitals "good" threshold ${GATES.clsWholePage} (font-swap sources: ${summary.clsFontSwapSources.join(', ')})`);
       if (summary.clsFromEnhancementMax > GATES.clsFromEnhancement) failures.push(`${tag}: layout shift from the enhancement ${summary.clsFromEnhancementMax} exceeds ${GATES.clsFromEnhancement}`);
       if (summary.backdropSurfacesAtSectionsMax > GATES.backdropSurfaces) failures.push(`${tag}: ${summary.backdropSurfacesAtSectionsMax} backdrop-filter surfaces at a section exceeds ${GATES.backdropSurfaces}`);
       if (variant === 'enhanced') {
@@ -283,7 +281,6 @@ try {
   server.close();
 }
 
-report.warnings = warnings;
 const output = JSON.stringify(report, null, 2);
 const outFile = argument('out');
 if (outFile) fs.writeFileSync(outFile, `${output}\n`);

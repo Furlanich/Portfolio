@@ -13,8 +13,8 @@
 //   - backdrop surfaces     : `backdrop-filter` surfaces intersecting the viewport (DOM scan)
 //   - layout shift          : shifts attributed to the enhancement (a source inside the canvas, scrim
 //                             or Pause pill, or any shift after `immersive:import-start` that is not
-//                             within 500 ms of a web font finishing loading) versus the whole-page
-//                             total (the font-swap reflow of the App Bar and hero text)
+//                             while a web font is loading or within 500 ms of it finishing) versus the whole-page
+//                             total (any font-swap reflow of the App Bar and hero text)
 
 /** Serialized into the page by `addInitScript`; must stay self-contained. */
 export function installInstrumentation() {
@@ -27,12 +27,16 @@ export function installInstrumentation() {
     textures: [],
     bound: null,
     shifts: [],
-    fontsDoneAt: [],
+    fontLoads: [], // [startMs, endMs | null] while a web font is in flight
   };
   window.__inst = inst;
   // A web font arriving late reflows text; on a throttled network that happens after the runtime
   // import has started, so time alone cannot attribute a shift to the enhancement.
-  document.fonts?.addEventListener('loadingdone', () => inst.fontsDoneAt.push(performance.now()));
+  document.fonts?.addEventListener('loading', () => inst.fontLoads.push([performance.now(), null]));
+  document.fonts?.addEventListener('loadingdone', () => {
+    const open = inst.fontLoads.findLast((load) => load[1] === null);
+    if (open) open[1] = performance.now();
+  });
 
   const proto = window.WebGL2RenderingContext?.prototype;
   if (proto) {
@@ -154,9 +158,9 @@ export async function measureIdleFrames(page, { quietMs = 1500, windowMs = 2000,
  * the sticky App Bar's bottom edge is entirely behind it and is not counted), measured two ways:
  *   - `atSections`: every Home section aligned under the App Bar and centred. This is the section 14
  *     gate ("E2E DOM scan at each section").
- *   - `sweep`: every half-viewport of scroll. D-08 says "no viewport", and between two sections the
- *     viewport straddles both, so the sweep's worst case can exceed the gate (plan PR 11, escalation
- *     E1). It is reported, not gated.
+ *   - `sweep`: every half-viewport of scroll, REPORTED ONLY. Between two sections the viewport
+ *     straddles both, so the sweep's worst case can exceed the gate; the owner reworded D-08 to the
+ *     per-section gate (plan PR 11, E1, 2026-10-04), so the sweep is a regression guard, not a gate.
  */
 export async function sweepBackdropSurfaces(page) {
   return page.evaluate(async () => {
@@ -213,7 +217,7 @@ export async function readLayoutShifts(page) {
   return page.evaluate(() => {
     const importStart = performance.getEntriesByName('immersive:import-start')[0]?.startTime ?? null;
     const shifts = window.__inst.shifts;
-    const nearFontSwap = (shift) => window.__inst.fontsDoneAt.some((doneAt) => shift.time >= doneAt - 50 && shift.time <= doneAt + 500);
+    const nearFontSwap = (shift) => window.__inst.fontLoads.some(([start, end]) => shift.time >= start && (end === null || shift.time <= end + 500));
     const fromEnhancement = shifts.filter((shift) => shift.enhancement || (importStart !== null && shift.time >= importStart && !nearFontSwap(shift)));
     const sum = (list) => list.reduce((total, shift) => total + shift.value, 0);
     return {
