@@ -20,7 +20,7 @@ last_verified: 2026-10-05
 
 ## Boundary
 
-This record is the Task 12 evidence for [PLAN-SKY-CHART-HOME-REDESIGN-V2](../../plans/completed/sky-chart-home-redesign-v2.md). It measures nothing new. It collects the automated evidence that the plan's checkpoints and PR #92 recorded for the merged implementation (`main` at `edf8330`, the W3 checkpoint), and it records the plan's section 26 manual protocol item by item. It changes no application behavior. The record also holds the verification of the W4 follow-up (the Founder atlas plate, checkpoint W4 and the two comment fixes) and the owner's approval of 2026-10-05, which accepts the record with its deferrals.
+This record is the Task 12 evidence for [PLAN-SKY-CHART-HOME-REDESIGN-V2](../../plans/completed/sky-chart-home-redesign-v2.md). It measures nothing new. It collects the automated evidence that the plan's checkpoints and PR #92 recorded for the merged implementation (`main` at `edf8330`, the W3 checkpoint), and it records the plan's section 26 manual protocol item by item. It changes no application behavior. The record also holds the verification of the W4 follow-up (the Founder atlas plate, checkpoint W4 and the comment fixes) and the owner's approval of 2026-10-05, which accepts the record with its deferrals.
 
 The plan's acceptance rule governs every line here: **no claim exceeds the recorded evidence.** Three states are used, and nothing is marked PASS without a recorded result:
 
