@@ -62,9 +62,10 @@ export const homeIntroClassName = 'mt-4 max-w-[60ch] text-body-lg';
 
 /**
  * D-21 dark-context focus ring (`outline: 3px solid #9CC4EC (sky.glow); outline-offset: 3px`)
- * for actions rendered directly on a `tone="dark"` HomeSection (not inside an AtlasPlate or
- * PlottingSheet, which are never interactive, and not inside the Position-fix toggle, which
- * already carries its own Ink ring since it sits on a PlottingSheet). The higher specificity
+ * for actions rendered on a `tone="dark"` HomeSection, either directly or (the Founder action,
+ * by owner decision 2026-10-05) inside the one AtlasPlate that wraps that section's content. The
+ * plate itself is never interactive, so the ring belongs to the action. Not for the Position-fix
+ * toggle, which already carries its own Ink ring since it sits on a PlottingSheet. The higher specificity
  * of these utility classes (one class + `:focus-visible`) wins over app/globals.css's bare
  * `:focus-visible` rule (0,0,1,0), so this only overrides the ring where it is applied.
  */

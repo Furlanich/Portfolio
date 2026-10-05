@@ -1,7 +1,7 @@
 ---
 id: REVIEW-SKY-CHART-ACCEPTANCE-V2
 type: acceptance-review
-status: PROPOSED
+status: APPROVED
 related:
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - RFC-SKY-CHART-VISUAL-SYSTEM-V2
@@ -20,7 +20,7 @@ last_verified: 2026-10-05
 
 ## Boundary
 
-This record is the Task 12 evidence for [PLAN-SKY-CHART-HOME-REDESIGN-V2](../../plans/completed/sky-chart-home-redesign-v2.md). It measures nothing new. It collects the automated evidence that the plan's checkpoints and PR #92 recorded for the merged implementation (`main` at `edf8330`, the W3 checkpoint), and it records the plan's section 26 manual protocol item by item. It changes no application behavior.
+This record is the Task 12 evidence for [PLAN-SKY-CHART-HOME-REDESIGN-V2](../../plans/completed/sky-chart-home-redesign-v2.md). It measures nothing new. It collects the automated evidence that the plan's checkpoints and PR #92 recorded for the merged implementation (`main` at `edf8330`, the W3 checkpoint), and it records the plan's section 26 manual protocol item by item. It changes no application behavior. The record also holds the verification of the W4 follow-up (the Founder atlas plate, checkpoint W4 and the comment fixes) and the owner's approval of 2026-10-05, which accepts the record with its deferrals.
 
 The plan's acceptance rule governs every line here: **no claim exceeds the recorded evidence.** Three states are used, and nothing is marked PASS without a recorded result:
 
@@ -28,7 +28,7 @@ The plan's acceptance rule governs every line here: **no claim exceeds the recor
 - **FAIL** — a recorded result outside the limit.
 - **DEFERRED** — not yet performed. The item stays open and carries a checklist for the owner to fill in.
 
-**Status: PROPOSED for the owner's review.** The automated evidence is final. No section 26 manual result existed on 2026-10-05, so **all six manual items and both hardware-GPU gates are DEFERRED**. That includes the real-device and screen-reader results that the previous immersive plan also deferred. The plan is marked COMPLETED with this deferral stated, as the previous plan was; the owner closes the remaining items by filling in the checklists below and updating this record.
+**Status: APPROVED on 2026-10-05, with manual QA DEFERRED.** The repository owner decided on 2026-10-05 to approve this record at the merge of the W4 follow-up PR ("Make it as APPROVED at merge"). That approval accepts the record **with its deferrals**. It is not a manual pass, and it does not turn any DEFERRED item into PASS. The automated evidence is final. No section 26 manual result existed on 2026-10-05, so **all six manual items and both hardware-GPU gates are DEFERRED**. That includes the real-device and screen-reader results that the previous immersive plan also deferred. The plan is marked COMPLETED with this deferral stated, as the previous plan was; the owner closes the remaining items by filling in the checklists below and updating this record. Before the approval, the owner also decided that Founder renders on an atlas plate, and the W4 follow-up implemented it (see "Checkpoint W4 and the owner's follow-up decisions" below).
 
 ## Summary
 
@@ -39,7 +39,8 @@ The plan's acceptance rule governs every line here: **no claim exceeds the recor
 | Section 14 hardware-GPU gates: scroll frame interval p95 ≤20 ms, interaction task <50 ms (2 of 13) | **DEFERRED**: only advisory SwiftShader numbers exist |
 | Section 26.1 browsers, 26.2 real devices, 26.3 screen readers, 26.4 preferences, 26.5 content truth, 26.6 design fidelity | **DEFERRED** (none performed) |
 | Constrained-Android evidence and a real screen-reader check, deferred by the previous plan | **Still open** |
-| Checkpoint W4 (`npm run validate` with the documentation synchronized) | See "Task 12 documentation check" below |
+| Checkpoint W4 (`npm run validate` on `main` at `e8703ee`, documentation synchronized) | PASS: see "Checkpoint W4 and the owner's follow-up decisions" below |
+| Record status | **APPROVED** by the owner on 2026-10-05, with every manual item and both hardware-GPU gates still DEFERRED |
 
 ## Environment of the automated evidence
 
@@ -64,6 +65,7 @@ Software-rendered, headless Chromium is regression evidence. It is not mobile ac
 | W1 | `db25420` | `validate` green; `chromium-desktop` 116/116 with one worker (the default parallel run failed 1 of 116 on the known dev-server race); `verify:static-export` 20 routes; no rendered change (`visual-chromium` 22/22 against the unchanged baselines) |
 | W2 | `4f63afa` | `validate` green (282 unit tests); `test:e2e` 1068 passed and 5 failed, all 5 passing serially; `/Portfolio` run 1070 passed and 3 failed, all passing serially except one real Pause-keyboard test defect that PR #90 fixed; `test:a11y` 16/16; `measure:immersive` ran three times; a manual look at the production build against the reference at 1440 and 390 found no deviation |
 | W3 | `edf8330` | See below |
+| W4 | `e8703ee` | `validate` green: `docs:check` 292 files, 98 IDs, 38 Skills; 291/291 unit tests; lint 0 errors; typecheck; build of 22 pages. The documentation matched the implementation except for the Founder item, which the owner then decided (below) |
 
 ### Checkpoint W3, in full
 
@@ -96,7 +98,7 @@ Run on `main` at `edf8330` in a clean worktree after a fresh `npm ci`.
 | LCP p75 | ≤2.5 s, element H1 | Mobile 2040 ms static and 2028 ms enhanced; desktop 540 ms and 524 ms; H1 in all 60 journeys | PASS |
 | INP p75 | ≤200 ms | Static (gated): 24 ms mobile, 16 ms desktop. Enhanced (advisory under SwiftShader): 104 ms and 32 ms | PASS |
 | Layout shift from the enhancement | 0 | 0 in 3/3 `measure:immersive` runs and all 60 vitals journeys. Whole-page CLS (gated ≤0.1): 0 mobile and 0.0437 desktop, from the font swap at about 300–560 ms | PASS |
-| Backdrop-filter surfaces, at each section (E1) | ≤3 | 3 at 320, 390, 768, 1024 and 1440. The informational sweep between sections reaches 4 at 768 and 1440 | PASS |
+| Backdrop-filter surfaces, at each section (E1) | ≤3 | 3 at 320, 390, 768, 1024 and 1440. The informational sweep between sections reaches 4 at 768 and 1440. After the W4 follow-up put Founder on an atlas plate, Founder counts 1 at every width (it counted 0), and the sweep is unchanged | PASS |
 | Idle rendering | 0 frames after settle | 0 settled in a chapter, 0 fully receded, 0 in the vitals journeys | PASS |
 | Main-thread interaction task | <50 ms on a hardware GPU | Longest 62–71 ms under SwiftShader (81–152 ms in PR #92's runs): advisory | **DEFERRED**: section 26.2 device protocol |
 
@@ -250,25 +252,25 @@ These are owner-approved or orchestrator-recorded changes made during delivery. 
 
 - **OPEN:** the whole of section 26, above, including the constrained-Android and real screen-reader checks that the previous plan deferred.
 - **OPEN:** hardware-GPU numbers for the frame-interval and interaction-task gates.
-- **OPEN (owner decision): Founder renders without an atlas plate.** The implementation differs from approved D-05, supersession item 13 and D-18: `HomeFounder.tsx` renders the 8/4 editorial grid directly over the environment and uses no `AtlasPlate`. The approved records place Founder on an atlas plate (plan section 2, supersession item 13, the RFC, and DESIGN-VISUAL D-05 and D-18). No owner decision is recorded. The owner chooses between adding the plate (a code task) and amending the design through governance. The approved design text is unchanged.
+- **OPEN (owner decision): Founder renders without an atlas plate.** The implementation differs from approved D-05, supersession item 13 and D-18: `HomeFounder.tsx` renders the 8/4 editorial grid directly over the environment and uses no `AtlasPlate`. The approved records place Founder on an atlas plate (plan section 2, supersession item 13, the RFC, and DESIGN-VISUAL D-05 and D-18). No owner decision is recorded. The owner chooses between adding the plate (a code task) and amending the design through governance. The approved design text is unchanged. *Resolved 2026-10-05 (owner decision): Founder now renders on an atlas plate. The owner decided: "Add the plate in the code in order to complete the implementation of the current plan. This will be later changed once the services-projects-footer-v1 execution plan is implemented." The W4 follow-up wraps the whole grid, action included, in one `AtlasPlate` (default blur, no plate number). The approved design text is unchanged, and the plate is expected to change again under `PLAN-SPF-V1`.*
 - **Note: gate order.** The ADR lists the capability gates as reduced motion, Save-Data, WebGL2, the software-renderer check, the session context-lost flag, near-viewport, then `load`. `ImmersiveEnhancement` evaluates them in a different order: reduced motion first, then the near-viewport observer, then the `load` event, and only then Save-Data, the WebGL2 probe with the software-renderer check, and the session context-lost flag. There is no behavioural consequence, because every gate must pass before the runtime is imported.
 - **OPEN:** the Roboto and Helvetica fallbacks for Instrument Sans are approximate, not metric clones. The Android pass must confirm there is no visible hero jump on a slow load.
 - **OPEN (section 30):** real-device thermal behaviour of a full-viewport canvas plus backdrop-filter on low-end Android, and the press-scale feedback recommendation, which conflicts with the approved no-scale rule.
 - **Limit:** Firefox and WebKit canvases are untested in automation.
 - **Limit:** local two-worker runs can flake under `next dev` load. CI runs with one retry and a 30-minute browser budget.
 - **Limit:** the Plex Mono subset has no Greek, so Greek in the mono face would fall back; the Bayer letters avoid that with the serif stack.
-- **Comments to update later:** two code comments still point at the plan's former path under `docs/plans/active/` (`components/homepage/impact/position-fix.module.css` and `lib/impact/position-fix.ts`). They are outside Task 12's paths.
+- **Comments to update later:** two code comments still point at the plan's former path under `docs/plans/active/` (`components/homepage/impact/position-fix.module.css` and `lib/impact/position-fix.ts`). They are outside Task 12's paths. *Resolved 2026-10-05: the two comments now cite `docs/plans/completed/sky-chart-home-redesign-v2.md`.*
 
 ## Definition of done (plan section 29)
 
 | Criterion | State |
 | --- | --- |
-| Tasks 1–12 merged by the owner; W0–W4 green and recorded | Tasks 1–11 merged and W0–W3 recorded; Task 12 completes on the owner's merge, after which W4 is the `main` run of `npm run validate` |
+| Tasks 1–12 merged by the owner; W0–W4 green and recorded | Tasks 1–12 merged and W0–W4 recorded. The remaining owner decisions (Founder plate, this record APPROVED, the comment fixes) land in the W4 follow-up PR, and criterion 1 of section 29 is met when the owner merges it. The remaining criteria are unchanged by the follow-up: see the rows below |
 | Every section 14 gate within limits on the production build, on both base paths | PASS for the 11 automatable gates (the measurement scripts cover the root build; `/Portfolio` is covered by the acceptance spec and `verify:static-export`). **Not yet met** for the two hardware-GPU gates (DEFERRED) |
 | Home in ES and EN matches D-01 to D-27 at 320, 390, 768, 1024 and 1440, verified by automated tests and the manual protocol | Automated: PASS (acceptance matrix, Home-sections and instrument baselines). Manual protocol: **DEFERRED** |
 | The App Bar matches D-22 on every localized route, with and without JavaScript | Automated: PASS (`app-bar.spec.ts` in the W3 e2e runs, acceptance spec, baselines for the non-Home pages). Manual: DEFERRED |
 | No invented evidence; every illustrative element labelled | Automated checks: PASS. Manual read-through: DEFERRED |
-| Records synchronized (section 27) | Done by Task 12 |
+| Records synchronized (section 27) | Done by Task 12, and updated by the W4 follow-up for the Founder plate and this record's status |
 | The acceptance record states the real-device and screen-reader results honestly | Done: both are DEFERRED, with checklists |
 
 ## Acceptance checklist
@@ -288,6 +290,30 @@ These are owner-approved or orchestrator-recorded changes made during delivery. 
 | Content-truth read-through | DEFERRED |
 | Side-by-side design fidelity at 1440 and 390 | DEFERRED |
 | G2 / Connection film | Withdrawn by the RFC (supersession item 17); no video exists |
+
+## Checkpoint W4 and the owner's follow-up decisions
+
+**Checkpoint W4** ran on `main` at `e8703ee` (PR #100, Task 12) in a clean worktree after a fresh `npm ci`. `npm run validate` was green: `docs:check` 292 files, 98 IDs, 38 Skills; 291/291 unit tests; lint 0 errors; typecheck; build of 22 pages. The documentation matched the implementation except for the Founder item, which was then open.
+
+On 2026-10-05 the owner decided the three open items, and the follow-up branch `codex/sky-chart-w4-founder-plate` applies them:
+
+- **Founder atlas plate (code, test first).** RED `4cafc66`, GREEN `7e7b35e` (`home-sections.spec.ts`, ES and EN). Founder's backdrop-filter surfaces go from 0 to 1 at every width, within the per-section limit of 3, and the sweep stays at a maximum of 4. The six win32 Founder baselines were regenerated. The taller Founder moves the Dawn CTA, so four win32 Dawn CTA baselines were regenerated as well, in a separate commit. The Linux baselines are not changed here.
+- **This record is APPROVED**, with every section 26 item and both hardware-GPU gates still DEFERRED.
+- **The two stale code comments** now cite the completed plan.
+
+Verification of the follow-up, run fresh in its worktree on Windows with `PLAYWRIGHT_PORT=3140` (nothing else listening there):
+
+| Command | Result |
+| --- | --- |
+| `npx playwright test tests/e2e/home-sections.spec.ts` (all projects that run it) | 198 passed, 18 skipped, 0 failed. The new Founder test passes in ES and EN in every project |
+| `npx playwright test --project=visual-chromium` | 64/64 with one worker. The default parallel run failed 1 of 64 (the Spanish project-detail compact baseline), the known `next dev` compile race on `/proyectos/the-system/`, and it passed serially |
+| `sky-chart-acceptance.spec.ts`, `immersive-chromium`, one worker | 142/142 at the root |
+| `npm run test:a11y` | 16/16. The acceptance spec's 20 axe tests, with the enhancement off, on, playing and paused, are inside its 142 |
+| `npm run measure:immersive` | Exit 0. `backdropSurfaces` at Founder: 1 aligned and 1 centred at 320, 390, 768, 1024 and 1440 (it was 0). Maximum at any section: 3. The sweep maximum is 3 at 320, 390 and 1024 and 4 at 768 and 1440, as before (informational cap 5). Lazy runtime chunk headroom 11.9 KiB |
+| `npm run verify:static-export` | 20 routes at base path `/` |
+| `npm run validate` | Green, run last on the final tree. `docs:check` 292 files, 98 IDs, 38 Skills; 291/291 unit tests; lint 0 errors (282 warnings, all in vendored Skill scripts); typecheck; build of 22 pages |
+
+The follow-up changes no budget, no dependency and no application path outside `HomeFounder.tsx` and three code comments (the doc comment in `HomeSection.tsx` and the cited path in the two position-fix files). Section 26 stays DEFERRED.
 
 ## Task 12 documentation check
 

@@ -1,6 +1,6 @@
 /**
  * Pure geometry and content contracts for the "Position fix" illustrative
- * visualization (HOME-IMPACT). See docs/plans/active/sky-chart-home-redesign-v2.md
+ * visualization (HOME-IMPACT). See docs/plans/completed/sky-chart-home-redesign-v2.md
  * section 12 (business-visualization architecture) for the approved spec.
  *
  * Everything here is deterministic and framework-free so it can be unit
