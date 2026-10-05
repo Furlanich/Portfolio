@@ -702,11 +702,15 @@ test.describe('capability and failure paths return quietly to static', () => {
       const uncaught: string[] = [];
       page.on('pageerror', (error) => uncaught.push(error.message));
       await allowSoftwareRenderer(page);
+      let aborted = false;
       await page.route('**/_next/static/chunks/**', async (route) => {
         try {
           const response = await route.fetch();
           const body = await response.text();
-          if (body.includes('webglcontextlost')) return await route.abort();
+          if (body.includes('webglcontextlost')) {
+            aborted = true;
+            return await route.abort();
+          }
           return await route.fulfill({ response, body });
         } catch {
           // A request still in flight when the page or test closes (dev HMR, prefetch) is
@@ -718,6 +722,8 @@ test.describe('capability and failure paths return quietly to static', () => {
       await gotoHome(page, locale);
       await expectStaticComposition(page);
       await expectStaticRecede(page);
+      // The injection must actually have happened: the runtime chunk was requested and aborted.
+      await expect.poll(() => aborted, EASE).toBe(true);
       expect(uncaught).toEqual([]);
     });
 

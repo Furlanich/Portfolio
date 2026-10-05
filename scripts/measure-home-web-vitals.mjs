@@ -268,6 +268,11 @@ try {
       if (summary.clsWholePageMax > GATES.clsWholePage) failures.push(`${tag}: whole-page CLS ${summary.clsWholePageMax} exceeds the web-vitals "good" threshold ${GATES.clsWholePage} (font-swap sources: ${summary.clsFontSwapSources.join(', ')})`);
       if (summary.clsFromEnhancementMax > GATES.clsFromEnhancement) failures.push(`${tag}: layout shift from the enhancement ${summary.clsFromEnhancementMax} exceeds ${GATES.clsFromEnhancement}`);
       if (summary.backdropSurfacesAtSectionsMax > GATES.backdropSurfaces) failures.push(`${tag}: ${summary.backdropSurfacesAtSectionsMax} backdrop-filter surfaces at a section exceeds ${GATES.backdropSurfaces}`);
+      // Every journey must reach its expected mode; otherwise a partial failure would silently
+      // drop out of the webgl maxima (or a static journey could be measured with the runtime on).
+      const expectedMode = variant === 'enhanced' ? 'webgl' : 'static';
+      const wrongMode = journeys.filter((item) => item.mode !== expectedMode);
+      if (wrongMode.length) failures.push(`${tag}: ${wrongMode.length} of ${journeys.length} journeys ended in mode ${[...new Set(wrongMode.map((item) => item.mode))].join(', ')} instead of ${expectedMode}`);
       if (variant === 'enhanced') {
         if (!summary.webgl.journeysWithRuntime) failures.push(`${tag}: the runtime never activated, so its draw calls and idle frames were not measured`);
         if (summary.webgl.drawCallsPerFrameMax > GATES.drawCallsPerFrame) failures.push(`${tag}: ${summary.webgl.drawCallsPerFrameMax} draw calls per frame exceeds ${GATES.drawCallsPerFrame}`);
