@@ -316,6 +316,23 @@ for (const testCase of CASES) {
       }
     });
 
+    // Owner decision 2026-10-05 (D-05/D-18): Founder is an editorial split inside the atlas-plate
+    // material. The plate's rendered marker is `sky-plate-material` (or `-solid` without blur),
+    // so the selector does not depend on CSS-module hashes.
+    test('Founder: the kicker, heading, biography and action all sit inside one atlas plate', async ({ page }) => {
+      await page.goto(appUrl(testCase.route));
+      const founder = page.locator('#founder');
+      const plates = founder.locator('.sky-plate-material, .sky-plate-material-solid');
+      await expect(plates).toHaveCount(1);
+      const plate = plates.first();
+
+      await expect(plate.locator('p')).toHaveCount(2);
+      await expect(plate.locator('p')).toHaveCount(await founder.locator('p').count());
+      await expect(plate.locator('h2#founder-heading')).toHaveCount(1);
+      await expect(plate.getByRole('link', { name: testCase.founderActionLabel })).toHaveCount(1);
+      await expect(founder.getByRole('link')).toHaveCount(1);
+    });
+
     test('Dawn CTA: the primary action carries the Ink focus ring', async ({ page }) => {
       await page.goto(appUrl(testCase.route));
       const primaryAction = page.locator('#cta a').first();
