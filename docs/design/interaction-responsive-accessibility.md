@@ -26,7 +26,8 @@ related:
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
-last_verified: 2026-09-30
+  - REVIEW-SKY-CHART-ACCEPTANCE-V2
+last_verified: 2026-10-05
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -450,7 +451,7 @@ Acceptance evidence covers both locales, all five widths, forward/reverse traver
 
 ## SKY-CHART-V2 — Sky Chart Home and App Bar — APPROVED
 
-**APPROVED — 2026-09-24.** Recorded after the repository owner approved and merged [Governance PR #77](https://github.com/Furlanich/Portfolio/pull/77) (merge commit `70168e9`), accepting [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md). This section is the approved interaction, responsive and accessibility record for the Sky Chart App Bar (every route) and the Home environment. The complete normative specification is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) sections 6 (D-22 to D-25, D-27), 11 (animation and motion architecture) and 13 (accessibility strategy); this section records the approved rules concisely and links to the plan for exact numeric values.
+**APPROVED — 2026-09-24.** Recorded after the repository owner approved and merged [Governance PR #77](https://github.com/Furlanich/Portfolio/pull/77) (merge commit `70168e9`), accepting [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md). This section is the approved interaction, responsive and accessibility record for the Sky Chart App Bar (every route) and the Home environment. The complete normative specification is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-home-redesign-v2.md) sections 6 (D-22 to D-25, D-27), 11 (animation and motion architecture) and 13 (accessibility strategy); this section records the approved rules concisely and links to the plan for exact numeric values.
 
 ### App Bar behavior (D-22)
 
@@ -461,6 +462,8 @@ On every localized route the App Bar keeps the approved prohibition on hiding, t
 The canvas, ground, scrim, glyphs, bearings, plate numbers, readout, decorative arc and Bayer letters are all `aria-hidden`; all meaning stays in HTML in the approved source order. The locale-neutral static poster pair (D-23) is the complete fallback for reduced motion, Save-Data, no JavaScript, unsupported WebGL, initialization failure and context loss, matching the existing `IMMERSIVE-HOME-V1.1` failure contract. The recede/suspend behavior (D-24) adds a new idle condition — rendering stops while fully receded, in addition to stopping when scroll progress settles — and is itself decorative; no focusable control or meaning depends on it.
 
 ### Pause control (D-25)
+
+*Implementation note, 2026-10-05:* the control exists only while the WebGL scene is active (`ImmersiveEnhancement` renders it), so reduced motion, Save-Data, no JavaScript, unsupported WebGL, software renderers and failures show no Pause control. In the DOM it follows the chapters, so it sits right after them in tab order (see the tab-order correction below). Its visible name states the next action and `aria-pressed` states the current one. Real screen-reader announcement of that state is DEFERRED to the manual protocol.
 
 The Pause motion control (see the item 16 marker above) is fixed at the viewport corner, shown only while the chapter span is in view, and hidden with the `hidden` attribute during the hero and under the D-24 recede rule. Hiding it during the hero never removes a focusable control while motion is visible, because the canvas shows no chapter motion before Chapter 1. It remains keyboard operable, exposes `aria-pressed`, and keeps a visible focus indicator, supplementing rather than replacing `prefers-reduced-motion`.
 
@@ -474,7 +477,7 @@ Every Home animation uses only `opacity`, `filter` or `transform`: the scene's s
 
 ### Accessibility strategy (plan section 13)
 
-Heading hierarchy and landmark count are unchanged. Keyboard tab order is App Bar, hero actions, Problems action, Services action, the Position fix toggle buttons, Proof action, Process action, Founder action, CTA actions, then the Pause control when present, in the approved source order; focus is always visible and the sticky bar never hides a focused element (`scroll-padding-top: 96px`). Every text pair introduced by `SKY-CHART-V2` (design-visual D-04 to D-06 and D-19) is asserted by `scripts/design-tokens.test.mjs`, including worst-case translucent composites. Forced colors and reduced transparency follow `DESIGN-VISUAL` D-07. Zoom and reflow: 320px with no horizontal scroll, and 200% text zoom with content growth; the hero exceeds `100svh` when needed rather than clipping content. Targets stay at least 44px, with 48px for the primary CTA. A real NVDA + Firefox check and a VoiceOver iOS spot check close the previous plan's deferred screen-reader item (Task 11 manual QA).
+Heading hierarchy and landmark count are unchanged. Keyboard tab order is App Bar, hero actions, the Pause control when present, Problems action, Services action, the Position fix toggle buttons, Proof action, Process action, Founder action, then the CTA actions, in the approved source order. *Corrected 2026-10-05 (plan Deviations, N12):* this sentence first put Pause last, after the CTA actions. D-25 hides Pause whenever the page has receded, which is always the case by the CTA, so a last position was unreachable. Pause comes right after the chapters' last focusable element. The chapters hold no focusable content, so in practice it follows the hero actions and precedes the Problems action (asserted by `sky-chart-acceptance.spec.ts`). Focus is always visible and the sticky bar never hides a focused element (`scroll-padding-top: 96px`). Every text pair introduced by `SKY-CHART-V2` (design-visual D-04 to D-06 and D-19) is asserted by `scripts/design-tokens.test.mjs`, including worst-case translucent composites. Forced colors and reduced transparency follow `DESIGN-VISUAL` D-07. Zoom and reflow: 320px with no horizontal scroll, and 200% text zoom with content growth; the hero exceeds `100svh` when needed rather than clipping content. Targets stay at least 44px, with 48px for the primary CTA. A real NVDA + Firefox check and a VoiceOver iOS spot check close the previous plan's deferred screen-reader item (Task 11 manual QA). *(2026-10-05: not performed. Plan section 26.3 is the protocol, and the [acceptance record](../reviews/sky-chart-acceptance-v2/index.md) records it as DEFERRED.)*
 
 ### Scope and supersession boundary
 

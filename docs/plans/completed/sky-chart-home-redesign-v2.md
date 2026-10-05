@@ -2,7 +2,7 @@
 id: PLAN-SKY-CHART-HOME-REDESIGN-V2
 type: execution-plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 related:
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
   - DESIGN-VISUAL
@@ -18,12 +18,17 @@ related:
   - TEST-VISUAL-REGRESSION
   - PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1
   - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
-last_verified: 2026-09-24
+  - RFC-SKY-CHART-VISUAL-SYSTEM-V2
+  - ADR-SKY-CHART-HOMEPAGE-RUNTIME
+  - REVIEW-SKY-CHART-ACCEPTANCE-V2
+last_verified: 2026-10-05
 ---
 
 # Sky Chart Home and App Bar redesign — implementation plan v2
 
-> **Status: APPROVED.** Gate G1 was passed when the repository owner approved and merged [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../../rfcs/sky-chart-visual-system-v2.md) as Governance PR #77 (merge commit `70168e9`) on 2026-09-24. This Task 2 / PR 2 records the accepted decision in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../../decisions/sky-chart-homepage-runtime.md) and the approved `DESIGN-VISUAL`/`DESIGN-IX-A11Y`/`PAGE-HOME` sections, and sets this document's `status` to APPROVED. Implementation Wave 1 (Tasks 3, 4, 5) unlocks once this PR merges and checkpoint W0 (section 25) passes.
+> **APPROVED / COMPLETED — 2026-10-05, with manual QA DEFERRED.** Tasks 1–11 are merged, and Task 12 (the documentation synchronization that moves this plan to `completed/`) completes the plan when the owner merges its PR. Checkpoints W0–W3 are green and recorded in Progress. Every section 14 gate that automation can measure is within limits. The section 26 manual protocol (browsers, real devices, screen readers, preferences, content truth and the side-by-side design check) has **not been performed**, and the two hardware-GPU gates (scroll frame interval p95 and the interaction task) are not yet measured on hardware. The [acceptance record](../../reviews/sky-chart-acceptance-v2/index.md) lists each of those items as DEFERRED, never as PASS, with a checklist the owner fills in. Nothing in this move changes application behavior.
+
+> **Status at approval, 2026-09-24: APPROVED.** Gate G1 was passed when the repository owner approved and merged [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../../rfcs/sky-chart-visual-system-v2.md) as Governance PR #77 (merge commit `70168e9`) on 2026-09-24. This Task 2 / PR 2 records the accepted decision in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../../decisions/sky-chart-homepage-runtime.md) and the approved `DESIGN-VISUAL`/`DESIGN-IX-A11Y`/`PAGE-HOME` sections, and sets this document's `status` to APPROVED. Implementation Wave 1 (Tasks 3, 4, 5) unlocks once this PR merges and checkpoint W0 (section 25) passes.
 
 ## 1. Plan metadata
 
@@ -169,7 +174,7 @@ Two rules apply to every pairing:
 - `@media (prefers-reduced-transparency: reduce)`: opaque plate `#0D243C`, opaque sheet `#F9F6EE`.
 - `@media (forced-colors: active)`: `border: 1px solid CanvasText`, with no background images.
 
-**D-08 Blur budget.** No viewport may intersect more than three content surfaces that use `backdrop-filter`; the App Bar is excluded. Process step plates therefore use `blur={false}`.
+**D-08 Blur budget.** No viewport may intersect more than three content surfaces that use `backdrop-filter`; the App Bar is excluded. Process step plates therefore use `blur={false}`. *Amended 2026-10-04 (owner decision E1, see Deviations; recorded in DESIGN-VISUAL by Task 12):* the gate is **per section**. At each section (a viewport aligned to, and centred on, that section) at most three content surfaces use `backdrop-filter`. A half-viewport sweep between sections is informational only, with a regression cap of 5; it records brief overshoots (4 at 768 and 1440 in production) while a viewport straddles two sections.
 
 **D-09 Typography.** The families (Instrument Sans, IBM Plex Mono) and the 64-character mono limit are unchanged. New Tailwind `fontSize` tokens:
 
@@ -182,23 +187,24 @@ Two rules apply to every pairing:
 | `body-lg` | 19px / 1.6 |
 | `label` | 12px mono, 0.08em tracking, uppercase |
 
-Headings use `text-wrap: balance`. Greek Bayer letters and degree labels use mono without the uppercase transform.
+Headings use `text-wrap: balance`. Greek Bayer letters and degree labels use mono without the uppercase transform. *(Amended by E5, 2026-10-04: the Bayer letters now use a serif Greek stack, see D-13. The degree labels are unchanged.)*
 
 **D-10 Spacing.**
 
 - Home section padding-block: `clamp(72px, 10vw, 140px)`.
 - Chapter gap: 34vh at ≥1024, 28vh at 768–1023, 22vh below 768. Chapter span padding-block: `10vh 30vh`.
 - Container and gutters: 1200px, 20/32/48px (unchanged).
-- `--app-bar-height: 84px` (48px CTA + 2×8px inner padding + 2×10px outer padding). `scroll-padding-top: 96px`.
+- `--app-bar-height: 84px` (48px CTA + 2×8px inner padding + 2×10px outer padding). `scroll-padding-top: 96px`. *Clarified 2026-10-04 (Task 11, PR #92; recorded by Task 12):* `header[data-app-bar]` is exactly `--app-bar-height` (84px) tall at every width, set with `h-[var(--app-bar-height)]`, so the hero pulled up by that value meets the header's top edge. The bar surface inside it is 66px tall at ≥1024 and 62px below. Before this fix the header's layout box was 86px (≥1024) or 82px (below), and the hero sat 2px off.
 
 **D-11 Hero.**
 
 - Pulled under the App Bar with `margin-top: calc(-1 * var(--app-bar-height))`.
 - `min-height: 100svh`, content bottom-aligned (`align-content: end`).
 - Padding-block: `calc(var(--app-bar-height) + 36px) 72px`.
-- Source order: coordinate line (mono `label`, `sky.lit`: the approved eyebrow, then `34°36′S · 58°22′W` with `aria-hidden`), then H1 (`display-1`, max 13ch, Bone), lede (`lead`, `sky.text-2`, max 46ch), actions (primary then ghost, 12px gap, 32px top), trust row (40px top, 20px padding-top, 1px `sky.plate-line` top rule, 14px `sky.text-2`, trust line then availability, 28px gap).
+- Source order: coordinate line (mono `label`, `sky.lit`: the approved eyebrow, then `34°36'S · 58°22'W` with `aria-hidden`; the minute sign is the ASCII apostrophe U+0027, see Deviations), then H1 (`display-1`, max 13ch of Instrument Sans Bold, set as `8.866em`, Bone), lede (`lead`, `sky.text-2`, max 46ch of Instrument Sans Regular, set as `30.636em`), actions (primary then ghost, 12px gap, 32px top), trust row (40px top, 20px padding-top, 1px `sky.plate-line` top rule, 14px `sky.text-2`, trust line then availability, 28px gap).
 - Below 480px the actions are full width.
 - Content growth is never clipped; at 200% zoom the hero grows past 100svh.
+- *Amended 2026-10-04 (owner decision, extends E2; recorded in DESIGN-VISUAL by Task 12):* the two caps are written in `em`, not `ch`, so the box is the same before and after the web-font swap. `ch` follows the face on screen, and in the fallback face the H1 cap was about 16% narrower. 8.866em and 30.636em are the exact Instrument Sans Bold and Regular equivalents of 13ch and 46ch, so the loaded layout is unchanged.
 
 **D-12 Chapters.**
 
@@ -213,7 +219,7 @@ Headings use `text-wrap: balance`. Greek Bayer letters and degree labels use mon
 - The cascade is the existing `<ul>` of situations, one `PlottingSheet` per `li`. Each `li` is a 56px glyph column plus a text column with an 18px gap.
 - Sheet layout: horizontal offsets 0, 56 and 112px at ≥1024 (0 below); vertical overlap −14px; stacking order increases down the list.
 - Contents of each sheet:
-  - Bayer letter α, β or γ: mono 15px Azure, no uppercase, `aria-hidden`.
+  - Bayer letter α, β or γ: mono 15px Azure, no uppercase, `aria-hidden`. *Amended 2026-10-04 (owner decision E5, see Deviations; recorded in DESIGN-VISUAL by Task 12):* the letters are set in a serif Greek stack, `Georgia, 'Times New Roman', 'Noto Serif', serif`, at 17px, Azure, no uppercase, `aria-hidden`. The Plex Mono subset has no Greek, so a mono declaration only ever rendered a fallback glyph.
   - Situation text: 19–23px (`clamp(19px, 1.7vw, 23px)`), Ink.
   - Bearing label 042°, 117° or 236°: `aria-hidden`.
   - Cocked-hat glyph: `aria-hidden` SVG using the path data in Appendix C.
@@ -263,7 +269,7 @@ Headings use `text-wrap: balance`. Greek Bayer letters and degree labels use mon
 
 **D-22 App Bar** (every route).
 
-- **Structure:** `div#site-top` is kept. `header[data-app-bar]` is sticky with `top: 0`, `z-index: 50`, 10px/12px outer padding, in normal flow.
+- **Structure:** `div#site-top` is kept. `header[data-app-bar]` is sticky with `top: 0`, `z-index: 50`, 10px/12px outer padding, in normal flow. *Clarified 2026-10-04 (see D-10):* its layout box is exactly `--app-bar-height` (84px) at every width, with the 66px (≥1024) or 62px bar surface top-aligned inside it.
 - **Inner container:** max 1200px, flex, 16px gap, padding `8px 8px 8px 16px`, radius 14px, 1px border.
 - **Docked state** (the default, and the only state without JS): fill `rgba(10,30,51,.82)`, `backdrop-filter: blur(16px) saturate(125%)`, border `sky.plate-line`. Without backdrop-filter support the fill is `.94`.
 - **Home undocked state:** only after JavaScript sets `data-docked="false"` while `scrollY ≤ 24`. The fill is transparent and the border transparent. Background and border transition over 240ms with `--ease-out`.
@@ -414,12 +420,12 @@ Content has no entrance animation or scroll reveal. Every animation uses only `o
 - The canvas, ground, scrim, glyphs, bearings, plate numbers, readout, arc and Bayer letters are all `aria-hidden`. All meaning stays in HTML in the approved order.
 - Heading hierarchy: one H1, chapter H2s, section H2s, H3s inside Services and Process. Landmark count is unchanged.
 - Contrast: every text pair in D-04, D-05, D-06 and D-19 is asserted by `scripts/design-tokens.test.mjs`, including worst-case composites (plate over `#9CC4EC`; sheet over `sky.field`).
-- Keyboard: tab order is App Bar, hero actions, Problems action, Services action, Position fix toggle buttons, Proof action, Process action, Founder action, CTA actions, then the Pause control when present. Focus is always visible (D-21), and the sticky bar never hides a focused element (scroll-padding-top 96px).
+- Keyboard: tab order is App Bar, hero actions, then the Pause control when present (it comes right after the chapters' last focusable element; the chapters hold none, so it follows the hero actions and precedes the Problems action), Problems action, Services action, Position fix toggle buttons, Proof action, Process action, Founder action, then CTA actions. *Corrected 2026-10-05 (N12, see Deviations):* this sentence first put Pause last, after the CTA actions. D-25 hides Pause once the page has receded, which is always the case by the CTA, so that position was unreachable. Focus is always visible (D-21), and the sticky bar never hides a focused element (scroll-padding-top 96px).
 - Motion: `prefers-reduced-motion` initializes no canvas. The Pause control supplements it.
 - Transparency and forced colours: D-07.
 - Zoom and reflow: 320px with no horizontal scroll, and 200% text zoom with content growth. The hero exceeds 100svh when needed.
 - Targets: at least 44px, with 48px for the primary CTA.
-- Screen readers: a real NVDA + Firefox check and a VoiceOver iOS spot check (Task 11 manual QA). The previous plan deferred this.
+- Screen readers: a real NVDA + Firefox check and a VoiceOver iOS spot check (Task 11 manual QA). The previous plan deferred this. *(2026-10-05: not performed. Section 26.3 is the protocol, and the [acceptance record](../../reviews/sky-chart-acceptance-v2/index.md) records it as DEFERRED.)*
 
 ## 14. Performance strategy
 
@@ -438,6 +444,14 @@ Content has no entrance animation or scroll reveal. Every animation uses only `o
 | Backdrop-filter surfaces per viewport | ≤3 (App Bar excluded) | E2E DOM scan at each section |
 | Idle rendering | 0 frames after settle | Debug hook frame counter |
 | Main-thread interaction task (retained ADR gate) | <50 ms | Hardware-accelerated GPU, as the frame interval (amended 2026-09-28); advisory in `measure:immersive` under SwiftShader |
+
+*Measurement notes, recorded 2026-10-05 from Task 11 (PR #92). No limit above changes.*
+
+- Draw calls, label textures and idle frames are measured in production at the WebGL API, because the dev-only debug hook is compiled out of production builds.
+- The JavaScript gate measures the lazy runtime chunk set (the runtime chunk plus `three`). The whole-page delta against the `ff6eadf` baseline is reported only.
+- Layout shift is attributed to the enhancement: shifts after `immersive:import-start`, or from a source inside the canvas, scrim or Pause pill, excluding web-font loading. Whole-page CLS is gated at ≤0.1 in `measure:home-vitals`.
+- The backdrop-filter gate applies at each section (D-08, E1). A half-viewport sweep between sections is reported as information only, with a regression cap of 5.
+- The two hardware-GPU rows are measured only by the section 26 device protocol. SwiftShader numbers are advisory.
 
 Loading order: HTML and CSS first, then fonts (Instrument preloaded). After `load`, near the viewport and past the gates, `three` and the runtime load in one dynamic chunk. The posters use CSS `background-image` and are not preloaded.
 
@@ -652,7 +666,7 @@ Every packet also inherits these rules:
 - **Owned paths:** see section 19. **Forbidden:** every component outside `components/surfaces/`. **Locks:** L-02, L-03.
 - **Expected behaviour:** no visible change on any page (no consumer yet).
 - **RED tests:**
-  - `design-tokens.test.mjs` asserts these exact values and minimum ratios, which fail until the tokens exist: `sky.lit` ≥4.5 on abyss, deep and field; Bone ≥7 on `sky.plate` composited over `#9CC4EC`; `sky.text-2` ≥4.5 on that same composite; Ink ≥7 and Muted ≥4.5 on `sky.sheet` composited over `sky.field`; Bone ≥7 on `#0A55A3`.
+  - `design-tokens.test.mjs` asserts these exact values and minimum ratios, which fail until the tokens exist: `sky.lit` ≥4.5 on abyss, deep and field; Bone ≥7 on `sky.plate` composited over `#9CC4EC`; `sky.text-2` ≥4.5 on that same composite; Ink ≥7 and Muted ≥4.5 on `sky.sheet` composited over `sky.field`; Bone ≥7 on `#0A55A3` *(corrected 2026-10-05 by Task 12, citing the 2026-09-24 Task 3 Deviation: the true ratio is 6.84:1, AA but not 7:1. The test asserts ≥6.5 and records the exact figure; see Deviations)*.
   - `surfaces.test.mjs` asserts: no `'use client'`; decorative spans are `aria-hidden`; no `hover:`, `cursor-pointer` or `onClick`; the D-07 `@supports`, `prefers-reduced-transparency` and `forced-colors` blocks exist; blur is absent when `blur={false}`.
   - A config assertion in `surfaces.test.mjs` checks that the three spec names are registered in the named projects.
 - **GREEN:** minimal tokens, CSS and components.
@@ -1086,11 +1100,11 @@ Performed after W3. Results are recorded honestly in Task 12's acceptance record
 
 ## Appendix A — New bilingual strings
 
-All other strings are existing approved content. Mono labels are ≤64 characters. Strings marked *(decorative)* are rendered `aria-hidden`.
+*Corrected 2026-10-05: `instrument.coordinates` uses the ASCII apostrophe U+0027, not the prime U+2032 that this table first wrote, because the shipped Instrument Sans subset lacks U+2032 (see Deviations).* All other strings are existing approved content. Mono labels are ≤64 characters. Strings marked *(decorative)* are rendered `aria-hidden`.
 
 | Key | English | Spanish |
 | --- | --- | --- |
-| `instrument.coordinates` *(decorative)* | 34°36′S · 58°22′W | 34°36′S · 58°22′W |
+| `instrument.coordinates` *(decorative)* | 34°36'S · 58°22'W | 34°36'S · 58°22'W |
 | `instrument.plateLabel` *(decorative)* | Plate {current}/04 | Lámina {current}/04 |
 | `instrument.statusLabel` *(decorative)* | Plate {current} of 04 | Lámina {current} de 04 |
 | `instrument.chapters[].kicker` | Recognize · Fragment · Connect · Coordinate | Reconocer · Fragmentar · Conectar · Coordinar |
@@ -1242,6 +1256,7 @@ Documentation impact: <none | records>
   - **Verdict.** Every section 14 gate that automation can measure is within limits. The two hardware-GPU gates are measured only by the section 26 protocol, as the amended ADR requires. They stay pending, and Task 12's acceptance record reports them as PASS, FAIL or DEFERRED from the manual results.
 
   Wave 4 dispatched: Task 12, from this checkpoint commit.
+- 2026-10-05 — Task 12 implemented on `codex/sky-chart-task-12-docs` (Claude Sonnet 5; independent review and the owner's merge follow). It synchronizes `ARCHITECTURE.md`, `docs/architecture/current-system.md` and `docs/index.md` with what was built; adds the [acceptance record](../../reviews/sky-chart-acceptance-v2/index.md) (`REVIEW-SKY-CHART-ACCEPTANCE-V2`); applies the corrections that the Deviations assign to Task 12 (coordinates, the 6.84:1 hover contrast, the N12 Pause tab position, D-08, D-10/D-22, D-11, D-13, the section 14 and ADR measurement notes, the font notes); records the acceptance spec, the Home-sections visual spec and `tests/e2e/support/*` in the two testing records; and moves this plan to `completed/`. `npm run docs:check` and `npm run validate` pass on the branch (see the acceptance record for the numbers). **Manual QA is DEFERRED.** No section 26 result existed on 2026-10-05, so the acceptance record lists every manual item and both hardware-GPU gates as DEFERRED with a checklist for the owner. Nothing is recorded as PASS without recorded evidence. The plan is marked `plan_status: COMPLETED` with that deferral stated, as the previous immersive plan was.
 
 ## Important implementation decisions
 
@@ -1350,3 +1365,28 @@ Documentation impact: <none | records>
     - **Evidence:** `scripts/font-fallback.test.mjs` (RED first). Windows is unchanged: font swap 10/10, visual 64/64, no baseline change. The Linux font-swap group passes 10/10 (run 37304538202).
     - **Still open:** Roboto and Helvetica are approximate rather than metric clones. The section 26 real-Android check must confirm there is no visible hero jump on a slow load.
 - **Task 12 provider substitution and base (2026-10-05, W3).** At its last use (PR #89, see "OpenAI reviewers run on GPT-5.6"), the Codex route could not run local commands, and Task 12 must run `npm run docs:check` and `npm run validate`. So Claude Sonnet 5 implements Task 12 under the Wave 1 arrangement, and an independent Claude Opus 5.5 agent reviews it, then the owner. Task 12's branch starts from the W3 checkpoint commit, which carries the W3 record that the plan's move to `completed/` must preserve. Its PR targets `main` and opens only after the W3 checkpoint PR merges. It is not stacked.
+- **Task 12 record corrections (2026-10-05).** Each item below was assigned to Task 12 by an earlier Deviations entry or by PR #92. Where a record lived in a path Task 12 does not own, the correction is only a link or a dated note.
+  - **Coordinates:** Appendix A, D-11 and PAGE-HOME now write `34°36'S · 58°22'W` with the ASCII apostrophe (Task 4 entry).
+  - **Hover contrast:** the Task 3 packet's "Bone ≥7 on `#0A55A3`" carries a correction note, and DESIGN-VISUAL D-04 records 6.84:1. No other record repeated the 7:1 claim.
+  - **N12:** the Pause tab-order sentence is corrected in section 13 and in DESIGN-IX-A11Y. Pause follows the chapters' last focusable element, so it sits after the hero actions and before the Problems action.
+  - **E1, E5 and the `em` caps:** D-08, D-13 and D-11 carry dated amendment notes here and the matching text in DESIGN-VISUAL. D-10 and D-22 record the exact 84px header box and the 66px (≥1024) or 62px bar surface inside it.
+  - **Section 14 and the ADR:** this plan's section 14 and the ADR's gate table carry the measurement notes from PR #92. The ADR note is a dated amendment, and no budget changes.
+  - **Fonts:** DESIGN-VISUAL records that Plex Mono uses a real monospace fallback (`Courier New`, `Liberation Mono`, `monospace`, `adjustFontFallback: false`), that Instrument Sans keeps `next/font`'s adjusted fallback plus the `Instrument Sans Metric Fallback` family, and that the Plex Mono subset has no Greek.
+  - **Testing records:** `docs/testing/playwright.md` and `docs/testing/visual-regression.md` gained entries for `sky-chart-acceptance.spec.ts`, `home-sections.visual.spec.ts` and `tests/e2e/support/*`, under a lock transfer from the orchestrator limited to those entries.
+  - **DESIGN records are not marked IMPLEMENTED.** The status vocabulary is APPROVED, PROPOSED, OPEN and REJECTED. Earlier delivered plans left their DESIGN records APPROVED, and only `docs/index.md` carries an "IMPLEMENTED" heading. Task 12 follows that: the `SKY-CHART-V2` sections stay APPROVED and `docs/index.md` gains a "Sky Chart Home and App Bar v2 — IMPLEMENTED, manual QA DEFERRED" section.
+  - **Left for the owner:** two code comments still name the old plan path (`components/homepage/impact/position-fix.module.css` and `lib/impact/position-fix.ts`: `docs/plans/active/sky-chart-home-redesign-v2.md`). Both files are outside Task 12's paths, so the comments now point at a moved file. A later code change can update them.
+- **Task 11 findings recorded at close (2026-10-05).** These were in PR #92's description, not in this section.
+  - **Hero top versus header top, closed.** The 2px gap (N3) was real at every width and in every mode. `header[data-app-bar]` is now exactly `--app-bar-height` tall (RED `fb7e722`, GREEN `04c6d01`), and `sky-chart-acceptance.spec.ts` asserts `|heroTop − headerTop| ≤ 1` at five widths with the runtime, and at 1440 and 390 without JavaScript. The ten instrument baselines moved by 2px at the header and the fixed poster edge, and the owner approved them (E3).
+  - **Gap for Task 11, closed.** Home sections at 768 are covered by `home-sections.visual.spec.ts` (1440, 768 and 390, both locales).
+  - **N6 coverage, restored** in `sky-chart-acceptance.spec.ts`: the multi-viewport journey, rotation during Connect, and 200% zoom (720×450, 512×384 and 384×512).
+  - **W2 follow-ups.** 1 is closed: `measure:immersive` gates the lazy runtime chunk plus `three` (108.1 KiB) and reports the whole-page delta (114.4 KiB). 2 is closed: shifts are attributed to the enhancement, whole-page CLS is gated at ≤0.1 in `measure:home-vitals`, and the font-swap cause was fixed under E2, which supersedes the note that font tuning needed an owner decision. 3 is mitigated, not eliminated: `gotoResilient` retries a 5xx from the `next dev` race, slow journeys use `test.slow()` and eased polls use a 20 s budget. Local two-worker runs can still flake under load; the W3 `/Portfolio` run had one such webkit contact failure. 4 stands as written.
+  - **Page-video recorder hang.** Two full-page navigations at once hang when Playwright records video while SwiftShader composites the canvas. `immersive-home.spec.ts` and `sky-chart-acceptance.spec.ts` therefore set a top-level `video: 'off'`. They still record screenshots and first-retry traces. `playwright.config.ts` is untouched.
+  - **Windows socket flake.** One local run saw `net::ERR_NO_BUFFER_SPACE` (socket buffer exhaustion) as a console error in the rotation test. It passed on the next run.
+  - **Greek in the Plex Mono subset.** The subset has no Greek, which is what E5 works around. Adding Greek glyphs to the subset is an asset change that stayed outside this plan.
+- **Open after Task 12.** These are explicit, not hidden by the move to `completed/`:
+  - **Owner decision: Founder has no atlas plate.** The implementation differs from approved D-05, supersession item 13 and D-18: `HomeFounder.tsx` renders the 8/4 grid without an `AtlasPlate`, although plan section 2, item 13, the RFC and DESIGN-VISUAL place Founder on an atlas plate. No owner decision is recorded. The owner either adds the plate (a code task) or amends the design through governance.
+  - The section 26 manual protocol (browsers, real devices, screen readers, preferences, content truth and design fidelity) is not performed. Section 3 promised that this plan would close the previous plan's three deferrals. The compact Pause placement is closed by D-25 and its tests, but the constrained-Android evidence and the real screen-reader check are still open.
+  - The hardware-GPU gates (scroll frame interval p95 ≤20 ms and the interaction task <50 ms) have only advisory SwiftShader numbers.
+  - The Instrument Sans fallback on Android uses Roboto and Helvetica, which approximate Arial's metrics rather than match them. The manual Android pass must confirm there is no visible hero jump on a slow load.
+  - Firefox and WebKit never activate the runtime in headless automation (E4), so a real canvas in those engines is covered only by the manual checklist.
+  - Real-device thermal behaviour and the press-scale question (section 30) remain OPEN.

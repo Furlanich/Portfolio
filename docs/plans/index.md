@@ -20,7 +20,8 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
-last_verified: 2026-09-30
+  - REVIEW-SKY-CHART-ACCEPTANCE-V2
+last_verified: 2026-10-05
 ---
 
 # Execution plans
@@ -34,10 +35,9 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 - [PLAN-SPF-V1](active/services-projects-footer-v1.md): **PROPOSED, awaiting human plan approval.** Codex-authored ADE v2 plan after owner approval of [DESIGN-SPF-V1](../design/services-projects-footer-v1.md)/linked ES/EN copy on 2026-09-30. Ten task/PR packets with [owner-approved model routing](active/services-projects-footer-v1.md#model-routing): Claude Sonnet 5.5 for complex/design work, bounded GPT-6 Luna implementation and independent GPT-6.1 Sol review for every PR. Exclusive locks, one disjoint concurrency wave and strict behavioral TDD remain. [Historical Luna review](../reviews/services-projects-footer-plan-review-2026-09-30.md) resolved both findings in round2; independent Sol round3 reviewed the revised plan with no findings. Production remains unchanged; governance/plan/merge gates remain mandatory.
 
-- [PLAN-SKY-CHART-HOME-REDESIGN-V2](active/sky-chart-home-redesign-v2.md): **APPROVED**. Sky Chart Home and App Bar redesign in twelve task/PR packets across five waves. Gate G1 passed when the owner approved and merged [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md) as Governance PR #77 (`70168e9`); Task 2 / PR 2 recorded [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md) and the approved design/product sections. Implementation Wave 1 unlocks once checkpoint W0 passes. Direction evidence: [REVIEW-SKY-CHART-DIRECTION-2026-09-23](../reviews/sky-chart-direction-2026-09-23/index.md).
-
 ## Completed
 
+- [PLAN-SKY-CHART-HOME-REDESIGN-V2](completed/sky-chart-home-redesign-v2.md): APPROVED / COMPLETED on 2026-10-05, **with manual QA DEFERRED**. Sky Chart Home and App Bar redesign delivered through twelve task/PR packets across five waves (Governance PRs #77 and #78; implementation PRs #79–#92, with #96 and #97 as supporting fixes). Checkpoints W0–W3 are green and recorded in the plan's Progress; every section 14 gate that automation can measure is within limits. The section 26 manual protocol and the two hardware-GPU gates (scroll frame interval p95 and the interaction task) have not been performed and are recorded as DEFERRED in the [acceptance record](../reviews/sky-chart-acceptance-v2/index.md) (`REVIEW-SKY-CHART-ACCEPTANCE-V2`). Governed by [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md) and [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md); direction evidence: [REVIEW-SKY-CHART-DIRECTION-2026-09-23](../reviews/sky-chart-direction-2026-09-23/index.md).
 - [PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1](completed/visual-identity-adaptive-immersive-v1.md): APPROVED / COMPLETED identity, static C2 homepage and direct Three.js enhancement through PRs #65–#69 and #71–#73; PR7 omitted. Constrained Android evidence, a real screen-reader spot check and the compact Pause-control placement are deferred to a follow-up execution plan.
 - [PLAN-MARKETING-PRESENTATION-EXCELLENCE](completed/marketing-presentation-excellence-v1.md): APPROVED / COMPLETED Route B plan for D01, D02, D04, D05, D06 and applicable D07; D03 remains REJECTED. Six sequential bilingual implementation PRs were completed through human merges of PRs #55–#59.
 - [`PLAN-CONTACT-INQUIRY-PIPELINE`](completed/contact-inquiry-pipeline.md): completed the bilingual demonstration Privacy and Contact experience, deployed zero-transmission proof, and preserved future commercial activation gates.

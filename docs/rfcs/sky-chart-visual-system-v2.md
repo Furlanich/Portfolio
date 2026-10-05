@@ -24,11 +24,11 @@ last_verified: 2026-09-24
 
 On 2026-09-23 the repository owner reviewed three prototyped directions — A Sky Chart, B Line Map, C Deployable Sheet — recorded in [`REVIEW-SKY-CHART-DIRECTION-2026-09-23`](../reviews/sky-chart-direction-2026-09-23/index.md), and chose Direction A · Sky Chart, with C · Deployable Sheet's personalization technique applied to specific sections, and a preference for semi-transparent cards wherever they stay legible and original. The owner also confirmed that implementation opens with this Governance PR, followed by a superseding ADR where runtime changes are recorded, and authorized use of Figma before implementation.
 
-[`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) carries the resolved direction into a twelve task/PR execution plan. That plan's `status` stays `PROPOSED` and no implementation task may start until this RFC receives the owner's gate G1 approval and Task 2 records the superseding ADR and approved design sections. This RFC implements nothing; it is the governance step the plan and the lifecycle require.
+[`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-home-redesign-v2.md) carries the resolved direction into a twelve task/PR execution plan. That plan's `status` stays `PROPOSED` and no implementation task may start until this RFC receives the owner's gate G1 approval and Task 2 records the superseding ADR and approved design sections. This RFC implements nothing; it is the governance step the plan and the lifecycle require.
 
 ## Proposal
 
-The resolved world is a navigator's star atlas, detailed in [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) section 2 ("Approved design direction") and normatively specified in that plan's section 6 design decisions D-01 through D-27. This RFC references those sections by link rather than restating them, so the plan stays the single normative source of the numeric specification.
+The resolved world is a navigator's star atlas, detailed in [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-home-redesign-v2.md) section 2 ("Approved design direction") and normatively specified in that plan's section 6 design decisions D-01 through D-27. This RFC references those sections by link rather than restating them, so the plan stays the single normative source of the numeric specification.
 
 In summary:
 
@@ -78,7 +78,7 @@ The superseding ADR is out of scope for this Governance PR and is not created he
 
 ## New copy
 
-The only new bilingual copy this direction requires is listed in [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) Appendix A ("New bilingual strings"), referenced here rather than duplicated. It covers: the decorative instrument coordinate line, plate-label and status-label templates; the four chapter kickers; the Services, Proof and Process section kickers; the App Bar readout labels; the Proof accountability log; and the complete `HOME-IMPACT` (Position fix) content — heading, introduction, illustrative-scenario tag, toggle labels, figure titles and descriptions, the five source/note pairs, and the impact-counts labels and caption. Every other Home and App Bar string is existing approved content; no approved copy is changed by this RFC.
+The only new bilingual copy this direction requires is listed in [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-home-redesign-v2.md) Appendix A ("New bilingual strings"), referenced here rather than duplicated. It covers: the decorative instrument coordinate line, plate-label and status-label templates; the four chapter kickers; the Services, Proof and Process section kickers; the App Bar readout labels; the Proof accountability log; and the complete `HOME-IMPACT` (Position fix) content — heading, introduction, illustrative-scenario tag, toggle labels, figure titles and descriptions, the five source/note pairs, and the impact-counts labels and caption. Every other Home and App Bar string is existing approved content; no approved copy is changed by this RFC.
 
 ## Alternatives
 
@@ -103,7 +103,7 @@ The Figma mirror for this direction (Gate F) exists at `https://www.figma.com/de
 
 The repository owner's gate G1 approval is requested for:
 
-1. The Sky Chart · Direction A environment, atlas-plate and plotting-sheet material system, and floating chart-header App Bar described above and normatively specified in [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) section 6 (D-01 to D-27).
+1. The Sky Chart · Direction A environment, atlas-plate and plotting-sheet material system, and floating chart-header App Bar described above and normatively specified in [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-home-redesign-v2.md) section 6 (D-01 to D-27).
 2. The eighteen supersessions listed above, each bounded as stated — **including, as a distinct decision, item 14's explicit removal of the derived Azure sculpture** as the scene's identity element.
 3. The runtime-change summary above, authorizing Task 2 to draft the superseding `ADR-SKY-CHART-HOMEPAGE-RUNTIME` for separate review; this RFC does not itself accept that ADR.
 4. The new copy referenced from plan Appendix A.
