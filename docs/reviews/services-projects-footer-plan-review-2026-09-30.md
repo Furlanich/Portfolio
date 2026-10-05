@@ -1,7 +1,7 @@
 ---
 id: REVIEW-SPF-PLAN-2026-09-30
 type: independent-plan-review
-status: PROPOSED
+status: APPROVED
 related:
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
@@ -12,7 +12,7 @@ last_verified: 2026-10-05
 
 # Independent ADE v2 plan review — Services, Projects and Footer
 
-The owner approved the Revision 5 written design/copy, then explicitly authorized ADE v2 planning and independent review. Codex authored [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md). A fresh **GPT-6 Luna (`gpt-6-luna`, high reasoning)** agent reviewed it independently under a read-only instruction, without authoring or editing the plan. It read the full plan, approved spec and repository source/testing/governance. The original Codex author alone incorporated corrections. This record preserves review evidence; the plan remains PROPOSED for human approval and production remains unchanged.
+The owner approved the Revision 5 written design/copy, then explicitly authorized ADE v2 planning and independent review. Codex authored [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md). A fresh **GPT-6 Luna (`gpt-6-luna`, high reasoning)** agent reviewed it independently under a read-only instruction, without authoring or editing the plan. It read the full plan, approved spec and repository source/testing/governance. The original Codex author alone incorporated corrections. This record preserves historical review evidence. Current revision 5 is APPROVED on 2026-10-05 under the [owner authorization below](#owner-approval-2026-10-05), after the independent round 6 passed; production remains unchanged.
 
 ## Round 1 — findings
 
@@ -74,9 +74,45 @@ On 2026-10-05 the owner then decided four open questions (OD-1 Home Founder plat
 
 **Status after revision 4:** the review gate is reopened. A fresh GPT-6.1 Sol round 5 must review revision 4 and find zero BLOCKING issues before the owner approves the plan. `npm run docs:check` passed for the revision.
 
+## Round 5 — final review of revision 4
+
+On 2026-10-05 the owner requested a final review after the Opus revision. Codex inspected revision 4 at `5204592`, the full approved spec/RFC/ADR, current source/test consumers, lifecycle/Skills, governance summaries and deployment triggers. The review made no repository edits.
+
+**Recommendation:** NOT READY. **Counts:** BLOCKING 2, HIGH 0, MEDIUM 1, LOW 0.
+
+| ID / severity | Target | Finding | Correction in revision 5 |
+| --- | --- | --- | --- |
+| SPF-FINAL-01 / BLOCKING | Task 3 | Services' GRS destination changes, but `marketing-services.spec.ts` retains old ES/EN detail URLs and belongs only to Task 6. | Assign both destination values and the href assertion to Task 3, require root/base-path Services runs, then transfer the whole file to Task 6 after W2. |
+| SPF-FINAL-02 / BLOCKING | Live policy, Tasks 7–9 | Initial true values deploy Task 7's live runtime before Task 9 hardware evidence. | Both merged values remain false through Task 8; Task 9 evaluates isolated undeployed candidates without test overrides, restores defaults, enables only evidenced tiers, and rechecks shipped-policy exports. |
+| SPF-FINAL-03 / MEDIUM | Task 1 | Status-only edits leave current PROPOSED/REOPENED prose; removing all historical occurrences would rewrite history. | Permit all current status summaries to be synchronized, preserving completed review rounds. |
+
+Fresh `npm run docs:check` and `git diff --check` passed; no implemented behavior or hardware result was claimed. The owner then requested correction, another review, and approval/PR creation only if the plan passes. This correcting session is a contributor, so revision 5 requires a fresh independent reviewer.
+
+## Round 6 — independent review of revision 5
+
+A fresh **GPT-6.1 Sol (`gpt-6.1-sol`, high reasoning)** reviewer inspected the full plan at `f03f3ec` against `main` at `9138941`, its complete five-file correction diff, review history, approved specification/copy/RFC/ADR, Skills/lifecycle, ownership/dependencies, source/test consumers, Playwright registration, measurement precedents and deployment trigger. It made no repository changes and did not contribute to the corrections.
+
+**Initial recommendation:** REVISE BEFORE APPROVAL. **Counts:** BLOCKING 0, HIGH 0, MEDIUM 1, LOW 0. SPF-FINAL-01, SPF-FINAL-02 and SPF-FINAL-03 were independently verified RESOLVED.
+
+| ID / severity | Target | Finding | Author correction |
+| --- | --- | --- | --- |
+| SPF-FINAL-04 / MEDIUM | Current architecture summaries | `ARCHITECTURE.md` and `docs/architecture/current-system.md` still expected SPF to change the Home Founder plate, contradicting OD-1 and leaving the correction outside the closed packet write sets. | Correct both current sentences with a dated OD-1 link, preserving delivered plate facts and historical approvals. |
+
+Fresh reviewer `npm run docs:check` and base-to-head `git diff --check` passed. Implementation visual/runtime/hardware/phone/screen-reader behavior was excluded because it has not been implemented; absent hardware evidence remains a future gate. Future Sonnet availability remains a dispatch gate, not a verified fact. The same independent reviewer re-reviewed the bounded correction at `d16d909` and verified SPF-FINAL-04 RESOLVED, with no new scope, status or link issue. **Final recommendation:** READY FOR HUMAN PLAN APPROVAL. **Final unresolved counts:** BLOCKING 0, HIGH 0, MEDIUM 0, LOW 0. Fresh reviewer `npm run docs:check` and `git diff --check origin/main..HEAD` passed; the working tree was clean. The reviewer made no file, index or HEAD changes. SPF-FINAL-01 through SPF-FINAL-03 remain resolved.
+
+## Owner approval — 2026-10-05
+
+The owner supplied this conditional authorization in the current Codex chat on 2026-10-05:
+
+> Correct the BLOCKING and MEDIUM issues, and review the plan again. If the plan then passes the review, change it's status to APPROVED and open a PR.
+
+The fresh independent round 6 and its bounded correction verification passed with zero unresolved findings. The stated condition is fulfilled: **PLAN-SPF-V1 revision 5 is APPROVED — 2026-10-05**. This paragraph is the durable approval-source record for Task 1. [Final-review PR #104](https://github.com/Furlanich/Portfolio/pull/104) records approval and corrections; Task 1 still verifies these records, assembles its acceptance scaffold/receipt and obtains the human Governance PR merge before W0. No implementation, W0 checkpoint, hardware acceptance or PR merge is claimed here. Human control of `main` remains unchanged.
+
 ## Boundaries and verification
 
 - Independent review evaluates execution readiness, not implemented behavior. No production code, route removal, runtime, baseline update or hardware acceptance was performed in this planning session.
 - Required physical-device/cross-browser/screen-reader/production-budget evidence remains an explicit implementation gate in Tasks 9–10. A planned future gate is not an unresolved design decision or a prototype-derived PASS.
 - Human plan approval precedes W0; Governance PR and every implementation PR require human merge. This review does not approve the plan on the owner's behalf.
-- Final documentation validation: `npm run docs:check` passed (379 Markdown files, 97 document IDs, 38 Skills); `git diff --check` passed. Changed files are documentation only, with no app/component/lib/public/script/test/package/config changes. No production test/build result is claimed from this documentation-only review.
+- Final PR review: the independent GPT-6.1 Sol reviewer checked the approval diff at `9cb03ab` read-only and returned BLOCKING 0, HIGH 0, MEDIUM 0, LOW 0. Current APPROVED/PASSED summaries and the owner authorization are synchronized; historical outcomes and implementation gates remain intact.
+- Final validation — 2026-10-05: `npm run validate` passed at `9cb03ab` in the clean `.worktrees/spf-final-validation` checkout after a physical `npm ci --prefer-offline`: documentation checks, 291/291 Node tests, ESLint, TypeScript no-emit and the production static build. ESLint had zero errors and 282 existing vendored-script warnings; Node module-type and stale Browserslist notices were non-fatal. The primary-checkout lint attempt scanned unrelated generated `.claude/worktrees`; the clean checkout excludes that local contamination without changing any gate. The initial dependency-junction build attempt was replaced with physical dependencies because Turbopack rejects links outside its project root.
+- Final diff scope: seven documentation files only; no app/component/lib/public/script/test/package/config changes. `npm run docs:check` and `git diff --check` pass. Existing application build success is not acceptance of the future SPF implementation; no browser, visual, hardware or screen-reader acceptance is claimed.
