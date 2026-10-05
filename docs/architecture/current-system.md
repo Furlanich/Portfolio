@@ -12,7 +12,12 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-19
+  - ADR-SKY-CHART-HOMEPAGE-RUNTIME
+  - PLAN-SKY-CHART-HOME-REDESIGN-V2
+  - REVIEW-SKY-CHART-ACCEPTANCE-V2
+  - DESIGN-VISUAL
+  - DESIGN-IX-A11Y
+last_verified: 2026-10-05
 ---
 
 # Current system
@@ -20,6 +25,8 @@ last_verified: 2026-09-19
 ## Scope
 
 This record includes the retained pre-cutover personal-portfolio implementation and the current Task 2 commercial homepage, Projects index, Task 3 project-detail and Privacy state, and Task 4 project cleanup. The fourteen approved foundation routes implement the documented Spanish-root and English-/en/ route pairs; the current Projects slice adds six paired static detail artifacts for the three approved slugs. Obsolete project JSON, project-only types/exports, animated Card code, and unapproved legacy SVG assets are retired; unrelated founder data and shared primitives remain available to their consumers.
+
+Since 2026-10-05 it also records the Sky Chart Home and App Bar as shipped (see "Current Sky Chart Home and App Bar implementation" below). Where an older section here describes the sticky white-Surface header or the C2 homepage instrument, that section is dated history and the Sky Chart section is current.
 
 ## Application stack
 
@@ -30,6 +37,7 @@ This record includes the retained pre-cutover personal-portfolio implementation 
 - Framer Motion for retained legacy reveal and hover primitives.
 - React Hook Form supports the implemented four-field Contact demonstration. Earlier foundation-only notes predate that integration; the public form simulates outcomes locally.
 - Lucide React plus repository SVG assets for icons.
+- Three.js `0.186.0` (direct, no React Three Fiber), used only by Home's lazily loaded runtime chunk.
 - Playwright Test `1.63.0` and `@axe-core/playwright` `4.13.0` are development-only browser and accessibility dependencies.
 
 The dependency baseline was patched in commit `f68a022` before Stage A.
@@ -175,6 +183,43 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - The shared `SiteHeader` renders as a sticky app bar at the top of every localized foundation route, remaining in normal document flow while scrolling.
 - Below `1024px`, the primary navigation is exposed through a native `<details>` disclosure with a keyboard-operable hamburger summary and a localized navigation panel; at `1024px` and above, the same links and CTA render inline.
 - The app bar preserves the existing localized route map, language switch, CTA destinations, approved focus treatment, static export, and optional base-path behavior without adding a client-state boundary or dependency. Keep browser event handlers and browser globals out of this shared Server Component; navigation uses native links and disclosure semantics. The FURLANICH wordmark links to the localized home route’s `#site-top` anchor so it resets the view from any scroll position without client-side event handling.
+
+## Current Sky Chart Home and App Bar implementation — Tasks 3–11
+
+Delivered by [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-home-redesign-v2.md) under [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md) (merged PRs #79–#92, with #96 and #97 as supporting fixes). The evidence, with what is still DEFERRED, is in the [acceptance record](../reviews/sky-chart-acceptance-v2/index.md). Routes, static export, trailing slashes and the optional base path are unchanged, and no dependency was added.
+
+### Home composition
+
+- `CommercialHomepage` renders `ImmersiveHomeSequence`, then `HomeProblems`, `HomeServices`, `HomeImpact`, `HomeProof`, `HomeProcess`, `HomeFounder` and `HomeCta`. `HomeImpact` is the new "Position fix" section (`#impact`, heading `impact-heading`), between Services and Proof.
+- `ImmersiveHomeSequence` (`components/homepage/immersive/`) is a `[data-instrument]` element containing `EnvironmentGround`, the hero (`section[aria-labelledby="home-heading"]`, pulled under the App Bar by `--app-bar-height`, minimum height `100svh`, bottom-aligned), a `[data-instrument-chapters]` container with the instrument label and four `ImmersiveChapter` plates, and `ImmersiveEnhancement`. The framed stage, the four chapter posters, `PhaseSpine` and the static artwork component were removed.
+- The hero source order is the coordinate line (the approved eyebrow, then `34°36'S · 58°22'W` as `aria-hidden` text with an ASCII apostrophe), the H1, the lede, the actions and the trust row. The H1 and lede max widths are `8.866em` and `30.636em`, so they do not change when the web font arrives.
+- Sections use the shared `HomeSection` shell (`components/homepage/HomeSection.tsx`): the standard 1200px container, section padding, and a `data-readout` value that the App Bar reads. `AtlasPlate` and `PlottingSheet` (`components/surfaces/`) are the two translucent materials. Atlas plates carry the chapters, Services, Proof and Process (Process steps use `blur={false}`). Plotting sheets carry the Problems cascade (three sheets, each with a Greek Bayer letter in a serif stack, a bearing label and a "cocked hat" glyph) and the Position fix figure and counts. Founder is an 8/4 editorial grid, and the Dawn CTA is a gradient to opaque Bone.
+- Position fix: `lib/impact/position-fix.ts` holds the fixed five-source geometry, and counts derive from it. `PositionFixFigure` and `ImpactCounts` are server components, and `PositionFixToggle` is the client leaf that turns the two stacked SVG figures into one with a segmented control and a polite live-region announcement. Without JavaScript both figures show. Every visual carries the "Illustrative scenario" tag.
+
+### Environment layers and the runtime
+
+- `EnvironmentGround` renders the fixed ground (z-index -3) and the contrast scrim (z-index -1) as `aria-hidden` siblings with no wrapper, so no ancestor creates a stacking context above `body`. The ground holds the D-02 gradient and the static poster pair from `public/brand/sky-chart/` (`environment-wide.webp` 1920×1080, `environment-compact.webp` 900×1600; 59.15 KiB and 29.04 KiB, budgets 150 and 80 KiB), chosen at 767px. `body` has no background of its own, and `html` takes the lightest ground colour on Home only. `scripts/render-sky-chart-posters.mjs` regenerates the posters.
+- `ImmersiveEnhancement` (`'use client'`) gates activation in order (reduced motion, Save-Data, WebGL2 and the software-renderer check, the session context-lost flag, near-viewport, `load`) and imports `runtime/create-sky-chart-scene` once. A software rasterizer fails the gate; a test-only `window.__SKY_CHART_ALLOW_SOFTWARE_RENDERER__` global lets SwiftShader-based tests and `measure:immersive` reach the runtime. In production builds the debug hook `__FURLANICH_SKY_CHART__` and the poster-rendering mode are compiled out.
+- The runtime creates the WebGL2 context itself and portals the canvas into `document.body` (fixed, z-index -2, `aria-hidden`, `tabIndex=-1`, `pointer-events: none`). The scene is a graticule, field stars, link segments and up to 20 label sprites for the nodes in `lib/immersive-home/sky-chart-model.ts` (tiers by group, revealed with scroll progress). `SkyChartController` damps by 0.12 and stops when settled; Pause freezes only the camera target, while recede and Pause visibility keep tracking. Canvas and scrim opacity follow `1 − 0.84k` after the chapters, and rendering is suspended while `k = 1`. At 768px and wider, tier-2 labels fade where they would cross the hero's text. Below 768px they are masked while the hero's bottom edge is below 60% of the viewport.
+- Static paths that still run JavaScript (reduced motion, Save-Data, no WebGL2, the software gate, failures) apply the same scrim recede instantly, with no canvas. Without JavaScript the scrim stays static.
+- `PauseMotionControl` renders only while the scene is active: a fixed plate-material pill with a phase readout from 768px, a 44px button and `aria-pressed`. It is hidden by the `hidden` attribute during the hero and once fully receded, and it follows the chapters in tab order.
+
+### App Bar
+
+- `SiteHeader` stays a server component on every route. `header[data-app-bar]` is sticky at `top: 0`, `z-index: 50`, in normal flow, and its layout box is exactly `--app-bar-height` (84px) at every width. The `[data-app-bar-surface]` inside it is the atlas-plate "chart header" (66px tall at 1024px and wider, 62px below). Without JavaScript it is always docked. The no-`backdrop-filter`, reduced-transparency and forced-colors fallbacks are arbitrary Tailwind variants on that element.
+- `BrandSignature variant="on-dark"` renders the bone-on-azure tile. `NavigationDisclosure` keeps the native `<details>` menu below 1024px.
+- `AppBarBehavior` (a render-nothing client leaf; `app-bar-path.ts` and `app-bar-readout.ts` hold its pure logic) sets `aria-current="page"` on the matching route link and, on Home only, `data-docked` (undocked while `scrollY ≤ 24`), the `{NN} · {name}` readout from `[data-readout]` and `aria-current="location"` on the Process link while that section crosses the 40% line.
+
+### Fonts
+
+- `app/fonts.ts`: Plex Mono has `adjustFontFallback: false` and the fallback list `Courier New`, `Liberation Mono`, `monospace`. Instrument Sans keeps `next/font`'s adjusted Arial fallback and then lists `Instrument Sans Metric Fallback`, declared in `app/globals.css` over `local()` Liberation Sans, Arimo, Roboto, Helvetica and Arial with `size-adjust` 103.22%, `ascent-override` 93.97%, `descent-override` 24.22% and `line-gap-override` 0%. `scripts/font-fallback.test.mjs` pins the fallback setup. The Plex Mono subset has no Greek.
+
+### Verification layers added
+
+- **Node tests:** `sky-chart-model`, `sky-chart-runtime`, `position-fix`, `surfaces`, `font-fallback`, `immersive-media-manifest` and `verify-static-export` (fixture exports), plus extended `design-tokens`, `homepage-content`, `site-header` and `immersive-home-state` suites.
+- **Playwright:** `app-bar.spec.ts`, `home-sections.spec.ts`, the `immersive-home*.spec.ts` runtime specs and the 142-test `sky-chart-acceptance.spec.ts` (`immersive-chromium`, SwiftShader), plus `visual-chromium` baselines for the instrument (10) and the seven Home sections (42), each per platform. Helpers live in `tests/e2e/support/`. See [Playwright QA](../testing/playwright.md) and the [visual regression policy](../testing/visual-regression.md).
+- **Production measurements:** `measure:immersive` gates the lazy runtime chunk plus `three`, draw calls, label textures, idle frames, pixel ratio, backdrop surfaces and the canvas and listener lifecycle on a production build at the root base path. `measure:home-vitals` gates LCP, INP and whole-page CLS (≤0.1). Both observe the WebGL API and the browser through `tests/e2e/support/production-instrumentation.mjs`. The `/Portfolio` build is covered by the acceptance spec and `verify:static-export`.
+- **Known limits:** SwiftShader frame and interaction numbers are advisory, Firefox and WebKit never activate the runtime in headless automation, and no real-device or screen-reader result exists yet (see the acceptance record).
 
 ## Environment
 

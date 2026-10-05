@@ -28,6 +28,11 @@ related:
   - PLAN-SERVICES-EXPERIENCE
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-STUDIO-FOUNDER-COMPLETION
+  - RFC-SKY-CHART-VISUAL-SYSTEM-V2
+  - ADR-SKY-CHART-HOMEPAGE-RUNTIME
+  - PLAN-SKY-CHART-HOME-REDESIGN-V2
+  - REVIEW-SKY-CHART-DIRECTION-2026-09-23
+  - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PAGE-HOME
   - PAGE-SERVICES
   - PAGE-STUDIO
@@ -37,7 +42,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-09-30
+last_verified: 2026-10-05
 ---
 
 # FURLANICH project knowledge
@@ -103,3 +108,9 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 ## Visual identity and immersive experience v1 — IMPLEMENTED
 
 [`RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1`](rfcs/visual-identity-immersive-experience-v1.md) established the identity and prototype boundary. The approved [throwaway prototype review](reviews/immersive-homepage-prototype-2026-09-19/index.md) records the bilingual five-width matrix, failure behavior, direct Three.js feasibility, React Three Fiber 8 incompatibility and payload evidence. [`RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1`](rfcs/adaptive-immersive-homepage-production-v1.md) approves C2 Adaptive System Instrument, the governed hybrid-media boundary, responsive choreography and production gates. [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](decisions/adaptive-immersive-homepage.md) supersedes the earlier prototype ADR. The [G0/G1 review](reviews/contained-master-optical-closure-2026-09-20/index.md) approves Balanced Contained as the exact protected geometry and Operational Clarity as the exact bilingual chapter voice. The completed [`PLAN-VISUAL-IDENTITY-ADAPTIVE-IMMERSIVE-V1`](plans/completed/visual-identity-adaptive-immersive-v1.md) delivered the identity, static C2 homepage and direct Three.js enhancement through PRs #65–#69 and #71–#73; the optional Connection film (PR7) is omitted. The [acceptance record](reviews/adaptive-immersive-homepage-acceptance-v1/index.md) records passing automated evidence and defers constrained Android evidence, a real screen-reader spot check and the compact Pause-control placement to a follow-up execution plan.
+
+## Sky Chart Home and App Bar v2 — IMPLEMENTED, manual QA DEFERRED
+
+[`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](rfcs/sky-chart-visual-system-v2.md) (Governance PR #77) accepted the owner's Direction A · Sky Chart, recorded in the [direction review](reviews/sky-chart-direction-2026-09-23/index.md). [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](decisions/sky-chart-homepage-runtime.md) supersedes the C2 instrument runtime for Home: a full-viewport star-atlas environment behind atlas-plate and plotting-sheet content, with a floating chart-header App Bar on every route. The approved `SKY-CHART-V2` sections of [DESIGN-VISUAL](design/visual-language.md#sky-chart-v2-sky-chart-home-and-app-bar-approved) and [DESIGN-IX-A11Y](design/interaction-responsive-accessibility.md#sky-chart-v2-sky-chart-home-and-app-bar-approved) and the `HOME-IMPACT` section of [PAGE-HOME](product/pages/home.md#home-impact) remain APPROVED. The completed [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](plans/completed/sky-chart-home-redesign-v2.md) delivered them through twelve task/PR packets, with checkpoints W0–W3 recorded in its Progress. [ARCHITECTURE](../ARCHITECTURE.md) and the [current system](architecture/current-system.md) describe the shipped implementation.
+
+The [acceptance record](reviews/sky-chart-acceptance-v2/index.md) records the passing automated evidence and every section 14 gate that automation can measure. It records the section 26 manual protocol (real devices including constrained Android, NVDA and VoiceOver, other browsers, user preferences, content truth and the side-by-side design check) and the two hardware-GPU gates as **DEFERRED**: none has been performed, so none is reported as PASS.
