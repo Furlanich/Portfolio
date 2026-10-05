@@ -12,7 +12,7 @@ last_verified: 2026-10-05
 
 # Independent ADE v2 plan review — Services, Projects and Footer
 
-The owner approved the Revision 5 written design/copy, then explicitly authorized ADE v2 planning and independent review. Codex authored [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md). A fresh **GPT-6 Luna (`gpt-6-luna`, high reasoning)** agent reviewed it independently under a read-only instruction, without authoring or editing the plan. It read the full plan, approved spec and repository source/testing/governance. The original Codex author alone incorporated corrections. This record preserves historical review evidence. Current revision 5 is APPROVED on 2026-10-05 under the [owner authorization below](#owner-approval-2026-10-05), after the independent round 6 passed; production remains unchanged.
+The owner approved the Revision 5 written design/copy, then explicitly authorized ADE v2 planning and independent review. Codex authored [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md). A fresh **GPT-6 Luna (`gpt-6-luna`, high reasoning)** agent reviewed it independently under a read-only instruction, without authoring or editing the plan. It read the full plan, approved spec and repository source/testing/governance. The original Codex author alone incorporated corrections. This record preserves historical review evidence. Current revision 5 is APPROVED on 2026-10-05 under the [owner authorization below](#owner-approval-2026-10-05), after independent round 6 passed with zero unresolved findings; final-review PR #104 merged on 2026-10-05. Task 1 packaging and its Governance PR/W0 remain pending; production remains unchanged.
 
 ## Round 1 — findings
 
@@ -102,11 +102,13 @@ Fresh reviewer `npm run docs:check` and base-to-head `git diff --check` passed. 
 
 ## Owner approval — 2026-10-05
 
+Owner approved revision 5 on 2026-10-05 ([approval and conditions](#owner-approval-2026-10-05)).
+
 The owner supplied this conditional authorization in the current Codex chat on 2026-10-05:
 
 > Correct the BLOCKING and MEDIUM issues, and review the plan again. If the plan then passes the review, change it's status to APPROVED and open a PR.
 
-The fresh independent round 6 and its bounded correction verification passed with zero unresolved findings. The stated condition is fulfilled: **PLAN-SPF-V1 revision 5 is APPROVED — 2026-10-05**. This paragraph is the durable approval-source record for Task 1. [Final-review PR #104](https://github.com/Furlanich/Portfolio/pull/104) records approval and corrections; Task 1 still verifies these records, assembles its acceptance scaffold/receipt and obtains the human Governance PR merge before W0. No implementation, W0 checkpoint, hardware acceptance or PR merge is claimed here. Human control of `main` remains unchanged.
+The fresh independent round 6 and its bounded correction verification passed with zero unresolved findings. The stated condition is fulfilled: **PLAN-SPF-V1 revision 5 is APPROVED — 2026-10-05**. This paragraph is the durable approval-source record for Task 1. [Final-review PR #104](https://github.com/Furlanich/Portfolio/pull/104) records approval and corrections and merged on 2026-10-05; its CI `validate` and browser jobs succeeded. Task 1 assembles its acceptance scaffold/receipt and still requires a separate human-merged Governance PR before W0. No implementation, W0 checkpoint or hardware acceptance is claimed here. Human control of `main` remains unchanged.
 
 ## Boundaries and verification
 

@@ -16,7 +16,7 @@ related:
   - PAGE-PRIVACY
   - CONTENT-LOCALIZATION
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-09-30
+last_verified: 2026-10-05
 ---
 
 # Information architecture
@@ -52,6 +52,8 @@ English is secondary:
 ```
 
 Project detail pages exist only when the disclosure level supports meaningful content. Restricted production summaries do not require a detail route.
+
+**Dated target note — 2026-10-05:** the [project-slug] detail routes are retired by [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) (PLAN-SPF-V1 Task 3). Until that task merges, the tree above describes the current implementation.
 
 ## Primary navigation
 
