@@ -1,7 +1,7 @@
 ---
 id: PLAN-SPF-V1
 type: execution-plan
-status: PROPOSED
+status: APPROVED
 plan_status: ACTIVE
 related:
   - REVIEW-SPF-PLAN-2026-09-30
@@ -31,7 +31,7 @@ last_verified: 2026-10-05
 
 **Spec:** [DESIGN-SPF-V1](../../design/services-projects-footer-v1.md), approved 2026-09-30 with linked exact ES/EN copy. Also: [design exploration and Revision 5 media](../../reviews/services-projects-footer-design-2026-09-30/index.md), the [retirement audit](../../reviews/services-projects-footer-design-2026-09-30/route-retirement-audit.md), the [accepted RFC](../../rfcs/services-projects-footer-redesign-v1.md) and the [runtime ADR](../../decisions/connected-studio-page-runtime.md). The [reference media](#reference-media) section lists the exact files that define "matches Revision 5".
 
-**Author/status:** Revision 5 (2026-10-05) corrects SPF-FINAL-01 to SPF-FINAL-04 from rounds 5–6: Services evidence-test ownership, disabled live-policy defaults with isolated candidate evaluation, complete current-status synchronization, and the Home Founder non-goal in current architecture summaries. The plan is PROPOSED pending a fresh independent GPT-6.1 Sol round 6. The owner has authorized approval only if that review passes. Prior authoring/review history and OD-1 to OD-4 remain in the [review record](../../reviews/services-projects-footer-plan-review-2026-09-30.md). Implementation stays locked behind the human-merged Governance PR and W0. No production code changes in this planning session.
+**Author/status:** Revision 5 is **APPROVED — 2026-10-05**, under the [owner's conditional authorization](../../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05), after a fresh independent GPT-6.1 Sol round 6 and correction verification returned zero unresolved findings. SPF-FINAL-01 to SPF-FINAL-04 are resolved. Prior authoring/review history and OD-1 to OD-4 remain in the [review record](../../reviews/services-projects-footer-plan-review-2026-09-30.md). Task 1 still verifies approval and packages the acceptance scaffold/receipt; implementation stays locked behind its human-merged Governance PR and W0. No production code changes in this planning session.
 
 ## Model routing
 
@@ -931,7 +931,7 @@ Documentation impact: <records updated in this PR>
 
 **Independent plan review:** a fresh **GPT-6.1 Sol (`gpt-6.1-sol`, high)** agent, distinct from the plan author and contributors, reviews read-only against this plan, the spec and the source. It must try to find missing requirements, overlap, concurrency and unmerged-dependency problems, weak acceptance, visual/3D ambiguity, TDD gaps, responsive/accessibility/performance cases and provider mismatches, including every assignment against the approved model-routing criteria. Findings use `BLOCKING / HIGH / MEDIUM / LOW`, with a target task, a concrete risk and a recommended correction. The reviewer never rewrites the plan. The plan author revises, independent review repeats after material corrections, and every BLOCKING finding is resolved before the owner approves. Every later PR also gets an independent Sol review.
 
-**Review gate status: REOPENED (2026-10-05), revision 5.** Round 5 on revision 4 returned 2 BLOCKING and 1 MEDIUM findings. This revision corrects all three, as recorded in [round 5](../../reviews/services-projects-footer-plan-review-2026-09-30.md#round-5-final-review-of-revision-4). A fresh independent GPT-6.1 Sol round 6 must pass before the owner's conditional approval is recorded. Historical rounds remain unchanged.
+**Review gate status: PASSED (2026-10-05), revision 5.** Fresh independent GPT-6.1 Sol [round 6](../../reviews/services-projects-footer-plan-review-2026-09-30.md#round-6-independent-review-of-revision-5) verified SPF-FINAL-01 to SPF-FINAL-04 resolved at `d16d909`: BLOCKING 0, HIGH 0, MEDIUM 0, LOW 0. The [owner's conditional approval](../../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05) is recorded. Historical review rounds remain unchanged; Task 1, human merge and W0 still precede code execution.
 
 ## Risks and rollback
 
@@ -948,6 +948,8 @@ Documentation impact: <records updated in this PR>
 - 2026-10-05: A supplemental independent review against `main` at `5270e32` returned NOT READY (4 BLOCKING, 14 HIGH, 16 MEDIUM, 6 LOW). The owner decided OD-1 to OD-4. Revision 4 serializes Task 4 after Task 3; adds the Skills contract, Non-goals, reference media, the test/baseline ownership inventory, wave checkpoints, the orchestrator role, production serving, the live policy, tier and label contracts, objective acceptance and the receipt template; and rewrites Task 1 for repository state. The OD-1 corrections went into the visual-language, status-register and Sky Chart acceptance records. The review gate is reopened for Sol round 5. Execution has not started.
 
 - 2026-10-05: Revision 5 corrects SPF-FINAL-01 to SPF-FINAL-03. Task 3 owns the Services evidence-test migration until W2; merged live defaults stay false pending hardware evidence from isolated candidate exports; Task 1 can synchronize current status summaries without changing historical rounds. Fresh independent review is pending. No implementation started.
+
+- 2026-10-05: Fresh independent GPT-6.1 Sol round 6 verified all four final-review findings resolved at `d16d909`, with zero unresolved findings. The [owner's conditional approval](../../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05) is fulfilled; revision 5 is APPROVED. The final-review Governance approval PR is being prepared. Task 1's remaining packaging and W0 have not run; no implementation started.
 
 ## Important implementation decisions
 

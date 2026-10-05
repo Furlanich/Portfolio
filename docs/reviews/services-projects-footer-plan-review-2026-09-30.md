@@ -1,7 +1,7 @@
 ---
 id: REVIEW-SPF-PLAN-2026-09-30
 type: independent-plan-review
-status: PROPOSED
+status: APPROVED
 related:
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
@@ -12,7 +12,7 @@ last_verified: 2026-10-05
 
 # Independent ADE v2 plan review — Services, Projects and Footer
 
-The owner approved the Revision 5 written design/copy, then explicitly authorized ADE v2 planning and independent review. Codex authored [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md). A fresh **GPT-6 Luna (`gpt-6-luna`, high reasoning)** agent reviewed it independently under a read-only instruction, without authoring or editing the plan. It read the full plan, approved spec and repository source/testing/governance. The original Codex author alone incorporated corrections. This record preserves review evidence; the plan remains PROPOSED for human approval and production remains unchanged.
+The owner approved the Revision 5 written design/copy, then explicitly authorized ADE v2 planning and independent review. Codex authored [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md). A fresh **GPT-6 Luna (`gpt-6-luna`, high reasoning)** agent reviewed it independently under a read-only instruction, without authoring or editing the plan. It read the full plan, approved spec and repository source/testing/governance. The original Codex author alone incorporated corrections. This record preserves historical review evidence. Current revision 5 is APPROVED on 2026-10-05 under the [owner authorization below](#owner-approval-2026-10-05), after the independent round 6 passed; production remains unchanged.
 
 ## Round 1 — findings
 
@@ -98,7 +98,15 @@ A fresh **GPT-6.1 Sol (`gpt-6.1-sol`, high reasoning)** reviewer inspected the f
 | --- | --- | --- | --- |
 | SPF-FINAL-04 / MEDIUM | Current architecture summaries | `ARCHITECTURE.md` and `docs/architecture/current-system.md` still expected SPF to change the Home Founder plate, contradicting OD-1 and leaving the correction outside the closed packet write sets. | Correct both current sentences with a dated OD-1 link, preserving delivered plate facts and historical approvals. |
 
-Fresh reviewer `npm run docs:check` and base-to-head `git diff --check` passed. Implementation visual/runtime/hardware/phone/screen-reader behavior was excluded because it has not been implemented; absent hardware evidence remains a future gate. Future Sonnet availability remains a dispatch gate, not a verified fact. The bounded SPF-FINAL-04 correction is awaiting independent re-review.
+Fresh reviewer `npm run docs:check` and base-to-head `git diff --check` passed. Implementation visual/runtime/hardware/phone/screen-reader behavior was excluded because it has not been implemented; absent hardware evidence remains a future gate. Future Sonnet availability remains a dispatch gate, not a verified fact. The same independent reviewer re-reviewed the bounded correction at `d16d909` and verified SPF-FINAL-04 RESOLVED, with no new scope, status or link issue. **Final recommendation:** READY FOR HUMAN PLAN APPROVAL. **Final unresolved counts:** BLOCKING 0, HIGH 0, MEDIUM 0, LOW 0. Fresh reviewer `npm run docs:check` and `git diff --check origin/main..HEAD` passed; the working tree was clean. The reviewer made no file, index or HEAD changes. SPF-FINAL-01 through SPF-FINAL-03 remain resolved.
+
+## Owner approval — 2026-10-05
+
+The owner supplied this conditional authorization in the current Codex chat on 2026-10-05:
+
+> Correct the BLOCKING and MEDIUM issues, and review the plan again. If the plan then passes the review, change it's status to APPROVED and open a PR.
+
+The fresh independent round 6 and its bounded correction verification passed with zero unresolved findings. The stated condition is fulfilled: **PLAN-SPF-V1 revision 5 is APPROVED — 2026-10-05**. This paragraph is the durable approval-source record for Task 1. The final-review PR records approval and corrections; Task 1 still verifies these records, assembles its acceptance scaffold/receipt and obtains the human Governance PR merge before W0. No implementation, W0 checkpoint, hardware acceptance or PR merge is claimed here. Human control of `main` remains unchanged.
 
 ## Boundaries and verification
 
