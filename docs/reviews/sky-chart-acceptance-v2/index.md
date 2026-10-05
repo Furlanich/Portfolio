@@ -20,7 +20,7 @@ last_verified: 2026-10-05
 
 ## Boundary
 
-This record is the Task 12 evidence for [PLAN-SKY-CHART-HOME-REDESIGN-V2](../../plans/completed/sky-chart-home-redesign-v2.md). It measures nothing new. It collects the automated evidence that the plan's checkpoints and PR #92 recorded for the merged implementation (`main` at `edf8330`, the W3 checkpoint), and it records the plan's section 26 manual protocol item by item. It changes no application behavior.
+This record is the Task 12 evidence for [PLAN-SKY-CHART-HOME-REDESIGN-V2](../../plans/completed/sky-chart-home-redesign-v2.md). It measures nothing new. It collects the automated evidence that the plan's checkpoints and PR #92 recorded for the merged implementation (`main` at `edf8330`, the W3 checkpoint), and it records the plan's section 26 manual protocol item by item. It changes no application behavior. The record also holds the verification of the W4 follow-up (the Founder atlas plate, checkpoint W4 and the two comment fixes) and the owner's approval of 2026-10-05, which accepts the record with its deferrals.
 
 The plan's acceptance rule governs every line here: **no claim exceeds the recorded evidence.** Three states are used, and nothing is marked PASS without a recorded result:
 
@@ -252,20 +252,20 @@ These are owner-approved or orchestrator-recorded changes made during delivery. 
 
 - **OPEN:** the whole of section 26, above, including the constrained-Android and real screen-reader checks that the previous plan deferred.
 - **OPEN:** hardware-GPU numbers for the frame-interval and interaction-task gates.
-- **Resolved 2026-10-05 (owner decision): Founder now renders on an atlas plate.** `HomeFounder.tsx` had rendered the 8/4 editorial grid directly over the environment, which differed from approved D-05, supersession item 13 and D-18. The owner decided: "Add the plate in the code in order to complete the implementation of the current plan. This will be later changed once the services-projects-footer-v1 execution plan is implemented." The W4 follow-up wraps the whole grid, action included, in one `AtlasPlate` (default blur, no plate number). The approved design text is unchanged, and the plate is expected to change again under `PLAN-SPF-V1`.
+- **OPEN (owner decision): Founder renders without an atlas plate.** The implementation differs from approved D-05, supersession item 13 and D-18: `HomeFounder.tsx` renders the 8/4 editorial grid directly over the environment and uses no `AtlasPlate`. The approved records place Founder on an atlas plate (plan section 2, supersession item 13, the RFC, and DESIGN-VISUAL D-05 and D-18). No owner decision is recorded. The owner chooses between adding the plate (a code task) and amending the design through governance. The approved design text is unchanged. *Resolved 2026-10-05 (owner decision): Founder now renders on an atlas plate. The owner decided: "Add the plate in the code in order to complete the implementation of the current plan. This will be later changed once the services-projects-footer-v1 execution plan is implemented." The W4 follow-up wraps the whole grid, action included, in one `AtlasPlate` (default blur, no plate number). The approved design text is unchanged, and the plate is expected to change again under `PLAN-SPF-V1`.*
 - **Note: gate order.** The ADR lists the capability gates as reduced motion, Save-Data, WebGL2, the software-renderer check, the session context-lost flag, near-viewport, then `load`. `ImmersiveEnhancement` evaluates them in a different order: reduced motion first, then the near-viewport observer, then the `load` event, and only then Save-Data, the WebGL2 probe with the software-renderer check, and the session context-lost flag. There is no behavioural consequence, because every gate must pass before the runtime is imported.
 - **OPEN:** the Roboto and Helvetica fallbacks for Instrument Sans are approximate, not metric clones. The Android pass must confirm there is no visible hero jump on a slow load.
 - **OPEN (section 30):** real-device thermal behaviour of a full-viewport canvas plus backdrop-filter on low-end Android, and the press-scale feedback recommendation, which conflicts with the approved no-scale rule.
 - **Limit:** Firefox and WebKit canvases are untested in automation.
 - **Limit:** local two-worker runs can flake under `next dev` load. CI runs with one retry and a 30-minute browser budget.
 - **Limit:** the Plex Mono subset has no Greek, so Greek in the mono face would fall back; the Bayer letters avoid that with the serif stack.
-- **Resolved 2026-10-05: stale comments.** The two code comments that pointed at the plan's former path under `docs/plans/active/` (`components/homepage/impact/position-fix.module.css` and `lib/impact/position-fix.ts`) now cite `docs/plans/completed/sky-chart-home-redesign-v2.md`.
+- **Comments to update later:** two code comments still point at the plan's former path under `docs/plans/active/` (`components/homepage/impact/position-fix.module.css` and `lib/impact/position-fix.ts`). They are outside Task 12's paths. *Resolved 2026-10-05: the two comments now cite `docs/plans/completed/sky-chart-home-redesign-v2.md`.*
 
 ## Definition of done (plan section 29)
 
 | Criterion | State |
 | --- | --- |
-| Tasks 1–12 merged by the owner; W0–W4 green and recorded | Tasks 1–12 merged and W0–W4 recorded. The remaining owner decisions (Founder plate, this record APPROVED, two comment fixes) land in the W4 follow-up PR, and the criterion is met when the owner merges it |
+| Tasks 1–12 merged by the owner; W0–W4 green and recorded | Tasks 1–12 merged and W0–W4 recorded. The remaining owner decisions (Founder plate, this record APPROVED, the comment fixes) land in the W4 follow-up PR, and criterion 1 of section 29 is met when the owner merges it. The remaining criteria are unchanged by the follow-up: see the rows below |
 | Every section 14 gate within limits on the production build, on both base paths | PASS for the 11 automatable gates (the measurement scripts cover the root build; `/Portfolio` is covered by the acceptance spec and `verify:static-export`). **Not yet met** for the two hardware-GPU gates (DEFERRED) |
 | Home in ES and EN matches D-01 to D-27 at 320, 390, 768, 1024 and 1440, verified by automated tests and the manual protocol | Automated: PASS (acceptance matrix, Home-sections and instrument baselines). Manual protocol: **DEFERRED** |
 | The App Bar matches D-22 on every localized route, with and without JavaScript | Automated: PASS (`app-bar.spec.ts` in the W3 e2e runs, acceptance spec, baselines for the non-Home pages). Manual: DEFERRED |
@@ -313,7 +313,7 @@ Verification of the follow-up, run fresh in its worktree on Windows with `PLAYWR
 | `npm run verify:static-export` | 20 routes at base path `/` |
 | `npm run validate` | Green, run last on the final tree. `docs:check` 292 files, 98 IDs, 38 Skills; 291/291 unit tests; lint 0 errors (282 warnings, all in vendored Skill scripts); typecheck; build of 22 pages |
 
-The follow-up changes no budget, no dependency and no application path outside `HomeFounder.tsx` and two comments. Section 26 stays DEFERRED.
+The follow-up changes no budget, no dependency and no application path outside `HomeFounder.tsx` and three code comments (the doc comment in `HomeSection.tsx` and the cited path in the two position-fix files). Section 26 stays DEFERRED.
 
 ## Task 12 documentation check
 
