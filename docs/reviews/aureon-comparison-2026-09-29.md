@@ -378,7 +378,7 @@ Independent source-audit rubric: accessibility **3/4**, performance structure **
 - [Positioning](../product/vision-and-positioning.md), [IA](../product/information-architecture.md), [Services](../product/pages/services.md).
 - [Visual language](../design/visual-language.md), [interaction/accessibility](../design/interaction-responsive-accessibility.md).
 - [Evidence policy](../product/project-evidence.md), [project inventory](../product/projects/index.md).
-- [Sky Chart RFC](../rfcs/sky-chart-visual-system-v2.md), [runtime ADR](../decisions/sky-chart-homepage-runtime.md), [execution plan](../plans/active/sky-chart-home-redesign-v2.md).
+- [Sky Chart RFC](../rfcs/sky-chart-visual-system-v2.md), [runtime ADR](../decisions/sky-chart-homepage-runtime.md), [execution plan](../plans/completed/sky-chart-home-redesign-v2.md).
 - [Demo Contact ADR](../decisions/contact-inquiry-demonstration-mode.md), [Contact/Privacy requirements](../product/pages/contact-and-privacy.md).
 
 **Conclusion:** Aureon is a useful reference for tangible delivery and operational reassurance. FURLANICH Live already has a distinctive visual system, focused service language and stronger bilingual access. Its next gains should come from dependable contact behavior, clearer service-to-deliverable paths and stronger permitted evidence.
