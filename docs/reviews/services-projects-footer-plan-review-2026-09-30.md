@@ -88,6 +88,18 @@ On 2026-10-05 the owner requested a final review after the Opus revision. Codex 
 
 Fresh `npm run docs:check` and `git diff --check` passed; no implemented behavior or hardware result was claimed. The owner then requested correction, another review, and approval/PR creation only if the plan passes. This correcting session is a contributor, so revision 5 requires a fresh independent reviewer.
 
+## Round 6 — independent review of revision 5
+
+A fresh **GPT-6.1 Sol (`gpt-6.1-sol`, high reasoning)** reviewer inspected the full plan at `f03f3ec` against `main` at `9138941`, its complete five-file correction diff, review history, approved specification/copy/RFC/ADR, Skills/lifecycle, ownership/dependencies, source/test consumers, Playwright registration, measurement precedents and deployment trigger. It made no repository changes and did not contribute to the corrections.
+
+**Initial recommendation:** REVISE BEFORE APPROVAL. **Counts:** BLOCKING 0, HIGH 0, MEDIUM 1, LOW 0. SPF-FINAL-01, SPF-FINAL-02 and SPF-FINAL-03 were independently verified RESOLVED.
+
+| ID / severity | Target | Finding | Author correction |
+| --- | --- | --- | --- |
+| SPF-FINAL-04 / MEDIUM | Current architecture summaries | `ARCHITECTURE.md` and `docs/architecture/current-system.md` still expected SPF to change the Home Founder plate, contradicting OD-1 and leaving the correction outside the closed packet write sets. | Correct both current sentences with a dated OD-1 link, preserving delivered plate facts and historical approvals. |
+
+Fresh reviewer `npm run docs:check` and base-to-head `git diff --check` passed. Implementation visual/runtime/hardware/phone/screen-reader behavior was excluded because it has not been implemented; absent hardware evidence remains a future gate. Future Sonnet availability remains a dispatch gate, not a verified fact. The bounded SPF-FINAL-04 correction is awaiting independent re-review.
+
 ## Boundaries and verification
 
 - Independent review evaluates execution readiness, not implemented behavior. No production code, route removal, runtime, baseline update or hardware acceptance was performed in this planning session.
