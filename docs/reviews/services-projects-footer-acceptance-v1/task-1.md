@@ -1,9 +1,9 @@
 Task 1 / PR 1 – Record plan approval and close governance prerequisites
 Implementer(s): GPT-6 Luna (`gpt-6-luna`, medium), Codex tool model; provider identifier not exposed. Single implementer; no subtask handoffs.   Reviewer: GPT-6.1 Sol (high), pending independent review
 Branch/worktree: codex/spf-1-governance at .worktrees/spf-1   Base: 7787d170d1ead839afe5a0d7366adfdfc01cc2db   PLAYWRIGHT_PORT: N/A (documentation only)
-Owned paths touched: Task 1 write set (see plan); PLAN-RECORD Progress edited by orchestrator only
-Locks held/transferred/released: GOVERNANCE and Task 1 acceptance paths held by implementer; PLAN-RECORD held by orchestrator. No handoffs.
-Skills stages: superpowers:using-git-worktrees → existing isolated worktree confirmed; project-knowledge-maintenance → approval/source/status summaries synchronized, historic rounds preserved; verification-before-completion → fresh docs:check and validate results recorded below; pr-readiness → diff and write-set review recorded below; human merge/review gates remain open
+Owned paths touched: docs/plans/active/services-projects-footer-v1.md; docs/plans/index.md; docs/governance/status-register.md; docs/index.md; docs/reviews/services-projects-footer-plan-review-2026-09-30.md; docs/product/information-architecture.md; docs/reviews/services-projects-footer-acceptance-v1/index.md; docs/reviews/services-projects-footer-acceptance-v1/task-1.md (PLAN-RECORD Progress line in plan edited by orchestrator only)
+Locks held/transferred/released: GOVERNANCE and Task 1 acceptance paths acquired by root before dispatch on 2026-10-05; exact UTC time was not recorded. PLAN-RECORD retained by orchestrator. No transfers. Governance/acceptance locks remain held through this receipt correction; release is pending new Governance PR human merge; no exact release time recorded.
+Skills stages (2026-10-05; exact UTC times not recorded, order known): superpowers:using-git-worktrees → pre-edit, confirmed existing isolated branch/worktree; project-knowledge-maintenance → read authority and updated current summaries/IA/acceptance records; verification-before-completion → ran npm run validate, then final npm run docs:check and git diff --check; pr-readiness → inspected full diff/status/write set after validation, before commit. This receipt correction follows first Sol review; independent re-review and PR readiness remain pending.
 RED:      N/A — documentation-only Task 1; TDD not applicable
 GREEN:    N/A — documentation-only Task 1; TDD not applicable
 REFACTOR: N/A — documentation-only Task 1; TDD not applicable
@@ -14,5 +14,5 @@ Visual matrix: N/A — no UI changes   Reference media compared: N/A
 Tuned constants: N/A
 Baseline changes: none
 Deviations: None
-Open items: independent Sol review; separate Task 1 Governance PR CI/review/human merge; W0. PR #104 CI `validate` and browser jobs succeeded; this new PR has not been created. No implementation or acceptance PASS is inferred.
+Open items: preliminary independent Sol review returned 1 MEDIUM receipt-traceability issue and 2 LOW status-formatting issues, corrected in this commit; Sol re-review, separate Task 1 Governance PR CI/review/human merge, and W0 remain pending. PR #104 CI `validate` and browser jobs succeeded; this new PR has not been created. No implementation or acceptance PASS is inferred.
 Documentation impact: PLAN-SPF-V1, PLAN-INDEX, DOCS-INDEX, GOV-STATUS, REVIEW-SPF-PLAN-2026-09-30, IA-SITE, and REVIEW-SPF-ACCEPTANCE-V1. New acceptance record remains PROPOSED.
