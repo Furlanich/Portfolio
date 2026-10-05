@@ -1211,6 +1211,37 @@ Documentation impact: <none | records>
   - **Manual look against the reference**, on the production build with the runtime active: 1440 and 390, covering the hero, a chapter, Position fix, Process and the Dawn CTA. The App Bar is transparent at the top with readout `00 · Home` and docks with `03 · Position fix` at `#impact`. The H1 and trust row are clear of labels, and the D-27 mask holds at 390. Plates, sheets, the ecliptic and the Pause pill match the reference. No deviation was found.
   
   Wave 3 can start: Task 10, then Task 11.
+- 2026-09-29 — Task 10 complete. The owner merged PR #91 (`f7a8620`): the two environment posters (59.1 KiB wide, 29.0 KiB compact, owner-approved art), the poster-flag branch in the runtime (development only), the manifest swap, and the `verify-static-export.mjs` poster requirements.
+- 2026-10-05 — Wave 3 complete. The owner merged Task 11 as PR #92 (`edf8330`), after #96 (CI browser budget) and #97 (`brag` skill description). The owner decisions E1–E5, the `em` hero caps and the cross-platform Instrument Sans fallback are recorded under Deviations. **Checkpoint W3 passed** on `main` at `edf8330`, in a clean worktree with a fresh `npm ci` (Windows, Git Bash with `MSYS2_ENV_CONV_EXCL='NEXT_PUBLIC_BASE_PATH'` per W2 follow-up 4, nothing else listening on 3000–3199):
+  - **`npm run validate`:** green. docs:check (291 files, 97 IDs, 38 Skills), 291/291 unit tests, lint 0 errors, typecheck, and a build of 22 pages.
+  - **`npm run test:e2e`, two workers:** 1272 passed, 0 failed, 101 skipped (29.2 min). This includes the 142 acceptance tests.
+  - **`NEXT_PUBLIC_BASE_PATH=/Portfolio npm run test:e2e`, two workers:** 1271 passed, 1 failed, 101 skipped (28.5 min). The failure was webkit-desktop `contact.spec.ts` "es-AR Contact preserves values through failure and retry": the form had not hydrated within 5 s, and the failure screenshot shows the `next dev` "Compiling…" badge. The spec, run alone on webkit at `/Portfolio` with `--repeat-each=10` and two workers, passed 140/140. This is the dev-server load flake class from W2 follow-up 3, outside this plan's paths, not a regression.
+  - **`npm run test:a11y`:** 16/16.
+  - **The full acceptance spec, serial** (`sky-chart-acceptance.spec.ts`, `immersive-chromium`, `--workers=1`): 142/142 at the root and 142/142 under `/Portfolio`, where the base-path group resolves every link, poster and chunk and the runtime activates.
+  - **`npm run verify:static-export`:** 20 routes at base path `/`, and 20 routes at `/Portfolio`.
+  - **Section 14 gates.** `measure:immersive` ran three times and `measure:home-vitals` once; every run exits 0. Both scripts build the root base path only, so the `/Portfolio` build is covered by the acceptance spec and `verify:static-export`.
+
+    | Gate | Limit | W3 measurement | Result |
+    | --- | --- | --- | --- |
+    | Incremental immersive JavaScript (lazy runtime chunk plus three) | ≤120 KiB Brotli | 108.1 KiB in 3/3 runs (11.9 KiB headroom); whole-page delta 114.4 KiB, reported only | Pass |
+    | `AppBarBehavior` plus `PositionFixToggle` | ≤6 KiB Brotli | 1.33 KiB, Task 11's build comparison; neither leaf changed between `f7a8620` and `edf8330` | Pass |
+    | Environment posters | ≤150 KiB wide, ≤80 KiB compact | 59.15 KiB, 29.04 KiB (`immersive-media-manifest.test.mjs` green) | Pass |
+    | Canvas DPR | ≤1.5 wide, ≤1.25 compact or constrained | 1.25 at 1440 and 390 on a 3x profile (this 4-core host counts as constrained) | Pass |
+    | Draw calls per frame | ≤28 | Max 15 (p95 15) in `measure:immersive`; max 16 desktop and 7 mobile in the vitals journeys | Pass |
+    | Label textures | ≤20, each ≤1024×64 | 20, largest 398×64 | Pass |
+    | Scroll frame interval p95 | ≤20 ms on a hardware GPU | 199.9–200 ms under SwiftShader, advisory | Pending: section 26 device protocol |
+    | LCP p75 | ≤2.5 s, element H1 | Mobile 2040 ms static and 2028 ms enhanced; desktop 540 ms and 524 ms; H1 in all 60 journeys | Pass |
+    | INP p75 | ≤200 ms | Static (gated): 24 ms mobile, 16 ms desktop. Enhanced (advisory under SwiftShader): 104 ms and 32 ms | Pass |
+    | Layout shift from the enhancement | 0 | 0 in 3/3 `measure:immersive` runs and all 60 vitals journeys. Whole-page CLS (gated ≤0.1): 0 mobile, 0.0437 desktop, from the font swap at about 300–560 ms | Pass |
+    | Backdrop-filter surfaces, at each section (E1) | ≤3 | 3 at 320, 390, 768, 1024 and 1440; the informational sweep reaches 4 at 768 and 1440 | Pass |
+    | Idle rendering | 0 frames after settle | 0 settled in a chapter, 0 fully receded, 0 in the vitals journeys | Pass |
+    | Main-thread interaction task | <50 ms on a hardware GPU | Longest 62–71 ms under SwiftShader, advisory | Pending: section 26 device protocol |
+
+    Lifecycle: one canvas; listeners 516 → 518 over five remounts.
+  - **Baselines:** `visual-chromium` passes inside both e2e runs against the committed, owner-approved baselines (E3, E5).
+  - **Verdict.** Every section 14 gate that automation can measure is within limits. The two hardware-GPU gates are measured only by the section 26 protocol, as the amended ADR requires. They stay pending, and Task 12's acceptance record reports them as PASS, FAIL or DEFERRED from the manual results.
+
+  Wave 4 dispatched: Task 12, from this checkpoint commit.
 
 ## Important implementation decisions
 
@@ -1318,3 +1349,4 @@ Documentation impact: <none | records>
     - **Fix:** `app/fonts.ts` adds `Instrument Sans Metric Fallback` after `next/font`'s own fallback. `app/globals.css` declares that family over `local()` Liberation Sans, Arimo, Roboto, Helvetica and Arial, with `next/font`'s overrides: `size-adjust` 103.22%, `ascent-override` 93.97%, `descent-override` 24.22%, `line-gap-override` 0%.
     - **Evidence:** `scripts/font-fallback.test.mjs` (RED first). Windows is unchanged: font swap 10/10, visual 64/64, no baseline change. The Linux font-swap group passes 10/10 (run 37304538202).
     - **Still open:** Roboto and Helvetica are approximate rather than metric clones. The section 26 real-Android check must confirm there is no visible hero jump on a slow load.
+- **Task 12 provider substitution and base (2026-10-05, W3).** At its last use (PR #89, see "OpenAI reviewers run on GPT-5.6"), the Codex route could not run local commands, and Task 12 must run `npm run docs:check` and `npm run validate`. So Claude Sonnet 5 implements Task 12 under the Wave 1 arrangement, and an independent Claude Opus 5.5 agent reviews it, then the owner. Task 12's branch starts from the W3 checkpoint commit, which carries the W3 record that the plan's move to `completed/` must preserve. Its PR targets `main` and opens only after the W3 checkpoint PR merges. It is not stacked.
