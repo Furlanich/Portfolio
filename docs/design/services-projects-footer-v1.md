@@ -13,7 +13,7 @@ related:
   - IA-SITE
   - PROJECT-EVIDENCE
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
-last_verified: 2026-09-30
+last_verified: 2026-10-05
 ---
 
 # Services, Projects and Footer — connected studio v1
@@ -200,7 +200,7 @@ Remove detail-only entry points, components, helpers, labels and unused assets a
 
 Keep source provenance, item records, internal permissions and reusable illustrations. Historical ADRs, completed plans and reviews remain intact with dated supersession links where needed. “Remove old URLs” means no supported public route or active destination; it does not erase immutable engineering history or the negative test that proves a route absent. No HTTP redirect/new hosting architecture is proposed.
 
-Home alignment is limited to retained service family wording/evidence destinations and the shared Footer. Founder alignment is the MPC source action and accurate context. No new project is made Home-eligible; do not change the Home proof fallback, header behavior or Contact transmission model.
+Home alignment is limited to retained service family wording/evidence destinations and the shared Footer. *Dated owner decision — 2026-10-05 (OD-3 in [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md#owner-decisions-and-plan-clarifications-2026-10-05)): this delivery makes no Home copy change; any Home/Services wording inconsistency found is recorded OPEN for a separate decision.* Founder alignment is the MPC source action and accurate context. No new project is made Home-eligible; do not change the Home proof fallback, header behavior or Contact transmission model.
 
 ## Approved bounded supersessions
 
