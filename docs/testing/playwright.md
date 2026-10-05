@@ -37,7 +37,7 @@ Set `NEXT_PUBLIC_BASE_PATH=/Portfolio` to reproduce GitHub Pages routing. The co
 | `tablet-chromium` | 1024×768 breakpoint behavior |
 | `wide-chromium` | 1440×900 responsive composition |
 | `accessibility-chromium` | Axe and representative structural/keyboard assertions |
-| `immersive-chromium` | The Sky Chart runtime specs (`immersive-home.spec.ts`, `immersive-home-acceptance.spec.ts`) and the Home acceptance matrix (`sky-chart-acceptance.spec.ts`), at 1440×900 on the SwiftShader software backend (`--use-angle=swiftshader --enable-unsafe-swiftshader`) |
+| `immersive-chromium` | `immersive-home.spec.ts`, `immersive-home-acceptance.spec.ts` and `sky-chart-acceptance.spec.ts` (the Home acceptance matrix, described below), at 1440×900 on the SwiftShader software backend (`--use-angle=swiftshader --enable-unsafe-swiftshader`) |
 | `visual-chromium` | Reduced-motion element baselines under `tests/e2e/visual/`, including `home-sections.visual.spec.ts` (see [visual regression](visual-regression.md)) |
 
 Mobile WebKit link tabbing depends on host Safari Full Keyboard Access, so exact first-link Tab order is asserted in mobile Chromium. Both mobile engines verify disclosure activation and dismissal by keyboard.

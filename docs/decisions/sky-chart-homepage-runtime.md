@@ -170,4 +170,4 @@ Task 11 of `PLAN-SKY-CHART-HOME-REDESIGN-V2` (PR #92) made the measurement scrip
 
 **AMENDED — 2026-09-28.** By owner decision, recorded in the amendment section above and in the plan's Deviations: a software-renderer capability gate, and frame-time gates measured on hardware GPUs. Limits are unchanged.
 
-**NOTED — 2026-10-05.** Measurement notes recorded in the amendment above. No limit or decision changes.
+**AMENDED — 2026-10-05 (measurement notes only).** Recorded in the amendment above. No limit or decision changes.
