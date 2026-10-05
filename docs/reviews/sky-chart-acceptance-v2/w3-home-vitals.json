@@ -1,0 +1,1822 @@
+{
+  "kind": "synthetic lab measurement (not field data)",
+  "journeysPerLocale": {
+    "static": 10,
+    "enhanced": 5
+  },
+  "gates": {
+    "lcpP75Ms": 2500,
+    "inpP75Ms": 200,
+    "clsWholePage": 0.1,
+    "clsFromEnhancement": 0,
+    "drawCallsPerFrame": 28,
+    "labelTextures": 20,
+    "idleFrames": 0,
+    "backdropSurfaces": 3
+  },
+  "profiles": {
+    "mobile": {
+      "static": {
+        "summary": {
+          "label": "Mobile: 390x844, DPR 3, touch, 4x CPU slowdown, Slow 4G applied (562.5 ms request latency, 1.47 Mbps down)",
+          "variant": "static",
+          "journeys": 20,
+          "modes": {
+            "static": 20
+          },
+          "lcpP75Ms": 2040,
+          "inpP75Ms": 24,
+          "inpGate": "gated",
+          "fcpP75Ms": 2040,
+          "ttfbP75Ms": 666,
+          "clsWholePageMax": 0,
+          "clsFromEnhancementMax": 0,
+          "clsFontSwapSources": [],
+          "backdropSurfacesAtSectionsMax": 3,
+          "backdropSurfacesSweepMax": 3,
+          "lcpElements": [
+            "H1"
+          ],
+          "clsWholePageRating": "good"
+        },
+        "journeys": [
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 690,
+            "fcpMs": 1844,
+            "lcpMs": 1844,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 24,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 664,
+            "fcpMs": 1936,
+            "lcpMs": 1936,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 32,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 665,
+            "fcpMs": 2056,
+            "lcpMs": 2056,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 16,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 665,
+            "fcpMs": 2028,
+            "lcpMs": 2028,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 24,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 666,
+            "fcpMs": 1992,
+            "lcpMs": 1992,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 32,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 662,
+            "fcpMs": 2052,
+            "lcpMs": 2052,
+            "lcpElement": "H1",
+            "interactions": 0,
+            "inpMs": 0,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 668,
+            "fcpMs": 2140,
+            "lcpMs": 2140,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 16,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 663,
+            "fcpMs": 2008,
+            "lcpMs": 2008,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 16,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 665,
+            "fcpMs": 2056,
+            "lcpMs": 2056,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 24,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 663,
+            "fcpMs": 1952,
+            "lcpMs": 1952,
+            "lcpElement": "H1",
+            "interactions": 0,
+            "inpMs": 0,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 666,
+            "fcpMs": 2012,
+            "lcpMs": 2012,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 16,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 662,
+            "fcpMs": 1980,
+            "lcpMs": 1980,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 16,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 665,
+            "fcpMs": 2040,
+            "lcpMs": 2040,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 662,
+            "fcpMs": 2008,
+            "lcpMs": 2008,
+            "lcpElement": "H1",
+            "interactions": 0,
+            "inpMs": 0,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 666,
+            "fcpMs": 1940,
+            "lcpMs": 1940,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 24,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 662,
+            "fcpMs": 2024,
+            "lcpMs": 2024,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 666,
+            "fcpMs": 2040,
+            "lcpMs": 2040,
+            "lcpElement": "H1",
+            "interactions": 0,
+            "inpMs": 0,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 664,
+            "fcpMs": 2040,
+            "lcpMs": 2040,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 24,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 667,
+            "fcpMs": 2012,
+            "lcpMs": 2012,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 24,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 662,
+            "fcpMs": 1976,
+            "lcpMs": 1976,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 24,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          }
+        ]
+      },
+      "enhanced": {
+        "summary": {
+          "label": "Mobile: 390x844, DPR 3, touch, 4x CPU slowdown, Slow 4G applied (562.5 ms request latency, 1.47 Mbps down)",
+          "variant": "enhanced",
+          "journeys": 10,
+          "modes": {
+            "webgl": 10
+          },
+          "lcpP75Ms": 2028,
+          "inpP75Ms": 104,
+          "inpGate": "advisory under SwiftShader (amended ADR 2026-09-28)",
+          "fcpP75Ms": 2028,
+          "ttfbP75Ms": 665,
+          "clsWholePageMax": 0,
+          "clsFromEnhancementMax": 0,
+          "clsFontSwapSources": [],
+          "backdropSurfacesAtSectionsMax": 3,
+          "backdropSurfacesSweepMax": 3,
+          "lcpElements": [
+            "H1"
+          ],
+          "webgl": {
+            "journeysWithRuntime": 10,
+            "drawCallsPerFrameMax": 7,
+            "labelTextures": 8,
+            "largestLabelTexture": [
+              398,
+              64
+            ],
+            "idleFramesInWindowMax": 0
+          },
+          "clsWholePageRating": "good"
+        },
+        "journeys": [
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 669,
+            "fcpMs": 1988,
+            "lcpMs": 1988,
+            "lcpElement": "H1",
+            "interactions": 3,
+            "inpMs": 144,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 115,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 6,
+                "framesObserved": 114
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 663,
+            "fcpMs": 2028,
+            "lcpMs": 2028,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 112,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 89,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 7,
+                "framesObserved": 88
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 665,
+            "fcpMs": 2024,
+            "lcpMs": 2024,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 96,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 92,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 6,
+                "framesObserved": 91
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 664,
+            "fcpMs": 2004,
+            "lcpMs": 2004,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 56,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 109,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 6,
+                "framesObserved": 108
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 665,
+            "fcpMs": 1868,
+            "lcpMs": 1868,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 88,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 92,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 6,
+                "framesObserved": 91
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 662,
+            "fcpMs": 1940,
+            "lcpMs": 1940,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 104,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 91,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 7,
+                "framesObserved": 90
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 665,
+            "fcpMs": 2036,
+            "lcpMs": 2036,
+            "lcpElement": "H1",
+            "interactions": 3,
+            "inpMs": 40,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 148,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 6,
+                "framesObserved": 147
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 664,
+            "fcpMs": 1988,
+            "lcpMs": 1988,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 64,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 91,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 7,
+                "framesObserved": 90
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 664,
+            "fcpMs": 2044,
+            "lcpMs": 2044,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 96,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 155,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 7,
+                "framesObserved": 154
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 662,
+            "fcpMs": 1992,
+            "lcpMs": 1992,
+            "lcpElement": "H1",
+            "interactions": 3,
+            "inpMs": 64,
+            "clsWholePage": 0,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 119,
+              "drawCallsPerFrame": {
+                "max": 7,
+                "p95": 6,
+                "framesObserved": 118
+              },
+              "labelTextures": {
+                "count": 8,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          }
+        ]
+      }
+    },
+    "desktop": {
+      "static": {
+        "summary": {
+          "label": "Desktop: 1440x900, DPR 1, 1x CPU, desktop applied (150 ms request latency, 9.2 Mbps down)",
+          "variant": "static",
+          "journeys": 20,
+          "modes": {
+            "static": 20
+          },
+          "lcpP75Ms": 540,
+          "inpP75Ms": 16,
+          "inpGate": "gated",
+          "fcpP75Ms": 540,
+          "ttfbP75Ms": 171,
+          "clsWholePageMax": 0.0437,
+          "clsFromEnhancementMax": 0,
+          "clsFontSwapSources": [
+            "div in hero",
+            "div in app-bar",
+            "p in hero",
+            "a in hero"
+          ],
+          "backdropSurfacesAtSectionsMax": 3,
+          "backdropSurfacesSweepMax": 4,
+          "lcpElements": [
+            "H1"
+          ],
+          "clsWholePageRating": "good"
+        },
+        "journeys": [
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 172,
+            "fcpMs": 536,
+            "lcpMs": 536,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 548,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 172,
+            "fcpMs": 540,
+            "lcpMs": 540,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 24,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 562,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 171,
+            "fcpMs": 540,
+            "lcpMs": 540,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 562,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 170,
+            "fcpMs": 532,
+            "lcpMs": 532,
+            "lcpElement": "H1",
+            "interactions": 0,
+            "inpMs": 0,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 549,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 170,
+            "fcpMs": 528,
+            "lcpMs": 528,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 548,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 171,
+            "fcpMs": 524,
+            "lcpMs": 524,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 547,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 171,
+            "fcpMs": 536,
+            "lcpMs": 536,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 555,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 170,
+            "fcpMs": 540,
+            "lcpMs": 540,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 565,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 171,
+            "fcpMs": 544,
+            "lcpMs": 544,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 558,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 172,
+            "fcpMs": 532,
+            "lcpMs": 532,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 559,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 171,
+            "fcpMs": 548,
+            "lcpMs": 548,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 569,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 171,
+            "fcpMs": 540,
+            "lcpMs": 540,
+            "lcpElement": "H1",
+            "interactions": 0,
+            "inpMs": 0,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 554,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 170,
+            "fcpMs": 524,
+            "lcpMs": 524,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 546,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 170,
+            "fcpMs": 568,
+            "lcpMs": 568,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 578,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 170,
+            "fcpMs": 520,
+            "lcpMs": 520,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 546,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 171,
+            "fcpMs": 524,
+            "lcpMs": 524,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 543,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 171,
+            "fcpMs": 544,
+            "lcpMs": 544,
+            "lcpElement": "H1",
+            "interactions": 0,
+            "inpMs": 0,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 561,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 169,
+            "fcpMs": 536,
+            "lcpMs": 536,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 556,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          },
+          {
+            "locale": "es",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 170,
+            "fcpMs": 520,
+            "lcpMs": 520,
+            "lcpElement": "H1",
+            "interactions": 1,
+            "inpMs": 16,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 539,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": null
+          },
+          {
+            "locale": "en",
+            "variant": "static",
+            "mode": "static",
+            "ttfbMs": 169,
+            "fcpMs": 516,
+            "lcpMs": 516,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 16,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 536,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": null
+          }
+        ]
+      },
+      "enhanced": {
+        "summary": {
+          "label": "Desktop: 1440x900, DPR 1, 1x CPU, desktop applied (150 ms request latency, 9.2 Mbps down)",
+          "variant": "enhanced",
+          "journeys": 10,
+          "modes": {
+            "webgl": 10
+          },
+          "lcpP75Ms": 524,
+          "inpP75Ms": 32,
+          "inpGate": "advisory under SwiftShader (amended ADR 2026-09-28)",
+          "fcpP75Ms": 524,
+          "ttfbP75Ms": 170,
+          "clsWholePageMax": 0.0437,
+          "clsFromEnhancementMax": 0,
+          "clsFontSwapSources": [
+            "div in hero",
+            "div in app-bar",
+            "p in hero",
+            "a in hero"
+          ],
+          "backdropSurfacesAtSectionsMax": 3,
+          "backdropSurfacesSweepMax": 4,
+          "lcpElements": [
+            "H1"
+          ],
+          "webgl": {
+            "journeysWithRuntime": 10,
+            "drawCallsPerFrameMax": 16,
+            "labelTextures": 20,
+            "largestLabelTexture": [
+              398,
+              64
+            ],
+            "idleFramesInWindowMax": 0
+          },
+          "clsWholePageRating": "good"
+        },
+        "journeys": [
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 170,
+            "fcpMs": 524,
+            "lcpMs": 524,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 32,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 550,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": {
+              "renderedFrames": 96,
+              "drawCallsPerFrame": {
+                "max": 15,
+                "p95": 15,
+                "framesObserved": 95
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 171,
+            "fcpMs": 520,
+            "lcpMs": 520,
+            "lcpElement": "H1",
+            "interactions": 2,
+            "inpMs": 32,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 541,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 98,
+              "drawCallsPerFrame": {
+                "max": 16,
+                "p95": 15,
+                "framesObserved": 97
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 170,
+            "fcpMs": 520,
+            "lcpMs": 520,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 32,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 538,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": {
+              "renderedFrames": 96,
+              "drawCallsPerFrame": {
+                "max": 15,
+                "p95": 15,
+                "framesObserved": 95
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 171,
+            "fcpMs": 548,
+            "lcpMs": 548,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 48,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 567,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 100,
+              "drawCallsPerFrame": {
+                "max": 16,
+                "p95": 15,
+                "framesObserved": 99
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 170,
+            "fcpMs": 516,
+            "lcpMs": 516,
+            "lcpElement": "H1",
+            "interactions": 3,
+            "inpMs": 32,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 541,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": {
+              "renderedFrames": 93,
+              "drawCallsPerFrame": {
+                "max": 15,
+                "p95": 15,
+                "framesObserved": 92
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 170,
+            "fcpMs": 516,
+            "lcpMs": 516,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 32,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 535,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 94,
+              "drawCallsPerFrame": {
+                "max": 16,
+                "p95": 15,
+                "framesObserved": 93
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 169,
+            "fcpMs": 516,
+            "lcpMs": 516,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 32,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 540,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": {
+              "renderedFrames": 90,
+              "drawCallsPerFrame": {
+                "max": 15,
+                "p95": 15,
+                "framesObserved": 89
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 170,
+            "fcpMs": 516,
+            "lcpMs": 516,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 48,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 539,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 97,
+              "drawCallsPerFrame": {
+                "max": 16,
+                "p95": 15,
+                "framesObserved": 96
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "es",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 170,
+            "fcpMs": 524,
+            "lcpMs": 524,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 32,
+            "clsWholePage": 0.0437,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0437,
+                "atMs": 544,
+                "sources": [
+                  "div in hero",
+                  "div in app-bar"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 4,
+            "webgl": {
+              "renderedFrames": 98,
+              "drawCallsPerFrame": {
+                "max": 15,
+                "p95": 15,
+                "framesObserved": 97
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  398,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          },
+          {
+            "locale": "en",
+            "variant": "enhanced",
+            "mode": "webgl",
+            "ttfbMs": 170,
+            "fcpMs": 548,
+            "lcpMs": 548,
+            "lcpElement": "H1",
+            "interactions": 4,
+            "inpMs": 32,
+            "clsWholePage": 0.0004,
+            "clsFromEnhancement": 0,
+            "clsNotFromEnhancement": [
+              {
+                "value": 0.0004,
+                "atMs": 572,
+                "sources": [
+                  "div in app-bar",
+                  "p in hero",
+                  "a in hero"
+                ]
+              }
+            ],
+            "clsEnhancementDetail": [],
+            "backdropMax": 3,
+            "backdropSweepMax": 3,
+            "webgl": {
+              "renderedFrames": 88,
+              "drawCallsPerFrame": {
+                "max": 16,
+                "p95": 15,
+                "framesObserved": 87
+              },
+              "labelTextures": {
+                "count": 20,
+                "largest": [
+                  308,
+                  64
+                ]
+              },
+              "idleFramesInWindow": 0
+            }
+          }
+        ]
+      }
+    }
+  }
+}

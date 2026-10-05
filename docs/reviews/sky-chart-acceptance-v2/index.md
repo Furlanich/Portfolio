@@ -84,7 +84,7 @@ Run on `main` at `edf8330` in a clean worktree after a fresh `npm ci`.
 
 ### Section 14 gates
 
-`measure:immersive` ran three times and `measure:home-vitals` once at W3. Every run exits 0. Both scripts build the root base path only.
+`measure:immersive` ran three times and `measure:home-vitals` once at W3. Every run exits 0. Both scripts build the root base path only. The full `measure:home-vitals` output is committed beside this record as `w3-home-vitals.json`: the gates, each profile's summary, and all 60 journeys (20 static and 10 enhanced on each of the mobile and desktop profiles). It is a synthetic lab measurement, not field data.
 
 | Gate | Limit | W3 measurement | Result |
 | --- | --- | --- | --- |
