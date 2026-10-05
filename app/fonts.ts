@@ -8,6 +8,9 @@ export const instrumentSans = localFont({
   variable: '--font-sans',
   display: 'swap',
   preload: true,
+  // next/font's own fallback is local(Arial) only; this family (app/globals.css) covers Arial's
+  // metric clones and the platform sans where Arial is missing (Linux, Android, ChromeOS).
+  fallback: ['Instrument Sans Metric Fallback', 'Arial', 'sans-serif'],
 });
 
 export const plexMono = localFont({
