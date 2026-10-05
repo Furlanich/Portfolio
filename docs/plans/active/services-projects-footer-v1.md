@@ -949,7 +949,7 @@ Documentation impact: <records updated in this PR>
 
 - 2026-10-05: Revision 5 corrects SPF-FINAL-01 to SPF-FINAL-03. Task 3 owns the Services evidence-test migration until W2; merged live defaults stay false pending hardware evidence from isolated candidate exports; Task 1 can synchronize current status summaries without changing historical rounds. Fresh independent review is pending. No implementation started.
 
-- 2026-10-05: Fresh independent GPT-6.1 Sol round 6 verified all four final-review findings resolved at `d16d909`, with zero unresolved findings. The [owner's conditional approval](../../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05) is fulfilled; revision 5 is APPROVED. The final-review Governance approval PR is being prepared. Task 1's remaining packaging and W0 have not run; no implementation started.
+- 2026-10-05: Fresh independent GPT-6.1 Sol round 6 verified all four final-review findings resolved at `d16d909`, with zero unresolved findings. The [owner's conditional approval](../../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05) is fulfilled; revision 5 is APPROVED. The final-review Governance approval [PR #104](https://github.com/Furlanich/Portfolio/pull/104) is open for human review. Task 1's remaining packaging and W0 have not run; no implementation started.
 
 ## Important implementation decisions
 

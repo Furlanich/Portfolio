@@ -106,7 +106,7 @@ The owner supplied this conditional authorization in the current Codex chat on 2
 
 > Correct the BLOCKING and MEDIUM issues, and review the plan again. If the plan then passes the review, change it's status to APPROVED and open a PR.
 
-The fresh independent round 6 and its bounded correction verification passed with zero unresolved findings. The stated condition is fulfilled: **PLAN-SPF-V1 revision 5 is APPROVED — 2026-10-05**. This paragraph is the durable approval-source record for Task 1. The final-review PR records approval and corrections; Task 1 still verifies these records, assembles its acceptance scaffold/receipt and obtains the human Governance PR merge before W0. No implementation, W0 checkpoint, hardware acceptance or PR merge is claimed here. Human control of `main` remains unchanged.
+The fresh independent round 6 and its bounded correction verification passed with zero unresolved findings. The stated condition is fulfilled: **PLAN-SPF-V1 revision 5 is APPROVED — 2026-10-05**. This paragraph is the durable approval-source record for Task 1. [Final-review PR #104](https://github.com/Furlanich/Portfolio/pull/104) records approval and corrections; Task 1 still verifies these records, assembles its acceptance scaffold/receipt and obtains the human Governance PR merge before W0. No implementation, W0 checkpoint, hardware acceptance or PR merge is claimed here. Human control of `main` remains unchanged.
 
 ## Boundaries and verification
 
