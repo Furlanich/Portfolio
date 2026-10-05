@@ -187,7 +187,7 @@ Two rules apply to every pairing:
 | `body-lg` | 19px / 1.6 |
 | `label` | 12px mono, 0.08em tracking, uppercase |
 
-Headings use `text-wrap: balance`. Greek Bayer letters and degree labels use mono without the uppercase transform.
+Headings use `text-wrap: balance`. Greek Bayer letters and degree labels use mono without the uppercase transform. *(Amended by E5, 2026-10-04: the Bayer letters now use a serif Greek stack, see D-13. The degree labels are unchanged.)*
 
 **D-10 Spacing.**
 
@@ -425,7 +425,7 @@ Content has no entrance animation or scroll reveal. Every animation uses only `o
 - Transparency and forced colours: D-07.
 - Zoom and reflow: 320px with no horizontal scroll, and 200% text zoom with content growth. The hero exceeds 100svh when needed.
 - Targets: at least 44px, with 48px for the primary CTA.
-- Screen readers: a real NVDA + Firefox check and a VoiceOver iOS spot check (Task 11 manual QA). The previous plan deferred this.
+- Screen readers: a real NVDA + Firefox check and a VoiceOver iOS spot check (Task 11 manual QA). The previous plan deferred this. *(2026-10-05: not performed. Section 26.3 is the protocol, and the [acceptance record](../../reviews/sky-chart-acceptance-v2/index.md) records it as DEFERRED.)*
 
 ## 14. Performance strategy
 
@@ -666,7 +666,7 @@ Every packet also inherits these rules:
 - **Owned paths:** see section 19. **Forbidden:** every component outside `components/surfaces/`. **Locks:** L-02, L-03.
 - **Expected behaviour:** no visible change on any page (no consumer yet).
 - **RED tests:**
-  - `design-tokens.test.mjs` asserts these exact values and minimum ratios, which fail until the tokens exist: `sky.lit` ≥4.5 on abyss, deep and field; Bone ≥7 on `sky.plate` composited over `#9CC4EC`; `sky.text-2` ≥4.5 on that same composite; Ink ≥7 and Muted ≥4.5 on `sky.sheet` composited over `sky.field`; Bone ≥7 on `#0A55A3` *(corrected 2026-09-24: the true ratio is 6.84:1, AA but not 7:1. The test asserts ≥6.5 and records the exact figure; see Deviations)*.
+  - `design-tokens.test.mjs` asserts these exact values and minimum ratios, which fail until the tokens exist: `sky.lit` ≥4.5 on abyss, deep and field; Bone ≥7 on `sky.plate` composited over `#9CC4EC`; `sky.text-2` ≥4.5 on that same composite; Ink ≥7 and Muted ≥4.5 on `sky.sheet` composited over `sky.field`; Bone ≥7 on `#0A55A3` *(corrected 2026-10-05 by Task 12, citing the 2026-09-24 Task 3 Deviation: the true ratio is 6.84:1, AA but not 7:1. The test asserts ≥6.5 and records the exact figure; see Deviations)*.
   - `surfaces.test.mjs` asserts: no `'use client'`; decorative spans are `aria-hidden`; no `hover:`, `cursor-pointer` or `onClick`; the D-07 `@supports`, `prefers-reduced-transparency` and `forced-colors` blocks exist; blur is absent when `blur={false}`.
   - A config assertion in `surfaces.test.mjs` checks that the three spec names are registered in the named projects.
 - **GREEN:** minimal tokens, CSS and components.
@@ -1384,6 +1384,7 @@ Documentation impact: <none | records>
   - **Windows socket flake.** One local run saw `net::ERR_NO_BUFFER_SPACE` (socket buffer exhaustion) as a console error in the rotation test. It passed on the next run.
   - **Greek in the Plex Mono subset.** The subset has no Greek, which is what E5 works around. Adding Greek glyphs to the subset is an asset change that stayed outside this plan.
 - **Open after Task 12.** These are explicit, not hidden by the move to `completed/`:
+  - **Owner decision: Founder has no atlas plate.** The implementation differs from approved D-05, supersession item 13 and D-18: `HomeFounder.tsx` renders the 8/4 grid without an `AtlasPlate`, although plan section 2, item 13, the RFC and DESIGN-VISUAL place Founder on an atlas plate. No owner decision is recorded. The owner either adds the plate (a code task) or amends the design through governance.
   - The section 26 manual protocol (browsers, real devices, screen readers, preferences, content truth and design fidelity) is not performed. Section 3 promised that this plan would close the previous plan's three deferrals. The compact Pause placement is closed by D-25 and its tests, but the constrained-Android evidence and the real screen-reader check are still open.
   - The hardware-GPU gates (scroll frame interval p95 ≤20 ms and the interaction task <50 ms) have only advisory SwiftShader numbers.
   - The Instrument Sans fallback on Android uses Roboto and Helvetica, which approximate Arial's metrics rather than match them. The manual Android pass must confirm there is no visible hero jump on a slow load.

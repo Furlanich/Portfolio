@@ -234,7 +234,7 @@ Recorded partial evidence, which does not satisfy this item: at checkpoint W2 th
 
 ## Known deviations from the plan's design
 
-These are owner-approved or orchestrator-recorded changes made during delivery. The plan's section 6 and DESIGN-VISUAL carry the dated amendment markers.
+These are owner-approved or orchestrator-recorded changes made during delivery. The one implementation difference with no recorded decision is listed under "Open items carried forward". The plan's section 6 and DESIGN-VISUAL carry the dated amendment markers.
 
 - **E1:** D-08 is gated per section, with the between-section sweep informational.
 - **E5:** the Bayer letters use a serif Greek stack at 17px, amending D-13.
@@ -243,7 +243,6 @@ These are owner-approved or orchestrator-recorded changes made during delivery. 
 - **Hover contrast:** Bone on `#0A55A3` is 6.84:1 (AA), not 7:1.
 - **Coordinates:** the minute sign is the ASCII apostrophe.
 - **N12–N14:** Pause sits right after the chapters in tab order; the scrim recedes instantly in static-with-JavaScript paths; tier-2 labels fade where they would cross hero text.
-- **Founder** renders as an 8/4 editorial grid with no atlas plate, because plan D-18 specifies only the grid.
 - **Static-only on software renderers:** a visitor on a software rasterizer (SwiftShader, llvmpipe, softpipe, the Microsoft Basic Render Driver) sees the static composition.
 - **Figma drift (plan section 30):** the [Figma mirror](https://www.figma.com/design/V6FD6Sq3gqqxeMw5Si7Dnx) was a snapshot of the plan at Gate F and has **not** been updated. It still shows the original D-13 (mono 15px Bayer letters), and it predates N12 (Pause tab order), N13, N14 and the amended D-08. The `em` caps, the header box and the coordinates apostrophe have no visible effect on the mirror. The drift is recorded here, as the plan allows, and no Figma update was made.
 
@@ -251,6 +250,8 @@ These are owner-approved or orchestrator-recorded changes made during delivery. 
 
 - **OPEN:** the whole of section 26, above, including the constrained-Android and real screen-reader checks that the previous plan deferred.
 - **OPEN:** hardware-GPU numbers for the frame-interval and interaction-task gates.
+- **OPEN (owner decision): Founder renders without an atlas plate.** The implementation differs from approved D-05, supersession item 13 and D-18: `HomeFounder.tsx` renders the 8/4 editorial grid directly over the environment and uses no `AtlasPlate`. The approved records place Founder on an atlas plate (plan section 2, supersession item 13, the RFC, and DESIGN-VISUAL D-05 and D-18). No owner decision is recorded. The owner chooses between adding the plate (a code task) and amending the design through governance. The approved design text is unchanged.
+- **Note: gate order.** The ADR lists the capability gates as reduced motion, Save-Data, WebGL2, the software-renderer check, the session context-lost flag, near-viewport, then `load`. `ImmersiveEnhancement` evaluates them in a different order: reduced motion first, then the near-viewport observer, then the `load` event, and only then Save-Data, the WebGL2 probe with the software-renderer check, and the session context-lost flag. There is no behavioural consequence, because every gate must pass before the runtime is imported.
 - **OPEN:** the Roboto and Helvetica fallbacks for Instrument Sans are approximate, not metric clones. The Android pass must confirm there is no visible hero jump on a slow load.
 - **OPEN (section 30):** real-device thermal behaviour of a full-viewport canvas plus backdrop-filter on low-end Android, and the press-scale feedback recommendation, which conflicts with the approved no-scale rule.
 - **Limit:** Firefox and WebKit canvases are untested in automation.
