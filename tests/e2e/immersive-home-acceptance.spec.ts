@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { appUrl, stableRoutes } from './support/paths';
+import { allowSoftwareRenderer, expectActive } from './support/sky-chart';
 
 // Task 7 acceptance matrix (PLAN-SKY-CHART-HOME-REDESIGN-V2 section 21). Scoped to the four RED
 // items this task's packet lists: keyboard order past the chapters, the D-25 Pause visibility
@@ -11,54 +12,16 @@ import { appUrl, stableRoutes } from './support/paths';
 // B1 (PR #83 review, amended ADR 2026-09-28): every test here expects webgl activation under
 // SwiftShader, so the whole file sets the explicit test-only software-renderer override.
 
-// Kept byte-identical to `immersive-home.spec.ts` (see the comment there): TypeScript's global
-// augmentation merging requires every `declare global` for this property to agree exactly.
-type SkyChartDebugFrame = {
-  yaw: number;
-  pitch: number;
-  groupOpacity: Record<string, number>;
-  linkFraction: number;
-  inputOpacity: number;
-  visibleTiers: readonly number[];
-  heroMask: number;
-};
-
-type SkyChartDebugHook = {
-  frame: SkyChartDebugFrame | null;
-  labelCount: number;
-  labels: readonly string[];
-  disposeCount: number;
-  renderCount: number;
-  drawCalls: number;
-  pixelRatio: number;
-  labelTextureSizes: readonly [number, number][];
-  labelOpacities: Record<string, number>;
-};
-
-declare global {
-  interface Window {
-    __FURLANICH_SKY_CHART__?: SkyChartDebugHook;
-    __SKY_CHART_ALLOW_SOFTWARE_RENDERER__?: boolean;
-  }
-}
-
 const locales = {
   es: { route: stableRoutes.home.es, pause: 'Pausar movimiento', resume: 'Reanudar movimiento' },
   en: { route: stableRoutes.home.en, pause: 'Pause motion', resume: 'Resume motion' },
 } as const;
 
-const mode = (page: Page) => page.locator('[data-instrument]').getAttribute('data-immersive-mode');
+const EASE = { timeout: 20_000 } as const;
 
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    window.__SKY_CHART_ALLOW_SOFTWARE_RENDERER__ = true;
-  });
+  await allowSoftwareRenderer(page);
 });
-
-async function expectActive(page: Page) {
-  await expect.poll(() => mode(page), { timeout: 20_000 }).toBe('webgl');
-  await expect(page.locator('canvas[data-sky-chart-canvas]')).toHaveCount(1);
-}
 
 for (const locale of ['es', 'en'] as const) {
   const copy = locales[locale];
@@ -99,6 +62,7 @@ for (const locale of ['es', 'en'] as const) {
   // over preflight's `[hidden]{display:none}`), and a hidden pill must not be keyboard
   // reachable -- both assert real rendered state (toBeHidden/toBeVisible), not the attribute.
   test(`${locale} Pause pill is hidden and keyboard-unreachable at scrollY 0, and hidden again while fully receded (D-25/B2)`, async ({ page }) => {
+    test.slow(); // two page loads and two activations
     for (const width of [390, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(appUrl(copy.route));
@@ -116,7 +80,7 @@ for (const locale of ['es', 'en'] as const) {
 
       await page.locator('#services').scrollIntoViewIfNeeded();
       await page.waitForTimeout(300);
-      await expect.poll(() => page.locator('[data-instrument]').getAttribute('data-recede')).toBe('1');
+      await expect.poll(() => page.locator('[data-instrument]').getAttribute('data-recede'), EASE).toBe('1');
       await expect(page.locator('[data-pause-motion-pill]')).toBeHidden();
     }
   });
@@ -125,7 +89,7 @@ for (const locale of ['es', 'en'] as const) {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(appUrl(copy.route));
     await expectActive(page);
-    await expect.poll(() => page.evaluate(() => window.__FURLANICH_SKY_CHART__?.frame?.inputOpacity ?? -1)).toBe(0);
+    await expect.poll(() => page.evaluate(() => window.__FURLANICH_SKY_CHART__?.frame?.inputOpacity ?? -1), EASE).toBe(0);
   });
 
   // N14: at >=768px, tier-2 labels whose projected position falls over the hero's text column
@@ -138,7 +102,7 @@ for (const locale of ['es', 'en'] as const) {
     // At the very top of the page (t=0), the "inputs" tier-2 labels reveal near-immediately
     // (group reveal g=0) and the hero fills the viewport -- the reference itself places
     // Messages against the trust row here, so this is the concrete case N14 fixes.
-    await expect.poll(async () => (await page.evaluate(() => window.__FURLANICH_SKY_CHART__?.labelOpacities?.messages)) ?? -1).toBe(0);
+    await expect.poll(async () => (await page.evaluate(() => window.__FURLANICH_SKY_CHART__?.labelOpacities?.messages)) ?? -1, EASE).toBe(0);
   });
 
   test(`${locale} enhanced Home passes axe with the runtime active, playing and paused`, async ({ page }) => {

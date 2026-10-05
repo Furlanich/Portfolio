@@ -30,6 +30,23 @@
   --app-bar-height: 84px;
 }
 
+/*
+ * Cross-platform metric fallback for Instrument Sans (owner decision 2026-10-05, extends E2;
+ * narrow exception to L-02). next/font's adjusted fallback is one @font-face on local(Arial),
+ * which Linux, Android and ChromeOS cannot match, so the hero fell to a wider system sans until
+ * the web font arrived. app/fonts.ts lists this family after next/font's own, with the same
+ * overrides next/font computes against Arial; Liberation Sans and Arimo share Arial's metrics,
+ * and Roboto and Helvetica come close. Where Arial exists the first fallback already applies.
+ */
+@font-face {
+  font-family: 'Instrument Sans Metric Fallback';
+  src: local('Liberation Sans'), local('Arimo'), local('Roboto'), local('Helvetica'), local('Arial');
+  ascent-override: 93.97%;
+  descent-override: 24.22%;
+  line-gap-override: 0%;
+  size-adjust: 103.22%;
+}
+
 html {
   background: #F9F6EE;
   scroll-behavior: smooth;

@@ -177,6 +177,26 @@ for (const testCase of CASES) {
       }
     });
 
+    // Owner decision E5 (2026-10-04): the IBM Plex Mono subset has no Greek, so the Bayer
+    // letters get their own serif Greek stack (as printed star atlases set them) instead of
+    // whatever monospace fallback happens to cover α, β, γ.
+    test('Problems Bayer letters use the serif Greek stack at 17px, Azure, not uppercased', async ({ page }) => {
+      await page.goto(appUrl(testCase.route));
+      const letters = page.locator('#problems li [data-bayer-letter]');
+      await expect(letters).toHaveCount(3);
+      for (let index = 0; index < 3; index += 1) {
+        const style = await letters.nth(index).evaluate((el) => {
+          const computed = window.getComputedStyle(el);
+          return { family: computed.fontFamily, size: computed.fontSize, transform: computed.textTransform, hidden: el.getAttribute('aria-hidden') };
+        });
+        expect(style.family.split(',')[0].trim().replace(/["']/g, '')).toBe('Georgia');
+        expect(style.family).toMatch(/serif$/);
+        expect(style.size).toBe('17px');
+        expect(style.transform).toBe('none');
+        expect(style.hidden).toBe('true');
+      }
+    });
+
     test('Services: the lead plate is at least 420px high and spans two rows at 1440', async ({ page }) => {
       await page.goto(appUrl(testCase.route));
       const width = viewportWidth(page);

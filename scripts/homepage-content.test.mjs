@@ -293,7 +293,7 @@ for (const [locale, content] of [['es', spanish], ['en', english]]) {
     assert.equal(new Set(instrument.chapters.map((chapter) => chapter.heading)).size, 4);
 
     for (const chapter of instrument.chapters) {
-      assert.equal(chapter.artworkId, `${chapter.id}-poster`);
+      assert.equal('artworkId' in chapter, false, 'the retired chapter-poster artworkId is gone (Task 10 leftover)');
       assert.doesNotMatch(chapter.heading + chapter.description, /\n/, 'no manual line breaks');
     }
   });

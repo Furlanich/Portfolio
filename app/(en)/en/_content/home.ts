@@ -32,7 +32,6 @@ export const homeContent = {
         heading: 'Recognize the real system',
         description:
           'Orders, bookings, messages, and tasks already coexist in one business. The first step is understanding how they relate.',
-        artworkId: 'recognition-poster',
       },
       {
         id: 'fragmentation',
@@ -41,7 +40,6 @@ export const homeContent = {
         heading: 'See where it fragments',
         description:
           'When information changes channels and is repeated, operations depend on more manual checks.',
-        artworkId: 'fragmentation-poster',
       },
       {
         id: 'connection',
@@ -50,7 +48,6 @@ export const homeContent = {
         heading: 'Connect what matters',
         description:
           'A well-defined solution brings data, rules, and actions together without adding unnecessary complexity.',
-        artworkId: 'connection-poster',
       },
       {
         id: 'coordination',
@@ -59,7 +56,6 @@ export const homeContent = {
         heading: 'Coordinate the work',
         description:
           'The system supports the real process and creates a foundation that can be maintained and adapted as the business changes.',
-        artworkId: 'coordination-poster',
       },
     ],
     nodes: {

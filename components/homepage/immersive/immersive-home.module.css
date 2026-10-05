@@ -116,14 +116,17 @@
 
 .heroHeading {
   margin: 20px 0 24px;
-  max-width: 13ch;
+  /* D-11 "max 13ch", fixed in em so the cap is the same box before and after the web-font
+     swap (13ch of Instrument Sans Bold = 8.866em; `ch` would follow the fallback face). */
+  max-width: 8.866em;
   color: #F9F6EE;
   text-wrap: balance;
 }
 
 .heroLede {
   margin: 0;
-  max-width: 46ch;
+  /* D-11 "max 46ch" of Instrument Sans Regular = 30.636em, for the same reason. */
+  max-width: 30.636em;
   color: var(--sky-text-2);
 }
 
