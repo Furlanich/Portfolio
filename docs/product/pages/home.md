@@ -18,7 +18,7 @@ related:
   - RFC-SKY-CHART-VISUAL-SYSTEM-V2
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
-last_verified: 2026-09-24
+last_verified: 2026-10-05
 ---
 
 # Spanish homepage
@@ -307,11 +307,11 @@ Counts derived from the fixed example above: `counts.separate` = 5, `counts.conn
 
 ### Other new SKY-CHART-V2 bilingual strings
 
-These new keys support the App Bar readout, the four chapters, and the Services/Proof/Process/Founder kickers introduced alongside `HOME-IMPACT`; they are recorded here because Appendix A of `PLAN-SKY-CHART-HOME-REDESIGN-V2` is their single source and this is the owning product record for new Home/App-Bar copy. Mono labels marked *(decorative)* are rendered `aria-hidden`.
+These new keys support the App Bar readout, the four chapters, and the Services/Proof/Process/Founder kickers introduced alongside `HOME-IMPACT`; they are recorded here because Appendix A of `PLAN-SKY-CHART-HOME-REDESIGN-V2` is their single source and this is the owning product record for new Home/App-Bar copy. Mono labels marked *(decorative)* are rendered `aria-hidden`. *Corrected 2026-10-05:* `instrument.coordinates` uses the ASCII apostrophe (U+0027) as the minute sign, not the prime U+2032 that this table first wrote, because the shipped Instrument Sans subset lacks U+2032 (plan Deviations, Task 4). The string is decorative and `aria-hidden`.
 
 | Key | Spanish | English |
 | --- | --- | --- |
-| `instrument.coordinates` *(decorative)* | 34°36′S · 58°22′W | 34°36′S · 58°22′W |
+| `instrument.coordinates` *(decorative)* | 34°36'S · 58°22'W | 34°36'S · 58°22'W |
 | `instrument.plateLabel` *(decorative)* | Lámina {current}/04 | Plate {current}/04 |
 | `instrument.statusLabel` *(decorative)* | Lámina {current} de 04 | Plate {current} of 04 |
 | `instrument.chapters[].kicker` | Reconocer · Fragmentar · Conectar · Coordinar | Recognize · Fragment · Connect · Coordinate |

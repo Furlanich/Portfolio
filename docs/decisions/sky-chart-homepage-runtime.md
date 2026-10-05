@@ -12,8 +12,9 @@ related:
   - PAGE-HOME
   - PROJECT-EVIDENCE
   - ADR-STATIC-LOCALIZED-ROUTING
+  - REVIEW-SKY-CHART-ACCEPTANCE-V2
 supersedes: ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
-last_verified: 2026-09-28
+last_verified: 2026-10-05
 ---
 
 # Sky Chart homepage runtime
@@ -22,7 +23,7 @@ last_verified: 2026-09-28
 
 [`ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE`](adaptive-immersive-homepage.md) recorded the semantic-first, homepage-only adaptive hybrid-media architecture: static chapter posters first, a direct-Three.js two-zone C2 instrument scene, the existing Framer Motion progress boundary, demand rendering, one-shot initialization, session-scoped context-loss handling and one optional governed Connection-video surface.
 
-On 2026-09-23 the repository owner reviewed three prototyped Home/App-Bar directions and chose Direction A · Sky Chart, recorded in [`REVIEW-SKY-CHART-DIRECTION-2026-09-23`](../reviews/sky-chart-direction-2026-09-23/index.md). [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md) carried that direction, eighteen bounded supersessions of approved `DESIGN-VISUAL`, `DESIGN-IX-A11Y`, `VISUAL-IDENTITY-V1`, `IMMERSIVE-HOME-V1.1`, `ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE` and `PAGE-HOME` boundaries, and the runtime-change summary below to gate G1. The owner approved and merged that RFC as Governance PR #77 (merge commit `70168e9`), explicitly accepting the redesign, the removal of the derived Azure sculpture from the Home scene, the addition of `HOME-IMPACT`, and the withdrawal of the ADR's permission for one optional Connection film. This ADR is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) Task 2's deliverable, recording that accepted runtime decision.
+On 2026-09-23 the repository owner reviewed three prototyped Home/App-Bar directions and chose Direction A · Sky Chart, recorded in [`REVIEW-SKY-CHART-DIRECTION-2026-09-23`](../reviews/sky-chart-direction-2026-09-23/index.md). [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md) carried that direction, eighteen bounded supersessions of approved `DESIGN-VISUAL`, `DESIGN-IX-A11Y`, `VISUAL-IDENTITY-V1`, `IMMERSIVE-HOME-V1.1`, `ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE` and `PAGE-HOME` boundaries, and the runtime-change summary below to gate G1. The owner approved and merged that RFC as Governance PR #77 (merge commit `70168e9`), explicitly accepting the redesign, the removal of the derived Azure sculpture from the Home scene, the addition of `HOME-IMPACT`, and the withdrawal of the ADR's permission for one optional Connection film. This ADR is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-home-redesign-v2.md) Task 2's deliverable, recording that accepted runtime decision.
 
 ## Decision
 
@@ -153,8 +154,20 @@ The PR #83 independent review measured the runtime on a quiet machine under Swif
 - **Frame timing is measured on hardware.** The scroll frame-interval p95 and main-thread interaction-task gates are acceptance gates on hardware-accelerated GPUs: the plan's real-device protocol, or a hardware-GPU runner. `measure:immersive` keeps SwiftShader and keeps gating the JavaScript budget, layout shift and the canvas and listener lifecycle counts. It reaches the runtime only through an explicit, test-only software-renderer override, and it records its frame numbers as advisory.
 - **Records.** `PLAN-SKY-CHART-HOME-REDESIGN-V2` sections 10 and 14 and its Deviations record the same decision. Task 7's follow-up implements it test-first.
 
+## Amendment 2026-10-05: how the production gates were measured
+
+Task 11 of `PLAN-SKY-CHART-HOME-REDESIGN-V2` (PR #92) made the measurement scripts and the acceptance spec gate the definitions below. These notes record the method only. **No limit in the production-gates table changes, and no budget is raised.** The measured values are in the [acceptance record](../reviews/sky-chart-acceptance-v2/index.md) and the plan's checkpoint W3.
+
+- **Draw calls, label textures and idle frames** are measured in production at the WebGL API. The dev-only debug hook named in the table is compiled out of production builds, so `scripts/measure-immersive-production.mjs` and `scripts/measure-home-web-vitals.mjs` observe the browser instead, through `tests/e2e/support/production-instrumentation.mjs`: draw calls between two `clear` calls, canvas-sourced textures with their sizes, and `clear` calls in a window after rendering settles. The debug hook still serves the development-server specs.
+- **Incremental immersive JavaScript** is the lazy runtime chunk set, the runtime chunk plus `three`, which is the table's definition. The whole-page Home JavaScript delta against the `ff6eadf` baseline is reported only, because it also counts `AppBarBehavior`, `PositionFixToggle` (budgeted separately) and other Home JavaScript added since.
+- **Layout shift from the enhancement** is attributed to the enhancement: shifts after `immersive:import-start`, or from a source inside the canvas, scrim or Pause pill, excluding shifts during or just after web-font loading. Whole-page CLS is a separate metric. It is gated at ≤0.1 (the web-vitals "good" line) in `measure:home-vitals`, which fails above it, and it is not the enhancement gate.
+- **Backdrop-filter surfaces** are gated at each section (the table's "E2E DOM scan at each section"; plan D-08 as amended by owner decision E1). A half-viewport sweep between sections is reported as information, with a regression cap of 5. The sweep is not a gate: a viewport that straddles two sections briefly intersects more surfaces than any one section holds.
+- **Frame interval and interaction task** stay hardware-GPU gates under the 2026-09-28 amendment. Under SwiftShader they are advisory, and the section 26 device protocol has not yet produced hardware numbers.
+
 ## Date and status
 
 **APPROVED — 2026-09-24.** Recorded after the repository owner approved and merged Governance PR #77 (`RFC-SKY-CHART-VISUAL-SYSTEM-V2`, merge commit `70168e9`), which accepted the Sky Chart runtime-change summary, the removal of the derived Azure sculpture, and the withdrawal of the optional Connection-film permission. This ADR authorizes execution of `PLAN-SKY-CHART-HOME-REDESIGN-V2` (Waves 1–4), not release, provider activation, evidence upgrades, legal/SEO work, additional WebGL routes or a React-major migration.
 
 **AMENDED — 2026-09-28.** By owner decision, recorded in the amendment section above and in the plan's Deviations: a software-renderer capability gate, and frame-time gates measured on hardware GPUs. Limits are unchanged.
+
+**NOTED — 2026-10-05.** Measurement notes recorded in the amendment above. No limit or decision changes.

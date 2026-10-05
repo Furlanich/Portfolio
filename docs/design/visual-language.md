@@ -28,7 +28,8 @@ related:
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
-last_verified: 2026-09-30
+  - REVIEW-SKY-CHART-ACCEPTANCE-V2
+last_verified: 2026-10-05
 ---
 
 # Visual language
@@ -514,6 +515,14 @@ Total added font transfer is 73,784 bytes, of which 38,368 bytes (the preloaded 
 
 The lockup wordmark is outlined from the official static `fonts/ttf/InstrumentSans-Bold.ttf` at the same Instrument commit (SHA-256 `735badeb8b2046cee6f5e1226412ab6c29db04accbca413af03d70e991dce10d`) with the font's pair kerning and `0.08em` tracking. That file is a build input only and is not shipped.
 
+#### Font fallbacks and Greek coverage (recorded 2026-10-05)
+
+These notes describe `app/fonts.ts` and `app/globals.css` as shipped by `PLAN-SKY-CHART-HOME-REDESIGN-V2` Task 11 (owner decisions E2 and the cross-platform fallback). They add no new face.
+
+- **IBM Plex Mono** uses a real monospace fallback: `Courier New`, `Liberation Mono`, `monospace`, with `adjustFontFallback: false`. `next/font`'s automatic fallback scales Arial to the face's average width (131% for Plex Mono), which made uppercase labels and digits about 25% wider than Plex Mono. They wrapped one way before the swap and another after it. Plex Mono advances 0.6em, as do Courier New, Liberation Mono and the platform monospace faces, so the swap is width-neutral.
+- **Instrument Sans** keeps `next/font`'s adjusted fallback, a single `@font-face` over `local(Arial)`, and then lists `Instrument Sans Metric Fallback`. That family, declared in `app/globals.css`, resolves `local()` Liberation Sans, Arimo, Roboto, Helvetica and Arial with `size-adjust` 103.22%, `ascent-override` 93.97%, `descent-override` 24.22% and `line-gap-override` 0%. Linux, Android and ChromeOS have no Arial for `local()` to match, so without it the hero fell to an unadjusted, wider system sans until the font arrived. Liberation Sans and Arimo share Arial's metrics. Roboto and Helvetica are approximate, and the real-Android check in the acceptance record must confirm there is no visible hero jump on a slow load.
+- **Greek.** The shipped Plex Mono subset (Latin-1) has no Greek letters, so any Greek set in the mono face falls back to another font. The decorative Bayer letters on Home therefore use the serif stack in D-13 below. Adding Greek to the subset would be an asset change that this design does not require.
+
 ### Precision Assembly composition
 
 The visual direction combines warm editorial space, controlled asymmetry, exact rules and one dimensional azure sculpture. Typography, whitespace, rules, project media and section numbering carry most site-wide identity. Cards remain reserved for genuine comparison, bounded evidence and controls; ordinary ideas use editorial composition rather than a bordered rectangle. *Superseded on Home by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 13): chapters, Proof, Process and Founder use atlas plates, and Problems and Position fix use plotting sheets, as ordinary editorial composition rather than bounded-evidence cards. Unaffected outside Home.*
@@ -615,19 +624,21 @@ The following remain **OPEN** for asset review without changing the approved com
 - exact Connection-film shot list and production tool;
 - final poster artwork and video encodes within the accepted budgets.
 
-*Both film-related items above are closed, not merely deferred, by the item-17 withdrawal recorded in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md): there is no Connection-film shot list, production tool or video encode to produce. Only the environment poster artwork (D-23) remains a live open item, tracked by [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) Task 10.*
+*Both film-related items above are closed, not merely deferred, by the item-17 withdrawal recorded in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md): there is no Connection-film shot list, production tool or video encode to produce. Only the environment poster artwork (D-23) remains a live open item, tracked by [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-home-redesign-v2.md) Task 10.*
 
 ## SKY-CHART-V2 — Sky Chart Home and App Bar — APPROVED
 
 **APPROVED — 2026-09-24.** Recorded after the repository owner approved and merged [Governance PR #77](https://github.com/Furlanich/Portfolio/pull/77) (merge commit `70168e9`), accepting [`RFC-SKY-CHART-VISUAL-SYSTEM-V2`](../rfcs/sky-chart-visual-system-v2.md) and its eighteen bounded supersessions. This section is the approved design record for the Sky Chart star-atlas environment on Home and the floating chart-header App Bar on every route. It supersedes `IMMERSIVE-HOME-V1.1`'s C2 composition and the other approved-record boundaries named below, each within the stated scope; everywhere else, `VISUAL-IDENTITY-V1` and this document's other sections remain authoritative unchanged.
 
-The complete normative specification is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/active/sky-chart-home-redesign-v2.md) section 6, design decisions D-01 through D-27, together with Appendices A–C. This section records the approved rules and, for D-04 and D-22, their complete values; the remaining numeric detail of plan section 6 not restated below (exact dimensions, offsets, shadow and typography specifications, and Appendices A–C) is incorporated by reference as an APPROVED design requirement of this section, through `PLAN-SKY-CHART-HOME-REDESIGN-V2` wherever that plan file currently lives (`docs/plans/active/` while the plan executes, `docs/plans/completed/` once Task 12 closes it). Where a later implementation PR and the plan disagree, the plan wins.
+The complete normative specification is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-home-redesign-v2.md) section 6, design decisions D-01 through D-27, together with Appendices A–C. This section records the approved rules and, for D-04 and D-22, their complete values; the remaining numeric detail of plan section 6 not restated below (exact dimensions, offsets, shadow and typography specifications, and Appendices A–C) is incorporated by reference as an APPROVED design requirement of this section, through `PLAN-SKY-CHART-HOME-REDESIGN-V2`, which lives in `docs/plans/completed/` since Task 12 closed it (it was in `docs/plans/active/` while the plan executed). Where a later implementation PR and the plan disagree, the plan wins.
+
+**Implementation note — 2026-10-05.** This design is implemented on Home and on every route's App Bar through plan Tasks 3–11 (see the [acceptance record](../reviews/sky-chart-acceptance-v2/index.md)). The status of this section stays **APPROVED**, as with earlier delivered plans; the repository status vocabulary has no separate implemented state. Five owner-approved amendments made during delivery are folded into the rules below with dated markers: D-04 (the true hover-contrast ratio), D-08 (a per-section gate, E1), D-10 and D-22 (the header's exact layout box), D-11 (hero caps set in `em`) and D-13 (the serif Greek stack for Bayer letters, E5). One implementation fact differs from this section's prose: Founder (D-18) renders as the 8/4 editorial grid directly over the environment, without an atlas plate, because plan D-18 specifies only the grid. The manual QA protocol in plan section 26 is not yet performed, so the acceptance record reports those items as DEFERRED.
 
 ### Environment and materials (D-01 to D-10)
 
 - **Layer model (Home only, D-01).** Back to front: an environment ground (`−3`), the fixed full-viewport WebGL canvas portaled to `document.body` (`−2`), a fixed contrast scrim (`−1`), transparent content (plates and sheets, `auto`), and the sticky App Bar (`50`). No ancestor of the fixed layers may create a stacking context above `body`.
 - **Ground and scrim (D-02, D-03).** A fixed radial ground gradient and a directional scrim. The dawn CTA and footer are opaque Bone surfaces that cover the ground and scrim beneath them. The scrim's opacity follows the D-24 recede factor.
-- **Palette (D-04).** `sky.*` and `chart.*` color tokens, used only on Home and the App Bar. Brand Azure and Bone keep their approved roles; Azure is never text on a `sky.*` ground. Primary actions stay Azure with Bone text (8.79:1); the hover state is `#0A55A3`. Every pairing is asserted by `scripts/design-tokens.test.mjs`, including worst-case translucent composites.
+- **Palette (D-04).** `sky.*` and `chart.*` color tokens, used only on Home and the App Bar. Brand Azure and Bone keep their approved roles; Azure is never text on a `sky.*` ground. Primary actions stay Azure with Bone text (8.79:1); the hover state is `#0A55A3`, with Bone text at 6.84:1 (AA for 16px semibold labels, not 7:1; the Task 3 packet's "≥7" was wrong and `scripts/design-tokens.test.mjs` asserts ≥6.5 and records the exact figure). Every pairing is asserted by `scripts/design-tokens.test.mjs`, including worst-case translucent composites.
 
   | Token | Value | Allowed use |
   | --- | --- | --- |
@@ -647,14 +658,15 @@ The complete normative specification is [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../p
   | `chart.context-dark` / `chart.signal-dark` | `#5E7185` / `#9CC4EC` | Chart pair on dark |
   | `chart.context-light` / `chart.signal-light` | `#8FA3B6` / `#004589` | Chart pair on sheets; direct labels are mandatory |
 
-- **Atlas plate (D-05) and plotting sheet (D-06).** Two translucent chart materials: a dark atlas plate with registration ticks and an optional plate number, used for chapters, Services, Proof, Process and Founder; and a bone plotting sheet with a plotting grid, bearing label and corner crease, used for Problems and the new Position fix section. Both define `@supports`, reduced-transparency and forced-colors fallbacks (D-07) and count toward a three-surface `backdrop-filter` budget per viewport, App Bar excluded (D-08).
-- **Type and spacing (D-09, D-10).** New `display-1`/`display-2`/`display-3`/`lead`/`body-lg`/`label` `fontSize` tokens and Home-specific section padding and chapter gaps, used only on Home. The `--app-bar-height` custom property and `scroll-padding-top: 96px` apply globally, wherever the App Bar renders (`app/globals.css`), not only on Home.
+- **Atlas plate (D-05) and plotting sheet (D-06).** Two translucent chart materials: a dark atlas plate with registration ticks and an optional plate number, used for chapters, Services, Proof, Process and Founder; and a bone plotting sheet with a plotting grid, bearing label and corner crease, used for Problems and the new Position fix section. Both define `@supports`, reduced-transparency and forced-colors fallbacks (D-07) and count toward a three-surface `backdrop-filter` budget, App Bar excluded (D-08).
+- **Blur budget (D-08).** The gate is **per section** (amended 2026-10-04, owner decision E1): at each section, with the viewport aligned to and centred on it, at most three content surfaces use `backdrop-filter`. Process step plates use `blur={false}`. The acceptance spec gates ≤3 at each section at 320, 390, 768, 1024 and 1440 in both locales. A half-viewport sweep also records the transient count while a viewport straddles two sections (Problems and Services, or Services and Position fix). That count reached 4 at 768 and 1440 in production and once 5 on a dev server at 768 EN. It is informational, with a regression cap of 5, and is not the gate.
+- **Type and spacing (D-09, D-10).** New `display-1`/`display-2`/`display-3`/`lead`/`body-lg`/`label` `fontSize` tokens and Home-specific section padding and chapter gaps, used only on Home. The `--app-bar-height` custom property (`84px`) and `scroll-padding-top: 96px` apply globally, wherever the App Bar renders (`app/globals.css`), not only on Home. `header[data-app-bar]` is exactly `--app-bar-height` tall at every width (clarified 2026-10-04, Task 11): the bar surface inside it is `66px` tall at `≥1024px` and `62px` below, top-aligned, so the Home hero pulled up by `--app-bar-height` meets the header's top edge. Before the fix the layout box was `86px` or `82px` and the hero sat `2px` off.
 
 ### Section compositions (D-11 to D-19)
 
-- **Hero (D-11).** Pulled under the App Bar, `min-height: 100svh`, bottom-aligned content; content growth is never clipped.
+- **Hero (D-11).** Pulled under the App Bar, `min-height: 100svh`, bottom-aligned content; content growth is never clipped. The coordinate line reads `34°36'S · 58°22'W` with the ASCII apostrophe (the shipped Instrument Sans subset lacks the prime U+2032) and is `aria-hidden`. The H1 and lede caps are 13ch and 46ch **of Instrument Sans, set in `em`** (amended 2026-10-04): `8.866em` for the Bold H1 and `30.636em` for the Regular lede. `ch` follows the face on screen, so in the fallback face the H1 cap was about 16% narrower and the headline re-wrapped when Instrument Sans arrived. The `em` values are the exact Instrument Sans equivalents, so the loaded layout is unchanged and the box is the same across the font swap.
 - **Chapters (D-12).** Four `AtlasPlate` chapters inside an instrument-label container; the framed instrument viewport, the four poster images and `PhaseSpine` are removed (see the item 3 markers above).
-- **Problems (D-13).** A stepped three-`PlottingSheet` cascade, each with a Bayer letter, a bearing label and a decorative "cocked hat" glyph (Appendix C).
+- **Problems (D-13).** A stepped three-`PlottingSheet` cascade, each with a Bayer letter, a bearing label and a decorative "cocked hat" glyph (Appendix C). The Bayer letters (α, β, γ) are set in the serif Greek stack `Georgia, 'Times New Roman', 'Noto Serif', serif` at 17px, Azure, with no uppercase transform, and are `aria-hidden` (amended 2026-10-04, owner decision E5; the original "mono 15px" is superseded). The Plex Mono subset has no Greek, so a mono declaration only rendered a small fallback glyph; printed star atlases set Bayer letters in a serif.
 - **Services (D-14).** Catalogue plates: a lead `AtlasPlate` spanning two rows plus supporting plates.
 - **Position fix / `HOME-IMPACT` (D-15).** A new illustrative section between Services and Proof; see [`PAGE-HOME`](../product/pages/home.md#home-impact) and plan section 12.
 - **Proof (D-16).** A log `AtlasPlate` with three accountability log lines.
@@ -669,7 +681,7 @@ On every route, the shared header becomes a floating "chart header" in atlas-pla
 
 Complete values:
 
-- **Structure.** `div#site-top` is kept. `header[data-app-bar]` is sticky, `top: 0`, `z-index: 50`, `10px`/`12px` outer padding, in normal flow.
+- **Structure.** `div#site-top` is kept. `header[data-app-bar]` is sticky, `top: 0`, `z-index: 50`, `10px`/`12px` outer padding, in normal flow. Its layout box is exactly `--app-bar-height` (`84px`) at every width, set with `h-[var(--app-bar-height)]`; the bar surface inside it is `66px` tall at `≥1024px` and `62px` below, top-aligned (clarified 2026-10-04, see D-10).
 - **Inner container.** Max `1200px`, flex, `16px` gap, padding `8px 8px 8px 16px`, `14px` radius, `1px` border.
 - **Docked state** (the default, and the only state without JS). Fill `rgba(10,30,51,.82)`, `backdrop-filter: blur(16px) saturate(125%)`, border `sky.plate-line`. Without `backdrop-filter` support the fill is `.94`.
 - **Home undocked state.** Only after JavaScript sets `data-docked="false"` while `scrollY ≤ 24`. Transparent fill and border.
