@@ -35,7 +35,9 @@ export default defineConfig({
     reuseExistingServer: !isCI,
     timeout: 120_000,
   },
-  projects: [
+  // TEMPORARY (throwaway branch, never merged): font-swap group only, to diagnose a Linux-only shift for PR #92.
+  grep: /web-font swap/,
+  projects: ([
     {
       name: 'chromium-desktop',
       testMatch: [
@@ -126,5 +128,5 @@ export default defineConfig({
         viewport: { width: 1440, height: 900 },
       },
     },
-  ],
+  ] as const).filter((project) => project.name === 'immersive-chromium'),
 });
