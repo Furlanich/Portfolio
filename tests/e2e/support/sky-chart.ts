@@ -177,13 +177,21 @@ export async function observeLayoutShifts(page: Page) {
       const element = node instanceof Element ? node : (node?.parentElement ?? null);
       if (!element) return { text: 'detached', enhancement: false };
       const enhancement = Boolean(element.closest('[data-sky-chart-canvas], [data-environment-scrim], [data-pause-motion-pill]')) || element.tagName === 'CANVAS';
-      const label = `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}${element.getAttribute('data-app-bar') !== null ? '[app-bar]' : ''}`;
+      // Enough to identify the element from a CI log: tag, id, the first two classes and any data-* hooks.
+      const classes = [...element.classList].slice(0, 2).map((name) => `.${name.slice(0, 40)}`).join('');
+      const hooks = [...element.attributes].filter((attribute) => attribute.name.startsWith('data-')).map((attribute) => `[${attribute.name}]`).join('');
+      const label = `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}${classes}${hooks}`;
       return { text: label, enhancement };
     };
     new PerformanceObserver((list) => {
       for (const entry of list.getEntries() as unknown as { value: number; startTime: number; hadRecentInput: boolean; sources?: { node: Node | null }[] }[]) {
         if (entry.hadRecentInput) continue;
-        const sources = (entry.sources ?? []).map((source) => describe(source.node));
+        const rect = (value: DOMRectReadOnly | undefined) => (value ? `${Math.round(value.x)},${Math.round(value.y)} ${Math.round(value.width)}x${Math.round(value.height)}` : '?');
+        const sources = (entry.sources ?? []).map((source) => {
+          const described = describe(source.node);
+          const moved = source as unknown as { previousRect?: DOMRectReadOnly; currentRect?: DOMRectReadOnly };
+          return { ...described, text: `${described.text} ${rect(moved.previousRect)} -> ${rect(moved.currentRect)}` };
+        });
         record.push({ value: entry.value, time: entry.startTime, enhancement: sources.some((source) => source.enhancement), sources: sources.map((source) => source.text) });
       }
     }).observe({ type: 'layout-shift', buffered: true });
