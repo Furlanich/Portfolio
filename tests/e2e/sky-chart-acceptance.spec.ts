@@ -955,6 +955,9 @@ test.describe('web-font swap', () => {
         appBar: box(document.querySelector('header[data-app-bar]')),
         hero: box(document.querySelector('section[aria-labelledby="home-heading"]')),
         heading: box(document.querySelector('#home-heading')),
+        // The hero's line-length caps must not depend on the face that happens to be showing.
+        headingMaxWidth: parseFloat(getComputedStyle(document.querySelector('#home-heading')!).maxWidth),
+        ledeMaxWidth: parseFloat(getComputedStyle(document.querySelector('#home-heading + p')!).maxWidth),
       };
     });
   }
@@ -999,6 +1002,10 @@ test.describe('web-font swap', () => {
         // The hero and H1 are not compared: the Instrument Sans swap re-wraps the H1 where its
         // `ch`-based max-width differs between faces (reported under measure:home-vitals; E2 limited
         // the fix to font metrics). CLS below still bounds that shift.
+        // Owner decision (2026-10-04, after E2): the H1 and lede caps are font-independent (em,
+        // not ch), so the swap cannot change the box the hero text wraps in.
+        expect(Math.abs(loaded.headingMaxWidth - fallback.headingMaxWidth), `H1 max-width ${fallback.headingMaxWidth} -> ${loaded.headingMaxWidth}`).toBeLessThanOrEqual(0.5);
+        expect(Math.abs(loaded.ledeMaxWidth - fallback.ledeMaxWidth), `lede max-width ${fallback.ledeMaxWidth} -> ${loaded.ledeMaxWidth}`).toBeLessThanOrEqual(0.5);
         for (const key of ['appBar'] as const) {
           const before = fallback[key]!;
           const after = loaded[key]!;
