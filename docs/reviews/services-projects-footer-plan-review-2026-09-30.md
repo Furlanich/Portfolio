@@ -7,7 +7,7 @@ related:
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
-last_verified: 2026-09-30
+last_verified: 2026-10-05
 ---
 
 # Independent ADE v2 plan review — Services, Projects and Footer
@@ -40,6 +40,39 @@ A fresh **GPT-6.1 Sol (`gpt-6.1-sol`, high reasoning)** agent independently revi
 The reviewer verified Sonnet ownership of Tasks 2–7/9; closed Luna checklists in Tasks 1/10; Sonnet's frozen media-design handoff, mechanical Luna work and serialized lock transfers in Task 8; mandatory Luna routing for separable eligible implementation batches; independent Sol review of every PR/follow-up; and exact-provider verification without an invented Sonnet identifier or availability claim. Dependency waves, ownership/write sets, strict TDD, approved copy/assets, acceptance gates and human merge boundaries remain intact. Overall plan status remains PROPOSED.
 
 **Recommendation:** Ready for human plan approval. **Findings:** BLOCKING 0, HIGH 0, MEDIUM 0, LOW 0. No corrective findings. This is execution-readiness review only; the reviewer performed no UI, hardware, implementation or shell-validation tests. Human approval and W0 still precede execution.
+
+## Round 4 — supplemental review and plan revision 4
+
+On 2026-10-05 the owner asked for a supplemental independent review of revision 3. A fresh **Claude Opus 5.5** session reviewed it read-only against `main` at `5270e32`. It read the full plan, DESIGN-SPF-V1, the IA copy, the lifecycle, the repository Skills, `playwright.config.ts`, the test and baseline inventory and the Sky Chart precedent. The reviewer did not author or edit the plan during the review. This review is supplemental: it does not satisfy the plan's GPT-6.1 Sol gate.
+
+**Recommendation:** NOT READY. **Counts:** BLOCKING 4, HIGH 14, MEDIUM 16, LOW 6.
+
+On 2026-10-05 the owner then decided four open questions (OD-1 Home Founder plate is a non-goal; OD-2 slow-phone handling is a global policy; OD-3 Home copy is a non-goal; OD-4 device and screen-reader gates are owner-executed, with phones static until they pass) and asked for the plan to be reworked. The same session produced revision 4. Because the reviewer then also became a contributor, round 5 must use a fresh GPT-6.1 Sol reviewer.
+
+| ID / severity | Finding | Disposition in revision 4 |
+| --- | --- | --- |
+| PLAN-REV-001 / BLOCKING | Route retirement breaks the unowned `tests/e2e/accessibility.spec.ts` (retired rows) and possibly `scripts/site-header.test.mjs` (`LanguageSwitch` classes) | Test and baseline ownership inventory; Task 3 owns the retired rows and keeps the classes; Task 3 step 0 inventory search |
+| PLAN-REV-002 / BLOCKING | Tasks 3 and 4 were parallel, but the approved Footer copy breaks the Footer assertions in Task 3-owned specs, plus unowned `privacy.spec.ts` and `sky-chart-acceptance.spec.ts` | Task 4 moved to W3 after Task 3; Footer blocks transferred to Task 4; Home acceptance run required |
+| PLAN-REV-003 / BLOCKING | Sky Chart records expected SPF to change the Home Founder plate; the plan was silent and stale | OD-1 non-goal; dated corrections in the three records; `last_verified` 2026-10-05 |
+| PLAN-REV-004 / BLOCKING | The Skills AGENTS.md requires were absent or deferred to Task 10 | Skills contract with ordered stages; a Skills line in every packet |
+| PLAN-REV-005 / HIGH | Task 1 premise was stale (governance package already on `main`) | Task 1 rewritten as a closed list of the remaining edits |
+| PLAN-REV-006 / HIGH | Taste preflight placed after GREEN; Taste Skill unnamed | `design-taste-frontend-v1` named; preflight before RED in every UI packet |
+| PLAN-REV-007 / HIGH | `review-animations` cannot be model-invoked; Brag misapplied; `emil-design-eng` missing | Direct-read rule; Brag forbidden; comparison against the reference `.webm` files; `emil-design-eng` required |
+| PLAN-REV-008 / HIGH | Sonnet prompts ignored Superpowers and Impeccable auto-triggers | Provider execution notes forbid `brainstorming` and `impeccable`; "premium/refinement" wording removed |
+| PLAN-REV-009 / HIGH | Prototype source not in the repository | PC-7 and the reference-media table; tuned constants recorded per receipt |
+| PLAN-REV-010 / HIGH | Contract could not express the tablet tier | PC-1: `ConnectedTier` and `getTravelScale` |
+| PLAN-REV-011 / HIGH | Slow-but-capable phone handling undefined | OD-2: `CONNECTED_LIVE_POLICY` set from evidence |
+| PLAN-REV-012 / HIGH | Production spec could not serve `out/` | Task 2 production serving under `PLAYWRIGHT_SERVE_EXPORT=1` |
+| PLAN-REV-013 / HIGH | Task 8 needed baselines it did not own | Task 8 owns the Services/Projects snapshots after Task 6 |
+| PLAN-REV-014 / HIGH | No defined way to run the Task 5 engine in a browser | Disposable uncommitted inspection route for design only; real draw-call assertion moved to Task 7 |
+| PLAN-REV-015 / HIGH | Home copy edits without approved strings | OD-3 non-goal |
+| PLAN-REV-016 / HIGH | Wave checkpoints and orchestrator undefined | Checkpoint table W0–W8; orchestrator role and ledger rules |
+| PLAN-REV-017 / HIGH | Device and screen-reader gates had no human executor | OD-4: owner executes; Sonnet prepares the protocol; the policy follows the evidence |
+| PLAN-REV-018 / HIGH | Base path missing from most tasks | `/Portfolio` builds and runs in Tasks 3, 4, 6, 7, 8 and 9 |
+| PLAN-REV-019 to -034 / MEDIUM | Subjective acceptance; label priority; pointer highlight; registration matrix; Ground ownership; Home loss key; Task 9 write breadth; doc sync per PR; Linux baselines and CI; per-task axe; visual matrices; Git Bash base path; `targetFps`; Luna synthesis and in-packet handoffs; Non-goals and Three docs; Footer grouping | Objective acceptance lists; PC-2 to PC-6; registration table; Ground lock chain 2 → 3 → 6 → 7 → 8; read-only Home key; defect-gated fixes; workflow items 6–8; per-task matrices; provider notes; closed fact list for Task 10; Non-goals; `find-docs` in Task 5; PC-4 Footer order |
+| PLAN-REV-035 to -040 / LOW | Typos; receipt template; worktree and port rules; poster precedent; watermark opacity owner; review-gate status | Fixed; receipt template added; `.worktrees/spf-<n>` and ports 3200+10n; precedent cited; owner picks opacity; gate reopened |
+
+**Status after revision 4:** the review gate is reopened. A fresh GPT-6.1 Sol round 5 must review revision 4 and find zero BLOCKING issues before the owner approves the plan. `npm run docs:check` passed for the revision.
 
 ## Boundaries and verification
 

@@ -16,99 +16,198 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-09-30
+last_verified: 2026-10-05
 ---
 
 # Services, Projects and Footer v1 Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkboxes. These skills do not override the named implementation models, exclusive ownership, merged-dependency gates or human PR merges below.
+> **For agentic workers:** Dispatch this plan task by task with `superpowers:subagent-driven-development` or `superpowers:executing-plans`. Those skills only provide dispatch mechanics. They do not override the named models, the [Skills contract](#skills-contract), exclusive ownership, merged-dependency gates or human merges. Every task ends in a Pull Request. Do not use the local-merge options of `superpowers:finishing-a-development-branch`.
 
-**Goal:** Deliver the approved bilingual Atlas Services, complete inline Projects dossiers and branded shared Footer, with the Revision 5 connected background and definitive retirement of six project-detail URLs.
+**Goal:** Deliver the approved bilingual Atlas Services page, the complete inline Projects dossiers and the branded shared Footer. Add the Revision 5 connected background, and retire the six project-detail URLs definitively.
 
-**Architecture:** Static server HTML and permitted evidence first. A separate, optional connected-studio controller/Three engine enhances Services/Projects behind their readable content. Keep current Home/App Bar behavior, localized static export, protected assets and local simulated Contact. All implementation arrives through human-merged PRs.
+**Architecture:** Static server HTML and permitted evidence come first. A separate, optional connected-studio controller and Three engine enhance Services and Projects behind their readable content. Keep the current Home/App Bar behavior, the localized static export, the protected assets and the local simulated Contact. All implementation arrives through human-merged PRs.
 
-**Tech stack:** Installed Next.js 16.3.2, React 18.2.0, TypeScript 5.5.4, Tailwind 3.4.7, Three 0.186.0, existing Framer Motion 11.2.10, Node test runner and Playwright 1.63.0/axe. Exact installed guides, not remembered Next APIs, govern code. No dependency changes are planned.
+**Tech stack:** Installed Next.js 16.3.2, React 18.2.0, TypeScript 5.5.4, Tailwind 3.4.7, Three 0.186.0, existing Framer Motion 11.2.10, the Node test runner and Playwright 1.63.0 with axe. The installed guides and type definitions govern code, not remembered APIs. No dependency changes are planned.
 
-**Spec:** [DESIGN-SPF-V1](../../design/services-projects-footer-v1.md), approved 2026-09-30 with linked exact ES/EN copy. [Exploration and Revision 5 media](../../reviews/services-projects-footer-design-2026-09-30/index.md), [retirement audit](../../reviews/services-projects-footer-design-2026-09-30/route-retirement-audit.md), [accepted RFC](../../rfcs/services-projects-footer-redesign-v1.md), [new ADR](../../decisions/connected-studio-page-runtime.md). The disposable prototype is a rendered reference, not production code to copy wholesale.
+**Spec:** [DESIGN-SPF-V1](../../design/services-projects-footer-v1.md), approved 2026-09-30 with linked exact ES/EN copy. Also: [design exploration and Revision 5 media](../../reviews/services-projects-footer-design-2026-09-30/index.md), the [retirement audit](../../reviews/services-projects-footer-design-2026-09-30/route-retirement-audit.md), the [accepted RFC](../../rfcs/services-projects-footer-redesign-v1.md) and the [runtime ADR](../../decisions/connected-studio-page-runtime.md). The [reference media](#reference-media) section lists the exact files that define "matches Revision 5".
 
-**Author/status:** Codex authored this plan after explicit design approval and planning authorization. This plan is PROPOSED for human approval. Independent plan review is a separate gate recorded below; neither that review nor this document authorizes implementation. No production code is changed in the planning session.
+**Author/status:** Codex authored this plan after design approval and planning authorization. Revision 4 (2026-10-05) incorporates a supplemental independent review (findings PLAN-REV-001 to PLAN-REV-040, recorded in [REVIEW-SPF-PLAN-2026-09-30](../../reviews/services-projects-footer-plan-review-2026-09-30.md#round-4-supplemental-review-and-plan-revision-4)) and four owner decisions made on 2026-10-05. The plan is PROPOSED. The required GPT-6.1 Sol review gate is **reopened** for this revision. Neither this document nor any review authorizes implementation. No production code changes in the planning session.
 
 ## Model routing
 
-**APPROVED 2026-09-30:** The owner's model-routing instruction governs all dispatches for this plan. It approves these assignments; overall plan approval and human merge gates remain separate.
+**APPROVED 2026-09-30:** The owner's model-routing instruction governs every dispatch for this plan. Overall plan approval and human merge gates remain separate.
 
-- **Claude Sonnet 5.5** leads Tasks 2–7 and 9: complex reasoning, contracts, lifecycle/race analysis, atomic migration, performance diagnosis, visual composition, 3D rendering and motion. It develops the strongest implementation within the approved Revision 5 design, exact copy, protected assets and budgets; design judgment does not reopen those requirements.
-- **GPT-6 Luna (`gpt-6-luna`, medium)** implements Tasks 1 and 10 and the mechanical portion of Task 8. A Luna assignment must meet all three conditions: low reasoning demand, low implementation risk, and no visual, interaction, motion or architectural design judgment. Supply frozen inputs, exact owned paths, a finite checklist and checkable expected outputs. Closed copy transcription, receipt assembly and predetermined asset operations are eligible; a task is not low demand merely because its specification is detailed.
-- **Task 8 handoff:** Sonnet first freezes capture poses/settings, label treatment, responsive asset matrix and picture/manifest wiring instructions from the merged scene. Luna performs capture, encoding, resolution-only derivatives and exact wiring. Sonnet inspects static-to-live continuity and owns any design correction or nontrivial loading/fallback defect. For either model to edit, transfer the same task's exclusive path locks serially and record the handoff; retain one PR and the existing dependency wave.
-- **GPT-6.1 Sol (`gpt-6.1-sol`, high; xhigh for Task 9)** independently reviews every PR, including governance, media, documentation closeout and follow-up fixes. The reviewer is distinct from all contributors to that PR and checks the complete final diff, receipts, design fidelity and required validation. Re-review after material corrections. Owner visual/manual acceptance and human merge remain additional gates; neither Sonnet nor Luna replaces Sol as PR reviewer.
-- Within a Sonnet-led packet, route every separable implementation subtask that meets all three Luna conditions to Luna as a bounded checklist batch. The packet lead keeps design, integration and complex test strategy. Preserve the declared write set, serialize overlapping edits and record each model's actual contribution in the receipt. If a Luna checklist exposes ambiguity, a race, a failed budget, a design decision or a nontrivial defect, route that work to Sonnet before continuing.
-- Before dispatch, verify that the execution provider exposes the exact named model and record its actual provider identifier/settings. Resolve Claude Sonnet 5.5 through a provider that supports it; do not invent a Codex alias or assume a reasoning setting from another provider. If any required model is unavailable, record the routing failure and obtain owner authorization for substitution before that work begins. Future Skills/default models cannot silently replace these assignments.
+- **Claude Sonnet 5.5** leads Tasks 2–7 and 9: complex reasoning, contracts, lifecycle and race analysis, the atomic migration, performance diagnosis, visual composition, 3D rendering and motion. It implements the approved Revision 5 design, exact copy, protected assets and budgets. Design judgment does not reopen those requirements.
+- **GPT-6 Luna (`gpt-6-luna`, medium)** implements Tasks 1 and 10 and the mechanical portion of Task 8. A Luna assignment must meet all three conditions: low reasoning demand, low implementation risk, and no visual, interaction, motion or architectural design judgment. Supply frozen inputs, exact owned paths, a finite checklist and checkable expected outputs. Closed copy transcription, receipt assembly and predetermined asset operations are eligible. A task is not low demand merely because its specification is detailed.
+- **Task 8 handoff:** Sonnet first freezes the capture poses and settings, label treatment, responsive asset matrix and picture/manifest wiring from the merged scene. Luna performs capture, encoding, resolution-only derivatives and exact wiring. Sonnet inspects static-to-live continuity and owns any design correction or nontrivial loading/fallback defect. Before either model edits, transfer that task's exclusive path locks serially and record the handoff. The task keeps one PR and its dependency wave.
+- **GPT-6.1 Sol (`gpt-6.1-sol`, high; xhigh for Task 9)** independently reviews every PR, including governance, media, documentation closeout and follow-up fixes. The reviewer has not contributed to the PR and checks the complete final diff, receipts, design fidelity and required validation. Re-review after material corrections. Owner visual/manual acceptance and human merge are additional gates. Neither Sonnet nor Luna replaces Sol as PR reviewer.
+- Within a Sonnet-led packet, a separable subtask that meets all three Luna conditions goes to Luna as a bounded checklist batch. Each batch receives a named subset of the packet's write set, acquired as a serial lock handoff, and returns it before Sonnet edits those paths again. Record each handoff and each model's contribution in the receipt. If a Luna checklist exposes ambiguity, a race, a failed budget, a design decision or a nontrivial defect, route that work back to Sonnet before continuing.
+- Before dispatch, verify that the execution provider exposes the exact named model, and record the actual provider identifier and settings. Resolve Claude Sonnet 5.5 through a provider that supports it. Do not invent a Codex alias or assume a reasoning setting from another provider. If a required model is unavailable, record the routing failure and get owner authorization for a substitute before that work begins. Future Skills or default models cannot silently replace these assignments.
+- **Orchestrator** (as in the Sky Chart precedent): the planning or harness session that dispatches tasks, holds the live lock ledger, runs the [wave checkpoints](#wave-checkpoints) on `main`, and updates this plan's Progress under `PLAN-RECORD`. It never implements or reviews a PR that it gates. Record its actual model and provider in Progress when it starts. The orchestrator is a coordination role, not an implementation assignment, so it does not alter the routing above.
+
+### Provider execution notes
+
+These notes apply to every dispatch and are repeated in each packet prompt.
+
+- **Claude Sonnet sessions (Claude Code with Superpowers):**
+  - The design gate is closed. Do not run `superpowers:brainstorming` or `superpowers:writing-plans`. Raise an unresolved product or design question to the owner as **OPEN** instead.
+  - Do not invoke `impeccable` or any `impeccable-*` agent. Its shaping, polishing and redesign flows would reopen approved decisions. If a harness suggests it, decline and note that in the receipt.
+  - Read every Skill in the packet's Skills line through the Skill tool. Where invocation is disabled, read the file directly.
+  - Shell: these sessions use Git Bash on Windows, which rewrites `/Portfolio` in environment values. Run base-path commands in PowerShell (`$env:NEXT_PUBLIC_BASE_PATH = '/Portfolio'`). In Git Bash, prefix them with `MSYS2_ENV_CONV_EXCL='NEXT_PUBLIC_BASE_PATH'`.
+- **GPT-6 Luna sessions:** follow the packet checklist literally and change nothing outside the listed paths. Any instruction that needs interpretation goes back to Sonnet or the orchestrator. Luna never records PASS for evidence it did not run.
+- **GPT-6.1 Sol reviews:** read-only. Use the [receipt template](#receipt-template), the packet's objective acceptance list and the [Skills contract](#skills-contract). A missing Skill stage, an unrecorded RED or an unexecuted command is a finding.
+
+## Owner decisions and plan clarifications — 2026-10-05
+
+The owner decided OD-1 to OD-4 on 2026-10-05, in response to the supplemental review. Clarifications PC-1 to PC-7 resolve plan-level ambiguities inside DESIGN-SPF-V1 without changing approved design. Approving this plan approves them; an owner objection returns the affected item to **OPEN** before W0.
+
+| ID | Decision or clarification | Effect on execution |
+| --- | --- | --- |
+| OD-1 | **Home Founder plate is a non-goal.** PLAN-SPF-V1 does not change the Home Founder atlas plate. Any later change needs its own design. | No task edits `HomeFounder`, its plate or `home-sections` baselines. The three Sky Chart records that expected an SPF change carry a dated correction. |
+| OD-2 | **Slow-but-capable phones are handled by global policy, not a runtime watchdog.** | `lib/connected-studio/capability.ts` exports `CONNECTED_LIVE_POLICY: { wide, compact }`. Task 9's physical-device evidence sets the shipped values. The controller has no frame-budget fallback. |
+| OD-3 | **Home copy is a non-goal.** | No task edits `app/(es)/_content/home.ts` or `app/(en)/en/_content/home.ts`. Any Home/Services wording inconsistency found is recorded as OPEN in the receipt. |
+| OD-4 | **Device and screen-reader gates:** the owner performs the physical Android, iPhone, NVDA-Firefox and VoiceOver-iOS checks. If they are not done when Task 9 is otherwise ready, Task 9 may merge with those items OPEN and `CONNECTED_LIVE_POLICY.compact = false`. `wide` stays `true` only if the owner's desktop hardware check passed; otherwise it is `false` too. | Turning a tier on later is a bounded follow-up PR (Sonnet implements, Sol reviews, owner merges) carrying the passing evidence. OPEN items never become PASS without evidence. |
+| PC-1 | **Tablet tier.** Tablet (768–1023px) uses the wide graph (16 nodes, 33 connections) with a travel/depth scale below 1. | `ConnectedTier` and `getTravelScale(tier)` join the W1 contract. Sonnet tunes the tablet and compact values against the reference media and records them. |
+| PC-2 | **Label visibility rule.** Clamp each label into the viewport. Hide it if it cannot fit, if it is out of view, or if it intersects an occluder (reading masks, captions, Pause, App Bar). Resolve label–label overlaps greedily by descending `depthScale`, then ascending node id. Never scale labels below ~11px. | The "twice wide / once compact" rule is about graph assignment. Rendered visibility can be lower where content occludes. The HTML legend always lists all eight words. A pure `resolveLabelVisibility` function belongs to Task 2. |
+| PC-3 | **Catalogue pointer highlight** is a CSS-only static radial light, revealed on fine-pointer hover and `:focus-visible`. It does not track the pointer. | No pointer-tracking JavaScript. Pointer tracking would need owner approval. |
+| PC-4 | **Footer composition follows `revision-footer-1440.png` and `revision-footer-390.png`** (see [Task 4](#task-4-pr-4-build-the-shared-protected-mark-azure-conclusion)). WhatsApp appears once, as the primary action. | Removes the duplicate-channel ambiguity. Footer direct-channel href order stays WhatsApp, email, phone. |
+| PC-5 | **Home context-loss key is read-only for connected routes.** They read Home's existing `furlanich:sky-chart-context-lost` session flag, so a Home loss suppresses connected activation. They write only their own namespaced flag. | Home behavior is unchanged, consistent with the ADR's "context-loss suppression for the connected routes". |
+| PC-6 | **`SceneSnapshot.targetFps` is a number:** 0 when stopped, ambient caps 30 (wide/tablet) and 20 (compact), active cadence ≤ 60. | Task 9 can lower cadence without a contract change. |
+| PC-7 | **The prototype source is not authoritative.** `revision.html` (served at `127.0.0.1:4317`) is not in the repository. The committed [reference media](#reference-media) is the only rendered reference. | Constants the spec does not fix are Sonnet tuning, recorded in receipts and accepted only through owner visual review against those files. |
+
+## Non-goals
+
+An implementation agent must not expand scope into any of these. A change that seems necessary goes to the owner as OPEN.
+
+- Home: hero, scene, chapters, sections, copy (OD-3), the Founder plate (OD-1), proof fallback and runtime. The only Home-visible change is the shared Footer.
+- App Bar, Header, `BrandSignature`, navigation labels or menu behavior.
+- Information architecture beyond the six approved retirements: no new pages, routes, top-level items, redirects, rewrites, sitemap or robots files, or SEO metadata work.
+- New services, products, projects, Home-eligible projects, evidence permissions, claims, metrics or imagery beyond the two approved concept derivatives and the four posters.
+- Contact transmission, the dormant inquiry pipeline, the rejected D03 notice/form redesign, analytics, backend, hosting, deployment and CI workflow changes.
+- Legal and privacy text, except the existing Privacy link placement in the Footer.
+- Global tokens, `app/globals.css`, fonts, Tailwind configuration, a design-system rewrite and unrelated refactors.
+- New dependencies or version changes.
+
+## Reference media
+
+All paths are under `docs/reviews/services-projects-footer-design-2026-09-30/`. "Matches Revision 5" means matching these committed files and DESIGN-SPF-V1, nothing else.
+
+| Purpose | Files |
+| --- | --- |
+| Services field and composition | `assets/revision5-services-1440-hero.png`, `assets/revision5-services-1440-chapter.png`, `assets/revision5-services-390-hero.png`, `assets/revision5-services-390-chapter.png` |
+| Projects field and dossiers | `assets/revision5-projects-1440-hero.png`, `assets/revision5-projects-1440-chapter.png`, `assets/revision5-projects-390-hero.png`, `assets/revision5-projects-390-chapter.png` |
+| Motion (idle, first scroll, reverse, Footer) | `assets/revision5-services-motion.webm`, `assets/revision5-projects-motion.webm` |
+| Footer | `assets/revision-footer-1440.png`, `assets/revision-footer-390.png` |
+| Observed prototype behavior (not acceptance) | `evidence/revision5-field-inspection.json`, `evidence/revision5-controls.json`, `evidence/revision5-accessibility.json` |
+
+The spec does not fix these constants: scroll-impulse gain, maximum local node travel, orbit tilt, node layout and word-to-node assignment, fog distances, and the tablet/compact travel scales. They are Sonnet tuning in Tasks 2, 5 and 7, recorded with their values in the receipt. They are accepted only through owner visual review against the files above. The `probeGpu=1` lab override must not exist in production.
 
 ## Global constraints
 
-- Dedicated Services/Projects plus shared Footer; Founder alignment is MPC source/context. Home changes are permitted only for demonstrated wording/link consistency. No new Home-eligible project, Home scene rewrite, App Bar redesign, Contact transmission, backend, analytics or hosting change.
-- Exact copy stays in [Services SPF-V1](../../product/pages/services.md#spf-v1-proposed-services-copy), [Projects SPF-V1](../../product/pages/projects.md#spf-v1-proposed-projects-copy-and-inline-presentation) and [IA SPF-V1](../../product/information-architecture.md#spf-v1-proposed-footer-copy-and-route-retirement). Heading slugs retain their historical “proposed” wording; item-level APPROVED markers govern. Do not paraphrase commercial exclusions, AI/ERP scope, evidence, captions or relationship limitations.
-- Services retains three families and service IDs `web`, `whatsapp`, `consulting`. Fragments remain `web`, `whatsapp`, ES `consultoria` / EN `consulting`, ES `condiciones` / EN `working-boundaries`. Every compressed D05 service boundary and the complete commercial block remain visible ordinary HTML; new scan copy is additive.
-- Projects renders exactly GRS first and The-System second, with complete context/problem/implemented scope/source/evidence/limitations and permitted concepts. No invented clients, metrics, live demos, operational billing or shared deployed architecture. MPC stays 2021 educational/group/fictional context on Founder. Busesfy blocked, Chrono retired, Documancer private remain excluded; no evidence permission changes.
-- Retire `/proyectos/{general-reservation-system,the-system,mpc-administracion}/` and `/en/work/{general-reservation-system,the-system,mpc-administracion}/` definitively. No redirect, compatibility page or wildcard destination. Stable index fragments are `general-reservation-system` and `the-system`; unknown fragment locale switches land at the equivalent index. Historical records and negative absence tests may retain retired paths.
-- Preserve the original two 1599×900 conceptual WebPs, exact alt/caption and meaning. Responsive derivatives may change resolution/compression only, never scene/crop/evidence. Delete MPC's unused public concept only after active-consumer absence; retain internal provenance. No generated visual is implementation proof.
-- Colors: Abyss `#06121F`; opaque plate `#0A1E33`; plate border `#36536C`; Azure `#004589`; Bone `#F9F6EE`; Ink `#09243D`; accents `#6FA8E0`, `#9CC4EC`; secondary `#B9C3CC`. Existing self-hosted Instrument Sans/Plex Mono, approximately 1180–1200px container and ≥20px compact gutters. No global token rebrand.
-- Wide ≥1024px; tablet 768–1023px; compact <768px. Required inspection widths 320, 390, 768, 1024, 1440; 200% zoom, landscape, touch, mobile chrome and long localized copy. Natural content height and native scroll; no pinned reading, hidden reveal, carousel or scroll interception.
-- Field: 16 nodes/33 connections wide/tablet; eight/13 compact. Each of the eight exact localized capability words appears twice wide and once compact, with the same semantic legend. Desktop second orbit/skeleton; compact one ring/fewer points. Labels remain upright, viewport-clamped, collision-managed and occluded behind reading plates. Canvas/labels are decorative and pointer-inert; meaningful information is server HTML.
-- Slow stationary rotation ~1–1.4°/s. The first nonzero scroll produces bounded, rapid fluid local movement and connection growth before any chapter; ~70ms progress damping, ~240ms velocity decay. Reverse input reverses progress; jumps/resize/back-forward restore current geometry without replay. Stable camera, no pointer steering/roll/fly-through. All paths complete at Footer handoff. Reading-line accent (~48% viewport) is independent of graph progress.
-- Cadence: ambient cap 30fps wide/tablet, 20fps compact; active up to60fps subject to hardware gates. Idle positions/words stay steady. Paused/hidden/failed/reduced/Footer-dominated states have zero pending scheduled work/draws. Ambient cadence and per-render cost are separate measurements: a 20fps interval is intentionally 50ms, not a frame-cost failure. Active-scroll interval p95 ≤20ms and per-render work p95 ≤20ms are assessed on hardware; record the measurement method and GPU timer availability.
-- Fine-pointer catalogue lift/arrow ≤3px, 160–220ms explicit transitions; artwork scale ≤1.018/~260ms, fixed caption; dossier border emphasis only. Reduced motion removes movement/zoom/highlights/hover transforms. No press-scale requirement or camera hover response.
-- Hero Pause slot is reserved before activation, target ≥44px, localized `aria-pressed`. Pause persists between connected routes/locales in the browsing session. Resume samples current pose. Fallback preserves a focused button as “Fondo estático” / “Static background” with `aria-disabled`; it must not remove focus or overlap text.
-- Reduced motion/Save-Data known at entry fetch no engine. Reject absent WebGL2/software renderer by default. Optional-module/init failure stays static without an unhandled promise or retry. Context loss suppresses connected-route initialization for the session. Hidden/offscreen/Footer suspend; no-JS HTML and CSS/static art stay complete. Forced colors removes environment/watermark and uses system colors/focus.
-- One live renderer/context across the navigation journey. Probe context must be released before engine context; cancel async activation and release geometry/materials/textures/listeners/observers on route change. Home retains its existing loss key/controller; the new connected routes honor that existing stored loss flag and their own memory fallback without modifying Home. New memory fallback covers connected routes if sessionStorage is unavailable; do not claim a new Home memory contract.
-- Optional engine/runtime closure ≤120KiB Brotli per cold route; draw calls ≤28 wide/tablet/18 compact; DPR ≤1.5 wide/tablet/1.25 compact; poster ≤150KiB wide/80KiB compact; scene interaction task <50ms; enhancement CLS zero; lab acceptance LCP p75 ≤2.5s, INP p75 ≤200ms using the established Home desktop/mobile profiles. Shared-cache reuse is reported separately, not subtracted from cold bytes.
-- Critical HTML/fonts/layout precede optional activation. Dynamic engine import belongs inside the thin client leaf after load/visibility/preferences/coarse probe, not a server `ssr:false` shortcut. No preloading engine or both below-fold project illustrations. Matched static art precedes canvas with no bright flash/shift; failed poster has CSS chart fallback.
-- Footer uses the whole protected Bone mark beside FURLANICH plus complete static watermark (~0.085 wide/.06 compact), clear space and all text above it. No crop/split/rotation/morph/sculpture or protected-asset edits. WhatsApp first, existing email/phone/Contact/Founder/profiles/navigation/locale/privacy/copyright; current global demo disclosure retained. No footer WebGL.
-- Strict behavioral TDD: **RED → verify intended failure → GREEN → verify pass → REFACTOR → verify again** in every applicable packet. Import/syntax/config errors are invalid RED. Pure layout/geometry/art uses spec/rendered inspection and approved stable baselines, never Tailwind/coordinate regexes.
+- **Scope:** dedicated Services and Projects pages plus the shared Footer. On Founder, align only the MPC source action and context. The [Non-goals](#non-goals) apply.
+- **Exact copy** stays in [Services SPF-V1](../../product/pages/services.md#spf-v1-proposed-services-copy), [Projects SPF-V1](../../product/pages/projects.md#spf-v1-proposed-projects-copy-and-inline-presentation) and [IA SPF-V1](../../product/information-architecture.md#spf-v1-proposed-footer-copy-and-route-retirement). Heading slugs keep their historical "proposed" wording; item-level APPROVED markers govern. Do not paraphrase commercial exclusions, AI/ERP scope, evidence, captions or relationship limitations.
+- **Services** keeps three families and the service IDs `web`, `whatsapp`, `consulting`. Fragments stay `web`, `whatsapp`, ES `consultoria` / EN `consulting`, and ES `condiciones` / EN `working-boundaries`. Every compressed D05 service boundary and the complete commercial block stay visible as ordinary HTML. New scan copy is additive.
+- **Projects** renders GRS first and The-System second, each with complete context, problem, implemented scope, source, evidence, limitations and permitted concepts. Do not invent clients, metrics, live demos, operational billing or a shared deployed architecture. MPC stays as 2021 educational/group/fictional context on Founder. Busesfy (blocked), Chrono (retired) and Documancer (private) stay excluded. Evidence permissions do not change.
+- **Route retirement:** retire `/proyectos/{general-reservation-system,the-system,mpc-administracion}/` and `/en/work/{general-reservation-system,the-system,mpc-administracion}/` definitively. No redirect, compatibility page or wildcard destination. The stable index fragments are `general-reservation-system` and `the-system`. A locale switch with an unknown fragment lands on the equivalent index. Historical records and negative absence tests may keep the retired paths.
+- **Imagery:** keep the original two 1599×900 conceptual WebPs (`public/projects/general-reservation-system/conceptual-workflow.webp`, `public/projects/the-system/conceptual-access-model.webp`) with their exact alt text, caption and meaning. Responsive derivatives may change resolution or compression only, never scene, crop or evidence. Delete MPC's unused `public/projects/mpc-administracion/conceptual-operations-model.webp` only after proving no active consumer. Keep its internal provenance. No generated visual counts as implementation proof.
+- **Colors:** Abyss `#06121F`; opaque plate `#0A1E33`; plate border `#36536C`; Azure `#004589`; Bone `#F9F6EE`; Ink `#09243D`; accents `#6FA8E0`, `#9CC4EC`; secondary `#B9C3CC`. Use the existing self-hosted Instrument Sans and Plex Mono, a container of about 1180–1200px, and compact gutters of at least 20px. No global token rebrand.
+- **Breakpoints:** wide ≥1024px, tablet 768–1023px, compact <768px. Use natural content height and native scroll. No pinned reading, hidden reveal, carousel or scroll interception.
+- **Field:** 16 nodes and 33 connections on wide/tablet; 8 nodes and 13 connections on compact. Each of the eight localized capability words is assigned to two wide nodes and one compact node, with the same semantic legend. Desktop has a second orbit and a skeleton; compact has one ring and fewer points. Labels follow PC-2. Canvas and labels are decorative and pointer-inert; meaningful information is server HTML.
+- **Motion:** slow stationary rotation of about 1–1.4°/s. The first nonzero scroll produces bounded, fast, fluid local movement and connection growth before any chapter: about 70ms progress damping and 240ms velocity decay. Reverse input reverses progress. Jumps, resize and back-forward restore the current geometry without replay. Stable camera; no pointer steering, roll or fly-through. All 33/13 connections reach growth 1 at the Footer handoff. The reading-line accent (about 48% of the viewport) is independent of graph progress.
+- **Cadence:** ambient cap 30fps wide/tablet and 20fps compact; active up to 60fps, subject to the live policy (OD-2). Idle positions and words stay steady. Paused, hidden, failed, reduced-motion and Footer-dominated states have zero pending scheduled work and zero draws. Ambient cadence and per-render cost are separate measurements: a 20fps interval is intentionally 50ms, not a frame-cost failure. On hardware, active-scroll interval p95 ≤20ms and per-render work p95 ≤20ms. Record the measurement method and whether GPU timers are available.
+- **Hover:** fine-pointer only. Catalogue lift and arrow ≤3px, with 160–220ms explicit-property transitions, plus the PC-3 radial light. Artwork scale ≤1.018 over about 260ms, with a fixed caption. Dossiers get border emphasis only. Reduced motion removes movement, zoom, highlights and hover transforms. No press-scale requirement or camera hover response.
+- **Pause:** the hero Pause slot is reserved before activation, with a target of at least 44px and localized `aria-pressed`. Pause persists across connected routes and locales for the browsing session. Resume samples the current pose. On fallback, a focused button stays focused and reads "Fondo estático" / "Static background" with `aria-disabled`. It must not lose focus or overlap text.
+- **Gates:** with reduced motion or Save-Data known at entry, fetch no engine. Reject absent WebGL2 or a software renderer by default. Also apply `CONNECTED_LIVE_POLICY` by tier (OD-2/OD-4). An optional-module or init failure stays static without an unhandled promise or retry. Context loss suppresses connected-route initialization for the session (PC-5). Hidden, offscreen or Footer states suspend. No-JS HTML and the CSS/static art stay complete. Forced colors removes the environment and watermark and uses system colors and focus.
+- **Lifecycle:** one live renderer and context across the navigation journey. Release the probe context before creating the engine context. On route change, cancel async activation and release geometry, materials, textures, listeners and observers. Home keeps its existing loss key and controller unchanged.
+- **Budgets:** optional engine/runtime closure ≤120KiB Brotli per cold route; draw calls ≤28 wide/tablet and ≤18 compact; DPR ≤1.5 wide/tablet and ≤1.25 compact; poster ≤150KiB wide and ≤80KiB compact; scene interaction task <50ms; zero enhancement CLS. Lab acceptance: LCP p75 ≤2.5s and INP p75 ≤200ms on the established Home desktop and mobile profiles. Report shared-cache reuse separately; do not subtract it from cold bytes.
+- **Loading:** critical HTML, fonts and layout come before optional activation. The dynamic engine import sits inside the thin client leaf, after load, visibility, preferences, policy and a coarse probe — not behind a server `ssr:false` shortcut. Do not preload the engine or both below-fold project illustrations. Matched static art comes before the canvas, with no bright flash or shift. A failed poster falls back to the CSS chart.
+- **Footer:** the whole protected Bone mark beside FURLANICH, plus a complete static watermark (about 0.085 opacity wide, 0.06 compact) with clear space and all text above it. No crop, split, rotation, morph, sculpture or protected-asset edit. No Footer WebGL. Keep the current global demo disclosure.
+- **TDD:** strict behavioral **RED → verify intended failure → GREEN → verify pass → REFACTOR → verify again** in every applicable packet. Import, syntax and config errors do not count as RED. Pure layout, geometry and art use the spec, rendered inspection and approved stable baselines, never Tailwind or coordinate regular expressions.
+
+## Skills contract
+
+Skills are **required**, not suggested. Each packet's **Skills** line lists them in execution order. The receipt records each stage, when it ran and its outcome. A skipped stage is a review finding. Repository Skills live in `.agents/skills/`.
+
+**Stage order for public UI packets (Tasks 3, 4, 6 and 7, and the UI portions of 2, 8 and 9):**
+
+```text
+read authority (AGENTS.md, DESIGN-SPF-V1, owning copy, this packet)
+→ frontend-implementation (governs the whole packet)
+→ design-taste-frontend-v1 preflight (constrained by DESIGN-SPF-V1; record conflicts, follow the spec)
+→ test-driven-development: RED → verify failure → GREEN → verify pass → REFACTOR → verify again
+→ playwright-qa (browser behavior, links, keyboard, console, axe via npm run test:a11y)
+→ visual-qa (rendered judgment against the reference media, the packet's visual matrix)
+→ design-taste-frontend-v1 post-implementation critique (recommendations accepted/adapted/rejected against the spec)
+→ verification-before-completion (fresh command evidence)
+→ pr-readiness (complete diff, readiness report, PR body)
+```
+
+**Special rules:**
+
+| Skill | Rule |
+| --- | --- |
+| `design-taste-frontend-v1` | This exact install name. Never `design-taste-frontend` (v2) or `gpt-taste`. It ranks below DESIGN-SPF-V1. |
+| `emil-design-eng` | Required wherever a packet implements hover, transitions or scene motion (Tasks 3, 6, 7). Spec values win over its defaults. |
+| `review-animations` | Model invocation is disabled. Read `.agents/skills/review-animations/SKILL.md` and `STANDARDS.md` directly. Skip its scripted first reply. Apply its ten standards to the packet diff and record findings in the receipt. Spec values (160–220ms, ~260ms, ~1–1.4°/s, ~70ms/~240ms) outrank its default tables. |
+| `brag`, `brag-slim` | **Forbidden.** The spec already adapted Brag's pacing. Pacing review compares recordings to `revision5-*-motion.webm`. Never install Hyperframes or render a video. |
+| `impeccable`, `impeccable-*` agents | **Forbidden** in this plan (see the [provider notes](#provider-execution-notes)). |
+| `superpowers:brainstorming` | **Forbidden.** The design is closed. |
+| `systematic-debugging` | Required before changing code or expectations after **any** unexpected test, build or browser failure. |
+| `find-docs` (Claude) or the installed `node_modules/three` types (any provider) | Required in Task 5 before using any Three 0.186 API. Do not rely on remembered APIs. |
+| `superpowers:using-git-worktrees` | Required at the start of every task. Create the worktree at `.worktrees/spf-<n>`. |
+| `project-knowledge-maintenance` | Required for every documentation write (Tasks 1 and 10, and the testing-doc rows in Tasks 2–9). |
 
 ## Prerequisites, workflow and locks
 
-Read `docs/index.md`, `CONTEXT.md`, `ARCHITECTURE.md`, lifecycle, upstream owners and relevant installed Next guides in `node_modules/next/dist/docs/01-app/02-guides/static-exports.md`, `lazy-loading.md` and `01-app/03-api-reference/01-directives/use-client.md`. Current source is a delivered baseline; scoped accepted target supersessions govern.
+Read `docs/index.md`, `CONTEXT.md`, `ARCHITECTURE.md`, the lifecycle, the upstream owners and these installed Next guides: `node_modules/next/dist/docs/01-app/02-guides/static-exports.md`, `lazy-loading.md` and `01-app/03-api-reference/01-directives/use-client.md`. Current source is the delivered baseline; scoped accepted target supersessions govern. The repository baseline for this revision is `main` at `5270e32`. The orchestrator re-confirms it before W0.
 
-The ADE v2 repository precedent is [Sky Chart plan §§16–25](../completed/sky-chart-home-redesign-v2.md): task/PR packets, exact models, merged-dependency waves, exclusive ownership, lock transfers and receipts. This plan adopts those mechanics with the approved model routing above and provider verification before dispatch; historical provider substitutions do not automatically apply.
+The ADE v2 precedent is the [Sky Chart plan](../completed/sky-chart-home-redesign-v2.md) §§16–26 and Appendix D: task/PR packets, exact models, merged-dependency waves, exclusive ownership, lock transfers, checkpoints and receipts. This plan adopts those mechanics with the approved model routing above. Historical provider substitutions do not carry over.
 
-1. Human approves this reviewed plan; Task 1 Governance PR is reviewed and **human merged**. A code task cannot run before W0. The existing design branch contains research history; curate the governance package from current `main`, without unrelated Brag/research commits or production changes.
-2. Each task gets an isolated worktree/short-lived `codex/spf-<n>-<purpose>` branch from current `main` after all dependencies are merged and their checkpoint passes. No stacked PRs, cherry-picking unmerged siblings or shared checkout editing. Pre-existing active Home work is not a dependency; inspect current main and preserve its acceptance status.
-3. Orchestrator holds a single dispatch/lock ledger outside agent write sets. Acquire the named exclusive locks plus each listed path before work; if unavailable, wait. Only the orchestrator updates plan Progress after human merge, under `PLAN-RECORD`. Packet receipts live in separate `docs/reviews/services-projects-footer-acceptance-v1/task-N.md` files.
-4. Even disjoint PRs rebase onto current `main` after a sibling merge and rerun their checks before human merge. If a shared file is unexpectedly needed, stop that edit and request a serialized ownership transfer; no “small fix” exception. A task never changes an unowned failing test to unblock itself.
-5. Freeze `package.json`, lockfile, global CSS/tokens, shared Header/BrandSignature/Home runtime/Contact unless a packet explicitly owns a narrow change. No new dependencies. Task 9 owns only the two new measurement script entries in `package.json`; it cannot change versions or unrelated scripts.
-6. Full code-task gate is `npm run validate` plus packet browser/export/visual/manual checks. A task is review-ready only with its strict TDD receipt, fresh deterministic results, rendered acceptance and independent GPT-6.1 Sol PR review; automated green alone is insufficient. The owner merges. No agent merges or pushes to `main`.
+1. The owner approves this reviewed plan, and Task 1's Governance PR is reviewed and **merged by the owner**. No code task runs before W0.
+2. Each task gets an isolated worktree at `.worktrees/spf-<n>` on a short-lived `codex/spf-<n>-<purpose>` branch cut from current `main`, after all dependencies are merged and their checkpoint passes. No stacked PRs, no cherry-picking unmerged siblings, no editing in a shared checkout. Each worktree sets `PLAYWRIGHT_PORT = 3200 + 10 × n` (Task 3 uses 3230) to avoid the default 3100 and the 3000–3199 range used by earlier worktrees.
+3. The orchestrator keeps the live dispatch/lock ledger outside every agent's write set, in its own session notes, and mirrors each acquisition, transfer and release into Progress at each merge or checkpoint. Only the orchestrator updates Progress, under `PLAN-RECORD`. Packet receipts live in separate `docs/reviews/services-projects-footer-acceptance-v1/task-N.md` files, which Task 1 sets up.
+4. A PR rebases onto current `main` after any sibling merge and reruns its checks before the owner merges it. If a file outside the write set is unexpectedly needed, stop that edit and ask the orchestrator for a serialized ownership transfer. There is no "small fix" exception. A task never changes an unowned failing test to unblock itself. Instead it stops, records the failure, and the orchestrator assigns the file.
+5. Frozen unless a packet explicitly owns a narrow change: `package.json`, the lockfile, global CSS and tokens, shared Header/`BrandSignature`/Home runtime/Contact, and `.github/workflows/*`. No new dependencies. Task 9 owns only two new measurement script entries in `package.json`. It cannot change versions or other scripts.
+6. A PR is review-ready only when it has: the strict TDD receipt; every Skills stage recorded; fresh deterministic results; **green PR CI** (`validate` and `test:e2e` jobs); the packet's rendered acceptance; and its visual matrix. Then GPT-6.1 Sol reviews it. Automated green alone is never enough. The owner merges; no agent merges or pushes to `main`.
+7. **Visual baselines** follow [visual regression policy](../../testing/visual-regression.md). Windows baselines are captured locally. Linux baselines are adopted from CI `actual` artifacts only after owner approval of the expected/actual/diff. When CI cannot produce them, the orchestrator uses a throwaway draft PR with a visual-only configuration, never merged. Every changed baseline file belongs to the packet that changes it ([inventory](#test-and-baseline-ownership-inventory)).
+8. **Documentation stays synchronized per PR.** A packet that adds a Playwright project, spec family, support helper, script or baseline set updates the matching row in `docs/testing/playwright.md` or `docs/testing/visual-regression.md` in the same PR. Task 10 reconciles; it does not catch up.
 
-Shared locks: `GOVERNANCE`, `PLAN-RECORD`, `HARNESS`, `ROUTE-CUTOVER`, `LOCALE-CONTROL`, `PUBLIC-EVIDENCE`, `FOOTER`, `SERVICES`, `CONNECTED-CONTRACTS`, `CONNECTED-ENGINE`, `CONNECTED-HOST`, `MEDIA`, `MEASUREMENT`, `VISUAL-BASELINES`, `ACCEPTANCE`. Path locks take precedence over label convenience. A lock transfers only after merge/checkpoint.
+**Shared locks:** `GOVERNANCE`, `PLAN-RECORD`, `HARNESS`, `ROUTE-CUTOVER`, `LOCALE-CONTROL`, `PUBLIC-EVIDENCE`, `FOOTER`, `SERVICES`, `CONNECTED-CONTRACTS`, `CONNECTED-GROUND`, `CONNECTED-ENGINE`, `CONNECTED-HOST`, `MEDIA`, `MEASUREMENT`, `VISUAL-BASELINES`, `SHARED-TESTS`, `ACCEPTANCE`. Path locks take precedence over label convenience. A lock transfers only after merge and checkpoint. `SHARED-TESTS` covers the named blocks in the inventory below.
 
 ## Interfaces and ownership map
 
-New paths below are planned, not existing. Function names/signatures are the handoff contract; implementations stay minimal and private to their owners. All client-boundary props are serializable. No runtime, `window`, storage or Three import in server content modules.
+The new paths below are planned, not existing. Function names and signatures are the handoff contract. Implementations stay minimal and private to their owners. All client-boundary props are serializable. Server content modules import no runtime, `window`, storage or Three.
 
 | Produced by | Interface/files | Consumed by |
 | --- | --- | --- |
-| Task 2 | `lib/connected-studio/types.ts`: `ConnectedRoute = 'services' \| 'projects'`, `ConnectedQuality = 'wide' \| 'compact'`, localized `CapabilityWords` tuple, immutable `GraphDefinition`, `ScenePose`, `SceneGateInput`, `SceneSnapshot`, `SceneHandle` | Tasks 3, 5, 6, 7, 8, 9 |
-| Task 2 | `model.ts`: `getConnectedGraph(quality)`, `measureConnectedProgress(scrollY, footerTop, viewportHeight)` normalized/clamped 0–1, `sampleConnectedPose(previous, input)` with elapsed seconds/scroll activity and current layout; deterministic seeded geometry, no random reset | Engine and fake-clock/geometry tests |
-| Task 2 | `controller.ts`: `createConnectedController({clock, scheduler, render, getLayout})` → `update(input)`, `pause()`, `resume()`, `dispose()`, `snapshot()`; injected scheduler/cancel and monotonic `now` in milliseconds, no browser globals/Three | Task 5 and Task 7 lifecycle |
-| Task 2 | `capability.ts`: `chooseConnectedMode(input)` fail-closed; `session.ts`: safe `readConnectedSession`, `setConnectedPaused`, `markConnectedContextLost`; memory fallback plus namespaced pause and stored Home loss compatibility; `media-manifest.ts`: typed route/quality static media interface | Task 7 activation, Task 8 final posters |
-| Task 2 | `content.ts`: exact two localized capability tuples and Pause/static labels from owning approved blocks; `components/connected-studio/ConnectedStudioGround.tsx` + `connected-studio.module.css`: server CSS/static ground and reserved mount contract, no engine | Static pages first; enhancement attached only Task 7 |
-| Tasks 3/6 | Main `data-connected-page` plus route/locale, reading-mask elements `data-connected-reading-mask`, chapter IDs and fixed hero Pause mount `connected-pause-<route>`. Ground gets `{route, locale, capabilityWords}`. Semantic legend remains ordinary HTML once per page | Task 7 measures geometry/occlusion and portals button into reserved slot |
-| Task 3 | `ProjectDossierSlug = 'general-reservation-system' \| 'the-system'`; `getProjectDossierHref(locale, slug)` in `lib/site-routes.ts`; `getPublishedProjectDossiers(content, locale)` from `publication.ts`; `PublicProjectDossierContent`/`ResolvedProjectDossier` in project types replace detail-route roles, retain useful story fields | Projects, Services evidence and locale control |
-| Task 3 | `lib/project-dossier-navigation.ts`: pure `resolveDossierAlternateHref(currentPath, hash, alternateHref)` preserves only a known fragment on a Projects index; otherwise returns existing equivalent href, preserving existing base-path convention | Shared `LanguageSwitch`, Header and Footer |
-| Task 4 | `footer-content.ts`: `getFooterConclusionContent(locale)` from exact IA table; Footer derives current locale from the existing opposite `paths.alternateLocale` (two-locale invariant). Existing `SiteFooterProps`/`SiteFooterLabels` remain compatible; no route-shell edits. Footer adds `data-site-footer` on its root | Task 7 Footer handoff, all fourteen retained host pages |
-| Task 5 | `runtime/create-connected-scene.ts`: `createConnectedScene({mount, graph, quality, words, onContextLost})` → `SceneHandle` (`render(pose)`, `resize(viewport, graph)`, `projectLabels(pose)`, `dispose()`, `diagnostics()`). Accepts primitive/typed DOM boundary, does not start its own endless loop | Task 7 only, dynamically imported |
-| Task 7 | `ConnectedStudioEnhancement.tsx`, `ConnectedPauseControl.tsx`: lightweight React lifecycle leaf; uses existing global createPortal typing, no duplicate shim. Owns browser layout/visibility/fonts/session/cancellation, delegates clock/render scheduling to controller and GPU to engine | Ground enhancement mount, Task 9 tests/measurement |
-| Task 8 | `scripts/capture-connected-studio-posters.mjs`; `public/brand/connected-studio/{services,projects}-{wide,compact}.webp`; responsive derivatives beside the two original project assets | Ground responsive picture and project dossier picture |
-| Task 9 | `scripts/measure-connected-studio-production.mjs`, `measure-connected-studio-vitals.mjs`, deterministic helper `lib/connected-studio/measurement.ts`; additive `measure:connected-studio` / `measure:connected-studio-vitals` script entries | Production acceptance and reproducible receipts |
+| Task 2 | `lib/connected-studio/types.ts`: `ConnectedRoute`, `ConnectedQuality`, `ConnectedTier`, `ConnectedLivePolicy`, localized `CapabilityWords`, immutable `GraphDefinition`, `ScenePose`, `SceneGateInput`, `SceneSnapshot`, `SceneHandle`, label types | Tasks 3, 5, 6, 7, 8, 9 |
+| Task 2 | `model.ts`: `getConnectedGraph(quality)`, `getTierForWidth(widthPx)`, `getQualityForTier(tier)`, `getTravelScale(tier)`, `measureConnectedProgress(...)`, `sampleConnectedPose(previous, input)`. Deterministic seeded geometry, no random reset | Engine, host and fake-clock tests |
+| Task 2 | `labels.ts`: pure `resolveLabelVisibility(labels, occluders, viewport)` implementing PC-2 | Task 7 host |
+| Task 2 | `controller.ts`: `createConnectedController({clock, scheduler, render, getLayout})` → `update`, `pause`, `resume`, `dispose`, `snapshot`. Injected scheduler/cancel and monotonic `now` in milliseconds; no browser globals or Three | Tasks 5 and 7 |
+| Task 2 | `capability.ts`: fail-closed `chooseConnectedMode(input)` and `CONNECTED_LIVE_POLICY` (initially `{ wide: true, compact: true }`; Task 9 sets the shipped values). `session.ts`: safe `readConnectedSession`, `setConnectedPaused`, `markConnectedContextLost`, with a memory fallback, a namespaced pause/loss key, and a read-only check of Home's `furlanich:sky-chart-context-lost` (PC-5). `media-manifest.ts`: typed route/quality static media | Tasks 7, 8, 9 |
+| Task 2 | `content.ts`: the two exact localized capability tuples and the Pause/static labels from their owning approved blocks. `components/connected-studio/ConnectedStudioGround.tsx` + `connected-studio.module.css`: server CSS/static ground and the reserved mount contract, no engine | Static pages first; enhancement attached only in Task 7 |
+| Task 2 | `tests/e2e/support/connected-studio-test-hooks.ts`: one test-injection mechanism, `window.__FURLANICH_CONNECTED_TEST__ = { allowSoftwareRenderer?: boolean; livePolicy?: ConnectedLivePolicy }`, set only through `page.addInitScript`. It mirrors Home's accepted `__SKY_CHART_ALLOW_SOFTWARE_RENDERER__`. Never read from query string, storage, UI or public configuration. Production measurements never set it | Tasks 7, 8, 9 |
+| Tasks 3/6 | `main` carries `data-connected-page` plus route/locale, reading-mask elements `data-connected-reading-mask`, chapter IDs and the fixed hero Pause mount `connected-pause-<route>`. Ground receives `{route, locale, capabilityWords}`. The semantic legend appears once per page as ordinary HTML | Task 7 measures geometry/occlusion and portals the button into the reserved slot |
+| Task 3 | `ProjectDossierSlug = 'general-reservation-system' \| 'the-system'`; `getProjectDossierHref(locale, slug)` in `lib/site-routes.ts`; `getPublishedProjectDossiers(content, locale)` in `lib/projects/publication.ts`; `PublicProjectDossierContent`/`ResolvedProjectDossier` replace the detail-route roles | Projects, Services evidence, locale control |
+| Task 3 | `lib/project-dossier-navigation.ts`: pure `resolveDossierAlternateHref(currentPath, hash, alternateHref)` keeps only a known fragment on a Projects index; otherwise it returns the existing equivalent href, following the existing base-path convention | `LanguageSwitch` (used by Header and Footer) |
+| Task 4 | `components/foundation/footer-content.ts`: `getFooterConclusionContent(locale)` from the exact IA table. The Footer derives its locale from the existing opposite `paths.alternateLocale` (two-locale invariant). Existing `SiteFooterProps`/`SiteFooterLabels` stay compatible; no route-shell edits. The Footer root gets `data-site-footer` | Task 7 Footer handoff; all fourteen retained host pages |
+| Task 5 | `components/connected-studio/runtime/create-connected-scene.ts`: `createConnectedScene({mount, graph, quality, tier, words, onContextLost})` → `SceneHandle`. Takes a primitive/typed DOM boundary and runs no endless loop of its own | Task 7 only, dynamically imported |
+| Task 7 | `ConnectedStudioEnhancement.tsx`, `ConnectedPauseControl.tsx`: a lightweight React lifecycle leaf using the existing global `createPortal` typing (no duplicate shim). Owns browser layout/visibility/fonts/session/cancellation; delegates clock and scheduling to the controller and the GPU to the engine. Exposes the non-production `__FURLANICH_CONNECTED__` diagnostics hook only when `process.env.NODE_ENV !== 'production'`, following Home's precedent | Ground enhancement mount; Task 9 tests and measurement |
+| Task 8 | `scripts/capture-connected-studio-posters.mjs`; `public/brand/connected-studio/{services,projects}-{wide,compact}.webp`; responsive derivatives beside the two original project assets | Ground picture and project dossier picture |
+| Task 9 | `scripts/measure-connected-studio-production.mjs`, `scripts/measure-connected-studio-vitals.mjs`, deterministic helper `lib/connected-studio/measurement.ts`; additive `measure:connected-studio` and `measure:connected-studio-vitals` script entries | Production acceptance and reproducible receipts |
 
-The scene is shared between the two routes, not Home. Session loss on either connected route suppresses both/new locale; stored Home loss also prevents connected activation. Writing Home's existing loss flag makes normal sessionStorage Home navigation honor a new loss without changing Home code. Storage-denied connected memory suppression is tested, while Home's pre-existing private fallback remains its own contract. Pause persistence is for connected routes/locales; no Home pause behavior is changed.
+The scene is shared between the two connected routes, not with Home. A session loss on either connected route suppresses both routes in both locales. A stored Home loss also prevents connected activation (PC-5). Pause persistence covers the connected routes and locales; Home's pause behavior does not change.
 
 ### Minimum typed declarations frozen at W1
 
-Task 2 must produce and independently review these minimum fields before human merge. These are interfaces, not implementation bodies. Private geometry/math may vary within the approved visual target. Later parallel agents consume the merged declarations unchanged; a needed interface change returns to the contract owner in a serialized follow-up PR before dependents proceed.
+Task 2 must produce and independently review at least these fields before the owner merges it. They are interfaces, not implementation bodies. Private geometry and math may vary within the reference media. Later parallel agents consume the merged declarations unchanged. A needed interface change goes back to the contract owner as a serialized follow-up PR before dependents proceed.
 
 ```ts
 type Vec3 = readonly [number, number, number];
+type ConnectedRoute = 'services' | 'projects';
+type ConnectedQuality = 'wide' | 'compact';            // topology: 16/33 or 8/13
+type ConnectedTier = 'wide' | 'tablet' | 'compact';    // >=1024, 768–1023, <768 CSS px
+type ConnectedLivePolicy = { readonly wide: boolean; readonly compact: boolean }; // 'wide' covers wide+tablet
 type CapabilityIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 type CapabilityWords = readonly [string, string, string, string, string, string, string, string];
 type GraphDefinition = {
@@ -127,20 +226,24 @@ type SceneGateInput = {
   reducedMotion: boolean; saveData: boolean; webgl2: boolean;
   softwareRenderer: boolean; sessionContextLost: boolean;
   loaded: boolean; visible: boolean;
+  tier: ConnectedTier; livePolicy: ConnectedLivePolicy;
 };
 type SceneSnapshot = {
   state: 'static' | 'live' | 'paused' | 'suspended' | 'disposed';
   pose: ScenePose; pendingCallbacks: number; renderCount: number;
-  targetFps: 0 | 20 | 30 | 60;
+  targetFps: number; // 0 when stopped; ambient cap 30 wide/tablet, 20 compact; active <= 60
 };
 type SceneLayout = { footerDocumentTop: number; viewportWidth: number; viewportHeight: number };
-type SceneUpdate = { graph: GraphDefinition; scrollY: number;
+type SceneUpdate = { graph: GraphDefinition; tier: ConnectedTier; scrollY: number;
   velocityPxPerSecond: number; visible: boolean; footerDominant: boolean };
-type SceneViewport = { width: number; height: number; pixelRatio: number };
+type SceneViewport = { width: number; height: number; pixelRatio: number; tier: ConnectedTier };
 type LabelProjection = { id: string; capabilityIndex: CapabilityIndex;
   xPx: number; yPx: number; depthScale: number; inView: boolean };
+type LabelBox = { id: string; left: number; top: number; width: number; height: number; depthScale: number };
+type OccluderRect = { left: number; top: number; width: number; height: number };
+type LabelVisibility = { id: string; visible: boolean; left: number; top: number };
 type SceneDiagnostics = { drawCalls: number; renderCount: number; pixelRatio: number;
-  geometries: number; materials: number; textures: number; disposed: boolean };
+  geometries: number; materials: number; textures: number; drawables: number; disposed: boolean };
 type SceneHandle = {
   render(pose: ScenePose): void;
   resize(viewport: SceneViewport, graph: GraphDefinition): void;
@@ -160,251 +263,690 @@ type ConnectedController = {
 };
 ```
 
-`getConnectedGraph(quality: ConnectedQuality): GraphDefinition`; `measureConnectedProgress(scrollY: number, footerDocumentTop: number, viewportHeight: number): number`; `sampleConnectedPose(previous: ScenePose | undefined, input: { graph: GraphDefinition; progress: number; velocityPxPerSecond: number; deltaSeconds: number }): ScenePose`; `chooseConnectedMode(input: SceneGateInput): 'static' | 'webgl'`; `createConnectedController(options: ControllerOptions): ConnectedController`. Session functions take an injected nullable storage boundary in pure tests and return `{paused: boolean, contextLost: boolean}`; access failures preserve the connected-module memory fallback.
+Function signatures:
 
-Anchors/positions/rotation use scene units/radians; label projections use CSS pixels; edge growth/progress/reveal bounds are finite normalized 0–1; velocity is pixels/second and elapsed pose time seconds. Node IDs and edge endpoints must remain stable across locale changes. Width/height are CSS pixels; quality changes rebuild batched graph resources via `resize` in the same renderer/context and release old allocations. Labels are noninteractive projections; collision/foreground occlusion uses host-measured DOM bounds, not a scene claim.
+- `getConnectedGraph(quality: ConnectedQuality): GraphDefinition`
+- `getTierForWidth(widthPx: number): ConnectedTier`
+- `getQualityForTier(tier: ConnectedTier): ConnectedQuality` — `'wide'` for wide and tablet
+- `getTravelScale(tier: ConnectedTier): number` — finite, in (0, 1]; wide = 1
+- `measureConnectedProgress(scrollY: number, footerDocumentTop: number, viewportHeight: number): number`
+- `sampleConnectedPose(previous: ScenePose | undefined, input: { graph: GraphDefinition; tier: ConnectedTier; progress: number; velocityPxPerSecond: number; deltaSeconds: number }): ScenePose`
+- `resolveLabelVisibility(labels: readonly LabelBox[], occluders: readonly OccluderRect[], viewport: { width: number; height: number }): readonly LabelVisibility[]`
+- `chooseConnectedMode(input: SceneGateInput): 'static' | 'webgl'` — `'static'` whenever `livePolicy[getQualityForTier(tier)]` is false
+- `createConnectedController(options: ControllerOptions): ConnectedController`
 
-Revision 5 reference handoff: progress reaches1 when Footer top reaches70% of viewport (`max(1, footerDocumentTop - 0.7 * viewportHeight)` denominator); suspend/hide when Footer top reaches18% of viewport. These thresholds separate completed graph from suspension and match the inspected prototype. Tests cover short documents, restored scroll and resized/localized geometry; tuning them must preserve completion before hiding. Controller state does not govern import eligibility; the host checks gate input before initialization and uses suspension for a retained live handle when hidden.
+Session functions take an injected nullable storage boundary in pure tests and return `{paused: boolean, contextLost: boolean}`. Access failures fall back to the connected-module memory store.
 
-Task 2 registers named new test patterns in all applicable projects once. Later tasks own distinct specs and cannot change `playwright.config.ts`. The production software-renderer rejection remains default; any existing-style test override is isolated to test injection, never activated by query string, storage, UI or public configuration.
+**Units:** anchors, positions and rotations use scene units and radians. Label projections and boxes use CSS pixels. Edge growth, progress and reveal bounds are finite and normalized to 0–1. Velocity is pixels per second; elapsed pose time is seconds. Node IDs and edge endpoints stay stable across locale changes. Width and height are CSS pixels. A quality or tier change rebuilds batched graph resources through `resize` in the same renderer and context, and releases the old allocations.
+
+**Footer handoff:** progress reaches 1 when the Footer top reaches 70% of the viewport (denominator `max(1, footerDocumentTop - 0.7 * viewportHeight)`). The scene suspends and hides when the Footer top reaches 18% of the viewport. Tests cover short documents, restored scroll and resized or localized geometry. Tuning must keep completion before hiding. Controller state does not decide import eligibility: the host checks the gate input before initialization, and uses suspension for a retained live handle when hidden.
+
+## Test and baseline ownership inventory
+
+Existing files that the plan changes or that depend on changed behavior. Ownership passes in the listed order, one owner at a time, through `SHARED-TESTS` or `VISUAL-BASELINES` transfers. Task 3's first step re-runs the inventory search. Any hit not listed here stops work until the orchestrator assigns it.
+
+| File | Coupling | Owners, in order |
+| --- | --- | --- |
+| `tests/e2e/accessibility.spec.ts` | Lines 15–16 audit retired detail routes | Task 3: replace those two rows with the two dossier index routes only. Then Task 9: full file |
+| `scripts/site-header.test.mjs` | Lines 152–166 assert `LanguageSwitch` class strings | Task 3 keeps those classes unchanged. If a class must change, Task 3 owns only that block |
+| `tests/e2e/studio-founder.spec.ts` | MPC/Founder actions; Footer heading at lines 89–105 | Task 3 (MPC/Founder blocks) → Task 4 (Footer block) → Task 9 |
+| `tests/e2e/marketing-navigation.spec.ts` | Detail-route locale cases; Footer block at lines 83–105 | Task 3 (detail and locale cases) → Task 4 (Footer block) → Task 9 |
+| `tests/e2e/privacy.spec.ts` | Footer Privacy link at lines 83–95 | Task 4 (that test only) |
+| `tests/e2e/sky-chart-acceptance.spec.ts` | Footer stop in the Home traversal (lines 258–300) and the link scan (line 821) | Read-only for every task, and Task 4 must run it. If it fails because of Footer structure, Task 4 owns only the Footer-region lines, with a recorded transfer. Home runtime stays untouched |
+| `scripts/projects-route.test.mjs`, `scripts/privacy-route.test.mjs` | Assert `<SiteFooter` presence | Task 3 (props stay compatible) |
+| `scripts/site-footer.test.mjs` | Footer source assertions | Task 4 |
+| `tests/e2e/visual/services-projects.visual.spec.ts` and snapshots | `main` of Services and Projects, both platforms | Task 3 (Projects) → Task 6 (Services) → Task 8 (both, posters) |
+| `tests/e2e/visual/founder.visual.spec.ts` snapshots | Founder `main` changes with the MPC source action | Task 3 |
+| `tests/e2e/visual/home-sections.visual.spec.ts` snapshots | Home sections; the Footer is outside the captured elements | No owner. Must stay unchanged (OD-1, OD-3) |
+| `playwright.config.ts` | Project registration | Task 2 only |
+| `docs/testing/playwright.md` | Project/spec and support-helper tables | Task 2 → Task 5 → Task 7 → Task 9 (rows for their own additions) |
+| `docs/testing/visual-regression.md` | Baseline inventory | Task 3 → Task 4 → Task 6 → Task 8 (rows for their own baselines) |
+
+### Playwright registration (Task 2)
+
+Existing unanchored patterns already match two new specs: `/responsive\.spec\.ts/` and `/accessibility\.spec\.ts/`. That is intended and recorded below.
+
+| Spec | Projects |
+| --- | --- |
+| `connected-studio-static.spec.ts` | chromium-desktop, firefox-desktop, webkit-desktop, mobile-chromium, mobile-webkit, tablet-portrait-chromium, tablet-chromium, compact-320-chromium |
+| `connected-studio-services.spec.ts` | chromium-desktop, firefox-desktop, webkit-desktop, mobile-chromium, tablet-portrait-chromium, compact-320-chromium |
+| `connected-studio-footer.spec.ts` | chromium-desktop, firefox-desktop, webkit-desktop, mobile-chromium, compact-320-chromium |
+| `connected-studio-navigation.spec.ts` | chromium-desktop, firefox-desktop, webkit-desktop, mobile-chromium |
+| `connected-studio-responsive.spec.ts` | Already matched on mobile-chromium, mobile-webkit, tablet-chromium, wide-chromium. Add compact-320-chromium and tablet-portrait-chromium explicitly |
+| `connected-studio-runtime.spec.ts` | immersive-chromium only |
+| `connected-studio-accessibility.spec.ts` | Already matched on accessibility-chromium; no further registration |
+| `connected-studio-production.spec.ts` | New project `connected-production-chromium`, defined only when `PLAYWRIGHT_SERVE_EXPORT=1` |
+| `tests/e2e/visual/connected-studio-*.visual.spec.ts` | Already matched by visual-chromium |
+
+**Production serving:** when `PLAYWRIGHT_SERVE_EXPORT=1`, the config's `webServer` runs the new `scripts/serve-static-export.mjs` instead of `next dev`. That script serves `out/` under the current base path, with no rewrite of missing routes to an index. The `connected-production-chromium` project then exists and no other project does. Without the variable, the config is unchanged, so CI (`npm run test:e2e`) never sees the production project. Task 9 runs it locally after a clean build, for root and `/Portfolio`, and records both.
 
 ## Dependency DAG and concurrency waves
 
 ```text
-1 governance/human approval
-└─2 contracts + harness
-  ├─3 atomic dossier + route retirement
-  ├─4 shared Footer (compatible props)
-  └─5 separate scene engine
-     [all 3,4,5 merged + checkpoint]
-     └─6 Atlas Services
-       └─7 enhancement integration
-         └─8 final media
-           └─9 production hardening + measurements
-             └─10 documentation + manual acceptance
+1 governance / human approval
+└─2 contracts + Ground + harness
+  ├─3 atomic dossiers + route retirement ──┐
+  │  └─4 shared Footer (after 3 merges)    │
+  └─5 separate scene engine ───────────────┤
+                    [3, 4, 5 merged + checkpoint]
+                    └─6 Atlas Services
+                      └─7 enhancement integration
+                        └─8 final media
+                          └─9 production hardening + measurements
+                            └─10 documentation + acceptance record
 ```
 
-| Wave | Tasks | Start gate / human merge order | Independence proof |
+| Wave | Tasks | Start gate / owner merge order | Independence proof |
 | --- | --- | --- | --- |
-| W0 | 1 | Reviewed-plan human approval; governance PR human merge | Documentation only, no implementation |
-| W1 | 2 | W0 → merge 2; validate/registration checkpoint | Serial prerequisites define types and harness |
-| W2 | 3, 4, 5 | W1 → human merge 3, then 4, then 5; each rebase/check | 3 owns cutover/page/evidence/navigation; 4 only Footer/new compatible module/new dedicated tests; 5 only new engine/new tests. All consume only merged Task 2. No shell/type/global test sharing |
-| W3 | 6 | All W2 merged and checkpoint green | Services file lock transfers from Task 3 only now |
-| W4 | 7 | Task 6 merged | Integration exclusively owns host and transfers page/ground paths after static pages merge |
-| W5 | 8 | Task 7 merged | Final captures depend on merged actual engine/host; media/component transfers serialized |
-| W6 | 9 | Task 8 merged | All source/test ownership transfers serialized; no runtime/media agents still writing |
-| W7 | 10 | Task 9 merged + hardware/manual gates satisfied | Documentation closeout; no production writes |
+| W0 | 1 | Reviewed plan approved by the owner; Governance PR merged | Documentation only |
+| W1 | 2 | W0 checkpoint | Defines types, Ground and harness |
+| W2 | 3 ∥ 5 | W1 checkpoint. Merge order 3, then 5; each rebases and rechecks | Task 3 owns cutover, pages, evidence, locale, Ground (first render) and the inventory blocks. Task 5 owns only new engine files and its own unit test. write(3) ∩ write(5) = ∅, and Task 5 reads only merged Task 2 |
+| W3 | 4 | Task 3 merged (Task 5 may still be in review) | Task 4 owns the Footer and its inventory blocks after Task 3 releases them. write(4) ∩ write(5) = ∅ |
+| W4 | 6 | Tasks 3, 4, 5 merged and W2/W3 checkpoints green | Services and Ground locks transfer from Task 3 |
+| W5 | 7 | Task 6 merged | Integration owns the host and takes the page/Ground hooks |
+| W6 | 8 | Task 7 merged | Media, Ground and dossier-picture transfers are serialized |
+| W7 | 9 | Task 8 merged | All source/test ownership transfers are serialized |
+| W8 | 10 | Task 9 merged; OD-4 recorded for every device/SR item (PASS with evidence, or OPEN with the corresponding policy) | Documentation closeout only |
 
-Do not increase concurrency by splitting Task 3 deletion from its consumer migration. Task 4 may run in W2 only because its existing props/callsites remain unchanged and its own signature component does not touch shared BrandSignature. If that constraint proves infeasible, serialize it after Task 3; never silently expand its W2 write set.
+Do not increase concurrency by splitting Task 3's deletion from its consumer migration. Task 4 never runs in parallel with Task 3.
 
-## Task 1 / PR 1 – Persist accepted design and governance prerequisites
+### Wave checkpoints
 
-**Exact implementation model:** GPT-6 Luna (`gpt-6-luna`, medium). **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner. Luna receives closed approval evidence and a finite record checklist; unresolved approval interpretation returns to Sonnet. **Dependencies:** human approval of this independently reviewed plan. **Locks:** GOVERNANCE, PLAN-RECORD. **TDD:** N/A, documentation/approval recording only.
+The orchestrator runs each checkpoint on `main` in a clean worktree after a fresh `npm ci`, and records the commands, results and SHA in Progress. A red checkpoint opens a fix task owned by the task whose paths contain the defect. The next wave stays locked until the checkpoint is green.
 
-**Write set:** This plan/index; accepted SPF design/RFC/review and indexes; new runtime ADR/index; SPF blocks in Services/Projects/IA/Founder; dated target supersession links in `docs/design/visual-language.md`, `docs/design/interaction-responsive-accessibility.md`, `docs/product/project-evidence.md`, `docs/product/projects/{experience,index,general-reservation-system,the-system,mpc-administracion}.md`, `docs/product/content-and-localization.md`, `docs/governance/status-register.md`, `docs/index.md`; receipt `task-1.md`. **Forbidden:** production/config/tests, older ADR bodies/completed-plan/review history, current-implementation claims.
+| Checkpoint | Commands on `main` | Pass condition |
+| --- | --- | --- |
+| W0 | `npm run docs:check` | Plan APPROVED; review record final; Governance PR merged |
+| W1 | `npm run validate`; `npx playwright test --list`; `npm run test:e2e -- --project=chromium-desktop --workers=1`; `npm run test:e2e -- --project=visual-chromium --workers=1`; root `npm run verify:static-export` | New patterns listed exactly as the registration table says; no rendered change on any page |
+| W2 | `npm run validate`; `npm run test:e2e -- --workers=1`; `npm run test:a11y`; root and `/Portfolio` clean build + `verify:static-export` | Six retired paths absent; both dossiers complete; all projects green |
+| W3 | All W2 commands, plus `npm run test:e2e -- --project=immersive-chromium --workers=1` (Home acceptance unchanged) | Footer on all fourteen hosts; Home acceptance green |
+| W4 | All W3 commands | Services catalogue and boundaries complete; baselines owner-approved |
+| W5 | All W3 commands, plus `npm run measure:immersive` (Home regression, read-only) | Connected runtime spec green; Home measurement unchanged within its recorded tolerance |
+| W6 | All W5 commands, plus the poster byte check in `scripts/connected-studio-media.test.mjs` | Posters within byte ceilings at both base paths |
+| W7 | All W5 commands, plus `npm run measure:connected-studio`, `npm run measure:connected-studio-vitals` and `npm run measure:home-vitals`, plus the production project for root and `/Portfolio` | Every budget within limits; `CONNECTED_LIVE_POLICY` matches the OD-4 evidence |
+| W8 | `npm run docs:check`; `npm run validate` | Records match the implementation; plan moved to completed |
 
-- [ ] Curate the planning-session documentation package on a fresh current-main branch. Confirm design/copy approval source and partial extension, do not promote this plan until explicit plan approval exists.
-- [ ] Add dated bounded supersession links to current owner records; preserve protected mark/evidence/Contact history. Record target and unimplemented facts separately; do not claim clean export retirement yet.
-- [ ] Record plan independent-review findings/dispositions and human plan approval link/date; mark APPROVED only then. Link final review from this plan/index.
-- [ ] Run `npm run docs:check` and `git diff --check`; inspect full diff and receipt for accidental source changes. Governance PR cites RFC-SPF-REDESIGN-V1, DESIGN-SPF-V1 and ADR-CONNECTED-STUDIO-PAGE-RUNTIME. Independent reviewer and human merge are required.
+## Task 1 / PR 1 – Record plan approval and close governance prerequisites
 
-**Acceptance/W0:** All authoritative targets agree, immutable history preserved, reviewed plan APPROVED and Governance PR merged by owner. Capture main SHA. No other task unlocks earlier. The planning session may author these docs now, but does not simulate this merge.
+**Implementer:** GPT-6 Luna (`gpt-6-luna`, medium). **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, high) plus the owner. **Dependencies:** owner approval of this plan after a Sol re-review with zero BLOCKING findings. **Wave:** W0. **Locks:** GOVERNANCE, PLAN-RECORD. **TDD:** N/A (documentation only).
 
-## Task 2 / PR 2 – Define connected-scene contracts and browser harness
+**Skills:** `superpowers:using-git-worktrees` → `project-knowledge-maintenance` → `verification-before-completion` → `pr-readiness`.
 
-**Exact implementation model:** Claude Sonnet 5.5. **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, high). Sonnet owns numeric choreography, cancellation/session reasoning, test strategy and static Ground design within the frozen signatures/invariants and approved reference. **Dependencies:** 1 merged/W0. **Locks:** CONNECTED-CONTRACTS, HARNESS. **Write set:** new `lib/connected-studio/{types,model,controller,capability,session,content,media-manifest}.ts`; new server Ground and its module CSS; new `scripts/connected-studio-{model,controller,session,content}.test.mjs`; `playwright.config.ts` only additive pattern registration; receipt `task-2.md`. **Forbidden:** existing page/content/routes, Footer, engine, Home files, shared export/browser suites, global CSS/tokens/packages.
+**Context Luna must not redo:** commit `e9f051f` already put the governance package on `main`: DESIGN-SPF-V1, RFC-SPF-REDESIGN-V1 and ADR-CONNECTED-STUDIO-PAGE-RUNTIME are APPROVED, and the supersession links exist in the design, product and evidence records. The plan-revision branch already recorded the OD-1 corrections. Do not recreate, reword or move any of that.
 
-**First RED:** `visible eligible controller rotates at rest and stops pending work when paused` in controller unit tests. Inject valid no-op scheduler/render stubs; initial minimal controller returns a frozen snapshot. Assert elapsed idle time changes mesh orientation while positions/progress stay steady, then Pause cancels every pending callback and produces no further draws. Failure must be wrong stationary output/cancellation, not missing import.
+**Write set (closed):**
+- this plan's front matter `status` and one Progress line;
+- the SPF entry in `docs/plans/index.md`;
+- the SPF **PROPOSED** sentence in `docs/governance/status-register.md`;
+- the PLAN-SPF-V1 paragraph in `docs/index.md`;
+- the front matter `status` and a closing line in `docs/reviews/services-projects-footer-plan-review-2026-09-30.md`;
+- one dated note under `## Sitemap` in `docs/product/information-architecture.md`;
+- new `docs/reviews/services-projects-footer-acceptance-v1/index.md`;
+- new `docs/reviews/services-projects-footer-acceptance-v1/task-1.md`.
 
-- [ ] Write that test plus failing behavior scaffold; run `node --test scripts/connected-studio-controller.test.mjs` and record intended failure.
-- [ ] GREEN minimal pure model/controller/session. Add RED cycles before each new behavior: first 1px progress before chapter, reversible scroll, finite zero-height layout, jumps/resize, graph connectivity/count/endpoints, no invalid node IDs, cadence/activity decay, hidden/Footer suspension, dispose idempotence, unknown-quality fail-closed, storage denied and stored context loss. Clamp elapsed time after hidden-tab resume rather than integrating unseen rotation.
-- [ ] Provide exact localized tuples/labels and SSR Ground contract. Pure CSS/chart static fallback needs no engine/JS; final poster URLs become concrete only Task 8. Do not put eight-family marketing cards into types.
-- [ ] Register `connected-studio-static.spec.ts`, `connected-studio-services.spec.ts`, `connected-studio-footer.spec.ts`, `connected-studio-navigation.spec.ts`, `connected-studio-responsive.spec.ts`, `connected-studio-runtime.spec.ts`, `connected-studio-accessibility.spec.ts`, `connected-studio-production.spec.ts` with applicable desktop/mobile/tablet/320/browser/axe projects. Register runtime spec on immersive-chromium; basic fallback smoke runs on Firefox/WebKit. Existing visual regexp discovers new visual specs. Run `npx playwright test --list` now and repeat discovery as each later spec appears; never treat “no tests found” as pass.
-- [ ] REFACTOR pure modules without behavior change; rerun focused unit tests, `npm run validate` and current browser smoke. Independent reviewer freezes exported declarations, units and signatures before human merge/W1; dependents cannot consume a draft. No rendered baseline change is expected because Ground is not wired yet.
+**Forbidden:** production code, config, tests, any other document, ADR bodies, completed plans and review history.
 
-**Acceptance:** Fake-clock suite demonstrates cadence/cancellation/progress/session contracts; no browser globals/Three imports in pure/server modules; harness additions retain old test coverage; current pages unchanged. Manual code review of numeric contracts and no-JS architecture accompanies automated checks.
+- [ ] Verify the two inputs and stop if either is missing: (a) the owner's approval message, with its date and link; (b) the latest Sol round in the review record shows `BLOCKING 0`.
+- [ ] Plan front matter: `status: APPROVED`. Progress: add `- <date>: Owner approved PLAN-SPF-V1 revision 4 (<link>). Governance PR <number> opened.`
+- [ ] `docs/plans/index.md`, `docs/index.md`, `docs/governance/status-register.md`: replace "PROPOSED, awaiting human plan approval" (or "**PROPOSED:**") for PLAN-SPF-V1 with `**APPROVED <date>** (<link>); execution starts at W1 after the Governance PR merges.` Change no other sentence.
+- [ ] Review record: front matter `status: APPROVED`, and append `Owner approved the plan on <date> (<link>).`
+- [ ] Under `## Sitemap` in the IA document, append: `**Dated target note — <date>:** the [project-slug] detail routes are retired by [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) (PLAN-SPF-V1 Task 3). Until that task merges, the tree above describes the current implementation.`
+- [ ] Create the acceptance index with front matter `id: REVIEW-SPF-ACCEPTANCE-V1`, `type: acceptance-record`, `status: PROPOSED`, the related IDs from this plan, and `last_verified: <date>`. Body: a title, one paragraph linking this plan, a "Receipts" list with entries for tasks 1–10 (only task 1 linked), and a link to this plan's [receipt template](#receipt-template).
+- [ ] Write `task-1.md` from the receipt template. Run `npm run docs:check` and `git diff --check`. Confirm that `git diff --name-only main` lists only the write set.
+
+**Acceptance (objective):** every checklist line is done; `docs:check` passes; the diff touches only the write set; no plan or record still says "PROPOSED" for PLAN-SPF-V1; the Governance PR cites RFC-SPF-REDESIGN-V1, DESIGN-SPF-V1 and ADR-CONNECTED-STUDIO-PAGE-RUNTIME, passes Sol review and is merged by the owner. Record the main SHA.
+
+## Task 2 / PR 2 – Define connected-scene contracts, static Ground and browser harness
+
+**Implementer:** Claude Sonnet 5.5. **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, high). Sonnet owns the numeric choreography, cancellation/session reasoning, test strategy and the static Ground design within the frozen signatures and the reference media. **Dependencies:** W0. **Wave:** W1. **Locks:** CONNECTED-CONTRACTS, HARNESS, CONNECTED-GROUND.
+
+**Skills:** `superpowers:using-git-worktrees` → `frontend-implementation` (Ground) → `design-taste-frontend-v1` preflight (Ground only) → `test-driven-development` → `playwright-qa` (registration, listing, CI parity) → `visual-qa` (Ground, disposable inspection) → `systematic-debugging` on any failure → `project-knowledge-maintenance` (testing doc) → `verification-before-completion` → `pr-readiness`.
+
+**Write set:**
+- new `lib/connected-studio/{types,model,labels,controller,capability,session,content,media-manifest}.ts`;
+- new `components/connected-studio/ConnectedStudioGround.tsx` and `connected-studio.module.css`;
+- new `scripts/connected-studio-{model,labels,controller,session,capability,content}.test.mjs`;
+- new `scripts/serve-static-export.mjs`;
+- new `tests/e2e/support/connected-studio-test-hooks.ts`;
+- `playwright.config.ts` (the registration table and the conditional production server only);
+- `docs/testing/playwright.md` (new spec/project rows and the production-serving procedure);
+- receipt `task-2.md`.
+
+**Forbidden:** existing pages, content, routes, Footer, engine, Home files, existing specs, global CSS/tokens and packages.
+
+**First RED:** `visible eligible controller rotates at rest and stops pending work when paused`, in the controller unit test. The scaffold is a `createConnectedController` that returns a constant snapshot and schedules nothing. Inject a no-op scheduler and a render stub. Assert that elapsed idle time changes node rotation while positions and progress stay steady, then that `pause()` cancels every pending callback and no further renders happen. The failure must be a wrong stationary output or a missing cancellation, not a missing import.
+
+- [ ] Write that test and the scaffold. Run `node --test scripts/connected-studio-controller.test.mjs` and record the intended failure.
+- [ ] GREEN the minimal pure model, controller and session. Before each new behavior, write a RED for it, in this order:
+  1. 1px of scroll moves progress before any chapter
+  2. reversible scroll
+  3. finite result for a zero-height layout
+  4. jumps and resize
+  5. graph connectivity, counts and endpoints (16/33, 8/13)
+  6. no invalid node IDs
+  7. each word assigned to two wide nodes and one compact node
+  8. cadence and activity decay; `targetFps` values per PC-6
+  9. hidden and Footer suspension
+  10. dispose is idempotent
+  11. unknown quality or tier fails closed
+  12. tier mapping at 767/768/1023/1024
+  13. `getTravelScale` is finite and in (0, 1]
+  14. `livePolicy` false → static, for each tier
+  15. storage denied
+  16. stored connected loss and read-only Home loss (PC-5)
+  17. each PC-2 label rule step
+
+  After a hidden tab resumes, clamp elapsed time rather than integrating unseen rotation.
+- [ ] Provide the exact localized tuples and labels, and the SSR Ground contract. The pure CSS/chart static fallback needs no engine and no JS. Final poster URLs become concrete only in Task 8. Do not put eight-family marketing cards into types.
+- [ ] Apply the Playwright registration table and production serving exactly. Run `npx playwright test --list` and record that each new spec appears under exactly the listed projects (specs that do not exist yet show no tests; record that). Never treat "no tests found" as a pass for a spec that exists.
+- [ ] Ground rendered check: mount Ground in a disposable, uncommitted route `app/(es)/spf-inspect-2/page.tsx`. Run Taste preflight and `visual-qa` at 1440 and 390 against `revision5-*-hero.png`, then compare the static fallback colors and chart grid. Delete the route. Record `git status --porcelain` showing it gone, plus the screenshots' local paths, in the receipt. The first committed rendered acceptance of Ground happens in Task 3.
+- [ ] REFACTOR the pure modules without behavior change. Rerun the focused unit tests, `npm run validate` and `npm run test:e2e -- --project=chromium-desktop --workers=1`. The reviewer freezes exported declarations, units and signatures before the owner merges. Dependents cannot consume a draft.
+
+**Acceptance (objective):**
+- All listed RED/GREEN cycles are recorded.
+- `grep` finds no `window`, `document`, storage or `three` import in `lib/connected-studio/*` except the guarded storage boundary in `session.ts`.
+- The `--list` output matches the registration table.
+- `PLAYWRIGHT_SERVE_EXPORT` unset leaves the config's project list unchanged except for the added patterns.
+- The visual-chromium run shows no changed baseline.
+- The `docs/testing/playwright.md` rows are added.
 
 ## Task 3 / PR 3 – Publish complete dossiers and retire detail destinations atomically
 
-**Exact implementation model:** Claude Sonnet 5.5. **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner visual/evidence review. Sonnet owns dossier composition and the whole dependency map/fail-closed migration; migrate useful data first, then remove old route machinery in the same PR. **Dependencies:** 2 merged/W1. **Locks:** ROUTE-CUTOVER, LOCALE-CONTROL, PUBLIC-EVIDENCE, SERVICES (GRS destination only), VISUAL-BASELINES (Services/Projects spec only).
+**Implementer:** Claude Sonnet 5.5. **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner visual and evidence review. Sonnet owns dossier composition and the complete dependency map and fail-closed migration. Migrate useful data first, then remove the old route machinery in the same PR. **Dependencies:** W1. **Wave:** W2 (parallel with Task 5). **Locks:** ROUTE-CUTOVER, LOCALE-CONTROL, PUBLIC-EVIDENCE, SERVICES (GRS href only), CONNECTED-GROUND (bounded static fixes), VISUAL-BASELINES (Projects and Founder subtrees), SHARED-TESTS (Task 3 blocks in the inventory).
 
-**Write set:** ES/EN `_content/projects.ts`, `_content/founder.ts`; `components/projects/{content-types.ts,ProjectsPage.tsx,ProjectCard.tsx,ProjectDetailPage.tsx}`, `lib/projects/publication.ts`; new `components/projects/ProjectDossier.tsx`, `projects.module.css`; both Projects index routes and both `[projectSlug]/page.tsx` deletions; `lib/site-routes.ts`, `foundation-navigation.ts`, new `project-dossier-navigation.ts`, shared `LanguageSwitch.tsx`; FounderPage/FounderProfessionalHistory/founder types; ServicesPage GRS destination only; MPC public concept deletion; `scripts/{site-routes,projects-publication,projects-route,project-details,foundation-content,privacy-route}.test.mjs`, new `project-dossier-navigation.test.mjs`, `verify-static-export.mjs`; `tests/e2e/{marketing-projects,marketing-navigation,studio-founder}.spec.ts`, new connected-studio static/navigation specs; `tests/e2e/visual/services-projects.visual.spec.ts` and only its Projects/detail snapshots. Implementation evidence is recorded in receipt `task-3.md`; owning requirement copy is unchanged. **Forbidden:** Footer/shared foundation types/brand; Services styling/content; engine/controller/host; Home/Contact; other visual baselines/harness/packages.
+**Skills:** `superpowers:using-git-worktrees` → `frontend-implementation` → `design-taste-frontend-v1` preflight → `test-driven-development` → `emil-design-eng` (dossier border and artwork hover) → `playwright-qa` → `visual-qa` → `design-taste-frontend-v1` post-critique → `review-animations` (hover, read directly) → `systematic-debugging` on any failure → `project-knowledge-maintenance` (visual-regression rows) → `verification-before-completion` → `pr-readiness`.
 
-**First RED:** `Projects index exposes both complete dossiers before JavaScript` in `connected-studio-static.spec.ts`. On existing implementation with JS disabled, assert visible article by title contains approved context/scope/evidence/source/limitation/concept caption. Current summary-card index fails on the absent full article, proving the intended behavior. Run `npx playwright test tests/e2e/connected-studio-static.spec.ts --project=chromium-desktop` and capture failure before changing UI.
+**Write set:**
+- ES/EN `_content/projects.ts` and `_content/founder.ts`;
+- `components/projects/{content-types.ts,ProjectsPage.tsx,ProjectCard.tsx,ProjectDetailPage.tsx}` and `lib/projects/publication.ts`;
+- new `components/projects/ProjectDossier.tsx` and `projects.module.css`;
+- both Projects index routes, and deletion of both `[projectSlug]/page.tsx`;
+- `lib/site-routes.ts`, `lib/foundation-navigation.ts`, new `lib/project-dossier-navigation.ts`, `components/foundation/LanguageSwitch.tsx`;
+- `components/founder/FounderPage.tsx`, `FounderProfessionalHistory`, founder types;
+- `components/services/ServicesPage.tsx` (GRS href only);
+- deletion of `public/projects/mpc-administracion/conceptual-operations-model.webp`;
+- `ConnectedStudioGround.tsx` and its module CSS (static defects found at first render only, each recorded);
+- `scripts/{site-routes,projects-publication,projects-route,project-details,foundation-content,privacy-route}.test.mjs`, new `scripts/project-dossier-navigation.test.mjs`, `scripts/verify-static-export.mjs`;
+- `tests/e2e/{marketing-projects,marketing-navigation,studio-founder}.spec.ts` (Task 3 blocks), `tests/e2e/accessibility.spec.ts` (lines 15–16 only), `scripts/site-header.test.mjs` (`LanguageSwitch` block, only if a class must change);
+- new `tests/e2e/connected-studio-static.spec.ts` and `connected-studio-navigation.spec.ts`;
+- `tests/e2e/visual/services-projects.visual.spec.ts` (Projects and detail cases) with their snapshots, and the `tests/e2e/visual/founder.visual.spec.ts` snapshots;
+- the `docs/testing/visual-regression.md` rows;
+- receipt `task-3.md`.
 
-- [ ] Add first RED and focused contract cases. Preserve exclusions; replace obsolete positive detail assertions under the approved dated retirement, not by deleting their protection. Before each new behavior verify failures: recognized dossier fragment locale persistence, unknown fragment fallback, Founder MPC external source, retired artifact absence.
-- [ ] Migrate detail story fields into dossier types/content; `getPublishedProjectDossiers` validates exactly the two approved IDs/maturity/relationships/permission/image/caption. Remove MPC only from commercial Projects projection, not its evidence record. Preserve source/test/Docker/historical-CI wording, GRS contributor and The-System incomplete/non-operational billing distinctions.
-- [ ] Render two complete semantic articles, jump links, ordinary limitations/source links, related Services/Founder and publication note with Atlas-compatible foreground masks/Ground/semantic capability legend/reserved Pause slot. No hidden accordion/core story or project-detail action. Use existing concepts at their intrinsic ratio/lazy loading; Task 8 adds responsive derivatives.
-- [ ] Replace GRS Services href with `getProjectDossierHref`. Replace MPC Founder slug/detail navigation with explicit approved external source action and preserve all educational limitations. Add native equivalent-route fallback plus small client fragment enhancement in LanguageSwitch; known Projects hashes only, no client-only link. On ordinary pages keep existing alternate route behavior.
-- [ ] Delete both dynamic route entry files, detail-only component/types/helpers/resolvers and MPC concept after `rg` active-consumer proof. Relocate ProjectMeta or delete ProjectCard only when no consumers remain. Remove route-only `details` naming and unused labels; retain evidence data. Do not introduce sitemap/robots/redirect files that do not exist.
-- [ ] Update export verifier: clean-build six negative artifact assertions, no active links/generated route payload destinations to retired paths, both full dossier bodies/captions/source links, GRS fragment and Founder MPC source; retain private/blocked fail-closed checks. A negative test may name old paths; archival docs are exempt from active-link scan. Build output must be fresh, not copied over a stale export.
-- [ ] GREEN focused contracts/browser/no-JS and root/base-path exports. REFACTOR obsolete branches/imports; rerun the same tests plus `npm run validate`. Refresh Projects baselines only after rendered owner inspection; delete obsolete detail snapshots as part of reviewed removal. Retain Services snapshots unchanged.
+**Forbidden:** Footer, shared foundation content-types, `BrandSignature`; Services styling and content; engine, controller and host; Home and Contact; other baselines, the harness and packages.
 
-**Commands:** `node --test scripts/site-routes.test.mjs scripts/projects-publication.test.mjs scripts/projects-route.test.mjs scripts/project-details.test.mjs scripts/project-dossier-navigation.test.mjs`; `npx playwright test tests/e2e/marketing-projects.spec.ts tests/e2e/marketing-navigation.spec.ts tests/e2e/studio-founder.spec.ts tests/e2e/connected-studio-static.spec.ts tests/e2e/connected-studio-navigation.spec.ts --project=chromium-desktop`; cross-browser Projects/locale on Firefox/WebKit; `npm run validate`, clean root and `/Portfolio` builds + `npm run verify:static-export`.
+**Step 0 — inventory:** run `rg -n "general-reservation-system/|the-system/|mpc-administracion|projectSlug|ProjectDetailPage|getProjectDetail|LanguageSwitch|SiteFooter" scripts tests components lib app`. Compare every hit with the write set and the inventory. Stop and ask the orchestrator about any unassigned hit.
 
-**Acceptance:** All six URLs absent with no supported alias, two complete readable dossiers and accurate Founder context, source/anchor destinations valid in both locales/base paths, no unused detail runtime. At 320/390/768/1024/1440 and no-JS inspect all limitations, captions, labels, natural article flow and known/unknown locale hashes. Existing Header/Footer language controls remain usable.
+**First RED:** `Projects index exposes both complete dossiers before JavaScript`, in `connected-studio-static.spec.ts`. With JS disabled on the current implementation, assert that a visible article, found by title, contains the approved context, scope, evidence, source, limitation and concept caption. The current summary-card index fails because the full article is absent. Run `npx playwright test tests/e2e/connected-studio-static.spec.ts --project=chromium-desktop` and capture the failure before changing UI.
+
+- [ ] Add the first RED and focused contract cases. Keep the exclusions. Replace obsolete positive detail assertions with dated negative ones; do not delete their protection. Verify a failure before each new behavior: known dossier fragment kept across a locale switch, unknown fragment fallback, Founder MPC external source, retired artifact absence.
+- [ ] Migrate the detail story fields into dossier types and content. `getPublishedProjectDossiers` validates exactly the two approved IDs, maturity, relationships, permission, image and caption. Remove MPC only from the commercial Projects projection, not from its evidence record. Keep the source/test/Docker/historical-CI wording, the GRS contributor and the The-System incomplete/non-operational billing distinctions.
+- [ ] Render two complete semantic articles, jump links, ordinary limitations and source links, related Services/Founder links and the publication note. Add foreground plates (`#0A1E33`, 1px `#36536C`, 16px radius) carrying `data-connected-reading-mask`, Ground, the semantic capability legend and the reserved Pause slot. No hidden accordion, core story or project-detail action. Use the existing concepts at their intrinsic ratio with lazy loading; Task 8 adds responsive derivatives. Add the dossier border hover and the artwork scale hover (≤1.018 over about 260ms, fixed caption, fine pointer only, removed under reduced motion).
+- [ ] Replace the GRS Services href with `getProjectDossierHref`. Replace the MPC Founder slug/detail navigation with the approved external source action, "Ver código fuente" / "View source code", keeping all educational limitations. Add a native equivalent-route fallback plus a small client fragment enhancement in `LanguageSwitch`: known Projects hashes only, no client-only link. On ordinary pages, keep the existing alternate-route behavior.
+- [ ] Delete both dynamic route entry files, the detail-only components, types, helpers and resolvers, and the MPC concept — after `rg` shows no active consumer. Relocate `ProjectMeta`, or delete `ProjectCard` only when it has no consumers. Remove route-only `details` naming and unused labels; keep the evidence data. Do not add sitemap, robots or redirect files.
+- [ ] Update the export verifier: six negative artifact assertions on a clean build; no active links or generated route payload destinations to retired paths; both full dossier bodies, captions and source links; the GRS fragment; the Founder MPC source. Keep the private/blocked fail-closed checks. Build output must be fresh, never copied over a stale export.
+- [ ] GREEN the focused contracts, browser tests, no-JS checks and both exports. REFACTOR obsolete branches and imports, then rerun the same tests and `npm run validate`. Run Taste post-critique, `visual-qa` and the `review-animations` read. Refresh the Projects and Founder baselines only after the owner inspects the render. Windows baselines are captured locally; Linux baselines follow workflow item 7. Delete obsolete detail snapshots as part of the reviewed removal. Leave the Services snapshots unchanged.
+
+**Commands:**
+- `node --test scripts/site-routes.test.mjs scripts/projects-publication.test.mjs scripts/projects-route.test.mjs scripts/project-details.test.mjs scripts/project-dossier-navigation.test.mjs scripts/site-header.test.mjs`
+- `npx playwright test tests/e2e/marketing-projects.spec.ts tests/e2e/marketing-navigation.spec.ts tests/e2e/studio-founder.spec.ts tests/e2e/connected-studio-static.spec.ts tests/e2e/connected-studio-navigation.spec.ts --workers=1` (all registered projects)
+- `npm run test:a11y`
+- `npm run validate`
+- clean root build + `npm run verify:static-export`
+- clean `/Portfolio` build + `npm run verify:static-export` + `npm run test:e2e -- --workers=1`
+
+**Visual matrix:** Projects in ES and EN at 320, 390, 768, 1024 and 1440; 1440 at 200% zoom; 844×390 landscape; reduced motion; JS disabled; forced colors. Founder in ES and EN at 390 and 1440.
+
+**Acceptance (objective):**
+- The six retired URLs return 404 on the clean static export, at both base paths. No file, link or route payload remains for them.
+- Each dossier shows every approved field from the Projects SPF-V1 table verbatim.
+- The jump links reach `#general-reservation-system` and `#the-system` below the App Bar.
+- A locale switch keeps a known fragment and drops an unknown one.
+- The Founder MPC action points to `https://github.com/Furlanich/MilkyPantsCheese-Administracion-`.
+- There is no horizontal overflow at 320, and no text is clipped across the visual matrix.
+- axe reports no serious or critical violations.
+- The changed baselines are owner-approved on both platforms.
+- The inventory search shows no unowned hits.
 
 ## Task 4 / PR 4 – Build the shared protected-mark Azure conclusion
 
-**Exact implementation model:** Claude Sonnet 5.5. **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner rendered critique. Sonnet owns premium hierarchy, protected-mark composition and responsive host behavior using exact IA copy/channel values; approved copy remains verbatim. **Dependencies:** 2 merged/W1; can run alongside 3/5. **Locks:** FOOTER; own dedicated Footer visual baseline subtree.
+**Implementer:** Claude Sonnet 5.5. **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner rendered critique. Sonnet implements the composition PC-4 fixes, using the exact IA copy and channel values. **Dependencies:** Task 3 merged. **Wave:** W3. **Locks:** FOOTER, VISUAL-BASELINES (new Footer subtree), SHARED-TESTS (Task 4 blocks in the inventory, transferred from Task 3).
 
-**Write set:** `components/foundation/SiteFooter.tsx`, new `footer-content.ts`, `site-footer.module.css`, new `FooterBrandSignature.tsx`; `scripts/site-footer.test.mjs`; `tests/e2e/connected-studio-footer.spec.ts`, `tests/e2e/visual/connected-studio-footer.visual.spec.ts` and its snapshots; receipt `task-4.md`. **Forbidden:** every `app/**/page.tsx`, shared foundation content-types/LanguageSwitch/BrandSignature/protected assets, other tests/global styles, route/helpers/publication/engine. If any forbidden change is necessary, serialize/transfer rather than collide.
+**Skills:** `superpowers:using-git-worktrees` → `frontend-implementation` → `design-taste-frontend-v1` preflight → `test-driven-development` → `playwright-qa` → `visual-qa` → `design-taste-frontend-v1` post-critique → `systematic-debugging` on any failure → `project-knowledge-maintenance` (visual-regression rows) → `verification-before-completion` → `pr-readiness`.
 
-**First RED:** `shared footer exposes approved invitation and WhatsApp primary action in both locales` in Footer browser spec: existing footer lacks the invitation. Add a semantic visible assertion and run `npx playwright test tests/e2e/connected-studio-footer.spec.ts --project=chromium-desktop` before UI work.
+**Composition (PC-4), in DOM and visual order:**
+1. Foreground mark and FURLANICH signature.
+2. Invitation column: the conclusion headline (H2), the introduction, and the primary "Escribinos por WhatsApp" / "Write on WhatsApp" button.
+3. "Contacto directo" / "Direct contact" column: email, phone, "Información de contacto" / "Contact information" (the localized Contact route), and the location/accountability line.
+4. A divider, then "Explorar" / "Explore": Services, Projects, How we work, About/Studio (the existing labels).
+5. "Responsabilidad directa" / "Direct accountability": Samuel Furlanich (Founder page), then the existing `founderLinks` values in their current order (the reference shows LinkedIn and GitHub). No link is added or removed.
+6. A divider, then the utility row: `© {build year} FURLANICH`, Privacy, and the language control.
 
-- [ ] Write first RED plus retained exact direct-channel/navigation/locale/demo checks. Replace old Tailwind-string Footer assertions with content-data/semantic/browser checks, not new CSS regex tests.
-- [ ] Keep existing compatible props/callsites; derive locale from typed alternateLocale and resolve new conclusion copy locally. Build foreground full Bone logo with exact canonical geometry, avoiding AppBar's `data-app-bar-brand` marker. Never use shared `BrandSignature variant='on-dark'` in Footer because that marker participates in Home AppBar detection. Add a complete CSS/SVG watermark below text with clear space; all decoration hidden to AT.
-- [ ] Render WhatsApp/email/phone/Contact/Founder/profiles/nav/locale/privacy/copyright in approved hierarchy. Add `data-site-footer` for handoff. Preserve demo disclosure elsewhere and Contact's untouched simulation. No new scheduled meeting/prefill/autoplay behavior.
-- [ ] GREEN both locales on all seven retained host page roles, long email wrap/keyboard/forced colors/no-JS/320. REFACTOR compatible helpers; rerun same tests and `npm run validate`. Perform Taste preflight/post critique against spec, targeted screenshot/contrast/clear-space inspection and owner-approved Footer baselines. Inspect Home App Bar scroll/readout after visiting Footer.
+Compact layouts stack these groups in the same order. The watermark (the complete three-chevron mark, static) sits behind columns 3–5 at wide sizes and behind the direct-contact group at compact sizes, as in the references. It is hidden from assistive technology.
 
-**Acceptance:** Premium conclusion matches approved reference, mark complete/unaltered, no CTA clipping or duplicated client behavior; all actual channels/equivalent links work. Host grid: Home, Services, Projects, Studio, Founder, Contact, Privacy × ES/EN; baseline only representative wide/compact Footer, remaining hosts use semantic/layout/manual checks.
+**Write set:**
+- `components/foundation/SiteFooter.tsx`, new `components/foundation/footer-content.ts`, `site-footer.module.css`, new `FooterBrandSignature.tsx`;
+- `scripts/site-footer.test.mjs`;
+- new `tests/e2e/connected-studio-footer.spec.ts`;
+- new `tests/e2e/visual/connected-studio-footer.visual.spec.ts` and its snapshots;
+- the Task 4 blocks of `studio-founder.spec.ts`, `marketing-navigation.spec.ts` and `privacy.spec.ts`, plus the conditional Footer-region lines of `sky-chart-acceptance.spec.ts` (see the inventory);
+- the `docs/testing/visual-regression.md` rows;
+- receipt `task-4.md`.
+
+**Forbidden:** every `app/**/page.tsx`; shared foundation content-types, `LanguageSwitch`, `BrandSignature` and protected assets; other tests; global styles; routes, helpers, publication and engine.
+
+**First RED:** `shared footer exposes approved invitation and WhatsApp primary action in both locales`, in the Footer browser spec. The existing Footer lacks the invitation. Add a visible, semantic assertion and run `npx playwright test tests/e2e/connected-studio-footer.spec.ts --project=chromium-desktop` before any UI work.
+
+- [ ] Write the first RED plus retained checks: exact direct-channel hrefs in the order wa.me, mailto, tel; navigation; locale; the demo disclosure. Replace the old Tailwind-string Footer assertions with content-data, semantic and browser checks — not new CSS regex tests. Update the inventory blocks for the approved headings ("Responsabilidad directa" replaces "Enlaces profesionales").
+- [ ] Keep the existing compatible props and callsites. Derive the locale from the typed `alternateLocale` and resolve the new conclusion copy locally. Build the foreground full Bone logo with the exact canonical geometry, without the App Bar's `data-app-bar-brand` marker. Never use the shared `BrandSignature variant='on-dark'` in the Footer, because that marker participates in Home App Bar detection. Add the complete CSS/SVG watermark below the text with its clear space.
+- [ ] Add `data-site-footer` to the root. Keep the demo disclosure where it is now and Contact's untouched simulation. No new scheduling, prefill or autoplay behavior.
+- [ ] GREEN in both locales on all seven host roles (Home, Services, Projects, Studio, Founder, Contact, Privacy). REFACTOR the compatible helpers. Rerun the same tests, `npm run test:e2e -- --project=immersive-chromium --workers=1` (Home acceptance) and `npm run validate`. Run Taste post-critique and `visual-qa` against both Footer references, then refresh the owner-approved Footer baselines (wide and compact, ES), with Linux baselines per workflow item 7. Visit the Footer, scroll back up, and confirm the Home App Bar scroll state and readout are unchanged.
+
+**Commands:** `node --test scripts/site-footer.test.mjs`; `npx playwright test tests/e2e/connected-studio-footer.spec.ts tests/e2e/studio-founder.spec.ts tests/e2e/marketing-navigation.spec.ts tests/e2e/privacy.spec.ts --workers=1`; the Home acceptance command above; `npm run test:a11y`; `npm run validate`; clean root and `/Portfolio` builds + `npm run verify:static-export` + a `/Portfolio` run of the Footer spec.
+
+**Visual matrix:** the Footer on all seven host roles in ES and EN at 390 and 1440 (semantic and layout checks); the Services host Footer at 320, 390, 768, 1024 and 1440; 200% zoom; JS disabled; forced colors (watermark removed, system colors).
+
+**Acceptance (objective):**
+- DOM order matches PC-4 on every host, and approved IA copy appears verbatim.
+- The mark's SVG geometry is identical to the canonical source, with no transform other than a uniform scale.
+- Every text element over the watermark measures at least 4.5:1 contrast (3:1 for large text). The owner picks the final watermark opacity at rendered review, starting from 0.085 wide and 0.06 compact.
+- The long email wraps without clipping at 320.
+- Every Footer link resolves at both base paths.
+- Home acceptance passes unchanged.
+- axe reports no serious or critical violations.
+- Baselines are owner-approved.
 
 ## Task 5 / PR 5 – Build the batched connected 3D engine
 
-**Exact implementation model:** Claude Sonnet 5.5. **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, high) plus rendered engine review by owner. Sonnet owns depth/lighting/path design, batching and resource/race reasoning within controller separation and scene budgets; optimize geometry without weakening visible density. **Dependencies:** 2 merged/W1; can run alongside 3/4. **Locks:** CONNECTED-ENGINE.
+**Implementer:** Claude Sonnet 5.5. **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner review of the rendered engine. Sonnet owns depth, lighting, path design, batching and resource/race reasoning within the controller separation and the scene budgets. Optimize geometry without weakening the visible density. **Dependencies:** W1. **Wave:** W2 (parallel with Task 3). **Locks:** CONNECTED-ENGINE.
 
-**Write set:** new `components/connected-studio/runtime/{create-connected-scene,connected-geometry,connected-labels,dispose-connected-scene}.ts`; `scripts/connected-studio-engine.test.mjs`; new `tests/e2e/support/connected-studio-engine-fixture.ts` for isolated test construction; receipt `task-5.md`. **Forbidden:** contract files/controller/session/Ground CSS, public pages/route shells/Footer/global tests/harness/Home/packages. Test fixture is test-only; do not publish a new route or enable a production software override.
+**Skills:** `superpowers:using-git-worktrees` → `find-docs` or the installed `node_modules/three` types (Three 0.186 APIs, before use) → `test-driven-development` → `visual-qa` (disposable inspection against the reference media) → `systematic-debugging` on any failure → `verification-before-completion` → `pr-readiness`.
 
-**First RED:** `disposing a constructed connected scene releases every owned GPU resource once` in unit test using injected renderer/resource factories. A valid minimal SceneHandle scaffold initially retains resources; assert dispose clears geometries/materials/textures/render lists/listeners/context/mount ownership and repeated dispose is safe. Run `node --test scripts/connected-studio-engine.test.mjs` for the intended resource-count failure.
+**Write set:** new `components/connected-studio/runtime/{create-connected-scene,connected-geometry,connected-labels,dispose-connected-scene}.ts`; `scripts/connected-studio-engine.test.mjs`; receipt `task-5.md`.
 
-- [ ] RED resource ownership, then minimal GREEN scene handle. Before adding geometry/labels/resize/context-loss handling, add meaningful failing handle/render tests using fakes at the browser/GPU boundary. Avoid asserting mesh coordinates/shader source strings as proof.
-- [ ] Build faceted Azure bodies/light cores/rings with instancing and batched curved paths/tracers/distant points; depth/lighting/fog match Revision 5. Graph edges follow moving endpoints and grow reversibly. Engine never owns a separate animation loop; controller alone calls render.
-- [ ] Return projected upright label positions/visible flags; host handles measured DOM boxes/foreground masks. Keep robust finite positions and DPR caps through 767/768/1023/1024 transitions; compact really uses eight/13/one ring. No bloom/HDR/model/video/fonts-as-heavy-textures.
-- [ ] Handle context loss callback/disposal, init failure and partially constructed resources without throwing into reading UI. Record renderer draw-call/resource diagnostics suitable for tests, not visitor-visible debug panels.
-- [ ] GREEN/focused resource tests, REFACTOR batching/disposal and rerun. `npm run validate` retains unchanged public rendering. Use an isolated test fixture/disposable visual workspace to inspect actual engine at wide/compact and initial/mid/complete poses; its use never proves hardware acceptance.
+**Forbidden:** contracts, controller, session, Ground, public pages, route shells, Footer, shared tests, the harness, Home, packages, and any committed test route or fixture page.
 
-**Acceptance:** Typed engine plugs into merged contract, owns no perpetual scheduler, releases resources, meets ≤28/18 draw-call ceilings in fixture, strong depth/node/path rendering and legible upright projected positions. This PR can merge without a live page because the complete current static pages remain valid; integration requires Task 7.
+**First RED:** `disposing a constructed connected scene releases every owned GPU resource once`, in a unit test using injected renderer and resource factories. A valid minimal `SceneHandle` scaffold initially keeps its resources. Assert that dispose clears geometries, materials, textures, render lists, listeners, the context and mount ownership, and that a repeated dispose is safe. Run `node --test scripts/connected-studio-engine.test.mjs` and record the resource-count failure.
+
+- [ ] RED resource ownership, then a minimal GREEN scene handle. Before adding geometry, labels, resize or context-loss handling, add a failing handle/render test for each, using fakes at the browser/GPU boundary. Do not assert mesh coordinates or shader source strings as proof.
+- [ ] Build faceted Azure bodies, light cores and rings with instancing, plus batched curved paths, tracers and distant points. Match depth, lighting and fog to `revision5-*-hero.png` and `revision5-*-chapter.png`. Graph edges follow their moving endpoints and grow reversibly. Apply `getTravelScale(tier)`. The engine never owns an animation loop; only the controller calls render.
+- [ ] Return projected upright label positions and visibility flags. The host applies PC-2. Keep positions finite and DPR within its caps through the 767/768/1023/1024 transitions. Compact genuinely uses 8 nodes, 13 paths and one ring. No bloom, HDR, model, video or heavy font textures.
+- [ ] Handle context-loss callbacks and disposal, init failure, and partially constructed resources without throwing into the reading UI. Report diagnostics (including `drawables`) for tests, never as visitor-visible debug panels.
+- [ ] GREEN the focused resource tests. REFACTOR batching and disposal and rerun. `npm run validate` must show unchanged public rendering. For design iteration only, mount the engine in a disposable, uncommitted route `app/(es)/spf-inspect-5/page.tsx` at 1440×900 and 390×844, at progress 0, 0.5 and 1. Compare with the reference media, then delete the route and record `git status --porcelain` as clean. That inspection is design evidence only; it is never hardware or draw-call acceptance.
+
+**Acceptance (objective):**
+- The engine compiles against the merged contract unchanged.
+- It schedules nothing on its own: tests count zero scheduler calls inside the engine.
+- Disposal releases every counted resource exactly once.
+- Diagnostics report `drawables` ≤28 for wide/tablet and ≤18 for compact. The real `drawCalls` ceiling is asserted in Task 7.
+- The compact graph is 8/13 with one ring.
+- The owner accepted the inspection screenshots against the reference media, as recorded in the receipt.
+- The PR merges without a live page; the static pages stay valid.
 
 ## Task 6 / PR 6 – Deliver the Atlas Services composition and boundaries
 
-**Exact implementation model:** Claude Sonnet 5.5. **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner visual/copy review. Sonnet owns Atlas hierarchy, asymmetric composition, masks and responsive refinement using exact copy, existing commercial paragraphs and three service IDs. **Dependencies:** 3,4,5 all merged/W2 checkpoint. **Locks:** SERVICES; Services portion of VISUAL-BASELINES.
+**Implementer:** Claude Sonnet 5.5. **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner visual and copy review. Sonnet implements the Atlas hierarchy, the asymmetric composition, the masks and responsive behavior, using exact copy, the existing commercial paragraphs and the three service IDs. **Dependencies:** Tasks 3, 4 and 5 merged, W3 checkpoint green. **Wave:** W4. **Locks:** SERVICES, CONNECTED-GROUND (bounded static fixes), VISUAL-BASELINES (Services subtree).
 
-**Write set:** ES/EN `_content/services.ts`; `components/services/{ServicesPage,ServicesIntroduction,ServiceSection,ServicesPrinciples,ServicesFinalCta}.tsx`, `components/services/content-types.ts`, new `ServiceCatalogue.tsx`, `services.module.css`; `scripts/{services-content,services-route}.test.mjs`; `tests/e2e/marketing-services.spec.ts`, `connected-studio-services.spec.ts`; Services assertions/snapshots only in `tests/e2e/visual/services-projects.visual.spec.ts`; receipt `task-6.md`. **Forbidden:** Projects/Founder/route helpers/LanguageSwitch/Footer/ground/engine/harness/global CSS/Home/Contact. Existing Services route props remain compatible; no shell edits needed.
+**Skills:** `superpowers:using-git-worktrees` → `frontend-implementation` → `design-taste-frontend-v1` preflight → `test-driven-development` → `emil-design-eng` (catalogue hover) → `playwright-qa` → `visual-qa` → `design-taste-frontend-v1` post-critique → `review-animations` (hover, read directly) → `systematic-debugging` on any failure → `project-knowledge-maintenance` (visual-regression rows) → `verification-before-completion` → `pr-readiness`.
 
-**First RED:** `Services exposes three native catalogue anchors and the complete scoped boundaries before enhancement` in new Services browser spec. Existing composition lacks the catalogue. Assert three native href/heading destinations plus visibility of each compressed boundary and the full commercial block; run `npx playwright test tests/e2e/connected-studio-services.spec.ts --project=chromium-desktop` before UI work.
+**Write set:**
+- ES/EN `_content/services.ts`;
+- `components/services/{ServicesPage,ServicesIntroduction,ServiceSection,ServicesPrinciples,ServicesFinalCta}.tsx`, `components/services/content-types.ts`, new `ServiceCatalogue.tsx`, `services.module.css`;
+- `ConnectedStudioGround.tsx` and its CSS (static defects only, each recorded);
+- `scripts/{services-content,services-route}.test.mjs`;
+- `tests/e2e/marketing-services.spec.ts`, new `tests/e2e/connected-studio-services.spec.ts`;
+- the Services cases and snapshots in `tests/e2e/visual/services-projects.visual.spec.ts`;
+- the `docs/testing/visual-regression.md` rows;
+- receipt `task-6.md`.
 
-- [ ] Add first RED plus content cases for exact new buyer copy/capability tuple/AI scope sentence without changing original boundary strings. Verify intended failures before implementation.
-- [ ] Compose introduction → web-dominant asymmetric catalogue → three alternating opaque chapters → complete working boundaries → Footer. Add SSR Ground/legend/masks and reserved Pause mount contract from Task 2; no live engine yet. Retain GRS index evidence link from merged Task 3.
-- [ ] Make catalogue native anchors with sticky-header offset; all chapter outcomes/delivery/engagement/evidence/actions and service-specific boundary precede working-boundaries link/evidence/Contact. Keep shared agreement/AIERP/commercial content verbatim and visible. Do not copy a technology catalogue or invent proof for automation/support.
-- [ ] Implement CSS fine-pointer feedback only and native keyboard/focus. Collapse natural flow under768, reflow at zoom, no hidden text/reveal. Background accents cannot leak through paragraphs; add semantic chapter hooks without changing scroll behavior.
-- [ ] GREEN browser/content/no-JS/axe-relevant semantics; REFACTOR presentation only, rerun focused tests plus `npm run validate`. Run approved-design visual QA and Taste pre/post critique in ES/EN at five widths, then owner-approved Services baseline refresh.
+**Forbidden:** Projects, Founder, route helpers, `LanguageSwitch`, Footer, engine, harness, global CSS, Home (including Home copy, OD-3) and Contact. The existing Services route props stay compatible; no shell edits.
 
-**Acceptance:** Three-family hierarchy is clearly dominant and commercial boundary coverage remains complete, readable and truthful. Anchors land below current App Bar, no overflow/scroll traps at320/zoom, honest evidence reaches complete GRS. Home wording is compared for family consistency; no new Home capability/links are added speculatively. Any required exact alignment transfers to Task 9's named Home copy allowance.
+**First RED:** `Services exposes three native catalogue anchors and the complete scoped boundaries before enhancement`, in the new Services browser spec. The existing composition lacks the catalogue. Assert three native href/heading destinations plus the visibility of each compressed boundary and the full commercial block. Run `npx playwright test tests/e2e/connected-studio-services.spec.ts --project=chromium-desktop` before any UI work.
+
+- [ ] Add the first RED plus content cases for the exact new buyer copy, the capability tuple and the AI scope sentence, without changing the original boundary strings. Verify the intended failures before implementing.
+- [ ] Compose: introduction → web-dominant asymmetric catalogue (one large card on the left, two stacked on the right at ≥1024px) → three alternating opaque chapters → complete working boundaries → Footer. Add the SSR Ground, legend, masks and reserved Pause mount from Task 2; no live engine yet. Keep the GRS index evidence link from Task 3.
+- [ ] Make the catalogue cards native anchors with a sticky-header offset. In each chapter, all outcomes, delivery, engagement, evidence and actions plus the service-specific boundary come before the working-boundaries link, evidence and Contact. Keep the shared agreement, AI/ERP scope and commercial content verbatim and visible. Do not add a technology catalogue or invent proof for automation or support.
+- [ ] Hover: fine pointer only, lift and arrow ≤3px over 160–220ms on explicit properties, a brighter border and the PC-3 static radial light. Keyboard and focus are native, with `:focus-visible` showing the same affordance. Below 768px, collapse to natural single-column flow; reflow at zoom; no hidden text or reveal. Background accents cannot show through paragraphs. Add semantic chapter hooks without changing scroll behavior.
+- [ ] GREEN the browser, content, no-JS and axe checks. REFACTOR presentation only, then rerun the focused tests and `npm run validate`. Run Taste post-critique, `visual-qa` and the `review-animations` read, then refresh the owner-approved Services baselines (Linux per workflow item 7). Compare Home's Services wording; record any inconsistency as OPEN in the receipt, and change nothing on Home (OD-3).
+
+**Commands:** `node --test scripts/services-content.test.mjs scripts/services-route.test.mjs`; `npx playwright test tests/e2e/marketing-services.spec.ts tests/e2e/connected-studio-services.spec.ts --workers=1`; `npm run test:a11y`; `npm run validate`; clean root and `/Portfolio` builds + `npm run verify:static-export` + a `/Portfolio` run of the Services spec.
+
+**Visual matrix:** Services in ES and EN at 320, 390, 768, 1024 and 1440; 1440 at 200% zoom; 844×390 landscape; reduced motion; JS disabled; forced colors.
+
+**Acceptance (objective):**
+- At ≥1024px the web card is the single large left card, and the other two stack on the right.
+- All three catalogue anchors land with their heading fully below the App Bar, at both base paths.
+- Every compressed boundary and the five-item commercial block appear verbatim in no-JS HTML.
+- There is no horizontal overflow at 320 or at 200% zoom.
+- Hover moves at most 3px and the transitions measure 160–220ms. Reduced motion removes the transforms.
+- axe reports no serious or critical violations.
+- Baselines are owner-approved.
+- The GRS evidence link reaches `#general-reservation-system`.
 
 ## Task 7 / PR 7 – Integrate optional live backgrounds and accessible lifecycle
 
-**Exact implementation model:** Claude Sonnet 5.5. **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner motion/visual critique. Sonnet owns cancellation/session/focus reasoning, label collision/occlusion, motion integration and real navigation invariants; no new abstraction in Home. **Dependencies:** 6 merged plus 2–5 merged. **Locks:** CONNECTED-HOST; serialized transfers for Ground module and page hooks.
+**Implementer:** Claude Sonnet 5.5. **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner motion and visual critique. Sonnet owns cancellation, session and focus reasoning, label collision and occlusion, motion integration and real navigation invariants. No new abstraction in Home. **Dependencies:** Task 6 merged (Tasks 2–5 already merged). **Wave:** W5. **Locks:** CONNECTED-HOST, CONNECTED-GROUND, SERVICES/PROJECTS page-hook transfers.
 
-**Write set:** new `ConnectedStudioEnhancement.tsx`, `ConnectedPauseControl.tsx`; Ground/module CSS; ServicesPage/ProjectsPage only missing mount/mask semantics; new `scripts/connected-studio-host.test.mjs`; `tests/e2e/connected-studio-runtime.spec.ts`, `connected-studio-responsive.spec.ts`, `connected-studio-accessibility.spec.ts`; new `tests/e2e/support/connected-studio.ts`; receipt `task-7.md`. Engine/contracts may change only via explicit post-merge transfer registered before edit; no parallel owner exists now. **Forbidden:** page copy, Footer, routing/locale helpers, Home/BrandSignature/Contact, harness/packages/global CSS.
+**Skills:** `superpowers:using-git-worktrees` → `frontend-implementation` → `design-taste-frontend-v1` preflight → `test-driven-development` → `emil-design-eng` (scene motion and Pause) → `playwright-qa` → `visual-qa` → `review-animations` (read directly) → `design-taste-frontend-v1` post-critique → `systematic-debugging` on any failure → `project-knowledge-maintenance` (testing doc) → `verification-before-completion` → `pr-readiness`.
 
-**First RED:** `eligible connected page starts a gently rotating scene with an accessible Pause control` in runtime browser spec. Use the existing-style test-only software injection with ordinary server content; current CSS-only Ground has no active scene/control. Assert an active decorative canvas and localized Pause, then measured idle orientation changes while positions stay steady. The intended failure is absent enhancement, not an undefined helper/import. Run `npx playwright test tests/e2e/connected-studio-runtime.spec.ts --project=immersive-chromium`. After that minimal GREEN, write the next RED for reduced-motion/Save-Data no-engine requests before implementing preference gates; request observation must cover the actual optional closure.
+**Write set:**
+- new `ConnectedStudioEnhancement.tsx` and `ConnectedPauseControl.tsx`;
+- Ground and its module CSS;
+- `ServicesPage`/`ProjectsPage` (missing mount and mask semantics only);
+- new `scripts/connected-studio-host.test.mjs`;
+- new `tests/e2e/connected-studio-runtime.spec.ts`, `connected-studio-responsive.spec.ts`, `connected-studio-accessibility.spec.ts`;
+- new `tests/e2e/support/connected-studio.ts`;
+- the `docs/testing/playwright.md` helper rows;
+- receipt `task-7.md`.
 
-- [ ] Test first RED; add failing cycles before each behavior: delayed activation/cancel-before-import-resolution, probe disposal, session preference/loss, normal software rejection, module/render failure, one live renderer, hidden/Footer suspension, Pause across connected routes/locales, focused dynamic fallback, fonts/resize/current geometry restoration and reduced-motion hover removal.
-- [ ] Gate load/visibility/preferences/coarse WebGL2/hardware probe before actual engine import in the client leaf. Release probe first; avoid duplicate contexts during React mount/unmount/async resolution. Default software path is static; test injection cannot become public runtime configuration.
-- [ ] Bind native scroll/layout resize/visualViewport/fonts/visibility to controller; measure layout in batched reads outside per-scroll writes. Start from actual restored scroll, compute whole-page progress through Footer handoff and chapter accent separately. Zero optional init shift; fully static if init fails or preferences forbid. Never hide core content waiting for fonts/engine.
-- [ ] Render decorative pointer-inert portal canvas/labels behind masks and current foreground; collision/occlusion boxes protect text, captions and Pause. Label words never rotate, cross viewport edges or shrink below~11px. Nodes rotate gently at rest with stationary positions; first scroll accelerates movement/path growth. Keyboard/user scroll stays native.
-- [ ] Reserve/present ≥44px localized Pause, persist via safe session store, freeze on pause, resume current progress; preserve focused fallback control. Hidden/offscreen/Footer cancels pending timers/RAF; route unmount cancels async callbacks, observers/listeners and GPU resources. If Home's previous renderer is still mounted, defer new activation rather than create a second context; verify actual transition without editing Home runtime.
-- [ ] GREEN targeted runtime/static/axes, REFACTOR lifecycle boundaries and rerun all prior focus/failure cases plus `npm run validate`. Review animated recording against Revision 5 (idle, first12px, middle, reverse, jump, Footer, interruption) in ES/EN wide/compact; run `review-animations`, Brag pacing critique and visual QA. No new autoplay/audio dependency.
+Engine and contract files change only through a post-merge transfer registered before the edit.
 
-**Acceptance:** Approved field exists across viewport at rest, immediate fluid first-scroll response and enough full connections at handoff; all listed preference/failure/session/cancellation paths work, one live context, no reading/focus/CLS loss. SwiftShader proves only functional regressions. Named physical-device performance must pass Task 9 before final live-runtime acceptance.
+**Forbidden:** page copy, Footer, routing and locale helpers, Home, `BrandSignature`, Contact, harness, packages and global CSS.
+
+**First RED:** `eligible connected page starts a gently rotating scene with an accessible Pause control`, in the runtime browser spec. Use `connected-studio-test-hooks.ts` (`allowSoftwareRenderer`) with ordinary server content. The current CSS-only Ground has no active scene or control. Assert an active decorative canvas and a localized Pause control, then that idle orientation changes while positions stay steady. The intended failure is the missing enhancement, not an undefined helper or import. Run `npx playwright test tests/e2e/connected-studio-runtime.spec.ts --project=immersive-chromium`. After that minimal GREEN, write the next RED: reduced motion and Save-Data request no engine. Its request observation must cover the actual optional closure.
+
+- [ ] Add a failing cycle before each behavior:
+  1. delayed activation, and cancel before the import resolves
+  2. probe disposal
+  3. session preference and loss, including the read-only Home loss (PC-5)
+  4. `livePolicy` false per tier (via the test hook)
+  5. normal software rejection
+  6. module and render failure
+  7. one live renderer
+  8. hidden and Footer suspension
+  9. Pause across connected routes and locales
+  10. focused dynamic fallback
+  11. fonts, resize and current-geometry restoration
+  12. reduced-motion hover removal
+  13. **real draw calls ≤28/18 from diagnostics at 1440 and 390**
+  14. 33/13 edges at growth 1 at the handoff
+- [ ] Before the actual engine import in the client leaf, check: load, visibility, preferences, `CONNECTED_LIVE_POLICY`, and a coarse WebGL2/hardware probe. Release the probe first. Avoid duplicate contexts during React mount, unmount and async resolution. The default software path is static. The test hook never becomes public runtime configuration.
+- [ ] Bind native scroll, layout resize, `visualViewport`, fonts and visibility to the controller. Read layout in batches, outside per-scroll writes. Start from the actual restored scroll; compute whole-page progress through the Footer handoff and the chapter accent separately. Zero optional-init shift. Fully static if init fails or preferences forbid it. Never hide core content while waiting for fonts or the engine.
+- [ ] Render a decorative, pointer-inert portal canvas with DOM labels behind the masks and the current foreground. Apply `resolveLabelVisibility` with occluders from the reading masks, captions, Pause and the App Bar. Labels never rotate, never cross viewport edges and never shrink below about 11px. Nodes rotate gently at rest with stationary positions; the first scroll accelerates movement and path growth. Keyboard and user scroll stay native.
+- [ ] Reserve and present a localized Pause control of at least 44px. Persist it through the safe session store, freeze on pause and resume from the current progress. Keep the focused fallback control. Hidden, offscreen and Footer states cancel pending timers and animation frames. Route unmount cancels async callbacks, observers, listeners and GPU resources. If Home's previous renderer is still mounted, defer the new activation rather than create a second context. Verify the real transition without editing Home's runtime.
+- [ ] GREEN the targeted runtime, static and axe checks. REFACTOR the lifecycle boundaries and rerun every prior case plus `npm run validate`. Record the motion at 1440×900 and 390×844 in ES and EN: idle 5 seconds, first 12px of scroll, middle, reverse, anchor jump, Footer, Pause/resume. Compare it side by side with `revision5-services-motion.webm` and `revision5-projects-motion.webm`. Then run the `review-animations` read, Taste post-critique and `visual-qa`. Add no autoplay or audio dependency.
+
+**Commands:** `node --test scripts/connected-studio-host.test.mjs`; `npx playwright test tests/e2e/connected-studio-runtime.spec.ts --project=immersive-chromium --workers=1`; `npx playwright test tests/e2e/connected-studio-responsive.spec.ts tests/e2e/connected-studio-accessibility.spec.ts tests/e2e/connected-studio-static.spec.ts --workers=1`; `npm run test:e2e -- --project=immersive-chromium --workers=1` (Home acceptance); `npm run test:a11y`; `npm run validate`; clean root and `/Portfolio` builds + `npm run verify:static-export` + a `/Portfolio` runtime run.
+
+**Visual matrix:** both pages in ES and EN at 320, 390, 768, 1024 and 1440, static and (under the hook) live; 200% zoom; reduced motion; forced colors; context-loss fallback with Pause focused.
+
+**Acceptance (objective):**
+- All fourteen cycles are green.
+- Diagnostics show draw calls ≤28 at 1440 and ≤18 at 390, and DPR ≤1.5/≤1.25.
+- At the handoff progress all 33/13 edges have growth 1, and at 18% the scene is suspended with zero pending callbacks.
+- No label overlaps another or any occluder, in the recorded poses at all five widths.
+- CLS from enhancement is 0.
+- The focused fallback keeps focus with "Fondo estático" / "Static background" and `aria-disabled`.
+- Home acceptance passes unchanged.
+- The owner accepted the recordings against the reference `.webm` files, as recorded in the receipt.
+- SwiftShader proves functional behavior only. Hardware acceptance happens in Task 9.
 
 ## Task 8 / PR 8 – Produce matched posters and truthful responsive imagery
 
-**Exact implementation model:** GPT-6 Luna (`gpt-6-luna`, medium) for frozen mechanical asset production/wiring; Claude Sonnet 5.5 for capture-design preflight, visual continuity and complex corrections. **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner visual inspection. Sonnet supplies exact poses/settings, asset/wiring matrix, byte ceilings/paths/captions; Luna follows that closed handoff with serialized locks and no illustration reinterpretation. **Dependencies:** 7 merged. **Locks:** MEDIA; serialized media-manifest/Ground/ProjectDossier transfers; intentional poster baseline subtree.
+**Implementer:** GPT-6 Luna (`gpt-6-luna`, medium) for the frozen mechanical asset production and wiring; Claude Sonnet 5.5 for the capture-design preflight, visual continuity, complex corrections and opening the PR. **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner visual inspection. Sonnet supplies exact poses and settings, the asset and wiring matrix, byte ceilings, paths and captions. Luna follows that closed handoff under serialized locks, with no reinterpretation of the illustrations. **Dependencies:** Task 7 merged. **Wave:** W6. **Locks:** MEDIA, CONNECTED-GROUND, VISUAL-BASELINES (Services/Projects subtree and the new poster subtree); serialized `media-manifest`/Ground/`ProjectDossier` transfers.
 
-**Write set:** capture script, four specified poster WebPs, `lib/connected-studio/media-manifest.ts`, Ground/picture selection, ProjectDossier picture selection; additive `conceptual-workflow-{640,960,1280}.webp`, `conceptual-access-model-{640,960,1280}.webp` beside originals; new `scripts/connected-studio-media.test.mjs`; `tests/e2e/visual/connected-studio-static.visual.spec.ts`/snapshots; receipt `task-8.md`. **Forbidden:** original protected mark/original concept files, copy/evidence/scheduler/route/global CSS/dependencies. Use existing available image tooling; if tooling missing, use workspace dependency discovery rather than add a public dependency.
+**Skills:**
+- Sonnet: `superpowers:using-git-worktrees` → `frontend-implementation` → `visual-qa`.
+- Luna: `test-driven-development` → `playwright-qa`.
+- PR lead (Sonnet): `systematic-debugging` on any failure → `project-knowledge-maintenance` (visual-regression rows) → `verification-before-completion` → `pr-readiness`.
 
-**First RED:** `compact static media selects an existing ≤80KiB matched poster without engine` in media contract + browser check. Start from merged Ground's CSS-only fallback; a required compact poster selection/existence assertion fails for missing intended artwork, not an import error. Run `node --test scripts/connected-studio-media.test.mjs`.
+**Write set:**
+- `scripts/capture-connected-studio-posters.mjs` (following the `scripts/render-sky-chart-posters.mjs` precedent) and the four poster WebPs;
+- `lib/connected-studio/media-manifest.ts`, Ground picture selection, `ProjectDossier` picture selection;
+- additive `conceptual-workflow-{640,960,1280}.webp` and `conceptual-access-model-{640,960,1280}.webp` beside the originals;
+- new `scripts/connected-studio-media.test.mjs`;
+- new `tests/e2e/visual/connected-studio-static.visual.spec.ts` with its snapshots, and the `services-projects.visual.spec.ts` snapshots;
+- the `docs/testing/visual-regression.md` rows;
+- receipt `task-8.md`.
 
-- [ ] Sonnet freezes and records exact wide/compact capture poses/settings, label treatment and the asset/picture/manifest matrix from merged Task 7 before Luna starts. Include checkable selection/intrinsic/lazy-loading/failure cases; any unresolved design or integration issue remains Sonnet's work under serialized task locks.
-- [ ] Luna verifies RED for the supplied selection/loading cases, then captures exact-pose wide/compact Services/Projects posters from the merged scene using the frozen label treatment. No UI text rasterization required for semantic content; retain accessible vocabulary.
-- [ ] Luna encodes under150/80KiB and generates resolution-only concept derivatives retaining entire1599:900 source, alt/caption and source provenance. Sonnet inspects depth/node/path continuity at the initial static→live transition and makes any required design correction after lock transfer. Keep both original reusable assets intact.
-- [ ] GREEN responsive picture choice/intrinsic allocation and image404 CSS fallback with no engine fetch; no eager preload of both dossier images/poster variants. REFACTOR media metadata; rerun unit/browser/`npm run validate`/clean export. Generated binaries are a visual-only exception, but selection/loading behavior follows TDD.
-- [ ] Owner reviews four posters and representative wide/compact paused/reduced/no-JS states. Capture stable controlled Chromium baselines with reduced motion; remove no meaningful labels/captions to reduce screenshot differences. Compare expected/actual/diff before baseline approval.
+**Forbidden:** the original protected mark and concept files; copy, evidence, scheduler, routes, global CSS and dependencies. Use existing image tooling only.
 
-**Acceptance:** Correct responsive art, byte limits, zero image-induced shift, no invented evidence/cropped concepts, clear CSS fallback, both locales use same permitted images while captions/legend stay localized HTML. Entire dossier remains readable when images fail.
+**First RED:** `compact static media selects an existing ≤80KiB matched poster without engine`, in the media contract test. Start from the merged Ground's CSS-only fallback. The required compact poster selection and existence assertion fails because the artwork is missing, not because of an import error. Run `node --test scripts/connected-studio-media.test.mjs`.
+
+- [ ] Sonnet freezes and records, from merged Task 7: the browser and renderer used for capture (and whether it is hardware or SwiftShader, with the hook only in the capture script); viewport, DPR and progress per poster; the label treatment; and the asset/picture/manifest matrix. Include checkable cases for selection, intrinsic size, lazy loading, failure and base path. Any unresolved design or integration issue stays Sonnet's work under serialized locks.
+- [ ] Luna verifies RED for the supplied cases, then captures the exact-pose wide and compact Services and Projects posters from the merged scene, using the frozen label treatment. Do not rasterize semantic content; keep the accessible vocabulary in HTML.
+- [ ] Luna encodes under 150KiB (wide) and 80KiB (compact), and generates resolution-only concept derivatives that keep the entire 1599:900 source, the alt text, caption and source provenance. Sonnet inspects depth, node and path continuity at the static-to-live transition, and makes any design correction after a lock transfer. Both original reusable assets stay intact.
+- [ ] GREEN the responsive picture choice, intrinsic allocation and the CSS fallback on image 404, with no engine fetch. No eager preload of both dossier images or of poster variants. Every poster and derivative URL resolves under `/Portfolio`. REFACTOR the media metadata, then rerun the unit and browser tests, `npm run validate`, and clean root and `/Portfolio` exports.
+- [ ] The owner reviews the four posters and representative wide/compact paused, reduced-motion and no-JS states. Capture stable controlled Chromium baselines with reduced motion (Linux per workflow item 7). Do not remove meaningful labels or captions to shrink screenshot differences. Compare expected, actual and diff before baseline approval.
+
+**Commands:** `node --test scripts/connected-studio-media.test.mjs`; `npx playwright test tests/e2e/connected-studio-static.spec.ts --workers=1`; `npm run test:e2e -- --project=visual-chromium --workers=1`; `npm run validate`; clean root and `/Portfolio` builds + `npm run verify:static-export` + a `/Portfolio` run of the static spec.
+
+**Visual matrix:** both pages in ES and EN at 390 and 1440 for poster selection, plus 320, 768 and 1024 for intrinsic allocation; reduced motion; JS disabled; image 404 (route-blocked) fallback.
+
+**Acceptance (objective):**
+- Four posters within their byte ceilings, recorded in the test.
+- `<picture>` selects the wide or compact poster at the 768px boundary.
+- Zero image-induced layout shift.
+- Derivatives have identical aspect ratios and full-frame content (owner-checked).
+- Captions and the legend stay localized HTML.
+- The CSS fallback renders on image failure with the dossier still complete.
+- All URLs resolve at both base paths.
+- Baselines are owner-approved.
 
 ## Task 9 / PR 9 – Harden production journeys, budgets and cross-page regressions
 
-**Exact implementation model:** Claude Sonnet 5.5. **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, xhigh) plus owner manual/performance review. Sonnet owns integrated failure investigations, whole optional dependency closure, budget optimization and final design/motion refinement; no gate relaxation or unrelated redesign. **Dependencies:** 8 merged/all earlier merges. **Locks:** ACCEPTANCE, MEASUREMENT; explicit sequential lock transfers for affected implementation/test paths.
+**Implementer:** Claude Sonnet 5.5. **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, xhigh) plus owner manual and performance review. Sonnet owns integrated failure investigations, the whole optional dependency closure, budget optimization and the live-policy evidence. No gate is relaxed and nothing unrelated is redesigned. **Dependencies:** Task 8 merged. **Wave:** W7. **Locks:** ACCEPTANCE, MEASUREMENT, SHARED-TESTS (Task 9 blocks); explicit sequential lock transfers for any fixed path.
 
-**Write set:** two new measurement scripts and pure measurement helper/test; `package.json` only two new command entries; new `connected-studio-production.spec.ts`; shared `tests/e2e/{accessibility,marketing-navigation,app-bar,home-sections}.spec.ts`, `tests/e2e/support/paths.ts` only if fragment handling needs normalization, `scripts/verify-static-export.mjs`; all SPF-owned modules/page composition/LanguageSwitch and their task-owned tests may receive bounded bug fixes after recorded transfer (never concurrently). Targeted Home copy alignment only in ES/EN `_content/home.ts`; if no discrepancy, leave untouched. Receipt `task-9.md` and production report artifacts. **Forbidden:** Home runtime/state/model/proof, Header/brand, Contact/Privacy behavior, dependencies/versions, unrelated page design/new claims; no broad source glob as an implicit write allowance.
+**Skills:** `superpowers:using-git-worktrees` → `systematic-debugging` (every defect) → `test-driven-development` (RED per defect) → `playwright-qa` → `visual-qa` → `review-animations` (read directly) → `design-taste-frontend-v1` post-critique → `project-knowledge-maintenance` (testing doc) → `verification-before-completion` → `pr-readiness`.
 
-**First RED:** `optional scene budget counts the complete nested chunk closure once` in `scripts/connected-studio-measurement.test.mjs`. Valid fixture contains entry plus nested shared dependencies whose combined Brotli exceeds120KiB; the initial helper counts only entry and falsely passes. Assert violation and complete deduplicated byte total. Run focused Node test, record wrong total as intended failure, then implement correct closure accounting. Also RED real cross-route/back-forward race/focus defects before fixes; do not repeat already-passing implementation tests as fictitious TDD.
+**Write set:**
+- the two new measurement scripts, `lib/connected-studio/measurement.ts` and `scripts/connected-studio-measurement.test.mjs`;
+- `package.json` (two new script entries only);
+- new `tests/e2e/connected-studio-production.spec.ts`;
+- `tests/e2e/{accessibility,marketing-navigation,app-bar,home-sections}.spec.ts` (assertions only);
+- `tests/e2e/support/paths.ts` (only if fragment handling needs normalization);
+- `scripts/verify-static-export.mjs`;
+- the `CONNECTED_LIVE_POLICY` values in `lib/connected-studio/capability.ts` (after transfer);
+- the `docs/testing/playwright.md` production-measurement rows;
+- receipt `task-9.md` and the production report artifacts.
 
-- [ ] Build route-neutral production measurement with requests + emitted chunk dependency/manifest cross-check; count every optional engine/runtime dependency absent from matched static preference route requests, cold and warm separately, both pages/locales. Report bytes/raw/Brotli/paths and fail if any route exceeds120KiB. Confirm static routes/preference paths never fetch the optional closure.
-- [ ] Extend established gzip lab server/throttling method to four page/locale destinations; desktop/mobile profile values come from `measure-home-web-vitals.mjs` unchanged. Ten journeys per locale/profile, cold navigation plus meaningful Pause/link interactions, aggregate p75 LCP≤2500ms/INP≤200ms; not field data. Report enhancement shifts separately, observer attribution/method and limitations.
-- [ ] Functional production browser journey: root/base path, Home→Services→Projects→locale→Founder→Contact→back/forward, recognized/unknown fragments, pause persistence, session loss, delayed import race, no duplicate contexts/stale words/listeners, screenshot/UI focus. Full content without JS, Save-Data/reduced/no-WebGL/software/module failure, image failure, dynamic preference with focus and forced colors.
-- [ ] Cross-browser: Chromium/Firefox/desktop WebKit fallback/layout/links plus live where hardware browser supports; controlled SwiftShader runtime only as functional evidence. Real Android Chrome and iOS Safari cover touch/chrome/landscape/phone live capability and fallback. 320/390/768/1024/1440,200% zoom and all14 Footer hosts; axe plus keyboard/manual contrast/headings/landmarks/NVDA-Firefox/VoiceOver-iOS. Test Contact success/error simulation still sends zero inquiry requests and keeps disclosure.
-- [ ] Hardware protocol: identify actual desktop CPU/GPU/OS/browser and named constrained Android (≤4 cores where available) plus iPhone profile BEFORE acceptance. Three full up/down traversals, ≥2min visible idle and pause/hidden/Footer checkpoints; sample render work/active frame interval p95, long tasks, draw calls/DPR, label continuity, heat/memory and disposal across routes. No software override. Ambient cadence30/20 cap is measured separately; paused states zero scheduled callbacks/draws. Record GPU query availability/disjoint rejection; CPU-only estimates cannot be called GPU measurements.
-- [ ] If budgets fail, RED the defect and optimize within approved proportions/counts first; lower cadence/DPR/distant geometry or static capability fallback where necessary, then repeat affected evidence. Dropping meaningful node/path density globally, raising120KiB/20ms/CWV gates or replacing capable-phone live mode requires owner decision; do not pass by weakening assertions. Unavailable physical/SR/browser evidence stays OPEN and blocks runtime final acceptance, not relabelled automated PASS.
-- [ ] GREEN measurement/unit/browser matrix and real gates. REFACTOR only proven hotspots/race ownership and rerun affected failures plus final commands. Independent Taste post-implementation and `review-animations` critique against approved reference; explain accepted/adapted/rejected feedback without overruling spec. Verify no unsupported “roadmap” chronology/product maturity implication.
+**Defect fixes:** any SPF-owned path may be fixed only after (a) a recorded defect, (b) a RED test reproducing it, and (c) an orchestrator lock transfer naming that exact path. Never concurrently. There is no broad source glob, and no "refinement" outside a recorded defect.
 
-**Commands/checkpoints:** `npm run validate`; `npm run test:e2e -- --workers=1` (avoid known dev-server concurrency race without changing assertions); `npm run test:a11y`; `npx playwright test --list`; clean root and `/Portfolio` build/export/browser matrix; `npm run measure:connected-studio`; `npm run measure:connected-studio-vitals`; read-only Home regression `npm run measure:immersive` and `npm run measure:home-vitals`. Home's existing accepted exceptions/status are reported independently; new routes receive no inherited headroom exception.
+**Forbidden:** Home runtime, state, model, proof and copy (OD-3); Header and brand; Contact and Privacy behavior; dependencies and versions; unrelated page design; new claims.
 
-**Acceptance:** Production semantic/export/browser/a11y/visual/motion/budget/hardware gates all pass with honest artifacts. Actual old public URLs return404 on a clean static preview, no residual files/active links, fail-closed evidence remains. Home/Header/Footer host journey and zero-transmission Contact regressions pass. No assumption that this work completes unverified old Home acceptance tasks.
+**First RED:** `optional scene budget counts the complete nested chunk closure once`, in `scripts/connected-studio-measurement.test.mjs`. A valid fixture contains an entry plus nested shared dependencies whose combined Brotli size exceeds 120KiB. The initial helper counts only the entry and wrongly passes. Assert the violation and the complete deduplicated byte total. Run the focused Node test, record the wrong total as the intended failure, then implement correct closure accounting. Write a RED for each real cross-route, back-forward, race or focus defect before fixing it. Do not rerun already-passing implementation tests as fictitious TDD.
 
-## Task 10 / PR 10 – Synchronize implementation facts and record human acceptance
+- [ ] Build route-neutral production measurement: requests plus the emitted chunk dependency/manifest cross-check. Count every optional engine/runtime dependency absent from the matched static-preference route requests, cold and warm separately, for both pages and both locales. Report bytes (raw and Brotli) and paths, and fail if any route exceeds 120KiB. Confirm that static routes and preference paths never fetch the optional closure.
+- [ ] Extend the established gzip lab server and throttling method to the four page/locale destinations, without editing `scripts/measure-home-web-vitals.mjs` or `tests/e2e/support/production-instrumentation.mjs`. Import their exported helpers, or copy the profile constants verbatim with a comment naming the source. Run ten journeys per locale and profile: cold navigation plus meaningful Pause and link interactions. Aggregate p75 LCP ≤2500ms and INP ≤200ms; this is lab data, not field data. Report enhancement shifts separately, with observer attribution, method and limitations.
+- [ ] Functional production journey, served from `out/` (`PLAYWRIGHT_SERVE_EXPORT=1`), at root and `/Portfolio`:
+  - Home → Services → Projects → locale switch → Founder → Contact, then back and forward;
+  - recognized and unknown fragments;
+  - Pause persistence, session loss, a delayed import race;
+  - no duplicate contexts, stale words or leaked listeners; focus preserved;
+  - full content without JS;
+  - Save-Data, reduced motion, no WebGL, software renderer, module failure, image failure, a dynamic preference change with focus, forced colors.
+- [ ] Cross-browser: Chromium, Firefox and desktop WebKit for fallback, layout and links; live mode where the browser supports hardware WebGL2. Controlled SwiftShader runtime counts as functional evidence only. Check 320, 390, 768, 1024 and 1440, 200% zoom, and all fourteen Footer hosts with axe plus keyboard, manual contrast, headings and landmarks. Contact's success and error simulation still sends zero inquiry requests and keeps its disclosure.
+- [ ] **Hardware protocol (owner-executed, OD-4):** Sonnet prepares a step-by-step protocol and recording sheet. The owner runs it on: their desktop (CPU, GPU, OS and browser recorded); a named Android phone with ≤4 cores where available, in Chrome; an iPhone in Safari; NVDA with Firefox; and VoiceOver on iOS. The protocol: three full up/down traversals, at least 2 minutes of visible idle, and Pause, hidden and Footer checkpoints. Sample render work and active frame interval p95, long tasks, draw calls and DPR, label continuity, heat and memory, and disposal across routes. No software override. Measure the 30/20 ambient cap separately; paused states show zero scheduled callbacks and draws. Record GPU query availability and disjoint rejection; CPU-only estimates are never called GPU measurements.
+- [ ] **Set `CONNECTED_LIVE_POLICY` from the evidence (OD-2/OD-4):** `wide: true` only if the desktop hardware gates passed; `compact: true` only if the Android and iPhone gates passed. Otherwise set `false` and record the item OPEN with its reason. RED the policy expectation in the capability test before changing the constant.
+- [ ] If budgets fail: RED the defect, then optimize within the approved proportions and counts first. Lower cadence, DPR or distant points (the far background points only, never the 16/33 or 8/13 graph) as needed, then repeat the affected evidence. Dropping graph density, raising the 120KiB/20ms/CWV gates, or changing the live policy against the evidence requires an owner decision. Never pass by weakening assertions.
+- [ ] GREEN the measurement, unit and browser matrix and the real gates. REFACTOR only proven hotspots and race ownership, then rerun the affected failures and the final commands. Run the `review-animations` read and Taste post-critique against the reference media. Explain accepted, adapted and rejected feedback without overruling the spec. Verify there is no unsupported "roadmap" chronology or product-maturity implication.
 
-**Exact implementation model:** GPT-6 Luna (`gpt-6-luna`, medium). **Reviewer:** independent GPT-6.1 Sol (`gpt-6.1-sol`, high) plus owner final review. Supply merged receipts/measurements, explicit acceptance verdicts and exact owner list; Luna reconciles/summarizes facts only. Missing or ambiguous evidence and any investigation return to Sonnet; Luna never infers PASS. **Dependencies:** 9 merged and required manual/device gates met. **Locks:** ACCEPTANCE, PLAN-RECORD, GOVERNANCE. **TDD:** N/A documentation/manual review only; any behavior correction returns to its source owner with TDD and a separate bounded PR.
+**Commands and checkpoints:**
+- `npm run validate`
+- `npm run test:e2e -- --workers=1` (avoids the known `next dev` concurrency race without changing assertions)
+- `npm run test:a11y`
+- `npx playwright test --list`
+- clean root and `/Portfolio` build, export and production project (`PLAYWRIGHT_SERVE_EXPORT=1 npx playwright test --project=connected-production-chromium`)
+- `npm run measure:connected-studio`
+- `npm run measure:connected-studio-vitals`
+- read-only Home regression: `npm run measure:immersive` and `npm run measure:home-vitals`
 
-**Write set:** `ARCHITECTURE.md`, `docs/architecture/current-system.md`, docs/design/product owners already named in Task1, `docs/testing/{strategy,playwright,visual-regression}.md` only new procedures, `docs/index.md`, plan/index, new `docs/reviews/services-projects-footer-acceptance-v1/index.md`, task10 receipt and evidence index. Move this plan to completed only when all gates/merges truly complete. **Forbidden:** production/config/tests, immutable ADR rationale/completed unrelated plan histories, confidential/internal evidence publication.
+Home's existing accepted exceptions and status are reported independently. The new routes inherit no headroom exception.
 
-- [ ] Reconcile the supplied requirement→task→test/render/device→PR checklist and explicit Sonnet/Sol/owner verdicts; list exact measured values/device/browser/base/mainSHA and distinguish prototype, software regression and hardware acceptance. Return gaps or contradictory evidence to Sonnet for investigation and Sol for review; preserve OPEN and leave the task incomplete until resolved.
-- [ ] Update current implementation maps to two indexes/no detail paths, separate scene controller/typed publication, responsive assets, shared Footer and static base-path behavior. Add dated supersession/acceptance links to historical baseline summaries without rewriting approvals.
-- [ ] Owner manually inspects complete ES/EN production journey against Revision5 media/spec: marketing hierarchy, evidence truth, field at idle/first-scroll/depth/connections, touch/reduced/noJS/fallback, Footer mark/contacts, keyboard/zoom. Record approval or exact rejected discrepancies; fix and retest on owning implementation PR before closeout.
-- [ ] Run `npm run docs:check`, `npm run validate`, `git diff --check`; full diff/self-review plus `verification-before-completion` and `pr-readiness`. All task receipts/independent reviews/human merges complete; no outstanding blocking acceptance finding.
+**Acceptance (objective):**
+- Every automated gate passes with honest artifacts.
+- The old public URLs return 404 on a clean static preview, with no residual files or active links.
+- Fail-closed evidence remains.
+- The Home, Header and Footer host journeys and the zero-transmission Contact regressions pass.
+- Each hardware and screen-reader item is either PASS with recorded evidence, or OPEN with `CONNECTED_LIVE_POLICY` set as OD-4 requires.
+- Nothing is relabelled.
 
-**Acceptance:** Truthful synchronized records, human production-design/manual acceptance, final scoped PR human merged. Only then plan COMPLETED. No task is done merely because automated tests pass.
+## Task 10 / PR 10 – Synchronize implementation facts and record acceptance
+
+**Implementer:** GPT-6 Luna (`gpt-6-luna`, medium). **Reviewer:** GPT-6.1 Sol (`gpt-6.1-sol`, high) plus the owner's final review. **Dependencies:** Task 9 merged; every OD-4 item recorded as PASS or OPEN with its policy. **Wave:** W8. **Locks:** ACCEPTANCE, PLAN-RECORD, GOVERNANCE. **TDD:** N/A (documentation only). A behavior correction goes back to its source owner with TDD, in a separate bounded PR.
+
+**Skills:** `superpowers:using-git-worktrees` → `project-knowledge-maintenance` → `verification-before-completion` → `pr-readiness`.
+
+**Inputs the orchestrator supplies (closed):**
+- every merged receipt;
+- the measurement reports;
+- the OD-4 sheet;
+- the final `CONNECTED_LIVE_POLICY` values;
+- PR numbers and merge SHAs;
+- the exact fact list below with the values filled in.
+
+Luna transcribes and links. It writes no new characterization.
+
+**Fact list to record:**
+1. Projects has two index dossiers and no detail paths; the six URLs are retired.
+2. The scene has a separate controller and engine, and the typed publication module.
+3. Responsive concept derivatives and four posters, with their byte sizes.
+4. The shared Footer and its host list.
+5. Static export behavior at root and base path.
+6. The live-policy values and their evidence.
+7. OPEN items, each with its owner.
+
+**Write set:**
+- `ARCHITECTURE.md` and `docs/architecture/current-system.md` (facts 1–5 only);
+- the dated acceptance/supersession links in the records Task 1 touched;
+- `docs/testing/{strategy,playwright,visual-regression}.md` (reconciliation only);
+- `docs/index.md`, this plan and its index entry;
+- `docs/reviews/services-projects-footer-acceptance-v1/index.md`;
+- receipt `task-10.md`.
+
+Move the plan to `completed/` only when every gate is PASS, or OPEN with its policy, and every merge is done. **Forbidden:** production code, config and tests; immutable ADR rationale; unrelated plan histories; confidential or internal evidence.
+
+- [ ] Fill the acceptance index with a requirement → task → test/render/device → PR table covering the [coverage map](#review-focus-and-traceability), copying verdicts from the receipts exactly. List the measured values, devices, browsers, base paths and main SHA. Keep prototype evidence, software regression results and hardware acceptance as separate columns. If an input is missing or contradictory, stop and send it back to the orchestrator; never infer PASS.
+- [ ] Write facts 1–7 into the listed records, each sentence linking its receipt. Add dated acceptance links to historical baseline summaries without rewriting approvals.
+- [ ] Record the owner's manual production review against the reference media and spec — marketing hierarchy, evidence truth, the field at idle, first scroll, depth and connections, touch, reduced motion, no-JS and fallback, the Footer mark and contacts, keyboard and zoom — as approval or as exact rejected discrepancies. A discrepancy is fixed and retested on its owning implementation PR before closeout.
+- [ ] Run `npm run docs:check`, `npm run validate` and `git diff --check`. Review the full diff. All receipts, independent reviews and owner merges are complete, with no outstanding blocking acceptance finding.
+
+**Acceptance (objective):**
+- Every fact in the list appears with a receipt link.
+- No PASS without evidence.
+- The owner's manual review is recorded.
+- `docs:check` and `validate` pass.
+- The PR is merged by the owner.
+- Only then is the plan marked COMPLETED.
 
 ## Verification commands, artifact hygiene and manual procedure
 
-Run commands sequentially in each task's own worktree. Before clean builds on Windows, resolve `.next` and `out` under that worktree's verified absolute root, check neither resolves outside it/through an unexpected link, then remove with native PowerShell `Remove-Item -LiteralPath` only. Never delete source, another worktree or an unchecked computed path. Stop managed dev servers before changing base path; reserve per-worktree ports via `PLAYWRIGHT_PORT` to avoid concurrent harness reuse.
+Run commands sequentially in each task's own worktree.
 
-Root production: clear base-path env for this shell, clean local outputs, `npm run validate`, `npm run verify:static-export`. Then separately set `$env:NEXT_PUBLIC_BASE_PATH = '/Portfolio'`, clean outputs, `npm run build`, `npm run verify:static-export`, `npm run test:e2e -- --workers=1`; restore env afterward. Keep root/base reports distinct and verify build configuration actually uses the chosen value. Do not call a root-only hardcoded Home measurement a base-path proof.
+**Cleaning build output on Windows:** resolve `.next` and `out` under that worktree's verified absolute root. Check that neither resolves outside it or through an unexpected link, then remove them with PowerShell `Remove-Item -LiteralPath` only. Never delete source, another worktree or an unchecked computed path. Stop managed dev servers before changing the base path. Use the per-task `PLAYWRIGHT_PORT`.
 
-New production specs must serve exported `out/`, not only `next dev`. Measurement scripts serve it locally. Production absence tests check404/content absence, both HTML/navigation payload links and actual directory absence; generic static server must not rewrite missing routes to index. Existing `appUrl` helper appends a trailing slash: compose `appUrl(index) + '#slug'`, never put a hash inside its route argument until a tested helper enhancement is merged.
+**Root production:** clear the base-path variable for this shell, clean the outputs, then run `npm run validate` and `npm run verify:static-export`.
 
-Visual baselines use controlled visual-chromium platform-specific naming, reduced motion/static pose, self-hosted fonts settled, deterministic copyright. Owner approves rendered design and each changed expected/actual/diff; no blanket update to make CI green. Screenshots/videos/traces/reports are local/CI artifacts by default; commit only reviewed baselines and intentionally curated acceptance evidence. New scene runtime screenshots freeze pose through test controls without enabling software in production.
+**Base-path production:** in PowerShell run `$env:NEXT_PUBLIC_BASE_PATH = '/Portfolio'`. In Git Bash use `MSYS2_ENV_CONV_EXCL='NEXT_PUBLIC_BASE_PATH' NEXT_PUBLIC_BASE_PATH=/Portfolio <command>`. Clean the outputs, then run `npm run build`, `npm run verify:static-export` and `npm run test:e2e -- --workers=1`. Restore the environment afterwards. Keep root and base-path reports separate, and verify that the build actually used the chosen value. A root-only hardcoded Home measurement is not a base-path proof.
 
-Manual final checklist: source order/oneH1/landmarks; all story/boundary text; keyboard/focus/Pause announcements; anchors/locale hash; exact concept captions; both node vocabularies/upright/occlusion; idle→first-scroll→reverse→Footer; reduced/noJS/SaveData/failure/forced colors; five widths/zoom/landscape/chrome/touch; all Footer hosts/channels; NVDA-Firefox/VoiceOver-iOS; physical desktop/Android/iPhone metrics and sustained-use heat; clean root/Portfolio exports. Each has PASS/FAIL/OPEN with evidence, reviewer/date and no conformance claim from axe alone.
+**Production specs** serve the exported `out/` through `scripts/serve-static-export.mjs` (`PLAYWRIGHT_SERVE_EXPORT=1`), never `next dev`. Absence tests check the 404 response and missing content, links in both HTML and navigation payloads, and actual directory absence. The static server never rewrites missing routes to an index. The existing `appUrl` helper appends a trailing slash: compose `appUrl(index) + '#slug'`. Never put a hash inside its route argument until a tested helper enhancement is merged.
+
+**Visual baselines** use the visual-chromium project's platform-specific naming, reduced motion and a static pose, settled self-hosted fonts and a deterministic copyright year. The owner approves the rendered design and each changed expected/actual/diff. Linux baselines are adopted per workflow item 7. Never bulk-update baselines to make CI green. Screenshots, videos, traces and reports are local or CI artifacts by default; commit only reviewed baselines and intentionally curated acceptance evidence. New scene runtime screenshots freeze the pose through the test hook, never by enabling software rendering in production.
+
+**Manual final checklist** (the owner executes the device and screen-reader rows, OD-4):
+- source order, one H1, landmarks;
+- all story and boundary text;
+- keyboard, focus and Pause announcements;
+- anchors and locale hash;
+- exact concept captions;
+- both node vocabularies, upright labels and occlusion;
+- idle → first scroll → reverse → Footer;
+- reduced motion, no-JS, Save-Data, failure and forced colors;
+- five widths, zoom, landscape, mobile chrome and touch;
+- all Footer hosts and channels;
+- NVDA with Firefox and VoiceOver on iOS;
+- physical desktop, Android and iPhone metrics, and heat during sustained use;
+- clean root and `/Portfolio` exports.
+
+Each item gets PASS, FAIL or OPEN with evidence, the person who checked it and the date. Never claim conformance from axe alone.
 
 ## Review focus and traceability
 
-These input classes require named tests in their owner packets, not a generic “handle edge cases” instruction.
+These input classes need named tests in their owner packets, not a generic "handle edge cases" instruction.
 
 | Risk/input | Required assertion/inspection | Owner |
 | --- | --- | --- |
-| Empty/unknown/private dossier data or hash, arbitrary slug, duplicated IDs | Fail-closed publication, only2dossiers, known hash preservation/unknown fallback, no retired routes | 3 |
-| Zero/short page, long locale copy, resize/mobile chrome/restored scroll/anchor jump | finiteclamped progress, firstpixel response, recomputedFooter endpoint/current pose, steadycamera/uprightlabels | 2,7,9 |
-| Async import/font/probe finishing after unmount, rapid route/locale/back-forward | no latecanvas/duplicatecontext/listenerleak/stale words; focus preserved | 5,7,9 |
-| Preference/context loss/storage denied while Pause focused | noengineknownstatic, cancelframes, safe session fallback, static button inactive/focused | 2,7,9 |
-| Dense/longlabels or image/module failure at320/zoom/forcedcolors | nooverflow/occludedcopy/tinylabels; complete HTML/CSSfallback, exactcaptions, realactions | 3,4,6,7,8,9 |
-| Ambient versus active timing/sharedchunkcache/software versus hardware | cadence cap separatecost; completeclosure/coldlimit; physical device report; no inherited exception | 5,9 |
+| Empty, unknown or private dossier data or hash; arbitrary slug; duplicated IDs | Fail-closed publication; exactly two dossiers; known hash kept, unknown dropped; no retired routes | 3 |
+| Zero or short page; long localized copy; resize, mobile chrome, restored scroll, anchor jump | Finite, clamped progress; first-pixel response; recomputed Footer endpoint and current pose; steady camera; upright labels | 2, 7, 9 |
+| Async import, font or probe finishing after unmount; rapid route, locale or back-forward changes | No late canvas, duplicate context, listener leak or stale words; focus preserved | 5, 7, 9 |
+| Preference change, context loss or storage denied while Pause has focus | No engine for known static paths; frames cancelled; safe session fallback; static button inactive and focused | 2, 7, 9 |
+| Dense or long labels, or image/module failure, at 320, zoom or forced colors | No overflow, occluded copy or tiny labels; complete HTML/CSS fallback; exact captions; real actions | 3, 4, 6, 7, 8, 9 |
+| Ambient versus active timing; shared chunk cache; software versus hardware | Cadence cap separate from cost; complete closure within the cold limit; physical-device report; no inherited exception; live policy matches evidence | 5, 9 |
 
-Coverage map: hierarchy/copy/boundaries→6; dossier truth/route/MPC→3; Footer/logo/contacts→4; graph/capability/progress/session→2; depth/batching/resources→5; live/labels/interaction/accessibility/fallback→7; imagery/posters→8; full crossbrowser/responsive/CWV/base-path/manualregression→9; owning records/humanacceptance→1,10. Skill findings remain in the design review; later critiques record recommendation→accepted/adapted/rejected against approved spec.
+**Coverage map:**
+- hierarchy, copy and boundaries → 6
+- dossier truth, routes and MPC → 3
+- Footer, logo and contacts → 4
+- graph, capability, progress, session and labels → 2
+- depth, batching and resources → 5
+- live behavior, labels, interaction, accessibility and fallback → 7
+- imagery and posters → 8
+- full cross-browser, responsive, CWV, base path, live policy and manual regression → 9
+- owning records and human acceptance → 1, 10
+
+Skill findings stay in each receipt as recommendation → accepted/adapted/rejected against the approved spec.
 
 ## Receipts, independent review and final gate
 
-Every behavioral receipt includes task/model/provider identifier/settings, each model's subtask contribution and serialized handoffs, independent GPT-6.1 Sol reviewer, branch/worktree/baseSHA, exact owned paths and locks, **RED command/test/intended failure**, GREEN same command/pass, REFACTOR change and repeated pass, fresh full checks, visual/a11y/responsive/motion/performance evidence, deviations, independent findings and human PR/mergeSHA. Documentation/generated-art exceptions are explicit; generated-art loading/selection behavior is not exempt. A test added after behavior is a recorded TDD deviation, not retrospectively called RED.
+Every behavioral receipt includes:
+- task, model, provider identifier and settings, and each model's subtask contribution and serialized handoffs;
+- the independent GPT-6.1 Sol reviewer;
+- branch, worktree and base SHA;
+- exact owned paths and locks;
+- every Skills stage with its outcome;
+- **the RED command, test and intended failure**; GREEN with the same command passing; the REFACTOR change and the repeated pass;
+- fresh full checks and PR CI status;
+- visual, accessibility, responsive, motion and performance evidence;
+- deviations and independent findings;
+- the owner's PR merge and its merge SHA.
 
-Independent plan review: use a fresh **GPT-6.1 Sol (`gpt-6.1-sol`, high)** agent, distinct from the plan author/contributors, read-only with this plan/spec/source. It must attempt to find missing requirements, overlap/concurrency/unmerged dependencies, weak acceptance, visual/3D ambiguity, TDD gaps, responsive/accessibility/performance cases and provider mismatch, including every assignment against the approved model-routing criteria. Findings have `BLOCKING / HIGH / MEDIUM / LOW`, target/task, concrete risk and recommended correction. Reviewer never rewrites the plan. Original author revises; repeat independent review after material corrections and resolve all blocking acceptance findings before human approval. Every subsequent PR also requires independent Sol review.
+Documentation and generated-art exceptions are explicit; generated-art loading and selection behavior is not exempt. A test added after the behavior is a recorded TDD deviation, never retroactively called RED.
 
-**Current model-routing revision review gate: PASSED GPT-6.1 Sol.** [Independent Sol round3](../../reviews/services-projects-footer-plan-review-2026-09-30.md) reviewed the full revised plan, approved spec, historical review and documentation diff with **0 BLOCKING, 0 HIGH, 0 MEDIUM, 0 LOW** findings. Recommendation: ready for human plan approval. Historical Luna rounds1–2 remain evidence for the earlier revision and its resolved full-path/typed-contract findings. The plan remains PROPOSED; neither routing approval nor review completion authorizes implementation.
+### Receipt template
+
+```text
+Task N / PR N – <title>
+Implementer(s): <model, provider id, settings; per-subtask contribution>   Reviewer: GPT-6.1 Sol (<settings>)
+Branch/worktree: codex/spf-<n>-<purpose> at .worktrees/spf-<n>   Base: <main SHA>   PLAYWRIGHT_PORT: <port>
+Owned paths touched: <list>  (must be a subset of the packet write set)
+Locks held/transferred/released: <list with times>
+Skills stages: <skill → when → outcome>, in contract order; skipped stage = finding
+RED:      <command> → <failing test names + intended-reason excerpt>
+GREEN:    <command> → <passing summary>
+REFACTOR: <what changed> → <command> still passing
+Validation (fresh): npm run validate → <result>; <Playwright commands> → <result>;
+          verify:static-export root → <result>; /Portfolio → <result>; PR CI → <result>
+Accessibility: <axe results + manual checks>
+Visual matrix: <widths × locales × states actually checked>   Reference media compared: <files>
+Tuned constants: <name = value, reason>   (reference-media items only)
+Baseline changes: <none | files + owner approval link, win32 and linux>
+Deviations: <none | description + reason>
+Open items: <none | item, owner>
+Documentation impact: <records updated in this PR>
+```
+
+**Independent plan review:** a fresh **GPT-6.1 Sol (`gpt-6.1-sol`, high)** agent, distinct from the plan author and contributors, reviews read-only against this plan, the spec and the source. It must try to find missing requirements, overlap, concurrency and unmerged-dependency problems, weak acceptance, visual/3D ambiguity, TDD gaps, responsive/accessibility/performance cases and provider mismatches, including every assignment against the approved model-routing criteria. Findings use `BLOCKING / HIGH / MEDIUM / LOW`, with a target task, a concrete risk and a recommended correction. The reviewer never rewrites the plan. The plan author revises, independent review repeats after material corrections, and every BLOCKING finding is resolved before the owner approves. Every later PR also gets an independent Sol review.
+
+**Review gate status: REOPENED (2026-10-05).** Sol round 3 passed revision 3. A supplemental independent review (Claude Opus 5.5, read-only) then found 4 BLOCKING, 14 HIGH, 16 MEDIUM and 6 LOW issues; this revision 4 addresses them, as recorded in [round 4](../../reviews/services-projects-footer-plan-review-2026-09-30.md#round-4-supplemental-review-and-plan-revision-4). The supplemental review does not satisfy this plan's Sol gate. A fresh Sol round 5 on revision 4 with zero BLOCKING findings is required before the owner approves the plan.
 
 ## Risks and rollback
 
-- Physical constrained-phone/browser/SR availability is an execution evidence gate, not a reopened design question. Do not silently defer required checks. New typed lifecycle/controller needs independent scrutiny even though prototype motion was approved.
-- Shared Footer may expose previously unseen host-page layout/contrast regressions; its compatible API and all-host checks prevent hidden shell overlap. Unexpected global changes require lock transfer and bounded review.
-- Route removal is deliberately final. Revert a defective runtime/host/media PR independently to complete static reading. Revert retirement only together with its consumer/content/export changes and owner authorization; never restore only six route files against new publication contracts. Preserve clean-output deployment discipline to prevent stale deleted files.
-- A runtime budget failure returns static for rejected capability, then optimized retest; general capability/live design degradation or ceiling change returns to owner/governance. No automatic dependency install. Provider availability and substitutions follow the approved model-routing policy above.
+- Physical phones and screen readers depend on the owner's availability (OD-4). An OPEN item turns the matching live tier off; it never blocks content or relabels evidence.
+- The shared Footer may expose previously unseen host-page layout or contrast regressions. Its compatible API, the host grid and the Home acceptance run catch them. Unexpected global changes need a lock transfer and bounded review.
+- Route removal is deliberately final. A defective runtime, host or media PR can be reverted on its own, back to complete static reading. Revert the retirement only together with its consumer, content and export changes, and only with owner authorization. Never restore just the six route files against the new publication contracts. Keep clean-output deployment discipline so stale deleted files cannot survive.
+- A runtime budget failure goes static for the rejected tier, then is optimized and retested. Degrading the live design or changing a ceiling goes back to the owner and governance. No automatic dependency installs. Provider availability and substitutions follow the approved model-routing policy.
 
 ## Progress
 
-- 2026-09-30: Owner approved Revision5 written design/copy and authorized ADE v2 planning + independent review. Codex authored this PROPOSED plan; production remains unchanged. Governance merge/execution W0 not performed.
-- 2026-09-30: Independent GPT-6 Luna round1 found two MEDIUM issues; original author revised paths/contracts. Round2 verified resolution with no remaining findings and recommended human plan approval. Documentation/diff validation passed; no implementation started.
-- 2026-09-30: Owner approved model routing: Claude Sonnet 5.5 for complex/design work, GPT-6 Luna only for low-demand/low-risk/no-design implementation, and independent GPT-6.1 Sol review for every PR. Reassigned Tasks 2–7/9, bounded Luna Tasks 1/8/10, and added serialized Sonnet/Luna media handoff and provider checks. Independent Sol round3 found no issues and recommended human plan approval; overall plan remains PROPOSED and execution has not started.
+- 2026-09-30: The owner approved the Revision 5 written design and copy and authorized ADE v2 planning plus independent review. Codex authored this PROPOSED plan. Production unchanged. Governance merge and W0 not performed.
+- 2026-09-30: Independent GPT-6 Luna round 1 found two MEDIUM issues; the original author revised paths and contracts. Round 2 verified the fixes with no remaining findings. Documentation and diff validation passed; no implementation started.
+- 2026-09-30: The owner approved the model routing (Claude Sonnet 5.5 for complex and design work, GPT-6 Luna only for low-demand, low-risk, no-design implementation, independent GPT-6.1 Sol review for every PR). Tasks 2–7 and 9 were reassigned, Tasks 1, 8 and 10 bounded for Luna, and the Sonnet/Luna media handoff and provider checks added. Sol round 3 found no issues. The plan stayed PROPOSED.
+- 2026-10-05: A supplemental independent review against `main` at `5270e32` returned NOT READY (4 BLOCKING, 14 HIGH, 16 MEDIUM, 6 LOW). The owner decided OD-1 to OD-4. Revision 4 serializes Task 4 after Task 3; adds the Skills contract, Non-goals, reference media, the test/baseline ownership inventory, wave checkpoints, the orchestrator role, production serving, the live policy, tier and label contracts, objective acceptance and the receipt template; and rewrites Task 1 for repository state. The OD-1 corrections went into the visual-language, status-register and Sky Chart acceptance records. The review gate is reopened for Sol round 5. Execution has not started.
+
+## Important implementation decisions
+
+The owner decisions and plan clarifications of 2026-10-05 are recorded in [OD-1 to OD-4 and PC-1 to PC-7](#owner-decisions-and-plan-clarifications-2026-10-05). Later decisions made during execution are added here with their date, owner and link.
 
 ## Deviations discovered during execution
 
-None; execution has not started. Independent review corrections are recorded in the review artifact, not treated as implementation deviations.
+None; execution has not started. Corrections from independent review are recorded in the review artifact, not treated as implementation deviations.
