@@ -74,6 +74,20 @@ On 2026-10-05 the owner then decided four open questions (OD-1 Home Founder plat
 
 **Status after revision 4:** the review gate is reopened. A fresh GPT-6.1 Sol round 5 must review revision 4 and find zero BLOCKING issues before the owner approves the plan. `npm run docs:check` passed for the revision.
 
+## Round 5 — final review of revision 4
+
+On 2026-10-05 the owner requested a final review after the Opus revision. Codex inspected revision 4 at `5204592`, the full approved spec/RFC/ADR, current source/test consumers, lifecycle/Skills, governance summaries and deployment triggers. The review made no repository edits.
+
+**Recommendation:** NOT READY. **Counts:** BLOCKING 2, HIGH 0, MEDIUM 1, LOW 0.
+
+| ID / severity | Target | Finding | Correction in revision 5 |
+| --- | --- | --- | --- |
+| SPF-FINAL-01 / BLOCKING | Task 3 | Services' GRS destination changes, but `marketing-services.spec.ts` retains old ES/EN detail URLs and belongs only to Task 6. | Assign both destination values and the href assertion to Task 3, require root/base-path Services runs, then transfer the whole file to Task 6 after W2. |
+| SPF-FINAL-02 / BLOCKING | Live policy, Tasks 7–9 | Initial true values deploy Task 7's live runtime before Task 9 hardware evidence. | Both merged values remain false through Task 8; Task 9 evaluates isolated undeployed candidates without test overrides, restores defaults, enables only evidenced tiers, and rechecks shipped-policy exports. |
+| SPF-FINAL-03 / MEDIUM | Task 1 | Status-only edits leave current PROPOSED/REOPENED prose; removing all historical occurrences would rewrite history. | Permit all current status summaries to be synchronized, preserving completed review rounds. |
+
+Fresh `npm run docs:check` and `git diff --check` passed; no implemented behavior or hardware result was claimed. The owner then requested correction, another review, and approval/PR creation only if the plan passes. This correcting session is a contributor, so revision 5 requires a fresh independent reviewer.
+
 ## Boundaries and verification
 
 - Independent review evaluates execution readiness, not implemented behavior. No production code, route removal, runtime, baseline update or hardware acceptance was performed in this planning session.
