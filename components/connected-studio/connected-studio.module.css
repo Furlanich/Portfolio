@@ -1,0 +1,85 @@
+/*
+ * PLAN-SPF-V1 Task 2: the static ground behind the connected routes (DESIGN-SPF-V1, "Visual
+ * system and composition"). Abyss #06121F, a subtle Azure atmospheric light, a low-contrast chart
+ * grid and restrained distant points, all in CSS, so the page is complete with no JavaScript, no
+ * poster and no canvas. The colors are the existing `--sky-*` tokens (app/globals.css), which are
+ * not changed here.
+ */
+
+/*
+ * The ground is a fixed layer at z-index -3. Without this, an element behind the body's content
+ * would sit above a light html background only where it paints; pinning the html background to the
+ * same Abyss keeps overscroll and the first paint from flashing Bone, the way Home does.
+ */
+:global(html):has(.ground) {
+  background: var(--sky-abyss);
+}
+
+.ground {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: var(--sky-abyss);
+  background-image:
+    /* Azure atmospheric light, upper right, the side the field opens toward */
+    radial-gradient(70% 55% at 78% 14%, rgba(0, 69, 137, 0.34) 0%, rgba(0, 69, 137, 0) 70%),
+    /* a second, fainter wash low on the left so the field does not read as one lit corner */
+    radial-gradient(60% 45% at 8% 92%, rgba(23, 56, 90, 0.42) 0%, rgba(23, 56, 90, 0) 72%),
+    /* distant points: two sparse tiles at unrelated periods so they never form a pattern */
+    radial-gradient(circle at center, rgba(156, 196, 236, 0.5) 0 1px, transparent 1.6px),
+    radial-gradient(circle at center, rgba(111, 168, 224, 0.38) 0 1px, transparent 1.6px),
+    /* the chart grid: 1px hairlines every 72px, low contrast on purpose */
+    linear-gradient(to right, rgba(111, 168, 224, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(111, 168, 224, 0.04) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    331px 277px,
+    197px 241px,
+    72px 72px,
+    72px 72px;
+  background-position:
+    0 0,
+    0 0,
+    61px 43px,
+    137px 109px,
+    -1px -1px,
+    -1px -1px;
+}
+
+/*
+ * The matched static poster (Task 8), painted over the CSS chart. The URLs arrive as custom
+ * properties from the component and are only defined once the poster is published; an undefined
+ * property leaves `background-image` at none, so nothing is requested. A poster that fails to load
+ * simply shows the CSS chart beneath it.
+ */
+.poster {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 70% 30%;
+  background-image: var(--connected-poster-wide);
+}
+
+@media (max-width: 767px) {
+  .poster {
+    background-image: var(--connected-poster-compact);
+  }
+}
+
+/* The reserved mount for the optional live scene: empty here, same box as the ground. */
+.mount {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Forced colors removes the decorative environment and uses system colors (DESIGN-SPF-V1). */
+@media (forced-colors: active) {
+  .ground {
+    display: none;
+  }
+}

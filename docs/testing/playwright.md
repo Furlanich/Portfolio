@@ -8,7 +8,9 @@ related:
   - DESIGN-IX-A11Y
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
-last_verified: 2026-10-05
+  - PLAN-SPF-V1
+  - DESIGN-SPF-V1
+last_verified: 2026-10-06
 ---
 
 # Playwright QA
@@ -39,8 +41,34 @@ Set `NEXT_PUBLIC_BASE_PATH=/Portfolio` to reproduce GitHub Pages routing. The co
 | `accessibility-chromium` | Axe and representative structural/keyboard assertions |
 | `immersive-chromium` | `immersive-home.spec.ts`, `immersive-home-acceptance.spec.ts` and `sky-chart-acceptance.spec.ts` (the Home acceptance matrix, described below), at 1440×900 on the SwiftShader software backend (`--use-angle=swiftshader --enable-unsafe-swiftshader`) |
 | `visual-chromium` | Reduced-motion element baselines under `tests/e2e/visual/`, including `home-sections.visual.spec.ts` (see [visual regression](visual-regression.md)) |
+| `connected-production-chromium` | Only when `PLAYWRIGHT_SERVE_EXPORT=1`: `connected-studio-production.spec.ts` at 1440×900 against the served clean static export. In that mode it is the only project (see [Connected studio specs](#connected-studio-specs-plan-spf-v1)) |
 
 Mobile WebKit link tabbing depends on host Safari Full Keyboard Access, so exact first-link Tab order is asserted in mobile Chromium. Both mobile engines verify disclosure activation and dismissal by keyboard.
+
+## Connected studio specs (PLAN-SPF-V1)
+
+`playwright.config.ts` registers the connected-studio spec families for Services, Projects and the shared Footer ahead of the specs themselves, so each later task adds its spec without a config change. The specs land in PLAN-SPF-V1 Tasks 3–9. Until a spec exists, `npx playwright test --list` shows no tests for it, and "no tests found" is never a pass for a spec that does exist. `scripts/connected-studio-harness.test.mjs` asserts this table against the listed project configuration.
+
+| Spec (`tests/e2e/`) | Projects |
+| --- | --- |
+| `connected-studio-static.spec.ts` | `chromium-desktop`, `firefox-desktop`, `webkit-desktop`, `mobile-chromium`, `mobile-webkit`, `tablet-portrait-chromium`, `tablet-chromium`, `compact-320-chromium` |
+| `connected-studio-services.spec.ts` | `chromium-desktop`, `firefox-desktop`, `webkit-desktop`, `mobile-chromium`, `tablet-portrait-chromium`, `compact-320-chromium` |
+| `connected-studio-footer.spec.ts` | `chromium-desktop`, `firefox-desktop`, `webkit-desktop`, `mobile-chromium`, `compact-320-chromium` |
+| `connected-studio-navigation.spec.ts` | `chromium-desktop`, `firefox-desktop`, `webkit-desktop`, `mobile-chromium` |
+| `connected-studio-responsive.spec.ts` | `mobile-chromium`, `mobile-webkit`, `tablet-chromium`, `wide-chromium` (matched by the existing unanchored `/responsive\.spec\.ts/`), plus `compact-320-chromium` and `tablet-portrait-chromium` (explicit) |
+| `connected-studio-runtime.spec.ts` | `immersive-chromium` only |
+| `connected-studio-accessibility.spec.ts` | `accessibility-chromium` (matched by the existing unanchored `/accessibility\.spec\.ts/`) |
+| `connected-studio-production.spec.ts` | `connected-production-chromium`, defined only when `PLAYWRIGHT_SERVE_EXPORT=1` |
+| `visual/connected-studio-*.visual.spec.ts` | `visual-chromium` (matched by the existing visual pattern) |
+
+### Production serving
+
+Set `PLAYWRIGHT_SERVE_EXPORT=1` to test the exported site instead of the development server. The config then runs `scripts/serve-static-export.mjs` for `webServer`, defines only `connected-production-chromium`, and never reuses a server already on the port, so a leftover `next dev` cannot stand in for the export. Without the variable the config is unchanged, and `npm run test:e2e` (including CI) never sees the production project.
+
+- Build a clean export first (fresh `out/`, never a copy over a stale one), then run `PLAYWRIGHT_SERVE_EXPORT=1 npx playwright test --project=connected-production-chromium`. For the subpath export, build and run with `NEXT_PUBLIC_BASE_PATH=/Portfolio` (the shell notes below apply). The server reads `PLAYWRIGHT_PORT`, `NEXT_PUBLIC_BASE_PATH`, `HOST` and `EXPORT_DIR`.
+- The server mirrors GitHub Pages: files and `<dir>/index.html` under the base path, a 301 from a directory URL to its trailing-slash form, `max-age=600`, GET and HEAD only, and the export's own `404.html` with a real 404 status for everything else. It **never rewrites a missing route to an index**, which is what lets a spec prove a retired route is absent. Paths outside the base path and traversal attempts are 404.
+- Compose URLs as `appUrl(index) + '#slug'`: `appUrl` appends a trailing slash, so a hash must not be placed inside its route argument.
+- Clean-build, base-path and measurement procedure: [PLAN-SPF-V1, Verification commands](../plans/active/services-projects-footer-v1.md#verification-commands-artifact-hygiene-and-manual-procedure).
 
 ## Failures and evidence
 
@@ -84,4 +112,5 @@ Run it with `npx playwright test --project=immersive-chromium tests/e2e/sky-char
 | `navigation.ts` | `gotoResilient`: retries a 5xx from the `next dev` race, and returns every other outcome untouched so a genuine failure still fails |
 | `console-errors.ts` | `observeUnexpectedBrowserErrors`: collects console errors and page errors and asserts none |
 | `editorial.ts` | Mono-text and sequence-marker assertions for the editorial pages |
+| `connected-studio-test-hooks.ts` | `setConnectedTestHook(page, hook)`: the one test-injection mechanism for the connected routes. It sets `window.__FURLANICH_CONNECTED_TEST__ = { allowSoftwareRenderer?, livePolicy? }` only through `page.addInitScript`, mirroring Home's `__SKY_CHART_ALLOW_SOFTWARE_RENDERER__`, and rejects any other field or a non-boolean value. Functional tests and poster capture may use it and label the result controlled test evidence; production measurements and owner hardware acceptance never set it |
 | `production-instrumentation.mjs` | Browser-level instrumentation for the production measurements (draw calls, label textures, idle frames, backdrop surfaces and layout-shift attribution); shared by `measure:immersive` and `measure:home-vitals`, which cannot use the dev-only debug hook |
