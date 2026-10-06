@@ -95,13 +95,17 @@ for (const projectCase of projectCases) {
     await page.goto(appUrl(projectCase.index));
     const article = page.locator('main article').first();
     await article.scrollIntoViewIfNeeded();
-    const before = await article.boundingBox();
+    // Page coordinates: hovering may scroll the page, which must not read as the article moving.
+    const pageBox = () => article.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      return { x: box.x + scrollX, y: box.y + scrollY, width: box.width, height: box.height };
+    });
+    const before = await pageBox();
     expect(await article.evaluate((element) => getComputedStyle(element).borderTopColor)).toBe('rgb(54, 83, 108)');
 
     await article.locator('h2').hover();
     await expect.poll(() => article.evaluate((element) => getComputedStyle(element).borderTopColor)).toBe('rgb(111, 168, 224)');
-    const after = await article.boundingBox();
-    expect(after).toEqual(before);
+    expect(await pageBox()).toEqual(before);
     expect(await article.evaluate((element) => getComputedStyle(element).transform)).toBe('none');
   });
 
@@ -114,8 +118,12 @@ for (const projectCase of projectCases) {
     const image = figure.locator('img');
     const caption = figure.locator('figcaption');
     await figure.scrollIntoViewIfNeeded();
-    const captionBefore = await caption.boundingBox();
-    const frameBefore = await figure.boundingBox();
+    const pageBox = (locator: typeof caption) => locator.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      return { x: box.x + scrollX, y: box.y + scrollY, width: box.width, height: box.height };
+    });
+    const captionBefore = await pageBox(caption);
+    const frameBefore = await pageBox(figure);
 
     await image.hover();
     const scale = () => image.evaluate((element) => {
@@ -124,8 +132,8 @@ for (const projectCase of projectCases) {
     });
     await expect.poll(scale).toBeGreaterThan(1.017);
     expect(await scale()).toBeLessThanOrEqual(1.018);
-    expect(await caption.boundingBox()).toEqual(captionBefore);
-    expect(await figure.boundingBox()).toEqual(frameBefore);
+    expect(await pageBox(caption)).toEqual(captionBefore);
+    expect(await pageBox(figure)).toEqual(frameBefore);
     expect(await image.evaluate((element) => getComputedStyle(element).transitionDuration)).toBe('0.26s');
     expect(await image.evaluate((element) => getComputedStyle(element).transitionProperty)).toBe('transform');
   });

@@ -13,21 +13,25 @@ const locales = [
   { name: 'English', index: stableRoutes.projects.en, alternate: stableRoutes.projects.es, switchHreflang: 'es-AR', services: stableRoutes.services.en },
 ] as const;
 
-/** Waits for the smooth fragment scroll to settle, then returns the element's top and the App Bar bottom. */
+/**
+ * Waits for the smooth fragment scroll to arrive and stop, then returns the element's top and the App
+ * Bar bottom. Arrival is "the top sits just under the App Bar": a bare "two equal reads" check can fire
+ * before WebKit starts the smooth scroll and report the pre-scroll position as settled.
+ */
 async function settledTop(page: Page, selector: string) {
-  let last = Number.NaN;
-  await expect
-    .poll(async () => {
-      const top = await page.locator(selector).evaluate((element) => element.getBoundingClientRect().top);
-      const settled = top === last;
-      last = top;
-      return settled;
-    }, { timeout: 8_000, intervals: [150] })
-    .toBe(true);
-  return page.evaluate((target) => ({
+  const measure = () => page.evaluate((target) => ({
     top: document.querySelector(target)?.getBoundingClientRect().top ?? Number.NaN,
     headerBottom: document.querySelector('header[data-app-bar]')?.getBoundingClientRect().bottom ?? Number.NaN,
   }), selector);
+  await expect
+    .poll(async () => {
+      const { top, headerBottom } = await measure();
+      return top >= headerBottom && top < headerBottom + 80;
+    }, { timeout: 10_000, intervals: [150] })
+    .toBe(true);
+  // Confirm it has stopped there rather than passing through.
+  await page.waitForTimeout(400);
+  return measure();
 }
 
 for (const locale of locales) {
