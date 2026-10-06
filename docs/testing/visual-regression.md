@@ -8,7 +8,9 @@ related:
   - DESIGN-VISUAL
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
-last_verified: 2026-10-05
+  - DESIGN-SPF-V1
+  - PLAN-SPF-V1
+last_verified: 2026-10-06
 ---
 
 # Visual regression policy
@@ -39,3 +41,18 @@ Visual snapshots are automated change detection, not design judgment. `visual-qa
 - Both sets are owner-approved: the 42 Home-sections captures, and the 10 instrument captures refreshed when the header's layout box became exactly `--app-bar-height`.
 
 The shared Playwright helpers that these specs import, such as `tests/e2e/support/paths.ts`, are listed in [Playwright QA](playwright.md#shared-helpers-testse2esupport).
+
+## Services, Projects and Founder (`services-projects.visual.spec.ts`, `founder.visual.spec.ts`)
+
+PLAN-SPF-V1 assigns these baselines to one task at a time, in the order Task 3 (Projects and Founder), Task 4 (Footer), Task 6 (Services) and Task 8 (both, with posters). Each task updates only its own rows.
+
+| Baseline set | Spec and file names | Captured subject | Owner | State |
+| --- | --- | --- | --- | --- |
+| Projects, wide and compact | `services-projects.visual.spec.ts`: `projects-wide` (1440) and `projects-compact` (390), Spanish, `visual-chromium`, win32 and linux | `main` of the Projects index: the introduction plate, the capability legend, both complete dossiers and the publication note | Task 3 | Refreshed for the dossier redesign. **PENDING owner approval** on both platforms; the Linux files are adopted from CI `actual` artifacts only after that approval |
+| Project detail, wide and compact | `project-detail-wide` and `project-detail-compact`, win32 and linux | The retired `/proyectos/general-reservation-system/` page | Task 3 | **Deleted** with the route (PLAN-SPF-V1 Task 3). No detail route exists to capture |
+| Founder, wide and compact | `founder.visual.spec.ts`: `founder-{spanish,english}-{wide,compact}`, win32 and linux | `main` of the Founder page, whose MPC action is now the approved external source | Task 3 | Refreshed for the MPC source action. **PENDING owner approval** on both platforms |
+| Services, wide and compact | `services-wide`, `services-compact` | `main` of the Services page | Task 6 | Unchanged by Task 3 |
+
+- The Projects capture hides the connected ground layer (`[data-connected-ground]`) before the screenshot. The ground is viewport-fixed, so a capture taller than the viewport would contain whichever slice sits behind each plate. The page keeps the same Abyss `html` background, so the plates are the whole subject. The ground has its own browser assertions in `connected-studio-static.spec.ts`, and the poster joins it in Task 8. The same step is a no-op on the Services page.
+- Reduced motion is on for the `visual-chromium` project, so there is no hover state, zoom or canvas in any capture.
+- Windows baselines are captured locally. Linux baselines are adopted from the failed CI run's `*-actual.png` files for exactly these cases and never in bulk.
