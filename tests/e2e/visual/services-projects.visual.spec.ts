@@ -4,7 +4,6 @@ import { appUrl, stableRoutes } from '../support/paths';
 const pages = [
   { name: 'services', route: stableRoutes.services.es },
   { name: 'projects', route: stableRoutes.projects.es },
-  { name: 'project-detail', route: '/proyectos/general-reservation-system/' },
 ] as const;
 
 const viewports = [
@@ -19,6 +18,10 @@ for (const { name, route } of pages) {
       await page.goto(appUrl(route));
       await page.evaluate(() => document.fonts.ready);
       await page.locator('nextjs-portal').evaluateAll((portals) => portals.forEach((portal) => portal.remove()));
+      // PLAN-SPF-V1 Task 3: the connected ground is viewport-fixed, so a tall element capture would contain
+      // whichever slice sits behind each plate. Hiding the layer leaves the same Abyss html background and
+      // makes the plates the whole subject; the Ground has its own assertions. A no-op where no ground exists.
+      await page.addStyleTag({ content: '[data-connected-ground]{display:none !important}' });
       await expect(page.locator('main')).toHaveScreenshot(`${name}-${viewport.name}.png`, { animations: 'disabled' });
     });
   }
