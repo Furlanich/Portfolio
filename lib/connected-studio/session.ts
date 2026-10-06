@@ -14,9 +14,12 @@ export const CONNECTED_SESSION_KEYS = {
 /** Home's own flag (PC-5): connected routes only read it. A Home loss suppresses their activation. */
 const HOME_CONTEXT_LOST_KEY = 'furlanich:sky-chart-context-lost';
 
-// Memory fallback when storage is denied or throws; it lasts for the page's JavaScript lifetime,
-// which spans client-side route and locale changes.
-const memory: ConnectedSession = { paused: false, contextLost: false };
+// What this page's JavaScript has itself decided, which spans client-side route and locale changes.
+// It is the fallback when storage is denied or throws, and it outranks stored Pause once this page
+// has set it: a write that failed leaves the stored value stale, and a stale value must never
+// override the visitor's latest choice. `paused` is undefined until the page sets it, so a fresh
+// page still starts from storage. A context loss only ever turns on, so it needs no such rule.
+const memory: { paused: boolean | undefined; contextLost: boolean } = { paused: undefined, contextLost: false };
 
 function resolveStorage(storage: SessionStorageLike | null | undefined): SessionStorageLike | null {
   if (storage !== undefined) return storage;
@@ -47,7 +50,7 @@ export function readConnectedSession(storage?: SessionStorageLike | null): Conne
   const target = resolveStorage(storage);
   const storedPause = read(target, CONNECTED_SESSION_KEYS.paused);
   return {
-    paused: storedPause === '1' ? true : storedPause === '0' ? false : memory.paused,
+    paused: memory.paused ?? storedPause === '1',
     contextLost:
       memory.contextLost ||
       read(target, CONNECTED_SESSION_KEYS.contextLost) === '1' ||

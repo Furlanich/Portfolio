@@ -97,3 +97,28 @@ test('unrecognized stored values never pause the scene or claim a loss', async (
   const storage = memoryStorage({ [PAUSE_KEY]: 'yes', [LOSS_KEY]: 'true', [HOME_LOSS_KEY]: '0' });
   assert.deepEqual(session.readConnectedSession(storage), { paused: false, contextLost: false });
 });
+
+// Readable but write-denied storage (a quota error, a locked-down profile): the stored value goes stale.
+function writeDeniedStorage(initial = {}) {
+  const values = new Map(Object.entries(initial));
+  return {
+    getItem: (key) => (values.has(key) ? values.get(key) : null),
+    setItem() {
+      throw new Error('QuotaExceededError: writes denied');
+    },
+  };
+}
+
+test('a denied write never lets stale stored state override this page\'s Pause or Resume', async () => {
+  const session = await freshSession();
+  const staleResumed = writeDeniedStorage({ [PAUSE_KEY]: '0' });
+  assert.equal(session.readConnectedSession(staleResumed).paused, false, 'the stored value is honored before this page sets anything');
+  assert.deepEqual(session.setConnectedPaused(true, staleResumed), { paused: true, contextLost: false }, 'Pause survives the denied write');
+  assert.equal(session.readConnectedSession(staleResumed).paused, true, 'a later read in the same page still sees Pause');
+
+  const fresh = await freshSession();
+  const stalePaused = writeDeniedStorage({ [PAUSE_KEY]: '1' });
+  assert.equal(fresh.readConnectedSession(stalePaused).paused, true, 'a fresh page honors the stored Pause');
+  assert.deepEqual(fresh.setConnectedPaused(false, stalePaused), { paused: false, contextLost: false }, 'Resume survives the denied write');
+  assert.equal(fresh.readConnectedSession(stalePaused).paused, false, 'a later read in the same page still sees Resume');
+});
