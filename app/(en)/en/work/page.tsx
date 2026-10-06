@@ -2,7 +2,7 @@ import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
 import { ProjectsPage } from '@/components/projects/ProjectsPage';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
-import { getPublishedProjectCards, validateProjectContent } from '@/lib/projects/publication';
+import { getPublishedProjectDossiers, validateProjectContent } from '@/lib/projects/publication';
 import { contactContent } from '../_content/contact';
 import { founderContent } from '../_content/founder';
 import { projectPageContent } from '../_content/projects';
@@ -28,7 +28,7 @@ export default function Page() {
           languageSwitch: 'View site in Spanish',
         }}
       />
-      <ProjectsPage content={projectPageContent} cards={getPublishedProjectCards(projectPageContent, route.locale)} />
+      <ProjectsPage content={projectPageContent} dossiers={getPublishedProjectDossiers(projectPageContent, route.locale)} />
       <SiteFooter
         paths={paths}
         contactActions={contactContent.actions}

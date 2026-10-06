@@ -1,14 +1,12 @@
-import Link from 'next/link';
 import type { FounderPageContent } from './content-types';
 
 interface FounderProfessionalHistoryProps {
   experience: FounderPageContent['experience'];
   biography: FounderPageContent['biography'];
   education: FounderPageContent['education'];
-  projectHref: string;
 }
 
-export function FounderProfessionalHistory({ experience, biography, education, projectHref }: FounderProfessionalHistoryProps) {
+export function FounderProfessionalHistory({ experience, biography, education }: FounderProfessionalHistoryProps) {
   return (
     <>
       <section aria-labelledby="founder-experience-heading" className="bg-foundation-surface py-16 md:py-20 lg:py-24">
@@ -64,12 +62,14 @@ export function FounderProfessionalHistory({ experience, biography, education, p
               <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{education.project.summary}</p>
               <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{education.project.relationship}</p>
               <p className="mt-3 max-w-[68ch] text-sm leading-6 text-foundation-muted">{education.project.limitation}</p>
-              <Link
-                href={projectHref}
+              <a
+                href={education.project.sourceHref}
+                target="_blank"
+                rel="noreferrer"
                 className="mt-4 inline-flex min-h-11 items-center font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
               >
                 {education.project.actionLabel}
-              </Link>
+              </a>
             </li>
           </ul>
         </div>

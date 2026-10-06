@@ -30,7 +30,8 @@ export type FounderEducationEntry = {
 };
 
 export type FounderEducationProject = {
-  slug: string;
+  /** The approved public repository; MPC has no project-detail route (retired 2026-10-06). */
+  sourceHref: string;
   title: string;
   context: string;
   summary: string;

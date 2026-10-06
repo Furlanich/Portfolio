@@ -50,6 +50,7 @@ function assertNoUnsafeStrings(content) {
       'https://wa.me/5491150117565',
       expectedProfessionalLinks.linkedin,
       expectedProfessionalLinks.github,
+      'https://github.com/Furlanich/MilkyPantsCheese-Administracion-', // Founder's MPC source action (2026-10-06)
     ].includes(value)),
     [],
   );
@@ -152,7 +153,10 @@ test('exports the complete approved Founder profile in both locales', async () =
     assert.equal(content.experience.entries.some(({ role }) => /Clever Soft/i.test(role)), false);
 
     assert.equal(content.education.entries.length, 2);
-    assert.equal(content.education.project.slug, 'mpc-administracion');
+    // Dated 2026-10-06 (PLAN-SPF-V1 Task 3): the MPC detail route is retired; Founder's action is the approved public source.
+    assert.equal(content.education.project.sourceHref, 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-');
+    assert.equal(content.education.project.actionLabel, locale === 'es' ? 'Ver código fuente' : 'View source code');
+    assert.equal('slug' in content.education.project, false);
     assert.match(content.education.project.summary, /2021/);
     assert.match(content.education.project.summary, /fictic|ficticio|fictional/i);
     assert.match(content.education.project.relationship, /grup|group/i);
@@ -215,7 +219,6 @@ test('uses the stable C-NAV Contact action in every localized shell', () => {
     'app/(es)/page.tsx',
     'app/(es)/servicios/page.tsx',
     'app/(es)/proyectos/page.tsx',
-    'app/(es)/proyectos/[projectSlug]/page.tsx',
     'app/(es)/contacto/page.tsx',
     'app/(es)/privacidad/page.tsx',
     'app/(es)/estudio/page.tsx',
@@ -223,7 +226,6 @@ test('uses the stable C-NAV Contact action in every localized shell', () => {
     'app/(en)/en/page.tsx',
     'app/(en)/en/services/page.tsx',
     'app/(en)/en/work/page.tsx',
-    'app/(en)/en/work/[projectSlug]/page.tsx',
     'app/(en)/en/contact/page.tsx',
     'app/(en)/en/privacy/page.tsx',
     'app/(en)/en/about/page.tsx',

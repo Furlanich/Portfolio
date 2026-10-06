@@ -1,292 +1,151 @@
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { getFoundationPath, getProjectDetailPath, getServiceSectionHref, serviceSectionIds } from '../site-routes.ts';
+import { getFoundationPath, getServiceSectionHref, projectDossierSlugs, serviceSectionIds } from '../site-routes.ts';
+import type { ProjectDossierSlug } from '../site-routes.ts';
 import type { Locale } from '../locales';
 import type {
-  PublicProjectCardContent,
+  PublicProjectDossierContent,
   PublicProjectLocaleContent,
   PublicProjectManifestEntry,
-  ResolvedProjectDetail,
-  ResolvedProjectCard,
+  ResolvedProjectDossier,
 } from '../../components/projects/content-types';
 
-export const publishedProjectManifest: readonly PublicProjectManifestEntry[] = [
+// PLAN-SPF-V1 Task 3. The Projects index publishes exactly two complete dossiers, GRS first and
+// The-System second. This module is the fail-closed gate: anything outside the approved pair, its
+// maturity, publication permission, image and source is rejected at build time, so a record can
+// never reach the page by accident. MPC is not in this projection: it stays a text context on
+// Founder, and its evidence record and permission are unchanged.
+
+type ApprovedRecord = {
+  id: string;
+  slug: ProjectDossierSlug;
+  maturity: PublicProjectManifestEntry['maturity'];
+  /** The existing approved public repository from the item record. */
+  sourceHref: string;
+  /** The original 1599x900 conceptual WebP, moved into its index dossier unchanged. */
+  visualSrc: string;
+};
+
+const approvedRecords: readonly ApprovedRecord[] = Object.freeze([
   {
     id: 'PROJECT-GRS',
     slug: 'general-reservation-system',
     maturity: 'prototype',
-    services: ['web'],
-    publicationScope: 'limited',
-    destination: {
-      kind: 'detail',
-    },
-    visual: {
-      kind: 'illustration',
-      src: '/projects/general-reservation-system/conceptual-workflow.webp',
-      width: 1599,
-      height: 900,
-    },
+    sourceHref: 'https://github.com/Furlanich/GeneralReservationSystem',
+    visualSrc: '/projects/general-reservation-system/conceptual-workflow.webp',
   },
   {
     id: 'PROJECT-THE-SYSTEM',
     slug: 'the-system',
     maturity: 'lab',
-    services: ['web'],
-    publicationScope: 'limited',
-    destination: {
-      kind: 'detail',
-    },
-    visual: {
-      kind: 'illustration',
-      src: '/projects/the-system/conceptual-access-model.webp',
-      width: 1599,
-      height: 900,
-    },
+    sourceHref: 'https://github.com/Furlanich/The-System',
+    visualSrc: '/projects/the-system/conceptual-access-model.webp',
   },
-  {
-    id: 'PROJECT-MPC-ADMIN',
-    slug: 'mpc-administracion',
-    maturity: 'prototype',
-    services: ['web'],
-    publicationScope: 'limited',
-    destination: {
-      kind: 'detail',
-    },
-    visual: {
-      kind: 'illustration',
-      src: '/projects/mpc-administracion/conceptual-operations-model.webp',
-      width: 1599,
-      height: 900,
-    },
-  },
-];
-
-export const publishedProjectIndexManifest = ['PROJECT-GRS', 'PROJECT-THE-SYSTEM'] as const;
-
-const allowedMaturities = new Set<PublicProjectManifestEntry['maturity']>([
-  'production',
-  'lab',
-  'prototype',
-]);
-const allowedScopes = new Set<PublicProjectManifestEntry['publicationScope']>([
-  'open',
-  'limited',
-]);
-const allowedVisualKinds = new Set<NonNullable<PublicProjectManifestEntry['visual']>['kind']>([
-  'screenshot',
-  'diagram',
-  'illustration',
 ]);
 
-function resolveProjectAction(
-  entry: PublicProjectManifestEntry,
-  locale: Locale,
-): { href: string; external: boolean } {
-  switch (entry.destination.kind) {
-    case 'detail':
-      return { href: getProjectDetailPath(locale, entry.slug), external: false };
-    case 'contact':
-      return { href: getFoundationPath('contact', locale), external: false };
-    case 'service':
-      return { href: getServiceSectionHref(locale, entry.destination.serviceId), external: false };
-    case 'external':
-      return { href: entry.destination.href, external: true };
-  }
+export const publishedProjectManifest: readonly PublicProjectManifestEntry[] = approvedRecords.map((record) => ({
+  id: record.id,
+  slug: record.slug,
+  maturity: record.maturity,
+  services: ['web'],
+  publicationScope: 'limited',
+  sourceHref: record.sourceHref,
+  visual: { kind: 'illustration', src: record.visualSrc, width: 1599, height: 900 },
+}));
+
+const allowedMaturities = new Set<PublicProjectManifestEntry['maturity']>(['production', 'lab', 'prototype']);
+const allowedScopes = new Set<PublicProjectManifestEntry['publicationScope']>(['open', 'limited']);
+
+function isBlank(value: unknown): boolean {
+  return typeof value !== 'string' || !value.trim();
 }
 
-function assertCardContent(card: PublicProjectCardContent, entry: PublicProjectManifestEntry, locale: Locale): void {
-  for (const field of [
-    'title',
-    'context',
-    'maturityLabel',
-    'summary',
-    'relationship',
-    'limitation',
-    'evidenceSignal',
-    'actionLabel',
-  ] as const) {
-    const value = card[field];
-    if (typeof value !== 'string' || !value.trim()) {
-      throw new Error(`${locale} ${entry.id} ${field} must not be empty`);
+export function validateProjectManifest(entries: readonly PublicProjectManifestEntry[]): void {
+  if (entries.length !== approvedRecords.length) {
+    throw new Error(`the manifest must publish exactly ${approvedRecords.length} dossiers`);
+  }
+  entries.forEach((entry, index) => {
+    const approved = approvedRecords[index];
+    if (entry.id !== approved.id) throw new Error(`manifest position ${index + 1} must be ${approved.id}, got ${entry.id}`);
+    if (!(projectDossierSlugs as readonly string[]).includes(entry.slug) || entry.slug !== approved.slug) {
+      throw new Error(`unsupported slug for ${entry.id}`);
     }
-  }
-
-  if (!Array.isArray(card.capabilities) || (card.capabilities.length !== 2 && card.capabilities.length !== 3)) {
-    throw new Error(`${locale} ${entry.id} must have two or three capabilities`);
-  }
-  if (card.capabilities.some((capability) => typeof capability !== 'string' || !capability.trim())) {
-    throw new Error(`${locale} ${entry.id} capabilities must not be empty`);
-  }
-}
-
-function assertDetailContent(
-  detail: import('../../components/projects/content-types').PublicProjectDetailContent,
-  entry: PublicProjectManifestEntry,
-  locale: Locale,
-): void {
-  for (const field of ['headerSummary', 'evidenceStatement', 'relationship', 'context', 'problem', 'result', 'limitations', 'publicationScope'] as const) {
-    if (typeof detail[field] !== 'string' || !detail[field].trim()) {
-      throw new Error(`${locale} ${entry.id} ${field} must not be empty`);
+    if (!allowedMaturities.has(entry.maturity) || entry.maturity !== approved.maturity) {
+      throw new Error(`unsupported maturity for ${entry.id}`);
     }
-  }
-  if (!detail.deliveredScope.length || detail.deliveredScope.some((item) => !item.trim())) {
-    throw new Error(`${locale} ${entry.id} delivered scope must not be empty`);
-  }
-  if (detail.capabilities.length < 2 || detail.capabilities.length > 3 || detail.capabilities.some((item) => !item.trim())) {
-    throw new Error(`${locale} ${entry.id} detail capabilities must contain two or three labels`);
-  }
-  if (!detail.evidence.links.length || detail.evidence.links.some((link) => !link.label.trim() || !/^https:\/\//.test(link.href))) {
-    throw new Error(`${locale} ${entry.id} detail evidence links must be approved https links`);
-  }
-  if (!entry.services.includes(detail.relatedService.serviceId) || !detail.relatedService.label.trim()) {
-    throw new Error(`${locale} ${entry.id} related service is not approved`);
-  }
-  if (detail.relatedService.visibility !== 'public' && detail.relatedService.visibility !== 'internal') {
-    throw new Error(`${locale} ${entry.id} related service visibility is not approved`);
-  }
-  if (detail.founderAction && detail.founderAction.routeId !== 'founder') {
-    throw new Error(`${locale} ${entry.id} Founder action must target the Founder route`);
-  }
-  if (!detail.visual.label.trim() || !detail.visual.alt.trim()) {
-    throw new Error(`${locale} ${entry.id} conceptual visual label and alt text are required`);
-  }
-}
-
-function assertManifestShape(entry: PublicProjectManifestEntry): void {
-  if (!entry.id.trim() || !entry.slug.trim()) {
-    throw new Error('manifest IDs and slugs must not be empty');
-  }
-  if (!allowedMaturities.has(entry.maturity)) {
-    throw new Error(`unsupported maturity for ${entry.id}`);
-  }
-  if (!entry.services.length || entry.services.some((serviceId) => !serviceSectionIds.includes(serviceId))) {
-    throw new Error(`unsupported service for ${entry.id}`);
-  }
-  if (!allowedScopes.has(entry.publicationScope)) {
-    throw new Error(`unsupported publication scope for ${entry.id}`);
-  }
-  if (entry.destination.kind === 'external' && !/^https:\/\//.test(entry.destination.href)) {
-    throw new Error(`external destination for ${entry.id} must use https`);
-  }
-  if (entry.visual) {
-    if (!allowedVisualKinds.has(entry.visual.kind) || !entry.visual.src.trim()) {
-      throw new Error(`invalid visual for ${entry.id}`);
+    if (!allowedScopes.has(entry.publicationScope) || entry.publicationScope !== 'limited') {
+      throw new Error(`unsupported publication scope for ${entry.id}`);
     }
-    if (!Number.isInteger(entry.visual.width) || entry.visual.width <= 0 ||
-      !Number.isInteger(entry.visual.height) || entry.visual.height <= 0) {
-      throw new Error(`visual dimensions for ${entry.id} must be positive integers`);
+    if (entry.services.length !== 1 || entry.services[0] !== 'web' || !serviceSectionIds.includes(entry.services[0])) {
+      throw new Error(`unsupported service for ${entry.id}`);
     }
-  }
-}
-
-function getManifestEntry(id: string): PublicProjectManifestEntry | undefined {
-  return publishedProjectManifest.find((entry) => entry.id === id);
-}
-
-function getPublishedProjectIndexEntries(): PublicProjectManifestEntry[] {
-  return publishedProjectIndexManifest.map((id) => {
-    const entry = getManifestEntry(id);
-    if (!entry) throw new Error(`project index selection is outside the publication manifest: ${id}`);
-    if (entry.destination.kind !== 'detail') {
-      throw new Error(`project index selection requires an approved detail destination: ${id}`);
+    if (!/^https:\/\//.test(entry.sourceHref) || entry.sourceHref !== approved.sourceHref) {
+      throw new Error(`source for ${entry.id} is not the approved public repository`);
     }
-    return entry;
+    if (entry.visual.kind !== 'illustration' || entry.visual.src !== approved.visualSrc) {
+      throw new Error(`visual for ${entry.id} is not the approved conceptual illustration`);
+    }
+    if (entry.visual.width !== 1599 || entry.visual.height !== 900) {
+      throw new Error(`visual dimensions for ${entry.id} must stay 1599x900`);
+    }
   });
 }
 
-export function getPublishedProjectCards(
-  content: PublicProjectLocaleContent,
-  locale: Locale,
-): ResolvedProjectCard[] {
-  return getPublishedProjectIndexEntries().map((entry) => {
-    const card = content.cards[entry.id];
-    if (!card) throw new Error(`${locale} content is missing ${entry.id}`);
+function assertDossierContent(dossier: PublicProjectDossierContent, entry: PublicProjectManifestEntry, locale: Locale): void {
+  for (const field of ['jumpLabel', 'title', 'maturityLabel', 'summary', 'relationship'] as const) {
+    if (isBlank(dossier[field])) throw new Error(`${locale} ${entry.id} ${field} must not be empty`);
+  }
+  if (isBlank(dossier.visual?.caption) || isBlank(dossier.visual?.alt)) {
+    throw new Error(`${locale} ${entry.id} conceptual image caption and alt text are required`);
+  }
+  for (const section of ['opportunity', 'evidence', 'limits'] as const) {
+    if (isBlank(dossier[section]?.heading) || isBlank(dossier[section]?.content)) {
+      throw new Error(`${locale} ${entry.id} ${section} must have a heading and content`);
+    }
+  }
+  if (isBlank(dossier.scope?.heading) || !Array.isArray(dossier.scope.items) || !dossier.scope.items.length || dossier.scope.items.some(isBlank)) {
+    throw new Error(`${locale} ${entry.id} implemented scope must have a heading and non-empty items`);
+  }
+}
+
+export function validateProjectContent(content: PublicProjectLocaleContent, locale: Locale): void {
+  validateProjectManifest(publishedProjectManifest);
+
+  for (const field of ['sourceAction', 'relatedServiceAction'] as const) {
+    if (isBlank(content[field])) throw new Error(`${locale} ${field} must not be empty`);
+  }
+  if (isBlank(content.founderAction?.label) || content.founderAction.routeId !== 'founder') {
+    throw new Error(`${locale} Founder action must target the Founder route`);
+  }
+  if (isBlank(content.disclosure?.heading) || isBlank(content.disclosure?.description)) {
+    throw new Error(`${locale} disclosure must not be empty`);
+  }
+
+  const expectedIds = publishedProjectManifest.map((entry) => entry.id);
+  for (const id of Object.keys(content.dossiers)) {
+    if (!expectedIds.includes(id)) throw new Error(`${locale} content ${id} is outside the publication manifest`);
+  }
+  for (const entry of publishedProjectManifest) {
+    const dossier = content.dossiers[entry.id];
+    if (!dossier) throw new Error(`${locale} content is missing ${entry.id}`);
+    assertDossierContent(dossier, entry, locale);
+  }
+}
+
+export function getPublishedProjectDossiers(content: PublicProjectLocaleContent, locale: Locale): ResolvedProjectDossier[] {
+  validateProjectContent(content, locale);
+  return publishedProjectManifest.map((entry) => {
+    const dossier = content.dossiers[entry.id];
     return {
-      ...card,
+      ...dossier,
       id: entry.id,
       slug: entry.slug,
       maturity: entry.maturity,
       serviceIds: entry.services,
-      publicationScope: entry.publicationScope,
-      action: resolveProjectAction(entry, locale),
-      visual: entry.visual,
+      publicationPermission: entry.publicationScope,
+      sourceHref: entry.sourceHref,
+      relatedServiceHref: getServiceSectionHref(locale, entry.services[0]),
+      founderHref: getFoundationPath('founder', locale),
+      visual: { ...entry.visual, ...dossier.visual },
     };
   });
-}
-
-export function getPublishedProjectDetails(
-  content: PublicProjectLocaleContent,
-  locale: Locale,
-): PublicProjectManifestEntry[] {
-  return publishedProjectManifest
-    .filter((entry) => entry.destination.kind === 'detail')
-    .map((entry) => {
-      if (!content.details[entry.id]) throw new Error(`${locale} detail content is missing ${entry.id}`);
-      return entry;
-    });
-}
-
-export function validateProjectContent(
-  content: PublicProjectLocaleContent,
-  locale: Locale,
-): void {
-  const ids = publishedProjectManifest.map((entry) => entry.id);
-  const slugs = publishedProjectManifest.map((entry) => entry.slug);
-  if (new Set(ids).size !== ids.length) throw new Error('manifest IDs must be unique');
-  if (new Set(slugs).size !== slugs.length) throw new Error('manifest slugs must be unique');
-  for (const entry of publishedProjectManifest) assertManifestShape(entry);
-
-  for (const id of Object.keys(content.cards)) {
-    if (!getManifestEntry(id)) throw new Error(`${locale} content ${id} is outside the publication manifest`);
-  }
-  for (const id of Object.keys(content.details)) {
-    const entry = getManifestEntry(id);
-    if (!entry || entry.destination.kind !== 'detail') {
-      throw new Error(`${locale} content ${id} is outside the publication manifest`);
-    }
-  }
-
-  for (const entry of publishedProjectManifest) {
-    const card = content.cards[entry.id];
-    if (!card) throw new Error(`${locale} content is missing ${entry.id}`);
-    assertCardContent(card, entry, locale);
-
-    if (entry.destination.kind === 'detail' && !content.details[entry.id]) {
-      throw new Error(`${locale} detail content is missing ${entry.id}`);
-    }
-    if (entry.destination.kind !== 'detail' && content.details[entry.id]) {
-      throw new Error(`${locale} detail content is not eligible for ${entry.id}`);
-    }
-    if (entry.destination.kind === 'detail') {
-      assertDetailContent(content.details[entry.id], entry, locale);
-    }
-  }
-}
-
-export function getPublishedProjectDetail(
-  content: PublicProjectLocaleContent,
-  slug: string,
-  locale: Locale,
-): ResolvedProjectDetail | undefined {
-  validateProjectContent(content, locale);
-  const entry = publishedProjectManifest.find(
-    (candidate) => candidate.slug === slug && candidate.destination.kind === 'detail',
-  );
-  if (!entry || !entry.visual) return undefined;
-  const detail = content.details[entry.id];
-  if (!detail) return undefined;
-  return {
-    ...detail,
-    id: entry.id,
-    slug: entry.slug,
-    title: content.cards[entry.id].title,
-    maturityLabel: content.cards[entry.id].maturityLabel,
-    maturity: entry.maturity,
-    serviceIds: entry.services,
-    publicationPermission: entry.publicationScope,
-    visual: { ...entry.visual, ...detail.visual },
-    relatedServiceHref: getServiceSectionHref(locale, detail.relatedService.serviceId),
-    founderAction: detail.founderAction
-      ? { ...detail.founderAction, href: getFoundationPath(detail.founderAction.routeId, locale) }
-      : undefined,
-  };
 }

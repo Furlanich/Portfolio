@@ -1,149 +1,97 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 
-const { publishedProjectManifest, getPublishedProjectDetail, getPublishedProjectDetails, validateProjectContent } =
-  await import('../lib/projects/publication.ts');
-const { projectPageContent: spanish } = await import('../app/(es)/_content/projects.ts');
-const { projectPageContent: english } = await import('../app/(en)/en/_content/projects.ts');
+// PLAN-SPF-V1 Task 3 (dated 2026-10-06): the six project-detail destinations are retired, and the
+// complete stories live in two dossiers on the Projects index. This file used to prove the detail
+// routes; it now proves their absence and keeps the protection that mattered (a closed, fail-closed
+// publication set, and a server-rendered, accessible evidence boundary), moved to the dossiers.
 
-const expectedSlugs = [
-  'general-reservation-system',
-  'the-system',
-  'mpc-administracion',
+async function collectFiles(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const path = `${directory}/${entry.name}`;
+    if (entry.isDirectory()) files.push(...await collectFiles(path));
+    else files.push(path);
+  }
+  return files;
+}
+
+const retiredSources = [
+  'app/(es)/proyectos/[projectSlug]/page.tsx',
+  'app/(en)/en/work/[projectSlug]/page.tsx',
+  'components/projects/ProjectDetailPage.tsx',
+  'components/projects/ProjectCard.tsx',
 ];
 
-const requiredDetailFields = [
-  'headerSummary',
-  'evidenceStatement',
-  'context',
-  'problem',
-  'deliveredScope',
-  'capabilities',
-  'result',
-  'evidence',
-  'limitations',
-  'relatedService',
-  'publicationScope',
-  'visual',
-];
-
-test('projects detail gate resolves exactly three paired detail destinations', () => {
-  assert.deepEqual(
-    publishedProjectManifest.map((entry) => entry.slug),
-    expectedSlugs,
-  );
-  assert.ok(publishedProjectManifest.every((entry) => entry.destination.kind === 'detail'));
-  assert.deepEqual(
-    getPublishedProjectDetails(spanish, 'es').map((entry) => entry.slug),
-    expectedSlugs,
-  );
-  assert.deepEqual(
-    getPublishedProjectDetails(english, 'en').map((entry) => entry.slug),
-    expectedSlugs,
-  );
-  assert.equal(getPublishedProjectDetail(spanish, 'unknown-project', 'es'), undefined);
-  assert.equal(getPublishedProjectDetail(english, 'unknown-project', 'en'), undefined);
+test('the retired detail route entries and detail-only components are gone', async () => {
+  for (const path of retiredSources) {
+    await assert.rejects(access(path), { code: 'ENOENT' }, path);
+  }
+  // The dynamic-route directories must not survive as empty shells either.
+  for (const directory of ['app/(es)/proyectos/[projectSlug]', 'app/(en)/en/work/[projectSlug]']) {
+    await assert.rejects(access(directory), { code: 'ENOENT' }, directory);
+  }
 });
 
-test('each locale supplies complete bounded detail content for every eligible project', () => {
-  validateProjectContent(spanish, 'es');
-  validateProjectContent(english, 'en');
-
-  for (const [locale, page] of [['es', spanish], ['en', english]]) {
-    for (const slug of expectedSlugs) {
-      const id = publishedProjectManifest.find((entry) => entry.slug === slug).id;
-      const detail = page.details[id];
-      assert.ok(detail, `${locale} ${slug} detail must exist`);
-      for (const field of requiredDetailFields) assert.ok(detail[field], `${locale} ${slug} ${field} must exist`);
-      assert.equal(detail.evidence.links.length >= 1, true);
-      const entry = publishedProjectManifest.find((candidate) => candidate.id === id);
-      assert.equal(entry.visual.kind, 'illustration');
-      assert.equal(entry.visual.src.endsWith('.webp'), true);
-      assert.equal(detail.visual.alt.length > 0, true);
-      assert.ok(detail.relationship);
-      assert.ok(detail.relatedService.visibility === 'public' || detail.relatedService.visibility === 'internal');
+test('no active source still names a detail-only symbol or generates a project route', async () => {
+  const files = (await Promise.all(['app', 'components', 'lib'].map((directory) => collectFiles(directory))))
+    .flat()
+    .filter((path) => /\.(mjs|ts|tsx|css)$/.test(path));
+  const offenders = [];
+  for (const path of files) {
+    const source = await readFile(path, 'utf8');
+    for (const forbidden of [
+      /ProjectDetailPage/, /ProjectDetailLabels/, /getPublishedProjectDetails?\b/, /getProjectDetailPath/,
+      /getProjectDetailNavigationPaths/, /ResolvedProjectDetail/, /PublicProjectDetailContent/,
+      /projectSlug/, /\bProjectCard\b/, /ProjectMeta/, /data-detail-/, /\bdetails:\s*\{/,
+    ]) {
+      if (forbidden.test(source)) offenders.push(`${path}: ${forbidden}`);
     }
   }
+  assert.deepEqual(offenders, []);
 });
 
-test('keeps localized publication prose separate from the internal publication permission', () => {
-  const spanishDetail = getPublishedProjectDetail(spanish, 'general-reservation-system', 'es');
-  const englishDetail = getPublishedProjectDetail(english, 'general-reservation-system', 'en');
-
-  assert.equal(spanishDetail.publicationPermission, 'limited');
-  assert.equal(englishDetail.publicationPermission, 'limited');
-  assert.equal(
-    spanishDetail.publicationScope,
-    'La descripción pública está limitada por permisos de publicación. La imagen es conceptual y no muestra una interfaz real.',
-  );
-  assert.equal(
-    englishDetail.publicationScope,
-    'The public description is limited by publication permissions. The image is conceptual and does not show a real interface.',
-  );
-  assert.notEqual(spanishDetail.publicationScope, 'limited');
-  assert.notEqual(englishDetail.publicationScope, 'limited');
-});
-
-test('routes MPC back to Founder education without rendering a commercial service destination', () => {
-  const spanishDetail = getPublishedProjectDetail(spanish, 'mpc-administracion', 'es');
-  const englishDetail = getPublishedProjectDetail(english, 'mpc-administracion', 'en');
-
-  assert.equal(spanishDetail.relatedService.visibility, 'internal');
-  assert.equal(englishDetail.relatedService.visibility, 'internal');
-  assert.deepEqual(spanishDetail.founderAction, {
-    label: 'Conocer la trayectoria de Samuel',
-    routeId: 'founder',
-    href: '/estudio/samuel-furlanich/',
-  });
-  assert.deepEqual(englishDetail.founderAction, {
-    label: "View Samuel's background",
-    routeId: 'founder',
-    href: '/en/about/samuel-furlanich/',
-  });
-});
-
-test('detail assets exist only at the three approved conceptual paths', async () => {
-  const paths = [
-    'public/projects/general-reservation-system/conceptual-workflow.webp',
-    'public/projects/the-system/conceptual-access-model.webp',
-    'public/projects/mpc-administracion/conceptual-operations-model.webp',
-  ];
-  await Promise.all(paths.map((path) => access(path)));
-});
-
-test('paired detail routes are static, closed to unknown params, and locale-owned', async () => {
-  const routes = [
-    ['app/(es)/proyectos/[projectSlug]/page.tsx', 'es'],
-    ['app/(en)/en/work/[projectSlug]/page.tsx', 'en'],
-  ];
-  for (const [path, locale] of routes) {
-    const source = await readFile(path, 'utf8');
-    assert.match(source, /generateStaticParams/);
-    assert.match(source, /dynamicParams\s*=\s*false/);
-    assert.match(source, /ProjectDetailPage/);
-    assert.match(source, new RegExp(`locale = '${locale}'`));
-    assert.match(source, /getProjectDetailNavigationPaths/);
-    assert.doesNotMatch(source, /next-intl|legacy|ProjectCard/);
+test('active routes and links never name a retired detail destination', async () => {
+  const files = (await Promise.all(['app', 'components', 'lib'].map((directory) => collectFiles(directory))))
+    .flat()
+    .filter((path) => /\.(mjs|ts|tsx|css)$/.test(path));
+  const retired = /(?:proyectos|work)\/(?:general-reservation-system|the-system|mpc-administracion)\//;
+  const offenders = [];
+  for (const path of files) {
+    if (retired.test(await readFile(path, 'utf8'))) offenders.push(path);
   }
+  assert.deepEqual(offenders, []);
 });
 
-test('detail composition is a server-rendered accessible evidence boundary', async () => {
-  const source = await readFile('components/projects/ProjectDetailPage.tsx', 'utf8');
+test('the dossier is a server-rendered, accessible evidence boundary with no hidden story', async () => {
+  const source = await readFile('components/projects/ProjectDossier.tsx', 'utf8');
   assert.doesNotMatch(source, /^['"]use client['"];?$/m);
-  assert.match(source, /from 'next\/image'/);
-  assert.match(source, /<main>/);
-  assert.match(source, /<h1/);
+  assert.match(source, /<article/);
+  assert.match(source, /aria-labelledby/);
+  assert.match(source, /<h2/);
+  assert.match(source, /<h3/);
   assert.match(source, /<ul/);
+  assert.match(source, /from 'next\/image'/);
+  assert.match(source, /loading="lazy"/);
+  assert.doesNotMatch(source, /priority/);
   assert.match(source, /target="_blank"/);
   assert.match(source, /rel="noreferrer"/);
-  assert.match(source, /min-h-11/);
-  assert.match(source, /publicationPermission/);
-  assert.match(source, /relatedService\.visibility/);
-  assert.match(source, /data-detail-group="context"/);
-  assert.match(source, /data-detail-group="scope"/);
-  assert.match(source, /data-detail-group="evidence"/);
-  assert.match(source, /data-detail-group="next-steps"/);
-  assert.doesNotMatch(source, /detail\.publicationScope === 'limited'/);
-  assert.doesNotMatch(source, /carousel|line-clamp|shadow-|functional-demonstration/i);
+  assert.match(source, /data-connected-reading-mask/);
+  assert.doesNotMatch(source, /<details|<summary|aria-expanded/);
+  assert.doesNotMatch(source, /carousel|line-clamp|shadow-|Ver proyecto|View project/i);
+});
+
+test('the Projects page carries the connected-page contract and no detail action', async () => {
+  const source = await readFile('components/projects/ProjectsPage.tsx', 'utf8');
+  assert.doesNotMatch(source, /^['"]use client['"];?$/m);
+  assert.match(source, /<main/);
+  assert.match(source, /data-connected-page/);
+  assert.match(source, /<ConnectedStudioGround/);
+  assert.match(source, /connected-pause-projects/);
+  assert.match(source, /formatCapabilityLegend/);
+  assert.match(source, /data-connected-reading-mask/);
+  assert.match(source, /<h1/);
+  assert.doesNotMatch(source, /Ver proyecto|View project|ProjectCard|details/);
 });

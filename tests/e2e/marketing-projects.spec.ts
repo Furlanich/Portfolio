@@ -1,7 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
-import { IDENTITY_TINT, backgroundOf, expectSequenceMarker, expectShortMonoOnly } from './support/editorial';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
+
+// PLAN-SPF-V1 Task 3 (dated 2026-10-06): the Projects index holds both complete dossiers and the six
+// project-detail destinations are retired, so the former detail-page and card tests are replaced by
+// dossier tests and by negative assertions. Exact copy lives in connected-studio-static.spec.ts.
+
+const MPC_SOURCE = 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-';
 
 const projectCases = [
   {
@@ -9,163 +14,169 @@ const projectCases = [
     index: stableRoutes.projects.es,
     founder: stableRoutes.founder.es,
     titles: ['Gestión de reservas para transporte de pasajeros', 'Gestión multiusuario de campañas de rol'],
-    relationship: 'Prototipo publicado por Samuel',
-    limitation: 'Demostración pública no disponible',
+    relationship: 'Repositorio publicado por el fundador con otro colaborador. No se presenta como trabajo para un cliente.',
     mpcTitle: 'MPC Administración',
-    detailPrefix: '/proyectos/',
-    serviceLabel: 'Sitios y aplicaciones web comerciales',
-    founderLabel: 'Conocer la trayectoria de Samuel',
-    publicationScope: 'La descripción pública está limitada por permisos de publicación. La imagen es conceptual y no muestra una interfaz real.',
-    groupHeadings: ['Contexto y oportunidad', 'Alcance implementado', 'Evidencia y límites', 'Siguientes destinos'],
-    contact: stableRoutes.contact.es,
-    finalHeading: '¿Necesitás resolver algo parecido?',
-    finalAction: 'Hablar sobre tu proyecto',
-    limitationsHeading: 'Limitaciones y alcance',
+    mpcAction: 'Ver código fuente',
+    retiredAction: /Ver proyecto|Ver el proyecto/,
   },
   {
     locale: 'English',
     index: stableRoutes.projects.en,
     founder: stableRoutes.founder.en,
     titles: ['Passenger transport reservation management', 'Multi-user role-playing campaign management'],
-    relationship: 'Prototype published by Samuel',
-    limitation: 'No current public demo',
+    relationship: 'Founder-published repository with another contributor. It is not presented as client work.',
     mpcTitle: 'MPC Administración',
-    detailPrefix: '/en/work/',
-    serviceLabel: 'Commercial websites and web applications',
-    founderLabel: "View Samuel's background",
-    publicationScope: 'The public description is limited by publication permissions. The image is conceptual and does not show a real interface.',
-    groupHeadings: ['Context and opportunity', 'Implemented scope', 'Evidence and limitations', 'Next destinations'],
-    contact: stableRoutes.contact.en,
-    finalHeading: 'Need to solve something similar?',
-    finalAction: 'Discuss your project',
-    limitationsHeading: 'Limitations and scope',
+    mpcAction: 'View source code',
+    retiredAction: /View project|View the project/,
   },
 ] as const;
 
+const slugs = ['general-reservation-system', 'the-system'] as const;
+
 for (const projectCase of projectCases) {
-  test(`${projectCase.locale} Projects selects GRS and Lab with editorial priority`, async ({ page }) => {
+  test(`${projectCase.locale} Projects publishes GRS then The-System as two complete dossiers`, async ({ page }) => {
     const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
     await page.goto(appUrl(projectCase.index));
 
     const main = page.getByRole('main');
-    const cards = main.locator('[data-project-slug]');
-    await expect(cards).toHaveCount(2);
-    await expect(cards.nth(0)).toHaveAttribute('data-project-slug', 'general-reservation-system');
-    await expect(cards.nth(0)).toHaveAttribute('data-project-presentation', 'lead');
-    await expect(cards.nth(1)).toHaveAttribute('data-project-slug', 'the-system');
-    await expect(cards.nth(1)).toHaveAttribute('data-project-presentation', 'secondary');
-    await expect(main.getByText(projectCase.titles[0], { exact: true })).toBeVisible();
-    await expect(main.getByText(projectCase.titles[1], { exact: true })).toBeVisible();
-    await expect(main.getByText(projectCase.mpcTitle, { exact: true })).toHaveCount(0);
-    await expect(main.getByText(projectCase.relationship)).toBeVisible();
-    await expect(main.getByText(projectCase.limitation)).toBeVisible();
-
-    const viewport = page.viewportSize();
-    if (viewport && viewport.width >= 1024) {
-      const lead = await cards.nth(0).boundingBox();
-      const secondary = await cards.nth(1).boundingBox();
-      expect(lead?.width).toBeGreaterThan(secondary?.width ?? 0);
+    await expect(main.getByRole('heading', { level: 1 })).toHaveCount(1);
+    const dossiers = main.locator('article');
+    await expect(dossiers).toHaveCount(2);
+    for (const [index, slug] of slugs.entries()) {
+      await expect(dossiers.nth(index)).toHaveAttribute('id', slug);
+      await expect(dossiers.nth(index)).toHaveAttribute('data-project-slug', slug);
+      await expect(dossiers.nth(index).getByRole('heading', { level: 2, name: projectCase.titles[index], exact: true })).toBeVisible();
     }
+    await expect(main.getByText(projectCase.relationship, { exact: true })).toBeVisible();
+    await expect(main.getByText(projectCase.mpcTitle, { exact: true })).toHaveCount(0);
+
+    // Nothing is hidden behind an accordion, a disclosure or a tab.
+    await expect(main.locator('details, summary, [aria-expanded], [role="tab"], [hidden]')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     assertNoBrowserErrors();
   });
 
-  test(`${projectCase.locale} Founder exposes the educational MPC detail from education`, async ({ page }) => {
+  test(`${projectCase.locale} Projects exposes no project-detail action or retired destination`, async ({ page }) => {
+    await page.goto(appUrl(projectCase.index));
+    const main = page.getByRole('main');
+    await expect(main.getByRole('link', { name: projectCase.retiredAction })).toHaveCount(0);
+    const hrefs = await page.locator('a[href]').evaluateAll((links) => links.map((link) => link.getAttribute('href') ?? ''));
+    expect(hrefs.filter((href) => /(?:proyectos|work)\/(?:general-reservation-system|the-system|mpc-administracion)/.test(href))).toEqual([]);
+    // Project cards are gone: no dossier is one big link and none is focusable on its own.
+    for (const article of await main.locator('article').all()) {
+      await expect(article).not.toHaveAttribute('tabindex', /.*/);
+      expect(await article.evaluate((element) => getComputedStyle(element).cursor)).not.toBe('pointer');
+    }
+  });
+
+  test(`${projectCase.locale} Projects keeps every foreground plate opaque Deep with the chart border`, async ({ page }) => {
+    await page.goto(appUrl(projectCase.index));
+    const masks = page.locator('main [data-connected-reading-mask]');
+    // The introduction, the capability legend, the two dossiers and the publication note.
+    await expect(masks).toHaveCount(5);
+    for (const mask of await masks.all()) {
+      const style = await mask.evaluate((element) => {
+        const computed = getComputedStyle(element);
+        return {
+          background: computed.backgroundColor,
+          border: computed.borderTopWidth,
+          borderStyle: computed.borderTopStyle,
+          borderColor: computed.borderTopColor,
+          radius: computed.borderTopLeftRadius,
+        };
+      });
+      expect(style).toEqual({ background: 'rgb(10, 30, 51)', border: '1px', borderStyle: 'solid', borderColor: 'rgb(54, 83, 108)', radius: '16px' });
+    }
+  });
+
+  test(`${projectCase.locale} Projects dossier hover emphasizes only its border`, async ({ page }) => {
+    const hoverable = await page.evaluate(() => matchMedia('(hover: hover) and (pointer: fine)').matches);
+    test.skip(!hoverable, 'hover treatments exist for fine pointers only');
+    await page.goto(appUrl(projectCase.index));
+    const article = page.locator('main article').first();
+    await article.scrollIntoViewIfNeeded();
+    const before = await article.boundingBox();
+    expect(await article.evaluate((element) => getComputedStyle(element).borderTopColor)).toBe('rgb(54, 83, 108)');
+
+    await article.locator('h2').hover();
+    await expect.poll(() => article.evaluate((element) => getComputedStyle(element).borderTopColor)).toBe('rgb(111, 168, 224)');
+    const after = await article.boundingBox();
+    expect(after).toEqual(before);
+    expect(await article.evaluate((element) => getComputedStyle(element).transform)).toBe('none');
+  });
+
+  test(`${projectCase.locale} Projects artwork scales at most 1.018 while its caption stays still`, async ({ page }) => {
+    const hoverable = await page.evaluate(() => matchMedia('(hover: hover) and (pointer: fine)').matches);
+    test.skip(!hoverable, 'hover treatments exist for fine pointers only');
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto(appUrl(projectCase.index));
+    const figure = page.locator('main article').first().locator('figure');
+    const image = figure.locator('img');
+    const caption = figure.locator('figcaption');
+    await figure.scrollIntoViewIfNeeded();
+    const captionBefore = await caption.boundingBox();
+    const frameBefore = await figure.boundingBox();
+
+    await image.hover();
+    const scale = () => image.evaluate((element) => {
+      const matrix = new DOMMatrixReadOnly(getComputedStyle(element).transform);
+      return Math.round(matrix.a * 10000) / 10000;
+    });
+    await expect.poll(scale).toBeGreaterThan(1.017);
+    expect(await scale()).toBeLessThanOrEqual(1.018);
+    expect(await caption.boundingBox()).toEqual(captionBefore);
+    expect(await figure.boundingBox()).toEqual(frameBefore);
+    expect(await image.evaluate((element) => getComputedStyle(element).transitionDuration)).toBe('0.26s');
+    expect(await image.evaluate((element) => getComputedStyle(element).transitionProperty)).toBe('transform');
+  });
+
+  test(`${projectCase.locale} Projects removes the artwork zoom under reduced motion`, async ({ page }) => {
+    const hoverable = await page.evaluate(() => matchMedia('(hover: hover) and (pointer: fine)').matches);
+    test.skip(!hoverable, 'hover treatments exist for fine pointers only');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(appUrl(projectCase.index));
+    const image = page.locator('main article').first().locator('figure img');
+    await image.scrollIntoViewIfNeeded();
+    await image.hover();
+    await page.waitForTimeout(400);
+    expect(await image.evaluate((element) => getComputedStyle(element).transform)).toBe('none');
+  });
+
+  test(`${projectCase.locale} Founder keeps the educational MPC context and links to its approved source`, async ({ page }) => {
     await page.goto(appUrl(projectCase.founder));
 
     const education = page.locator('section[aria-labelledby="founder-education-heading"]');
     await expect(education.getByText(projectCase.mpcTitle, { exact: true })).toBeVisible();
     await expect(education.getByText(/(?:Trabajo educativo grupal|Educational group work) · 2021/)).toBeVisible();
     await expect(education.getByText(/fictic|ficticio|fictional/i)).toBeVisible();
-    await expect(education.getByRole('link')).toHaveAttribute('href', appPathname(`${projectCase.detailPrefix}mpc-administracion/`));
-  });
+    await expect(education.getByText(/no representa|does not represent/i)).toBeVisible();
+    await expect(education.getByText(/No se verificó|has not been verified/i)).toBeVisible();
 
-  for (const slug of ['general-reservation-system', 'the-system', 'mpc-administracion'] as const) {
-    test(`${projectCase.locale} ${slug} detail preserves evidence boundaries and grouped reading order`, async ({ page }) => {
-      await page.goto(appUrl(`${projectCase.detailPrefix}${slug}/`));
-
-      const main = page.getByRole('main');
-      await expect(main.locator('[data-detail-group]')).toHaveCount(4);
-      for (const heading of projectCase.groupHeadings) {
-        await expect(main.getByRole('heading', { name: heading, exact: true })).toBeVisible();
-      }
-      const publicationScope =
-        slug === 'mpc-administracion'
-          ? projectCase.locale === 'Spanish'
-            ? 'La descripción pública está limitada por el contexto educativo y los permisos de publicación. La imagen es conceptual y no muestra una interfaz real.'
-            : 'The public description is limited by the educational context and publication permissions. The image is conceptual and does not show a real interface.'
-          : projectCase.publicationScope;
-      await expect(main.getByText(publicationScope, { exact: true })).toBeVisible();
-      await expect(main.getByRole('link', { name: /external link|enlace externo/i })).toHaveCount(1);
-
-      if (slug === 'mpc-administracion') {
-        await expect(main.getByRole('link', { name: projectCase.serviceLabel, exact: true })).toHaveCount(0);
-        await expect(main.getByRole('link', { name: projectCase.founderLabel, exact: true })).toHaveAttribute(
-          'href',
-          appPathname(projectCase.founder),
-        );
-      } else {
-        await expect(main.getByRole('link', { name: projectCase.serviceLabel, exact: true })).toHaveAttribute(
-          'href',
-          projectCase.locale === 'Spanish' ? appPathname('/servicios/') + '#web' : appPathname('/en/services/') + '#web',
-        );
-      }
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    });
-  }
-}
-
-for (const projectCase of projectCases) {
-  test(`${projectCase.locale} Projects keeps evidence cards bounded and ends on the inquiry band`, async ({ page }) => {
-    await page.goto(appUrl(projectCase.index));
-    const main = page.getByRole('main');
-    const cards = main.locator('[data-project-slug]');
-
-    for (const card of await cards.all()) {
-      await expect(card.getByRole('link')).toHaveCount(1);
-      await expect(card).not.toHaveAttribute('tabindex', /.*/);
-      expect(await card.evaluate((element) => getComputedStyle(element).cursor)).not.toBe('pointer');
-      await expect(card.locator('[data-project-meta]')).toBeVisible();
-    }
-
-    const mono = await expectShortMonoOnly(main);
-    expect(mono.length).toBeGreaterThan(0);
-
-    const ending = main.locator('section[aria-labelledby="projects-cta-heading"]');
-    await expect(ending.getByRole('heading', { level: 2, name: projectCase.finalHeading, exact: true })).toBeVisible();
-    await expect(ending.getByRole('link', { name: projectCase.finalAction, exact: true })).toHaveAttribute('href', appPathname(projectCase.contact));
-    expect(await backgroundOf(ending)).toBe(IDENTITY_TINT);
-  });
-
-  test(`${projectCase.locale} project detail numbers its groups and keeps limitations in a bounded panel`, async ({ page }) => {
-    await page.goto(appUrl(`${projectCase.detailPrefix}general-reservation-system/`));
-    const main = page.getByRole('main');
-
-    const groups = main.locator('[data-detail-group]');
-    for (const [index, heading] of projectCase.groupHeadings.entries()) {
-      const group = groups.nth(index);
-      await expect(group.getByRole('heading', { level: 2, name: heading, exact: true })).toBeVisible();
-      await expectSequenceMarker(group, String(index + 1).padStart(2, '0'));
-    }
-
-    const limitations = main.locator('[data-detail-limitations]');
-    await expect(limitations.getByRole('heading', { level: 3, name: projectCase.limitationsHeading, exact: true })).toBeVisible();
-    await expect(limitations.getByText(projectCase.publicationScope, { exact: true })).toBeVisible();
-    expect(await limitations.evaluate((element) => getComputedStyle(element).borderTopStyle)).toBe('solid');
-
-    await expectShortMonoOnly(main);
-
-    const ending = main.locator('section[aria-labelledby="detail-cta-heading"]');
-    await expect(ending.getByRole('link', { name: projectCase.finalAction, exact: true })).toHaveAttribute('href', appPathname(projectCase.contact));
-    expect(await backgroundOf(ending)).toBe(IDENTITY_TINT);
+    const source = education.getByRole('link', { name: projectCase.mpcAction, exact: true });
+    await expect(source).toHaveCount(1);
+    await expect(source).toHaveAttribute('href', MPC_SOURCE);
+    await expect(source).toHaveAttribute('target', '_blank');
+    await expect(source).toHaveAttribute('rel', /noreferrer/);
+    // No internal MPC destination remains, and the old educational-project action is gone.
+    await expect(education.getByRole('link', { name: /Ver proyecto educativo|View educational project/ })).toHaveCount(0);
+    const hrefs = await education.locator('a[href]').evaluateAll((links) => links.map((link) => link.getAttribute('href') ?? ''));
+    expect(hrefs.filter((href) => /mpc-administracion/.test(href))).toEqual([]);
   });
 }
 
-test('MPC education link remains usable without JavaScript', async ({ browser }) => {
+test('the MPC source link remains usable without JavaScript', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto(appUrl(stableRoutes.founder.es));
-  await page.getByRole('link', { name: 'Ver proyecto educativo' }).click();
-  await expect(page).toHaveURL((url) => url.pathname === appPathname('/proyectos/mpc-administracion/'));
+  await expect(page.getByRole('link', { name: 'Ver código fuente', exact: true })).toHaveAttribute('href', MPC_SOURCE);
+  await expect(page.getByRole('link', { name: 'Ver código fuente', exact: true })).toHaveAttribute('href', MPC_SOURCE);
   await context.close();
+});
+
+test('the Founder page carries no link to a retired MPC route in either locale', async ({ page }) => {
+  for (const route of [stableRoutes.founder.es, stableRoutes.founder.en]) {
+    await page.goto(appUrl(route));
+    const hrefs = await page.locator('a[href]').evaluateAll((links) => links.map((link) => link.getAttribute('href') ?? ''));
+    expect(hrefs.filter((href) => href.includes(appPathname('/proyectos/mpc')) || href.includes(appPathname('/en/work/mpc')))).toEqual([]);
+  }
 });

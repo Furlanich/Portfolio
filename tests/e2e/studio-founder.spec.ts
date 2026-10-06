@@ -244,13 +244,8 @@ const integrationCases = [
     contactActionLabels: ['Escribir por WhatsApp', 'Enviar un correo', 'Llamar'],
     contactFounderLabel: 'Conocer la trayectoria de Samuel',
     projectFounderLabel: 'Conocer a Samuel',
-    mpcFounderLabel: 'Conocer la trayectoria de Samuel',
     founderRoute: stableRoutes.founder.es,
-    projectRoutes: {
-      'general-reservation-system': '/proyectos/general-reservation-system/',
-      'the-system': '/proyectos/the-system/',
-      'mpc-administracion': '/proyectos/mpc-administracion/',
-    },
+    projectsRoute: stableRoutes.projects.es,
   },
   {
     locale: 'English',
@@ -258,13 +253,8 @@ const integrationCases = [
     contactActionLabels: ['Write on WhatsApp', 'Send an email', 'Call'],
     contactFounderLabel: "View Samuel's background",
     projectFounderLabel: 'Meet Samuel',
-    mpcFounderLabel: "View Samuel's background",
     founderRoute: stableRoutes.founder.en,
-    projectRoutes: {
-      'general-reservation-system': '/en/work/general-reservation-system/',
-      'the-system': '/en/work/the-system/',
-      'mpc-administracion': '/en/work/mpc-administracion/',
-    },
+    projectsRoute: stableRoutes.projects.en,
   },
 ] as const;
 
@@ -285,20 +275,15 @@ for (const integrationCase of integrationCases) {
     );
   });
 
-  test(`${integrationCase.locale} project details expose Founder context only when evidence authorizes it`, async ({ page }) => {
-    for (const slug of ['general-reservation-system', 'the-system'] as const) {
-      await page.goto(appUrl(integrationCase.projectRoutes[slug]));
-      await expect(page.getByRole('main').getByRole('link', { name: integrationCase.projectFounderLabel })).toHaveAttribute(
-        'href',
-        appPathname(integrationCase.founderRoute),
-      );
+  // Dated 2026-10-06 (PLAN-SPF-V1 Task 3): the project-detail pages are retired, so Founder context now
+  // belongs to the two index dossiers. MPC is not on Projects; its Founder context links to its source.
+  test(`${integrationCase.locale} Projects dossiers expose Founder context only when evidence authorizes it`, async ({ page }) => {
+    await page.goto(appUrl(integrationCase.projectsRoute));
+    const founderLinks = page.getByRole('main').getByRole('link', { name: integrationCase.projectFounderLabel, exact: true });
+    await expect(founderLinks).toHaveCount(2);
+    for (const link of await founderLinks.all()) {
+      await expect(link).toHaveAttribute('href', appPathname(integrationCase.founderRoute));
     }
-
-    await page.goto(appUrl(integrationCase.projectRoutes['mpc-administracion']));
-    await expect(page.getByRole('main').getByRole('link', { name: integrationCase.mpcFounderLabel })).toHaveAttribute(
-      'href',
-      appPathname(integrationCase.founderRoute),
-    );
   });
 }
 

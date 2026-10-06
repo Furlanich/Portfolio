@@ -1,19 +1,20 @@
 import type { ActionLink } from '../foundation/content-types';
 import type { ServiceSectionId } from '../services/content-types';
 import type { Locale } from '../../lib/locales';
+import type { ProjectDossierSlug } from '../../lib/site-routes';
+
+// PLAN-SPF-V1 Task 3: the Projects index publishes two complete dossiers. These types replace the
+// former card/detail-route roles; there is no per-project destination any more.
 
 export type PublicProjectManifestEntry = {
   id: string;
-  slug: string;
+  slug: ProjectDossierSlug;
   maturity: 'production' | 'lab' | 'prototype';
   services: readonly [ServiceSectionId, ...ServiceSectionId[]];
   publicationScope: 'open' | 'limited';
-  destination:
-    | { kind: 'detail' }
-    | { kind: 'contact' }
-    | { kind: 'service'; serviceId: ServiceSectionId }
-    | { kind: 'external'; href: string };
-  visual?: {
+  /** The existing approved public repository (language-neutral). */
+  sourceHref: string;
+  visual: {
     kind: 'screenshot' | 'diagram' | 'illustration';
     src: string;
     width: number;
@@ -21,62 +22,21 @@ export type PublicProjectManifestEntry = {
   };
 };
 
-export type PublicProjectCardContent = {
+export type PublicProjectDossierContent = {
+  /** The localized jump-link label shown in the page introduction. */
+  jumpLabel: string;
   title: string;
-  context: string;
   maturityLabel: string;
   summary: string;
   relationship: string;
-  limitation: string;
-  capabilities: readonly [string, string] | readonly [string, string, string];
-  evidenceSignal: string;
-  actionLabel: string;
-  visualAlt?: string;
-};
-
-export type PublicProjectEvidenceLink = {
-  label: string;
-  href: string;
-  kind: 'repository' | 'conceptual-visual';
-};
-
-export type PublicProjectDetailContent = {
-  headerSummary: string;
-  evidenceStatement: string;
-  relationship: string;
-  context: string;
-  problem: string;
-  deliveredScope: readonly string[];
-  capabilities: readonly [string, string] | readonly [string, string, string];
-  result: string;
-  evidence: {
-    links: readonly [PublicProjectEvidenceLink, ...PublicProjectEvidenceLink[]];
-  };
-  limitations: string;
-  relatedService: {
-    label: string;
-    serviceId: ServiceSectionId;
-    visibility: 'public' | 'internal';
-  };
-  publicationScope: string;
   visual: {
-    label: string;
+    caption: string;
     alt: string;
   };
-  founderAction?: ActionLink;
-};
-
-export type ResolvedProjectCard = PublicProjectCardContent & {
-  id: string;
-  slug: string;
-  maturity: PublicProjectManifestEntry['maturity'];
-  serviceIds: PublicProjectManifestEntry['services'];
-  publicationScope: PublicProjectManifestEntry['publicationScope'];
-  action: {
-    href: string;
-    external: boolean;
-  };
-  visual?: PublicProjectManifestEntry['visual'];
+  opportunity: { heading: string; content: string };
+  scope: { heading: string; items: readonly string[] };
+  evidence: { heading: string; content: string };
+  limits: { heading: string; content: string };
 };
 
 export type ProjectsPageContent = {
@@ -84,35 +44,27 @@ export type ProjectsPageContent = {
   routeId: 'projects';
   heading: string;
   introduction: string;
-  taxonomy: {
-    production: string;
-    lab: string;
-    prototype: string;
-  };
-  confidentiality: {
+  sourceAction: string;
+  relatedServiceAction: string;
+  founderAction: ActionLink;
+  disclosure: {
     heading: string;
     description: string;
   };
-  finalCta: {
-    heading: string;
-    description: string;
-    action: ActionLink;
-  };
-  cards: Readonly<Record<string, PublicProjectCardContent>>;
-  details: Readonly<Record<string, PublicProjectDetailContent>>;
+  sceneCaption: string;
+  dossiers: Readonly<Record<string, PublicProjectDossierContent>>;
 };
 
-export type ResolvedProjectDetail = PublicProjectDetailContent & {
+export type ResolvedProjectDossier = Omit<PublicProjectDossierContent, 'visual'> & {
   id: string;
-  slug: string;
-  title: string;
-  maturityLabel: string;
+  slug: ProjectDossierSlug;
   maturity: PublicProjectManifestEntry['maturity'];
   serviceIds: PublicProjectManifestEntry['services'];
   publicationPermission: PublicProjectManifestEntry['publicationScope'];
-  visual: NonNullable<PublicProjectManifestEntry['visual']> & PublicProjectDetailContent['visual'];
+  sourceHref: string;
   relatedServiceHref: string;
-  founderAction?: ActionLink & { href: string };
+  founderHref: string;
+  visual: PublicProjectManifestEntry['visual'] & PublicProjectDossierContent['visual'];
 };
 
-export type PublicProjectLocaleContent = Pick<ProjectsPageContent, 'cards' | 'details'>;
+export type PublicProjectLocaleContent = Pick<ProjectsPageContent, 'dossiers' | 'sourceAction' | 'relatedServiceAction' | 'founderAction' | 'disclosure'>;

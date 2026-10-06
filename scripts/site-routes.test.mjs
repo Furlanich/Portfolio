@@ -7,12 +7,15 @@ const {
   getFoundationPath,
   homeProcessAnchors,
   getHomeProcessHref,
-  getProjectDetailPath,
+  getProjectDossierHref,
+  projectDossierSlugs,
   serviceSectionIds,
   serviceSectionAnchors,
   getServiceSectionHref,
 } = await import('../lib/site-routes.ts');
-const { getFoundationNavigationPaths, getProjectDetailNavigationPaths } = await import('../lib/foundation-navigation.ts');
+const siteRoutes = await import('../lib/site-routes.ts');
+const foundationNavigation = await import('../lib/foundation-navigation.ts');
+const { getFoundationNavigationPaths } = foundationNavigation;
 
 const expectedRoutes = {
   home: { es: '/', en: '/en/' },
@@ -70,10 +73,27 @@ test('resolves localized Services fragments without adding routes', () => {
   assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'studio', 'founder']);
 });
 
-test('resolves paired project-detail paths without changing the foundation route map', () => {
-  assert.equal(getProjectDetailPath('es', 'the-system'), '/proyectos/the-system/');
-  assert.equal(getProjectDetailPath('en', 'the-system'), '/en/work/the-system/');
+test('resolves the two Projects dossiers as the localized index plus a stable fragment', () => {
+  assert.deepEqual(projectDossierSlugs, ['general-reservation-system', 'the-system']);
+  assert.equal(getProjectDossierHref('es', 'general-reservation-system'), '/proyectos/#general-reservation-system');
+  assert.equal(getProjectDossierHref('es', 'the-system'), '/proyectos/#the-system');
+  assert.equal(getProjectDossierHref('en', 'general-reservation-system'), '/en/work/#general-reservation-system');
+  assert.equal(getProjectDossierHref('en', 'the-system'), '/en/work/#the-system');
   assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'studio', 'founder']);
+});
+
+test('fails closed for a dossier slug outside the approved pair, including the retired MPC slug', () => {
+  for (const slug of ['mpc-administracion', 'unknown', '', '__proto__']) {
+    assert.throws(() => getProjectDossierHref('es', slug), RangeError, slug);
+    assert.throws(() => getProjectDossierHref('en', slug), RangeError, slug);
+  }
+});
+
+// Dated negative (2026-10-06, PLAN-SPF-V1 Task 3): the six project-detail destinations are retired,
+// so their route helpers no longer exist. This replaces the former positive detail-path assertions.
+test('no helper builds a retired project-detail destination', () => {
+  assert.equal('getProjectDetailPath' in siteRoutes, false);
+  assert.equal('getProjectDetailNavigationPaths' in foundationNavigation, false);
 });
 
 test('returns working navigation links, Projects, Process, and the equivalent-language destination', () => {
@@ -106,16 +126,5 @@ test('returns working navigation links, Projects, Process, and the equivalent-la
       assert.equal(paths.alternateLocale, alternateLocale);
       assert.equal(paths.alternateHref, expectedRoutes[currentRouteId][alternateLocale]);
     }
-  }
-});
-
-test('maps a project detail to the same stable slug in the alternate locale', () => {
-  for (const locale of ['es', 'en']) {
-    const paths = getProjectDetailNavigationPaths(locale, 'the-system');
-    const alternateLocale = locale === 'es' ? 'en' : 'es';
-
-    assert.equal(paths.projects, expectedRoutes.projects[locale]);
-    assert.equal(paths.alternateLocale, alternateLocale);
-    assert.equal(paths.alternateHref, getProjectDetailPath(alternateLocale, 'the-system'));
   }
 });

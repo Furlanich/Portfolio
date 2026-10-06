@@ -1,0 +1,151 @@
+/*
+ * PLAN-SPF-V1 Task 3: the Projects reading plates over the connected ground (DESIGN-SPF-V1,
+ * "Visual system and composition" and "Motion and interaction contract"). Every foreground plate is
+ * opaque Deep #0A1E33 (`--sky-deep`) with a 1px chart border #36536C and a 16px radius, so no scene
+ * path ever shows through a paragraph. Bone, Azure and the Sky tokens are the existing global ones.
+ * The border colour #36536C is defined here because it is not a global token and global tokens are
+ * frozen; the scene's motion stays behind these plates.
+ */
+
+.page {
+  --plate-fill: var(--sky-deep);
+  --plate-line: #36536C;
+  --plate-line-hover: var(--sky-lit);
+  position: relative;
+  color: #F9F6EE;
+}
+
+/* The foreground plate: an opaque reading surface. */
+.plate {
+  background-color: var(--plate-fill);
+  border: 1px solid var(--plate-line);
+  border-radius: 16px;
+}
+
+/*
+ * Dossier hover (fine pointer only): border emphasis, nothing else. The article does not tilt, lift
+ * or scale. Under reduced motion the transition is dropped by the global rule, so the emphasis is
+ * instant and nothing moves.
+ */
+.dossier {
+  transition: border-color 200ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dossier:hover {
+    border-color: var(--plate-line-hover);
+  }
+}
+
+/* A metadata chip: short Plex Mono text in a 1px bordered box (maturity). */
+.chip {
+  display: inline-block;
+  border: 1px solid var(--plate-line);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #F9F6EE;
+}
+
+/*
+ * The conceptual illustration: the 1599x900 ratio is reserved by the image's own intrinsic size, and
+ * the frame crops the zoom, so the artwork never changes the layout. The caption sits outside the
+ * zoomed frame and stays still.
+ */
+.figure {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--plate-line);
+  border-radius: 12px;
+  background-color: var(--plate-fill);
+}
+
+.artFrame {
+  overflow: hidden;
+  background-color: #F9F6EE;
+  line-height: 0;
+}
+
+.artImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: 50% 50%;
+  transition: transform 260ms var(--ease-out);
+}
+
+/* Artwork scale (fine pointer, and only when motion is allowed): at most 1.018. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .figure:hover .artImage {
+    transform: scale(1.018);
+  }
+}
+
+.caption {
+  margin: 0;
+  padding: 12px 16px;
+  border-top: 1px solid var(--plate-line);
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--sky-text-2);
+}
+
+/* The prominent limitations block: visible text, never a hover or hidden state. */
+.limits {
+  background-color: var(--sky-field);
+  border: 1px solid var(--plate-line);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Links on a plate: accent text, a 44px target and the App Bar's focus treatment. */
+.link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  font-weight: 600;
+  color: var(--sky-glow);
+  text-decoration: underline;
+  text-decoration-color: rgba(156, 196, 236, 0.55);
+  text-underline-offset: 4px;
+  transition: color var(--dur-2) var(--ease-out);
+}
+
+.link:hover {
+  color: #FFFFFF;
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--sky-glow);
+  outline-offset: 3px;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+/* The hero Pause mount is reserved before activation, so adding the button never moves the plate. */
+.pauseSlot {
+  min-height: 44px;
+}
+
+/* Forced colors: system colors, visible borders and focus; the environment is removed by the Ground. */
+@media (forced-colors: active) {
+  .plate,
+  .figure,
+  .limits,
+  .chip {
+    background-color: Canvas;
+    border-color: CanvasText;
+    forced-color-adjust: auto;
+  }
+
+  .link {
+    color: LinkText;
+  }
+
+  .link:focus-visible {
+    outline-color: Highlight;
+  }
+}

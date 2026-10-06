@@ -19,7 +19,9 @@ const navigationLabels = {
   },
 } as const;
 
-const detailRoutes = [
+// Dated 2026-10-06 (PLAN-SPF-V1 Task 3): these six project-detail destinations are retired. They stay
+// here only so their absence stays tested; no navigation or locale test treats them as routes.
+const retiredDetailRoutes = [
   stableRoutes.projects.es.replace(/\/$/, '/general-reservation-system/'),
   stableRoutes.projects.es.replace(/\/$/, '/the-system/'),
   stableRoutes.projects.es.replace(/\/$/, '/mpc-administracion/'),
@@ -43,7 +45,6 @@ const allRoutes = [
   stableRoutes.privacy.en,
   stableRoutes.contact.es,
   stableRoutes.contact.en,
-  ...detailRoutes,
 ] as const;
 
 const desktopNavigationProjects = new Set([
@@ -79,19 +80,33 @@ for (const route of allRoutes) {
   });
 }
 
-for (const route of detailRoutes) {
-  test('keeps equivalent language switching in the footer for ' + route, async ({ page }) => {
-    const labels = localeFor(route);
-    const alternateRoute = route.startsWith('/en/')
-      ? route.replace('/en/work/', '/proyectos/')
-      : route.replace('/proyectos/', '/en/work/');
+for (const route of retiredDetailRoutes) {
+  test('the retired project-detail URL ' + route + ' is a 404 with no project content', async ({ page }) => {
+    const response = await page.goto(appUrl(route));
+    expect(response?.status()).toBe(404);
+    await expect(page.getByRole('article')).toHaveCount(0);
+    await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(/General Reservation|Gestión de reservas|Passenger transport|Multi-user|multiusuario|MPC/);
+  });
+}
 
+test('the retired MPC concept illustration is no longer served, while the two dossier illustrations are', async ({ request, baseURL }) => {
+  const asset = (path: string) => new URL(path, baseURL).toString();
+  expect((await request.get(asset('projects/mpc-administracion/conceptual-operations-model.webp'))).status()).toBe(404);
+  expect((await request.get(asset('projects/general-reservation-system/conceptual-workflow.webp'))).status()).toBe(200);
+  expect((await request.get(asset('projects/the-system/conceptual-access-model.webp'))).status()).toBe(200);
+});
+
+for (const [name, route, alternate, hreflang] of [
+  ['Spanish', stableRoutes.projects.es, stableRoutes.projects.en, 'en'],
+  ['English', stableRoutes.projects.en, stableRoutes.projects.es, 'es-AR'],
+] as const) {
+  test('keeps equivalent language switching in the footer for the ' + name + ' Projects index', async ({ page }) => {
     await gotoResilient(page, appUrl(route));
 
     const footer = page.locator('footer');
-    const languageSwitch = footer.locator('a[hreflang="' + labels.alternate + '"]');
+    const languageSwitch = footer.locator('a[hreflang="' + hreflang + '"]');
     await expect(languageSwitch).toHaveCount(1);
-    await expect(languageSwitch).toHaveAttribute('href', appPathname(alternateRoute));
+    await expect(languageSwitch).toHaveAttribute('href', appPathname(alternate));
     await expect(footer.getByText(/© \d{4} FURLANICH/)).toBeVisible();
 
     const directChannelHrefs = await footer
