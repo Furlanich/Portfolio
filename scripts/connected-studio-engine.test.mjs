@@ -938,3 +938,41 @@ test('the engine schedules nothing of its own: no timer, frame, idle callback, m
   assert.deepEqual(calls, [], 'zero scheduler calls inside the engine');
   assert.equal(fx.state.animationLoops, 0, 'the renderer animation loop is never started');
 });
+
+// --- distant points fill the viewport ----------------------------------------------------------------------------
+
+test('distant points are spread across the whole viewport at every aspect ratio', () => {
+  const viewports = [VIEWPORTS.wide, VIEWPORTS.tablet, VIEWPORTS.compact, { width: 2560, height: 1080, pixelRatio: 1, tier: 'wide' }];
+  for (const viewport of viewports) {
+    const fx = drawFixture(viewport);
+    const camera = fx.state.lastCamera;
+    const positions = drawnByRole(fx).points.geometry.getAttribute('position');
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (let index = 0; index < positions.count; index += 1) {
+      const ndc = new Vector3(positions.getX(index), positions.getY(index), positions.getZ(index)).project(camera);
+      assert.ok(ndc.x >= -1 && ndc.x <= 1 && ndc.y >= -1 && ndc.y <= 1, `${viewport.width}px: every point is inside the viewport`);
+      minX = Math.min(minX, ndc.x);
+      maxX = Math.max(maxX, ndc.x);
+      minY = Math.min(minY, ndc.y);
+      maxY = Math.max(maxY, ndc.y);
+    }
+    assert.ok(minX < -0.8 && maxX > 0.8 && minY < -0.8 && maxY > 0.8, `${viewport.width}px: the points reach every edge region (${minX}, ${maxX}, ${minY}, ${maxY})`);
+  }
+});
+
+// --- the canvas is decorative -----------------------------------------------------------------------------------
+
+test('the canvas is decorative, unfocusable, pointer-inert and fills its mount whatever the pixel ratio', () => {
+  const fx = drawFixture({ ...VIEWPORTS.compact, pixelRatio: 3 });
+  assert.equal(fx.canvas.attributes['aria-hidden'], 'true');
+  assert.equal(fx.canvas.attributes.tabindex, '-1');
+  const style = fx.canvas.style.cssText.replace(/\s+/g, '');
+  assert.match(style, /pointer-events:none/);
+  assert.match(style, /width:100%/);
+  assert.match(style, /height:100%/, 'the backing store is sized by the pixel ratio, the box by CSS');
+  assert.match(style, /position:absolute/);
+  assert.equal(fx.mount.children[0], fx.canvas);
+});

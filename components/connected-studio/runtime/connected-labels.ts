@@ -1,9 +1,8 @@
 import type { GraphDefinition, LabelProjection, ScenePose } from '../../../lib/connected-studio/types';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { CAMERA_FOV_DEGREES, CAMERA_NEAR, CAMERA_Z, RING_RADIUS } from './connected-geometry.ts';
+import { CAMERA_NEAR, CAMERA_Z, HALF_FOV_TAN, RING_RADIUS, createPoseLookup } from './connected-geometry.ts';
 import type { ConnectedLayout } from './connected-geometry';
 
-const HALF_FOV_TAN = Math.tan((CAMERA_FOV_DEGREES * Math.PI) / 360);
 /** CSS px between the bottom of a node's ring and the top of its label. */
 const LABEL_GAP_PX = 6;
 
@@ -19,9 +18,9 @@ function finiteOr(value: number | undefined, fallback: number): number {
  * overlap) on top of these anchors; positions here are always finite.
  */
 export function projectConnectedLabels(graph: GraphDefinition, pose: ScenePose, layout: ConnectedLayout): LabelProjection[] {
-  const poseNodes = new Map(pose.nodes.map((node) => [node.id, node]));
+  const lookup = createPoseLookup(pose);
   return graph.nodes.map((node, index) => {
-    const posed = pose.nodes[index]?.id === node.id ? pose.nodes[index] : poseNodes.get(node.id);
+    const posed = lookup.node(index, node.id);
     const source = posed?.position ?? node.anchor;
     const x = finiteOr(source[0], node.anchor[0]) * layout.spreadX;
     const y = finiteOr(source[1], node.anchor[1]) * layout.spreadY;

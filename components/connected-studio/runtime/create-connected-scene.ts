@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { Color, DirectionalLight, Fog, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { CAMERA_FAR, CAMERA_FOV_DEGREES, CAMERA_NEAR, CAMERA_Z, computeConnectedLayout, createGraphBatch } from './connected-geometry.ts';
 import type { ConnectedGraphBatch } from './connected-geometry';
@@ -87,6 +87,23 @@ function usableViewport(viewport: SceneViewport): boolean {
   );
 }
 
+/**
+ * Environment (Sonnet tuning, PC-7). Fog pulls the far side of the field toward the ground colour so
+ * nearer, larger nodes read in front of smaller distant ones; the key light comes from the upper left
+ * so facets read, with a cool hemisphere fill. No shadows, no environment map.
+ */
+const FOG_COLOR = new Color(0x0a2340);
+const FOG_NEAR = 10.8;
+const FOG_FAR = 19;
+
+function createEnvironment(scene: Scene): void {
+  scene.fog = new Fog(FOG_COLOR, FOG_NEAR, FOG_FAR);
+  scene.add(new HemisphereLight(0x8fbbe6, 0x0b2a4a, 1.6));
+  const key = new DirectionalLight(0xe4eefa, 3.6);
+  key.position.set(-3.5, 4.5, 7);
+  scene.add(key);
+}
+
 function initError(reason: string, cause?: unknown): Error {
   return new Error(`connected-studio: scene initialization failed (${reason})`, { cause });
 }
@@ -108,6 +125,11 @@ export function createConnectedScene(
   }
 
   const canvas = factories.createCanvas();
+  // Decorative and pointer-inert; the box fills the mount and the pixel ratio only sizes the backing store.
+  canvas.setAttribute('aria-hidden', 'true');
+  canvas.setAttribute('tabindex', '-1');
+  canvas.setAttribute('data-connected-canvas', '');
+  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;';
   let renderer: ConnectedRendererLike;
   try {
     renderer = factories.createRenderer(canvas);
@@ -137,11 +159,13 @@ export function createConnectedScene(
     disposeConnectedScene({ renderer, canvas, tracker: createResourceTracker(), detach: () => {} });
     throw initError('the graph could not be built', cause);
   }
+  createEnvironment(scene);
   scene.add(scope.batch.group);
   canvas.addEventListener('webglcontextlost', handleContextLost);
   options.mount.appendChild(canvas);
   let renderCount = 0;
   let layout = computeConnectedLayout(DEFAULT_VIEWPORT[options.tier], options.graph);
+  scope.batch.fit(layout);
 
   return {
     render(pose: ScenePose) {
@@ -172,6 +196,7 @@ export function createConnectedScene(
         scene.add(scope.batch.group);
       }
       layout = computeConnectedLayout(viewport, graph);
+      scope.batch.fit(layout);
       const ratio = Number.isFinite(viewport.pixelRatio) && viewport.pixelRatio > 0 ? viewport.pixelRatio : 1;
       renderer.setPixelRatio(Math.min(PIXEL_RATIO_CAP[viewport.tier], ratio));
       renderer.setSize(viewport.width, viewport.height, false);

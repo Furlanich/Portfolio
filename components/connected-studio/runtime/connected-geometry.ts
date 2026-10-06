@@ -36,7 +36,7 @@ export const CAMERA_Z = 12;
 export const CAMERA_FOV_DEGREES = 35;
 export const CAMERA_NEAR = 1;
 export const CAMERA_FAR = 40;
-const HALF_FOV_TAN = Math.tan((CAMERA_FOV_DEGREES * Math.PI) / 360);
+export const HALF_FOV_TAN = Math.tan((CAMERA_FOV_DEGREES * Math.PI) / 360);
 
 /** Proportions from DESIGN-SPF-V1 (Scene integration): node 0.22, primary ring 0.39, path 0.025. */
 export const NODE_RADIUS = 0.22;
@@ -47,9 +47,9 @@ const CORE_OFFSET = new Vector3(0.45, 0.42, 0.78);
 
 /** Target on-screen ring diameter in CSS px at the reference viewport height (Sonnet tuning, PC-7). */
 const RING_DIAMETER_PX: Record<ConnectedTier, { px: number; referenceHeight: number }> = {
-  wide: { px: 66, referenceHeight: 900 },
-  tablet: { px: 56, referenceHeight: 1024 },
-  compact: { px: 42, referenceHeight: 844 },
+  wide: { px: 80, referenceHeight: 900 },
+  tablet: { px: 66, referenceHeight: 1024 },
+  compact: { px: 46, referenceHeight: 844 },
 };
 /** Path tube radius in CSS px, so connections read the same at any viewport size. */
 const PATH_RADIUS_PX: Record<ConnectedTier, number> = { wide: 1.7, tablet: 1.5, compact: 1.4 };
@@ -128,6 +128,37 @@ export function toScenePosition(layout: ConnectedLayout, x: number, y: number, z
   return out.set(x * layout.spreadX, y * layout.spreadY, z * layout.depthScale);
 }
 
+type PosedNode = ScenePose['nodes'][number];
+
+export type PoseLookup = {
+  node(index: number, id: string): PosedNode | undefined;
+  growth(index: number, id: string): number | undefined;
+};
+
+/**
+ * Finds a graph item's pose entry. Poses are built in graph order, so the positional match is the
+ * fast path and allocates nothing; an entry out of order, missing or unknown falls back to an id map
+ * built once on first need. Matching is always by id, never by position alone.
+ */
+export function createPoseLookup(pose: ScenePose): PoseLookup {
+  let nodesById: Map<string, PosedNode> | undefined;
+  let growthById: Map<string, number> | undefined;
+  return {
+    node(index, id) {
+      const positional = pose.nodes[index];
+      if (positional?.id === id) return positional;
+      nodesById ??= new Map(pose.nodes.map((node) => [node.id, node]));
+      return nodesById.get(id);
+    },
+    growth(index, id) {
+      const positional = pose.edges[index];
+      if (positional?.id === id) return positional.growth;
+      growthById ??= new Map(pose.edges.map((edge) => [edge.id, edge.growth]));
+      return growthById.get(id);
+    },
+  };
+}
+
 // --- resources --------------------------------------------------------------------------------------
 
 const PATH_SEGMENTS = 16;
@@ -151,6 +182,8 @@ export type ConnectedGraphBatch = {
   drawables: readonly (Mesh | LineSegments | InstancedMesh | Points)[];
   /** Writes the pose into the batched buffers. Pure of time: the same pose always gives the same buffers. */
   update(pose: ScenePose, layout: ConnectedLayout): void;
+  /** Spreads the distant points over the viewport. Needed only when the layout changes. */
+  fit(layout: ConnectedLayout): void;
 };
 
 function instanced(
@@ -185,10 +218,17 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
     nodeCount,
     'nodes',
   );
+  // Nearer nodes read a little brighter (their depthScale is larger), with a seeded wobble so they are not clones.
+  const tint = new Color();
+  graph.nodes.forEach((node, index) => {
+    const brightness = 0.82 + ((node.depthScale - 0.7) / 0.3) * 0.38 + (node.seed - 0.5) * 0.1;
+    nodes.setColorAt(index, tint.setScalar(brightness));
+  });
+  if (nodes.instanceColor) nodes.instanceColor.needsUpdate = true;
   const cores = instanced(tracker, new IcosahedronGeometry(1, 0), new MeshBasicMaterial({ color: 0xf9f6ee, fog: false }), nodeCount, 'cores');
   const rings = instanced(
     tracker,
-    new TorusGeometry(RING_RADIUS, 0.014, 6, 48),
+    new TorusGeometry(RING_RADIUS, 0.02, 6, 48),
     new MeshBasicMaterial({ color: 0x9cc4ec }),
     nodeCount,
     'rings',
@@ -237,7 +277,8 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
   const tracers = instanced(tracker, new IcosahedronGeometry(1, 0), new MeshBasicMaterial({ color: 0xf9f6ee }), edgeCount, 'tracers');
   tracers.count = 0;
 
-  const points = createDistantPoints(graph.quality, tracker);
+  const distant = createDistantPoints(graph.quality, tracker);
+  const points = distant.points;
 
   const drawables = [points, skeleton, paths, nodes, rings, cores, tracers] as const;
   for (const drawable of drawables) group.add(drawable);
@@ -292,9 +333,9 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
   }
 
   function update(pose: ScenePose, layout: ConnectedLayout): void {
-    const poseNodes = new Map(pose.nodes.map((node) => [node.id, node]));
+    const lookup = createPoseLookup(pose);
     graph.nodes.forEach((node, index) => {
-      const posed = pose.nodes[index]?.id === node.id ? pose.nodes[index] : poseNodes.get(node.id);
+      const posed = lookup.node(index, node.id);
       const source = posed?.position ?? node.anchor;
       toScenePosition(
         layout,
@@ -325,7 +366,6 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
     rings.instanceMatrix.needsUpdate = true;
     cores.instanceMatrix.needsUpdate = true;
 
-    const poseEdges = new Map(pose.edges.map((edge) => [edge.id, edge.growth]));
     let activeTracers = 0;
     graph.edges.forEach((edge, index) => {
       const [fromIndex, toIndex] = edgeEnds[index] as readonly [number, number];
@@ -350,7 +390,7 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
         bezier((step + 1) / SKELETON_SEGMENTS, point).toArray(skeletonPositions.array as Float32Array, offset + 3);
       }
 
-      const growth = clamp(finiteOr(poseEdges.get(edge.id) ?? 0, 0), 0, 1);
+      const growth = clamp(finiteOr(lookup.growth(index, edge.id) ?? 0, 0), 0, 1);
       for (let ring = 0; ring <= PATH_SEGMENTS; ring += 1) {
         const t = ring / PATH_SEGMENTS;
         const u = Math.min(t, growth);
@@ -391,11 +431,14 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
     skeletonPositions.needsUpdate = true;
   }
 
-  return { group, drawables, update };
+  return { group, drawables, update, fit: distant.fit };
 }
 
 /** Distant points: fewer on compact (DESIGN-SPF-V1, Responsive scene). Counts are Sonnet tuning (PC-7). */
-const POINT_COUNT: Record<ConnectedQuality, number> = { wide: 120, compact: 48 };
+const POINT_GRID: Record<ConnectedQuality, { columns: number; rows: number }> = {
+  wide: { columns: 12, rows: 10 },
+  compact: { columns: 6, rows: 8 },
+};
 const POINT_SPRITE_SIZE = 16;
 
 /** mulberry32: deterministic, so the same points appear on every load. */
@@ -426,15 +469,28 @@ function createPointSprite(): DataTexture {
   return texture;
 }
 
-function createDistantPoints(quality: ConnectedQuality, tracker: ResourceTracker): Points {
-  const count = POINT_COUNT[quality];
+type DistantPoints = { points: Points; fit(layout: ConnectedLayout): void };
+
+/**
+ * A jittered grid of normalized (-1..1) positions at a few depths behind the field, so the points
+ * cover any viewport evenly without clumps. `fit` maps them onto the viewport at the current aspect.
+ */
+function createDistantPoints(quality: ConnectedQuality, tracker: ResourceTracker): DistantPoints {
+  const { columns, rows } = POINT_GRID[quality];
   const random = createRandom(quality === 'wide' ? 0x7a11 : 0xc0a7);
-  const positions = new Float32Array(count * 3);
-  for (let index = 0; index < count; index += 1) {
-    positions.set([(random() * 2 - 1) * 6, (random() * 2 - 1) * 3.5, -1.5 - random() * 3], index * 3);
+  const field = new Float32Array(columns * rows * 3);
+  for (let row = 0; row < rows; row += 1) {
+    for (let column = 0; column < columns; column += 1) {
+      const at = (row * columns + column) * 3;
+      field[at] = ((column + 0.1 + random() * 0.8) / columns) * 2 - 1;
+      field[at + 1] = ((row + 0.1 + random() * 0.8) / rows) * 2 - 1;
+      field[at + 2] = -1.5 - random() * 3;
+    }
   }
+  const positions = new Float32Array(field.length);
   const geometry = tracker.geometry(new BufferGeometry());
-  geometry.setAttribute('position', new BufferAttribute(positions, 3));
+  const attribute = new BufferAttribute(positions, 3);
+  geometry.setAttribute('position', attribute);
   const material = tracker.material(
     new PointsMaterial({
       color: 0x9cc4ec,
@@ -449,5 +505,16 @@ function createDistantPoints(quality: ConnectedQuality, tracker: ResourceTracker
   );
   const points = tag(new Points(geometry, material), 'points');
   points.frustumCulled = false;
-  return points;
+  return {
+    points,
+    fit(layout) {
+      for (let at = 0; at < field.length; at += 3) {
+        const halfHeight = (CAMERA_Z - field[at + 2]) * HALF_FOV_TAN;
+        positions[at] = field[at] * halfHeight * layout.aspect;
+        positions[at + 1] = field[at + 1] * halfHeight;
+        positions[at + 2] = field[at + 2];
+      }
+      attribute.needsUpdate = true;
+    },
+  };
 }
