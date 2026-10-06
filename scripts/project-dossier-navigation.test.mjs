@@ -11,6 +11,12 @@ const { resolveDossierAlternateHref } = await import('../lib/project-dossier-nav
 const ES_INDEX = '/proyectos/';
 const EN_INDEX = '/en/work/';
 
+// CI builds and tests with NEXT_PUBLIC_BASE_PATH=/Portfolio, so every test starts from a known state:
+// no base path unless the test sets one.
+test.beforeEach(() => {
+  delete process.env.NEXT_PUBLIC_BASE_PATH;
+});
+
 test.afterEach(() => {
   delete process.env.NEXT_PUBLIC_BASE_PATH;
 });
