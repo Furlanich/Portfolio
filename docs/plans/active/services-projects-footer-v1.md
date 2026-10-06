@@ -16,7 +16,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-10-05
+last_verified: 2026-10-06
 ---
 
 # Services, Projects and Footer v1 Implementation Plan
@@ -953,10 +953,34 @@ Documentation impact: <records updated in this PR>
 
 - 2026-10-05: Task 1 execution started from `main` at `7787d17` after the owner merged [PR #104](https://github.com/Furlanich/Portfolio/pull/104). The OpenAI Codex primary session is the orchestrator (exact session model identifier is not exposed by the harness). Task 1 is dispatched to `gpt-6-luna`, medium, in `.worktrees/spf-1` on `codex/spf-1-governance`; GOVERNANCE and the Task 1 acceptance paths are acquired for Luna, while the orchestrator retains PLAN-RECORD Progress ownership. A read-only Claude Code provider check resolved `sonnet` to `claude-sonnet-5-5` on `firstParty`. The acceptance scaffold/receipt Governance PR, independent Sol review, human merge and W0 remain pending; no production implementation started.
 
+- 2026-10-06: Task 1's Governance [PR #105](https://github.com/Furlanich/Portfolio/pull/105) merged at `f9f740d`; GOVERNANCE and the Task 1 acceptance paths are released. **W0 checkpoint PASSED** on `main` at `f9f740d` in a fresh worktree after `npm ci` (exit 0): `npm run docs:check` passed (294 Markdown files, 99 document IDs, 38 Skills); the plan and REVIEW-SPF-PLAN-2026-09-30 are APPROVED, and the Governance PR is merged. The Task 2 implementer session ran this checkpoint at the owner's request, as recorded in the [Task 2 receipt](../../reviews/services-projects-footer-acceptance-v1/task-2.md).
+
+- 2026-10-06: Task 2 ([PR #106](https://github.com/Furlanich/Portfolio/pull/106), Claude Sonnet 5.5, `claude-sonnet-5-5`, firstParty) merged at `944a350`; PR CI `validate` and `browser` passed. CONNECTED-CONTRACTS, HARNESS (including the owner-granted transfer of `scripts/connected-studio-harness.test.mjs`) and CONNECTED-GROUND are released. The W1 frozen declarations are now the merged contract.
+
+- 2026-10-06: A new orchestrator session started: Claude Opus 5.5 (`claude-opus-5-5`), firstParty, in the Claude Code desktop app. **W1 checkpoint PASSED** on `main` at `944a350`, root base path, in a clean detached worktree after `npm ci` (exit 0), with `PLAYWRIGHT_PORT=3300`:
+  - `npm run validate` passed: docs:check 295 Markdown files, 99 document IDs, 38 Skills; `npm test` 359/359; lint, typecheck and build passed.
+  - `npx playwright test --list`: 1385 tests in 22 files. The new connected-studio patterns are registered exactly as the registration table says; none of those specs exist yet, so they list no tests.
+  - `test:e2e --project=chromium-desktop --workers=1`: 193 passed, 2 skipped.
+  - `test:e2e --project=visual-chromium --workers=1`: 64 passed; no baseline changed.
+  - `verify:static-export`: 20 routes, base path `/`.
+  - The only working-tree change was the `next dev`-regenerated `next-env.d.ts`, so there is no rendered change.
+
+- 2026-10-06: W2 dispatched from `944a350`. Both tasks are Claude Sonnet 5.5 subagents dispatched by the orchestrator.
+  - Task 3: `.worktrees/spf-3` on `codex/spf-3-dossiers-route-retirement`, port 3230. Acquired ROUTE-CUTOVER, LOCALE-CONTROL, PUBLIC-EVIDENCE, SERVICES (GRS href only), CONNECTED-GROUND (bounded static fixes), VISUAL-BASELINES (Projects and Founder subtrees) and SHARED-TESTS (Task 3 blocks).
+  - Task 5: `.worktrees/spf-5` on `codex/spf-5-connected-engine`, port 3250. Acquired CONNECTED-ENGINE.
+  - Task 5 was started at the owner's request; write(3) ∩ write(5) = ∅.
+  - Both sessions were interrupted by a provider rate limit and resumed with their context intact.
+  - Each PR passed `validate` and `browser` CI on its own branch: [PR #107](https://github.com/Furlanich/Portfolio/pull/107) (Task 5) at `da87bae` and [PR #108](https://github.com/Furlanich/Portfolio/pull/108) (Task 3) at `a1a4211`.
+  - The owner merged PR #107 at 2026-10-06T22:08:21Z (`f426043`), then PR #108 at 22:08:33Z (`025b447`). That reverses the planned order (Task 3, then Task 5) and skips the rebase-and-recheck step; see the deviations below.
+  - The W2 checkpoint has not run; the W2 locks are released only when it passes.
+
 ## Important implementation decisions
 
 The owner decisions and plan clarifications of 2026-10-05 are recorded in [OD-1 to OD-4 and PC-1 to PC-7](#owner-decisions-and-plan-clarifications-2026-10-05). Later decisions made during execution are added here with their date, owner and link.
 
 ## Deviations discovered during execution
 
-None; execution has not started. Corrections from independent review are recorded in the review artifact, not treated as implementation deviations.
+Corrections from independent review are recorded in the review artifact, not treated as implementation deviations.
+
+- 2026-10-06: The W0 checkpoint was run by the Task 2 implementer session instead of an orchestrator, at the owner's request; its result is unaffected.
+- 2026-10-06: PR #107 (Task 5) merged before PR #108 (Task 3), the reverse of the W2 merge order. PR #108 was not rebased and rechecked on top of Task 5. The write sets do not overlap, but no CI run has covered the combined `main` at `025b447`, so the W2 checkpoint on that SHA is the first combined verification.
