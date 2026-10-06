@@ -81,6 +81,7 @@ export type SceneUpdate = {
   readonly scrollY: number;
   readonly velocityPxPerSecond: number;
   readonly visible: boolean;
+  /** Compute it with `isFooterDominant` so every connection completes before the scene hides. */
   readonly footerDominant: boolean;
 };
 
@@ -147,6 +148,10 @@ export type ControllerOptions = {
   readonly clock: { now(): number };
   readonly scheduler: { schedule(callback: () => void, delayMs: number): number; cancel(id: number): void };
   render(pose: ScenePose): void;
+  /**
+   * Called on every `update()`, which is every scroll event. The host serves it from a cache that it
+   * refreshes on resize, font load and content change; it must never force layout from here.
+   */
   getLayout(): SceneLayout;
 };
 
