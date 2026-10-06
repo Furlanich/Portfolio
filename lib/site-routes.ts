@@ -57,6 +57,20 @@ export function getHomeProcessHref(locale: Locale): string {
   return `${getFoundationPath('home', locale)}#${homeProcessAnchors[locale]}`;
 }
 
-export function getProjectDetailPath(locale: Locale, slug: string): string {
-  return locale === 'es' ? `/proyectos/${slug}/` : `/en/work/${slug}/`;
+// The two Projects dossiers are fragments of the Projects index (DESIGN-SPF-V1, "Route retirement
+// and targeted consistency"). There is no per-project route: the six old detail destinations are
+// retired, and an unknown slug fails closed instead of producing a link to a missing destination.
+export const projectDossierSlugs = ['general-reservation-system', 'the-system'] as const;
+
+export type ProjectDossierSlug = (typeof projectDossierSlugs)[number];
+
+export function isProjectDossierSlug(value: string): value is ProjectDossierSlug {
+  return (projectDossierSlugs as readonly string[]).includes(value);
+}
+
+export function getProjectDossierHref(locale: Locale, slug: string): string {
+  if (!isProjectDossierSlug(slug)) {
+    throw new RangeError(`Unknown Projects dossier: "${String(slug)}"`);
+  }
+  return `${getFoundationPath('projects', locale)}#${slug}`;
 }

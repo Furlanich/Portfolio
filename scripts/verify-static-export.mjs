@@ -2,6 +2,11 @@ import { readFile, readdir, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, extname, join, relative, resolve } from 'node:path';
 
+// PLAN-SPF-V1 Task 3: the dossier bodies are verified against the same typed content the pages render.
+const { projectPageContent: spanishProjects } = await import('../app/(es)/_content/projects.ts');
+const { projectPageContent: englishProjects } = await import('../app/(en)/en/_content/projects.ts');
+const { getPublishedProjectDossiers } = await import('../lib/projects/publication.ts');
+
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 // STATIC_EXPORT_DIR lets `scripts/verify-static-export.test.mjs` run this verifier against a fixture
 // export; it is unset for `npm run verify:static-export`, which always checks the real `out/`.
@@ -12,9 +17,6 @@ const artifacts = [
   { route: '/', file: 'index.html', lang: 'es-AR' },
   { route: '/servicios/', file: 'servicios/index.html', lang: 'es-AR' },
   { route: '/proyectos/', file: 'proyectos/index.html', lang: 'es-AR' },
-  { route: '/proyectos/general-reservation-system/', file: 'proyectos/general-reservation-system/index.html', lang: 'es-AR' },
-  { route: '/proyectos/the-system/', file: 'proyectos/the-system/index.html', lang: 'es-AR' },
-  { route: '/proyectos/mpc-administracion/', file: 'proyectos/mpc-administracion/index.html', lang: 'es-AR' },
   { route: '/contacto/', file: 'contacto/index.html', lang: 'es-AR' },
   { route: '/privacidad/', file: 'privacidad/index.html', lang: 'es-AR' },
   { route: '/estudio/', file: 'estudio/index.html', lang: 'es-AR' },
@@ -22,14 +24,28 @@ const artifacts = [
   { route: '/en/', file: 'en/index.html', lang: 'en' },
   { route: '/en/services/', file: 'en/services/index.html', lang: 'en' },
   { route: '/en/work/', file: 'en/work/index.html', lang: 'en' },
-  { route: '/en/work/general-reservation-system/', file: 'en/work/general-reservation-system/index.html', lang: 'en' },
-  { route: '/en/work/the-system/', file: 'en/work/the-system/index.html', lang: 'en' },
-  { route: '/en/work/mpc-administracion/', file: 'en/work/mpc-administracion/index.html', lang: 'en' },
   { route: '/en/contact/', file: 'en/contact/index.html', lang: 'en' },
   { route: '/en/privacy/', file: 'en/privacy/index.html', lang: 'en' },
   { route: '/en/about/', file: 'en/about/index.html', lang: 'en' },
   { route: '/en/about/samuel-furlanich/', file: 'en/about/samuel-furlanich/index.html', lang: 'en' },
 ];
+
+// PLAN-SPF-V1 Task 3 (2026-10-06): the six project-detail destinations and the MPC concept illustration
+// are retired. A clean export must contain none of them, and nothing may link to them. Their paths
+// appear here only so their absence stays verified.
+const retiredRoutes = [
+  'proyectos/general-reservation-system',
+  'proyectos/the-system',
+  'proyectos/mpc-administracion',
+  'en/work/general-reservation-system',
+  'en/work/the-system',
+  'en/work/mpc-administracion',
+];
+const retiredArtifacts = [
+  ...retiredRoutes.map((route) => route + '/index.html'),
+  'projects/mpc-administracion/conceptual-operations-model.webp',
+];
+const retiredDestination = /(?:\/proyectos\/|\/en\/work\/)(?:general-reservation-system|the-system|mpc-administracion)(?![\w-])/;
 
 const studioRequirements = {
   'estudio/index.html': {
@@ -64,7 +80,7 @@ const founderRequirements = {
     contact: '/contacto/',
     cv: '/Samuel-Furlanich-CV.pdf',
     mpc: 'MPC Administración',
-    mpcHref: '/proyectos/mpc-administracion/',
+    mpcAction: 'Ver código fuente',
   },
   'en/about/samuel-furlanich/index.html': {
     heading: 'Samuel Furlanich',
@@ -73,7 +89,7 @@ const founderRequirements = {
     contact: '/en/contact/',
     cv: '/Samuel-Furlanich-CV.pdf',
     mpc: 'MPC Administración',
-    mpcHref: '/en/work/mpc-administracion/',
+    mpcAction: 'View source code',
   },
 };
 const homepageRequirements = {
@@ -176,7 +192,7 @@ const servicesRequirements = {
       'Todavía no hay un proyecto público de WhatsApp que podamos mostrar.',
       'El enfoque se apoya en la experiencia técnica de Samuel.',
     ],
-    evidenceLink: ['/proyectos/general-reservation-system/', 'Ver el proyecto y sus límites'],
+    evidenceLink: ['/proyectos/#general-reservation-system', 'Ver el proyecto y sus límites'],
   },
   'en/services/index.html': {
     route: '/en/services/',
@@ -210,38 +226,20 @@ const servicesRequirements = {
       'There is no public WhatsApp project to show yet.',
       'The approach draws on Samuel’s technical background.',
     ],
-    evidenceLink: ['/en/work/general-reservation-system/', 'View the project and its limitations'],
+    evidenceLink: ['/en/work/#general-reservation-system', 'View the project and its limitations'],
   },
 };
 
 const projectsRequirements = {
-  'proyectos/index.html': {
-    heading: 'Proyectos seleccionados',
-    introduction: 'Publicamos trabajo solo cuando podemos explicar con claridad',
-    cards: [
-      ['Gestión de reservas para transporte de pasajeros', 'Ver proyecto', '/proyectos/general-reservation-system/'],
-      ['Gestión multiusuario de campañas de rol', 'Ver proyecto', '/proyectos/the-system/'],
-    ],
-    excludedCard: 'Gestión educativa de producción y stock',
-    scopeHeading: 'Alcance de publicación',
-    finalHeading: '¿Necesitás resolver algo parecido?',
-    finalAction: 'Hablar sobre tu proyecto',
-    forbiddenTaxonomy: ['Soluciones en producción', 'Laboratorio FURLANICH', 'Prototipos funcionales'],
-  },
-  'en/work/index.html': {
-    heading: 'Selected work',
-    introduction: 'We publish work only when we can clearly explain',
-    cards: [
-      ['Passenger transport reservation management', 'View project', '/en/work/general-reservation-system/'],
-      ['Multi-user role-playing campaign management', 'View project', '/en/work/the-system/'],
-    ],
-    excludedCard: 'Educational production and inventory management',
-    scopeHeading: 'Publication scope',
-    finalHeading: 'Need to solve something similar?',
-    finalAction: 'Discuss your project',
-    forbiddenTaxonomy: ['Production solutions', 'FURLANICH Lab', 'Functional prototypes'],
-  },
+  'proyectos/index.html': { content: spanishProjects, locale: 'es', services: '/servicios/', founder: '/estudio/samuel-furlanich/' },
+  'en/work/index.html': { content: englishProjects, locale: 'en', services: '/en/services/', founder: '/en/about/samuel-furlanich/' },
 };
+
+const approvedSources = {
+  'general-reservation-system': 'https://github.com/Furlanich/GeneralReservationSystem',
+  'the-system': 'https://github.com/Furlanich/The-System',
+};
+const mpcSource = 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-';
 
 const privacyRequirements = {
   'privacidad/index.html': {
@@ -295,98 +293,12 @@ const contactRequirements = {
   },
 };
 
-const detailRequirements = {
-  'proyectos/general-reservation-system/index.html': {
-    route: '/proyectos/general-reservation-system/',
-    title: 'Gestión de reservas para transporte de pasajeros',
-    headerSummary: 'Código para gestionar recorridos, estaciones, asientos y reservas de transporte de pasajeros.',
-    evidenceStatement: 'Evidencia de implementación basada en el repositorio público',
-    visual: '/projects/general-reservation-system/conceptual-workflow.webp',
-    alt: 'Diagrama conceptual del flujo de recorridos, estaciones, disponibilidad de asientos, reservas y autogestión de pasajeros.',
-    source: 'https://github.com/Furlanich/GeneralReservationSystem',
-    limitation: 'No hay una demostración pública verificada. El funcionamiento actual no fue revalidado y la interfaz de pagos no se presenta como implementada. No se afirman adopción, disponibilidad ni resultados comerciales.',
-    relatedService: '/servicios/#web',
-    founder: '/estudio/samuel-furlanich/',
-    contact: '/contacto/',
-    alternate: '/en/work/general-reservation-system/',
-    headings: ['Contexto y oportunidad', 'Alcance implementado', 'Evidencia y límites', 'Resultado y estado', 'Evidencia pública', 'Limitaciones y alcance', 'Siguientes destinos'],
-  },
-  'proyectos/the-system/index.html': {
-    route: '/proyectos/the-system/',
-    title: 'Gestión multiusuario de campañas de rol',
-    headerSummary: 'Laboratorio de campañas de rol con código para cuentas, membresías, invitaciones y permisos.',
-    evidenceStatement: 'Evidencia de implementación basada en el repositorio público',
-    visual: '/projects/the-system/conceptual-access-model.webp',
-    alt: 'Diagrama conceptual de un espacio de campañas conectado con identidad, membresías, invitaciones, permisos y límites de suscripción.',
-    source: 'https://github.com/Furlanich/The-System',
-    limitation: 'No hay demostración pública ni ejecución actual verificada. La suscripción está modelada en el código; no se presenta como facturación operativa. Escenas, activos, notas y colaboración completa no se presentan como entregados.',
-    relatedService: '/servicios/#web',
-    founder: '/estudio/samuel-furlanich/',
-    contact: '/contacto/',
-    alternate: '/en/work/the-system/',
-    headings: ['Contexto y oportunidad', 'Alcance implementado', 'Evidencia y límites', 'Resultado y estado', 'Evidencia pública', 'Limitaciones y alcance', 'Siguientes destinos'],
-  },
-  'proyectos/mpc-administracion/index.html': {
-    route: '/proyectos/mpc-administracion/',
-    title: 'Gestión educativa de producción y stock',
-    headerSummary: 'Proyecto educativo grupal de 2021 para administrar producción y stock de una fábrica de quesos ficticia.',
-    evidenceStatement: 'Evidencia de implementación basada en el repositorio público',
-    visual: '/projects/mpc-administracion/conceptual-operations-model.webp',
-    alt: 'Diagrama conceptual de producción, stock, administración de usuarios, registros y datos de maduración para una organización ficticia.',
-    source: 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-',
-    limitation: 'No se verificó su funcionamiento actual. No se afirma autoría individual, uso real, despliegue ni resultado comercial. No hay material visual autorizado del sistema original.',
-    relatedService: null,
-    founder: '/estudio/samuel-furlanich/',
-    contact: '/contacto/',
-    alternate: '/en/work/mpc-administracion/',
-    headings: ['Contexto y oportunidad', 'Alcance implementado', 'Evidencia y límites', 'Resultado y estado', 'Evidencia pública', 'Limitaciones y alcance', 'Siguientes destinos'],
-  },
-  'en/work/general-reservation-system/index.html': {
-    route: '/en/work/general-reservation-system/',
-    title: 'Passenger transport reservation management',
-    headerSummary: 'Code for managing passenger transport routes, stations, seats and reservations.',
-    evidenceStatement: 'Implementation evidence based on the public repository',
-    visual: '/projects/general-reservation-system/conceptual-workflow.webp',
-    alt: 'Conceptual diagram of routes, stations, seat availability, reservations, and passenger self-service.',
-    source: 'https://github.com/Furlanich/GeneralReservationSystem',
-    limitation: 'There is no verified public demonstration. Current behavior has not been revalidated and the payment interface is not presented as implemented. Adoption, uptime and business results are not claimed.',
-    relatedService: '/en/services/#web',
-    founder: '/en/about/samuel-furlanich/',
-    contact: '/en/contact/',
-    alternate: '/proyectos/general-reservation-system/',
-    headings: ['Context and opportunity', 'Implemented scope', 'Evidence and limitations', 'Result and current state', 'Public evidence', 'Limitations and scope', 'Next destinations'],
-  },
-  'en/work/the-system/index.html': {
-    route: '/en/work/the-system/',
-    title: 'Multi-user role-playing campaign management',
-    headerSummary: 'A role-playing campaign lab with code for accounts, memberships, invitations and permissions.',
-    evidenceStatement: 'Implementation evidence based on the public repository',
-    visual: '/projects/the-system/conceptual-access-model.webp',
-    alt: 'Conceptual diagram of a campaign workspace connected to identity, memberships, invitations, permissions, and subscription boundaries.',
-    source: 'https://github.com/Furlanich/The-System',
-    limitation: 'There is no public demonstration or verified current execution. Subscription boundaries are modeled in code, not presented as operational billing. Scenes, assets, notes and full collaboration are not presented as delivered.',
-    relatedService: '/en/services/#web',
-    founder: '/en/about/samuel-furlanich/',
-    contact: '/en/contact/',
-    alternate: '/proyectos/the-system/',
-    headings: ['Context and opportunity', 'Implemented scope', 'Evidence and limitations', 'Result and current state', 'Public evidence', 'Limitations and scope', 'Next destinations'],
-  },
-  'en/work/mpc-administracion/index.html': {
-    route: '/en/work/mpc-administracion/',
-    title: 'Educational production and inventory management',
-    headerSummary: 'A 2021 educational group project for managing production and inventory at a fictional cheese factory.',
-    evidenceStatement: 'Implementation evidence based on the public repository',
-    visual: '/projects/mpc-administracion/conceptual-operations-model.webp',
-    alt: 'Conceptual diagram of production, inventory, user administration, logs, and curing data for a fictional organization.',
-    source: 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-',
-    limitation: 'Current functionality has not been verified. Sole authorship, real-world use, deployment and business results are not claimed. No visual material from the original system is authorized.',
-    relatedService: null,
-    founder: '/en/about/samuel-furlanich/',
-    contact: '/en/contact/',
-    alternate: '/proyectos/mpc-administracion/',
-    headings: ['Context and opportunity', 'Implemented scope', 'Evidence and limitations', 'Result and current state', 'Public evidence', 'Limitations and scope', 'Next destinations'],
-  },
-};
+function getCapabilityLegend(locale) {
+  return {
+    es: 'Sitios web · Apps · Chatbots · Agentes · Automatización · Consultoría · Soporte · Modernización',
+    en: 'Websites · Apps · Chatbots · Agents · Automation · Consulting · Support · Modernization',
+  }[locale];
+}
 
 function countMatches(html, pattern) {
   return [...html.matchAll(pattern)].length;
@@ -545,42 +457,77 @@ function assertServicesArtifact(artifact, html) {
 function assertProjectsArtifact(artifact, html) {
   const requirement = projectsRequirements[artifact.file];
   if (!requirement) return;
-  if (countMatches(html, /<main\b/g) !== 1) failures.push(`${artifact.file}: expected exactly one main landmark`);
-  if (countMatches(html, /<h1\b/g) !== 1 || !html.includes(requirement.heading)) {
-    failures.push(`${artifact.file}: expected one approved visible H1`);
+  const { content, locale } = requirement;
+  const dossiers = getPublishedProjectDossiers(content, locale);
+  const file = artifact.file;
+  const mainStart = html.indexOf('<main');
+  const mainHtml = html.slice(mainStart, html.indexOf('</main>', mainStart));
+
+  if (countMatches(html, /<main\b/g) !== 1) failures.push(file + ': expected exactly one main landmark');
+  const mainTag = html.match(/<main\b[^>]*>/)?.[0] ?? '';
+  if (!/\bdata-connected-page\b/.test(mainTag) || !/\bdata-connected-route="projects"/.test(mainTag)) {
+    failures.push(file + ': main must carry the connected-page contract');
   }
-  if (!html.includes(requirement.introduction)) failures.push(`${artifact.file}: missing approved introduction`);
-  let previousCardPosition = -1;
-  for (const [title, action, href] of requirement.cards) {
-    const cardPosition = html.indexOf(title);
-    if (cardPosition === -1 || cardPosition <= previousCardPosition) {
-      failures.push(`${artifact.file}: cards are missing or out of approved order`);
+  if (countMatches(html, /<h1\b/g) !== 1 || !hasHeading(html, 'h1', content.heading)) {
+    failures.push(file + ': expected one approved visible H1');
+  }
+  if (!html.includes(content.introduction)) failures.push(file + ': missing approved introduction');
+
+  // The decorative ground, the reserved Pause mount and the semantic legend are server HTML.
+  if (!/\bdata-connected-ground\b/.test(html) || !/\bdata-connected-mount\b/.test(html)) failures.push(file + ': missing the static connected ground');
+  if (!/\bid="connected-pause-projects"/.test(html)) failures.push(file + ': missing the reserved Pause mount');
+  if (!html.includes(content.sceneCaption)) failures.push(file + ': missing the scene caption');
+  if (countMatches(html, /<canvas\b/g) !== 0) failures.push(file + ': a canvas must not be server-rendered');
+
+  // Exactly two complete articles, GRS first, with every approved field and the original concept.
+  if (countMatches(html, /<article\b/g) !== dossiers.length) {
+    failures.push(file + ': expected exactly ' + dossiers.length + ' complete dossiers');
+  }
+  let previousPosition = -1;
+  for (const dossier of dossiers) {
+    const articleStart = html.search(new RegExp('<article\\b[^>]*\\bid="' + escapeRegExp(dossier.slug) + '"'));
+    if (articleStart === -1 || articleStart <= previousPosition) {
+      failures.push(file + ': dossier #' + dossier.slug + ' is missing or out of approved order');
+      continue;
     }
-    previousCardPosition = cardPosition;
-    if (!html.includes(action)) failures.push(`${artifact.file}: missing card action ${action}`);
-    const expectedReference = href.startsWith('/') ? expectedHref(href) : href;
-    if (!html.includes(`href="${expectedReference}"`)) failures.push(`${artifact.file}: missing project link ${expectedReference}`);
-  }
-  if (html.includes(requirement.excludedCard)) failures.push(`${artifact.file}: MPC must remain out of the commercial index`);
-  if (countMatches(html, /<article\b/g) !== requirement.cards.length) {
-    failures.push(`${artifact.file}: expected exactly ${requirement.cards.length} selected project cards`);
-  }
-  if (!html.includes('data-project-presentation="lead"') || !html.includes('data-project-presentation="secondary"')) {
-    failures.push(`${artifact.file}: missing editorial lead/secondary presentation markers`);
-  }
-  if (!hasHeading(html, 'h2', requirement.scopeHeading)) failures.push(`${artifact.file}: missing publication scope heading`);
-  if (!hasHeading(html, 'h2', requirement.finalHeading)) failures.push(`${artifact.file}: missing final CTA heading`);
-  if (!html.includes(requirement.finalAction)) failures.push(`${artifact.file}: missing final CTA action`);
-  for (const taxonomy of requirement.forbiddenTaxonomy) {
-    if (new RegExp(`<h3\\b[^>]*>${escapeRegExp(taxonomy)}</h3>`).test(html)) {
-      failures.push(`${artifact.file}: empty taxonomy group rendered: ${taxonomy}`);
+    previousPosition = articleStart;
+    const article = html.slice(articleStart, html.indexOf('</article>', articleStart));
+    const fields = [
+      dossier.title, dossier.maturityLabel, dossier.summary, dossier.relationship,
+      dossier.opportunity.heading, dossier.opportunity.content,
+      dossier.scope.heading, ...dossier.scope.items,
+      dossier.evidence.heading, dossier.evidence.content,
+      dossier.limits.heading, dossier.limits.content,
+      dossier.visual.caption, content.sourceAction, content.relatedServiceAction, content.founderAction.label,
+    ];
+    for (const field of fields) {
+      if (!article.includes(field)) failures.push(file + ': dossier #' + dossier.slug + ' is missing approved text "' + field + '"');
     }
+    if (!hasHeading(article, 'h2', dossier.title)) failures.push(file + ': dossier #' + dossier.slug + ' needs its title as an H2');
+    if (countMatches(article, /<h3\b/g) !== 4) failures.push(file + ': dossier #' + dossier.slug + ' needs four section headings');
+    if (countMatches(article, /<li\b/g) !== dossier.scope.items.length) failures.push(file + ': dossier #' + dossier.slug + ' scope list is incomplete');
+
+    const images = article.match(/<img\b[^>]*>/gi) ?? [];
+    const expectedSrc = expectedHref(dossier.visual.src);
+    if (images.length !== 1 || !images[0].includes('alt="' + dossier.visual.alt + '"') || !images[0].includes(expectedSrc) || !/width="1599"/.test(images[0]) || !/height="900"/.test(images[0]) || !/loading="lazy"/.test(images[0])) {
+      failures.push(file + ': dossier #' + dossier.slug + ' needs its original 1599x900 lazy concept with the approved alt text');
+    }
+    if (!article.includes('href="' + approvedSources[dossier.slug] + '"')) failures.push(file + ': dossier #' + dossier.slug + ' is missing its approved source link');
+    if (!article.includes('href="' + expectedHref(requirement.services) + '#web"')) failures.push(file + ': dossier #' + dossier.slug + ' is missing its Services link');
+    if (!article.includes('href="' + expectedHref(requirement.founder) + '"')) failures.push(file + ': dossier #' + dossier.slug + ' is missing its Founder context link');
+    if (!html.includes('href="#' + dossier.slug + '"') || !html.includes(dossier.jumpLabel)) failures.push(file + ': missing the #' + dossier.slug + ' jump link');
   }
-  if (countMatches(html, /<img\b/gi) > 0) failures.push(`${artifact.file}: unexpected image in image-free index`);
-  const firstArticle = html.indexOf('<article');
-  const firstArticleClose = html.indexOf('</article>', firstArticle);
-  const nestedArticle = firstArticle !== -1 && html.indexOf('<article', firstArticle + 1) < firstArticleClose;
-  if (nestedArticle) failures.push(`${artifact.file}: nested project cards`);
+  if (countMatches(html, /<img\b/gi) !== dossiers.length) failures.push(file + ': expected exactly the two approved concept images');
+
+  if (!hasHeading(html, 'h2', content.disclosure.heading) || !html.includes(content.disclosure.description)) {
+    failures.push(file + ': missing the publication note');
+  }
+  const legend = getCapabilityLegend(locale);
+  if (!html.includes(legend)) failures.push(file + ': the semantic capability legend must read as one ordinary line');
+
+  // Nothing hidden, and no detail action, card or MPC record left behind.
+  if (/<details\b|<summary\b|aria-expanded/.test(mainHtml)) failures.push(file + ': no story may sit behind a disclosure');
+  if (/Ver proyecto|View project|MPC Administración|MilkyPantsCheese|data-project-presentation/.test(html)) failures.push(file + ': a retired card, detail action or MPC record is still present');
 }
 
 function assertStudioArtifact(artifact, html) {
@@ -661,60 +608,16 @@ function assertFounderArtifact(artifact, html) {
   if (!html.includes('Clever Soft SA') || /<h[1-6]\b[^>]*>[^<]*Clever Soft SA/i.test(html)) {
     failures.push(artifact.file + ': Clever Soft SA must remain narrative-only');
   }
-  if (!html.includes(requirement.mpc) || !html.includes('href="' + expectedHref(requirement.mpcHref) + '"')) {
-    failures.push(artifact.file + ': missing Founder-owned MPC education destination');
+  if (!html.includes(requirement.mpc) || !html.includes('href="' + mpcSource + '"') || !html.includes('>' + requirement.mpcAction + '<')) {
+    failures.push(artifact.file + ': missing Founder-owned MPC source action');
+  }
+  if (/href="[^"]*mpc-administracion/i.test(html)) {
+    failures.push(artifact.file + ': Founder must not link to a retired MPC destination');
   }
   if (countMatches(html, /<img\b/gi) > 0) {
     failures.push(artifact.file + ': unexpected Founder portrait or media');
   }
 }
-function assertProjectDetailArtifact(artifact, html) {
-  const requirement = detailRequirements[artifact.file];
-  if (!requirement) return;
-  const publicationScope = requirement.relatedService
-    ? artifact.file.startsWith('en/')
-      ? 'The public description is limited by publication permissions. The image is conceptual and does not show a real interface.'
-      : 'La descripción pública está limitada por permisos de publicación. La imagen es conceptual y no muestra una interfaz real.'
-    : artifact.file.startsWith('en/')
-      ? 'The public description is limited by the educational context and publication permissions. The image is conceptual and does not show a real interface.'
-      : 'La descripción pública está limitada por el contexto educativo y los permisos de publicación. La imagen es conceptual y no muestra una interfaz real.';
-  if (countMatches(html, /<main\b/g) !== 1) failures.push(`${artifact.file}: expected exactly one main landmark`);
-  if (countMatches(html, /<h1\b/g) !== 1 || !html.includes(requirement.title)) {
-    failures.push(`${artifact.file}: expected one approved visible H1`);
-  }
-  for (const text of [requirement.headerSummary, requirement.evidenceStatement, requirement.limitation, publicationScope]) {
-    if (!html.includes(text)) failures.push(`${artifact.file}: missing approved detail text "${text}"`);
-  }
-  let previousHeadingPosition = -1;
-  for (const heading of requirement.headings) {
-    const position = html.indexOf(heading);
-    if (position === -1 || position <= previousHeadingPosition) failures.push(`${artifact.file}: detail sections are missing or out of order`);
-    previousHeadingPosition = position;
-  }
-  const expectedImage = expectedHref(requirement.visual);
-  if (!html.includes(expectedImage) || !html.includes(`alt="${requirement.alt}"`)) {
-    failures.push(`${artifact.file}: missing approved conceptual visual or alt text`);
-  }
-  if (!html.includes(`href="${requirement.source}"`) || !html.includes(requirement.source)) {
-    failures.push(`${artifact.file}: missing approved public repository evidence link`);
-  }
-  if (!requirement.relatedService && /href="[^"]*services\/#web"/.test(html)) {
-    failures.push(artifact.file + ': MPC must not expose a commercial service destination');
-  }
-  for (const route of [requirement.relatedService, requirement.founder, requirement.contact, requirement.alternate]) {
-    if (!route) continue;
-    const expected = expectedHref(route);
-    if (!html.includes(`href="${expected}"`)) failures.push(`${artifact.file}: missing internal detail reference ${expected}`);
-  }
-  if (countMatches(html, /<img\b/gi) !== 1) failures.push(`${artifact.file}: expected exactly one conceptual visual`);
-  if (/Busesfy|ChronoApp|Documancer|PRIVATE|FOUNDER-ONLY|BLOCKED-|functional-demonstration/i.test(html)) {
-    failures.push(`${artifact.file}: forbidden non-public or unsupported evidence matched`);
-  }
-  if (/public\/projects\/.*\.svg|projects\/(?:Busesfy|MPC-Administracion|GRS)\.svg/i.test(html)) {
-    failures.push(`${artifact.file}: legacy project asset referenced`);
-  }
-}
-
 function assertPrivacyArtifact(artifact, html) {
   const requirement = privacyRequirements[artifact.file];
   if (!requirement) return;
@@ -847,12 +750,25 @@ for (const artifact of artifacts) {
   }
 }
 
+// The six retired detail routes and the MPC concept must be absent from a clean export.
+for (const retired of [...retiredArtifacts, ...retiredRoutes, 'projects/mpc-administracion']) {
+  try {
+    await stat(join(outputRoot, retired));
+    failures.push(retired + ': a retired project-detail artifact is still exported');
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+}
+
 const exportedTextFiles = await collectTextFiles(outputRoot);
 for (const filePath of exportedTextFiles) {
   const source = await readFile(filePath, 'utf8');
   const file = relative(outputRoot, filePath);
   if (/Busesfy|ChronoApp|Documancer|FOUNDER-ONLY|BLOCKED-|PROJECT-(?:GRS|THE-SYSTEM|MPC-ADMIN)/i.test(source)) {
     failures.push(`${file}: blocked, private, retired, or internal project identity leaked into exported payload`);
+  }
+  if (retiredDestination.test(source) || /mpc-administracion/i.test(source)) {
+    failures.push(file + ': an active link or route payload still names a retired project-detail destination');
   }
   if (/brand\/immersive\//.test(source)) {
     failures.push(`${file}: references the retired brand/immersive chapter posters`);
@@ -872,7 +788,6 @@ for (const { artifact, html } of allHtml) {
   assertProjectsArtifact(artifact, html);
   assertStudioArtifact(artifact, html);
   assertFounderArtifact(artifact, html);
-  assertProjectDetailArtifact(artifact, html);
   assertPrivacyArtifact(artifact, html);
   assertContactArtifact(artifact, html);
   const requirement = homepageRequirements[artifact.file];

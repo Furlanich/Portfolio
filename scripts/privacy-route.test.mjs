@@ -9,10 +9,10 @@ const routeDefinitions = [
 
 const footerRouteFiles = [
   '../app/(es)/page.tsx', '../app/(es)/servicios/page.tsx', '../app/(es)/proyectos/page.tsx',
-  '../app/(es)/proyectos/[projectSlug]/page.tsx', '../app/(es)/estudio/page.tsx',
+  '../app/(es)/estudio/page.tsx',
   '../app/(es)/estudio/samuel-furlanich/page.tsx', '../app/(es)/contacto/page.tsx',
   '../app/(en)/en/page.tsx', '../app/(en)/en/services/page.tsx', '../app/(en)/en/work/page.tsx',
-  '../app/(en)/en/work/[projectSlug]/page.tsx', '../app/(en)/en/about/page.tsx',
+  '../app/(en)/en/about/page.tsx',
   '../app/(en)/en/about/samuel-furlanich/page.tsx', '../app/(en)/en/contact/page.tsx',
 ];
 

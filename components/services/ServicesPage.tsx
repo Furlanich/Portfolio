@@ -1,5 +1,5 @@
 import { resolveActionLink } from '@/components/foundation/content-types';
-import { getProjectDetailPath, getServiceSectionHref, serviceSectionAnchors } from '@/lib/site-routes';
+import { getProjectDossierHref, getServiceSectionHref, serviceSectionAnchors } from '@/lib/site-routes';
 import type { ServicesPageContent } from './content-types';
 import { ServicesFinalCta } from './ServicesFinalCta';
 import { ServicesIntroduction } from './ServicesIntroduction';
@@ -25,7 +25,7 @@ export function ServicesPage({ content }: ServicesPageProps) {
       {content.services.map((service, index) => {
         const action = resolveActionLink(service.action, content.locale);
         const evidenceHref = service.evidenceLink
-          ? getProjectDetailPath(content.locale, service.evidenceLink.slug)
+          ? getProjectDossierHref(content.locale, service.evidenceLink.slug)
           : undefined;
 
         return (

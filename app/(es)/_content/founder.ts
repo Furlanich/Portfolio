@@ -48,13 +48,13 @@ export const founderContent = {
       { title: 'Técnico Informático', institution: 'E.E.S.T. N.º 1, Chivilcoy', status: 'Formación completada' },
     ],
     project: {
-      slug: 'mpc-administracion',
+      sourceHref: 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-',
       title: 'MPC Administración',
       context: 'Trabajo educativo grupal · 2021',
       summary: 'Proyecto educativo grupal de 2021 para administrar producción y stock de una fábrica de quesos ficticia.',
       relationship: 'Trabajo educativo grupal; no representa un cliente, un empleo ni una entrega de FURLANICH.',
       limitation: 'No se verificó su funcionamiento actual. No se afirma autoría individual, uso real, despliegue ni resultado comercial. No hay material visual autorizado del sistema original.',
-      actionLabel: 'Ver proyecto educativo',
+      actionLabel: 'Ver código fuente',
     },
   },
   capabilities: {

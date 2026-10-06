@@ -35,7 +35,7 @@ const serviceCases = [
     contactLabel: 'Ver contacto',
     finalAction: 'Iniciar una consulta',
     evidenceLink: 'Ver el proyecto y sus límites',
-    evidencePath: '/proyectos/general-reservation-system/',
+    evidenceIndex: stableRoutes.projects.es,
   },
   {
     locale: 'English',
@@ -68,7 +68,7 @@ const serviceCases = [
     contactLabel: 'Contact options',
     finalAction: 'Start an enquiry',
     evidenceLink: 'View the project and its limitations',
-    evidencePath: '/en/work/general-reservation-system/',
+    evidenceIndex: stableRoutes.projects.en,
   },
 ] as const;
 
@@ -107,7 +107,7 @@ for (const serviceCase of serviceCases) {
 
     await expect(main.getByRole('link', { name: serviceCase.evidenceLink, exact: true })).toHaveAttribute(
       'href',
-      appPathname(serviceCase.evidencePath),
+      appPathname(serviceCase.evidenceIndex) + '#general-reservation-system',
     );
     await expect(main.getByRole('link', { name: serviceCase.finalAction, exact: true })).toHaveAttribute(
       'href',

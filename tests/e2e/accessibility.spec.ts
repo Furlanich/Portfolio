@@ -12,8 +12,6 @@ const representativeRoutes = [
   ['English Studio', stableRoutes.studio.en],
   ['Spanish Founder', stableRoutes.founder.es],
   ['English Founder', stableRoutes.founder.en],
-  ['Spanish GRS detail', '/proyectos/general-reservation-system/'],
-  ['English MPC detail', '/en/work/mpc-administracion/'],
   ['Spanish Privacy', stableRoutes.privacy.es],
   ['English Privacy', stableRoutes.privacy.en],
   ['Spanish Contact', stableRoutes.contact.es],

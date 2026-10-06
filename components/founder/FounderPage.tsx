@@ -1,6 +1,5 @@
 import { resolveActionLink } from '@/components/foundation/content-types';
 import type { FounderPageContent } from './content-types';
-import { getProjectDetailPath } from '@/lib/site-routes';
 import { FounderCapabilities } from './FounderCapabilities';
 import { FounderFinalCta } from './FounderFinalCta';
 import { FounderHeader } from './FounderHeader';
@@ -15,7 +14,6 @@ interface FounderPageProps {
 export function FounderPage({ content }: FounderPageProps) {
   const projectsAction = resolveActionLink(content.projectsBridge.action, content.locale);
   const finalAction = resolveActionLink(content.finalCta.action, content.locale);
-  const educationProjectHref = getProjectDetailPath(content.locale, content.education.project.slug);
 
   return (
     <main>
@@ -25,7 +23,6 @@ export function FounderPage({ content }: FounderPageProps) {
         experience={content.experience}
         biography={content.biography}
         education={content.education}
-        projectHref={educationProjectHref}
       />
       <FounderCapabilities content={content.capabilities} />
       <FounderProjectsBridge content={content.projectsBridge} actionHref={projectsAction.href} />
