@@ -99,6 +99,14 @@ export function createConnectedController(options: ControllerOptions): Connected
     }
     // An unknown tier fails closed: no pose can be sampled for it, so no work is scheduled.
     if (!input || !isConnectedTier(input.tier) || !input.visible || input.footerDominant) {
+      // Footer handoff: the damped pose trails a fast scroll, so suspending as-is would freeze the
+      // network part-grown. One last frame lands on the current target (every connection complete
+      // by the model's completion-before-hiding rule), then no further work or draws. A hidden
+      // tab draws nothing, so only the Footer takes this frame.
+      if (state === 'live' && input && isConnectedTier(input.tier) && input.visible && input.footerDominant) {
+        if (pose) pose = { ...pose, progress: targetProgress, scrollActivity: 0 };
+        renderNow();
+      }
       cancelPending();
       if (input) state = 'suspended';
       return;

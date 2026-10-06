@@ -388,3 +388,35 @@ test('an unknown tier makes the controller inert instead of scheduling or render
   harness.controller.update(update());
   assert.equal(harness.controller.snapshot().state, 'live', 'a later valid update recovers');
 });
+
+test('fast scrolling into the Footer completes every connection before the scene suspends', () => {
+  const harness = createHarness();
+  harness.controller.update(update({ scrollY: 0 }));
+  // Fast scroll: 300px every 16ms. The damped pose trails the scroll target the whole way down.
+  for (let step = 1; step <= 16; step += 1) {
+    harness.advance(16);
+    harness.controller.update(update({ scrollY: step * 300, velocityPxPerSecond: 18_750 }));
+  }
+  const trailing = harness.renders[harness.renders.length - 1];
+  const minGrowthWhileTrailing = Math.min(...trailing.edges.map((edge) => edge.growth));
+  assert.ok(minGrowthWhileTrailing < 0.95, `the scenario must trail the target to be meaningful, got ${minGrowthWhileTrailing}`);
+
+  harness.advance(16);
+  harness.controller.update(update({ scrollY: 4900, velocityPxPerSecond: 18_750, footerDominant: true }));
+  const handoff = harness.controller.snapshot();
+  assert.equal(handoff.state, 'suspended');
+  assert.equal(handoff.pendingCallbacks, 0);
+
+  const last = harness.renders[harness.renders.length - 1];
+  assert.equal(last.progress, 1, 'the last drawn pose is the completed one');
+  assert.deepEqual(
+    last.edges.map((edge) => edge.growth),
+    last.edges.map(() => 1),
+    'every connection reaches growth 1 before the scene hides',
+  );
+
+  const rendersAtHandoff = harness.renders.length;
+  harness.advance(5000);
+  assert.equal(harness.renders.length, rendersAtHandoff, 'nothing draws once the Footer dominates');
+  assert.equal(harness.pending(), 0);
+});
