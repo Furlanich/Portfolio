@@ -15,7 +15,7 @@ last_verified: 2026-10-07
 
 # Playwright QA
 
-`playwright.config.ts` owns a fixed local origin, Next.js development-server startup, normalized optional base path, conservative parallelism, CI-only retry, and failure evidence. Install matching browser binaries after `npm ci` with `npx playwright install chromium firefox webkit`; CI uses `--with-deps`.
+`playwright.config.ts` owns a fixed local origin, Next.js development-server startup, normalized optional base path, conservative parallelism, CI-only retry, and failure evidence. Install matching browser binaries after `npm ci` with `npx playwright install chromium firefox webkit`. CI instead runs its browser job in the official `mcr.microsoft.com/playwright:v1.63.0-noble` container, so it installs no browsers or system libraries per run; the image tag must equal the locked `@playwright/test` version and be changed with it, `npm ci` still runs, and the full `npm run test:e2e` is unchanged ([Playwright CI containers](https://playwright.dev/docs/ci#via-containers), [Docker](https://playwright.dev/docs/docker)).
 
 ## Commands
 
