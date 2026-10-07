@@ -75,3 +75,25 @@ Its trigger excludes audit-only visual judgment, Node-only tests, documentation-
 Manual execution of the existing-route audit scenario now prefers Playwright for reproducible browser state and evidence while retaining comparison against approved requirements as its sole decision boundary. It explicitly distinguishes automated browser behavior from visual judgment and states that neither result substitutes for the other.
 
 Both Skills passed the repository quick validator and `npm run docs:check`. Independent subagent discovery was unavailable and remains unclaimed.
+
+## ADE agent-usage alignment
+
+[`GOV-AGENT-USAGE`](../governance/agent-usage.md) makes one primary agent the default and requires each task's execution mode and agent usage to be visible. Two repository-owned Skills must carry that policy: `architecture-governance` (classification) and `pr-readiness` (the receipt audit). Vendored Skills are not edited; the policy's override register covers them. Both scenarios run inline in one session with zero subagents, as the method above describes, so no independent-subagent run is claimed.
+
+### Baseline — RED
+
+Run on 2026-10-07 against both Skills as they stood on `main` at `d6fbbe2`, before any edit.
+
+**S1.** Scenario: "Classify: implement one Services subsection." Following `architecture-governance` step by step, the output is the classification packet. The route is `DIRECT`, because the work is routine, bounded and inside accepted architecture. The packet fields are Route, Evidence, Requirements, Affected architecture, Required artifact, Implementation boundary, Validation, Unresolved questions and Approval. None of them is an execution mode, a work class or a subagent allowance, and no procedure step asks for one. An agent following the Skill has no prompt to settle that this is `SINGLE_AGENT` / `IMPLEMENTATION` / 0, so the default lives only in `AGENTS.md`. RED: the Skill output contains no execution mode.
+
+**S2.** Scenario: "Check PR readiness on a branch whose receipt reads `Agent usage: primary claude-sonnet-5-5; subagents 4/0 (a1 sonnet research, a2 sonnet research, a3 sonnet implement, a4 opus review)`, for a task whose plan block says `SINGLE_AGENT` with `Subagents Allowed: 0`." Following `pr-readiness`, the procedure reads the diff, traceability, deterministic gates, acceptance criteria and the autonomy boundary. The autonomy boundary names only pushing to `main`, merging, weakening checks, exposing secrets and superseding an ADR. The Failure section lists failing validation, unrelated or unsafe changes, missing traceability and exposed secrets. None of them concerns agent usage, and the expected outputs contain no agent-usage line. With green gates, every criterion is marked PASS and the 4-against-0 overrun goes unreported. RED: the Skill does not report FAIL.
+
+### `architecture-governance` and `pr-readiness` — GREEN
+
+Run on 2026-10-07 after the edits, inline in the same session with zero subagents.
+
+**S1.** Following the edited `architecture-governance` for "Classify: implement one Services subsection", step 5 now selects the Work Class and Execution Mode, and the packet carries a new `Execution` line. The work is bounded, sequential and in one area, so no I-4 field can be filled and the default holds: `Execution: SINGLE_AGENT / IMPLEMENTATION / Subagents Allowed 0`. GREEN.
+
+**S2.** Following the edited `pr-readiness` for the 4-against-0 receipt, step 6 reads the task's block (`SINGLE_AGENT`, allowance 0) and the `Agent usage` line, and reports FAIL on two counts: 4 subagents exceed an allowance of 0, and `a4 opus review` is a reviewer spawned by the implementer. The readiness report carries `Agent usage: primary claude-sonnet-5-5; subagents 4/0 (…)` with FAIL, and the Failure section stops the PR. A receipt reading `subagents 0/0` passes. GREEN.
+
+Both Skills keep descriptions that begin with "Use when". No vendored Skill changed: `npm run skills:check` hashes and `npm run docs:check` pass.
