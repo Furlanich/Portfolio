@@ -2,7 +2,14 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const EXCLUDED_DIRECTORIES = new Set(['.git', '.next', '.worktrees', 'node_modules', 'out']);
+const EXCLUDED_DIRECTORIES = new Set(['.git', '.next', '.superpowers', '.worktrees', 'node_modules', 'out']);
+export const EXECUTION_POLICY = 'ADE-AGENT-USAGE-V1';
+// Active plans approved before the ADE agent-usage policy. Exempt by ID only,
+// so a copy of one of them still fails.
+export const LEGACY_EXECUTION_PLAN_IDS = new Set(['PLAN-SPF-V1']);
+const EXECUTION_MODES = new Set(['SINGLE_AGENT', 'BOUNDED_MULTI_AGENT']);
+const WORK_CLASSES = new Set(['IMPLEMENTATION', 'RESEARCH', 'REVIEW']);
+const PLACEHOLDER_VALUE = /^(\.\.\.|TBD|TODO|<.*>)$/i;
 // Root-relative checkouts of other branches. `.claude` itself holds tracked
 // agent documents that remain subject to validation.
 const EXCLUDED_PATHS = new Set(['.claude/worktrees']);
@@ -332,6 +339,105 @@ function validateLinks(documents, rootDir, ignoredSourcePaths = new Set()) {
   return violations;
 }
 
+function findTaskSections(document) {
+  const headings = [];
+  const lines = document.body.split(/\r?\n/);
+  let fenced = false;
+  lines.forEach((line, index) => {
+    if (/^\s{0,3}(```|~~~)/.test(line)) {
+      fenced = !fenced;
+      return;
+    }
+    if (fenced) return;
+    const match = line.match(/^(#{1,6})\s+(.*?)\s*#*\s*$/);
+    if (match) headings.push({ index, level: match[1].length, text: match[2] });
+  });
+
+  const sections = [];
+  for (const [position, heading] of headings.entries()) {
+    if (heading.level < 2 || heading.level > 3) continue;
+    const task = heading.text.match(/^Task (\d+)\b/);
+    if (!task) continue;
+    const end = headings.slice(position + 1).find((next) => next.level <= heading.level)?.index ?? lines.length;
+    sections.push({ number: task[1], lines: lines.slice(heading.index + 1, end) });
+  }
+  return sections;
+}
+
+function readExecutionBlocks(sectionLines) {
+  const blocks = [];
+  let fenced = false;
+  for (let index = 0; index < sectionLines.length; index += 1) {
+    const line = sectionLines[index];
+    if (/^\s{0,3}(```|~~~)/.test(line)) {
+      fenced = !fenced;
+      continue;
+    }
+    if (fenced || line.trim() !== '**Execution**') continue;
+    const block = [];
+    for (let next = index + 1; next < sectionLines.length && sectionLines[next].trim(); next += 1) {
+      block.push(sectionLines[next]);
+    }
+    blocks.push(block);
+  }
+  return blocks;
+}
+
+function parseExecutionBlock(block) {
+  const fields = new Map();
+  let responsibilities = 0;
+  for (const line of block) {
+    const field = line.match(/^- ([^:]+):\s*(.*?)\s*$/);
+    if (field) {
+      fields.set(field[1].trim(), field[2]);
+    } else if (/^\s+\d+\.\s+\S/.test(line)) {
+      responsibilities += 1;
+    }
+  }
+  return { fields, responsibilities };
+}
+
+export function validateExecutionPlans(documents) {
+  const violations = [];
+  for (const document of documents) {
+    const { type, plan_status: planStatus, id, execution_policy: policy } = document.frontMatter.values;
+    if (type !== 'execution-plan' || planStatus !== 'ACTIVE' || LEGACY_EXECUTION_PLAN_IDS.has(id)) continue;
+
+    if (policy !== EXECUTION_POLICY) {
+      violations.push(violation(document, `execution_policy must be "${EXECUTION_POLICY}"`));
+    }
+
+    for (const { number, lines } of findTaskSections(document)) {
+      const report = (message) => violations.push(violation(document, `Task ${number}: ${message}`));
+      const blocks = readExecutionBlocks(lines);
+      if (blocks.length !== 1) {
+        report(blocks.length ? 'multiple Execution blocks' : 'missing Execution block');
+        continue;
+      }
+
+      const { fields, responsibilities } = parseExecutionBlock(blocks[0]);
+      const mode = fields.get('Execution Mode');
+      if (!EXECUTION_MODES.has(mode)) report('Execution Mode must be SINGLE_AGENT or BOUNDED_MULTI_AGENT');
+      if (!WORK_CLASSES.has(fields.get('Work Class'))) report('Work Class must be IMPLEMENTATION, RESEARCH or REVIEW');
+
+      const allowed = fields.get('Subagents Allowed');
+      if (mode === 'SINGLE_AGENT' && allowed !== '0') report('SINGLE_AGENT requires Subagents Allowed: 0');
+      if (mode !== 'BOUNDED_MULTI_AGENT') continue;
+
+      if (!/^[1-3]$/.test(allowed ?? '')) report('Subagents Allowed must be 1-3');
+      for (const name of ['Single-agent insufficiency', 'Cost justification', 'Isolation / File Boundaries']) {
+        const value = fields.get(name)?.trim() ?? '';
+        if (!value || PLACEHOLDER_VALUE.test(value)) report(`${name} is required`);
+      }
+      if (fields.get('Nesting') !== 'forbidden') report('Nesting must be forbidden');
+      if (/^[1-3]$/.test(allowed ?? '') && responsibilities !== Number(allowed)) {
+        report(`expected ${allowed} Subagent Responsibilities, found ${responsibilities}`);
+      }
+    }
+  }
+  return violations;
+}
+
 async function findSkillDirectories(rootDir) {
   const skillsRoot = path.join(rootDir, '.agents', 'skills');
   try {
@@ -393,6 +499,7 @@ export async function validateRepository(rootDir) {
     ...validateFrontMatter(repositoryDocuments),
     ...validateHeadings(repositoryDocuments),
     ...validateLinks(documents, resolvedRoot, vendoredSkills.paths),
+    ...validateExecutionPlans(repositoryDocuments),
     ...validateSkills(documents, resolvedRoot, skillDirectories, vendoredSkills.names)
   ].sort();
 }
