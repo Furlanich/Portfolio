@@ -19,10 +19,16 @@ related:
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
-last_verified: 2026-09-30
+  - RFC-ADE-AGENT-USAGE-V1
+  - PLAN-ADE-AGENT-USAGE-V1
+last_verified: 2026-10-07
 ---
 
 # RFCs
+
+## Proposed ADE agent usage
+
+- [RFC-ADE-AGENT-USAGE-V1](ade-agent-usage-v1.md): **PROPOSED — 2026-10-07.** One task = one primary agent by default (`SINGLE_AGENT`, 0 subagents). Up to 3 justified, bounded subagents are allowed per task, with no nesting. The independent reviewer is a separate session. Claude and Codex project configuration enforces the caps, and the docs validator enforces per-task execution blocks for new plans. The owner decided D1–D6 on 2026-10-07; execution follows [PLAN-ADE-AGENT-USAGE-V1](../plans/active/ade-agent-usage-optimization-v1.md). No product or runtime change.
 
 ## Proposed connected studio redesign
 
