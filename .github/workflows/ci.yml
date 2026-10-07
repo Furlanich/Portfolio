@@ -24,7 +24,16 @@ jobs:
 
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Overall job resource budget only (the full matrix outgrew 30). Per-test, hook and expect timeouts are unchanged.
+    timeout-minutes: 35
+    # Official prebuilt Playwright image: browsers and system libraries come with it, so the job no longer
+    # installs them over the network on every run. The tag MUST equal the locked `@playwright/test` version
+    # (package.json); change both together. Options follow the Playwright CI and Docker guides:
+    # --user 1001 is the GitHub runner user (workspace files stay writable and uploadable),
+    # --init reaps zombie processes, --ipc=host avoids Chromium shared-memory crashes.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --user 1001 --init --ipc=host
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,7 +41,6 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run test:e2e
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}

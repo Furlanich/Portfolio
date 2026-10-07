@@ -28,8 +28,9 @@ function withTrailingSlash(path: string): string {
 
 /**
  * `currentPath` is the browser pathname (it carries the deployment base path), `hash` is
- * the URL fragment including its `#`, and `alternateHref` is the router-level href of the equivalent route (it does not
- * carry the base path, because `next/link` adds it).
+ * the URL fragment including its `#`, and `alternateHref` is the router-level href of the equivalent route. The
+ * result is router-level too: it never carries the base path. The caller owns applying it, exactly once, when it
+ * renders a native link (`LanguageSwitch` does so with `withBasePath`).
  */
 export function resolveDossierAlternateHref(currentPath: string, hash: string, alternateHref: string): string {
   const appPath = stripBasePath(currentPath);

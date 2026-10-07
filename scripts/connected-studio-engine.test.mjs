@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BufferGeometry, InstancedMesh, Material, Texture, Vector3 } from 'three';
+import { BufferGeometry, InstancedMesh, Material, Matrix4, Texture, Vector3 } from 'three';
 
 // PLAN-SPF-V1 Task 5. The engine runs in Node against fakes at the browser/GPU boundary only: a
 // canvas, a mount, and a renderer that models GPU ownership the way three's WebGLRenderer does
@@ -16,7 +16,7 @@ const { getConnectedGraph, getQualityForTier, getTierForWidth, sampleConnectedPo
 
 // --- fakes at the browser/GPU boundary ------------------------------------------------------------
 
-function createFakeCanvas() {
+function createFakeCanvas(behavior = {}) {
   const listeners = new Map();
   const canvas = {
     style: { cssText: '' },
@@ -24,6 +24,7 @@ function createFakeCanvas() {
     parent: null,
     removals: 0,
     setAttribute(name, value) {
+      if (behavior.setAttributeThrows) throw new Error('canvas attribute refused');
       this.attributes[name] = value;
     },
     addEventListener(type, listener) {
@@ -50,12 +51,15 @@ function createFakeCanvas() {
   return canvas;
 }
 
-function createFakeMount() {
+/** `appendThrows` refuses outright; `attachThenThrows` models a DOM that adopts the node and then fails. */
+function createFakeMount(behavior = {}) {
   return {
     children: [],
     appendChild(node) {
+      if (behavior.appendThrows) throw new Error('mount refused the canvas');
       node.parent = this;
       this.children.push(node);
+      if (behavior.attachThenThrows) throw new Error('mount failed after adopting the canvas');
       return node;
     },
   };
@@ -171,9 +175,19 @@ function viewportForWidth(width, height = 900, pixelRatio = 2) {
  * Builds a scene against the fakes. `graph`, `quality` and `rendererFails` inject construction
  * failures; with `expectFailure` the construction error is returned instead of thrown.
  */
-function createFixture({ viewport = VIEWPORTS.wide, rendererBehavior = {}, onContextLost, graph: graphOverride, quality, rendererFails = false, expectFailure = false } = {}) {
-  const canvas = createFakeCanvas();
-  const mount = createFakeMount();
+function createFixture({
+  viewport = VIEWPORTS.wide,
+  rendererBehavior = {},
+  canvasBehavior = {},
+  mountBehavior = {},
+  onContextLost,
+  graph: graphOverride,
+  quality,
+  rendererFails = false,
+  expectFailure = false,
+} = {}) {
+  const canvas = createFakeCanvas(canvasBehavior);
+  const mount = createFakeMount(mountBehavior);
   const fake = createFakeRenderer(canvas, rendererBehavior);
   const lost = { count: 0 };
   const graph = graphOverride ?? getConnectedGraph(getQualityForTier(viewport.tier));
@@ -260,6 +274,37 @@ test('disposing a constructed connected scene releases every owned GPU resource 
 
 // --- batched graph ------------------------------------------------------------------------------------
 
+/** Every ring instance the scene draws, whichever instanced meshes hold them, as world matrices. */
+function ringInstances(fx) {
+  const instances = [];
+  fx.state.lastScene.traverse((object) => {
+    if (object.userData.connectedRole !== 'rings') return;
+    for (let index = 0; index < object.count; index += 1) {
+      const matrix = new Matrix4();
+      object.getMatrixAt(index, matrix);
+      instances.push(matrix);
+    }
+  });
+  return instances;
+}
+
+const translationOf = (matrix) => new Vector3().setFromMatrixPosition(matrix);
+
+/** The unit normal of the plane a ring instance lies in (a torus is built in its local XY plane). */
+const ringNormal = (matrix) => new Vector3(0, 0, 1).transformDirection(matrix);
+
+/** The ring instances centred on each node, in node order, found by position so no instance layout is assumed. */
+function ringsByNode(fx) {
+  const rings = ringInstances(fx);
+  const nodes = drawnByRole(fx).nodes;
+  const matrix = new Matrix4();
+  return fx.graph.nodes.map((_, index) => {
+    nodes.getMatrixAt(index, matrix);
+    const centre = translationOf(matrix);
+    return rings.filter((ring) => translationOf(ring).distanceTo(centre) < 1e-6);
+  });
+}
+
 /** The engine tags what it builds with `userData.connectedRole`; counts come from the objects themselves. */
 function drawnByRole(fx) {
   const byRole = {};
@@ -282,7 +327,7 @@ test('a wide scene batches 16 nodes with their rings and cores and 33 connection
   const roles = drawnByRole(fx);
   assert.equal(roles.nodes?.count, 16, 'sixteen faceted nodes in one instanced mesh');
   assert.equal(roles.cores?.count, 16, 'one light core per node');
-  assert.equal(roles.rings?.count, 16, 'one ring per node');
+  assert.equal(ringInstances(fx).length, 32, 'a primary ring and a second tilted orbit for each of the sixteen nodes');
   assert.equal(roles.paths?.userData.connections, 33, 'thirty-three connections in one path batch');
   assert.equal(roles.skeleton?.userData.connections, 33, 'the faint skeleton covers every connection');
   const { drawables, drawCalls } = fx.handle.diagnostics();
@@ -309,11 +354,100 @@ test('the compact scene is 8 nodes, 13 connections and one ring per node', () =>
   const roles = drawnByRole(fx);
   assert.equal(roles.nodes?.count, 8);
   assert.equal(roles.cores?.count, 8);
-  assert.equal(roles.rings?.count, 8, 'one ring per node, not a second orbit of rings');
+  assert.equal(ringInstances(fx).length, 8, 'one ring per node, not a second orbit of rings');
   assert.equal(roles.paths?.userData.connections, 13);
   assert.equal(roles.skeleton?.userData.connections, 13);
   const { drawables } = fx.handle.diagnostics();
   assert.ok(drawables >= 6 && drawables <= 18, `a compact scene stays within 18 drawables, got ${drawables}`);
+});
+
+// --- the second tilted orbit (DESIGN-SPF-V1, Scene integration) -----------------------------------------------
+
+test('wide and tablet draw a second, differently tilted orbit around every node; compact draws exactly one ring', () => {
+  for (const [viewport, orbits] of [[VIEWPORTS.wide, 2], [VIEWPORTS.tablet, 2], [VIEWPORTS.compact, 1]]) {
+    const fx = drawFixture(viewport, 0.5);
+    const perNode = ringsByNode(fx);
+    assert.equal(ringInstances(fx).length, orbits * fx.graph.nodes.length, `${viewport.tier}: ${orbits} ring instance(s) per node in total`);
+    perNode.forEach((rings, index) => {
+      assert.equal(rings.length, orbits, `${viewport.tier} node ${index}: ${orbits} orbit(s) centred on the node`);
+      if (orbits === 2) {
+        const [first, second] = rings;
+        assert.notDeepEqual(Array.from(first.elements), Array.from(second.elements), `${viewport.tier} node ${index}: the two orbits are not coincident`);
+        const sharp = Math.abs(ringNormal(first).dot(ringNormal(second)));
+        assert.ok(sharp < Math.cos((20 * Math.PI) / 180), `${viewport.tier} node ${index}: the orbit planes differ by at least 20 degrees (|cos| ${sharp})`);
+      }
+    });
+    const { drawables, drawCalls } = fx.handle.diagnostics();
+    assert.ok(drawables <= (orbits === 2 ? 28 : 18), `${viewport.tier}: ${drawables} drawables stays inside its budget`);
+    assert.equal(drawCalls, drawables);
+  }
+});
+
+test('both orbits follow a moving node and settle back when it returns, and no other node\'s orbits move', () => {
+  const fx = drawFixture(VIEWPORTS.wide, 1);
+  const base = restPose(fx.graph, 'wide', 1);
+  const snapshot = () => ringsByNode(fx).map((rings) => rings.map((ring) => Array.from(ring.elements)));
+  const before = snapshot();
+  assert.ok(before.every((rings) => rings.length === 2));
+
+  fx.handle.render(movedPose(base, fx.graph.nodes[0].id, [0.6, -0.4, 0.3]));
+  const nodeMatrix = new Matrix4();
+  drawnByRole(fx).nodes.getMatrixAt(0, nodeMatrix);
+  const moved = ringsByNode(fx);
+  assert.equal(moved[0].length, 2, 'both orbits are centred on the node at its new position');
+  moved[0].forEach((ring) => assert.ok(translationOf(ring).distanceTo(translationOf(nodeMatrix)) < 1e-6));
+  const after = snapshot();
+  assert.notDeepEqual(after[0], before[0], 'the moved node\'s orbits moved');
+  assert.deepEqual(after.slice(1), before.slice(1), 'every other node keeps its orbits');
+
+  fx.handle.render(base);
+  assert.deepEqual(snapshot(), before, 'returning the node restores both orbits exactly');
+});
+
+test('every ring instance of both orbits is released exactly once, with the GPU copy', () => {
+  const fx = drawFixture(VIEWPORTS.wide);
+  const ringMeshes = [];
+  fx.state.lastScene.traverse((object) => {
+    if (object.userData.connectedRole === 'rings') ringMeshes.push(object);
+  });
+  assert.ok(ringMeshes.length >= 1 && ringMeshes.every((mesh) => fx.state.gpu.instanced.has(mesh)), 'the renderer holds every ring mesh');
+  assert.equal(ringMeshes.reduce((total, mesh) => total + mesh.count, 0), 32);
+  fx.handle.dispose();
+  for (const mesh of ringMeshes) {
+    assert.equal(fx.state.gpu.instanced.has(mesh), false, 'no ring mesh stays on the GPU');
+    assert.equal(fx.state.disposeEvents.get(mesh), 1, 'each ring mesh is released exactly once');
+  }
+});
+
+test('the primary ring and the compact appearance are unchanged by the second orbit', () => {
+  // Golden values captured from the base commit (1514860) before the second orbit existed: the first
+  // instance of each pair is the node's primary ring and must stay exactly as it was.
+  const golden = {
+    compact: {
+      0: [-0.103223, -0.10704, -0.474928, 0, 0.323571, 0.347657, -0.148682, 0, 0.363753, -0.339627, -0.002514, 0, 1.132724, 0.827853, 0.207873, 1],
+      4: [0.370894, 0.021625, 0.289009, 0, -0.2898, 0.03265, 0.369467, 0, -0.003073, -0.469066, 0.039041, 0, -1.216664, -0.949132, -0.045173, 1],
+      7: [0.426824, -0.254227, -0.165952, 0, 0.30252, 0.380254, 0.195547, 0, 0.025565, -0.255197, 0.456696, 0, 1.157141, -1.526791, 0.47485, 1],
+    },
+    wide: {
+      0: [-0.704094, -0.074378, -0.492167, 0, 0.345723, 0.540303, -0.576243, 0, 0.358101, -0.667869, -0.411368, 0, 4.622682, -0.654621, 0.865288, 1],
+      9: [0.286759, -0.21643, -0.488955, 0, 0.411824, 0.44328, 0.045311, 0, 0.341057, -0.353285, 0.356397, 0, -2.174372, -1.776381, -1.794536, 1],
+    },
+  };
+  for (const [tier, viewport] of [['compact', VIEWPORTS.compact], ['wide', VIEWPORTS.wide]]) {
+    const fx = drawFixture(viewport, 0.5);
+    const nodes = drawnByRole(fx).nodes;
+    const nodeMatrix = new Matrix4();
+    for (const [index, expected] of Object.entries(golden[tier])) {
+      nodes.getMatrixAt(Number(index), nodeMatrix);
+      const centre = translationOf(nodeMatrix);
+      // The primary ring is the instance centred on the node whose scale is the node's own (the smaller orbit).
+      const orbit = ringsByNode(fx)[Number(index)].sort((a, b) => a.getMaxScaleOnAxis() - b.getMaxScaleOnAxis())[0];
+      assert.equal(translationOf(orbit).distanceTo(centre) < 1e-6, true);
+      Array.from(orbit.elements).forEach((value, at) => {
+        assert.ok(Math.abs(value - expected[at]) < 1e-5, `${tier} node ${index}: primary ring element ${at} is ${value}, expected ${expected[at]}`);
+      });
+    }
+  }
 });
 
 // --- paths and nodes follow the pose --------------------------------------------------------------------
@@ -743,6 +877,163 @@ test('a host callback that throws or disposes re-entrantly cannot break the engi
   for (const [resource, events] of fixture.state.disposeEvents) assert.equal(events, 1, `${resource.constructor.name} released once`);
 });
 
+// --- resize failure containment -------------------------------------------------------------------------------
+
+/** Every resource that exists after the fixture's own disposal must have been released once, and none left on the GPU. */
+function assertEverythingReleasedOnce(fx, watch) {
+  fx.handle.dispose();
+  for (const resource of watch.created) {
+    assert.equal(watch.disposed.get(resource), 1, `${resource.constructor.name} is released exactly once`);
+  }
+  for (const [resource, events] of fx.state.disposeEvents) assert.equal(events, 1, `${resource.constructor.name} released once on the GPU`);
+  for (const kind of ['geometry', 'material', 'texture', 'instanced']) assert.equal(fx.state.gpu[kind].size, 0, `no ${kind} stays on the GPU`);
+}
+
+test('a renderer that fails while sizing is contained: the host hears one loss, and nothing is drawn or retried after it', () => {
+  for (const method of ['setPixelRatio', 'setSize']) {
+    const fx = drawFixture(VIEWPORTS.wide);
+    const watch = watchThreeResources();
+    try {
+      let attempts = 0;
+      fx.fake.renderer[method] = () => {
+        attempts += 1;
+        throw new Error(`GPU ${method} failed`);
+      };
+      assert.doesNotThrow(() => fx.handle.resize({ ...VIEWPORTS.wide, width: 1200, height: 800 }, fx.graph), `${method} failing never reaches the reader`);
+      assert.equal(fx.lost.count, 1, `${method}: the host learns that the GPU path is unusable, once`);
+      assert.equal(attempts, 1, `${method}: the failed operation is attempted once`);
+
+      const rendersBefore = fx.state.renders;
+      assert.doesNotThrow(() => fx.handle.render(restPose(fx.graph, 'wide', 0.5)));
+      assert.equal(fx.state.renders, rendersBefore, `${method}: a scene that failed to size is never drawn again`);
+      assert.equal(fx.lost.count, 1, `${method}: still one loss`);
+      assert.equal(fx.handle.projectLabels(restPose(fx.graph, 'wide', 0.5)).length, 16, 'projection needs no GPU and keeps working');
+      assertEverythingReleasedOnce(fx, watch);
+    } finally {
+      watch.stop();
+    }
+  }
+});
+
+test('once the scene is lost, resize does no renderer work and allocates nothing', () => {
+  const fx = drawFixture(VIEWPORTS.compact);
+  fx.canvas.dispatch('webglcontextlost');
+  assert.equal(fx.lost.count, 1);
+  const before = { sizes: fx.state.setSize.length, ratios: fx.state.setPixelRatio.length, counts: fx.handle.diagnostics() };
+  const watch = watchThreeResources();
+  try {
+    assert.doesNotThrow(() => fx.handle.resize(VIEWPORTS.compact, fx.graph), 'a same-graph resize');
+    assert.doesNotThrow(() => fx.handle.resize(VIEWPORTS.wide, getConnectedGraph('wide')), 'a resize that would rebuild the graph');
+    assert.equal(watch.created.size, 0, 'a lost scene allocates no resource, not even to replace its graph');
+  } finally {
+    watch.stop();
+  }
+  assert.equal(fx.state.setSize.length, before.sizes, 'no later resize reaches setSize');
+  assert.equal(fx.state.setPixelRatio.length, before.ratios, 'no later resize reaches setPixelRatio');
+  const after = fx.handle.diagnostics();
+  assert.deepEqual(
+    { geometries: after.geometries, materials: after.materials, textures: after.textures },
+    { geometries: before.counts.geometries, materials: before.counts.materials, textures: before.counts.textures },
+    'the scene still owns exactly what it owned when it was lost',
+  );
+  assert.equal(fx.lost.count, 1, 'still one loss');
+  fx.handle.dispose();
+  for (const [resource, events] of fx.state.disposeEvents) assert.equal(events, 1, `${resource.constructor.name} released once`);
+});
+
+function unplaceableGraph(quality) {
+  const graph = getConnectedGraph(quality);
+  return { ...graph, nodes: graph.nodes.map((node, index) => (index === graph.nodes.length - 1 ? { ...node, anchor: null } : node)) };
+}
+
+test('a rebuilt graph that cannot be laid out is contained: one loss, the half-swapped graph is released and the running scene stays whole', () => {
+  const fx = drawFixture(VIEWPORTS.compact);
+  const before = fx.handle.diagnostics();
+  const sizes = fx.state.setSize.length;
+  const watch = watchThreeResources();
+  try {
+    assert.doesNotThrow(() => fx.handle.resize(VIEWPORTS.tablet, unplaceableGraph('wide')), 'a layout failure never reaches the reader');
+    assert.ok(watch.created.size > 0, 'the rebuild did start allocating');
+    for (const resource of watch.created) {
+      assert.equal(watch.disposed.get(resource), 1, `${resource.constructor.name} of the rejected graph is released exactly once`);
+    }
+    assert.equal(fx.lost.count, 1, 'the host learns that the scene cannot follow the viewport, once');
+    assert.equal(fx.state.setSize.length, sizes, 'the renderer was not resized to a layout that does not exist');
+    const after = fx.handle.diagnostics();
+    assert.deepEqual(
+      { geometries: after.geometries, materials: after.materials, textures: after.textures },
+      { geometries: before.geometries, materials: before.materials, textures: before.textures },
+      'the scene still owns exactly the previous graph, not a mixture',
+    );
+    assert.equal(fx.handle.projectLabels(restPose(fx.graph, 'compact', 0.5)).length, 8, 'the previous graph still projects');
+    for (const resource of fx.state.gpu.geometry) assert.equal(watch.disposed.has(resource), false, 'no live GPU resource was disposed by the failed swap');
+
+    watch.created.clear();
+    assert.doesNotThrow(() => fx.handle.resize(VIEWPORTS.tablet, getConnectedGraph('wide')));
+    assert.equal(watch.created.size, 0, 'a lost scene allocates nothing afterwards');
+  } finally {
+    watch.stop();
+  }
+  assert.equal(fx.state.setSize.length, sizes, 'no renderer work after the loss');
+  fx.handle.dispose();
+  for (const [resource, events] of fx.state.disposeEvents) assert.equal(events, 1, `${resource.constructor.name} released once`);
+  for (const kind of ['geometry', 'material', 'texture', 'instanced']) assert.equal(fx.state.gpu[kind].size, 0, `no ${kind} stays on the GPU`);
+});
+
+test('a renderer that fails sizing while a graph swap is pending releases the unswapped graph and the running one exactly once', () => {
+  const fx = drawFixture(VIEWPORTS.compact);
+  const compactResources = new Set([...fx.state.gpu.geometry, ...fx.state.gpu.material, ...fx.state.gpu.texture, ...fx.state.gpu.instanced]);
+  const watch = watchThreeResources();
+  try {
+    fx.fake.renderer.setSize = () => {
+      throw new Error('GPU setSize failed');
+    };
+    assert.doesNotThrow(() => fx.handle.resize(VIEWPORTS.tablet, getConnectedGraph('wide')));
+    assert.ok(watch.created.size > 0, 'the wide graph was built beside the compact one');
+    assert.equal(fx.lost.count, 1);
+    for (const resource of watch.created) {
+      assert.equal(watch.disposed.get(resource), 1, `${resource.constructor.name} of the unswapped graph is released exactly once`);
+    }
+    assert.doesNotThrow(() => fx.handle.render(restPose(fx.graph, 'compact', 0.5)));
+    assertEverythingReleasedOnce(fx, watch);
+    for (const resource of compactResources) assert.equal(fx.state.disposeEvents.get(resource), 1, 'the running graph is released once');
+  } finally {
+    watch.stop();
+  }
+});
+
+test('a host that throws and disposes re-entrantly from the loss callback during a failed resize releases everything once', () => {
+  let fx;
+  let calls = 0;
+  fx = createFixture({
+    onContextLost() {
+      calls += 1;
+      fx.handle.dispose();
+      throw new Error('host callback failed');
+    },
+  });
+  fx.handle.resize(VIEWPORTS.wide, fx.graph);
+  fx.handle.render(restPose(fx.graph, 'wide', 0.5));
+  const watch = watchThreeResources();
+  try {
+    fx.fake.renderer.setSize = () => {
+      throw new Error('GPU setSize failed');
+    };
+    assert.doesNotThrow(() => fx.handle.resize(VIEWPORTS.tablet, unplaceableGraph('wide')), 'neither the failure nor the callback reaches the reader');
+    assert.equal(calls, 1, 'the callback ran exactly once');
+    assert.equal(fx.handle.diagnostics().disposed, true);
+    assert.doesNotThrow(() => fx.handle.resize(VIEWPORTS.wide, fx.graph));
+    assert.doesNotThrow(() => fx.handle.dispose());
+    assert.equal(calls, 1, 'and never again');
+    assert.equal(fx.state.dispose, 1, 'disposed once from inside the callback');
+    for (const resource of watch.created) assert.equal(watch.disposed.get(resource), 1, `${resource.constructor.name} of the rejected graph released once`);
+  } finally {
+    watch.stop();
+  }
+  for (const [resource, events] of fx.state.disposeEvents) assert.equal(events, 1, `${resource.constructor.name} released once on the GPU`);
+  for (const kind of ['geometry', 'material', 'texture', 'instanced']) assert.equal(fx.state.gpu[kind].size, 0, `no ${kind} stays on the GPU`);
+});
+
 // --- init failure, partial construction, render failure and hostile input ---------------------------------
 
 test('a renderer that cannot be created fails construction cleanly with nothing left behind', () => {
@@ -773,6 +1064,94 @@ test('a graph that fails part-way through construction releases everything built
   assert.equal(fx.mount.children.length, 0, 'the canvas never reached the mount');
   assert.equal(fx.canvas.removals >= 1, true, 'the canvas is removed');
   assert.equal(fx.canvas.listenerCount('webglcontextlost'), 0);
+});
+
+/** Builds with the failure injected and asserts that the failed construction left nothing behind. */
+function assertLateFailureLeavesNothing(options) {
+  const watch = watchThreeResources();
+  let fx;
+  try {
+    fx = createFixture({ ...options, expectFailure: true });
+    assert.ok(watch.created.size > 0, 'the graph was fully built before the late failure');
+    for (const resource of watch.created) {
+      assert.equal(watch.disposed.get(resource), 1, `${resource.constructor.name} built before the late failure is released exactly once`);
+    }
+  } finally {
+    watch.stop();
+  }
+  assert.ok(fx.error instanceof Error, 'construction reports a plain Error the host can catch');
+  assert.match(fx.error.message, /connected-studio: scene initialization failed/, 'the documented wrapped initialization error');
+  assert.equal(fx.state.renderListsDisposed, 1, 'render lists are cleared once');
+  assert.equal(fx.state.dispose, 1, 'the renderer is disposed once');
+  assert.equal(fx.state.forceContextLoss, 1, 'the context is released once');
+  assert.equal(fx.canvas.listenerCount('webglcontextlost'), 0, 'no context-loss listener is retained');
+  assert.equal(fx.mount.children.length, 0, 'the mount owns nothing');
+  assert.equal(fx.canvas.parent, null, 'the canvas is detached');
+  assert.ok(fx.canvas.removals >= 1, 'the canvas is removed');
+  assert.equal(fx.lost.count, 0, 'an init failure is not a context loss');
+  fx.canvas.dispatch('webglcontextlost');
+  assert.equal(fx.lost.count, 0, 'a loss event after the failed construction reaches nobody');
+  return fx;
+}
+
+test('a mount that refuses the canvas fails construction with every resource, the renderer, its context and the listener released', () => {
+  assertLateFailureLeavesNothing({ mountBehavior: { appendThrows: true } });
+});
+
+test('a mount that adopts the canvas and then fails still ends with the canvas removed and nothing retained', () => {
+  const fx = assertLateFailureLeavesNothing({ mountBehavior: { attachThenThrows: true } });
+  assert.equal(fx.mount.children.includes(fx.canvas), false, 'the half-attached canvas is gone from the mount');
+});
+
+test('a graph that cannot be laid out after the canvas is attached releases the attached canvas, its listener and everything built', () => {
+  const wide = getConnectedGraph('wide');
+  const unplaceable = { ...wide, nodes: wide.nodes.map((node, index) => (index === wide.nodes.length - 1 ? { ...node, anchor: null } : node)) };
+  assertLateFailureLeavesNothing({ graph: unplaceable });
+});
+
+test('a canvas that refuses its decoration fails construction with the documented error before any context exists', () => {
+  const watch = watchThreeResources();
+  let fx;
+  try {
+    fx = createFixture({ canvasBehavior: { setAttributeThrows: true }, expectFailure: true });
+    assert.equal(watch.created.size, 0, 'no resource was built for a canvas that cannot be prepared');
+  } finally {
+    watch.stop();
+  }
+  assert.ok(fx.error instanceof Error, 'construction reports an Error the host can catch');
+  assert.match(fx.error.message, /connected-studio: scene initialization failed/, 'the documented wrapped initialization error, not the raw DOM error');
+  assert.equal(fx.factories.created.renderers, 0, 'no renderer or context was created');
+  assert.equal(fx.mount.children.length, 0);
+  assert.equal(fx.canvas.listenerCount('webglcontextlost'), 0);
+});
+
+test('a renderer that fails part-way through its own initialization still gives its acquired context back', () => {
+  // The default factory acquires the WebGL2 context first and then hands it to three. A context that three
+  // cannot finish initializing on (this one has none of the GL surface) is already allocated by then.
+  const calls = { contexts: [], loseContext: 0 };
+  const context = {
+    getExtension(name) {
+      return name === 'WEBGL_lose_context' ? { loseContext: () => (calls.loseContext += 1) } : null;
+    },
+  };
+  const canvas = createFakeCanvas();
+  canvas.getContext = (type) => (calls.contexts.push(type), context);
+  const mount = createFakeMount();
+  const graph = getConnectedGraph('wide');
+  const hadDocument = 'document' in globalThis;
+  globalThis.document = { createElement: () => canvas };
+  try {
+    assert.throws(
+      () => createConnectedScene({ mount, graph, quality: 'wide', tier: 'wide', words: [], onContextLost() {} }),
+      /connected-studio: scene initialization failed \(no renderer\)/,
+    );
+  } finally {
+    if (!hadDocument) delete globalThis.document;
+  }
+  assert.deepEqual(calls.contexts, ['webgl2'], 'the default factory did acquire a context');
+  assert.equal(calls.loseContext, 1, 'the context three could not finish initializing on is released once');
+  assert.equal(mount.children.length, 0);
+  assert.equal(canvas.listenerCount('webglcontextlost'), 0);
 });
 
 test('incoherent construction options fail before anything is allocated', () => {

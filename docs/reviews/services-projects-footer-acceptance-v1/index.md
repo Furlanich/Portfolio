@@ -15,7 +15,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-10-05
+last_verified: 2026-10-07
 ---
 
 # Services, Projects and Footer v1 acceptance
@@ -25,14 +25,16 @@ Acceptance evidence for [PLAN-SPF-V1](../../plans/active/services-projects-foote
 ## Receipts
 
 - [Task 1 — governance packaging](task-1.md)
-- Task 2
-- Task 3
+- [Task 2 — shared contracts](task-2.md)
+- [Task 3 — project dossier cutover](task-3.md)
 - Task 4
-- Task 5
+- [Task 5 — connected engine](task-5.md)
 - Task 6
 - Task 7
 - Task 8
 - Task 9
 - Task 10
+
+Follow-up record: [Task 3/5 receipt corrections](task-3-5-corrections.md). The task receipts remain subject to their stated owner approvals; this follow-up does not record final acceptance.
 
 [Receipt template](../../plans/active/services-projects-footer-v1.md#receipt-template)

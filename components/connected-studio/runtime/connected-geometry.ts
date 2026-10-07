@@ -42,6 +42,14 @@ export const HALF_FOV_TAN = Math.tan((CAMERA_FOV_DEGREES * Math.PI) / 360);
 export const NODE_RADIUS = 0.22;
 export const RING_RADIUS = 0.39;
 const CORE_RADIUS = 0.05;
+/**
+ * The second tilted orbit (DESIGN-SPF-V1, Scene integration: wide and tablet only; compact has one ring).
+ * It shares the primary ring's pose and is turned about the ring's own Y axis, so the two planes share a
+ * diameter, and is drawn larger so the orbits nest and never touch. Sonnet tuning (PC-7): the angle and
+ * the scale are accepted only through owner review of the rendered engine.
+ */
+const SECOND_ORBIT_TILT = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), 1.05);
+const SECOND_ORBIT_SCALE = 1.22;
 /** Where the light core sits on the node body, toward the key light (unit-ish, times the body radius). */
 const CORE_OFFSET = new Vector3(0.45, 0.42, 0.78);
 
@@ -203,13 +211,14 @@ type NodeState = { tiltX: number; tiltZ: number };
 
 /**
  * Builds everything the graph draws into a handful of batched drawables: three instanced meshes for
- * the nodes, cores and rings, one dynamic tube batch for the grown paths and one line batch for the
+ * the nodes, cores and rings (two orbits of rings per node on wide, one on compact), one dynamic tube batch for the grown paths and one line batch for the
  * faint skeleton. Connections are never one object each.
  */
 export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracker): ConnectedGraphBatch {
   const group = new Group();
   const nodeCount = graph.nodes.length;
   const edgeCount = graph.edges.length;
+  const orbits = graph.quality === 'wide' ? 2 : 1;
 
   const nodes = instanced(
     tracker,
@@ -230,7 +239,7 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
     tracker,
     new TorusGeometry(RING_RADIUS, 0.02, 6, 48),
     new MeshBasicMaterial({ color: 0x9cc4ec }),
-    nodeCount,
+    nodeCount * orbits,
     'rings',
   );
 
@@ -295,6 +304,7 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
 
   const matrix = new Matrix4();
   const quaternion = new Quaternion();
+  const orbit = new Quaternion();
   const euler = new Euler();
   const position = new Vector3();
   const scale = new Vector3();
@@ -357,6 +367,12 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
 
       quaternion.setFromEuler(euler.set(rotX + nodeStates[index].tiltX, rotY, rotZ + nodeStates[index].tiltZ, 'YXZ'));
       rings.setMatrixAt(index, matrix.compose(position, quaternion, scale));
+      if (orbits > 1) {
+        // The second orbit fills the second half of the same instanced mesh, so it costs no draw call.
+        orbit.copy(quaternion).multiply(SECOND_ORBIT_TILT);
+        scale.setScalar(radius * SECOND_ORBIT_SCALE);
+        rings.setMatrixAt(nodeCount + index, matrix.compose(position, orbit, scale));
+      }
 
       coreOffset.copy(CORE_OFFSET).multiplyScalar(NODE_RADIUS * radius).add(position);
       scale.setScalar(CORE_RADIUS * radius);
