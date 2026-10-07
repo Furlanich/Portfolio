@@ -74,16 +74,24 @@ Implementation sessions use Claude Sonnet unless a plan names another model with
 
 ## Claude Code controls
 
-OPEN until Task 4 of the plan probes and records each control. The intended values come from decisions D3 and D5.
+Owned by Task 4 of the plan. Values come from decisions D3 and D5 and live in `.claude/settings.json`. Every row was probed on 2026-10-07 with Claude Code 2.1.286 through `claude -p` (haiku session model, `--max-turns` 8). The desktop apps were not probed.
 
-| Control | Intended value | Status |
-| --- | --- | --- |
-| `env.CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` | `1` | OPEN |
-| `env.CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` | `3` | OPEN |
-| `env.CLAUDE_CODE_SUBAGENT_MODEL` | `sonnet` (no `_FORCE`) | OPEN |
-| `permissions.ask` | `Agent` | OPEN |
-| `permissions.deny` | `Agent(model:opus)`, `Agent(model:fable)`, `Agent(codex:codex-rescue)` | OPEN |
-| Specialist agent | `.claude/agents/ade-readonly-specialist.md`, read-only, no `Agent` tool | OPEN |
+| Control | Value | Status | Evidence |
+| --- | --- | --- | --- |
+| `env.CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` | `1` | VERIFIED (CLI) | Before: a subagent spawned a grandchild. After: the subagent reported it had no `Agent` tool. |
+| `env.CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` | `3` | VERIFIED (CLI) | Before: four background subagents ran together. After: the 4th spawn returned "Concurrent subagent limit reached. You can run 3 subagents at once." |
+| `env.CLAUDE_CODE_SUBAGENT_MODEL` | `sonnet` (no `_FORCE`) | VERIFIED (CLI) | Before: a spawn with no model inherited the session model (haiku). After: it ran on `claude-sonnet-5-5`. |
+| `permissions.ask` | `Agent` | VERIFIED headless; interactive prompt OPEN | In `default`, `acceptEdits`, `auto`, `plan` and `bypassPermissions` the spawn was refused ("requested permissions to use Agent, but you haven't granted it yet"), because `-p` cannot answer a prompt. `dontAsk` denied it. `--allowedTools Agent` did not override the rule. The prompt itself was not observed. |
+| `permissions.deny` `Agent(model:opus)`, `Agent(model:fable)` | as listed | VERIFIED (CLI) | "Permission to use Agent with model:opus has been denied", and the same for fable. |
+| `permissions.deny` `Agent(codex:codex-rescue)` | as listed | VERIFIED with a caveat | With the plugin loaded and the rule passed as a flag setting, the call returned "Agent type 'codex:codex-rescue' has been denied". `Agent(codex-rescue)` and `Agent(codex:*)` did not match. Under the project `ask` rule the headless call stops at the ask stage first, so the type deny takes effect only after a human approves the ask. |
+| Specialist agent | `.claude/agents/ade-readonly-specialist.md` | VERIFIED (CLI) | Spawned by name, it listed only Read, Grep and Glob, ran on sonnet, and had no write or spawn tool. |
+
+Open items:
+
+- **Desktop app: OPEN.** None of the settings were probed in the Claude desktop app. Treat the caps as CLI-verified until the owner repeats the three spawn probes there.
+- **Interactive `ask` prompt: OPEN.** Headless mode only shows that the spawn is blocked until a human answers. Whether auto and bypass modes prompt interactively was not observed.
+- **Total spawns: no control.** The concurrency cap bounds simultaneous spawns only. The receipt's "Agent usage" line and review still carry the total.
+- **Probe method.** The cap probes (depth, concurrency, model) ran with the same `env` block passed through `--settings` and no project `ask` rule, because the ask gate would otherwise refuse the spawn before the caps could be observed.
 
 ## Codex controls
 
