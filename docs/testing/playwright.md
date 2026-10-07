@@ -10,7 +10,7 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 ---
 
 # Playwright QA
@@ -60,6 +60,8 @@ Mobile WebKit link tabbing depends on host Safari Full Keyboard Access, so exact
 | `connected-studio-accessibility.spec.ts` | `accessibility-chromium` (matched by the existing unanchored `/accessibility\.spec\.ts/`) |
 | `connected-studio-production.spec.ts` | `connected-production-chromium`, defined only when `PLAYWRIGHT_SERVE_EXPORT=1` |
 | `visual/connected-studio-*.visual.spec.ts` | `visual-chromium` (matched by the existing visual pattern) |
+
+The navigation spec measures ordinary-anchor middle-click behavior in bounded setup only for middle-click journeys. Its observer regressions cover a canceled current-tab navigation followed by a new tab and rejection of a wrong destination. Journey destination assertions retain exact locale paths and fragments.
 
 ### Production serving
 
