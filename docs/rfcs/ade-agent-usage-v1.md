@@ -16,7 +16,7 @@ last_verified: 2026-10-07
 
 ## Context
 
-The FURLANICH ADE runs work through Claude Code and Codex. It uses repository Skills, vendored third-party Skills, user-level plugins and the ADE v2 plan mechanics: task/PR packets, waves, locks, receipts and independent review. Those mechanics come from the [Sky Chart plan](../plans/completed/sky-chart-home-redesign-v2.md#24-sequential-integration-procedure) and [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md#model-routing). The [current-state findings](../plans/active/ade-agent-usage-optimization-v1.md#current-state-findings) map every layer.
+The FURLANICH ADE runs work through Claude Code and Codex. It uses repository Skills, vendored third-party Skills, user-level plugins and the ADE v2 plan mechanics: task/PR packets, waves, locks, receipts and independent review. Those mechanics come from the [Sky Chart plan](../plans/completed/sky-chart-home-redesign-v2.md#24-sequential-integration-procedure) and [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md#model-routing). The [current-state findings](../plans/completed/ade-agent-usage-optimization-v1.md#current-state-findings) map every layer.
 
 ## Problem
 
@@ -40,7 +40,7 @@ Plans also delegate within tasks. The SPF orchestrator spawned its implementers 
 
 ## Proposed approach
 
-Adopt invariants I-1 to I-10 and the execution-block schema as written in the [plan's target policy](../plans/active/ade-agent-usage-optimization-v1.md#target-policy-and-invariants). Then put them into effect through seven single-agent PRs:
+Adopt invariants I-1 to I-10 and the execution-block schema as written in the [plan's target policy](../plans/completed/ade-agent-usage-optimization-v1.md#target-policy-and-invariants). Then put them into effect through seven single-agent PRs:
 
 1. This Governance PR.
 2. One owning governance record, `GOV-AGENT-USAGE`, an ADR, and short pointers in `AGENTS.md` and the lifecycle.
@@ -76,7 +76,7 @@ The independent PR reviewer is a separate session. It is a gate, not a subagent 
 
 ## Risks
 
-See the [plan's risks](../plans/active/ade-agent-usage-optimization-v1.md#risks). The main ones:
+See the [plan's risks](../plans/completed/ade-agent-usage-optimization-v1.md#risks). The main ones:
 
 - Configuration keys have been confirmed in documentation but not yet live-probed. Tasks 4 and 5 probe them and record OPEN for any key that is not honored.
 - Codex is an alpha build.
@@ -89,11 +89,11 @@ None at the decision level. The owner decided D1–D6 on 2026-10-07; see the sta
 
 ## Recommendation
 
-Approve this RFC and [PLAN-ADE-AGENT-USAGE-V1](../plans/active/ade-agent-usage-optimization-v1.md) with the owner decisions below. Then record the accepted policy as `ADR-ADE-AGENT-USAGE` and `GOV-AGENT-USAGE` in Task 2.
+Approve this RFC and [PLAN-ADE-AGENT-USAGE-V1](../plans/completed/ade-agent-usage-optimization-v1.md) with the owner decisions below. Then record the accepted policy as `ADR-ADE-AGENT-USAGE` and `GOV-AGENT-USAGE` in Task 2.
 
 ## Status
 
-The owner accepted the plan's recommendations for every [decision D1–D6](../plans/active/ade-agent-usage-optimization-v1.md#owner-decisions-d1d6):
+The owner accepted the plan's recommendations for every [decision D1–D6](../plans/completed/ade-agent-usage-optimization-v1.md#owner-decisions-d1d6):
 
 | ID | Decision |
 | --- | --- |

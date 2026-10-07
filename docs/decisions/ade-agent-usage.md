@@ -15,7 +15,7 @@ last_verified: 2026-10-07
 
 ## Context
 
-No repository record governed delegation in the FURLANICH ADE, so Skills, user plugins and harness defaults decided how much fan-out happened. Claude Code allowed nesting depth 3 and 20 concurrent subagents, Codex subagents inherited the user's most capable model, and several Skills and plans required or encouraged subagents for work one agent could finish. The findings are in [the plan](../plans/active/ade-agent-usage-optimization-v1.md#current-state-findings). The proposal is [RFC-ADE-AGENT-USAGE-V1](../rfcs/ade-agent-usage-v1.md).
+No repository record governed delegation in the FURLANICH ADE, so Skills, user plugins and harness defaults decided how much fan-out happened. Claude Code allowed nesting depth 3 and 20 concurrent subagents, Codex subagents inherited the user's most capable model, and several Skills and plans required or encouraged subagents for work one agent could finish. The findings are in [the plan](../plans/completed/ade-agent-usage-optimization-v1.md#current-state-findings). The proposal is [RFC-ADE-AGENT-USAGE-V1](../rfcs/ade-agent-usage-v1.md).
 
 ## Decision
 

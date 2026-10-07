@@ -14,7 +14,7 @@ last_verified: 2026-10-07
 
 # Agent usage
 
-This is the owning record for how agents delegate work in the FURLANICH ADE (the Claude Code and Codex development environment). Decision: [ADR-ADE-AGENT-USAGE](../decisions/ade-agent-usage.md). Proposal history: [RFC-ADE-AGENT-USAGE-V1](../rfcs/ade-agent-usage-v1.md). Delivery: [PLAN-ADE-AGENT-USAGE-V1](../plans/active/ade-agent-usage-optimization-v1.md). `AGENTS.md` and the [engineering lifecycle](engineering-lifecycle.md) point here and do not repeat it.
+This is the owning record for how agents delegate work in the FURLANICH ADE (the Claude Code and Codex development environment). Decision: [ADR-ADE-AGENT-USAGE](../decisions/ade-agent-usage.md). Proposal history: [RFC-ADE-AGENT-USAGE-V1](../rfcs/ade-agent-usage-v1.md). Delivery: [PLAN-ADE-AGENT-USAGE-V1](../plans/completed/ade-agent-usage-optimization-v1.md). `AGENTS.md` and the [engineering lifecycle](engineering-lifecycle.md) point here and do not repeat it.
 
 ## Invariants
 
