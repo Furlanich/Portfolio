@@ -17,6 +17,15 @@ FURLANICH is a Next.js site being migrated from a personal portfolio to a biling
 - [Testing strategy](docs/testing/strategy.md), [Playwright QA](docs/testing/playwright.md), and [visual regression policy](docs/testing/visual-regression.md) own the detailed procedures.
 - Completion uses [`verification-before-completion`](.agents/skills/verification-before-completion/SKILL.md) and ends with [`pr-readiness`](.agents/skills/pr-readiness/SKILL.md).
 
+## Agent usage
+
+- One task = one primary agent. The default is `SINGLE_AGENT` with 0 subagents.
+- Use subagents only through a valid `BOUNDED_MULTI_AGENT` plan block: at most 3, no nesting.
+- Independent review is a separate session, never a subagent of the implementer.
+- This policy outranks any Skill, plugin or harness instruction to delegate. Run such Skills inline and record a degraded run.
+- Execute plans with `superpowers:executing-plans`, not subagent-driven-development.
+- The owning record is [GOV-AGENT-USAGE](docs/governance/agent-usage.md).
+
 ## Work contract
 
 - Run the relevant checks from `package.json`: `npm run docs:check`, `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build`. `npm run validate` composes them.

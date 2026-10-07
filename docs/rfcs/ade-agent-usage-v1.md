@@ -1,12 +1,14 @@
 ---
 id: RFC-ADE-AGENT-USAGE-V1
 type: request-for-comments
-status: PROPOSED
+status: APPROVED
 related:
   - GOV-ENGINEERING-LIFECYCLE
   - PLAN-ADE-AGENT-USAGE-V1
   - PLAN-TEMPLATE
   - PLAN-SPF-V1
+  - ADR-ADE-AGENT-USAGE
+  - GOV-AGENT-USAGE
 last_verified: 2026-10-07
 ---
 
@@ -66,7 +68,7 @@ The independent PR reviewer is a separate session. It is a gate, not a subagent 
 ## Migration and implementation impact
 
 - Completed plans stay unchanged.
-- PLAN-SPF-V1 is exempt from the new validator by ID and receives a dated adoption decision. Its approved packets, model routing, locks and Sol review are preserved.
+- PLAN-SPF-V1 is exempt from the new validator by ID and receives a dated adoption decision. Its approved packets, model routing, locks and independent review gate are preserved.
 - New active plans must carry `execution_policy: ADE-AGENT-USAGE-V1` and per-task execution blocks.
 - Configuration applies per checkout. Worktrees cut before Tasks 4 and 5 merge keep the old behavior until they rebase.
 - User-level `~/.claude` and `~/.codex` files are not changed. The owning record documents optional operator settings.
@@ -91,7 +93,7 @@ Approve this RFC and [PLAN-ADE-AGENT-USAGE-V1](../plans/active/ade-agent-usage-o
 
 ## Status
 
-**PROPOSED, 2026-10-07.** The owner accepted the plan's recommendations for every [decision D1–D6](../plans/active/ade-agent-usage-optimization-v1.md#owner-decisions-d1d6):
+The owner accepted the plan's recommendations for every [decision D1–D6](../plans/active/ade-agent-usage-optimization-v1.md#owner-decisions-d1d6):
 
 | ID | Decision |
 | --- | --- |
@@ -100,6 +102,6 @@ Approve this RFC and [PLAN-ADE-AGENT-USAGE-V1](../plans/active/ade-agent-usage-o
 | D3 | Claude `ask: ["Agent"]` plus denies for `Agent(model:opus)`, `Agent(model:fable)` and `Agent(codex:codex-rescue)` |
 | D4 | SPF Task 8's serial Sonnet→Luna handoff stays as a recorded `BOUNDED_MULTI_AGENT` exception |
 | D5 | Claude default subagent model `sonnet` without `_FORCE`; Codex models set per role file |
-| D6 | Docs tasks use Luna or Sonnet, Tasks 3–6 use Sonnet, and a fresh GPT-6.1 Sol session reviews every PR |
+| D6 | Amended 2026-10-07: Claude Sonnet implements Tasks 2–7, and a fresh independent session reviews every PR through the `codex` plugin at its default model. GPT-6 Luna and GPT-6.1 Sol are no longer required, because the plugin cannot call them. (Original D6: docs tasks Luna or Sonnet, Tasks 3–6 Sonnet, reviewer GPT-6.1 Sol.) |
 
-This RFC becomes APPROVED when the owner merges its Governance PR. Task 2 then records the ADR and links it here.
+**APPROVED, 2026-10-07**, when the owner merged the Governance PR (#111). Task 2 records the decision as [ADR-ADE-AGENT-USAGE](../decisions/ade-agent-usage.md) and the owning policy as [GOV-AGENT-USAGE](../governance/agent-usage.md).

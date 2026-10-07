@@ -1,7 +1,7 @@
 ---
 id: PLAN-ADE-AGENT-USAGE-V1
 type: execution-plan
-status: PROPOSED
+status: APPROVED
 plan_status: ACTIVE
 execution_policy: ADE-AGENT-USAGE-V1
 related:
@@ -10,6 +10,8 @@ related:
   - PLAN-INDEX
   - PLAN-SPF-V1
   - RFC-ADE-AGENT-USAGE-V1
+  - ADR-ADE-AGENT-USAGE
+  - GOV-AGENT-USAGE
 last_verified: 2026-10-07
 ---
 
@@ -118,7 +120,7 @@ These invariants become the owning record `GOV-AGENT-USAGE` (Task 2).
 - **I-5 No recursion.** Subagents never spawn. The primary agent integrates and runs the final validation.
 - **I-6 Work classes.** `IMPLEMENTATION` is strictest: a writing subagent needs a disjoint write set and its own worktree. `RESEARCH` and `REVIEW` subagents are read-only and need independent perspectives or unrelated areas.
 - **I-7 Model economy.** A subagent names its model and effort. It never inherits the most capable session model by default.
-- **I-8 Independent review is a gate, not a subagent.** The PR's independent reviewer is a separate top-level session (for example GPT-6.1 Sol in Codex) that has not contributed to the PR. It does not count against the implementer's allowance. The implementer self-reviews inline and never spawns its own reviewer. The reviewer session may itself use `BOUNDED_MULTI_AGENT` with work class `REVIEW` when justified.
+- **I-8 Independent review is a gate, not a subagent.** The PR's independent reviewer is a separate top-level session (for example a fresh Codex session started through the `codex` plugin at its default model) that has not contributed to the PR. It does not count against the implementer's allowance. The implementer self-reviews inline and never spawns its own reviewer. The reviewer session may itself use `BOUNDED_MULTI_AGENT` with work class `REVIEW` when justified.
 - **I-9 Task-level parallelism.** Independent tasks run concurrently as separate sessions in separate worktrees. They need disjoint write sets, as in the ADE v2 waves. Keep at most 3 concurrent task sessions per provider. That limits the rate-limit failures seen in SPF W2.
 - **I-10 Precedence.** This policy outranks any Skill, plugin or harness instruction that asks for delegation. A Skill that cannot run inline records a degraded run instead of spawning.
 
@@ -377,7 +379,7 @@ max_depth = 1            # value chosen after the Step 1 semantics probe
 # default_subagent_model: set only if D5 approves a model id that `codex` resolves
 ```
 
-**`ade-readonly-specialist.toml`**: `name`, `description`, `model` (per D5, for example `gpt-6-luna` for RESEARCH, while review-class roles keep `gpt-6.1-sol`), `model_reasoning_effort = "medium"`, and `developer_instructions` saying it is read-only, returns findings only and never spawns. Use read-only sandboxing only if Step 1 shows that role files accept a sandbox key; otherwise read-only is instruction-level and recorded as such.
+**`ade-readonly-specialist.toml`**: `name`, `description`, `model` (per D5: an explicit model id that `codex` resolves in the Step 1 probe; no specific GPT-6 model is required, see the D6 amendment), `model_reasoning_effort = "medium"`, and `developer_instructions` saying it is read-only, returns findings only and never spawns. Use read-only sandboxing only if Step 1 shows that role files accept a sandbox key; otherwise read-only is instruction-level and recorded as such.
 
 - [ ] **Step 1: Probe (behavioral RED and semantics).** With `codex exec` (installed 0.162.0-alpha.2) in a scratch worktree, and once in the Codex desktop app:
   - (a) Confirm the project config loads in a `.worktrees/*` checkout (trust inheritance).
@@ -437,10 +439,10 @@ Single-agent rationale: there are two small Skill edits and their scenario evide
 - [ ] **Step 1:** Add a dated decision `ADE-AGENT-USAGE adoption`. Do not rewrite approved packets.
   - Tasks 4 and 6–10 run as `SINGLE_AGENT`.
   - Orchestration follows D1.
-  - Task 8's Sonnet→Luna serial handoff follows D4.
+  - Task 8's serial cheaper-model handoff follows D4. The Task 7 session names the helper model from models the runtime can call; Luna is not required (D6 amendment).
   - The header's subagent-driven-development recommendation is superseded by `AGENTS.md`.
   - The "separable subtask to Luna" clause requires a recorded per-use owner approval.
-  - Independent Sol review and every gate are unchanged.
+  - Independent review and every gate are unchanged. The reviewer model follows the D6 amendment: a fresh session through the `codex` plugin at its default model.
 - [ ] **Step 2:** `npm run docs:check` (PLAN-SPF-V1 stays in the legacy exemption), then `npm run validate` and `pr-readiness`. Commit `docs(spf): adopt ADE agent-usage policy for remaining tasks`.
 
 **Acceptance:** Approved history is untouched; remaining SPF tasks have an unambiguous execution mode; routing, TDD, locks and review gates are unchanged.
@@ -468,8 +470,8 @@ The owner accepted every recommendation below on 2026-10-07; see [Important impl
 | D2 | **Codex default.** | (A) Caps only (concurrency 3, depth 1). (B) Project `features.multi_agent = false`, with an opt-in profile or `-c` flag for justified work. | **A** unless Task 5 proves that profile/`-c` opt-in works in the Codex desktop app. B is stronger, but it may leave no opt-in path in the desktop app. |
 | D3 | **Claude spawn gate.** | (A) `ask: ["Agent"]` plus the tier/rescue denies. (B) Deny list only. | **A.** Every spawn becomes an explicit human decision. Risk: the `ask` rule might not prompt in auto/bypass modes; Task 4 measures this. |
 | D4 | **SPF Task 8 Sonnet→Luna handoff.** | (A) Keep it as Task 8's recorded `BOUNDED_MULTI_AGENT` exception (1 serial helper, cheaper model). (B) Collapse it into one Sonnet session. (C) Split it into two tasks/PRs. | **A.** It is serial, file-disjoint and cost-*reducing*, so it meets the exception criteria. |
-| D5 | **Subagent models.** | Claude default `sonnet` with or without `_FORCE`; Codex `default_subagent_model` unset or `gpt-6-luna`. | Claude `sonnet` without `_FORCE`, so plan-named models still win. Codex: unset, with models set per role file, because Luna is not suitable for REVIEW-class work. |
-| D6 | **This plan's own routing.** | The implementing and reviewing model per task. | Docs Tasks 1, 2 and 7: GPT-6 Luna or Sonnet. Tasks 3–6: Sonnet. Reviewer: a fresh GPT-6.1 Sol session that did not contribute to the PR. |
+| D5 | **Subagent models.** | Claude default `sonnet` with or without `_FORCE`; Codex `default_subagent_model` unset or `gpt-6-luna`. | Claude `sonnet` without `_FORCE`, so plan-named models still win. Codex: unset, with models set per role file. |
+| D6 | **This plan's own routing.** | The implementing and reviewing model per task. | Original: docs Tasks 1, 2 and 7 GPT-6 Luna or Sonnet; Tasks 3–6 Sonnet; reviewer a fresh GPT-6.1 Sol session. **Amended 2026-10-07 (owner):** Tasks 2–7 Claude Sonnet; reviewer a fresh session that did not contribute to the PR, started through the `codex` plugin at its default model. Luna and Sol are not required, because the plugin cannot call them. |
 
 ## Risks
 
@@ -484,6 +486,7 @@ The owner accepted every recommendation below on 2026-10-07; see [Important impl
 
 - 2026-10-07: Plan authored (PROPOSED) from a read-only ADE inspection by Claude Opus 5.5 in a single session with zero subagents. Configuration keys were checked against current documentation and installed versions, but not live-probed. No ADE files changed.
 - 2026-10-07: The owner accepted D1–D6 as recommended. Task 1 started from `main` at `1514860` in `.worktrees/ade-1` on `codex/ade-1-governance`. It adds [`RFC-ADE-AGENT-USAGE-V1`](../../rfcs/ade-agent-usage-v1.md) (PROPOSED), the plan index entry and the status-register entry. Independent review, the owner's merge and Tasks 2–7 are pending.
+- 2026-10-07: The owner merged the Task 1 Governance PR (#111) at `86a5fa4`, then amended D6: GPT-6 Luna and GPT-6.1 Sol are no longer required. The plan and RFC are APPROVED. Task 2 started from `86a5fa4` in `.worktrees/ade-2` on `codex/ade-2-policy-record`. It adds `GOV-AGENT-USAGE`, `ADR-ADE-AGENT-USAGE` and the `AGENTS.md` and lifecycle pointers. Independent review, the owner's merge and Tasks 3–7 are pending.
 
 ## Important implementation decisions
 
@@ -493,8 +496,11 @@ The owner accepted every recommendation below on 2026-10-07; see [Important impl
   - D3: (A) Claude uses `ask: ["Agent"]`, plus denies for the `opus` and `fable` tiers and for `codex:codex-rescue`.
   - D4: (A) SPF Task 8's Sonnet→Luna serial handoff is kept as a recorded `BOUNDED_MULTI_AGENT` exception.
   - D5: Claude subagents default to `sonnet` without `_FORCE`. Codex `default_subagent_model` stays unset, and role files set models.
-  - D6: Docs Tasks 1, 2 and 7 are implemented by GPT-6 Luna or Claude Sonnet, and Tasks 3–6 by Claude Sonnet. A fresh GPT-6.1 Sol session that did not contribute reviews every PR.
+  - D6: Docs Tasks 1, 2 and 7 are implemented by GPT-6 Luna or Claude Sonnet, and Tasks 3–6 by Claude Sonnet. A fresh GPT-6.1 Sol session that did not contribute reviews every PR. **Amended below.**
+- 2026-10-07, owner: **D6 amendment.** The Claude-to-Codex plugin cannot call GPT-6 Luna or GPT-6.1 Sol, so both requirements are removed. Claude Sonnet implements Tasks 2–7. Each PR is reviewed by a fresh independent session that did not contribute to it, started through the `codex` plugin at its default model. The reviewer is still a separate session (I-8), never a subagent of the implementer. Other plans keep their own routing until they adopt this policy (PLAN-SPF-V1 through Task 7).
 
 ## Deviations discovered during execution
+
+- 2026-10-07: Task 2 is implemented by Claude Sonnet 5.5 (`claude-sonnet-5-5`) in one top-level session with zero subagents, in `.worktrees/ade-2` on `codex/ade-2-policy-record`. The owner amended D6 first (see Important implementation decisions). Besides the listed files, Task 2 also edits this plan (D6 amendment, status APPROVED), the RFC (status APPROVED, D6 row), `docs/rfcs/index.md` and `docs/plans/index.md`, so that no active record still demands Luna or Sol.
 
 - 2026-10-07: Task 1 was implemented by Claude Opus 5.5 (`claude-opus-5-5`, firstParty) in the plan-authoring session, at the owner's direct request. D6 assigns docs tasks to Luna or Sonnet. The change is documentation only, ran `SINGLE_AGENT` with 0 subagents, and still requires independent GPT-6.1 Sol review and the owner's merge.

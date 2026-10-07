@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - GOV-AGENT-USAGE
   - PLAN-SPF-V1
   - REVIEW-SPF-PLAN-2026-09-30
   - DESIGN-SPF-V1
@@ -69,6 +70,7 @@ Front matter records the overall governance status of a document. In mixed-statu
 - [Architecture index](architecture/index.md): current implementation facts and known quality findings; it is not a target-architecture decision.
 - [Architecture map](../ARCHITECTURE.md): concise current-system entry point, approved product constraints, and proposed/open architecture context.
 - [Engineering lifecycle](governance/engineering-lifecycle.md): change classification, autonomy boundaries, traceability, and PR rules.
+- [Agent usage](governance/agent-usage.md): one task = one primary agent, bounded subagents, Claude Code and Codex controls, and Skill overrides.
 - [RFCs](rfcs/index.md), [ADRs](decisions/index.md), and [execution plans](plans/index.md): consequential proposals, accepted architecture history, and substantial-work records.
 - [Testing strategy](testing/strategy.md): TDD, deterministic, browser, accessibility, visual, and static-export verification layers.
 - [Project-local process Skills](superpowers/README.md): pinned Taste/Superpowers provenance and methodology artifact locations.
