@@ -12,7 +12,8 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-CONTACT-INQUIRY-PIPELINE
-last_verified: 2026-10-05
+  - ADR-ADE-AGENT-USAGE
+last_verified: 2026-10-07
 ---
 
 # Architecture decision records
@@ -20,6 +21,8 @@ last_verified: 2026-10-05
 An ADR records a consequential architectural decision after it is accepted. Use [the template](template.md). Accepted ADRs use `APPROVED` status and remain immutable historical records. A changed decision gets a new ADR whose `supersedes` metadata identifies the earlier record; do not rewrite the earlier decision.
 
 ## Approved
+
+- [ADR-ADE-AGENT-USAGE](ade-agent-usage.md): **APPROVED — 2026-10-07.** One task = one primary agent; `SINGLE_AGENT` with 0 subagents by default; up to 3 justified, bounded subagents with no nesting; independent review as a separate session; hard limits in Claude Code and Codex project configuration. Records owner decisions D1–D6, including the D6 amendment that drops the GPT-6 Luna and GPT-6.1 Sol requirements. Owning record: [GOV-AGENT-USAGE](../governance/agent-usage.md). No product or runtime change.
 
 - [ADR-CONNECTED-STUDIO-PAGE-RUNTIME](connected-studio-page-runtime.md): **APPROVED decision intent — 2026-09-30**, after Revision 5 design/copy approval. Separate optional connected backgrounds on Services/Projects, complete index dossiers, six detail URLs retired and protected-mark Azure Footer. Partially extends Home-only WebGL scope; Home's own demand-only contract remains unchanged. Production is unimplemented; human governance/plan/PR gates remain required.
 
