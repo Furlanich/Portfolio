@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { validateRepository } from './validate-repository-docs.mjs';
@@ -273,6 +273,132 @@ test('reports malformed Skill metadata', async () => {
   const root = await createFixture({ valid: false, defect: 'skill' });
   try {
     assert.match((await validateRepository(root)).join('\n'), /skill/i);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+const SINGLE_AGENT_BLOCK = `**Execution**
+- Execution Mode: SINGLE_AGENT
+- Work Class: IMPLEMENTATION
+- Subagents Allowed: 0`;
+
+function boundedBlock({ allowed = '2', responsibilities = 2, overrides = {} } = {}) {
+  const fields = {
+    'Single-agent insufficiency': 'Two unrelated areas must be read in parallel.',
+    'Cost justification': 'Reading both areas sequentially costs more than two small readers.',
+    'Isolation / File Boundaries': 'Read-only; docs/a and docs/b respectively.',
+    Nesting: 'forbidden',
+    ...overrides
+  };
+  const items = Array.from({ length: responsibilities }, (_, index) => `  ${index + 1}. Read area ${index + 1} (sonnet, medium)`);
+  return [
+    '**Execution**',
+    '- Execution Mode: BOUNDED_MULTI_AGENT',
+    '- Work Class: RESEARCH',
+    `- Subagents Allowed: ${allowed}`,
+    `- Single-agent insufficiency: ${fields['Single-agent insufficiency']}`,
+    `- Cost justification: ${fields['Cost justification']}`,
+    '- Subagent Responsibilities:',
+    ...items,
+    `- Isolation / File Boundaries: ${fields['Isolation / File Boundaries']}`,
+    `- Nesting: ${fields.Nesting}`
+  ].join('\n');
+}
+
+async function writePlan(root, { id = 'PLAN-SAMPLE', planStatus = 'ACTIVE', policy = 'ADE-AGENT-USAGE-V1', tasks = [SINGLE_AGENT_BLOCK] } = {}) {
+  await mkdir(path.join(root, 'docs', 'plans', 'active'), { recursive: true });
+  const sections = tasks.map((block, index) => (
+    `## Task ${index + 1} / PR ${index + 1} - Sample\n\n${block ?? ''}\n\n- [ ] **Step 1:** Do the work.\n`
+  ));
+  await writeFile(
+    path.join(root, 'docs', 'plans', 'active', 'sample.md'),
+    `---
+id: ${id}
+type: execution-plan
+status: APPROVED
+plan_status: ${planStatus}
+${policy ? `execution_policy: ${policy}\n` : ''}---
+
+# Sample plan
+
+${sections.join('\n')}`
+  );
+}
+
+async function violationsForPlan(options) {
+  const root = await createFixture({ valid: true });
+  try {
+    await writePlan(root, options);
+    return (await validateRepository(root)).join('\n');
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+}
+
+test('accepts an active plan whose tasks declare SINGLE_AGENT execution', async () => {
+  assert.equal(await violationsForPlan({ tasks: [SINGLE_AGENT_BLOCK, SINGLE_AGENT_BLOCK] }), '');
+});
+
+test('accepts a valid BOUNDED_MULTI_AGENT task with two responsibilities', async () => {
+  assert.equal(await violationsForPlan({ tasks: [boundedBlock()] }), '');
+});
+
+test('reports an active plan without the execution policy marker', async () => {
+  assert.match(await violationsForPlan({ policy: '' }), /execution_policy must be "ADE-AGENT-USAGE-V1"/);
+});
+
+test('reports a task without an Execution block', async () => {
+  assert.match(await violationsForPlan({ tasks: [SINGLE_AGENT_BLOCK, null] }), /Task 2: missing Execution block/);
+});
+
+test('reports SINGLE_AGENT with nonzero Subagents Allowed', async () => {
+  const block = SINGLE_AGENT_BLOCK.replace('Subagents Allowed: 0', 'Subagents Allowed: 1');
+  assert.match(await violationsForPlan({ tasks: [block] }), /Task 1: SINGLE_AGENT requires Subagents Allowed: 0/);
+});
+
+test('reports BOUNDED_MULTI_AGENT above three subagents', async () => {
+  assert.match(
+    await violationsForPlan({ tasks: [boundedBlock({ allowed: '4', responsibilities: 4 })] }),
+    /Task 1: Subagents Allowed must be 1-3/
+  );
+});
+
+test('reports BOUNDED_MULTI_AGENT missing justification fields', async () => {
+  assert.match(
+    await violationsForPlan({ tasks: [boundedBlock({ overrides: { 'Cost justification': '...' } })] }),
+    /Task 1: Cost justification is required/
+  );
+});
+
+test('reports responsibility count that differs from Subagents Allowed', async () => {
+  assert.match(
+    await violationsForPlan({ tasks: [boundedBlock({ allowed: '2', responsibilities: 1 })] }),
+    /Task 1: expected 2 Subagent Responsibilities, found 1/
+  );
+});
+
+test('exempts completed and legacy active plans', async () => {
+  assert.equal(await violationsForPlan({ planStatus: 'COMPLETED', policy: '', tasks: [null] }), '');
+  assert.equal(await violationsForPlan({ id: 'PLAN-SPF-V1', policy: '', tasks: [null] }), '');
+});
+
+test('keeps the plan template defaulting to SINGLE_AGENT', async () => {
+  const template = await readFile(new URL('../docs/plans/template.md', import.meta.url), 'utf8');
+  assert.match(template, /Execution Mode: SINGLE_AGENT/);
+  assert.match(template, /Subagents Allowed: 0/);
+  assert.match(template, /execution_policy: ADE-AGENT-USAGE-V1/);
+});
+
+test('ignores local Superpowers orchestration ledgers during discovery', async () => {
+  const root = await createFixture({ valid: true });
+  try {
+    await mkdir(path.join(root, '.superpowers', 'sdd', 'sample'), { recursive: true });
+    await writeFile(
+      path.join(root, '.superpowers', 'sdd', 'sample', 'task-1-brief.md'),
+      '# Brief\n\nSee [missing](docs/not-real.md).\n'
+    );
+    assert.deepEqual(await validateRepository(root), []);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

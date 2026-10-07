@@ -21,7 +21,11 @@ related:
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
-last_verified: 2026-10-05
+  - PLAN-ADE-AGENT-USAGE-V1
+  - RFC-ADE-AGENT-USAGE-V1
+  - ADR-ADE-AGENT-USAGE
+  - GOV-AGENT-USAGE
+last_verified: 2026-10-07
 ---
 
 # Execution plans
@@ -33,6 +37,14 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
+- [PLAN-ADE-AGENT-USAGE-V1](active/ade-agent-usage-optimization-v1.md): **APPROVED — 2026-10-07** (Governance PR #111 merged), with [RFC-ADE-AGENT-USAGE-V1](../rfcs/ade-agent-usage-v1.md), [ADR-ADE-AGENT-USAGE](../decisions/ade-agent-usage.md) and [GOV-AGENT-USAGE](../governance/agent-usage.md). Seven single-agent task/PR packets:
+  - the policy record;
+  - a plan template that defaults to `SINGLE_AGENT`, with docs-validator enforcement;
+  - Claude Code and Codex project controls for depth, concurrency and subagent model;
+  - repository Skill alignment;
+  - a PLAN-SPF-V1 adoption decision.
+
+  The owner decided D1–D6 on 2026-10-07 and amended D6 the same day: GPT-6 Luna and GPT-6.1 Sol are no longer required. Task 1 is merged. Task 2 (the policy record) is in review; Tasks 3–7 follow.
 - [PLAN-SPF-V1](active/services-projects-footer-v1.md): **APPROVED 2026-10-05 (revision 5)** under [owner authorization](../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05), after fresh independent GPT-6.1 Sol round 6 and correction verification returned zero unresolved findings. Ten ADE v2 task/PR packets retain the [approved Sonnet/Luna/Sol routing](active/services-projects-footer-v1.md#model-routing), exclusive ownership, Skills contract, wave checkpoints and strict behavioral TDD. Task 3 now owns the GRS Services test migration before Task 6; both live tiers stay disabled until hardware evidence passes. [Historical review outcomes](../reviews/services-projects-footer-plan-review-2026-09-30.md) are preserved. The Task 1 Governance PR packages its acceptance scaffold/receipt; PR #104 merged on 2026-10-05 and passed CI. W1 starts only after the Task 1 Governance PR is human-merged and W0 passes. Production remains unchanged.
 
 ## Completed

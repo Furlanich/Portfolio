@@ -8,7 +8,8 @@ related:
   - RFC-INDEX
   - ADR-INDEX
   - PLAN-INDEX
-last_verified: 2026-09-02
+  - GOV-AGENT-USAGE
+last_verified: 2026-10-07
 ---
 
 # Engineering lifecycle
@@ -46,6 +47,12 @@ RFCs, ADRs, plans, commits, test evidence, and PR descriptions should cite the r
 Agents may inspect, research, classify, plan, implement approved scope, test, document, self-review, commit, push a task branch, and open a Pull Request. They preserve approved product requirements and immutable ADR history.
 
 Agents escalate through a Governance PR when a consequential product or architecture choice is unresolved. They keep ambiguous product questions **OPEN**. Agents do not merge Pull Requests, push to `main`, bypass a failing gate, weaken a quality gate to pass, silently supersede an ADR, or expose secrets.
+
+## Agent usage
+
+One task = one primary agent. Every task defaults to `SINGLE_AGENT` with 0 subagents. A plan may declare `BOUNDED_MULTI_AGENT` with at most 3 justified subagents and no nesting.
+
+Independent review is a separate session, never a subagent of the implementer. Delegation limits, work classes, controls and Skill overrides are owned by [GOV-AGENT-USAGE](agent-usage.md).
 
 ## Git and completion
 

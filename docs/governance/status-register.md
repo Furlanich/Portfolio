@@ -45,10 +45,18 @@ related:
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
-last_verified: 2026-10-05
+  - RFC-ADE-AGENT-USAGE-V1
+  - PLAN-ADE-AGENT-USAGE-V1
+  - ADR-ADE-AGENT-USAGE
+  - GOV-AGENT-USAGE
+last_verified: 2026-10-07
 ---
 
 # Product knowledge status register
+
+## ADE agent usage — 2026-10-07
+
+**APPROVED:** [RFC-ADE-AGENT-USAGE-V1](../rfcs/ade-agent-usage-v1.md) and [PLAN-ADE-AGENT-USAGE-V1](../plans/active/ade-agent-usage-optimization-v1.md): one task = one primary agent by default, at most 3 justified bounded subagents per task, no nesting, and independent review as a separate session. The owner decided D1–D6 on 2026-10-07 and merged the Governance PR (#111). The same day the owner amended D6: GPT-6 Luna and GPT-6.1 Sol are no longer required, because the `codex` plugin cannot call them; Claude Sonnet implements and a fresh independent session reviews through the plugin at its default model. [ADR-ADE-AGENT-USAGE](../decisions/ade-agent-usage.md) records the decision and [GOV-AGENT-USAGE](agent-usage.md) owns the policy (Task 2). The Claude Code and Codex controls stay **OPEN** until Tasks 4 and 5 probe them. No Skill or product change lands in Task 2.
 
 ## Services, Projects and Footer — 2026-09-30
 

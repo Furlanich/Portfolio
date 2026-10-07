@@ -7,7 +7,8 @@ related:
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
   - ADR-STATIC-LOCALIZED-ROUTING
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-09-23
+  - GOV-AGENT-USAGE
+last_verified: 2026-10-07
 ---
 
 # Frontend testing strategy
@@ -17,6 +18,7 @@ Use the lowest stable layer that proves the behavior, then add higher layers onl
 | Layer | Use for | Command |
 | --- | --- | --- |
 | Node/unit/contract | Route maps, content and publication contracts, pure utilities, documentation and build-time rules | `npm test` |
+| Documentation validation | Front matter, IDs, links, anchors, Skills, and the per-task `**Execution**` block of every new active plan ([GOV-AGENT-USAGE](../governance/agent-usage.md)); `PLAN-SPF-V1` is exempt by ID | `npm run docs:check` |
 | Playwright browser | Localized navigation, links, menus, keyboard behavior, responsive layouts, visible structure, and browser errors | `npm run test:e2e` |
 | Playwright plus axe | Automatically detectable accessibility issues on representative routes | `npm run test:a11y` |
 | Visual review | Typography, hierarchy, composition, clipping, imagery, and rendered states against approved design | Follow `visual-qa` and [visual regression policy](visual-regression.md) |
