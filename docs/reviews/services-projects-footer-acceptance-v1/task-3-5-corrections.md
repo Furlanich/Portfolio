@@ -397,3 +397,5 @@ Limits and what is not proven. The adequacy of 35 minutes is NOT proven. The tru
 Still open and unchanged. The existing 435-test `validate` at `2690fc0` after integrating main `70e324c`, and the green remote `validate`, are preserved; the known LOW missing pre-implementation Taste preflight, full owner Task 3/5 acceptance and the W2 checkpoint remain OPEN; both live-policy values remain false; merge authority remains human-controlled. No review-ready status is claimed. The parent owns PLAN Progress, the documentation check, the YAML-semantics comparison, the inventory verification, the independent final reviews and the new full remote CI.
 
 Locks: the exclusive serial writes on `.github/workflows/ci.yml`, `docs/testing/playwright.md` and this receipt are released by this report.
+
+Agent usage: primary Claude Sonnet 5.5 (`claude-sonnet-5-5`, firstParty, high); subagents 0/0 (this budget implementation packet; no nesting); audit PASS. Parent-dispatched independent Sol Standards/Spec reviews and frozen Luna documentation support use the approved PLAN-SPF-V1 routing preserved by the override register; historical contributors remain recorded in this receipt.
