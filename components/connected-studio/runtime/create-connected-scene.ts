@@ -1,7 +1,7 @@
 import { Color, DirectionalLight, Fog, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { CAMERA_FAR, CAMERA_FOV_DEGREES, CAMERA_NEAR, CAMERA_Z, computeConnectedLayout, createGraphBatch } from './connected-geometry.ts';
-import type { ConnectedGraphBatch } from './connected-geometry';
+import type { ConnectedGraphBatch, ConnectedLayout } from './connected-geometry';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { projectConnectedLabels } from './connected-labels.ts';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
@@ -50,7 +50,17 @@ const defaultFactories: ConnectedSceneFactories = {
   createRenderer(canvas) {
     const context = canvas.getContext('webgl2', { antialias: true, alpha: true, powerPreference: 'low-power' });
     if (!context) throw new Error('connected-studio: WebGL2 context unavailable');
-    return new WebGLRenderer({ canvas, context, antialias: true, alpha: true, powerPreference: 'low-power' });
+    try {
+      return new WebGLRenderer({ canvas, context, antialias: true, alpha: true, powerPreference: 'low-power' });
+    } catch (error) {
+      // The context already exists, and no renderer was returned to release it, so give it back here.
+      try {
+        context.getExtension('WEBGL_lose_context')?.loseContext();
+      } catch {
+        // A context that cannot be released is already unusable; the original failure is what matters.
+      }
+      throw error;
+    }
   },
 };
 
@@ -125,11 +135,15 @@ export function createConnectedScene(
   }
 
   const canvas = factories.createCanvas();
-  // Decorative and pointer-inert; the box fills the mount and the pixel ratio only sizes the backing store.
-  canvas.setAttribute('aria-hidden', 'true');
-  canvas.setAttribute('tabindex', '-1');
-  canvas.setAttribute('data-connected-canvas', '');
-  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;';
+  try {
+    // Decorative and pointer-inert; the box fills the mount and the pixel ratio only sizes the backing store.
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.setAttribute('tabindex', '-1');
+    canvas.setAttribute('data-connected-canvas', '');
+    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;';
+  } catch (cause) {
+    throw initError('the canvas could not be prepared', cause);
+  }
   let renderer: ConnectedRendererLike;
   try {
     renderer = factories.createRenderer(canvas);
@@ -138,8 +152,6 @@ export function createConnectedScene(
   }
   const scene = new Scene();
   const camera = new PerspectiveCamera(CAMERA_FOV_DEGREES, 1, CAMERA_NEAR, CAMERA_FAR);
-  camera.position.set(0, 0, CAMERA_Z);
-  camera.updateMatrixWorld();
   let disposed = false;
   let lost = false;
   const reportLoss = () => {
@@ -152,20 +164,35 @@ export function createConnectedScene(
     }
   };
   const handleContextLost = () => reportLoss();
+  const detach = () => {
+    canvas.removeEventListener('webglcontextlost', handleContextLost);
+    scene.clear();
+  };
+  // From here the renderer, its context and the canvas are ours. Everything below, the listener, the
+  // mount and the first layout included, runs under one guard that releases whatever exists so far.
   let scope: Scope;
+  let layout: ConnectedLayout;
+  let building: ResourceTracker | undefined;
+  let reason = 'the scene could not be assembled';
   try {
+    camera.position.set(0, 0, CAMERA_Z);
+    camera.updateMatrixWorld();
+    reason = 'the graph could not be built';
     scope = buildScope(options.graph);
+    building = scope.tracker;
+    reason = 'the scene could not be assembled';
+    createEnvironment(scene);
+    scene.add(scope.batch.group);
+    canvas.addEventListener('webglcontextlost', handleContextLost);
+    options.mount.appendChild(canvas);
+    layout = computeConnectedLayout(DEFAULT_VIEWPORT[options.tier], options.graph);
+    scope.batch.fit(layout);
   } catch (cause) {
-    disposeConnectedScene({ renderer, canvas, tracker: createResourceTracker(), detach: () => {} });
-    throw initError('the graph could not be built', cause);
+    disposed = true;
+    disposeConnectedScene({ renderer, canvas, tracker: building ?? createResourceTracker(), detach });
+    throw initError(reason, cause);
   }
-  createEnvironment(scene);
-  scene.add(scope.batch.group);
-  canvas.addEventListener('webglcontextlost', handleContextLost);
-  options.mount.appendChild(canvas);
   let renderCount = 0;
-  let layout = computeConnectedLayout(DEFAULT_VIEWPORT[options.tier], options.graph);
-  scope.batch.fit(layout);
 
   return {
     render(pose: ScenePose) {
@@ -180,28 +207,40 @@ export function createConnectedScene(
       }
     },
     resize(viewport: SceneViewport, graph: GraphDefinition) {
-      if (disposed || !usableViewport(viewport) || graph.quality !== getQualityForTier(viewport.tier)) return;
+      if (disposed || lost || !usableViewport(viewport) || graph.quality !== getQualityForTier(viewport.tier)) return;
+      // Build the new graph beside the old one: a failed rebuild leaves the running scene untouched.
+      let next: Scope | undefined;
       if (graph !== scope.graph) {
-        // Build the new graph beside the old one, and swap only once it exists: a failed rebuild
-        // leaves the running scene untouched.
-        let next: Scope;
         try {
           next = buildScope(graph);
         } catch {
           return;
         }
-        scene.remove(scope.batch.group);
-        scope.tracker.release();
-        scope = next;
-        scene.add(scope.batch.group);
       }
-      layout = computeConnectedLayout(viewport, graph);
-      scope.batch.fit(layout);
-      const ratio = Number.isFinite(viewport.pixelRatio) && viewport.pixelRatio > 0 ? viewport.pixelRatio : 1;
-      renderer.setPixelRatio(Math.min(PIXEL_RATIO_CAP[viewport.tier], ratio));
-      renderer.setSize(viewport.width, viewport.height, false);
-      camera.aspect = layout.aspect;
-      camera.updateProjectionMatrix();
+      try {
+        // Everything that can fail runs against the new graph and the renderer first, and the swap is the
+        // last step, so a failure never leaves a mixture of the old and the new graph.
+        const nextLayout = computeConnectedLayout(viewport, graph);
+        (next ?? scope).batch.fit(nextLayout);
+        const ratio = Number.isFinite(viewport.pixelRatio) && viewport.pixelRatio > 0 ? viewport.pixelRatio : 1;
+        renderer.setPixelRatio(Math.min(PIXEL_RATIO_CAP[viewport.tier], ratio));
+        renderer.setSize(viewport.width, viewport.height, false);
+        camera.aspect = nextLayout.aspect;
+        camera.updateProjectionMatrix();
+        if (next) {
+          scene.add(next.batch.group);
+          scene.remove(scope.batch.group);
+          const previous = scope;
+          scope = next;
+          previous.tracker.release();
+        }
+        layout = nextLayout;
+      } catch {
+        // A layout or renderer that cannot follow the viewport is as unusable as a lost context. The graph
+        // that was never swapped in is released here; the scene that is still live is the host's to dispose.
+        next?.tracker.release();
+        reportLoss();
+      }
     },
     projectLabels(pose: ScenePose): readonly LabelProjection[] {
       return projectConnectedLabels(scope.graph, pose, layout);
@@ -225,10 +264,7 @@ export function createConnectedScene(
         renderer,
         canvas,
         tracker: scope.tracker,
-        detach: () => {
-          canvas.removeEventListener('webglcontextlost', handleContextLost);
-          scene.clear();
-        },
+        detach,
       });
     },
   };
