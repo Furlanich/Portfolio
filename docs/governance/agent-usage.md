@@ -95,14 +95,22 @@ Open items:
 
 ## Codex controls
 
-OPEN until Task 5 of the plan probes and records each control. The intended values come from decisions D2 and D5.
+Owned by Task 5 of the plan. Values come from decisions D2 and D5 and live in `.codex/config.toml` and `.codex/agents/ade-readonly-specialist.toml`. Probed on 2026-10-07 with `codex exec` from the npm CLI 0.160.1 in a `.worktrees/*` checkout, observing the spawned threads in the session rollouts (spawn depth, parent, model). The plan expected 0.162.0-alpha.2, which is not installed. The Codex desktop app and its bundled CLI 0.147.0 were not verified.
 
-| Control | Intended value | Status |
-| --- | --- | --- |
-| `[agents] max_concurrent_threads_per_session` | `3` | OPEN |
-| `[agents] max_depth` | Value chosen by the Task 5 semantics probe; no nested delegation | OPEN |
-| `default_subagent_model` | Unset; role files set models | OPEN |
-| Specialist role | `.codex/agents/ade-readonly-specialist.toml`, explicit model, medium effort, read-only by instruction | OPEN |
+| Control | Value | Status | Evidence |
+| --- | --- | --- | --- |
+| `[agents] max_concurrent_threads_per_session` | `3` | VERIFIED (CLI 0.160.1) | The project file loads in a worktree. With the value 2 the 3rd and 4th spawns returned "collab spawn failed: agent thread limit reached"; with 3 the 4th did. Codex already stops at 3 subagents without the file, so the key pins the limit rather than lowering it. |
+| `[agents] max_depth` | not set | OPEN (not honored) | Values 0, 1 and 2 passed with `-c`, and 1 in the project file, all still allowed a grandchild (`/root/child/pong`, depth 2). The upstream docs say `max_depth` is enforced only by the V1 multi-agent backend. This build runs V2, and `features.multi_agent_v2=false` did not switch it back. No configuration caps nesting. |
+| `default_subagent_model` | unset (D5) | n/a | Spawned threads inherited the root model and effort (`gpt-6.1-sol`, `low` in the probes) unless a role file sets them. |
+| Specialist role file | `.codex/agents/ade-readonly-specialist.toml` | VERIFIED model, effort and sandbox; spawn limit is instruction-level | The spawned thread ran on `gpt-6-luna` at `medium` with a `read-only` sandbox, and obeyed its instructions to attempt no write and no spawn. A `[features] multi_agent = false` override in a role file did not stop a role from spawning, so it is not used. |
+| `agents.enabled = false` | not set (D2 option A) | VERIFIED as a fallback | With `-c agents.enabled=false` the session had no `spawn_agent` tool. `-c features.multi_agent=false` did not remove it. A desktop-app opt-in path is not proven, so D2 stays option A. |
+
+Open items:
+
+- **Nested delegation: OPEN.** Nothing in Codex configuration caps depth in this build. The thread cap bounds the fan-out of a recursion (a probe role told it may spawn reached the limit and stopped), and the specialist role forbids spawning by instruction. Treat the receipt's "Agent usage" line and review as the control for default-role threads. Re-probe after a Codex upgrade.
+- **Desktop app and CLI 0.147.0: OPEN.** The bundled 0.147.0 refused `gpt-6.1-sol` for this account ("not supported when using Codex with a ChatGPT account"), and with `gpt-5.6-luna` it exposed no `spawn_agent` tool, so the probes could not run there.
+- **Model pin.** The role pins `gpt-6-luna` because it resolved in the CLI probe. No specific GPT-6 model is required (D6 amendment); change the role's model if it stops resolving.
+- **`-c agents.*` overrides** are not a reliable way to test the cap. Probe with the project file.
 
 ## Skill and plugin override register
 

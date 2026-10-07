@@ -1,0 +1,3 @@
+# Project controls for Codex subagents. Evidence: docs/governance/agent-usage.md.
+[agents]
+max_concurrent_threads_per_session = 3
