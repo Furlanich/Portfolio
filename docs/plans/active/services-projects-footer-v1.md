@@ -16,7 +16,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-10-06
+last_verified: 2026-10-07
 ---
 
 # Services, Projects and Footer v1 Implementation Plan
@@ -973,6 +973,8 @@ Documentation impact: <records updated in this PR>
   - Each PR passed `validate` and `browser` CI on its own branch: [PR #107](https://github.com/Furlanich/Portfolio/pull/107) (Task 5) at `da87bae` and [PR #108](https://github.com/Furlanich/Portfolio/pull/108) (Task 3) at `a1a4211`.
   - The owner merged PR #107 at 2026-10-06T22:08:21Z (`f426043`), then PR #108 at 22:08:33Z (`025b447`). That reverses the planned order (Task 3, then Task 5) and skips the rebase-and-recheck step; see the deviations below.
   - The W2 checkpoint has not run; the W2 locks are released only when it passes.
+
+- 2026-10-07: The owner authorized review and correction of Tasks 3/5 after ledger [PR #109](https://github.com/Furlanich/Portfolio/pull/109) merged at `1514860`. The bounded correction branch `codex/spf-task-3-5-corrections` uses that combined baseline. Claude Sonnet 5.5 (`claude-sonnet-5-5`, firstParty, high) implemented scene ownership/failure containment, the second wide/tablet orbit, native locale navigation and regression fixtures; GPT-6 Luna handled serialized mechanical receipt/index corrections. Independent read-only GPT-6.1 Sol Standards and Spec reviews have zero unresolved source or factual-receipt findings. A LOW workflow deviation (no recorded pre-implementation Taste preflight) is disclosed, with a retrospective authority/design audit rather than a retroactive stage claim. Fresh parent gates passed: `validate` 417 tests, root and `/Portfolio` exports 14 routes each, 24 affected development checks and 216 production-export checks; the preceding broader scoped development matrix passed 316 before the final test-only setup refactor. Exact results and historical failures are retained in the [correction receipt](../../reviews/services-projects-footer-acceptance-v1/task-3-5-corrections.md). Final committed-diff review precedes draft publication; PR CI remains pending. Full Task 3/5 acceptance, owner rendered/hardware approval and W2 on merged `main` remain OPEN, and W2 locks are not released by this correction record. Both live-policy values remain false; no later task, wave checkpoint or human merge is recorded.
 
 ## Important implementation decisions
 
