@@ -23,14 +23,16 @@ Use this Skill to prepare a FURLANICH task branch for human review at a Pull Req
 3. Check traceability from the requirement or design record through the plan, implementation, and validation evidence. Confirm material product, design, architecture, or status changes update their authoritative owner rather than duplicating it.
 4. Run the repository's deterministic gates appropriate to the change. Prefer `npm run validate` when it covers the scope; otherwise run the relevant commands individually, including `npm run docs:check`, `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build` as applicable. Record exact commands, exit results, warnings, and environment notices separately.
 5. Review acceptance criteria and unresolved questions. Verify status markers and document links remain coherent, and ensure OPEN decisions remain OPEN. Perform visual QA only when the change affects rendered UI, and label visual observations as judgment-based evidence rather than replacing deterministic gates.
-6. Review the autonomy boundary: the agent may commit, push a task branch, and open a PR, but must not push directly to `main`, merge a PR, weaken checks, expose secrets, or silently alter approved requirements or supersede an ADR.
-7. Prepare a concise readiness report containing scope, requirement/decision traceability, changed-file review, deterministic validation, visual/judgment-based review (if applicable), risks and unresolved questions, and the recommended PR title/body. Leave the branch ready for human review and do not merge.
+6. Audit agent usage against [GOV-AGENT-USAGE](../../../docs/governance/agent-usage.md). Read the task's Execution block (default `SINGLE_AGENT`, `Subagents Allowed: 0`) and the receipt's `Agent usage` line. Report FAIL when the subagent count exceeds the allowance, when any subagent spawned another, or when the implementer spawned its own reviewer. An independent review by a separate session is not a subagent and does not count.
+7. Review the autonomy boundary: the agent may commit, push a task branch, and open a PR, but must not push directly to `main`, merge a PR, weaken checks, expose secrets, or silently alter approved requirements or supersede an ADR.
+8. Prepare a concise readiness report containing scope, requirement/decision traceability, changed-file review, deterministic validation, agent usage, visual/judgment-based review (if applicable), risks and unresolved questions, and the recommended PR title/body. Both the report and the PR body carry the line `Agent usage: primary <model>; subagents <n>/<allowed> (<ids, model, purpose>)`. Leave the branch ready for human review and do not merge.
 
 ## Expected outputs
 
 - A final acceptance checklist with each criterion marked PASS, FAIL, or OPEN and supporting evidence.
 - A diff-scope and documentation-synchronization summary.
 - Exact validation commands and results, with warnings/notices distinguished from errors.
+- The `Agent usage` line, with PASS, or FAIL and the count, for the agent-usage audit.
 - Risks, unresolved questions, and any escalation required before opening the PR.
 - A PR-ready summary/body that states the autonomy boundary and explicitly leaves merge authority with a human.
 
@@ -43,6 +45,6 @@ Use this Skill to prepare a FURLANICH task branch for human review at a Pull Req
 
 ## Failure and escalation
 
-- Stop and report FAIL when deterministic validation fails, the diff contains unrelated or unsafe changes, required traceability is missing, or secrets are exposed. Fix only within scope; never weaken a gate to make it pass.
+- Stop and report FAIL when deterministic validation fails, the diff contains unrelated or unsafe changes, required traceability is missing, secrets are exposed, or the agent-usage audit fails. Fix only within scope; never weaken a gate to make it pass.
 - Keep unresolved product, design, legal, accessibility, or architecture questions as OPEN and identify the owning record or governance PR needed.
 - Escalate to the human at the PR boundary for consequential decisions, failed checks that cannot be resolved safely, missing approval, branch protection changes, merge, or any request to push to `main`.

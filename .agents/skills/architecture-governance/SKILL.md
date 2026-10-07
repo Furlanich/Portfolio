@@ -39,8 +39,9 @@ If repository truth conflicts with chat context, use the repository and record t
    | **ADR** | A consequential architectural decision has already been accepted through the appropriate human-reviewed path and needs a durable historical record. | Add an immutable ADR recording context, decision, rationale, consequences, rejected alternatives, related RFC/requirements, date, and status; link implementation work to it. |
 
 4. Apply precedence deliberately. If an RFC is required, it comes before implementation. An ADR records an accepted decision after approval; it is not a substitute for an RFC or approval. A plan may accompany either route when execution is substantial, but a plan cannot authorize an unresolved consequential decision.
-5. Produce the route as a deterministic handoff. Include the classification, evidence, affected requirement/architecture IDs, required artifact, implementation boundary, validation commands, unresolved questions, and approval needed.
-6. Re-check classification if scope changes during execution. Pause implementation and route the new decision through an RFC/governance PR when a previously routine change becomes consequential.
+5. Select the Work Class (`IMPLEMENTATION`, `RESEARCH` or `REVIEW`) and the Execution Mode under [GOV-AGENT-USAGE](../../../docs/governance/agent-usage.md). The default is `SINGLE_AGENT` with 0 subagents. Choose `BOUNDED_MULTI_AGENT` (1-3 subagents, no nesting) only when sequential work by one agent is materially worse and the plan block states every required field: subagent count, why single-agent is insufficient, each responsibility, file boundaries, and the cost justification. A missing field keeps the task `SINGLE_AGENT`.
+6. Produce the route as a deterministic handoff. Include the classification, execution mode, evidence, affected requirement/architecture IDs, required artifact, implementation boundary, validation commands, unresolved questions, and approval needed.
+7. Re-check classification if scope changes during execution. Pause implementation and route the new decision through an RFC/governance PR when a previously routine change becomes consequential.
 
 ## Decision heuristics
 
@@ -55,6 +56,7 @@ Return a concise classification packet:
 
 ```text
 Route: DIRECT | PLAN | RFC | ADR (or a justified combination)
+Execution: <SINGLE_AGENT | BOUNDED_MULTI_AGENT> / <IMPLEMENTATION | RESEARCH | REVIEW> / Subagents Allowed <0-3>
 Evidence: repository records and files inspected
 Requirements: stable product/design IDs
 Affected architecture: current/accepted/proposed/open records
