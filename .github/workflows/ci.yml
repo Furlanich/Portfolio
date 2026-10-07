@@ -24,7 +24,8 @@ jobs:
 
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Overall job resource budget only (the full matrix outgrew 30). Per-test, hook and expect timeouts are unchanged.
+    timeout-minutes: 35
     # Official prebuilt Playwright image: browsers and system libraries come with it, so the job no longer
     # installs them over the network on every run. The tag MUST equal the locked `@playwright/test` version
     # (package.json); change both together. Options follow the Playwright CI and Docker guides:
