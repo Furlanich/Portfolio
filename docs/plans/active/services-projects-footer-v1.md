@@ -16,7 +16,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-10-07
+last_verified: 2026-10-08
 ---
 
 # Services, Projects and Footer v1 Implementation Plan
@@ -983,6 +983,17 @@ Documentation impact: <records updated in this PR>
 
 - 2026-10-07: Container CI run 37678206635 at `6adc24f` passed validate and started tests within 52 seconds, then exceeded the overall 30-minute browser-job limit. Its incomplete log contains 1553 completed PASS markers, 89 SKIP markers and zero failed-case markers; all 280 navigation cases passed on Linux, including the reported WebKit cases, but 49 scheduled cases remained and there is no complete reporter summary. The orchestrator explicitly assigned a further narrow CI-support packet to Claude Sonnet 5.5 (firstParty, high), with exclusive ownership of the workflow, testing record and append-only receipt; those locks are now released. The overall browser-job resource budget changes from 30 to 35 minutes only. Per-test/hook 30-second and assertion 5-second deadlines, two workers, one retry, all cases, assertions, baselines and artifacts remain unchanged. The Standards scope assessment found no new governance approval or RFC/ADR requirement. Parent semantic-diff and documentation checks, separate final Standards/Spec reviews and a complete new-head remote CI run precede any readiness claim; the adequacy of 35 minutes is unverified. Exact evidence remains in the [correction receipt](../../reviews/services-projects-footer-acceptance-v1/task-3-5-corrections.md). The LOW preflight omission, full owner acceptance and W2 remain OPEN; both live policies stay false and human merge authority is unchanged.
 
+- 2026-10-08: **W2 checkpoint PASSED** on `main` at `6c7f309`. The orchestrator is the same Claude Opus 5.5 (`claude-opus-5-5`, firstParty) coordination session. That SHA contains Tasks 3 and 5 ([PR #108](https://github.com/Furlanich/Portfolio/pull/108), [PR #107](https://github.com/Furlanich/Portfolio/pull/107)) and the Task 3/5 correction ([PR #110](https://github.com/Furlanich/Portfolio/pull/110), merged at `6319c85` after browser and validate CI run 37683947473 passed). It also contains the documentation-only and agent-control PRs #109 and #111–#118. It therefore supersedes `025b447` as the first combined verification of W2. Run conditions: a clean detached worktree after a fresh `npm ci` (exit 0), root base path, `PLAYWRIGHT_PORT=3300`.
+  - `npm run validate` passed: docs:check 303 Markdown files, 103 document IDs, 38 Skills; `npm test` 439/439; lint, typecheck and build passed.
+  - Root `verify:static-export`: 14 routes, base path `/`. None of the six retired `out/` directories exist.
+  - `npm run test:a11y`: 14 passed.
+  - `npm run test:e2e -- --workers=1`, all registered projects: 1602 passed, 89 skipped, 0 failed, in 48.2 minutes.
+  - `/Portfolio` clean build: exit 0. `verify:static-export`: 14 routes, base path `/Portfolio`; the six retired directories are absent, and `out/index.html` references `/Portfolio/_next`.
+  - `git status` afterwards: clean.
+  - An earlier full run on the same SHA (2026-10-07) had one failure out of 1602 tests: `immersive-home.spec.ts:388`, under SwiftShader without the override. Its only error was the `next dev` hot-reload WebSocket failing with `net::ERR_NO_BUFFER_SPACE` after 48 minutes on Windows. Under `systematic-debugging`, that spec file passed 24/24 in isolation. The complete rerun above, sampled every 60 seconds, peaked at 839 TCP connections (711 in TIME_WAIT) against the 16,384-port dynamic range, with a non-paged pool of 784–944 MB. The failure did not recur, and no product or test path was changed.
+  - Lock releases: Task 3 releases ROUTE-CUTOVER, LOCALE-CONTROL, PUBLIC-EVIDENCE and VISUAL-BASELINES (Projects and Founder subtrees). Task 5 releases CONNECTED-ENGINE. SERVICES and CONNECTED-GROUND become available to Task 6. The Task 4 blocks of SHARED-TESTS become available to Task 4. Whole-file ownership of `tests/e2e/marketing-services.spec.ts` transfers to Task 6, per the inventory.
+  - W3 (Task 4) may start. Under the [ADE-AGENT-USAGE adoption](#important-implementation-decisions), it starts as its own top-level Claude Sonnet 5.5 session in `.worktrees/spf-4`. Full Task 3/5 owner acceptance, the disclosed LOW preflight omission and owner rendered/hardware approval remain OPEN. Both live-policy values stay false.
+
 ## Important implementation decisions
 
 The owner decisions and plan clarifications of 2026-10-05 are recorded in [OD-1 to OD-4 and PC-1 to PC-7](#owner-decisions-and-plan-clarifications-2026-10-05). Later decisions made during execution are added here with their date, owner and link.
@@ -1007,3 +1018,4 @@ Corrections from independent review are recorded in the review artifact, not tre
 
 - 2026-10-06: The W0 checkpoint was run by the Task 2 implementer session instead of an orchestrator, at the owner's request; its result is unaffected.
 - 2026-10-06: PR #107 (Task 5) merged before PR #108 (Task 3), the reverse of the W2 merge order. PR #108 was not rebased and rechecked on top of Task 5. The write sets do not overlap, but no CI run has covered the combined `main` at `025b447`, so the W2 checkpoint on that SHA is the first combined verification.
+- 2026-10-08: Resolution of the previous item. The combined verification ran on `6c7f309` instead, which contains `025b447` plus the Task 3/5 correction and the later documentation-only and agent-control PRs. It passed (see Progress, 2026-10-08). No defect traces to the reversed merge order.
