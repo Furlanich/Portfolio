@@ -2,7 +2,7 @@
 id: PLAN-ADE-AGENT-USAGE-V1
 type: execution-plan
 status: APPROVED
-plan_status: ACTIVE
+plan_status: COMPLETED
 execution_policy: ADE-AGENT-USAGE-V1
 related:
   - GOV-ENGINEERING-LIFECYCLE
@@ -25,7 +25,7 @@ last_verified: 2026-10-07
 
 **Tech stack:** Node test runner (`node --test scripts/*.test.mjs`), `scripts/validate-repository-docs.mjs`, Claude Code 2.1.286 (installed), Codex CLI 0.162.0-alpha.2 (installed). No new dependencies.
 
-**Spec:** The owner's ADE Agent-Usage Optimization brief of 2026-10-07, the [engineering lifecycle](../../governance/engineering-lifecycle.md) and the ADE v2 precedent in [PLAN-SPF-V1](services-projects-footer-v1.md#model-routing).
+**Spec:** The owner's ADE Agent-Usage Optimization brief of 2026-10-07, the [engineering lifecycle](../../governance/engineering-lifecycle.md) and the ADE v2 precedent in [PLAN-SPF-V1](../active/services-projects-footer-v1.md#model-routing).
 
 ## Current-state findings
 
@@ -36,7 +36,7 @@ last_verified: 2026-10-07
 | Repository instructions | [`AGENTS.md`](../../../AGENTS.md) | Routes to docs, lifecycle, Skills; work contract; `codex/` branches | **No agent-usage rule at all.** Silent on subagents, concurrency, models. |
 | Governance | [Engineering lifecycle](../../governance/engineering-lifecycle.md) | Classifies work, RFC/ADR/plan paths, autonomy and escalation | Silent on delegation. "Agents may inspect, research, ..." without limits. |
 | Plan template | [`docs/plans/template.md`](../template.md) | Section headings only | **No per-task execution section.** No task packet shape. |
-| ADE v2 mechanics | [Sky Chart plan §§16–26](../completed/sky-chart-home-redesign-v2.md#24-sequential-integration-procedure), [PLAN-SPF-V1](services-projects-footer-v1.md#model-routing) | Orchestrator dispatches each task; waves; locks; receipts; independent review | The orchestrator spawns each task as a **subagent** (the SPF ledger in `.superpowers/sdd/services-projects-footer-v1/progress.md` records "Agent model=sonnet, general-purpose" for Tasks 3 and 5). The SPF plan also lets a Sonnet packet hand subtasks to Luna "as a bounded checklist batch", and its header recommends `superpowers:subagent-driven-development`. |
+| ADE v2 mechanics | [Sky Chart plan §§16–26](../completed/sky-chart-home-redesign-v2.md#24-sequential-integration-procedure), [PLAN-SPF-V1](../active/services-projects-footer-v1.md#model-routing) | Orchestrator dispatches each task; waves; locks; receipts; independent review | The orchestrator spawns each task as a **subagent** (the SPF ledger in `.superpowers/sdd/services-projects-footer-v1/progress.md` records "Agent model=sonnet, general-purpose" for Tasks 3 and 5). The SPF plan also lets a Sonnet packet hand subtasks to Luna "as a bounded checklist batch", and its header recommends `superpowers:subagent-driven-development`. |
 | Claude project config | `.claude/settings.json` | Enables the `brag` plugin only | **No env caps, no permission rules on `Agent`.** |
 | Claude local config (tracked) | `.claude/settings.local.json` | Impeccable hooks | None. |
 | Claude custom agents | `.claude/agents/impeccable-*.md` (4) | `model: inherit`, `maxTurns` 12–30, all omit the `Agent` tool | `model: inherit` runs them on the session model (Opus in an Opus session). |
@@ -492,6 +492,7 @@ The owner accepted every recommendation below on 2026-10-07; see [Important impl
 - 2026-10-07: The owner merged Task 4 (#114) at `70e324c`. Task 5 started from it in `.worktrees/ade-5` on `codex/ade-5-codex-controls` (the worktree was pre-created by a deleted background session; its untracked probe files were discarded and the probes redone), run `SINGLE_AGENT` with 0 subagents by Claude Sonnet 5.5. It adds `.codex/config.toml` (concurrency 3), the read-only specialist role and `scripts/codex-agent-config.test.mjs` (4 tests). Probing found that `agents.max_depth` is not honored by the multi-agent v2 backend, so no depth key is set and nested delegation stays OPEN in `GOV-AGENT-USAGE`; the desktop app and bundled CLI 0.147.0 could not be probed. Independent review, the owner's merge and Tasks 6–7 are pending.
 - 2026-10-07: The owner merged Task 5 (#115) at `75d55b14`. Task 6 started from it in `.worktrees/ade-6` on `codex/ade-6-skill-alignment` (pre-created by a deleted background session; its uncommitted RED write-up was verified against the unchanged Skills and kept), run `SINGLE_AGENT` with 0 subagents by Claude Sonnet 5.5. `architecture-governance` now selects the Work Class and Execution Mode (default `SINGLE_AGENT`, 0 subagents), and `pr-readiness` audits the receipt's `Agent usage` line and FAILs on an over-allowance count, nesting or an implementer-spawned reviewer. S1 and S2 are recorded RED then GREEN in `docs/testing/skill-validation.md`. No vendored Skill changed. Independent review, the owner's merge and Task 7 are pending.
 - 2026-10-07: The owner merged Task 6 (#116) at `79d47442`. Task 7 started from it in `.worktrees/ade-7` on `codex/ade-7-spf-adoption`, run `SINGLE_AGENT` with 0 subagents by Claude Sonnet 5.5. It records the dated ADE-AGENT-USAGE adoption decision in PLAN-SPF-V1's Important implementation decisions, one SPF Progress line and the SPF note in the plan index. The SPF orchestrator's `PLAN-RECORD` handoff was not recorded in SPF Progress when the PR was drafted, so the PR waits for that handoff and the owner's approval of the adoption text before merge. Independent review and the owner's merge are pending. Closing this plan (moving it to `completed/`) is a separate step.
+- 2026-10-07: **COMPLETED.** The owner merged Task 7 (#117) at `8b593db7` and marked the plan completed. The plan moved from `active/` to `completed/` with its history intact. Delivered, each as a single-agent PR the owner merged: Task 1 #111, Task 2 #112, Task 3 #113, Task 4 #114, Task 5 #115, Task 6 #116, Task 7 #117. Against the acceptance criteria: 1, 2, 5, 6 and 7 are met; 3 and 4 are met on the plan's terms (each control live-verified or recorded OPEN), with the open items below; 8 holds because each PR reports `subagents 0/0` (the probe subagents in Tasks 4 and 5 are the tool under test, as the plan allows). **Open items** (all in [GOV-AGENT-USAGE](../../governance/agent-usage.md)): the Claude and Codex desktop apps were not probed; the interactive Claude `ask` prompt was not observed; nested Codex delegation has no honored configuration (`agents.max_depth` is V1-only); the Codex type deny for `codex:codex-rescue` takes effect only after an `ask` is approved. Re-probe after major Claude Code or Codex upgrades.
 
 ## Important implementation decisions
 
@@ -509,3 +510,7 @@ The owner accepted every recommendation below on 2026-10-07; see [Important impl
 - 2026-10-07: Task 2 is implemented by Claude Sonnet 5.5 (`claude-sonnet-5-5`) in one top-level session with zero subagents, in `.worktrees/ade-2` on `codex/ade-2-policy-record`. The owner amended D6 first (see Important implementation decisions). Besides the listed files, Task 2 also edits this plan (D6 amendment, status APPROVED), the RFC (status APPROVED, D6 row), `docs/rfcs/index.md` and `docs/plans/index.md`, so that no active record still demands Luna or Sol.
 
 - 2026-10-07: Task 1 was implemented by Claude Opus 5.5 (`claude-opus-5-5`, firstParty) in the plan-authoring session, at the owner's direct request. D6 assigns docs tasks to Luna or Sonnet. The change is documentation only, ran `SINGLE_AGENT` with 0 subagents, and still requires independent GPT-6.1 Sol review and the owner's merge.
+- 2026-10-07: Codex CLI 0.160.1 (npm) and 0.147.0 (desktop-bundled) were installed, not the 0.162.0-alpha.2 this plan names. Task 5 probed 0.160.1.
+- 2026-10-07: Task 5's test "forbids nested delegation (asserts the probed value)" became a test that the config does not claim `max_depth`, because no depth key is honored (the plan says to remove an unhonored key and record it OPEN).
+- 2026-10-07: Tasks 4 to 6 were first launched as background sessions that were deleted, leaving pre-created worktrees `ade-4`, `ade-5` and `ade-6`. Task 4's was clean and reused. Task 5's untracked probe files were discarded and the probes redone. Task 6's uncommitted RED write-up was verified against the unchanged Skills and kept.
+- 2026-10-07: Each task also edited this plan's Progress, and Task 2 edited the RFC, indexes and register beyond its listed files. Task 2 amended D6 to drop the GPT-6 Luna and GPT-6.1 Sol requirements, because the Claude-to-Codex plugin cannot call them.

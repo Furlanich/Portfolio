@@ -28,7 +28,7 @@ last_verified: 2026-10-07
 
 ## ADE agent usage
 
-- [RFC-ADE-AGENT-USAGE-V1](ade-agent-usage-v1.md): **APPROVED — 2026-10-07** with Governance PR #111; recorded by [ADR-ADE-AGENT-USAGE](../decisions/ade-agent-usage.md) and [GOV-AGENT-USAGE](../governance/agent-usage.md). One task = one primary agent by default (`SINGLE_AGENT`, 0 subagents). Up to 3 justified, bounded subagents are allowed per task, with no nesting. The independent reviewer is a separate session. Claude and Codex project configuration enforces the caps, and the docs validator enforces per-task execution blocks for new plans. The owner decided D1–D6 on 2026-10-07; execution follows [PLAN-ADE-AGENT-USAGE-V1](../plans/active/ade-agent-usage-optimization-v1.md). No product or runtime change.
+- [RFC-ADE-AGENT-USAGE-V1](ade-agent-usage-v1.md): **APPROVED — 2026-10-07** with Governance PR #111; recorded by [ADR-ADE-AGENT-USAGE](../decisions/ade-agent-usage.md) and [GOV-AGENT-USAGE](../governance/agent-usage.md). One task = one primary agent by default (`SINGLE_AGENT`, 0 subagents). Up to 3 justified, bounded subagents are allowed per task, with no nesting. The independent reviewer is a separate session. Claude and Codex project configuration enforces the caps, and the docs validator enforces per-task execution blocks for new plans. The owner decided D1–D6 on 2026-10-07; execution follows [PLAN-ADE-AGENT-USAGE-V1](../plans/completed/ade-agent-usage-optimization-v1.md). No product or runtime change.
 
 ## Proposed connected studio redesign
 
