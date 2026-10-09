@@ -1,0 +1,314 @@
+/*
+ * PLAN-SPF-V1 Task 4 / PC-4: the shared Azure conclusion (DESIGN-SPF-V1, "Footer: premium conclusion
+ * and actual next action"). Composition follows revision-footer-1440.png and revision-footer-390.png.
+ * Azure #004589 with Bone #F9F6EE type, the self-hosted Instrument Sans from the root layout, a
+ * container of 1200px and gutters of at least 20px. There is no WebGL, no script and no animation: the
+ * watermark is one complete static copy of the protected mark behind the right-hand groups, and every
+ * line of text sits above it.
+ *
+ * The colors are literals, as in the connected-studio ground: no global token is added or changed.
+ */
+
+.footer {
+  --footer-azure: #004589;
+  --footer-bone: #F9F6EE;
+  --footer-accent: #9CC4EC;
+  --footer-line: rgba(249, 246, 238, 0.32);
+  --footer-gutter: 20px;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--footer-azure);
+  color: var(--footer-bone);
+  padding-block: 4rem 3rem;
+}
+
+.inner {
+  position: relative;
+  width: min(1200px, calc(100% - 2 * var(--footer-gutter)));
+  margin-inline: auto;
+}
+
+/* The signature: the whole Bone mark beside the wordmark, one link home. */
+.signature {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 44px;
+  max-width: 100%;
+  color: var(--footer-bone);
+  font-size: clamp(2.25rem, 1.2rem + 4.8vw, 5.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.signatureMark {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+}
+
+.wordmark {
+  min-width: 0;
+}
+
+.conclusion {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+.invitation {
+  position: relative;
+  z-index: 1;
+}
+
+.headline {
+  max-width: 14ch;
+  margin: 0;
+  font-size: clamp(2.125rem, 1.4rem + 1.9vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.introduction {
+  max-width: 44rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.primaryAction {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  margin-top: 2rem;
+  padding: 0 1.375rem;
+  border-radius: 8px;
+  background-color: var(--footer-bone);
+  color: var(--footer-azure);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 160ms ease-out;
+}
+
+.primaryAction:hover {
+  background-color: #FFFFFF;
+}
+
+/*
+ * Direct contact. At compact widths it is the positioned parent of the watermark, which is centered
+ * behind it; from 768px up it is static, so the watermark's containing block becomes `.inner` and the
+ * mark spans the right-hand groups.
+ */
+.direct {
+  position: relative;
+}
+
+.groupHeading {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.directoryHeading {
+  font-size: 1rem;
+}
+
+.list {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 2rem;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 44px;
+  color: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  transition: color 160ms ease-out;
+}
+
+/* The direct channels are the actionable values, so they carry more weight than the directory links. */
+.channel {
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.link:hover {
+  color: var(--footer-accent);
+}
+
+.primaryAction:focus-visible,
+.link:focus-visible,
+.signature:focus-visible {
+  outline: 3px solid var(--footer-accent);
+  outline-offset: 3px;
+  box-shadow: none;
+  border-radius: 4px;
+}
+
+.primaryAction:focus-visible {
+  border-radius: 8px;
+}
+
+.location {
+  position: relative;
+  z-index: 1;
+  max-width: 30rem;
+  margin: 1rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.directory {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--footer-line);
+}
+
+.utility {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--footer-line);
+}
+
+.copyright,
+.utility .link {
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+/*
+ * The watermark: the complete mark, one static layer, about 0.06 opacity at compact widths and 0.085
+ * from 768px up (the owner picks the final value at rendered review). Its box is square, so the mark
+ * only ever scales uniformly, and it is placed with insets rather than a transform.
+ */
+.watermark {
+  --watermark-size: min(20rem, 86vw);
+
+  position: absolute;
+  z-index: 0;
+  left: calc(50% - var(--watermark-size) / 2);
+  /* Centered a little below the group's middle, as in the 390px reference. */
+  top: calc(50% - var(--watermark-size) / 2 + 5.5rem);
+  width: var(--watermark-size);
+  height: var(--watermark-size);
+  color: var(--footer-bone);
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .footer {
+    --footer-gutter: 32px;
+
+    padding-block: 5rem 3rem;
+  }
+
+  .conclusion {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+    column-gap: 2.5rem;
+    margin-top: 3rem;
+  }
+
+  .direct {
+    position: static;
+  }
+
+  .directory {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+    column-gap: 2.5rem;
+    margin-top: 3rem;
+  }
+
+  .watermark {
+    --watermark-size: 26rem;
+
+    left: auto;
+    right: -2.5rem;
+    top: 2.25rem;
+    opacity: 0.085;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer {
+    --footer-gutter: 48px;
+  }
+
+  .conclusion,
+  .directory {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    column-gap: 4rem;
+  }
+
+  .watermark {
+    --watermark-size: 38.75rem;
+
+    right: -4.3rem;
+  }
+}
+
+/* Forced colors: no environment, no watermark; system colors and the system focus ring. */
+@media (forced-colors: active) {
+  .footer {
+    background-color: Canvas;
+    color: CanvasText;
+    border-top: 1px solid CanvasText;
+  }
+
+  .watermark {
+    display: none;
+  }
+
+  .primaryAction {
+    border: 1px solid ButtonText;
+    background-color: ButtonFace;
+    color: ButtonText;
+  }
+
+  .link:hover {
+    color: LinkText;
+  }
+
+  .primaryAction:focus-visible,
+  .link:focus-visible,
+  .signature:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
