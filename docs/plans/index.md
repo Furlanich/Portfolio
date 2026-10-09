@@ -25,7 +25,7 @@ related:
   - RFC-ADE-AGENT-USAGE-V1
   - ADR-ADE-AGENT-USAGE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-07
+last_verified: 2026-10-09
 ---
 
 # Execution plans
@@ -37,7 +37,9 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [PLAN-SPF-V1](active/services-projects-footer-v1.md): **APPROVED 2026-10-05 (revision 5)** under [owner authorization](../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05), after fresh independent GPT-6.1 Sol round 6 and correction verification returned zero unresolved findings. Ten ADE v2 task/PR packets retain the [approved Sonnet/Luna/Sol routing](active/services-projects-footer-v1.md#model-routing), exclusive ownership, Skills contract, wave checkpoints and strict behavioral TDD. Task 3 now owns the GRS Services test migration before Task 6; both live tiers stay disabled until hardware evidence passes. [Historical review outcomes](../reviews/services-projects-footer-plan-review-2026-09-30.md) are preserved. The Task 1 Governance PR packages its acceptance scaffold/receipt; PR #104 merged on 2026-10-05 and passed CI. W1 starts only after the Task 1 Governance PR is human-merged and W0 passes. From 2026-10-07 its remaining tasks follow [GOV-AGENT-USAGE](../governance/agent-usage.md): single-agent by default, a coordination-only orchestrator, and independent review by a separate session (see its [adoption decision](active/services-projects-footer-v1.md#important-implementation-decisions)). Production remains unchanged.
+- [PLAN-SPF-V1](active/services-projects-footer-v1.md): **APPROVED 2026-10-05 (revision 5)** under [owner authorization](../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05), after fresh independent GPT-6.1 Sol round 6 and correction verification returned zero unresolved findings. Ten ADE v2 task/PR packets retain the [approved Sonnet/Luna/Sol routing](active/services-projects-footer-v1.md#model-routing), exclusive ownership, Skills contract, wave checkpoints and strict behavioral TDD. Task 3 now owns the GRS Services test migration before Task 6; both live tiers stay disabled until hardware evidence passes. [Historical review outcomes](../reviews/services-projects-footer-plan-review-2026-09-30.md) are preserved. Human-merged task delivery and checkpoint evidence are recorded in Progress. From 2026-10-07 its remaining tasks follow [GOV-AGENT-USAGE](../governance/agent-usage.md): single-agent by default, a coordination-only orchestrator, and independent review by a separate session (see its [adoption decision](active/services-projects-footer-v1.md#important-implementation-decisions)). Current delivery and remaining gates are summarized below.
+
+The SPF [Progress](active/services-projects-footer-v1.md#progress) records human-merged Tasks 1–3 and 5, the Task 3/5 correction, and passing W0–W2. [PR #119](https://github.com/Furlanich/Portfolio/pull/119) merged the W2 record. The [W3 handoff](../reviews/services-projects-footer-acceptance-v1/w3-handoff.md) prepares the separate Sonnet 5.5 Task 4 session after the handoff PR merges; Task 4 and its post-merge W3 checkpoint remain pending, with existing owner acceptance items OPEN.
 
 ## Completed
 
