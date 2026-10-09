@@ -13,7 +13,7 @@ last_verified: 2026-10-09
 
 # Wave 3 preparation and Task 4 handoff
 
-The owner authorized a documentation-only W3 handoff PR on 2026-10-09, followed by Task 4 in a separate Claude Sonnet 5.5 session after this PR is human-merged. This record prepares that session. The [Task 4 packet](../../plans/active/services-projects-footer-v1.md#task-4-pr-4-build-the-shared-protected-mark-azure-conclusion) still owns implementation and acceptance. The plan's **W3 checkpoint remains pending** until the Footer PR merges and the orchestrator runs it on merged `main`.
+The owner authorized a documentation-only W3 handoff PR on 2026-10-09, followed by Task 4 in a separate Claude Sonnet 5.5 session after its human merge. This is the historical preparation record; startup observations and receipt below retain their original provenance. The [Task 4 packet](../../plans/active/services-projects-footer-v1.md#task-4-pr-4-build-the-shared-protected-mark-azure-conclusion) owns implementation and acceptance. At preparation, Task 4 and W3 were pending. Current status: PRs #121/#122 are merged and the [W3 checkpoint passed](w3-checkpoint.md) on `ddc78aed`; its receipt owns the releases and next-wave boundary.
 
 ## Verified start state
 

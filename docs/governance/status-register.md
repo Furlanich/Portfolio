@@ -49,7 +49,7 @@ related:
   - PLAN-ADE-AGENT-USAGE-V1
   - ADR-ADE-AGENT-USAGE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-07
+last_verified: 2026-10-09
 ---
 
 # Product knowledge status register
@@ -60,7 +60,7 @@ last_verified: 2026-10-07
 
 ## Services, Projects and Footer — 2026-09-30
 
-**APPROVED:** [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) Revision 5 and linked exact bilingual copy, Atlas hierarchy, complete dossiers, definitive six-URL retirement, MPC on Founder, simplified capable-phone live field, protected whole-mark Azure Footer and bounded [RFC-SPF-REDESIGN-V1](../rfcs/services-projects-footer-redesign-v1.md)/[runtime ADR](../decisions/connected-studio-page-runtime.md) exceptions. Owner explicitly authorized ADE v2 planning/independent review and approved the plan's [Sonnet/Luna/Sol model routing](../plans/active/services-projects-footer-v1.md#model-routing). **APPROVED 2026-10-05** ([PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md), revision 5), under [owner authorization](../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05), after fresh independent GPT-6.1 Sol round 6 and correction verification returned zero unresolved findings. Revision 5 resolves final review findings SPF-FINAL-01 to SPF-FINAL-04; both live tiers remain disabled in merged builds until their hardware gates pass. Task 1 packages its acceptance scaffold/receipt in a new Governance PR; PR #104 merged on 2026-10-05 and passed CI. W1 starts only after the Task 1 Governance PR is human-merged and W0 passes. A supplemental review of revision 3 returned NOT READY; revision 4 addresses it and records owner decisions OD-1 to OD-4 (Home Founder plate and Home copy are non-goals; slow-phone handling is a global live policy; the owner performs device/screen-reader gates, with phones static until they pass). Production is unchanged; human governance/implementation merges remain mandatory. Physical-device, cross-browser, screen-reader and production budget acceptance remain implementation gates, not prototype-derived PASS.
+**APPROVED:** [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) Revision 5 and exact bilingual copy, Atlas hierarchy, complete dossiers, six-URL retirement, MPC on Founder, protected whole-mark Azure Footer and bounded [RFC-SPF-REDESIGN-V1](../rfcs/services-projects-footer-redesign-v1.md)/[runtime ADR](../decisions/connected-studio-page-runtime.md) exceptions. [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md) revision 5 was approved 2026-10-05 after final independent review; Progress preserves review history, OD-1–OD-4, routing and human merges. Current delivery: Tasks 1–5 and corrections merged, W0–W3 passed. The [W3 receipt](../reviews/services-projects-footer-acceptance-v1/w3-checkpoint.md) records fresh merged-main gates and serial lock releases; Task 4's rendered/baseline approval is in its receipt. W4 / Task 6 may start under its packet after provider verification/path acquisition. Both live tiers stay disabled. Task 3/5 owner acceptance, LOW preflight omission, remaining manual/hardware/screen-reader and final acceptance remain OPEN; no prototype/automated result supplies those approvals.
 
 This register summarizes status. Detailed requirements remain authoritative in their owning documents.
 
