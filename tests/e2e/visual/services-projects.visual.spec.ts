@@ -22,6 +22,9 @@ for (const { name, route } of pages) {
       // whichever slice sits behind each plate. Hiding the layer leaves the same Abyss html background and
       // makes the plates the whole subject; the Ground has its own assertions. A no-op where no ground exists.
       await page.addStyleTag({ content: '[data-connected-ground]{display:none !important}' });
+      // Stabilize the one neighboring pixel included when main ends on a fractional CSS pixel.
+      // The Footer's own visual spec captures its real Azure surface without this separator.
+      await page.addStyleTag({ content: 'footer[data-site-footer] { border-top: 1px solid #D3D4D2 !important; }' });
       await expect(page.locator('main')).toHaveScreenshot(`${name}-${viewport.name}.png`, { animations: 'disabled' });
     });
   }

@@ -163,7 +163,8 @@
 }
 
 .link:hover {
-  color: var(--footer-accent);
+  /* The focus accent is too dark for normal text over the wide watermark. */
+  color: #FFFFFF;
 }
 
 .primaryAction:focus-visible,
@@ -260,7 +261,7 @@
     --watermark-size: 26rem;
 
     left: auto;
-    right: -2.5rem;
+    right: 0;
     top: 2.25rem;
     opacity: 0.085;
   }
@@ -278,9 +279,17 @@
   }
 
   .watermark {
+    /* Keep the smaller complete mark clear of the viewport edge and utility controls. */
+    top: 7rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .watermark {
     --watermark-size: 38.75rem;
 
     right: -4.3rem;
+    top: 2.25rem;
   }
 }
 
