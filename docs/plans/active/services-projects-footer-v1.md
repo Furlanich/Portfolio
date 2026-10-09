@@ -16,7 +16,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-10-08
+last_verified: 2026-10-09
 ---
 
 # Services, Projects and Footer v1 Implementation Plan
@@ -993,6 +993,10 @@ Documentation impact: <records updated in this PR>
   - An earlier full run on the same SHA (2026-10-07) had one failure out of 1602 tests: `immersive-home.spec.ts:388`, under SwiftShader without the override. Its only error was the `next dev` hot-reload WebSocket failing with `net::ERR_NO_BUFFER_SPACE` after 48 minutes on Windows. Under `systematic-debugging`, that spec file passed 24/24 in isolation. The complete rerun above, sampled every 60 seconds, peaked at 839 TCP connections (711 in TIME_WAIT) against the 16,384-port dynamic range, with a non-paged pool of 784–944 MB. The failure did not recur, and no product or test path was changed.
   - Lock releases: Task 3 releases ROUTE-CUTOVER, LOCALE-CONTROL, PUBLIC-EVIDENCE and VISUAL-BASELINES (Projects and Founder subtrees). Task 5 releases CONNECTED-ENGINE. SERVICES and CONNECTED-GROUND become available to Task 6. The Task 4 blocks of SHARED-TESTS become available to Task 4. Whole-file ownership of `tests/e2e/marketing-services.spec.ts` transfers to Task 6, per the inventory.
   - W3 (Task 4) may start. Under the [ADE-AGENT-USAGE adoption](#important-implementation-decisions), it starts as its own top-level Claude Sonnet 5.5 session in `.worktrees/spf-4`. Full Task 3/5 owner acceptance, the disclosed LOW preflight omission and owner rendered/hardware approval remain OPEN. Both live-policy values stay false.
+
+- 2026-10-09: The owner authorized **W3 handoff preparation only**, with Task 4 implementation in a separate top-level Claude Sonnet 5.5 session after the preparation PR is human-merged. The OpenAI Codex GPT-6 primary session is coordination-only for the Footer packet (exact provider model identifier/settings are not exposed); `SINGLE_AGENT`, 0 subagents. Preparation starts from merged `main` / `origin/main` at `39c56466` ([W2 record PR #119](https://github.com/Furlanich/Portfolio/pull/119), merged 2026-10-08; `validate` and `browser` CI passed). PLAN-RECORD and the handoff/index documentation are acquired in `.worktrees/spf-w3-handoff`, branch `codex/spf-w3-handoff`; no Task 4 implementation locks are acquired. The [W3 startup handoff](../../reviews/services-projects-footer-acceptance-v1/w3-handoff.md) records the released Task 4 paths, observed consumers, provider re-verification, startup prompt and remaining gates. Task 4 is not started, and the W3 checkpoint remains pending until its implementation PR merges. Existing owner acceptance OPEN items and both false live-policy values are preserved. Fresh preparation validation, separate-session independent review and the preparation PR's human merge are pending.
+
+- 2026-10-09: W3 preparation's fresh local checks passed in `.worktrees/spf-w3-handoff`: locked `npm ci` exit 0; `npm run validate` exit 0 (304 Markdown files, 104 IDs, 38 Skills; 439/439 Node tests; lint 0 errors / 282 warnings in unchanged vendored scripts; typecheck and root build pass); root `verify:static-export` passed for 14 routes. Initial sandbox filesystem EPERM / localhost EACCES failures were resolved by running the same commands outside the sandbox, without code or assertion changes. Node module-type and stale Browserslist notices are retained as notices. The complete documentation diff was self-reviewed; no implementation path, runtime policy or baseline changed. Preparation locks are released with the committed handoff; separate-session independent review, new PR CI and human merge remain OPEN. Task 4 acquisition and the W3 checkpoint are still pending.
 
 ## Important implementation decisions
 
