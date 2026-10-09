@@ -1,7 +1,13 @@
 import Link from 'next/link';
-import { BrandSignature } from '@/components/brand/BrandSignature';
 import type { FoundationNavigationPaths } from '@/lib/foundation-navigation';
+import { FooterBrandSignature, FooterMarkStrokes } from '@/components/foundation/FooterBrandSignature';
 import { LanguageSwitch } from '@/components/foundation/LanguageSwitch';
+import {
+  getDirectChannelText,
+  getFooterConclusionContent,
+  resolveFooterLocale,
+} from '@/components/foundation/footer-content';
+import styles from '@/components/foundation/site-footer.module.css';
 import type {
   ContactAction,
   ExternalLink,
@@ -15,60 +21,89 @@ interface SiteFooterProps {
   paths: FoundationNavigationPaths;
 }
 
+// PLAN-SPF-V1 Task 4 / PC-4: the shared Azure conclusion, in DOM and visual order -- signature,
+// invitation, direct contact, a divider, Explore and direct accountability, a divider, the utility row.
+// The props are the ones every route page already passes: destination labels and hrefs come from them,
+// the approved conclusion copy from footer-content.ts, and the locale from the typed alternate one.
 export function SiteFooter({ contactActions, founderLinks, labels, paths }: SiteFooterProps) {
   const copyrightYear = new Date().getFullYear();
+  const content = getFooterConclusionContent(resolveFooterLocale(paths.alternateLocale));
+  const whatsapp = contactActions.find((action) => action.kind === 'whatsapp');
+  const directChannels = contactActions.filter((action) => action.kind !== 'whatsapp');
 
   return (
-    <footer className="border-t border-foundation-border bg-foundation-surface">
-      <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-5 py-12 md:grid-cols-3 md:px-8 lg:px-12">
-        <div>
-          <BrandSignature href={paths.home} />
-          <p className="mt-4 text-sm leading-6 text-foundation-muted">{labels.location}</p>
+    <footer data-site-footer className={styles.footer}>
+      <div className={styles.inner}>
+        <FooterBrandSignature href={paths.home} />
+
+        <div className={styles.conclusion}>
+          <div className={styles.invitation}>
+            <h2 className={styles.headline}>{content.headline}</h2>
+            <p className={styles.introduction}>{content.introduction}</p>
+            {whatsapp ? (
+              <a href={whatsapp.href} className={styles.primaryAction}>{content.whatsappAction}</a>
+            ) : null}
+          </div>
+
+          <div className={styles.direct}>
+            {/* The complete static watermark, behind the right-hand groups. Decorative: hidden from
+                assistive technology, pointer-inert and never animated. */}
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 256 256"
+              data-footer-watermark
+              className={styles.watermark}
+            >
+              <FooterMarkStrokes />
+            </svg>
+            <h3 className={styles.groupHeading}>{content.directContactHeading}</h3>
+            <ul className={styles.list}>
+              {directChannels.map((action) => (
+                <li key={action.kind}>
+                  <a href={action.href} className={`${styles.link} ${styles.channel}`}>{getDirectChannelText(action)}</a>
+                </li>
+              ))}
+              <li>
+                <Link href={paths.contact} className={`${styles.link} ${styles.channel}`}>{content.contactRouteAction}</Link>
+              </li>
+            </ul>
+            <p className={styles.location}>{content.locationAccountability}</p>
+          </div>
         </div>
 
-        <nav aria-label={labels.navigation}>
-          <h2 className="text-sm font-semibold text-foundation-ink">{labels.navigation}</h2>
-          <ul className="mt-3 grid gap-2 text-sm font-semibold text-foundation-muted">
-            <li><Link href={paths.services} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.services}</Link></li>
-            <li><Link href={paths.projects} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.projects}</Link></li>
-            <li><Link href={paths.process} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.process}</Link></li>
-            <li><Link href={paths.studio} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.studio}</Link></li>
-            <li><Link href={paths.contact} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.contact}</Link></li>
-            <li><Link href={paths.privacy} className="inline-flex min-h-11 items-center hover:text-foundation-action">{labels.privacy}</Link></li>
-          </ul>
-        </nav>
+        <div className={styles.directory}>
+          <nav aria-labelledby="site-footer-explore">
+            <h3 id="site-footer-explore" className={`${styles.groupHeading} ${styles.directoryHeading}`}>{content.exploreHeading}</h3>
+            <ul className={`${styles.list} ${styles.inline}`}>
+              <li><Link href={paths.services} className={styles.link}>{labels.services}</Link></li>
+              <li><Link href={paths.projects} className={styles.link}>{labels.projects}</Link></li>
+              <li><Link href={paths.process} className={styles.link}>{labels.process}</Link></li>
+              <li><Link href={paths.studio} className={styles.link}>{labels.studio}</Link></li>
+            </ul>
+          </nav>
 
-        <div>
-          <h2 className="text-sm font-semibold text-foundation-ink">{labels.professional}</h2>
-          <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-foundation-muted">
-            <li>
-              <Link href={paths.founder} className="inline-flex min-h-11 items-center hover:text-foundation-action">
-                {labels.founder}
-              </Link>
-            </li>
-            {founderLinks.map((link) => (
-              <li key={link.href}>
-                <a href={link.href} className="inline-flex min-h-11 items-center hover:text-foundation-action">{link.label}</a>
-              </li>
-            ))}
-          </ul>
-          <h3 className="mt-6 text-sm font-semibold text-foundation-ink">{labels.directContact}</h3>
-          <ul className="mt-3 grid gap-2 text-sm text-foundation-muted">
-            {contactActions.map((action) => (
-              <li key={action.kind}>
-                <a href={action.href} className="inline-flex min-h-11 items-center hover:text-foundation-action">{action.label}</a>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <h3 className={`${styles.groupHeading} ${styles.directoryHeading}`}>{content.accountabilityHeading}</h3>
+            <ul className={`${styles.list} ${styles.inline}`}>
+              <li><Link href={paths.founder} className={styles.link}>{labels.founder}</Link></li>
+              {founderLinks.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} className={styles.link}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-foundation-border pt-6 md:col-span-3 md:flex-row md:items-center md:justify-between">
+        <div className={styles.utility}>
+          <p className={styles.copyright}>© {copyrightYear} FURLANICH</p>
+          <Link href={paths.privacy} className={styles.link}>{labels.privacy}</Link>
           <LanguageSwitch
             alternateHref={paths.alternateHref}
             alternateLocale={paths.alternateLocale}
             label={labels.languageSwitch}
           />
-          <p className="text-sm text-foundation-muted">© {copyrightYear} FURLANICH</p>
         </div>
       </div>
     </footer>

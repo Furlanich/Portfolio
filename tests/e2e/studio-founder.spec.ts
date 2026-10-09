@@ -18,7 +18,7 @@ const studioCases = [
     navigationLabel: 'Navegación principal',
     studioLabel: 'El estudio',
     menuLabel: 'Abrir navegación principal',
-    professionalLabel: 'Enlaces profesionales',
+    accountabilityLabel: 'Responsabilidad directa',
   },
   {
     locale: 'English',
@@ -34,7 +34,7 @@ const studioCases = [
     navigationLabel: 'Primary navigation',
     studioLabel: 'About',
     menuLabel: 'Open primary navigation',
-    professionalLabel: 'Professional links',
+    accountabilityLabel: 'Direct accountability',
   },
 ] as const;
 
@@ -86,10 +86,10 @@ for (const studioCase of studioCases) {
     );
   });
 
-  test(`${studioCase.locale} footer keeps Founder distinct beside professional links`, async ({ page }) => {
+  test(`${studioCase.locale} footer keeps Founder distinct beside the professional profiles under direct accountability`, async ({ page }) => {
     await page.goto(appUrl(studioCase.route));
     const footer = page.getByRole('contentinfo');
-    await expect(footer.getByRole('heading', { name: studioCase.professionalLabel })).toBeVisible();
+    await expect(footer.getByRole('heading', { name: studioCase.accountabilityLabel })).toBeVisible();
     await expect(footer.getByRole('link', { name: 'Samuel Furlanich' })).toHaveAttribute(
       'href',
       appPathname(studioCase.founderRoute),

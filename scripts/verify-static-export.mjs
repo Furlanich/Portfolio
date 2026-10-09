@@ -314,14 +314,14 @@ const chromeRequirements = {
     menu: 'Abrir navegación principal',
     subjects: ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio'],
     primary: 'Ver contacto',
-    footerLabels: ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio', 'Contacto', 'Privacidad'],
+    footerLabels: ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio', 'Información de contacto', 'Privacidad'],
   },
   en: {
     navigation: 'Primary navigation',
     menu: 'Open primary navigation',
     subjects: ['Services', 'Work', 'How we work', 'About'],
     primary: 'Contact options',
-    footerLabels: ['Services', 'Work', 'How we work', 'About', 'Contact', 'Privacy'],
+    footerLabels: ['Services', 'Work', 'How we work', 'About', 'Contact information', 'Privacy'],
   },
 };
 
