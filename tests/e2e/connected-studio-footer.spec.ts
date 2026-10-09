@@ -290,67 +290,142 @@ test('the watermark is one static, decorative, pointer-inert mark that sits behi
   expect(whatsappBox.y + whatsappBox.height).toBeLessThan(compact.rect.top);
 });
 
+async function footerContrastFailures(page: Page) {
+  return page.evaluate(() => {
+    const footer = document.querySelector<HTMLElement>('footer[data-site-footer]')!;
+    const watermark = footer.querySelector<SVGElement>('[data-footer-watermark]')!;
+    const parse = (value: string) => {
+      const channels = value.match(/[\d.]+/g)!.map(Number);
+      return { r: channels[0], g: channels[1], b: channels[2], a: channels[3] ?? 1 };
+    };
+    const luminance = ({ r, g, b }: { r: number; g: number; b: number }) => {
+      const linear = [r, g, b].map((channel) => {
+        const unit = channel / 255;
+        return unit <= 0.03928 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+    };
+    const background = parse(getComputedStyle(footer).backgroundColor);
+    const stroke = parse(getComputedStyle(watermark).color);
+    const opacity = Number(getComputedStyle(watermark).opacity);
+    // Worst case: the brightest background a glyph can sit on is the Azure with the watermark stroke
+    // composited at its opacity.
+    const under = {
+      r: background.r * (1 - opacity) + stroke.r * opacity,
+      g: background.g * (1 - opacity) + stroke.g * opacity,
+      b: background.b * (1 - opacity) + stroke.b * opacity,
+    };
+    const results: string[] = [];
+    const walker = document.createTreeWalker(footer, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (!node.textContent?.trim()) continue;
+      const element = node.parentElement!;
+      if (watermark.contains(element)) continue;
+      const computed = getComputedStyle(element);
+      const color = parse(computed.color);
+      const size = parseFloat(computed.fontSize);
+      const weight = Number(computed.fontWeight);
+      const large = size >= 24 || (size >= 18.66 && weight >= 700);
+      // Text on its own opaque surface (the Bone button) is measured against that surface; every
+      // other glyph sits on the Footer, so it is measured against the watermarked worst case.
+      let surface = under;
+      for (let ancestor: HTMLElement | null = element; ancestor && ancestor !== footer; ancestor = ancestor.parentElement) {
+        const fill = parse(getComputedStyle(ancestor).backgroundColor);
+        if (fill.a === 1) {
+          surface = fill;
+          break;
+        }
+      }
+      const lighter = Math.max(luminance(color), luminance(surface));
+      const darker = Math.min(luminance(color), luminance(surface));
+      const ratio = (lighter + 0.05) / (darker + 0.05);
+      if (ratio < (large ? 3 : 4.5)) results.push(`${node.textContent.trim().slice(0, 40)} ${ratio.toFixed(2)}`);
+    }
+    return results;
+  });
+}
+
 test('every text element over the watermark measures at least 4.5:1 (3:1 for large text)', async ({ page }) => {
   for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }, { width: 320, height: 700 }]) {
     await page.setViewportSize(viewport);
     for (const locale of locales) {
       await openFooter(page, stableRoutes.services[locale]);
-      const failures = await page.evaluate(() => {
-        const footer = document.querySelector<HTMLElement>('footer[data-site-footer]')!;
-        const watermark = footer.querySelector<SVGElement>('[data-footer-watermark]')!;
-        const parse = (value: string) => {
-          const channels = value.match(/[\d.]+/g)!.map(Number);
-          return { r: channels[0], g: channels[1], b: channels[2], a: channels[3] ?? 1 };
-        };
-        const luminance = ({ r, g, b }: { r: number; g: number; b: number }) => {
-          const linear = [r, g, b].map((channel) => {
-            const unit = channel / 255;
-            return unit <= 0.03928 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4;
-          });
-          return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
-        };
-        const background = parse(getComputedStyle(footer).backgroundColor);
-        const stroke = parse(getComputedStyle(watermark).color);
-        const opacity = Number(getComputedStyle(watermark).opacity);
-        // Worst case: the brightest background a glyph can sit on is the Azure with the watermark stroke
-        // composited at its opacity.
-        const under = {
-          r: background.r * (1 - opacity) + stroke.r * opacity,
-          g: background.g * (1 - opacity) + stroke.g * opacity,
-          b: background.b * (1 - opacity) + stroke.b * opacity,
-        };
-        const results: string[] = [];
-        const walker = document.createTreeWalker(footer, NodeFilter.SHOW_TEXT);
-        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-          if (!node.textContent?.trim()) continue;
-          const element = node.parentElement!;
-          if (watermark.contains(element)) continue;
-          const computed = getComputedStyle(element);
-          const color = parse(computed.color);
-          const size = parseFloat(computed.fontSize);
-          const weight = Number(computed.fontWeight);
-          const large = size >= 24 || (size >= 18.66 && weight >= 700);
-          // Text on its own opaque surface (the Bone button) is measured against that surface; every
-          // other glyph sits on the Footer, so it is measured against the watermarked worst case.
-          let surface = under;
-          for (let ancestor: HTMLElement | null = element; ancestor && ancestor !== footer; ancestor = ancestor.parentElement) {
-            const fill = parse(getComputedStyle(ancestor).backgroundColor);
-            if (fill.a === 1) {
-              surface = fill;
-              break;
-            }
-          }
-          const lighter = Math.max(luminance(color), luminance(surface));
-          const darker = Math.min(luminance(color), luminance(surface));
-          const ratio = (lighter + 0.05) / (darker + 0.05);
-          if (ratio < (large ? 3 : 4.5)) results.push(`${node.textContent.trim().slice(0, 40)} ${ratio.toFixed(2)}`);
-        }
-        return results;
-      });
-      expect(failures, `${locale} ${viewport.width}px`).toEqual([]);
+      expect(await footerContrastFailures(page), `${locale} ${viewport.width}px`).toEqual([]);
     }
   }
 });
+
+for (const width of [768, 1440]) {
+  test(`hovered Footer links retain text contrast over the watermark at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    for (const locale of locales) {
+      const footer = await openFooter(page, stableRoutes.services[locale]);
+      for (const link of await footer.locator('a').all()) {
+        await link.hover();
+        expect(await footerContrastFailures(page), `${locale}: ${await link.innerText()}`).toEqual([]);
+      }
+    }
+  });
+}
+
+// Project the canonical stroked silhouette, including butt endpoints and miter joins. SVG getBBox()
+// excludes the stroke in supported browsers, so checking its box alone misses the protected clear space.
+function canonicalSilhouette() {
+  const halfBand = Number(canonicalMark.match(/stroke-width="([\d.]+)"/)![1]) / 2;
+  const outline: { x: number; y: number }[] = [];
+  for (const points of canonicalPoints) {
+    const vertices = points.split(' ').map(point => {
+      const [x, y] = point.split(',').map(Number);
+      return { x, y };
+    });
+    const normals = vertices.slice(1).map((end, index) => {
+      const start = vertices[index];
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      const length = Math.hypot(dx, dy);
+      return { x: -dy / length, y: dx / length };
+    });
+    for (const [index, vertex] of vertices.entries()) {
+      const previous = normals[index - 1];
+      const next = normals[index];
+      const divisor = previous && next ? 1 + previous.x * next.x + previous.y * next.y : 1;
+      const normal = previous && next
+        ? { x: (previous.x + next.x) / divisor, y: (previous.y + next.y) / divisor }
+        : previous ?? next;
+      for (const side of [-1, 1]) outline.push({ x: vertex.x + side * halfBand * normal.x, y: vertex.y + side * halfBand * normal.y });
+    }
+  }
+  return {
+    left: Math.min(...outline.map(point => point.x)),
+    right: Math.max(...outline.map(point => point.x)),
+    top: Math.min(...outline.map(point => point.y)),
+    bottom: Math.max(...outline.map(point => point.y)),
+    band: halfBand * 2,
+  };
+}
+
+for (const width of [320, 390, 768, 1024, 1400, 1440]) {
+  test(`the watermark keeps protected clear space within the Footer at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    const silhouette = canonicalSilhouette();
+    for (const locale of locales) {
+      const footer = await openFooter(page, stableRoutes.services[locale]);
+      const frame = (await footer.boundingBox())!;
+      const svg = (await footer.locator('[data-footer-watermark]').boundingBox())!;
+      const scale = svg.width / 256;
+      const clear = silhouette.band * scale;
+      expect(svg.x + silhouette.left * scale - clear, `${locale} left clear space`).toBeGreaterThanOrEqual(frame.x - 1);
+      expect(svg.x + silhouette.right * scale + clear, `${locale} right clear space`).toBeLessThanOrEqual(frame.x + frame.width + 1);
+      expect(svg.y + silhouette.top * scale - clear, `${locale} top clear space`).toBeGreaterThanOrEqual(frame.y - 1);
+      expect(svg.y + silhouette.bottom * scale + clear, `${locale} bottom clear space`).toBeLessThanOrEqual(frame.y + frame.height + 1);
+      if (width >= 768) {
+        const language = (await footer.locator('a[hreflang]').boundingBox())!;
+        expect(svg.y + silhouette.bottom * scale, `${locale} watermark ends before the language control`).toBeLessThanOrEqual(language.y + 1);
+      }
+    }
+  });
+}
 
 test('the long email wraps without clipping and nothing overflows at 320px', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
@@ -381,19 +456,19 @@ test('the long email wraps without clipping and nothing overflows at 320px', asy
 
 // Visual matrix (packet): every host role, both locales, at 390 and 1440. These are layout facts, not
 // pixels: the page never scrolls sideways and the composition reads in the specified direction.
-test('no host page overflows sideways with the footer at 390px and 1440px', async ({ page }) => {
-  for (const width of [390, 1440]) {
-    await page.setViewportSize({ width, height: 900 });
-    for (const host of hosts) {
-      for (const locale of locales) {
+for (const width of [390, 1440]) {
+  for (const locale of locales) {
+    test(`no host page overflows sideways with the footer: ${locale} at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      for (const host of hosts) {
         await openFooter(page, host.route[locale]);
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
         expect(overflow, `${locale} ${host.role} at ${width}px`).toBeLessThanOrEqual(0);
         await expect(footerOf(page).getByRole('heading', { level: 2 })).toBeVisible();
       }
-    }
+    });
   }
-});
+}
 
 // The Services host at 320, 390, 768, 1024 and 1440: stacked below 768px, two columns from 768px up.
 for (const width of [320, 390, 768, 1024, 1440]) {

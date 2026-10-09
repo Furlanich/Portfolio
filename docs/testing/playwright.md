@@ -10,7 +10,7 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-07
+last_verified: 2026-10-09
 ---
 
 # Playwright QA
@@ -101,7 +101,7 @@ Check console errors, page errors, visible outcomes, keyboard activation/focus, 
 Run it with `npx playwright test --project=immersive-chromium tests/e2e/sky-chart-acceptance.spec.ts`, and add `NEXT_PUBLIC_BASE_PATH=/Portfolio` for the base-path group. Notes learned while running it:
 
 - The file sets a top-level `video: 'off'`. With the page-video recorder on, two full-page navigations at once can hang under SwiftShader.
-- Under two or more local workers, the `next dev` parallel-compile race and load-sensitive journeys can fail and then pass serially. `--workers=1` is the safe local setting. CI uses two workers and one retry, and its browser job has a 35-minute overall budget (a runner-resource limit); the per-test and hook 30-second timeouts and the 5-second `expect` timeout are unchanged.
+- Under two or more local workers, the `next dev` parallel-compile race and load-sensitive journeys can fail and then pass serially. `--workers=1` is the safe local setting. CI uses two workers and one retry, and its browser job has a 45-minute overall budget (a runner-resource limit), including setup, failure evidence and cache cleanup. PR #122's complete matrix passed in 34 minutes but exhausted the previous 35-minute job limit during cleanup; the Task 4 receipt records that capacity finding. The per-test and hook 30-second timeouts and the 5-second `expect` timeout are unchanged.
 - From Git Bash on Windows, set `MSYS2_ENV_CONV_EXCL='NEXT_PUBLIC_BASE_PATH'`, or run from PowerShell, so the base path is not rewritten into a Windows path.
 - Firefox and WebKit never activate the runtime in headless automation, so a real canvas in those engines is covered only by the manual protocol in the [acceptance record](../reviews/sky-chart-acceptance-v2/index.md).
 

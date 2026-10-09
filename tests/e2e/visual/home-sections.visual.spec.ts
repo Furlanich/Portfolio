@@ -49,6 +49,9 @@ for (const locale of locales) {
       for (const section of sections) {
         test(`${section} visual baseline`, async ({ page }) => {
           const id = section === 'process' ? locale.processId : section;
+          // A fractional section edge includes one pixel of the neighboring Footer. Keep that
+          // separator stable; the actual Azure conclusion has its own unmodified capture.
+          await page.addStyleTag({ content: 'footer[data-site-footer] { border-top: 1px solid #D3D4D2 !important; }' });
           await expect(page.locator(`main section#${id}`)).toHaveScreenshot(`home-${section}-${locale.name}-${viewport.width}.png`, {
             animations: 'disabled',
           });
