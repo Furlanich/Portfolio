@@ -10,7 +10,7 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - DESIGN-SPF-V1
   - PLAN-SPF-V1
-last_verified: 2026-10-06
+last_verified: 2026-10-09
 ---
 
 # Visual regression policy
@@ -51,8 +51,10 @@ PLAN-SPF-V1 assigns these baselines to one task at a time, in the order Task 3 (
 | Projects, wide and compact | `services-projects.visual.spec.ts`: `projects-wide` (1440) and `projects-compact` (390), Spanish, `visual-chromium`, win32 and linux | `main` of the Projects index: the introduction plate, the capability legend, both complete dossiers and the publication note | Task 3 | Refreshed for the dossier redesign. **PENDING owner approval** on both platforms; the Linux files are adopted from CI `actual` artifacts only after that approval |
 | Project detail, wide and compact | `project-detail-wide` and `project-detail-compact`, win32 and linux | The retired `/proyectos/general-reservation-system/` page | Task 3 | **Deleted** with the route (PLAN-SPF-V1 Task 3). No detail route exists to capture |
 | Founder, wide and compact | `founder.visual.spec.ts`: `founder-{spanish,english}-{wide,compact}`, win32 and linux | `main` of the Founder page, whose MPC action is now the approved external source | Task 3 | Refreshed for the MPC source action. **PENDING owner approval** on both platforms |
+| Footer, wide and compact | `connected-studio-footer.visual.spec.ts`: `footer-wide` (1440) and `footer-compact` (390), Spanish, on the Services host, `visual-chromium`, win32 and linux | `footer[data-site-footer]`: the whole shared Azure conclusion (signature, invitation, direct contact, Explore and direct accountability, utility row, static watermark) | Task 4 | New. **PENDING owner approval**: the win32 candidates are committed; the Linux files are adopted from CI `actual` artifacts only after the owner approves the expected, actual and diff |
 | Services, wide and compact | `services-wide`, `services-compact` | `main` of the Services page | Task 6 | Unchanged by Task 3 |
 
 - The Projects capture hides the connected ground layer (`[data-connected-ground]`) before the screenshot. The ground is viewport-fixed, so a capture taller than the viewport would contain whichever slice sits behind each plate. The page keeps the same Abyss `html` background, so the plates are the whole subject. The ground has its own browser assertions in `connected-studio-static.spec.ts`, and the poster joins it in Task 8. The same step is a no-op on the Services page.
+- The Footer capture hides the fixed App Bar (`header[data-app-bar]`) for the capture only: at 390px the Footer is taller than the viewport, so the element screenshot is taken in tiles and the bar would land at a different offset in each. The bar has its own baselines. The Footer is an opaque surface, so it needs no ground or poster handling. The Footer's semantic, contrast, overflow, forced-colors and no-JavaScript checks are browser assertions in `connected-studio-footer.spec.ts`, not pixels.
 - Reduced motion is on for the `visual-chromium` project, so there is no hover state, zoom or canvas in any capture.
 - Windows baselines are captured locally. Linux baselines are adopted from the failed CI run's `*-actual.png` files for exactly these cases and never in bulk.
