@@ -456,19 +456,19 @@ test('the long email wraps without clipping and nothing overflows at 320px', asy
 
 // Visual matrix (packet): every host role, both locales, at 390 and 1440. These are layout facts, not
 // pixels: the page never scrolls sideways and the composition reads in the specified direction.
-test('no host page overflows sideways with the footer at 390px and 1440px', async ({ page }) => {
-  for (const width of [390, 1440]) {
-    await page.setViewportSize({ width, height: 900 });
-    for (const host of hosts) {
-      for (const locale of locales) {
+for (const width of [390, 1440]) {
+  for (const locale of locales) {
+    test(`no host page overflows sideways with the footer: ${locale} at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      for (const host of hosts) {
         await openFooter(page, host.route[locale]);
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
         expect(overflow, `${locale} ${host.role} at ${width}px`).toBeLessThanOrEqual(0);
         await expect(footerOf(page).getByRole('heading', { level: 2 })).toBeVisible();
       }
-    }
+    });
   }
-});
+}
 
 // The Services host at 320, 390, 768, 1024 and 1440: stacked below 768px, two columns from 768px up.
 for (const width of [320, 390, 768, 1024, 1440]) {
