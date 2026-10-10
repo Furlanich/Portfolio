@@ -479,7 +479,11 @@ test.describe('catalogue hover and focus', () => {
       expect(arrowShift).toBeLessThanOrEqual(3.01);
     });
 
-    test(`${copy.locale} Services catalogue shows the same affordance on keyboard focus-visible`, async ({ page }) => {
+    test(`${copy.locale} Services catalogue shows the same affordance on keyboard focus-visible`, async ({ page, browserName }) => {
+      // Playwright's WebKit never moves focus to a link on Tab (it reaches only the body and the dev
+      // overlay), a host Safari link-tabbing policy rather than a page behavior; Chromium and Firefox
+      // walk the real tab order. See "Mobile WebKit link tabbing" in docs/testing/playwright.md.
+      test.skip(browserName === 'webkit', 'WebKit does not Tab to links by default on this host');
       await page.goto(appUrl(copy.route));
       const card = catalogueLink(page, copy, 'consulting');
       await card.scrollIntoViewIfNeeded();
