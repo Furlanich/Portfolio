@@ -20,9 +20,11 @@ const routes = [
   },
 ];
 
+const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+
 test('localized Services routes use the shared complete page composition', () => {
   for (const route of routes) {
-    const source = fs.readFileSync(path.join(root, route.source), 'utf8');
+    const source = read(route.source);
 
     assert.match(source, /import \{ ServicesPage \} from ['"]@\/components\/services\/ServicesPage['"]/);
     assert.match(source, new RegExp(route.contentImport.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
@@ -32,24 +34,62 @@ test('localized Services routes use the shared complete page composition', () =>
   }
 });
 
-test('Services T4 composition uses plain buyer-evaluation content instead of package cards', () => {
-  const files = [
+test('the route shells stay compatible: Header, the shared Footer and no new props on the page', () => {
+  for (const route of routes) {
+    const source = read(route.source);
+    assert.match(source, /<SiteHeader/);
+    assert.match(source, /<SiteFooter/);
+    assert.doesNotMatch(source, /<ServicesPage[^>]*\b(?:route|ground|capabilityWords)\b/);
+  }
+});
+
+test('Services composes the connected ground, the catalogue, the chapters and the working boundaries without package cards', () => {
+  const page = read('components/services/ServicesPage.tsx');
+  assert.match(page, /ConnectedStudioGround/);
+  assert.match(page, /route="services"/);
+  assert.match(page, /data-connected-page/);
+  assert.match(page, /data-connected-route="services"/);
+  assert.match(page, /ServiceCatalogue/);
+  assert.match(page, /CONNECTED_CAPABILITY_WORDS/);
+  // The reading masks, the Pause mount and the legend live in the composed parts.
+  const parts = ['ServicesIntroduction', 'ServiceCatalogue', 'ServiceSection', 'ServicesPrinciples', 'ServicesFinalCta']
+    .map((name) => read('components/services/' + name + '.tsx'))
+    .join('\n');
+  assert.match(parts, /data-connected-reading-mask/);
+  assert.match(parts, /connected-pause-services/);
+  assert.match(parts, /formatCapabilityLegend/);
+
+  for (const file of [
+    'components/services/ServiceCatalogue.tsx',
     'components/services/ServiceSection.tsx',
     'components/services/ServicesPrinciples.tsx',
     'components/services/ServicesFinalCta.tsx',
-  ];
-
-  for (const file of files) {
-    const source = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.doesNotMatch(source, /CommercialContentCard|commercialEqualHeightCardGrid/);
+    'components/services/ServicesIntroduction.tsx',
+  ]) {
+    assert.doesNotMatch(read(file), /CommercialContentCard|commercialEqualHeightCardGrid/, file);
   }
+});
 
-  const sectionSource = fs.readFileSync(path.join(root, files[0]), 'utf8');
-  assert.match(sectionSource, /content\.work/);
-  assert.match(sectionSource, /content\.startingPoint/);
-  assert.match(sectionSource, /content\.boundaries/);
-  assert.match(sectionSource, /evidenceHref/);
+test('the catalogue cards are native anchors with CSS-only hover: no pointer tracking, no press-scale', () => {
+  const catalogue = read('components/services/ServiceCatalogue.tsx');
+  assert.match(catalogue, /<a\b|<Link\b/);
+  assert.match(catalogue, /data-catalogue-arrow/);
+  assert.doesNotMatch(catalogue, /'use client'|"use client"|useState|useEffect|onPointer|onMouse|mousemove|pointermove/);
 
-  const finalSource = fs.readFileSync(path.join(root, files[2]), 'utf8');
-  assert.doesNotMatch(finalSource, /responseStatement/);
+  const css = read('components/services/services.module.css');
+  assert.doesNotMatch(css, /transition:\s*all\b/);
+  assert.doesNotMatch(css, /:active\s*\{[^}]*scale\(/);
+  assert.match(css, /@media \(hover: hover\) and \(pointer: fine\)/);
+  assert.match(css, /prefers-reduced-motion/);
+  assert.match(css, /forced-colors/);
+  // The reading plates are opaque; no translucent plate fill lets scene paths show through paragraphs.
+  assert.doesNotMatch(css, /\.plate\s*\{[^}]*background(?:-color)?:\s*rgba\(/);
+});
+
+test('every Services component stays a Server Component and imports no runtime, storage or Three', () => {
+  for (const file of fs.readdirSync(path.join(root, 'components/services')).filter((name) => name.endsWith('.tsx'))) {
+    const source = read(path.join('components/services', file));
+    assert.doesNotMatch(source, /['"]use client['"]/, file);
+    assert.doesNotMatch(source, /from ['"]three['"]|localStorage|sessionStorage|window\./, file);
+  }
 });

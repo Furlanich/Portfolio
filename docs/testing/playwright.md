@@ -10,7 +10,7 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 ---
 
 # Playwright QA
@@ -60,6 +60,8 @@ Mobile WebKit link tabbing depends on host Safari Full Keyboard Access, so exact
 | `connected-studio-accessibility.spec.ts` | `accessibility-chromium` (matched by the existing unanchored `/accessibility\.spec\.ts/`) |
 | `connected-studio-production.spec.ts` | `connected-production-chromium`, defined only when `PLAYWRIGHT_SERVE_EXPORT=1` |
 | `visual/connected-studio-*.visual.spec.ts` | `visual-chromium` (matched by the existing visual pattern) |
+
+The Services spec (Task 6) asserts the catalogue, the chapters and the complete scoped boundaries with JavaScript disabled, including the approved D05 management-system/AI paragraph and the separate chatbot-and-agent scope sentence in both locales. `scripts/services-content.test.mjs` compares the management-system/AI paragraph directly with the owning Services copy table. Browser coverage then checks the wide composition (web as the single large left card), anchor landing below the App Bar, 320px / 200% zoom / landscape reflow, fine-pointer hover (lift and arrow ≤3px, 160–220ms explicit transitions), keyboard focus, reduced motion and axe. Hover cases skip, visibly, where the primary pointer is not a fine one. `marketing-services.spec.ts` keeps the buyer-evaluation flow and editorial order in every registered project.
 
 The navigation spec measures ordinary-anchor middle-click behavior in bounded setup only for middle-click journeys. Its observer regressions cover a canceled current-tab navigation followed by a new tab and rejection of a wrong destination. Journey destination assertions retain exact locale paths and fragments.
 
