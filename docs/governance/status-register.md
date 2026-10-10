@@ -49,7 +49,7 @@ related:
   - PLAN-ADE-AGENT-USAGE-V1
   - ADR-ADE-AGENT-USAGE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 ---
 
 # Product knowledge status register
@@ -60,7 +60,7 @@ last_verified: 2026-10-09
 
 ## Services, Projects and Footer — 2026-09-30
 
-**APPROVED:** [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) Revision 5 and exact bilingual copy, Atlas hierarchy, complete dossiers, six-URL retirement, MPC on Founder, protected whole-mark Azure Footer and bounded [RFC-SPF-REDESIGN-V1](../rfcs/services-projects-footer-redesign-v1.md)/[runtime ADR](../decisions/connected-studio-page-runtime.md) exceptions. [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md) revision 5 was approved 2026-10-05 after final independent review; Progress preserves review history, OD-1–OD-4, routing and human merges. Current delivery: Tasks 1–5 and corrections merged, W0–W3 passed. The [W3 receipt](../reviews/services-projects-footer-acceptance-v1/w3-checkpoint.md) records fresh merged-main gates and serial lock releases; Task 4's rendered/baseline approval is in its receipt. W4 / Task 6 may start under its packet after provider verification/path acquisition. Both live tiers stay disabled. Task 3/5 owner acceptance, LOW preflight omission, remaining manual/hardware/screen-reader and final acceptance remain OPEN; no prototype/automated result supplies those approvals.
+**APPROVED:** [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) Revision 5 and exact bilingual copy, Atlas hierarchy, complete dossiers, six-URL retirement, MPC on Founder, protected whole-mark Azure Footer and bounded [RFC-SPF-REDESIGN-V1](../rfcs/services-projects-footer-redesign-v1.md)/[runtime ADR](../decisions/connected-studio-page-runtime.md) exceptions. [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md) revision 5 was approved 2026-10-05 after final independent review; Progress preserves review history, OD-1–OD-4, routing and human merges. Current delivery: Tasks 1–6 and corrections merged, W0–W4 passed. The [W3 receipt](../reviews/services-projects-footer-acceptance-v1/w3-checkpoint.md) records fresh merged-main gates and serial lock releases; Task 4's rendered/baseline approval is in its receipt. The [W4 receipt](../reviews/services-projects-footer-acceptance-v1/w4-checkpoint.md) records the Atlas Services merge (PR #124), fresh merged-main gates and serial lock releases; W5 / Task 7 may start under its packet after provider verification/path acquisition. Both live tiers stay disabled. Task 3/5 owner acceptance, LOW preflight omission, remaining manual/hardware/screen-reader/real-zoom and final acceptance, and the OD-3 Home/Services wording difference, remain OPEN; no prototype/automated result supplies those approvals.
 
 This register summarizes status. Detailed requirements remain authoritative in their owning documents.
 

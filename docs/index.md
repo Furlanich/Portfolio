@@ -43,7 +43,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 ---
 
 # FURLANICH project knowledge
@@ -84,7 +84,7 @@ The [Services/Projects/Footer design](design/services-projects-footer-v1.md) fol
 
 [PLAN-SPF-V1](plans/active/services-projects-footer-v1.md) is **APPROVED 2026-10-05** ([owner authorization](reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05)). Fresh independent GPT-6.1 Sol round 6 and correction verification returned zero unresolved findings. Revision 5 closes the Services evidence-test ownership, premature live enablement, current-status synchronization and Home Founder architecture-summary findings; [Sonnet/Luna/Sol routing](plans/active/services-projects-footer-v1.md#model-routing) remains owner-approved. Historical review rounds are preserved. The historical approval and subsequent task delivery are recorded in Progress. Physical-device and owner acceptance remain OPEN where their receipts say so; the current wave status follows.
 
-Current execution: Tasks 1–5 and their corrections are human-merged, with W0–W3 passed. Task 4's Footer and correction merged through [PR #121](https://github.com/Furlanich/Portfolio/pull/121) and [PR #122](https://github.com/Furlanich/Portfolio/pull/122); its owner-approved rendering and Windows/Linux baseline adoption are in the receipt. The [fresh W3 receipt](reviews/services-projects-footer-acceptance-v1/w3-checkpoint.md) records merged source, all required gates, failed attempts/reruns and serial lock releases. W4 / Task 6 may start under its packet after provider verification and path acquisition; no Task 6 implementation or dispatch is claimed. See [Progress](plans/active/services-projects-footer-v1.md#progress) for the ledger. Existing manual/final acceptance remains OPEN; both connected live tiers stay disabled.
+Current execution: Tasks 1–6 and their corrections are human-merged, with W0–W4 passed. Task 4's Footer and correction merged through [PR #121](https://github.com/Furlanich/Portfolio/pull/121) and [PR #122](https://github.com/Furlanich/Portfolio/pull/122); its owner-approved rendering and Windows/Linux baseline adoption are in the receipt. The [fresh W3 receipt](reviews/services-projects-footer-acceptance-v1/w3-checkpoint.md) records merged source, all required gates, failed attempts/reruns and serial lock releases. Task 6 (the Atlas Services composition) merged through [PR #124](https://github.com/Furlanich/Portfolio/pull/124); the [fresh W4 receipt](reviews/services-projects-footer-acceptance-v1/w4-checkpoint.md) records merged source, all required gates, one cold-start failed attempt and the serial lock releases. W5 / Task 7 may start under its packet after provider verification and path acquisition; no Task 7 implementation or dispatch is claimed. See [Progress](plans/active/services-projects-footer-v1.md#progress) for the ledger. Existing manual/final acceptance remains OPEN; both connected live tiers stay disabled.
 
 Stage A preserves product and design knowledge, and Stage B adds the lightweight engineering harness. Stage C accepted the homepage-foundation localized-routing architecture in [`ADR-STATIC-LOCALIZED-ROUTING`](decisions/static-localized-routing.md); [`PLAN-HOMEPAGE-FOUNDATION`](plans/completed/homepage-foundation.md) records its completed four-PR delivery.
 

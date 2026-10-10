@@ -25,7 +25,7 @@ related:
   - RFC-ADE-AGENT-USAGE-V1
   - ADR-ADE-AGENT-USAGE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-09
+last_verified: 2026-10-10
 ---
 
 # Execution plans
@@ -39,7 +39,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 - [PLAN-SPF-V1](active/services-projects-footer-v1.md): **APPROVED 2026-10-05 (revision 5)** under [owner authorization](../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05), after fresh independent GPT-6.1 Sol round 6 and correction verification returned zero unresolved findings. Ten ADE v2 task/PR packets retain the [approved Sonnet/Luna/Sol routing](active/services-projects-footer-v1.md#model-routing), exclusive ownership, Skills contract, wave checkpoints and strict behavioral TDD. Task 3 now owns the GRS Services test migration before Task 6; both live tiers stay disabled until hardware evidence passes. [Historical review outcomes](../reviews/services-projects-footer-plan-review-2026-09-30.md) are preserved. Human-merged task delivery and checkpoint evidence are recorded in Progress. From 2026-10-07 its remaining tasks follow [GOV-AGENT-USAGE](../governance/agent-usage.md): single-agent by default, a coordination-only orchestrator, and independent review by a separate session (see its [adoption decision](active/services-projects-footer-v1.md#important-implementation-decisions)). Current delivery and remaining gates are summarized below.
 
-The SPF [Progress](active/services-projects-footer-v1.md#progress) records human-merged Tasks 1–5, corrections and passing W0–W3. Task 4 and its follow-up merged through [PR #121](https://github.com/Furlanich/Portfolio/pull/121) and [PR #122](https://github.com/Furlanich/Portfolio/pull/122). The [W3 receipt](../reviews/services-projects-footer-acceptance-v1/w3-checkpoint.md) records fresh merged-main gates and serial lock releases. W4 / Task 6 is available under its existing packet; no session is dispatched. Existing manual/final acceptance items remain OPEN, and both live tiers remain disabled.
+The SPF [Progress](active/services-projects-footer-v1.md#progress) records human-merged Tasks 1–6, corrections and passing W0–W4. Task 4 and its follow-up merged through [PR #121](https://github.com/Furlanich/Portfolio/pull/121) and [PR #122](https://github.com/Furlanich/Portfolio/pull/122). The [W3 receipt](../reviews/services-projects-footer-acceptance-v1/w3-checkpoint.md) records fresh merged-main gates and serial lock releases. Task 6 merged through [PR #124](https://github.com/Furlanich/Portfolio/pull/124); the [W4 receipt](../reviews/services-projects-footer-acceptance-v1/w4-checkpoint.md) records the gates and lock releases. W5 / Task 7 is available under its existing packet; no session is dispatched. Existing manual/final acceptance items remain OPEN, and both live tiers remain disabled.
 
 ## Completed
 
