@@ -194,8 +194,8 @@ test('keeps the approved minimum homepage and services copy', async () => {
   assert.equal(spanishHome.secondaryAction.routeId, 'services');
   assert.equal(englishHome.primaryAction.routeId, 'contact');
   assert.equal(englishHome.secondaryAction.routeId, 'services');
-  assert.equal(spanishServices.introduction.heading, 'Software para tu negocio');
-  assert.equal(englishServices.introduction.heading, 'Software for your business');
+  assert.equal(spanishServices.introduction.heading, 'Software para que el trabajo avance.');
+  assert.equal(englishServices.introduction.heading, 'Software that moves work forward.');
   assert.equal(spanishServices.services.length, 3);
   assert.equal(englishServices.services.length, 3);
   assert.equal(spanishServices.finalCta.action.routeId, 'contact');
