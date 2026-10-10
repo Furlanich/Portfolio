@@ -56,6 +56,10 @@ export async function expectStatic(page: Page, route: ConnectedRoute, settleMs =
   await page.waitForTimeout(settleMs);
   await expect(page.locator('canvas')).toHaveCount(0);
   await expect(pauseSlot(page, route).getByRole('button')).toHaveCount(0);
+  // The dev-only witness counts every start of the dynamic engine import, which a gated page never makes.
+  const reading = await readConnected(page);
+  expect(reading?.mode, 'diagnostics hook present on a static page').toBe('static');
+  expect(reading?.imports, 'no engine import was started').toBe(0);
 }
 
 /**

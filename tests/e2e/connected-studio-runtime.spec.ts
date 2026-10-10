@@ -3,6 +3,7 @@ import {
   connectedCanvas,
   enableLiveForTest,
   expectLive,
+  expectStatic,
   gotoConnected,
   pauseLabels,
   pauseSlot,
@@ -40,5 +41,21 @@ test.describe('connected runtime', () => {
       .not.toBe(first!.idleAngleRadians);
     const later = await readConnected(page);
     expect(later!.nodes.map((node) => node.position)).toEqual(first!.nodes.map((node) => node.position));
+  });
+
+  test('reduced motion requests no engine and keeps the static background', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'en');
+    await expectStatic(page, 'services');
+  });
+
+  test('Save-Data requests no engine and keeps the static background', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'connection', { value: { saveData: true }, configurable: true });
+    });
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'projects', 'es');
+    await expectStatic(page, 'projects');
   });
 });
