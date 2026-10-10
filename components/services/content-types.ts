@@ -60,6 +60,7 @@ export type ServicesPageContent = {
   aiNote: {
     heading: string;
     description: string;
+    managementScope: string;
     scope: string;
   };
   finalCta: {

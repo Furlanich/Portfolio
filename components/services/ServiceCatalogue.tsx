@@ -24,7 +24,7 @@ export function ServiceCatalogue({ introduction, services, hrefs }: ServiceCatal
       >
         {introduction.catalogueLabel}
       </p>
-      <ul className={`${styles.catalogue} mt-4`}>
+      <ul className={styles.catalogue}>
         {services.map((service, index) => (
           <li
             key={service.id}

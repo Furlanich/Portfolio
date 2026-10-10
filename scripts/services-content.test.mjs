@@ -153,6 +153,7 @@ test('every D05 compressed service boundary, the shared agreement and the AI/ERP
     assert.equal(page.services[1].boundaries, boundary('WhatsApp', locale));
     assert.equal(page.services[2].boundaries, boundary('Consulting', locale));
     assert.equal(page.principles.workingAgreement, boundary('Shared working agreement', locale));
+    assert.equal(page.aiNote.managementScope, boundary('AI / ERP', locale));
     assert.equal(page.aiNote.scope, aiScopeRows[0][locale === 'es' ? 0 : 1]);
   }
 });

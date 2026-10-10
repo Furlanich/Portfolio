@@ -89,6 +89,7 @@ const cases = {
       ['Acuerdo de trabajo', 'Antes de avanzar se acuerdan alcance, entregables, responsabilidades, validaciones y entrega. Samuel mantiene la responsabilidad técnica, con implementación mantenible y documentación proporcional. El trabajo depende de la participación del negocio y de los accesos necesarios. Costos externos, propiedad, licencias y continuidad se definen en el acuerdo correspondiente.'],
       ['IA solo cuando aporta valor', 'La IA no es un cuarto servicio ni se incorpora por defecto. Puede formar parte de una automatización o sistema a medida —por ejemplo, para procesar documentos, asistir un flujo interno o interpretar una solicitud acotada— solo cuando aporta valor, puede evaluarse responsablemente y sus proveedores, datos, costos, límites y supervisión quedan explícitos.'],
     ],
+    managementScope: 'Los sistemas de gestión y la IA se evalúan según la necesidad. La IA requiere revisar datos, proveedores, costos, límites y supervisión humana.',
     aiScope: 'Chatbots y agentes se evalúan con alcance, datos, proveedores, costos, límites y supervisión humana acordados.',
     commercialHeading: 'Límites comerciales',
     commercialDescription:
@@ -181,6 +182,7 @@ const cases = {
       ['Working agreement', 'Scope, deliverables, responsibilities, validation and handover are agreed before proceeding. Samuel retains technical responsibility, with maintainable implementation and proportionate documentation. Work depends on business participation and the necessary access. External costs, ownership, licenses and ongoing support are defined in the relevant agreement.'],
       ['AI only where it adds value', 'AI is not a fourth service and is not included by default. It may be one capability inside a tailored automation or system — for example, document processing, an AI-assisted internal workflow, or interpretation of a bounded request — only when it adds value and its providers, data, costs, limitations, evaluation, and human oversight are explicit.'],
     ],
+    managementScope: 'Management systems and AI are assessed against the need. AI requires review of data, providers, costs, limitations and human oversight.',
     aiScope: 'Chatbots and agents are evaluated with agreed scope, data, providers, costs, limits and human oversight.',
     commercialHeading: 'Commercial boundaries',
     commercialDescription:
@@ -261,6 +263,7 @@ test.describe('before enhancement (JavaScript disabled)', () => {
         await expect(boundaries.getByRole('heading', { level: 3, name: heading, exact: true })).toBeVisible();
         await expect(boundaries.getByText(body, { exact: true })).toBeVisible();
       }
+      await expect(boundaries.getByText(copy.managementScope, { exact: true })).toBeVisible();
       await expect(boundaries.getByText(copy.aiScope, { exact: true })).toBeVisible();
       await expect(boundaries.getByRole('heading', { level: 3, name: copy.commercialHeading, exact: true })).toBeVisible();
       await expect(boundaries.getByText(copy.commercialDescription, { exact: true })).toBeVisible();

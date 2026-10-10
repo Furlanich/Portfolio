@@ -123,6 +123,8 @@ export const servicesPageContent = {
     heading: 'AI only where it adds value',
     description:
       'AI is not a fourth service and is not included by default. It may be one capability inside a tailored automation or system — for example, document processing, an AI-assisted internal workflow, or interpretation of a bounded request — only when it adds value and its providers, data, costs, limitations, evaluation, and human oversight are explicit.',
+    managementScope:
+      'Management systems and AI are assessed against the need. AI requires review of data, providers, costs, limitations and human oversight.',
     scope: 'Chatbots and agents are evaluated with agreed scope, data, providers, costs, limits and human oversight.',
   },
   finalCta: {

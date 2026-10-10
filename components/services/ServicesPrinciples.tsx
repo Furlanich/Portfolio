@@ -57,6 +57,7 @@ export function ServicesPrinciples({ content, commercialBoundaries, aiNote, anch
         <div className={styles.principle}>
           <h3 className={GROUP_HEADING}>{aiNote.heading}</h3>
           <p className={BODY}>{aiNote.description}</p>
+          <p className={BODY}>{aiNote.managementScope}</p>
           <p className={BODY}>{aiNote.scope}</p>
         </div>
       </div>

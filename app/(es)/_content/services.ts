@@ -122,6 +122,8 @@ export const servicesPageContent = {
     heading: 'IA solo cuando aporta valor',
     description:
       'La IA no es un cuarto servicio ni se incorpora por defecto. Puede formar parte de una automatización o sistema a medida —por ejemplo, para procesar documentos, asistir un flujo interno o interpretar una solicitud acotada— solo cuando aporta valor, puede evaluarse responsablemente y sus proveedores, datos, costos, límites y supervisión quedan explícitos.',
+    managementScope:
+      'Los sistemas de gestión y la IA se evalúan según la necesidad. La IA requiere revisar datos, proveedores, costos, límites y supervisión humana.',
     scope: 'Chatbots y agentes se evalúan con alcance, datos, proveedores, costos, límites y supervisión humana acordados.',
   },
   finalCta: {
