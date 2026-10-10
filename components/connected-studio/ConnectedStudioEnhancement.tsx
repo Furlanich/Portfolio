@@ -98,6 +98,23 @@ function readLayout(): SceneLayout {
   };
 }
 
+/** Idle time after `load` before the optional engine starts, so first paint and layout always come first. */
+const ACTIVATION_DELAY_MS = 250;
+
+/** Runs `callback` once the page has loaded plus the activation delay; the returned function cancels it. */
+function scheduleAfterLoad(callback: () => void): () => void {
+  let timer = 0;
+  const arm = () => {
+    timer = window.setTimeout(callback, ACTIVATION_DELAY_MS);
+  };
+  if (document.readyState === 'complete') arm();
+  else window.addEventListener('load', arm, { once: true });
+  return () => {
+    window.removeEventListener('load', arm);
+    window.clearTimeout(timer);
+  };
+}
+
 /**
  * The controller's scheduler on the browser clock: a timer for the interval, then one animation frame
  * so a draw lands on a frame boundary. Cancelling clears whichever stage is pending.
@@ -159,103 +176,108 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     let cancelled = false;
     let teardown = () => undefined as void;
 
-    counters.imports += 1;
-    void import('./runtime/create-connected-scene').then(({ createConnectedScene }) => {
-      if (cancelled) return;
-      let layout = readLayout();
-      let tier = getTierForWidth(layout.viewportWidth);
-      let graph = getConnectedGraph(getQualityForTier(tier));
-      const scene: SceneHandle = createConnectedScene({
-        mount,
-        graph,
-        quality: graph.quality,
-        tier,
-        words: capabilityWords,
-        onContextLost: () => undefined,
-      });
-      const sizeScene = () => {
-        scene.resize(
-          { width: mount.clientWidth, height: mount.clientHeight, pixelRatio: window.devicePixelRatio || 1, tier },
+    const activate = () => {
+      counters.imports += 1;
+      void import('./runtime/create-connected-scene').then(({ createConnectedScene }) => {
+        if (cancelled) return;
+        let layout = readLayout();
+        let tier = getTierForWidth(layout.viewportWidth);
+        let graph = getConnectedGraph(getQualityForTier(tier));
+        const scene: SceneHandle = createConnectedScene({
+          mount,
           graph,
-        );
-      };
-      sizeScene();
-
-      const timing = createBrowserScheduler();
-      const controller = createConnectedController({
-        clock: { now: () => performance.now() },
-        scheduler: timing.scheduler,
-        render: (pose) => scene.render(pose),
-        getLayout: () => layout,
-      });
-      controllerRef.current = controller;
-
-      let lastY = window.scrollY;
-      let lastAt = performance.now();
-      const push = (velocity: number) => {
-        const scrollY = window.scrollY;
-        controller.update({
-          graph,
+          quality: graph.quality,
           tier,
-          scrollY,
-          velocityPxPerSecond: velocity,
-          visible: !document.hidden,
-          footerDominant: isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight),
+          words: capabilityWords,
+          onContextLost: () => undefined,
         });
-      };
-      const onScroll = () => {
-        const now = performance.now();
-        const scrollY = window.scrollY;
-        const velocity = ((scrollY - lastY) / Math.max(now - lastAt, 8)) * 1000;
-        lastY = scrollY;
-        lastAt = now;
-        push(velocity);
-      };
-      const onResize = () => {
-        layout = readLayout();
-        tier = getTierForWidth(layout.viewportWidth);
-        graph = getConnectedGraph(getQualityForTier(tier));
-        sizeScene();
-        push(0);
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onResize);
-      push(0);
-
-      publish(() => {
-        const snapshot = controller.snapshot();
-        const info = scene.diagnostics();
-        return {
-          mode: 'live',
-          controller: snapshot.state,
-          renderCount: info.renderCount,
-          pendingCallbacks: snapshot.pendingCallbacks,
-          targetFps: snapshot.targetFps,
-          progress: snapshot.pose.progress,
-          idleAngleRadians: snapshot.pose.idleAngleRadians,
-          nodes: snapshot.pose.nodes.map((node) => ({ id: node.id, position: node.position })),
-          edgeGrowth: snapshot.pose.edges.map((edge) => edge.growth),
-          drawCalls: info.drawCalls,
-          pixelRatio: info.pixelRatio,
-          tier,
+        const sizeScene = () => {
+          scene.resize(
+            { width: mount.clientWidth, height: mount.clientHeight, pixelRatio: window.devicePixelRatio || 1, tier },
+            graph,
+          );
         };
-      });
+        sizeScene();
 
-      teardown = () => {
-        window.removeEventListener('scroll', onScroll);
-        window.removeEventListener('resize', onResize);
-        controller.dispose();
-        timing.cancelAll();
-        scene.dispose();
-        controllerRef.current = null;
-        publish(null);
-      };
-      setSlot(document.getElementById(`connected-pause-${route}`));
-      setLive(true);
-    });
+        const timing = createBrowserScheduler();
+        const controller = createConnectedController({
+          clock: { now: () => performance.now() },
+          scheduler: timing.scheduler,
+          render: (pose) => scene.render(pose),
+          getLayout: () => layout,
+        });
+        controllerRef.current = controller;
+
+        let lastY = window.scrollY;
+        let lastAt = performance.now();
+        const push = (velocity: number) => {
+          const scrollY = window.scrollY;
+          controller.update({
+            graph,
+            tier,
+            scrollY,
+            velocityPxPerSecond: velocity,
+            visible: !document.hidden,
+            footerDominant: isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight),
+          });
+        };
+        const onScroll = () => {
+          const now = performance.now();
+          const scrollY = window.scrollY;
+          const velocity = ((scrollY - lastY) / Math.max(now - lastAt, 8)) * 1000;
+          lastY = scrollY;
+          lastAt = now;
+          push(velocity);
+        };
+        const onResize = () => {
+          layout = readLayout();
+          tier = getTierForWidth(layout.viewportWidth);
+          graph = getConnectedGraph(getQualityForTier(tier));
+          sizeScene();
+          push(0);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onResize);
+        push(0);
+
+        publish(() => {
+          const snapshot = controller.snapshot();
+          const info = scene.diagnostics();
+          return {
+            mode: 'live',
+            controller: snapshot.state,
+            renderCount: info.renderCount,
+            pendingCallbacks: snapshot.pendingCallbacks,
+            targetFps: snapshot.targetFps,
+            progress: snapshot.pose.progress,
+            idleAngleRadians: snapshot.pose.idleAngleRadians,
+            nodes: snapshot.pose.nodes.map((node) => ({ id: node.id, position: node.position })),
+            edgeGrowth: snapshot.pose.edges.map((edge) => edge.growth),
+            drawCalls: info.drawCalls,
+            pixelRatio: info.pixelRatio,
+            tier,
+          };
+        });
+
+        teardown = () => {
+          window.removeEventListener('scroll', onScroll);
+          window.removeEventListener('resize', onResize);
+          controller.dispose();
+          timing.cancelAll();
+          scene.dispose();
+          controllerRef.current = null;
+          publish(null);
+        };
+        setSlot(document.getElementById(`connected-pause-${route}`));
+        setLive(true);
+      });
+    };
+
+    const cancelActivation = scheduleAfterLoad(activate);
 
     return () => {
       cancelled = true;
+      cancelActivation();
       teardown();
       setLive(false);
     };

@@ -81,3 +81,27 @@ export function observeEngineRequests(page: Page): { urls: string[] } {
   });
   return seen;
 }
+
+/**
+ * Holds the page `load` event open on a never-answered image until `release()`. The optional engine
+ * must not start while the page is still loading, and must not start at all if the visitor leaves
+ * first. Install it before the first navigation and navigate with `waitUntil: 'domcontentloaded'`.
+ */
+export async function holdPageLoad(page: Page): Promise<{ release(): void }> {
+  let release = () => undefined as void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const pixel = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
+  await page.route('**/__connected-load-hold__.gif', async (route) => {
+    await gate;
+    await route.fulfill({ status: 200, contentType: 'image/gif', body: pixel }).catch(() => undefined);
+  });
+  await page.addInitScript(() => {
+    document.addEventListener('DOMContentLoaded', () => {
+      const image = new Image();
+      image.src = `${location.origin}/__connected-load-hold__.gif`;
+    });
+  });
+  return { release };
+}

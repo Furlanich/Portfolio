@@ -5,10 +5,12 @@ import {
   expectLive,
   expectStatic,
   gotoConnected,
+  holdPageLoad,
   pauseLabels,
   pauseSlot,
   readConnected,
 } from './support/connected-studio';
+import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 // PLAN-SPF-V1 Task 7: the optional live scene behind Services and Projects. WebGL here runs on
 // SwiftShader, so these specs prove functional behavior only. They opt in through the controlled
@@ -57,5 +59,37 @@ test.describe('connected runtime', () => {
     await enableLiveForTest(page);
     await gotoConnected(page, 'projects', 'es');
     await expectStatic(page, 'projects');
+  });
+
+test('activation waits for the page to finish loading', async ({ page }) => {
+    const hold = await holdPageLoad(page);
+    await enableLiveForTest(page);
+    await page.goto(appUrl(stableRoutes.services.es), { waitUntil: 'domcontentloaded' });
+    // The page is interactive but not loaded: the engine import has not started, and it stays that way.
+    await page.waitForTimeout(1_500);
+    expect(await page.evaluate(() => document.readyState)).not.toBe('complete');
+    expect((await readConnected(page))?.imports).toBe(0);
+    await expect(page.locator('canvas')).toHaveCount(0);
+
+    hold.release();
+    await expectLive(page);
+    expect((await readConnected(page))?.imports).toBe(1);
+  });
+
+  test('leaving before activation starts cancels it and creates no scene', async ({ page }) => {
+    const hold = await holdPageLoad(page);
+    await enableLiveForTest(page);
+    await page.goto(appUrl(stableRoutes.services.es), { waitUntil: 'domcontentloaded' });
+    await expect.poll(async () => (await readConnected(page)) !== null, { message: 'the page hydrated' }).toBe(true);
+    expect((await readConnected(page))?.imports).toBe(0);
+
+    // A real client-side navigation unmounts the connected page while it still waits to activate.
+    await page.locator('[data-app-bar-brand]').first().click();
+    await expect(page).toHaveURL(new RegExp(appPathname(stableRoutes.home.es) + '$'));
+    hold.release();
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(1_500);
+    expect((await readConnected(page))?.imports).toBe(0);
+    await expect(page.locator('canvas')).toHaveCount(0);
   });
 });
