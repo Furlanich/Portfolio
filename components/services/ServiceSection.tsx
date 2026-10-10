@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { CommercialSectionHeading } from '@/components/commercial/CommercialSectionHeading';
 import type { ServicesSectionContent } from './content-types';
+import styles from './services.module.css';
 
 interface ServiceSectionProps {
   content: ServicesSectionContent;
@@ -9,73 +9,97 @@ interface ServiceSectionProps {
   sequence: string;
   actionHref: string;
   evidenceHref?: string;
-  surface: 'canvas' | 'surface';
+  boundariesHref: string;
+  boundariesLabel: string;
+  alternate: boolean;
 }
 
-const bodyClassName = 'text-base leading-7 text-foundation-muted';
+const BODY = 'mt-3 max-w-[62ch] text-base leading-7 text-sky-text-2';
+const ROW_HEADING = 'text-lg font-bold leading-7 text-identity-bone';
 
-// One ruled row of the service specification: label column and content column at wide widths.
-function ServiceRow({ heading, children }: { heading: string; children: ReactNode }) {
+function FactRow({ heading, children }: { heading: string; children: ReactNode }) {
   return (
-    <div className="grid gap-3 border-t border-foundation-border py-6 md:py-8 lg:grid-cols-12 lg:gap-12">
-      <h3 className="text-lg font-bold leading-7 text-foundation-ink lg:col-span-4">{heading}</h3>
-      <div className="max-w-[68ch] lg:col-span-8">{children}</div>
+    <div className={styles.factRow}>
+      <h3 className={ROW_HEADING}>{heading}</h3>
+      {children}
     </div>
   );
 }
 
-export function ServiceSection({ content, anchor, sequence, actionHref, evidenceHref, surface }: ServiceSectionProps) {
-  const sectionClassName =
-    'scroll-mt-24 py-16 md:scroll-mt-28 md:py-20 lg:scroll-mt-32 lg:py-24 ' +
-    (surface === 'surface' ? 'bg-foundation-surface' : 'bg-foundation-canvas');
+/**
+ * One service chapter (DESIGN-SPF-V1, "Services hierarchy and wording"): the category and the
+ * problem/outcome headline, what the buyer receives, the engagement facts, the approved compressed
+ * boundary with a same-page working-boundaries link, the evidence status and the Contact action, in
+ * that reading order. It is an opaque plate. Nothing is collapsed or revealed, and the chapter id is
+ * the stable service fragment.
+ */
+export function ServiceSection({
+  content,
+  anchor,
+  sequence,
+  actionHref,
+  evidenceHref,
+  boundariesHref,
+  boundariesLabel,
+  alternate,
+}: ServiceSectionProps) {
+  const headingId = `${anchor}-heading`;
 
   return (
     <section
       id={anchor}
-      aria-labelledby={anchor + '-heading'}
-      className={sectionClassName}
+      aria-labelledby={headingId}
+      data-connected-reading-mask
+      data-connected-chapter={content.id}
+      className={`${styles.plate} ${styles.chapter} ${alternate ? styles.chapterAlt : ''} p-5 md:p-8 lg:p-10`}
     >
-      <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <div className="border-t-2 border-foundation-ink pt-8 md:pt-10">
-          <CommercialSectionHeading headingId={anchor + '-heading'} heading={content.heading} sequence={sequence} />
-          <p className="mt-6 max-w-[68ch] text-lg leading-7 text-foundation-muted lg:text-xl lg:leading-8">{content.lead}</p>
-        </div>
-
-        <div className="mt-10 border-b border-foundation-border md:mt-12">
-          <ServiceRow heading={content.workHeading}>
-            <ul className={'grid list-disc gap-3 pl-5 marker:text-foundation-action ' + bodyClassName}>
-              {content.work.map((item) => <li key={item}>{item}</li>)}
-            </ul>
-          </ServiceRow>
-          <ServiceRow heading={content.startingHeading}>
-            <p className={bodyClassName}>{content.startingPoint}</p>
-          </ServiceRow>
-          <ServiceRow heading={content.fitHeading}>
-            <p className={bodyClassName}>{content.fit}</p>
-          </ServiceRow>
-          <ServiceRow heading={content.boundariesHeading}>
-            <p className={bodyClassName}>{content.boundaries}</p>
-          </ServiceRow>
-          <ServiceRow heading={content.evidenceHeading}>
-            <p className={bodyClassName}>{content.evidence}</p>
-            {content.evidenceLink && evidenceHref ? (
-              <Link
-                href={evidenceHref}
-                className="mt-4 inline-flex min-h-11 items-center text-base font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong hover:decoration-foundation-action-strong"
-              >
-                {content.evidenceLink.label}
-              </Link>
-            ) : null}
-          </ServiceRow>
-        </div>
-
-        <div className="mt-10 md:mt-12">
-          <Link
-            href={actionHref}
-            className="inline-flex min-h-12 items-center justify-center rounded-[10px] bg-foundation-action px-6 text-base font-semibold text-white transition-colors duration-[160ms] ease-out hover:bg-foundation-action-strong max-[479px]:w-full"
+      <div className={styles.chapterGrid}>
+        <div className={styles.chapterLead}>
+          <p className="flex items-center gap-3 text-base font-semibold leading-6 text-sky-glow">
+            <span aria-hidden="true" data-sequence className={styles.sequence}>{sequence}</span>
+            <span>{content.family}</span>
+          </p>
+          <h2
+            id={headingId}
+            className="mt-4 text-[32px] font-bold leading-[1.06] tracking-[-0.025em] text-identity-bone md:text-[40px] lg:text-[44px]"
           >
-            {content.action.label}
-          </Link>
+            {content.headline}
+          </h2>
+          <p className="mt-5 max-w-[34ch] text-xl leading-8 text-identity-bone lg:text-[22px] lg:leading-9">{content.outcome}</p>
+          <div className={`${styles.delivery} mt-8`}>
+            <h3 className={ROW_HEADING}>{content.deliveryHeading}</h3>
+            <p className={BODY}>{content.delivery}</p>
+          </div>
+        </div>
+
+        <div className={styles.chapterFacts}>
+          <FactRow heading={content.situationsHeading}>
+            <p className={BODY}>{content.situations}</p>
+          </FactRow>
+          <FactRow heading={content.startingHeading}>
+            <p className={BODY}>{content.startingPoint}</p>
+          </FactRow>
+          <FactRow heading={content.scopeHeading}>
+            <p className={BODY}>{content.scope}</p>
+          </FactRow>
+          <FactRow heading={content.boundariesHeading}>
+            <p className={BODY}>{content.boundaries}</p>
+            <a href={boundariesHref} className={`${styles.link} mt-2`}>{boundariesLabel}</a>
+          </FactRow>
+          <FactRow heading={content.evidenceHeading}>
+            <p className={BODY}>{content.evidence}</p>
+            {content.evidenceLink && evidenceHref ? (
+              <Link href={evidenceHref} className={`${styles.link} mt-2`}>{content.evidenceLink.label}</Link>
+            ) : null}
+          </FactRow>
+          <div className={styles.factRow}>
+            <Link
+              href={actionHref}
+              className="inline-flex min-h-12 items-center justify-center rounded-[10px] bg-identity-azure px-6 text-base font-semibold text-identity-bone transition-colors duration-[160ms] ease-out hover:bg-sky-lit hover:text-identity-ink focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-sky-glow max-[479px]:w-full"
+            >
+              {content.action.label}
+            </Link>
+          </div>
         </div>
       </div>
     </section>

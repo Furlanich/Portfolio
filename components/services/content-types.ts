@@ -3,26 +3,29 @@ import type { Locale } from '../../lib/locales';
 
 export type ServiceSectionId = 'web' | 'whatsapp' | 'consulting';
 
-export type ServicesIndexItem = {
-  id: ServiceSectionId;
-  label: string;
-};
-
 export type ServiceEvidenceLink = {
   label: string;
   slug: string;
 };
 
+// One service family, in three presentations that share these fields: a catalogue card (family,
+// catalogueSummary), a chapter (headline through action) and the same-page boundary (boundaries).
+// PLAN-SPF-V1 Task 6: the labels and fields follow the approved SPF-V1 copy table; `boundaries` is
+// the approved D05 compressed boundary and stays verbatim.
 export type ServicesSectionContent = {
   id: ServiceSectionId;
-  heading: string;
-  lead: string;
-  workHeading: string;
-  work: string[];
+  family: string;
+  headline: string;
+  catalogueSummary: string;
+  outcome: string;
+  deliveryHeading: string;
+  delivery: string;
+  situationsHeading: string;
+  situations: string;
   startingHeading: string;
   startingPoint: string;
-  fitHeading: string;
-  fit: string;
+  scopeHeading: string;
+  scope: string;
   boundariesHeading: string;
   boundaries: string;
   evidenceHeading: string;
@@ -37,13 +40,15 @@ export type ServicesPageContent = {
   introduction: {
     heading: string;
     description: string;
-    indexLabel: string;
-    indexItems: ServicesIndexItem[];
+    catalogueLabel: string;
+    catalogueAction: string;
   };
+  sceneCaption: string;
   services: [ServicesSectionContent, ServicesSectionContent, ServicesSectionContent];
+  workingBoundariesLabel: string;
   principles: {
     heading: string;
-    introduction: string;
+    statements: [string, string, string];
     workingHeading: string;
     workingAgreement: string;
   };
@@ -55,6 +60,7 @@ export type ServicesPageContent = {
   aiNote: {
     heading: string;
     description: string;
+    scope: string;
   };
   finalCta: {
     heading: string;

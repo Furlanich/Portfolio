@@ -1,9 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { appUrl, stableRoutes } from '../support/paths';
 
+// Snapshot names keep the Task 3 convention for the Spanish pages (`<page>-<viewport>`). PLAN-SPF-V1
+// Task 6 adds the English Services captures as `services-english-<viewport>`; the Projects cases
+// belong to Task 3 and stay Spanish-only.
 const pages = [
-  { name: 'services', route: stableRoutes.services.es },
-  { name: 'projects', route: stableRoutes.projects.es },
+  { name: 'services', label: 'Spanish', route: stableRoutes.services.es },
+  { name: 'services-english', label: 'English', route: stableRoutes.services.en },
+  { name: 'projects', label: 'Spanish', route: stableRoutes.projects.es },
 ] as const;
 
 const viewports = [
@@ -11,9 +15,9 @@ const viewports = [
   { name: 'compact', width: 390, height: 844 },
 ] as const;
 
-for (const { name, route } of pages) {
+for (const { name, label, route } of pages) {
   for (const viewport of viewports) {
-    test(`Spanish ${name} ${viewport.name} visual baseline`, async ({ page }) => {
+    test(`${label} ${name.replace('-english', '')} ${viewport.name} visual baseline`, async ({ page }) => {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
       await page.goto(appUrl(route));
       await page.evaluate(() => document.fonts.ready);

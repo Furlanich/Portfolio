@@ -1,47 +1,39 @@
-import Link from 'next/link';
+import { formatCapabilityLegend } from '@/lib/connected-studio/content';
+import type { CapabilityWords } from '@/lib/connected-studio/types';
 import type { ServicesPageContent } from './content-types';
+import styles from './services.module.css';
 
 interface ServicesIntroductionProps {
   content: ServicesPageContent['introduction'];
-  indexHrefs: Record<ServicesPageContent['introduction']['indexItems'][number]['id'], string>;
+  sceneCaption: string;
+  capabilityWords: CapabilityWords;
 }
 
-export function ServicesIntroduction({ content, indexHrefs }: ServicesIntroductionProps) {
+/**
+ * The page introduction: the one H1 and its short orientation inside a reading mask, with the hero
+ * Pause mount reserved beneath it (Task 7 portals the button in; nothing here moves when it does),
+ * and the illustrative-model caption with the semantic capability legend beside it. The legend
+ * appears once on the page, as ordinary text, so the vocabulary never depends on the canvas.
+ */
+export function ServicesIntroduction({ content, sceneCaption, capabilityWords }: ServicesIntroductionProps) {
   return (
-    <section aria-labelledby="services-introduction-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
-      <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <div className="max-w-[68ch]">
-          <h1
-            id="services-introduction-heading"
-            className="max-w-[18ch] text-[36px] font-bold leading-10 tracking-[-0.02em] text-foundation-ink md:text-[48px] md:leading-[52px]"
-          >
-            {content.heading}
-          </h1>
-          <p className="mt-6 text-lg leading-7 text-foundation-muted lg:text-xl lg:leading-8">
-            {content.description}
-          </p>
-        </div>
-
-        <div className="mt-8 border-y border-foundation-border py-4 md:py-5">
-          <nav aria-label={content.indexLabel}>
-            <ul className="flex list-none flex-wrap gap-x-6 gap-y-3">
-              {content.indexItems.map((item, index) => (
-                <li key={item.id}>
-                  <Link
-                    href={indexHrefs[item.id]}
-                    className="group inline-flex min-h-11 items-center gap-3 text-base font-semibold text-foundation-action transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong"
-                  >
-                    <span aria-hidden="true" className="font-mono text-sm font-semibold text-foundation-muted">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <span className="underline decoration-foundation-action/40 underline-offset-4 group-hover:decoration-foundation-action-strong">{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
+    <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
+      <div
+        data-connected-reading-mask
+        data-connected-chapter="introduction"
+        className={`${styles.plate} p-5 md:p-10 lg:col-span-7`}
+      >
+        <h1 className="max-w-[15ch] text-[44px] font-bold leading-[1.02] tracking-[-0.03em] text-identity-bone md:text-[56px] lg:text-[72px]">
+          {content.heading}
+        </h1>
+        <p className="mt-6 max-w-[56ch] text-lg leading-8 text-sky-text-2 lg:text-xl">{content.description}</p>
+        <div id="connected-pause-services" data-connected-pause-slot className={`${styles.pauseSlot} mt-6`} />
       </div>
-    </section>
+
+      <div data-connected-reading-mask className={`${styles.plate} p-5 lg:col-span-4 lg:col-start-9`}>
+        <p className="text-sm font-semibold leading-6 text-identity-bone">{sceneCaption}</p>
+        <p className="mt-2 text-sm leading-6 text-sky-text-2">{formatCapabilityLegend(capabilityWords)}</p>
+      </div>
+    </div>
   );
 }

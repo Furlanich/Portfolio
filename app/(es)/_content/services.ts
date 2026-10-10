@@ -1,113 +1,107 @@
 import type { ServicesPageContent } from '../../../components/services/content-types';
 
+// PLAN-SPF-V1 Task 6. Exact copy from docs/product/pages/services.md: the "SPF-V1 proposed Services
+// copy" table (APPROVED 2026-09-30), the D05 compressed boundaries, the shared working agreement, the
+// complete Límites comerciales block and the AI note, which stay verbatim. `scripts/services-content.test.mjs`
+// reads that record and compares every field.
 export const servicesPageContent = {
   locale: 'es',
   routeId: 'services',
   introduction: {
-    heading: 'Software para tu negocio',
+    heading: 'Software para que el trabajo avance.',
     description:
-      'Sitios web, automatización e integraciones, y mejoras para sistemas existentes. No hace falta tener una solución definida para entender las opciones.',
-    indexLabel: 'Ir a un servicio',
-    indexItems: [
-      { id: 'web', label: 'Sitios y aplicaciones web' },
-      { id: 'whatsapp', label: 'WhatsApp e integraciones' },
-      { id: 'consulting', label: 'Mantenimiento y consultoría' },
-    ],
+      'Sitios, aplicaciones e integraciones para resolver necesidades concretas. Empezamos por el problema y acordamos qué construir, conectar o mejorar.',
+    catalogueLabel: 'Encontrá tu punto de partida',
+    catalogueAction: 'Explorar el servicio',
   },
+  sceneCaption: 'Capacidades conectadas · modelo ilustrativo',
   services: [
     {
       id: 'web',
-      heading: 'Sitios y aplicaciones web',
-      lead:
-        'Desde presentar tu negocio hasta coordinar pedidos, reservas o acceso de clientes. El alcance depende del proceso que necesitás resolver.',
-      workHeading: 'Tipos de trabajo',
-      work: [
-        'Sitio o catálogo: presentar la oferta.',
-        'Pedidos o reservas: organizar solicitudes e integrar proveedores cuando sea viable.',
-        'Portal o aplicación: dar acceso y gestionar un proceso específico.',
-      ],
+      family: 'Sitios y aplicaciones web',
+      headline: 'Una interfaz clara para el negocio.',
+      catalogueSummary: 'Una presencia clara. Una operación más simple.',
+      outcome: 'Un sitio comercial, un portal o una aplicación según el problema.',
+      deliveryHeading: 'Qué recibís',
+      delivery: 'Un sitio o aplicación, recorridos acordados y documentación proporcional al alcance.',
+      situationsHeading: 'Situaciones habituales',
+      situations: 'Publicar una oferta; gestionar reservas o pedidos; coordinar información en una aplicación.',
       startingHeading: 'Punto de partida',
-      startingPoint:
-        'Revisar contenido, recorridos y sistemas existentes para acordar qué conviene construir o integrar.',
-      fitHeading: 'Buen encaje',
-      fit:
-        'Un sitio o una herramienta existente puede ser suficiente. El desarrollo a medida tiene sentido cuando el proceso necesita algo que esas opciones no resuelven.',
+      startingPoint: 'El objetivo, los recorridos principales y los datos necesarios.',
+      scopeHeading: 'Alcance acordado',
+      scope: 'Hosting, licencias e integraciones se definen según lo que el proyecto necesita.',
       boundariesHeading: 'Límites del servicio',
       boundaries:
         'Diseño, contenido, integraciones, administración y pruebas se acuerdan según el proyecto. Marca, producción de contenido, alojamiento, cargos de proveedores, aplicaciones móviles y mantenimiento no están incluidos salvo acuerdo. Los resultados comerciales no se garantizan.',
-      evidenceHeading: 'Evidencia disponible',
-      evidence:
-        'General Reservation System contiene código para reservas de transporte de pasajeros. Su funcionamiento actual no está verificado y no se presenta como trabajo de cliente.',
+      evidenceHeading: 'Evidencia',
+      evidence: 'Evidencia disponible: prototipo de reservas, con código público y ejecución actual no revalidada.',
       evidenceLink: {
-        label: 'Ver el proyecto y sus límites',
+        label: 'Examinar el prototipo de reservas',
         slug: 'general-reservation-system',
       },
       action: {
-        label: 'Ver contacto',
+        label: 'Contanos qué necesitás resolver',
         routeId: 'contact',
       },
     },
     {
       id: 'whatsapp',
-      heading: 'WhatsApp e integraciones',
-      lead:
-        'Organizá consultas repetidas, solicitudes y avisos, con una persona a cargo cuando el flujo necesita atención.',
-      workHeading: 'Tipos de trabajo',
-      work: [
-        'Un enlace abre una conversación.',
-        'Un flujo automatizado organiza pasos.',
-        'Un bot ayuda con respuestas definidas.',
-        'Una integración conecta sistemas cuando la plataforma y los proveedores lo permiten.',
-      ],
+      family: 'Integraciones y automatización',
+      headline: 'Las herramientas dejan de trabajar aisladas.',
+      catalogueSummary: 'Menos traspasos manuales.',
+      outcome: 'Flujos y datos conectados para reducir traspasos manuales.',
+      deliveryHeading: 'Qué recibís',
+      delivery: 'Un flujo integrado, sus límites y una forma acordada de comprobarlo.',
+      situationsHeading: 'Situaciones habituales',
+      situations: 'Información que se copia entre herramientas; pedidos o consultas que se pierden entre mensajes.',
       startingHeading: 'Punto de partida',
-      startingPoint:
-        'Revisar volumen, datos, excepciones y quién atiende cada caso.',
-      fitHeading: 'Buen encaje',
-      fit:
-        'Con pocas consultas, un enlace o respuestas manuales pueden ser suficientes.',
+      startingPoint: 'Mapear el flujo actual y comprobar acceso a herramientas, APIs y datos.',
+      scopeHeading: 'Alcance acordado',
+      scope:
+        'WhatsApp requiere un proveedor habilitado y aprobaciones. Definimos qué se automatiza y dónde interviene una persona.',
       boundariesHeading: 'Límites del servicio',
       boundaries:
         'La viabilidad depende de las políticas de WhatsApp/Meta, aprobaciones de cuentas y plantillas cuando correspondan, proveedores, costos, datos y sistemas disponibles. FURLANICH no controla esas aprobaciones, disponibilidad, entrega de mensajes ni cambios de precios. Los pagos dependen del proveedor; no se procesan necesariamente dentro de WhatsApp.',
-      evidenceHeading: 'Evidencia disponible',
-      evidence:
-        'Todavía no hay un proyecto público de WhatsApp que podamos mostrar.',
+      evidenceHeading: 'Evidencia',
+      evidence: 'No se publica actualmente un caso verificado de este servicio. El modelo de fondo es ilustrativo.',
       action: {
-        label: 'Ver contacto',
+        label: 'Contanos qué necesitás resolver',
         routeId: 'contact',
       },
     },
     {
       id: 'consulting',
-      heading: 'Mejoras para sistemas existentes',
-      lead:
-        'Investigá fallas, conectá herramientas y evaluá mejoras antes de decidir una reconstrucción.',
-      workHeading: 'Tipos de trabajo',
-      work: [
-        'Diagnóstico y corrección de fallas.',
-        'Actualizaciones e integraciones.',
-        'Revisión de rendimiento y plan de modernización.',
-      ],
+      family: 'Mejora de software existente',
+      headline: 'Un sistema que puede seguir evolucionando.',
+      catalogueSummary: 'Mejorá lo que ya tenés.',
+      outcome: 'Diagnóstico, mantenimiento y modernización con prioridades claras.',
+      deliveryHeading: 'Qué recibís',
+      delivery: 'Un diagnóstico acotado, mejoras priorizadas y próximos pasos acordados.',
+      situationsHeading: 'Situaciones habituales',
+      situations: 'Errores recurrentes, tareas lentas, software heredado o una integración que necesita continuidad.',
       startingHeading: 'Punto de partida',
-      startingPoint:
-        'Primero se revisa el sistema y los accesos autorizados.',
-      fitHeading: 'Buen encaje',
-      fit:
-        'El diagnóstico define las opciones; las mejoras y el soporte continuo se acuerdan por separado.',
+      startingPoint: 'Revisar el código, el entorno y el problema. Acordar primero una intervención acotada.',
+      scopeHeading: 'Alcance acordado',
+      scope: 'Definimos prioridades, responsabilidades y una modalidad de soporte o mantenimiento adecuada.',
       boundariesHeading: 'Límites del servicio',
       boundaries:
         'Se necesitan accesos autorizados al código, entornos, registros, documentación y personas que conocen el sistema. No incluye por defecto reconstrucción, sistema nuevo, guardias, SLA, certificación, licencias, infraestructura ni tareas de otro proveedor.',
-      evidenceHeading: 'Evidencia disponible',
-      evidence:
-        'El enfoque se apoya en la experiencia técnica de Samuel. Todavía no hay una intervención pública autorizada para mostrar.',
+      evidenceHeading: 'Evidencia',
+      evidence: 'No se publica actualmente un caso verificado de este servicio. El modelo de fondo es ilustrativo.',
       action: {
-        label: 'Ver contacto',
+        label: 'Contanos qué necesitás resolver',
         routeId: 'contact',
       },
     },
   ],
+  workingBoundariesLabel: 'Ver condiciones de trabajo',
   principles: {
-    heading: 'Qué podés esperar de cualquier servicio',
-    introduction: 'El servicio cambia; estas decisiones de trabajo no.',
+    heading: 'Alcance claro. Entregas revisables.',
+    statements: [
+      'Definimos responsabilidades, recorridos y criterios de aceptación antes de construir.',
+      'La documentación y el traspaso son proporcionales al alcance. Mantenimiento y soporte se acuerdan de forma explícita.',
+      'IA cuando aporta una función concreta, con sus límites y supervisión definidos. No es una promesa de automatización total.',
+    ],
     workingHeading: 'Acuerdo de trabajo',
     workingAgreement:
       'Antes de avanzar se acuerdan alcance, entregables, responsabilidades, validaciones y entrega. Samuel mantiene la responsabilidad técnica, con implementación mantenible y documentación proporcional. El trabajo depende de la participación del negocio y de los accesos necesarios. Costos externos, propiedad, licencias y continuidad se definen en el acuerdo correspondiente.',
@@ -128,6 +122,7 @@ export const servicesPageContent = {
     heading: 'IA solo cuando aporta valor',
     description:
       'La IA no es un cuarto servicio ni se incorpora por defecto. Puede formar parte de una automatización o sistema a medida —por ejemplo, para procesar documentos, asistir un flujo interno o interpretar una solicitud acotada— solo cuando aporta valor, puede evaluarse responsablemente y sus proveedores, datos, costos, límites y supervisión quedan explícitos.',
+    scope: 'Chatbots y agentes se evalúan con alcance, datos, proveedores, costos, límites y supervisión humana acordados.',
   },
   finalCta: {
     heading: 'Contanos qué necesitás resolver',

@@ -1,0 +1,336 @@
+/*
+ * PLAN-SPF-V1 Task 6: the Atlas Services composition over the connected ground (DESIGN-SPF-V1,
+ * "Visual system and composition", "Services hierarchy and wording" and "Motion and interaction
+ * contract"). Every foreground plate is opaque Deep #0A1E33 (`--sky-deep`) with a 1px chart border
+ * #36536C and a 16px radius, so no scene path ever shows through a paragraph. Bone, Azure and the Sky
+ * tokens are the existing global ones; #36536C is not a global token and global tokens are frozen,
+ * so it is defined here, as on Projects. The scene's motion stays behind these plates.
+ */
+
+.page {
+  --plate-fill: var(--sky-deep);
+  --plate-line: #36536C;
+  --plate-line-hover: var(--sky-lit);
+  position: relative;
+  color: #F9F6EE;
+}
+
+/* The foreground plate: an opaque reading surface. */
+.plate {
+  background-color: var(--plate-fill);
+  border: 1px solid var(--plate-line);
+  border-radius: 16px;
+}
+
+/* Links on a plate: accent text, a 44px target and the App Bar's focus treatment. */
+.link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  font-weight: 600;
+  color: var(--sky-glow);
+  text-decoration: underline;
+  text-decoration-color: rgba(156, 196, 236, 0.55);
+  text-underline-offset: 4px;
+  transition: color var(--dur-2) var(--ease-out);
+}
+
+.link:hover {
+  color: #FFFFFF;
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--sky-glow);
+  outline-offset: 3px;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+/* The hero Pause mount is reserved before activation, so adding the button never moves the plate. */
+.pauseSlot {
+  min-height: 44px;
+}
+
+/* Small plotting metadata: the sequence number, in Plex Mono, decorative. */
+.sequence {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.04em;
+  color: var(--sky-lit);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The catalogue (D05 "service index" as the Atlas): one large native-anchor card on the left and
+ * two supporting cards stacked on the right at 1024px and wider; the natural single column below.
+ * ------------------------------------------------------------------------------------------- */
+
+.catalogueLabel {
+  display: inline-block;
+  padding: 10px 16px;
+}
+
+.catalogue {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 1024px) {
+  .catalogue {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .catalogueLead {
+    grid-row: 1 / span 2;
+  }
+}
+
+.catalogueItem {
+  display: flex;
+  min-width: 0;
+}
+
+/*
+ * A catalogue card. Hover (fine pointer only) lifts it at most 3px, brightens the border, moves the
+ * arrow at most 3px and reveals a static radial light (PC-3: CSS only, never tracking the pointer),
+ * all on explicit properties over 180ms (the spec allows 160-220ms). :focus-visible gives the same
+ * affordance with a visible outline, so a keyboard user never needs the pointer.
+ */
+.card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  padding: 24px;
+  color: inherit;
+  text-decoration: none;
+  background-color: var(--plate-fill);
+  border: 1px solid var(--plate-line);
+  border-radius: 16px;
+  transition:
+    transform 180ms var(--ease-out),
+    border-color 180ms var(--ease-out);
+}
+
+.cardLead {
+  padding: 24px;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 28px;
+  }
+
+  .cardLead {
+    padding: 36px;
+  }
+}
+
+/* The static radial light, behind the text, inside the card's own rounded box. */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(120% 90% at 18% 0%, rgba(111, 168, 224, 0.2) 0%, rgba(111, 168, 224, 0) 62%);
+  opacity: 0;
+  transition: opacity 180ms var(--ease-out);
+}
+
+.cardFamily {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #F9F6EE;
+}
+
+.cardLead .cardFamily {
+  font-size: 32px;
+}
+
+@media (min-width: 768px) {
+  .cardLead .cardFamily {
+    font-size: 40px;
+    letter-spacing: -0.025em;
+  }
+}
+
+.cardSummary {
+  display: block;
+  max-width: 34ch;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--sky-text-2);
+}
+
+.cardLead .cardSummary {
+  margin-top: auto;
+  font-size: 20px;
+}
+
+.cardLead .cardAction {
+  margin-top: 0;
+  padding-top: 8px;
+}
+
+.cardAction {
+  display: inline-flex;
+  min-height: 44px;
+  margin-top: auto;
+  padding-top: 12px;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--sky-glow);
+}
+
+.cardArrow {
+  display: inline-flex;
+  transition: transform 180ms var(--ease-out);
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--sky-glow);
+  outline-offset: 3px;
+  border-color: var(--plate-line-hover);
+}
+
+/* Hover (fine pointer only) brightens the border; motion is added below only when it is allowed. */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    border-color: var(--plate-line-hover);
+  }
+}
+
+/*
+ * Lift, arrow and light: on fine-pointer hover and on keyboard :focus-visible, only when motion is
+ * allowed. Under reduced motion the card keeps the border change and the focus outline, and nothing moves.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .card:focus-visible {
+    transform: translateY(-3px);
+  }
+
+  .card:focus-visible::before {
+    opacity: 1;
+  }
+
+  .card:focus-visible .cardArrow {
+    transform: translateX(3px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translateY(-3px);
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+
+  .card:hover .cardArrow {
+    transform: translateX(3px);
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The service chapters: three alternating opaque plates. DOM order is the reading order; at wide
+ * widths the second chapter swaps columns, which changes nothing for keyboard or assistive order.
+ * ------------------------------------------------------------------------------------------- */
+
+.chapter {
+  /* Clear the sticky App Bar plus breathing room, so an anchor lands with its heading in view. */
+  scroll-margin-top: calc(var(--app-bar-height) + 24px);
+}
+
+.chapterGrid {
+  display: grid;
+  gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .chapterGrid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 56px;
+    align-items: start;
+  }
+
+  .chapterAlt .chapterLead {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .chapterAlt .chapterFacts {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .chapterAlt .chapterGrid {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  }
+}
+
+.delivery {
+  background-color: var(--sky-field);
+  border: 1px solid var(--plate-line);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.factRow {
+  border-top: 1px solid var(--plate-line);
+  padding-block: 20px;
+}
+
+.factRow:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* The working-boundaries principles: ruled statements, not cards. */
+.principle {
+  border-top: 1px solid var(--plate-line);
+  padding-block: 20px;
+}
+
+.principle:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* Forced colors: system colors, visible borders and focus; the environment is removed by the Ground. */
+@media (forced-colors: active) {
+  .plate,
+  .card,
+  .delivery {
+    background-color: Canvas;
+    border-color: CanvasText;
+    forced-color-adjust: auto;
+  }
+
+  .card::before {
+    display: none;
+  }
+
+  .link,
+  .cardAction {
+    color: LinkText;
+  }
+
+  .link:focus-visible,
+  .card:focus-visible {
+    outline-color: Highlight;
+  }
+}
