@@ -333,4 +333,53 @@ test('Pause persists across connected routes and locales, and Resume samples the
     await expect.poll(async () => (await readConnected(page))?.progress ?? 0).toBeGreaterThan(0.1);
     expect((await readSession(page)).paused).toBe('0');
   });
+
+test('a focused Pause control keeps focus and becomes the inactive Static background control after a context loss', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'es');
+    await expectLive(page);
+    const control = pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.es.pause });
+    await control.focus();
+    await page.evaluate(() => {
+      const canvas = document.querySelector<HTMLCanvasElement>('canvas[data-connected-canvas]');
+      (canvas?.getContext('webgl2') as WebGL2RenderingContext | null)?.getExtension('WEBGL_lose_context')?.loseContext();
+    });
+    await expect(page.locator('canvas')).toHaveCount(0);
+    const fallback = pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.es.staticBackground });
+    await expect(fallback).toBeFocused();
+    await expect(fallback).toHaveAttribute('aria-disabled', 'true');
+    await expect(fallback).not.toHaveAttribute('aria-pressed', /.*/);
+
+    // It stays only while it holds focus; the reserved slot keeps its space when it goes.
+    const slotBefore = await pauseSlot(page, 'services').boundingBox();
+    await page.keyboard.press('Tab');
+    await expect(pauseSlot(page, 'services').getByRole('button')).toHaveCount(0);
+    const slotAfter = await pauseSlot(page, 'services').boundingBox();
+    expect(slotAfter?.height).toBe(slotBefore?.height);
+    expect(slotAfter?.height ?? 0).toBeGreaterThanOrEqual(44);
+  });
+
+  test('reduced motion turned on while live goes static, keeping a focused control in place', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'projects', 'en');
+    await expectLive(page);
+    await pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.en.pause }).focus();
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('canvas')).toHaveCount(0);
+    const fallback = pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.en.staticBackground });
+    await expect(fallback).toBeFocused();
+    await expect(fallback).toHaveAttribute('aria-disabled', 'true');
+    await expectStopped(page);
+    expect((await readConnected(page))?.mode).toBe('static');
+  });
+
+  test('reduced motion turned on while live removes an unfocused control with the canvas', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'projects', 'es');
+    await expectLive(page);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('canvas')).toHaveCount(0);
+    await expect(pauseSlot(page, 'projects').getByRole('button')).toHaveCount(0);
+    await expectStopped(page);
+  });
 });

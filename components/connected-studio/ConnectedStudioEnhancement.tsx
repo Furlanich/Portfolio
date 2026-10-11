@@ -344,6 +344,8 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const [live, setLive] = useState(false);
   const [paused, setPaused] = useState(false);
+  // After a fallback the control stays only while it holds keyboard focus (DESIGN-SPF-V1, Motion).
+  const [fallbackHeld, setFallbackHeld] = useState(false);
 
   useEffect(() => {
     const anchor = anchorRef.current;
@@ -355,12 +357,17 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     let deferTimer = 0;
     let deferrals = 0;
 
-    /** Quietly back to the complete static background: release everything, report it, show nothing. */
-    const fallBack = () => {
+    /**
+     * Quietly back to the complete static background: release everything and report it. A Pause control
+     * that holds focus stays in place as the inactive "Static background" control; any other goes away.
+     */
+    const fallBack = (mode: 'failed' | 'static' = 'failed') => {
       liveScene?.dispose();
       liveScene = null;
       controllerRef.current = null;
-      publish(() => ({ ...STATIC_READING, mode: 'failed' }));
+      publish(() => ({ ...STATIC_READING, mode }));
+      const pauseSlot = document.getElementById(`connected-pause-${route}`);
+      setFallbackHeld(Boolean(pauseSlot && document.activeElement && pauseSlot.contains(document.activeElement)));
       setLive(false);
     };
 
@@ -416,19 +423,28 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
           setLive(true);
           if (lostEarly) fallBack();
         })
-        .catch(fallBack);
+        .catch(() => fallBack());
     };
 
     const cancelActivation = scheduleAfterLoad(activate);
+
+    // Reduced motion turned on while the scene runs ends it at once; turning it off again never restarts it.
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onReducedMotion = () => {
+      if (reducedMotion.matches && liveScene) fallBack('static');
+    };
+    reducedMotion.addEventListener('change', onReducedMotion);
 
     return () => {
       cancelled = true;
       cancelActivation();
       window.clearTimeout(deferTimer);
+      reducedMotion.removeEventListener('change', onReducedMotion);
       liveScene?.dispose();
       liveScene = null;
       controllerRef.current = null;
       setLive(false);
+      setFallbackHeld(false);
     };
   }, [capabilityWords, locale, route]);
 
@@ -443,9 +459,15 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
   return (
     <>
       <span ref={anchorRef} aria-hidden="true" hidden />
-      {live && slot
+      {(live || fallbackHeld) && slot
         ? createPortal(
-            <ConnectedPauseControl labels={CONNECTED_CONTROL_LABELS[locale]} paused={paused} fallback={false} onToggle={toggle} />,
+            <ConnectedPauseControl
+              labels={CONNECTED_CONTROL_LABELS[locale]}
+              paused={paused}
+              fallback={!live}
+              onToggle={toggle}
+              onBlur={() => setFallbackHeld(false)}
+            />,
             slot,
           )
         : null}

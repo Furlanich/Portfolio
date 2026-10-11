@@ -10,6 +10,8 @@ type ConnectedPauseControlProps = {
    */
   fallback: boolean;
   onToggle(): void;
+  /** The fallback control goes away once it loses focus. */
+  onBlur(): void;
 };
 
 /**
@@ -17,7 +19,7 @@ type ConnectedPauseControlProps = {
  * least 44px in both directions, portaled by the enhancement into the slot the page reserved. Its
  * visible name states the next action and `aria-pressed` states the current one, as on Home.
  */
-export function ConnectedPauseControl({ labels, paused, fallback, onToggle }: ConnectedPauseControlProps) {
+export function ConnectedPauseControl({ labels, paused, fallback, onToggle, onBlur }: ConnectedPauseControlProps) {
   return (
     <button
       type="button"
@@ -26,6 +28,7 @@ export function ConnectedPauseControl({ labels, paused, fallback, onToggle }: Co
       aria-pressed={fallback ? undefined : paused}
       aria-disabled={fallback ? true : undefined}
       onClick={fallback ? undefined : onToggle}
+      onBlur={fallback ? onBlur : undefined}
       className={styles.pause}
     >
       {fallback ? labels.staticBackground : paused ? labels.resume : labels.pause}
