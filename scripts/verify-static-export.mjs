@@ -395,7 +395,7 @@ function assertServicesArtifact(artifact, html) {
   }
 
   for (const [route, label] of requirement.index) {
-    const expected = expectedHref(route);
+    const expected = expectedPageLinkHref(route);
     if (!html.includes(`href="${expected}"`) || !html.includes(label)) {
       failures.push(`${artifact.file}: missing service index link ${expected}`);
     }
@@ -438,7 +438,7 @@ function assertServicesArtifact(artifact, html) {
 
   if (requirement.evidenceLink) {
     const [route, label] = requirement.evidenceLink;
-    if (!html.includes('href="' + expectedHref(route) + '"') || !html.includes(label)) {
+    if (!html.includes('href="' + expectedPageLinkHref(route) + '"') || !html.includes(label)) {
       failures.push(artifact.file + ': missing evidence link ' + expectedHref(route));
     }
   }
@@ -552,7 +552,7 @@ function assertStudioArtifact(artifact, html) {
   }
 
   for (const route of requirement.references) {
-    const expected = expectedHref(route);
+    const expected = expectedPageLinkHref(route);
     if (!html.includes(`href="${expected}"`)) {
       failures.push(`${artifact.file}: missing Studio reference ${expected}`);
     }
@@ -584,7 +584,7 @@ function assertFounderArtifact(artifact, html) {
   }
 
   for (const route of [requirement.projects, requirement.contact, requirement.cv]) {
-    const expected = expectedHref(route);
+    const expected = expectedPageLinkHref(route);
     if (!html.includes('href="' + expected + '"')) {
       failures.push(artifact.file + ': missing Founder reference ' + expected);
     }
@@ -662,7 +662,7 @@ function assertContactArtifact(artifact, html) {
     if (!html.includes(text)) failures.push(artifact.file + ': missing approved Contact text "' + text + '"');
   }
   for (const route of [requirement.privacy, requirement.founder]) {
-    const expected = expectedHref(route);
+    const expected = expectedPageLinkHref(route);
     if (!html.includes('href="' + expected + '"')) failures.push(artifact.file + ': missing Contact reference ' + expected);
   }
   if (!html.includes('<form') || !html.includes('Simul') && !html.includes('Simulate')) {
@@ -675,6 +675,11 @@ function assertContactArtifact(artifact, html) {
 
 function expectedHref(route) {
   return `${configuredBasePath}${route}`;
+}
+
+function expectedPageLinkHref(route) {
+  const pageTopRoutes = ['/servicios/', '/en/services/', '/proyectos/', '/en/work/'];
+  return expectedHref(route) + (pageTopRoutes.includes(route) ? '#site-top' : '');
 }
 
 function getInternalReferences(html) {
@@ -858,7 +863,7 @@ for (const { artifact, html } of allHtml) {
   }
 
   for (const reference of requirement.requiredReferences) {
-    const expectedReference = reference.startsWith('/') ? expectedHref(reference) : reference;
+    const expectedReference = reference.startsWith('/') ? expectedPageLinkHref(reference) : reference;
     if (!html.includes(`href="${expectedReference}"`)) {
       failures.push(`${artifact.file}: missing required homepage reference ${expectedReference}`);
     }

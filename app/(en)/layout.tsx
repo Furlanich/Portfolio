@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PageTopNavigation } from '../../components/foundation/PageTopNavigation';
 import { instrumentSans, plexMono } from '../fonts';
 import '../globals.css';
 
@@ -23,7 +24,7 @@ export const viewport = {
 export default function EnglishLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${instrumentSans.variable} ${plexMono.variable}`}>
-      <body>{children}</body>
+      <body><PageTopNavigation />{children}</body>
     </html>
   );
 }

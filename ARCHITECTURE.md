@@ -69,6 +69,10 @@ Home now uses the approved D02 bilingual hero/action/accountability/availability
 - **App Bar.** `SiteHeader` stays a server component on every route: a sticky floating "chart header" whose layout box is exactly `--app-bar-height` (84px). `AppBarBehavior`, a render-nothing client leaf, sets `aria-current` (`page`, or `location` for the Process link while its Home section is in view) and, on Home only, the transparent-to-docked state and the mono section readout. Below 1024px the native `<details>` disclosure is kept. `PositionFixToggle` is the other small Home client leaf: it upgrades two server-rendered SVG figures into one with a segmented control.
 - **Budgets and evidence.** The production gates and their measured values, with the manual QA that is still DEFERRED, are in the [acceptance record](docs/reviews/sky-chart-acceptance-v2/index.md).
 
+## PR #126 navigation correction — under review, 2026-10-11
+
+On the Task 7 branch, ordinary Services/Projects Header, Footer and content actions resolve through `getFoundationPageLinkHref` to the existing `#site-top` marker. Canonical paths, locale equivalents and intentional dossier/service-section fragments retain their separate helpers. Both locale roots opt into Next.js 16's documented smooth-scroll handling and mount `PageTopNavigation`, a render-nothing client leaf. It tracks an ordinary same-origin top-link click and performs one instant reset after the destination commits, cancelling residual smooth scroll from the source page. Modified clicks, other destinations and Back/Forward do not initiate that reset; listeners and the pending frame are cleaned up on unmount. This is a bounded navigation repair requested by the owner; PR #126 remains subject to human review.
+
 ## Current Contact demonstration — Task 4 / PR 4
 
 This section supersedes the older pre-merge baseline wording above: Contact Task 4 is merged in `e17fd1e`, deployed on `gh-pages`, and recorded by the completed Contact + Inquiry plan.

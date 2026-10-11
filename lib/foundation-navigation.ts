@@ -16,17 +16,22 @@ export type FoundationNavigationPaths = {
   alternateHref: string;
 };
 
+/** Page links use a stable top target; canonical URLs and intentional section links stay separate. */
+export function getFoundationPageLinkHref(routeId: FoundationRouteId, locale: Locale): string {
+  const path = getFoundationPath(routeId, locale);
+  return routeId === 'services' || routeId === 'projects' ? `${path}#site-top` : path;
+}
+
 export function getFoundationNavigationPaths(
   locale: Locale,
   currentRouteId: FoundationRouteId,
 ): FoundationNavigationPaths {
   const alternateLocale = locale === 'es' ? 'en' : 'es';
 
-  // An explicit anchor returns a same-route link to the top; Next otherwise preserves its scroll.
   return {
     home: getFoundationPath('home', locale),
-    services: getFoundationPath('services', locale) + (currentRouteId === 'services' ? '#site-top' : ''),
-    projects: getFoundationPath('projects', locale) + (currentRouteId === 'projects' ? '#site-top' : ''),
+    services: getFoundationPageLinkHref('services', locale),
+    projects: getFoundationPageLinkHref('projects', locale),
     contact: getFoundationPath('contact', locale),
     studio: getFoundationPath('studio', locale),
     founder: getFoundationPath('founder', locale),

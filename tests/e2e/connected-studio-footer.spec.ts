@@ -145,8 +145,8 @@ for (const host of hosts) {
       await expect(email).toHaveAttribute('href', channels.email);
       await expect(phone).toHaveAttribute('href', channels.phone);
       await expect(contactRoute).toHaveAttribute('href', appPathname(stableRoutes.contact[locale]));
-      await expect(exploreLinks[0]).toHaveAttribute('href', appPathname(stableRoutes.services[locale]) + (host.route[locale] === stableRoutes.services[locale] ? '#site-top' : ''));
-      await expect(exploreLinks[1]).toHaveAttribute('href', appPathname(stableRoutes.projects[locale]) + (host.route[locale] === stableRoutes.projects[locale] ? '#site-top' : ''));
+      await expect(exploreLinks[0]).toHaveAttribute('href', appPathname(stableRoutes.services[locale]) + '#site-top');
+      await expect(exploreLinks[1]).toHaveAttribute('href', appPathname(stableRoutes.projects[locale]) + '#site-top');
       await expect(exploreLinks[2]).toHaveAttribute('href', `${appPathname(home)}#${text.processAnchor}`);
       await expect(exploreLinks[3]).toHaveAttribute('href', appPathname(stableRoutes.studio[locale]));
       await expect(founder).toHaveAttribute('href', appPathname(stableRoutes.founder[locale]));

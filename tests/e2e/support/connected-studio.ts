@@ -202,7 +202,7 @@ export async function navigateInApp(page: Page, route: string) {
   const isHome = route === stableRoutes.home.es || route === stableRoutes.home.en;
   const link = isHome
     ? page.locator('a[data-app-bar-brand]:visible').first()
-    : page.locator(`a[data-app-bar-nav-link][href="${pathname}"]:visible`).first();
+    : page.locator(`a[data-app-bar-nav-link]:is([href="${pathname}"], [href="${pathname}#site-top"]):visible`).first();
   await link.click();
   await page.waitForURL((url) => url.pathname === pathname);
 }

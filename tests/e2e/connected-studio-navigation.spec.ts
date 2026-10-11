@@ -19,14 +19,14 @@ for (const language of ['es', 'en'] as const) {
     for (const entry of ['banner', 'contentinfo', 'main'] as const) {
       test(`${language} ${destination} page link from ${entry} lands at the top`, async ({ page }) => {
         await page.goto(appUrl(entry === 'contentinfo' ? stableRoutes.studio[language] : stableRoutes.home[language]));
-        const link = page.getByRole(entry).locator(`a[href="${appPathname(stableRoutes[destination][language])}"]:visible`).first();
+        const link = page.getByRole(entry).locator(`a[href="${appPathname(stableRoutes[destination][language])}#site-top"]:visible`).first();
         if (entry === 'banner') {
           await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
           if (!(await link.isVisible())) await page.getByRole('banner').locator('summary').click();
         }
         await link.click();
-        await page.waitForURL(appPathname(stableRoutes[destination][language]), { waitUntil: 'commit' });
-        await expectDestination(page, stableRoutes[destination][language], '');
+        await page.waitForURL(appPathname(stableRoutes[destination][language]) + '#site-top', { waitUntil: 'commit' });
+        await expectDestination(page, stableRoutes[destination][language], '#site-top');
         await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
         await page.waitForTimeout(400);
         expect(await page.evaluate(() => window.scrollY)).toBe(0);
@@ -47,6 +47,34 @@ for (const language of ['es', 'en'] as const) {
         expect(await page.evaluate(() => window.scrollY)).toBe(0);
       });
     }
+    test(`${language} ${destination} modified current-page link keeps the original page's scroll`, async ({ page, context }) => {
+      await page.goto(appUrl(stableRoutes[destination][language]));
+      const link = page.getByRole('banner').locator(`a[href="${appPathname(stableRoutes[destination][language])}#site-top"]:visible`).first();
+      if (!(await link.isVisible())) await page.getByRole('banner').locator('summary').click();
+      // Establish a settled top-link URL before measuring the modified click. Direct entry with
+      // #site-top can still be scrolling during hydration and would contaminate this control.
+      await link.click();
+      await expectDestination(page, stableRoutes[destination][language], '#site-top');
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+      await page.waitForTimeout(400);
+      if (!(await link.isVisible())) await page.getByRole('banner').locator('summary').click();
+      // Focus before scrolling and use a trusted pointer click: locator.click's preparatory
+      // scrollIntoView can itself move the source viewport and is outside this modifier control.
+      await link.evaluate((anchor) => (anchor as HTMLElement).focus({ preventScroll: true }));
+      await page.evaluate(() => window.scrollTo({ top: 600, behavior: 'instant' }));
+      const scrollBefore = await page.evaluate(() => window.scrollY);
+      expect(scrollBefore).toBeGreaterThan(0);
+      const box = (await link.boundingBox())!;
+      const opened = context.waitForEvent('page');
+      await page.keyboard.down('ControlOrMeta');
+      await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+      await page.keyboard.up('ControlOrMeta');
+      const tab = await opened;
+      await expectDestination(tab, stableRoutes[destination][language], '#site-top');
+      await page.waitForTimeout(400);
+      expect(await page.evaluate(() => window.scrollY)).toBe(scrollBefore);
+      await tab.close();
+    });
   }
 }
 

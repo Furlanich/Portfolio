@@ -183,7 +183,7 @@ for (const founderCase of founderCases) {
 
     await expect(page.getByRole('main').getByRole('link', { name: founderCase.projectsLabel })).toHaveAttribute(
       'href',
-      appPathname(founderCase.projectsRoute),
+      appPathname(founderCase.projectsRoute) + '#site-top',
     );
     await expect(page.getByRole('main').getByRole('link', { name: founderCase.contactLabel })).toHaveAttribute(
       'href',
