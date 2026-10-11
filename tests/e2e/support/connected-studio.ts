@@ -156,3 +156,21 @@ export async function trackWebglContexts(page: Page): Promise<{ events(): Promis
     maxAlive: () => page.evaluate(() => (window as unknown as { __connectedGl: { maxAlive: number } }).__connectedGl.maxAlive),
   };
 }
+
+export const SESSION_KEYS = {
+  paused: 'furlanich:connected-studio-paused',
+  contextLost: 'furlanich:connected-studio-context-lost',
+  /** Home's own flag: connected routes only read it (PC-5). */
+  homeContextLost: 'furlanich:sky-chart-context-lost',
+} as const;
+
+/** Seeds browsing-session state before any page script runs, as an earlier page in the session would have. */
+export async function seedSession(page: Page, values: Partial<Record<keyof typeof SESSION_KEYS, '1' | '0'>>) {
+  const entries = Object.entries(values).map(([key, value]) => [SESSION_KEYS[key as keyof typeof SESSION_KEYS], value]);
+  await page.addInitScript((pairs) => {
+    for (const [key, value] of pairs) window.sessionStorage.setItem(key as string, value as string);
+  }, entries);
+}
+
+export const readSession = (page: Page) =>
+  page.evaluate((keys) => Object.fromEntries(Object.entries(keys).map(([name, key]) => [name, window.sessionStorage.getItem(key)])), SESSION_KEYS);

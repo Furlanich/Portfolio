@@ -9,6 +9,7 @@ import {
   pauseLabels,
   pauseSlot,
   readConnected,
+  seedSession,
   trackWebglContexts,
 } from './support/connected-studio';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
@@ -105,5 +106,35 @@ test('the capability probe context is released before the engine creates its own
       { type: 'create', context: 2 },
     ]);
     expect(await contexts.maxAlive(), 'never two live contexts').toBe(1);
+  });
+
+test('a stored Home context loss keeps connected routes static (read-only, PC-5)', async ({ page }) => {
+    await seedSession(page, { homeContextLost: '1' });
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'es');
+    await expectStatic(page, 'services');
+  });
+
+  test('a stored connected context loss keeps both routes and locales static', async ({ page }) => {
+    await seedSession(page, { contextLost: '1' });
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'projects', 'en');
+    await expectStatic(page, 'projects');
+  });
+
+  test('a stored Pause preference starts the scene paused on its current pose', async ({ page }) => {
+    await seedSession(page, { paused: '1' });
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'es');
+    await expectLive(page);
+    const resume = pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.es.resume });
+    await expect(resume).toHaveAttribute('aria-pressed', 'true');
+    const first = await readConnected(page);
+    expect(first?.controller).toBe('paused');
+    expect(first?.pendingCallbacks).toBe(0);
+    await page.waitForTimeout(1_200);
+    const later = await readConnected(page);
+    expect(later?.renderCount, 'a paused scene draws nothing').toBe(first?.renderCount);
+    expect(later?.idleAngleRadians).toBe(first?.idleAngleRadians);
   });
 });

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
 import { createConnectedController } from '@/lib/connected-studio/controller';
 import { getConnectedGraph, getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
+import { readConnectedSession } from '@/lib/connected-studio/session';
 import type {
   CapabilityWords,
   ConnectedController,
@@ -191,6 +192,9 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     const publish = installDiagnostics(route);
     const preferences = readPreferences();
     if (preferences.reducedMotion || preferences.saveData) return;
+    // A context loss, on this page or on Home (read-only, PC-5), keeps every connected route static.
+    const session = readConnectedSession();
+    if (session.contextLost) return;
     let cancelled = false;
     let teardown = () => undefined as void;
 
@@ -258,6 +262,8 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
         window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('resize', onResize);
         push(0);
+        // A stored Pause starts from one drawn frame on the current pose, then holds.
+        if (session.paused) controller.pause();
 
         publish(() => {
           const snapshot = controller.snapshot();
@@ -288,6 +294,7 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
           publish(null);
         };
         setSlot(document.getElementById(`connected-pause-${route}`));
+        setPaused(session.paused);
         setLive(true);
       });
     };
