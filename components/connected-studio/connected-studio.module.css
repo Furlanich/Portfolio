@@ -78,10 +78,10 @@
 }
 
 /*
- * The projected capability words (Task 7). Decorative, pointer-inert, upright and never below 12px
- * (the spec's floor is about 11px). Position and visibility arrive from the runtime as a transform and an
- * opacity, so nothing here lays out against the page. A suspended scene (hidden tab, Footer handoff)
- * hides the whole mount.
+ * The projected capability words (Task 7), as small plate chips like the Revision 5 references:
+ * decorative, pointer-inert, upright and never below 12px (the spec's floor is about 11px). Position
+ * and visibility arrive from the runtime as a transform and an opacity, so nothing here lays out
+ * against the page. A suspended scene (hidden tab, Footer handoff) hides the whole mount.
  */
 .labels {
   position: absolute;
@@ -96,12 +96,15 @@
   top: 0;
   white-space: nowrap;
   pointer-events: none;
-  font-family: var(--font-mono), ui-monospace, monospace;
+  padding: 3px 8px;
+  border: 1px solid rgba(111, 168, 224, 0.32);
+  border-radius: 6px;
+  background-color: rgba(8, 26, 46, 0.82);
   font-size: 12px;
+  font-weight: 600;
   line-height: 16px;
-  letter-spacing: 0.06em;
-  color: var(--sky-glow);
-  text-shadow: 0 0 8px rgba(6, 18, 31, 0.95);
+  letter-spacing: 0.01em;
+  color: #d3e3f3;
   opacity: 0;
   will-change: transform;
   transition: opacity var(--dur-2) var(--ease-out);
