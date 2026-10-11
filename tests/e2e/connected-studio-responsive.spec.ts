@@ -1,5 +1,6 @@
 import { chromium, expect, test, type Browser, type Page } from '@playwright/test';
 import {
+  closeContext,
   enableLiveForTest,
   expectLive,
   expectStatic,
@@ -94,7 +95,7 @@ test.describe('live background (controlled test evidence on SwiftShader)', () =>
           await page.waitForTimeout(600);
         }
         expect(await shifts.shiftsAfterActivation(), 'layout shift caused by the enhancement').toBe(0);
-        await context.close();
+        await closeContext(context);
       });
     });
   }
@@ -119,7 +120,7 @@ test.describe('live background (controlled test evidence on SwiftShader)', () =>
       hold.release();
       await expectLive(page);
       expect(await geometry(), 'headings, actions and the reserved slot keep their place').toEqual(before);
-      await context.close();
+      await closeContext(context);
     });
   });
 
@@ -135,7 +136,7 @@ test.describe('live background (controlled test evidence on SwiftShader)', () =>
         expect(await horizontalOverflow(page), `${route} ${locale}`).toBe(0);
         await expect(page.locator('main h1:visible')).toHaveCount(1);
       }
-      await context.close();
+      await closeContext(context);
     });
   });
 });

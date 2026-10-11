@@ -45,9 +45,17 @@ test.describe('static background', () => {
 });
 
 test.describe('live background (controlled test evidence on SwiftShader)', () => {
-  test.describe.configure({ timeout: 60_000 });
+  // Software rendering shares the CPU with axe, so each live case is slow (about a minute when alone).
+  test.describe.configure({ timeout: 150_000 });
 
-  for (const { route, locale } of pages) {
+  // Leave the page first: tearing a browser context down around a running software-rendered scene can stall
+  // under load, while unmounting the scene releases its context at once.
+  test.afterEach(async ({ page }) => {
+    await page.goto('about:blank');
+  });
+
+  // Two representative pages: the locale strings are covered by the static matrix, and every live case is expensive.
+  for (const { route, locale } of [pages[0], pages[3]]) {
     test(`${route} ${locale} has no critical or serious axe violations with the scene running`, async ({ page }) => {
       await enableLiveForTest(page);
       await gotoConnected(page, route, locale);

@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type BrowserContext, type Page } from '@playwright/test';
 import type { ConnectedDiagnostics } from '../../../components/connected-studio/ConnectedStudioEnhancement';
 import type { ConnectedLivePolicy, ConnectedRoute } from '../../../lib/connected-studio/types';
 import { appPathname, appUrl, stableRoutes } from './paths';
@@ -329,4 +329,13 @@ export async function observeEnhancementShifts(page: Page): Promise<{ shiftsAfte
         return state.shifts.filter((shift) => shift.startTime >= state.activationAt - 50).reduce((sum, shift) => sum + shift.value, 0);
       }),
   };
+}
+
+/**
+ * Closes a context after leaving its pages. Tearing a context down around a running software-rendered
+ * scene can stall under load, whereas unmounting the scene releases its GL context at once.
+ */
+export async function closeContext(context: BrowserContext) {
+  await Promise.all(context.pages().map((page) => page.goto('about:blank').catch(() => undefined)));
+  await context.close();
 }

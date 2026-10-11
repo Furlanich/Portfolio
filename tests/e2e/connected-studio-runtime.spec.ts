@@ -3,6 +3,7 @@ import { observeUnexpectedBrowserErrors } from './support/console-errors';
 import { allowSoftwareRenderer, expectActive } from './support/sky-chart';
 import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 import {
+  closeContext,
   connectedCanvas,
   controlVisibility,
   enableLiveForTest,
@@ -102,7 +103,8 @@ test('activation waits for the page to finish loading', async ({ page }) => {
 
     // A real client-side navigation unmounts the connected page while it still waits to activate.
     await page.locator('[data-app-bar-brand]').first().click();
-    await expect(page).toHaveURL(new RegExp(appPathname(stableRoutes.home.es) + '$'));
+    // 'commit': the held load event must not block this wait.
+    await page.waitForURL((url) => url.pathname === appPathname(stableRoutes.home.es), { waitUntil: 'commit' });
     hold.release();
     await page.waitForLoadState('load');
     await page.waitForTimeout(1_500);
@@ -452,7 +454,7 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
       expect(reading?.edgeGrowth).toHaveLength(budget.edges);
       expect(reading?.drawCalls).toBeLessThanOrEqual(budget.drawCalls);
       expect(reading?.pixelRatio).toBeLessThanOrEqual(budget.dpr);
-      await context.close();
+      await closeContext(context);
     });
   }
 
@@ -488,7 +490,7 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
       expect(stopped?.controller).toBe('suspended');
       expect(stopped?.pendingCallbacks).toBe(0);
       expect(stopped?.schedulerPending).toBe(0);
-      await context.close();
+      await closeContext(context);
     });
   }
 
@@ -521,7 +523,7 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
         expect(label.pointerEvents).toBe('none');
       }
       expect(await page.locator('[data-connected-ground]').getAttribute('aria-hidden')).toBe('true');
-      await context.close();
+      await closeContext(context);
     });
   }
 
@@ -560,7 +562,7 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
         }
       }
       expect(visibleTotal, 'the check is not vacuous: some labels are visible at this width').toBeGreaterThan(0);
-      await context.close();
+      await closeContext(context);
     });
   }
 
