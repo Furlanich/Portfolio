@@ -295,3 +295,38 @@ type Box = { left: number; top: number; right: number; bottom: number };
 export function overlaps(a: Box, b: Box, tolerance = 0.5): boolean {
   return a.left < b.right - tolerance && b.left < a.right - tolerance && a.top < b.bottom - tolerance && b.top < a.bottom - tolerance;
 }
+
+/**
+ * Layout shifts that happen once the enhancement is in the page. The activation moment is the first
+ * time the optional canvas or the Pause control is inserted; every shift without recent input from
+ * then on counts. A page that reserved its slot and sized its canvas as a fixed layer reports 0.
+ */
+export async function observeEnhancementShifts(page: Page): Promise<{ shiftsAfterActivation(): Promise<number> }> {
+  await page.addInitScript(() => {
+    const state = { activationAt: Number.POSITIVE_INFINITY, shifts: [] as { value: number; startTime: number }[] };
+    (window as unknown as { __connectedShifts: typeof state }).__connectedShifts = state;
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries() as unknown as { value: number; startTime: number; hadRecentInput: boolean }[]) {
+        if (!entry.hadRecentInput) state.shifts.push({ value: entry.value, startTime: entry.startTime });
+      }
+    }).observe({ type: 'layout-shift', buffered: true });
+    new MutationObserver((records) => {
+      if (state.activationAt !== Number.POSITIVE_INFINITY) return;
+      for (const record of records) {
+        for (const node of Array.from(record.addedNodes)) {
+          if (node instanceof Element && (node.matches('canvas, [data-connected-pause], [data-connected-labels]') || node.querySelector('canvas, [data-connected-pause]'))) {
+            state.activationAt = performance.now();
+          }
+        }
+      }
+    }).observe(document, { childList: true, subtree: true });
+  });
+  return {
+    shiftsAfterActivation: () =>
+      page.evaluate(() => {
+        const state = (window as unknown as { __connectedShifts: { activationAt: number; shifts: { value: number; startTime: number }[] } }).__connectedShifts;
+        if (state.activationAt === Number.POSITIVE_INFINITY) return -1;
+        return state.shifts.filter((shift) => shift.startTime >= state.activationAt - 50).reduce((sum, shift) => sum + shift.value, 0);
+      }),
+  };
+}
