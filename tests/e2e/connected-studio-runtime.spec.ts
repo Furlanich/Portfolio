@@ -431,4 +431,62 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
     const first = await readConnected(page);
     expect(first?.progress, 'the first drawn frame is already at the restored scroll').toBeGreaterThan(0.2);
   });
+
+// The budgets are the plan's, read from the engine's own diagnostics (real draw calls of the last frame).
+  for (const budget of [
+    { name: '1440', width: 1440, height: 900, route: 'services', drawCalls: 28, dpr: 1.5, nodes: 16, edges: 33 },
+    { name: '390', width: 390, height: 844, route: 'projects', drawCalls: 18, dpr: 1.25, nodes: 8, edges: 13 },
+  ] as const) {
+    test(`real draw calls and pixel ratio stay within budget at ${budget.name}px`, async ({ browser }) => {
+      const context = await browser.newContext({ viewport: { width: budget.width, height: budget.height }, deviceScaleFactor: 2 });
+      const page = await context.newPage();
+      await enableLiveForTest(page);
+      await gotoConnected(page, budget.route, 'es');
+      await expectLive(page);
+      await scrollInstant(page, 600);
+      await expect.poll(async () => (await readConnected(page))?.drawCalls ?? 0).toBeGreaterThan(0);
+      const reading = await readConnected(page);
+      expect(reading?.nodes).toHaveLength(budget.nodes);
+      expect(reading?.edgeGrowth).toHaveLength(budget.edges);
+      expect(reading?.drawCalls).toBeLessThanOrEqual(budget.drawCalls);
+      expect(reading?.pixelRatio).toBeLessThanOrEqual(budget.dpr);
+      await context.close();
+    });
+  }
+
+  for (const handoff of [
+    { name: '1440', width: 1440, height: 900, route: 'services', edges: 33 },
+    { name: '390', width: 390, height: 844, route: 'projects', edges: 13 },
+  ] as const) {
+    test(`every connection has grown by the Footer handoff at ${handoff.name}px, and the scene is then suspended`, async ({ browser }) => {
+      const context = await browser.newContext({ viewport: { width: handoff.width, height: handoff.height } });
+      const page = await context.newPage();
+      await enableLiveForTest(page);
+      await gotoConnected(page, handoff.route, 'en');
+      await expectLive(page);
+
+      // Footer top at 70% of the viewport is the handoff: put it there.
+      const target = await page.evaluate(() => {
+        const footer = document.querySelector<HTMLElement>('[data-site-footer]')!;
+        return footer.getBoundingClientRect().top + window.scrollY - 0.7 * window.innerHeight;
+      });
+      await scrollInstant(page, target);
+      await expect.poll(async () => (await readConnected(page))?.progress ?? 0).toBeGreaterThanOrEqual(0.999);
+      await expect
+        .poll(async () => {
+          const growth = (await readConnected(page))?.edgeGrowth ?? [];
+          return growth.length === handoff.edges && growth.every((value) => value >= 0.999);
+        })
+        .toBe(true);
+
+      // Footer top at 18% of the viewport: suspended, no pending work, zero further draws.
+      await scrollInstant(page, 'bottom');
+      await expectStopped(page);
+      const stopped = await readConnected(page);
+      expect(stopped?.controller).toBe('suspended');
+      expect(stopped?.pendingCallbacks).toBe(0);
+      expect(stopped?.schedulerPending).toBe(0);
+      await context.close();
+    });
+  }
 });
