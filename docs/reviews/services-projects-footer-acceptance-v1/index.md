@@ -15,7 +15,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-10-10
+last_verified: 2026-10-11
 ---
 
 # Services, Projects and Footer v1 acceptance
@@ -30,7 +30,7 @@ Acceptance evidence for [PLAN-SPF-V1](../../plans/active/services-projects-foote
 - [Task 4 — shared Footer and corrections](task-4.md)
 - [Task 5 — connected engine](task-5.md)
 - [Task 6 — Atlas Services composition, owner-approved transfers and review correction](task-6.md)
-- Task 7
+- [Task 7 — connected enhancement (merged; its W5 checkpoint is RED)](task-7.md)
 - Task 8
 - Task 9
 - Task 10
@@ -39,6 +39,6 @@ Follow-up record: [Task 3/5 receipt corrections](task-3-5-corrections.md). The t
 
 ## Next session
 
-The [W3 handoff](w3-handoff.md) is the historical Task 4 startup record. Task 4 and its correction are now human-merged; the [W3 receipt](w3-checkpoint.md) records PASS on `ddc78aed`, failed attempts/reruns and serial lock releases. Task 6 then merged through PR #124, and the [W4 receipt](w4-checkpoint.md) records PASS on `9279838f`, one cold-start failed attempt and the serial lock releases. W5 / Task 7 may start under its existing packet; no startup or dispatch is claimed. Overall acceptance stays PROPOSED, with existing manual/final gates OPEN.
+The [W3 handoff](w3-handoff.md) is the historical Task 4 startup record. Task 4 and its correction are now human-merged; the [W3 receipt](w3-checkpoint.md) records PASS on `ddc78aed`, failed attempts/reruns and serial lock releases. Task 6 then merged through PR #124, and the [W4 receipt](w4-checkpoint.md) records PASS on `9279838f`, one cold-start failed attempt and the serial lock releases. Task 7 then merged through PR #126, and the [W5 receipt](w5-checkpoint.md) records the checkpoint as **RED** on `4da0720e`: the `#site-top` link change breaks `measure:immersive` and two Home specs outside Task 7's write set. W6 / Task 8 stays locked until a fix task and a fresh green W5. Overall acceptance stays PROPOSED, with existing manual/final gates OPEN.
 
 [Receipt template](../../plans/active/services-projects-footer-v1.md#receipt-template)
