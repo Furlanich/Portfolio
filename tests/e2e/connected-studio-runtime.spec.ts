@@ -9,6 +9,7 @@ import {
   pauseLabels,
   pauseSlot,
   readConnected,
+  trackWebglContexts,
 } from './support/connected-studio';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
@@ -91,5 +92,18 @@ test('activation waits for the page to finish loading', async ({ page }) => {
     await page.waitForTimeout(1_500);
     expect((await readConnected(page))?.imports).toBe(0);
     await expect(page.locator('canvas')).toHaveCount(0);
+  });
+
+test('the capability probe context is released before the engine creates its own', async ({ page }) => {
+    const contexts = await trackWebglContexts(page);
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'en');
+    await expectLive(page);
+    expect((await contexts.events()).slice(0, 3)).toEqual([
+      { type: 'create', context: 1 },
+      { type: 'lose', context: 1 },
+      { type: 'create', context: 2 },
+    ]);
+    expect(await contexts.maxAlive(), 'never two live contexts').toBe(1);
   });
 });

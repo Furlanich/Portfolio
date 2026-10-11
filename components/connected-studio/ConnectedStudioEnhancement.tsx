@@ -80,6 +80,24 @@ function installDiagnostics(route: ConnectedRoute): (reading: (() => LiveReading
   };
 }
 
+type WebglProbe = { available: boolean; softwareRenderer: boolean };
+
+/**
+ * A coarse WebGL2 probe on a throwaway canvas. The probe context is released immediately
+ * (`WEBGL_lose_context`), before the engine creates its own, so the page never holds two.
+ */
+function probeWebgl(): WebglProbe {
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl2') as WebGL2RenderingContext | null;
+    if (!gl) return { available: false, softwareRenderer: false };
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return { available: true, softwareRenderer: false };
+  } catch {
+    return { available: false, softwareRenderer: false };
+  }
+}
+
 /** Preferences known at entry. With either set, the optional engine is never fetched. */
 function readPreferences(): { reducedMotion: boolean; saveData: boolean } {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
@@ -177,6 +195,7 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     let teardown = () => undefined as void;
 
     const activate = () => {
+      probeWebgl();
       counters.imports += 1;
       void import('./runtime/create-connected-scene').then(({ createConnectedScene }) => {
         if (cancelled) return;

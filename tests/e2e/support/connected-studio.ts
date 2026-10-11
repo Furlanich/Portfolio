@@ -105,3 +105,54 @@ export async function holdPageLoad(page: Page): Promise<{ release(): void }> {
   });
   return { release };
 }
+
+export type WebglEvent = { type: 'create' | 'lose'; context: number };
+
+/**
+ * Records every WebGL2 context the page creates and every WEBGL_lose_context release, in order,
+ * without changing what either returns. It lets a spec prove that the probe context is released
+ * before the engine context exists, that there is never more than one live context, and that
+ * disposal releases the last one. Install it before the first navigation.
+ */
+export async function trackWebglContexts(page: Page): Promise<{ events(): Promise<WebglEvent[]>; maxAlive(): Promise<number> }> {
+  await page.addInitScript(() => {
+    const record = { events: [] as { type: 'create' | 'lose'; context: number }[], alive: 0, maxAlive: 0, next: 0 };
+    const ids = new WeakMap<object, number>();
+    const released = new WeakSet<object>();
+    (window as unknown as { __connectedGl: typeof record }).__connectedGl = record;
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
+      const context = (original as (...args: unknown[]) => unknown).call(this, type, ...rest) as WebGL2RenderingContext | null;
+      if (context && type === 'webgl2' && !ids.has(context)) {
+        const id = ++record.next;
+        ids.set(context, id);
+        record.events.push({ type: 'create', context: id });
+        record.alive += 1;
+        record.maxAlive = Math.max(record.maxAlive, record.alive);
+        const getExtension = context.getExtension.bind(context);
+        context.getExtension = ((name: string) => {
+          const extension = getExtension(name);
+          if (name !== 'WEBGL_lose_context' || !extension) return extension;
+          return new Proxy(extension, {
+            get(target, property) {
+              if (property !== 'loseContext') return Reflect.get(target, property);
+              return () => {
+                if (!released.has(context)) {
+                  released.add(context);
+                  record.events.push({ type: 'lose', context: id });
+                  record.alive -= 1;
+                }
+                target.loseContext();
+              };
+            },
+          });
+        }) as typeof context.getExtension;
+      }
+      return context;
+    } as typeof HTMLCanvasElement.prototype.getContext;
+  });
+  return {
+    events: () => page.evaluate(() => (window as unknown as { __connectedGl: { events: WebglEvent[] } }).__connectedGl.events),
+    maxAlive: () => page.evaluate(() => (window as unknown as { __connectedGl: { maxAlive: number } }).__connectedGl.maxAlive),
+  };
+}
