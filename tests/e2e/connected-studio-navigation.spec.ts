@@ -25,6 +25,7 @@ for (const language of ['es', 'en'] as const) {
           if (!(await link.isVisible())) await page.getByRole('banner').locator('summary').click();
         }
         await link.click();
+        await page.waitForURL(appPathname(stableRoutes[destination][language]), { waitUntil: 'commit' });
         await expectDestination(page, stableRoutes[destination][language], '');
         await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
         await page.waitForTimeout(400);
@@ -39,6 +40,7 @@ for (const language of ['es', 'en'] as const) {
         const link = page.getByRole(entry).locator(`a[href="${appPathname(stableRoutes[destination][language])}#site-top"]:visible`).first();
         if (entry === 'banner' && !(await link.isVisible())) await page.getByRole('banner').locator('summary').click();
         await link.click();
+        await page.waitForURL(appPathname(stableRoutes[destination][language]) + '#site-top', { waitUntil: 'commit' });
         await expectDestination(page, stableRoutes[destination][language], '#site-top');
         await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
         await page.waitForTimeout(400);
