@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 import {
   connectedCanvas,
   enableLiveForTest,
@@ -18,6 +19,9 @@ import { appPathname, appUrl, stableRoutes } from './support/paths';
 // SwiftShader, so these specs prove functional behavior only. They opt in through the controlled
 // test hook (`allowSoftwareRenderer`, `livePolicy`), which never changes the shipped policy. Hardware
 // acceptance belongs to Task 9.
+
+// Software rendering shares the CPU and the first test after a source edit meets a cold dev recompile.
+test.describe.configure({ timeout: 60_000 });
 
 test.describe('connected runtime', () => {
   test('eligible connected page starts a gently rotating scene with an accessible Pause control', async ({ page }) => {
@@ -137,4 +141,27 @@ test('a stored Home context loss keeps connected routes static (read-only, PC-5)
     expect(later?.renderCount, 'a paused scene draws nothing').toBe(first?.renderCount);
     expect(later?.idleAngleRadians).toBe(first?.idleAngleRadians);
   });
+
+test('the shipped policy keeps an ordinary page static even when the software gate is open', async ({ page }) => {
+    await setConnectedTestHook(page, { allowSoftwareRenderer: true });
+    await gotoConnected(page, 'services', 'en');
+    await expectStatic(page, 'services');
+  });
+
+  for (const scenario of [
+    { name: 'wide off, compact on', policy: { wide: false, compact: true }, width: 1440, height: 900, live: false },
+    { name: 'wide off, compact on', policy: { wide: false, compact: true }, width: 390, height: 844, live: true },
+    { name: 'wide on, compact off', policy: { wide: true, compact: false }, width: 390, height: 844, live: false },
+    { name: 'wide on, compact off', policy: { wide: true, compact: false }, width: 1440, height: 900, live: true },
+    { name: 'wide on, compact off (tablet follows wide)', policy: { wide: true, compact: false }, width: 820, height: 1180, live: true },
+    { name: 'wide off, compact on (tablet follows wide)', policy: { wide: false, compact: true }, width: 820, height: 1180, live: false },
+  ] as const) {
+    test(`livePolicy ${scenario.name} at ${scenario.width}px is ${scenario.live ? 'live' : 'static'}`, async ({ page }) => {
+      await page.setViewportSize({ width: scenario.width, height: scenario.height });
+      await enableLiveForTest(page, scenario.policy);
+      await gotoConnected(page, 'projects', 'es');
+      if (scenario.live) await expectLive(page);
+      else await expectStatic(page, 'projects');
+    });
+  }
 });

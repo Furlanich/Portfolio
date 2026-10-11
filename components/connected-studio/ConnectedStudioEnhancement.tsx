@@ -3,12 +3,14 @@
 import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
+import { CONNECTED_LIVE_POLICY, chooseConnectedMode } from '@/lib/connected-studio/capability';
 import { createConnectedController } from '@/lib/connected-studio/controller';
 import { getConnectedGraph, getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
 import { readConnectedSession } from '@/lib/connected-studio/session';
 import type {
   CapabilityWords,
   ConnectedController,
+  ConnectedLivePolicy,
   ConnectedRoute,
   ConnectedTier,
   ControllerOptions,
@@ -99,7 +101,23 @@ function probeWebgl(): WebglProbe {
   }
 }
 
-/** Preferences known at entry. With either set, the optional engine is never fetched. */
+/**
+ * The controlled test hook (`tests/e2e/support/connected-studio-test-hooks.ts`), set only by
+ * `page.addInitScript`. It is read as data and never from a query string, storage or UI.
+ */
+function readTestHook(): { allowSoftwareRenderer: boolean; livePolicy?: ConnectedLivePolicy } {
+  const hook = (window as typeof window & { __FURLANICH_CONNECTED_TEST__?: { allowSoftwareRenderer?: unknown; livePolicy?: { wide?: unknown; compact?: unknown } } }).__FURLANICH_CONNECTED_TEST__;
+  const policy = hook?.livePolicy;
+  return {
+    allowSoftwareRenderer: hook?.allowSoftwareRenderer === true,
+    livePolicy:
+      policy && typeof policy.wide === 'boolean' && typeof policy.compact === 'boolean'
+        ? { wide: policy.wide, compact: policy.compact }
+        : undefined,
+  };
+}
+
+/** Preferences known at activation. With either set, the optional engine is never fetched. */
 function readPreferences(): { reducedMotion: boolean; saveData: boolean } {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
   return {
@@ -190,16 +208,29 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     const mount = anchor?.closest('[data-connected-ground]')?.querySelector<HTMLElement>('[data-connected-mount]');
     if (!mount) return;
     const publish = installDiagnostics(route);
-    const preferences = readPreferences();
-    if (preferences.reducedMotion || preferences.saveData) return;
-    // A context loss, on this page or on Home (read-only, PC-5), keeps every connected route static.
-    const session = readConnectedSession();
-    if (session.contextLost) return;
     let cancelled = false;
     let teardown = () => undefined as void;
 
     const activate = () => {
-      probeWebgl();
+      // Every condition is read now, at activation, so a preference or a session that changed while the
+      // page loaded is honored. The cheap gates run first: a page that cannot go live never probes.
+      const preferences = readPreferences();
+      const session = readConnectedSession();
+      const hook = readTestHook();
+      const gate = {
+        reducedMotion: preferences.reducedMotion,
+        saveData: preferences.saveData,
+        sessionContextLost: session.contextLost,
+        loaded: document.readyState === 'complete',
+        visible: !document.hidden,
+        tier: getTierForWidth(window.innerWidth),
+        livePolicy: hook.livePolicy ?? CONNECTED_LIVE_POLICY,
+      };
+      if (chooseConnectedMode({ ...gate, webgl2: true, softwareRenderer: false }) !== 'webgl') return;
+      const probe = probeWebgl();
+      if (chooseConnectedMode({ ...gate, webgl2: probe.available, softwareRenderer: probe.softwareRenderer && !hook.allowSoftwareRenderer }) !== 'webgl') {
+        return;
+      }
       counters.imports += 1;
       void import('./runtime/create-connected-scene').then(({ createConnectedScene }) => {
         if (cancelled) return;
