@@ -13,7 +13,7 @@ last_verified: 2026-10-11
 
 # W5 checkpoint — 2026-10-11
 
-**Checkpoint result: RED (open).** Fresh post-merge evidence for the [W5 checkpoint](../../plans/active/services-projects-footer-v1.md#wave-checkpoints) shows one cause with three consequences. [PR #126](https://github.com/Furlanich/Portfolio/pull/126) made the localized Services and Projects links end in `#site-top`, and three checks that live outside Task 7's write set still expect the bare path. Everything else passed. Per the plan, a red checkpoint opens a fix task owned by the task whose paths contain the defect, and the next wave (W6 / Task 8) stays locked until a fresh green W5. No source, assertion, timeout, retry or baseline was changed to obtain a result. This receipt stays PROPOSED pending its independent review and human merge.
+**Checkpoint result: RED (open).** Fresh post-merge evidence for the [W5 checkpoint](../../plans/active/services-projects-footer-v1.md#wave-checkpoints) shows one cause with three consequences (Findings 1–3) and, once the first was worked around in a separate fix branch, a fourth finding the cause had hidden: a Home measurement regression (Finding 4). [PR #126](https://github.com/Furlanich/Portfolio/pull/126) made the localized Services and Projects links end in `#site-top`, and three checks that live outside Task 7's write set still expect the bare path. Everything else passed. Per the plan, a red checkpoint opens a fix task owned by the task whose paths contain the defect, and the next wave (W6 / Task 8) stays locked until a fresh green W5. No source, assertion, timeout, retry or baseline was changed to obtain a result. This receipt stays PROPOSED pending its independent review and human merge.
 
 ## Source and execution
 
@@ -52,15 +52,33 @@ Pass condition from the plan: "Connected runtime spec green; Home measurement un
 
 Notices, distinct from failures: existing vendored-script lint warnings, the module-type warning, a stale Browserslist notice, reduced-motion and software-renderer console notices.
 
+**Finding 4 — with the wait corrected, `measure:immersive` shows a Home regression (found after the checkpoint run, on the fix branch).** The same script, on the same machine, at pre-Task-7 `9279838f` (two runs, with the corrected wait applied temporarily to that detached worktree and restored afterwards) and at `4da0720e` plus the PR #128 change (three runs):
+
+| | `9279838f`, 2 runs | `4da0720e` + PR #128, 3 runs |
+| --- | --- | --- |
+| Lazy runtime Brotli (gate ≤ 120 KiB) | 108.1 KiB, one chunk | 112.1 KiB, two chunks (2.4 + 109.7), all 3 runs |
+| Headroom (working target 15 KiB, owner-accepted floor 6 KiB) | 11.9 KiB | 7.9 KiB, all 3 runs |
+| Listeners after traversal → after remounts (gate: growth ≤ 2) | 520 → 522, 520 → 522: pass, pass | 525 → 529, 525 → 529, 528 → 529: fail, fail, pass |
+
+Headroom fell by 4.0 KiB deterministically; the 120 KiB gate and the 6 KiB floor still pass. The listener count settles at 529 in every current run (no monotonic growth), but higher than before (522) and later: whether the gate passes depends on how many of the new listeners exist when the traversal sample is taken. That points at the connected host's deferred activation on the Services visit interacting with the gate's sampling point; it is not diagnosed here and no cause is claimed. The remount loop now visits Services, which carries Task 7's host, whereas at `9279838f` it did not. Per the plan's pass condition ("Home measurement unchanged within its recorded tolerance") this is a failure: the headroom changed and the listener gate is unstable. Logs: `w5-measure-immersive.log` (checkpoint run, wait timeout) and, under the same ignored workspace, `fix-measure.log`, `cur-measure1.log`, `cur-measure2.log`, `base-measure1.log`, `base-measure2.log`.
+
 ## Required fix task
 
-Owner: Task 7 (its change introduced the new link shape). Needs an owner-authorized serial transfer of these paths, limited to the href expectations:
+### Stale expectations (fix PR open)
+
+Owner: Task 7 (its change introduced the new link shape). [PR #128](https://github.com/Furlanich/Portfolio/pull/128) (draft, `codex/spf-7-site-top-expectations`) updates only the three expectations, under the owner's 2026-10-11 choice of a separate fix PR for them:
 
 - `scripts/measure-immersive-production.mjs` (the `waitForURL` at line 245 only);
 - `tests/e2e/smoke.spec.ts` (the Home link assertion at line 91);
 - `tests/e2e/immersive-home-static.spec.ts` (the Home link assertion at line 154).
 
-After the fix, W5 must be rerun fresh on merged `main`: at minimum `npm run measure:immersive` (its Home figures compared with the values recorded in the [sky-chart acceptance record](../sky-chart-acceptance-v2/index.md) and the script's own gates), the two Home specs on all projects, and the full matrix, since the failures above were found only there. Until then the Task 7 locks (CONNECTED-HOST, CONNECTED-GROUND) are not released and Task 8 stays locked.
+Verified on that branch with the unchanged tests as the RED: both Home specs on every project that runs them, `--workers=1`, 82 passed; `npm run validate` exit 0 (472/472, lint 0 errors). The branch is not merged and does not make W5 green (Finding 4).
+
+### Home regression (no fix task open yet)
+
+Finding 4 needs a Task 7 root-cause task with its own RED test, and an owner decision if the gate's sampling point or the 6 KiB headroom floor should change. Neither the gate nor the headroom floor was touched. A task that edits Home's runtime or the measurement script needs its own serial transfer.
+
+After both, W5 must be rerun fresh on merged `main`: `npm run measure:immersive` passing (its Home figures compared with the values recorded in the [sky-chart acceptance record](../sky-chart-acceptance-v2/index.md) and the script's own gates), the two Home specs on all projects, and the full matrix, since the failures above were found only there. Until then the Task 7 locks (CONNECTED-HOST, CONNECTED-GROUND) are not released and Task 8 stays locked.
 
 ## Serial lock ledger
 
@@ -68,4 +86,4 @@ No lock is released. Task 7 holds CONNECTED-HOST and CONNECTED-GROUND (acquired 
 
 ## Acceptance
 
-Source/isolation, the agent-usage audit and the evidence below the RED finding are accurate as recorded. The checkpoint itself is not accepted. Still OPEN: the fix task and a fresh green W5; the screen-reader, real-zoom and physical-device checks the owner performs under OD-4; independent acceptance of the Task 6 correction and of Task 7; the OD-3 Home/Services wording difference; full Task 3/5 owner acceptance; and final SPF acceptance. Both live tiers stay false. Publish as draft until independent review and human merge.
+Source/isolation, the agent-usage audit and the evidence below the RED finding are accurate as recorded. The checkpoint itself is not accepted. Still OPEN: PR #128 (review and merge), a Task 7 root-cause task for Finding 4, and a fresh green W5; the screen-reader, real-zoom and physical-device checks the owner performs under OD-4; independent acceptance of the Task 6 correction and of Task 7; the OD-3 Home/Services wording difference; full Task 3/5 owner acceptance; and final SPF acceptance. Both live tiers stay false. Publish as draft until independent review and human merge.
