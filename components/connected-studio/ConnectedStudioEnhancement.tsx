@@ -7,6 +7,7 @@ import { CONNECTED_LIVE_POLICY, chooseConnectedMode } from '@/lib/connected-stud
 import { createConnectedController } from '@/lib/connected-studio/controller';
 import { getConnectedGraph, getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
 import { readConnectedSession } from '@/lib/connected-studio/session';
+import { isSoftwareRenderer } from '@/lib/immersive-home/capability';
 import type {
   CapabilityWords,
   ConnectedController,
@@ -94,8 +95,11 @@ function probeWebgl(): WebglProbe {
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl2') as WebGL2RenderingContext | null;
     if (!gl) return { available: false, softwareRenderer: false };
+    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+    const renderer = String(debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER));
+    const softwareRenderer = isSoftwareRenderer(renderer);
     gl.getExtension('WEBGL_lose_context')?.loseContext();
-    return { available: true, softwareRenderer: false };
+    return { available: true, softwareRenderer };
   } catch {
     return { available: false, softwareRenderer: false };
   }

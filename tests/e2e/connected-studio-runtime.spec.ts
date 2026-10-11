@@ -164,4 +164,10 @@ test('the shipped policy keeps an ordinary page static even when the software ga
       else await expectStatic(page, 'projects');
     });
   }
+
+test('a software renderer is rejected by default even with the live policy on', async ({ page }) => {
+    await setConnectedTestHook(page, { livePolicy: { wide: true, compact: true } });
+    await gotoConnected(page, 'services', 'es');
+    await expectStatic(page, 'services');
+  });
 });
