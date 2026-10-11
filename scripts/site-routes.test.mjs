@@ -96,6 +96,14 @@ test('no helper builds a retired project-detail destination', () => {
   assert.equal('getProjectDetailNavigationPaths' in foundationNavigation, false);
 });
 
+test('current Services and Projects navigation links explicitly target the page top', () => {
+  for (const locale of ['es', 'en']) {
+    for (const route of ['services', 'projects']) {
+      assert.equal(getFoundationNavigationPaths(locale, route)[route], `${expectedRoutes[route][locale]}#site-top`);
+    }
+  }
+});
+
 test('returns working navigation links, Projects, Process, and the equivalent-language destination', () => {
   for (const locale of ['es', 'en']) {
     const alternateLocale = locale === 'es' ? 'en' : 'es';
@@ -115,8 +123,8 @@ test('returns working navigation links, Projects, Process, and the equivalent-la
         },
         {
           home: expectedRoutes.home[locale],
-          services: expectedRoutes.services[locale],
-          projects: expectedRoutes.projects[locale],
+          services: expectedRoutes.services[locale] + (currentRouteId === 'services' ? '#site-top' : ''),
+          projects: expectedRoutes.projects[locale] + (currentRouteId === 'projects' ? '#site-top' : ''),
           contact: expectedRoutes.contact[locale],
           studio: expectedRoutes.studio[locale],
           founder: expectedRoutes.founder[locale],

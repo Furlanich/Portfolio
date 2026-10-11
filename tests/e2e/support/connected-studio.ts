@@ -203,10 +203,6 @@ export async function navigateInApp(page: Page, route: string) {
   const link = isHome
     ? page.locator('a[data-app-bar-brand]:visible').first()
     : page.locator(`a[data-app-bar-nav-link][href="${pathname}"]:visible`).first();
-  // Pre-existing and outside this task: with the global `html { scroll-behavior: smooth }`, a Next route
-  // transition in Playwright Chromium lands at the bottom of the new page (instant scrolling lands at the
-  // top). The journey tests need a known starting scroll, so they navigate with instant scrolling.
-  await page.addStyleTag({ content: 'html { scroll-behavior: auto !important; }' });
   await link.click();
   await page.waitForURL((url) => url.pathname === pathname);
 }

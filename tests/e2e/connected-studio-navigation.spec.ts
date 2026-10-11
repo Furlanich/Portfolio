@@ -14,6 +14,40 @@ const locales = [
   { name: 'English', index: stableRoutes.projects.en, alternate: stableRoutes.projects.es, switchHreflang: 'es-AR', services: stableRoutes.services.en },
 ] as const;
 
+for (const language of ['es', 'en'] as const) {
+  for (const destination of ['services', 'projects'] as const) {
+    for (const entry of ['banner', 'contentinfo', 'main'] as const) {
+      test(`${language} ${destination} page link from ${entry} lands at the top`, async ({ page }) => {
+        await page.goto(appUrl(entry === 'contentinfo' ? stableRoutes.studio[language] : stableRoutes.home[language]));
+        const link = page.getByRole(entry).locator(`a[href="${appPathname(stableRoutes[destination][language])}"]:visible`).first();
+        if (entry === 'banner') {
+          await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+          if (!(await link.isVisible())) await page.getByRole('banner').locator('summary').click();
+        }
+        await link.click();
+        await expectDestination(page, stableRoutes[destination][language], '');
+        await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+        await page.waitForTimeout(400);
+        expect(await page.evaluate(() => window.scrollY)).toBe(0);
+        await expect(page.locator('main h1')).toBeInViewport();
+      });
+    }
+    for (const entry of ['banner', 'contentinfo'] as const) {
+      test(`${language} ${destination} current-page ${entry} link returns to the top`, async ({ page }) => {
+        await page.goto(appUrl(stableRoutes[destination][language]));
+        await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+        const link = page.getByRole(entry).locator(`a[href="${appPathname(stableRoutes[destination][language])}#site-top"]:visible`).first();
+        if (entry === 'banner' && !(await link.isVisible())) await page.getByRole('banner').locator('summary').click();
+        await link.click();
+        await expectDestination(page, stableRoutes[destination][language], '#site-top');
+        await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+        await page.waitForTimeout(400);
+        expect(await page.evaluate(() => window.scrollY)).toBe(0);
+      });
+    }
+  }
+}
+
 /**
  * Waits for the smooth fragment scroll to arrive and stop, then returns the element's top and the App
  * Bar bottom. Arrival is "the top sits just under the App Bar": a bare "two equal reads" check can fire

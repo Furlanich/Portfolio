@@ -10,7 +10,7 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-10
+last_verified: 2026-10-11
 ---
 
 # Playwright QA
@@ -46,6 +46,8 @@ Set `NEXT_PUBLIC_BASE_PATH=/Portfolio` to reproduce GitHub Pages routing. The co
 Mobile WebKit link tabbing depends on host Safari Full Keyboard Access, so exact first-link Tab order is asserted in mobile Chromium. Both mobile engines verify disclosure activation and dismissal by keyboard.
 
 ## Connected studio specs (PLAN-SPF-V1)
+
+PR #126 correction coverage also checks initially hidden activation, both disabled-tier resize directions, and a retained Home renderer beyond the bounded deferral. The Node host suite executes the actual React effect with a deferred optional-module promise to test changed preferences/session/policy/visibility, cancellation, eligible attachment and import rejection. Navigation regressions use the shipped smooth-scroll CSS: ordinary Services/Projects links from Header, Footer and page content land at the top in both locales, while same-route Header/Footer links use the existing `#site-top` target. Intentional dossier and service-section fragments retain their anchor behavior.
 
 `playwright.config.ts` registers the connected-studio spec families for Services, Projects and the shared Footer ahead of the specs themselves, so each later task adds its spec without a config change. The specs land in PLAN-SPF-V1 Tasks 3–9. Until a spec exists, `npx playwright test --list` shows no tests for it, and "no tests found" is never a pass for a spec that does exist. `scripts/connected-studio-harness.test.mjs` asserts this table against the listed project configuration.
 
@@ -119,5 +121,5 @@ Run it with `npx playwright test --project=immersive-chromium tests/e2e/sky-char
 | `console-errors.ts` | `observeUnexpectedBrowserErrors`: collects console errors and page errors and asserts none |
 | `editorial.ts` | Mono-text and sequence-marker assertions for the editorial pages |
 | `connected-studio-test-hooks.ts` | `setConnectedTestHook(page, hook)`: the one test-injection mechanism for the connected routes. It sets `window.__FURLANICH_CONNECTED_TEST__ = { allowSoftwareRenderer?, livePolicy? }` only through `page.addInitScript`, mirroring Home's `__SKY_CHART_ALLOW_SOFTWARE_RENDERER__`, and rejects any other field or a non-boolean value. Functional tests and poster capture may use it and label the result controlled test evidence; production measurements and owner hardware acceptance never set it |
-| `connected-studio.ts` | The runtime-spec helpers: `enableLiveForTest` (the controlled opt-in), `gotoConnected`, `expectLive`, `expectStatic`, `expectFellBack`, `expectStopped`, the `readConnected` reader of the development-only diagnostics hook (its `ConnectedDiagnostics` type lives with the component), `trackWebglContexts` (create and `WEBGL_lose_context` events, never two live), `holdPageLoad`, `controlVisibility`, `seedSession`/`readSession`, `navigateInApp` (a real client-side navigation with instant scrolling), `readLabelGeometry`/`overlaps` (the label oracle read from the DOM), `observeEnhancementShifts` (layout shift after activation) and `isConnectedEngineRequest`/`observeEngineRequests` (the request-level observer, used against the production export) |
+| `connected-studio.ts` | The runtime-spec helpers: `enableLiveForTest` (the controlled opt-in), `gotoConnected`, `expectLive`, `expectStatic`, `expectFellBack`, `expectStopped`, the `readConnected` reader of the development-only diagnostics hook (its `ConnectedDiagnostics` type lives with the component), `trackWebglContexts` (create and `WEBGL_lose_context` events, never two live), `holdPageLoad`, `controlVisibility`, `seedSession`/`readSession`, `navigateInApp` (a real client-side navigation using the shipped scroll behavior), `readLabelGeometry`/`overlaps` (the label oracle read from the DOM), `observeEnhancementShifts` (layout shift after activation) and `isConnectedEngineRequest`/`observeEngineRequests` (the request-level observer, used against the production export) |
 | `production-instrumentation.mjs` | Browser-level instrumentation for the production measurements (draw calls, label textures, idle frames, backdrop surfaces and layout-shift attribution); shared by `measure:immersive` and `measure:home-vitals`, which cannot use the dev-only debug hook |

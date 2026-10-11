@@ -22,7 +22,7 @@ export const viewport = {
 
 export default function EnglishLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${instrumentSans.variable} ${plexMono.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${instrumentSans.variable} ${plexMono.variable}`}>
       <body>{children}</body>
     </html>
   );

@@ -22,10 +22,11 @@ export function getFoundationNavigationPaths(
 ): FoundationNavigationPaths {
   const alternateLocale = locale === 'es' ? 'en' : 'es';
 
+  // An explicit anchor returns a same-route link to the top; Next otherwise preserves its scroll.
   return {
     home: getFoundationPath('home', locale),
-    services: getFoundationPath('services', locale),
-    projects: getFoundationPath('projects', locale),
+    services: getFoundationPath('services', locale) + (currentRouteId === 'services' ? '#site-top' : ''),
+    projects: getFoundationPath('projects', locale) + (currentRouteId === 'projects' ? '#site-top' : ''),
     contact: getFoundationPath('contact', locale),
     studio: getFoundationPath('studio', locale),
     founder: getFoundationPath('founder', locale),
