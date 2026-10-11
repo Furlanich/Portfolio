@@ -4,9 +4,11 @@ import { allowSoftwareRenderer, expectActive } from './support/sky-chart';
 import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 import {
   connectedCanvas,
+  controlVisibility,
   enableLiveForTest,
   expectFellBack,
   expectLive,
+  expectStopped,
   expectStatic,
   gotoConnected,
   holdPageLoad,
@@ -16,6 +18,7 @@ import {
   pauseSlot,
   readConnected,
   readSession,
+  scrollInstant,
   seedSession,
   trackWebglContexts,
 } from './support/connected-studio';
@@ -263,5 +266,33 @@ test('one live renderer across the whole navigation journey', async ({ page }) =
     await expectLive(page);
     await expect(page.locator('canvas[data-sky-chart-canvas]')).toHaveCount(0);
     expect(await contexts.maxAlive(), 'Home released its context before Services created one').toBe(1);
+  });
+
+test('a hidden tab stops all scheduled work and resumes only when visible again', async ({ page }) => {
+    const visibility = await controlVisibility(page);
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'es');
+    await expectLive(page);
+    await visibility.setHidden(true);
+    await expectStopped(page);
+    expect((await readConnected(page))?.controller).toBe('suspended');
+
+    const stoppedAt = (await readConnected(page))?.renderCount ?? 0;
+    await visibility.setHidden(false);
+    await expect.poll(async () => (await readConnected(page))?.renderCount ?? 0).toBeGreaterThan(stoppedAt);
+    expect((await readConnected(page))?.controller).toBe('live');
+  });
+
+  test('the Footer suspends the scene and leaving it resumes from the current state', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'projects', 'en');
+    await expectLive(page);
+    await scrollInstant(page, 'bottom');
+    await expectStopped(page);
+    expect((await readConnected(page))?.controller).toBe('suspended');
+
+    await scrollInstant(page, 0);
+    await expect.poll(async () => (await readConnected(page))?.controller).toBe('live');
+    expect((await readConnected(page))?.progress).toBeLessThan(0.05);
   });
 });

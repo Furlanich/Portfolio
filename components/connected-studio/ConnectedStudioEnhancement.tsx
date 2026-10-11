@@ -40,7 +40,10 @@ export type ConnectedDiagnostics = {
   mode: 'static' | 'live' | 'failed';
   controller: SceneSnapshot['state'] | 'none';
   renderCount: number;
+  /** The controller's own pending count. */
   pendingCallbacks: number;
+  /** Timers and animation frames the browser scheduler actually holds; zero whenever the scene is stopped. */
+  schedulerPending: number;
   targetFps: number;
   progress: number;
   idleAngleRadians: number;
@@ -62,6 +65,7 @@ const STATIC_READING: LiveReading = {
   controller: 'none',
   renderCount: 0,
   pendingCallbacks: 0,
+  schedulerPending: 0,
   targetFps: 0,
   progress: 0,
   idleAngleRadians: 0,
@@ -165,7 +169,7 @@ function scheduleAfterLoad(callback: () => void): () => void {
  * The controller's scheduler on the browser clock: a timer for the interval, then one animation frame
  * so a draw lands on a frame boundary. Cancelling clears whichever stage is pending.
  */
-function createBrowserScheduler(): { scheduler: ControllerOptions['scheduler']; cancelAll(): void } {
+function createBrowserScheduler(): { scheduler: ControllerOptions['scheduler']; cancelAll(): void; size(): number } {
   const pending = new Map<number, { timeout: number; frame: number }>();
   let nextId = 1;
   const clear = (entry: { timeout: number; frame: number }) => {
@@ -197,6 +201,7 @@ function createBrowserScheduler(): { scheduler: ControllerOptions['scheduler']; 
       pending.forEach(clear);
       pending.clear();
     },
+    size: () => pending.size,
   };
 }
 
@@ -287,11 +292,15 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       sizeScene();
       push(0);
     };
+    // A hidden tab stops all scheduled work; showing it again resumes from the current scroll state.
+    const onVisibility = () => push(0);
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVisibility);
     releases.push(() => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
+      document.removeEventListener('visibilitychange', onVisibility);
     });
     push(0);
     // A stored Pause starts from one drawn frame on the current pose, then holds.
@@ -305,6 +314,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         controller: snapshot.state,
         renderCount: info.renderCount,
         pendingCallbacks: snapshot.pendingCallbacks,
+        schedulerPending: timing.size(),
         targetFps: snapshot.targetFps,
         progress: snapshot.pose.progress,
         idleAngleRadians: snapshot.pose.idleAngleRadians,

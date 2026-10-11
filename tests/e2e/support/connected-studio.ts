@@ -215,3 +215,40 @@ export async function navigateInApp(page: Page, route: string) {
 export function liveContexts(events: readonly WebglEvent[]): number {
   return events.filter((event) => event.type === 'create').length - events.filter((event) => event.type === 'lose').length;
 }
+
+/**
+ * Lets a spec hide and show the document without a second browser tab: document.hidden and
+ * visibilityState become controllable and visibilitychange fires, as it does for a real tab switch.
+ */
+export async function controlVisibility(page: Page): Promise<{ setHidden(hidden: boolean): Promise<void> }> {
+  await page.addInitScript(() => {
+    let hidden = false;
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => hidden });
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => (hidden ? 'hidden' : 'visible') });
+    (window as unknown as { __setConnectedHidden(value: boolean): void }).__setConnectedHidden = (value) => {
+      hidden = value;
+      document.dispatchEvent(new Event('visibilitychange'));
+    };
+  });
+  return {
+    setHidden: (hidden) => page.evaluate((value) => (window as unknown as { __setConnectedHidden(v: boolean): void }).__setConnectedHidden(value), hidden),
+  };
+}
+
+export const scrollInstant = (page: Page, top: number | 'bottom') =>
+  page.evaluate((target) => window.scrollTo({ top: target === 'bottom' ? document.documentElement.scrollHeight : target, behavior: 'instant' }), top);
+
+/** Polls until the scene has stopped: suspended or paused, with no scheduled work and no further draws. */
+export async function expectStopped(page: Page, settleMs = 800) {
+  await expect
+    .poll(async () => {
+      const reading = await readConnected(page);
+      return reading && reading.controller !== 'live' && reading.pendingCallbacks === 0 && reading.schedulerPending === 0;
+    })
+    .toBe(true);
+  const first = await readConnected(page);
+  await page.waitForTimeout(settleMs);
+  const later = await readConnected(page);
+  expect(later?.renderCount, 'a stopped scene draws nothing').toBe(first?.renderCount);
+  expect(later?.schedulerPending).toBe(0);
+}
