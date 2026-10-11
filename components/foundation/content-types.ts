@@ -1,5 +1,5 @@
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { getFoundationPath } from '../../lib/site-routes.ts';
+import { getFoundationPageLinkHref } from '../../lib/foundation-navigation.ts';
 import type { FoundationRouteId } from '../../lib/site-routes.ts';
 import type { Locale } from '../../lib/locales';
 
@@ -18,7 +18,7 @@ export function resolveActionLink(
 ): ResolvedActionLink {
   return {
     ...action,
-    href: getFoundationPath(action.routeId, locale),
+    href: getFoundationPageLinkHref(action.routeId, locale),
   };
 }
 

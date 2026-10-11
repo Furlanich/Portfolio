@@ -3,6 +3,7 @@ import { getConnectedPoster } from '@/lib/connected-studio/media-manifest';
 import type { CapabilityWords, ConnectedRoute } from '@/lib/connected-studio/types';
 import type { Locale } from '@/lib/locales';
 import { withBasePath } from '@/lib/paths';
+import { ConnectedStudioEnhancement } from './ConnectedStudioEnhancement';
 import styles from './connected-studio.module.css';
 
 export type ConnectedStudioGroundProps = {
@@ -45,6 +46,7 @@ export function ConnectedStudioGround({ route, locale, capabilityWords }: Connec
     >
       <div data-connected-poster className={styles.poster} />
       <div data-connected-mount data-capability-words={JSON.stringify(capabilityWords)} className={styles.mount} />
+      <ConnectedStudioEnhancement route={route} locale={locale} capabilityWords={capabilityWords} />
     </div>
   );
 }

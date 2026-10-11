@@ -16,6 +16,12 @@ export type FoundationNavigationPaths = {
   alternateHref: string;
 };
 
+/** Page links use a stable top target; canonical URLs and intentional section links stay separate. */
+export function getFoundationPageLinkHref(routeId: FoundationRouteId, locale: Locale): string {
+  const path = getFoundationPath(routeId, locale);
+  return routeId === 'services' || routeId === 'projects' ? `${path}#site-top` : path;
+}
+
 export function getFoundationNavigationPaths(
   locale: Locale,
   currentRouteId: FoundationRouteId,
@@ -24,8 +30,8 @@ export function getFoundationNavigationPaths(
 
   return {
     home: getFoundationPath('home', locale),
-    services: getFoundationPath('services', locale),
-    projects: getFoundationPath('projects', locale),
+    services: getFoundationPageLinkHref('services', locale),
+    projects: getFoundationPageLinkHref('projects', locale),
     contact: getFoundationPath('contact', locale),
     studio: getFoundationPath('studio', locale),
     founder: getFoundationPath('founder', locale),

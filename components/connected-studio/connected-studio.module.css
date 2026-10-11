@@ -77,6 +77,87 @@
   pointer-events: none;
 }
 
+/*
+ * The projected capability words (Task 7), as small plate chips like the Revision 5 references:
+ * decorative, pointer-inert, upright and never below 12px (the spec's floor is about 11px). Position
+ * and visibility arrive from the runtime as a transform and an opacity, so nothing here lays out
+ * against the page. A suspended scene (hidden tab, Footer handoff) hides the whole mount.
+ */
+.labels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  padding: 3px 8px;
+  border: 1px solid rgba(111, 168, 224, 0.32);
+  border-radius: 6px;
+  background-color: rgba(8, 26, 46, 0.82);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  color: #d3e3f3;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+
+.mount[data-connected-state='suspended'] {
+  visibility: hidden;
+}
+
+/*
+ * The hero Pause control (Task 7). It lives in the slot the page reserved inside the introduction
+ * plate, so it is neither fixed nor over body copy. 44px in both directions, the App Bar's focus
+ * treatment, and an explicit-property hover (fine pointers only) inside the spec's 160-220ms.
+ */
+.pause {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: 1px solid rgba(156, 196, 236, 0.5);
+  border-radius: 10px;
+  background-color: transparent;
+  color: #F9F6EE;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pause:hover {
+    border-color: var(--sky-glow);
+    background-color: rgba(111, 168, 224, 0.1);
+  }
+}
+
+.pause:focus-visible {
+  outline: 3px solid var(--sky-glow);
+  outline-offset: 3px;
+}
+
+/* After fallback the control stays for a keyboard user who holds it, but it no longer acts. */
+.pause[aria-disabled='true'] {
+  cursor: default;
+  color: var(--sky-glow);
+  border-color: rgba(156, 196, 236, 0.28);
+}
+
 /* Forced colors removes the decorative environment and uses system colors (DESIGN-SPF-V1). */
 @media (forced-colors: active) {
   .ground {

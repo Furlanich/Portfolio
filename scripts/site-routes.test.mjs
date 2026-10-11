@@ -16,6 +16,7 @@ const {
 const siteRoutes = await import('../lib/site-routes.ts');
 const foundationNavigation = await import('../lib/foundation-navigation.ts');
 const { getFoundationNavigationPaths } = foundationNavigation;
+const { resolveActionLink } = await import('../components/foundation/content-types.ts');
 
 const expectedRoutes = {
   home: { es: '/', en: '/en/' },
@@ -96,6 +97,18 @@ test('no helper builds a retired project-detail destination', () => {
   assert.equal('getProjectDetailNavigationPaths' in foundationNavigation, false);
 });
 
+test('Services and Projects navigation and content actions always explicitly target the page top', () => {
+  for (const locale of ['es', 'en']) {
+    for (const route of ['services', 'projects']) {
+      for (const current of foundationRouteIds) {
+        assert.equal(getFoundationNavigationPaths(locale, current)[route], `${expectedRoutes[route][locale]}#site-top`);
+      }
+      assert.equal(resolveActionLink({ label: 'Page link', routeId: route }, locale).href, `${expectedRoutes[route][locale]}#site-top`);
+    }
+    assert.equal(resolveActionLink({ label: 'Contact', routeId: 'contact' }, locale).href, expectedRoutes.contact[locale]);
+  }
+});
+
 test('returns working navigation links, Projects, Process, and the equivalent-language destination', () => {
   for (const locale of ['es', 'en']) {
     const alternateLocale = locale === 'es' ? 'en' : 'es';
@@ -115,8 +128,8 @@ test('returns working navigation links, Projects, Process, and the equivalent-la
         },
         {
           home: expectedRoutes.home[locale],
-          services: expectedRoutes.services[locale],
-          projects: expectedRoutes.projects[locale],
+          services: expectedRoutes.services[locale] + '#site-top',
+          projects: expectedRoutes.projects[locale] + '#site-top',
           contact: expectedRoutes.contact[locale],
           studio: expectedRoutes.studio[locale],
           founder: expectedRoutes.founder[locale],
