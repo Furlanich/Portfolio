@@ -242,7 +242,8 @@ try {
   };
   const remount = async () => {
     await page.locator('header').getByRole('link', { name: 'Servicios', exact: true }).first().click();
-    await page.waitForURL('**/servicios/');
+    // The header's Services link ends in `#site-top` (getFoundationPageLinkHref).
+    await page.waitForURL(/\/servicios\/(#site-top)?$/);
     await page.goBack();
     await page.evaluate(() => window.scrollTo(0, 0));
     // N3 lock transfer: Next's own back-navigation scroll restoration can still land *after*

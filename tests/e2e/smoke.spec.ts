@@ -90,7 +90,7 @@ for (const narrativeCase of homepageNarrativeCases) {
     await expect(main.getByText(narrativeCase.audience, { exact: true })).toBeVisible();
     await expect(main.getByRole('region', { name: narrativeCase.proofHeading }).getByRole('link', { name: narrativeCase.proofAction })).toHaveAttribute(
       'href',
-      appPathname(narrativeCase.projectsPath),
+      `${appPathname(narrativeCase.projectsPath)}#site-top`,
     );
     await expect(main.getByText(narrativeCase.demoStatement, { exact: true })).toBeVisible();
     // Home carries no <img> at all: the environment poster is a CSS background (D-23), and no
