@@ -174,3 +174,21 @@ export async function seedSession(page: Page, values: Partial<Record<keyof typeo
 
 export const readSession = (page: Page) =>
   page.evaluate((keys) => Object.fromEntries(Object.entries(keys).map(([name, key]) => [name, window.sessionStorage.getItem(key)])), SESSION_KEYS);
+
+/**
+ * The page tried to go live and fell back: no canvas, no Pause control, a complete static page, and
+ * the diagnostics report `failed` (an engine import was started, unlike a gated page).
+ */
+export async function expectFellBack(page: Page, route: ConnectedRoute, timeout = 30_000) {
+  await expect.poll(async () => (await readConnected(page))?.mode, { timeout }).toBe('failed');
+  await expect(page.locator('canvas')).toHaveCount(0);
+  await expect(pauseSlot(page, route).getByRole('button')).toHaveCount(0);
+  expect((await readConnected(page))?.imports, 'an engine import was attempted').toBeGreaterThan(0);
+}
+
+/** Uncaught page errors only (an unhandled rejection is one); failed resource loads are the test's own doing. */
+export function observePageErrors(page: Page): { errors: string[] } {
+  const seen = { errors: [] as string[] };
+  page.on('pageerror', (error) => seen.errors.push(error.message));
+  return seen;
+}

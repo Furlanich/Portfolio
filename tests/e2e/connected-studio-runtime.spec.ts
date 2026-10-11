@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test';
+import { observeUnexpectedBrowserErrors } from './support/console-errors';
 import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 import {
   connectedCanvas,
   enableLiveForTest,
+  expectFellBack,
   expectLive,
   expectStatic,
   gotoConnected,
@@ -10,6 +12,7 @@ import {
   pauseLabels,
   pauseSlot,
   readConnected,
+  readSession,
   seedSession,
   trackWebglContexts,
 } from './support/connected-studio';
@@ -169,5 +172,40 @@ test('a software renderer is rejected by default even with the live policy on', 
     await setConnectedTestHook(page, { livePolicy: { wide: true, compact: true } });
     await gotoConnected(page, 'services', 'es');
     await expectStatic(page, 'services');
+  });
+
+test('a renderer that fails after the probe returns quietly to static', async ({ page }) => {
+    const assertNoBrowserErrors = observeUnexpectedBrowserErrors(page);
+    await page.addInitScript(() => {
+      const original = HTMLCanvasElement.prototype.getContext;
+      let webgl2Requests = 0;
+      HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
+        // The first request is the capability probe; the engine's own request fails.
+        if (type === 'webgl2' && ++webgl2Requests > 1) return null;
+        return (original as (...args: unknown[]) => unknown).call(this, type, ...rest);
+      } as typeof HTMLCanvasElement.prototype.getContext;
+    });
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'en');
+    await expectFellBack(page, 'services');
+    assertNoBrowserErrors();
+  });
+
+  test('a lost context disposes the scene and keeps the session static, writing only its own flag', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'es');
+    await expectLive(page);
+    await page.evaluate(() => {
+      const canvas = document.querySelector<HTMLCanvasElement>('canvas[data-connected-canvas]');
+      const extension = (canvas?.getContext('webgl2') as WebGL2RenderingContext | null)?.getExtension('WEBGL_lose_context');
+      extension?.loseContext();
+    });
+    await expectFellBack(page, 'services');
+    expect(await readSession(page)).toMatchObject({ contextLost: '1', homeContextLost: null });
+
+    // The loss outlives the page: the same session stays static on the other route and locale.
+    await seedSession(page, {});
+    await gotoConnected(page, 'projects', 'en');
+    await expectStatic(page, 'projects');
   });
 });

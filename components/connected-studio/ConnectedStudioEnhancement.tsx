@@ -6,7 +6,7 @@ import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
 import { CONNECTED_LIVE_POLICY, chooseConnectedMode } from '@/lib/connected-studio/capability';
 import { createConnectedController } from '@/lib/connected-studio/controller';
 import { getConnectedGraph, getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
-import { readConnectedSession } from '@/lib/connected-studio/session';
+import { markConnectedContextLost, readConnectedSession } from '@/lib/connected-studio/session';
 import { isSoftwareRenderer } from '@/lib/immersive-home/capability';
 import type {
   CapabilityWords,
@@ -195,6 +195,129 @@ function createBrowserScheduler(): { scheduler: ControllerOptions['scheduler']; 
   };
 }
 
+type LiveOptions = {
+  createConnectedScene: typeof import('./runtime/create-connected-scene').createConnectedScene;
+  mount: HTMLElement;
+  route: ConnectedRoute;
+  words: CapabilityWords;
+  startPaused: boolean;
+  publish: (reading: (() => LiveReading) | null) => void;
+  onContextLost(): void;
+};
+
+type LiveScene = { controller: ConnectedController; dispose(): void };
+
+/**
+ * Builds the live scene: the engine, the controller and the browser bindings. Every acquisition
+ * pushes its release onto one stack, so a failure at any step, or the final dispose, releases
+ * exactly what was built, in reverse order. A throw leaves nothing behind.
+ */
+function attachLiveScene(options: LiveOptions): LiveScene {
+  const releases: Array<() => void> = [];
+  const dispose = () => {
+    while (releases.length) {
+      try {
+        releases.pop()?.();
+      } catch {
+        // A release that throws must not stop the rest from running.
+      }
+    }
+  };
+  try {
+    let layout = readLayout();
+    let tier = getTierForWidth(layout.viewportWidth);
+    let graph = getConnectedGraph(getQualityForTier(tier));
+    const scene: SceneHandle = options.createConnectedScene({
+      mount: options.mount,
+      graph,
+      quality: graph.quality,
+      tier,
+      words: options.words,
+      onContextLost: options.onContextLost,
+    });
+    releases.push(() => scene.dispose());
+    const sizeScene = () => {
+      scene.resize(
+        { width: options.mount.clientWidth, height: options.mount.clientHeight, pixelRatio: window.devicePixelRatio || 1, tier },
+        graph,
+      );
+    };
+    sizeScene();
+
+    const timing = createBrowserScheduler();
+    releases.push(timing.cancelAll);
+    const controller = createConnectedController({
+      clock: { now: () => performance.now() },
+      scheduler: timing.scheduler,
+      render: (pose) => scene.render(pose),
+      getLayout: () => layout,
+    });
+    releases.push(() => controller.dispose());
+
+    let lastY = window.scrollY;
+    let lastAt = performance.now();
+    const push = (velocity: number) => {
+      const scrollY = window.scrollY;
+      controller.update({
+        graph,
+        tier,
+        scrollY,
+        velocityPxPerSecond: velocity,
+        visible: !document.hidden,
+        footerDominant: isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight),
+      });
+    };
+    const onScroll = () => {
+      const now = performance.now();
+      const scrollY = window.scrollY;
+      const velocity = ((scrollY - lastY) / Math.max(now - lastAt, 8)) * 1000;
+      lastY = scrollY;
+      lastAt = now;
+      push(velocity);
+    };
+    const onResize = () => {
+      layout = readLayout();
+      tier = getTierForWidth(layout.viewportWidth);
+      graph = getConnectedGraph(getQualityForTier(tier));
+      sizeScene();
+      push(0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+    releases.push(() => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    });
+    push(0);
+    // A stored Pause starts from one drawn frame on the current pose, then holds.
+    if (options.startPaused) controller.pause();
+
+    options.publish(() => {
+      const snapshot = controller.snapshot();
+      const info = scene.diagnostics();
+      return {
+        mode: 'live',
+        controller: snapshot.state,
+        renderCount: info.renderCount,
+        pendingCallbacks: snapshot.pendingCallbacks,
+        targetFps: snapshot.targetFps,
+        progress: snapshot.pose.progress,
+        idleAngleRadians: snapshot.pose.idleAngleRadians,
+        nodes: snapshot.pose.nodes.map((node) => ({ id: node.id, position: node.position })),
+        edgeGrowth: snapshot.pose.edges.map((edge) => edge.growth),
+        drawCalls: info.drawCalls,
+        pixelRatio: info.pixelRatio,
+        tier,
+      };
+    });
+    releases.push(() => options.publish(null));
+    return { controller, dispose };
+  } catch (error) {
+    dispose();
+    throw error;
+  }
+}
+
 /**
  * PLAN-SPF-V1 Task 7: the thin client leaf that attaches the optional live scene to a connected
  * route. It owns browser layout, scroll, visibility, session and cancellation; the controller owns
@@ -213,7 +336,16 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     if (!mount) return;
     const publish = installDiagnostics(route);
     let cancelled = false;
-    let teardown = () => undefined as void;
+    let liveScene: LiveScene | null = null;
+
+    /** Quietly back to the complete static background: release everything, report it, show nothing. */
+    const fallBack = () => {
+      liveScene?.dispose();
+      liveScene = null;
+      controllerRef.current = null;
+      publish(() => ({ ...STATIC_READING, mode: 'failed' }));
+      setLive(false);
+    };
 
     const activate = () => {
       // Every condition is read now, at activation, so a preference or a session that changed while the
@@ -236,102 +368,31 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
         return;
       }
       counters.imports += 1;
-      void import('./runtime/create-connected-scene').then(({ createConnectedScene }) => {
-        if (cancelled) return;
-        let layout = readLayout();
-        let tier = getTierForWidth(layout.viewportWidth);
-        let graph = getConnectedGraph(getQualityForTier(tier));
-        const scene: SceneHandle = createConnectedScene({
-          mount,
-          graph,
-          quality: graph.quality,
-          tier,
-          words: capabilityWords,
-          onContextLost: () => undefined,
-        });
-        const sizeScene = () => {
-          scene.resize(
-            { width: mount.clientWidth, height: mount.clientHeight, pixelRatio: window.devicePixelRatio || 1, tier },
-            graph,
-          );
-        };
-        sizeScene();
-
-        const timing = createBrowserScheduler();
-        const controller = createConnectedController({
-          clock: { now: () => performance.now() },
-          scheduler: timing.scheduler,
-          render: (pose) => scene.render(pose),
-          getLayout: () => layout,
-        });
-        controllerRef.current = controller;
-
-        let lastY = window.scrollY;
-        let lastAt = performance.now();
-        const push = (velocity: number) => {
-          const scrollY = window.scrollY;
-          controller.update({
-            graph,
-            tier,
-            scrollY,
-            velocityPxPerSecond: velocity,
-            visible: !document.hidden,
-            footerDominant: isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight),
+      import('./runtime/create-connected-scene')
+        .then(({ createConnectedScene }) => {
+          if (cancelled) return;
+          let lostEarly = false;
+          liveScene = attachLiveScene({
+            createConnectedScene,
+            mount,
+            route,
+            words: capabilityWords,
+            startPaused: session.paused,
+            publish,
+            onContextLost: () => {
+              // The loss suppresses every connected route for the session; Home's own flag is only read.
+              markConnectedContextLost();
+              if (liveScene) fallBack();
+              else lostEarly = true;
+            },
           });
-        };
-        const onScroll = () => {
-          const now = performance.now();
-          const scrollY = window.scrollY;
-          const velocity = ((scrollY - lastY) / Math.max(now - lastAt, 8)) * 1000;
-          lastY = scrollY;
-          lastAt = now;
-          push(velocity);
-        };
-        const onResize = () => {
-          layout = readLayout();
-          tier = getTierForWidth(layout.viewportWidth);
-          graph = getConnectedGraph(getQualityForTier(tier));
-          sizeScene();
-          push(0);
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', onResize);
-        push(0);
-        // A stored Pause starts from one drawn frame on the current pose, then holds.
-        if (session.paused) controller.pause();
-
-        publish(() => {
-          const snapshot = controller.snapshot();
-          const info = scene.diagnostics();
-          return {
-            mode: 'live',
-            controller: snapshot.state,
-            renderCount: info.renderCount,
-            pendingCallbacks: snapshot.pendingCallbacks,
-            targetFps: snapshot.targetFps,
-            progress: snapshot.pose.progress,
-            idleAngleRadians: snapshot.pose.idleAngleRadians,
-            nodes: snapshot.pose.nodes.map((node) => ({ id: node.id, position: node.position })),
-            edgeGrowth: snapshot.pose.edges.map((edge) => edge.growth),
-            drawCalls: info.drawCalls,
-            pixelRatio: info.pixelRatio,
-            tier,
-          };
-        });
-
-        teardown = () => {
-          window.removeEventListener('scroll', onScroll);
-          window.removeEventListener('resize', onResize);
-          controller.dispose();
-          timing.cancelAll();
-          scene.dispose();
-          controllerRef.current = null;
-          publish(null);
-        };
-        setSlot(document.getElementById(`connected-pause-${route}`));
-        setPaused(session.paused);
-        setLive(true);
-      });
+          controllerRef.current = liveScene.controller;
+          setSlot(document.getElementById(`connected-pause-${route}`));
+          setPaused(session.paused);
+          setLive(true);
+          if (lostEarly) fallBack();
+        })
+        .catch(fallBack);
     };
 
     const cancelActivation = scheduleAfterLoad(activate);
@@ -339,7 +400,9 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     return () => {
       cancelled = true;
       cancelActivation();
-      teardown();
+      liveScene?.dispose();
+      liveScene = null;
+      controllerRef.current = null;
       setLive(false);
     };
   }, [capabilityWords, locale, route]);
