@@ -2,10 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { runInNewContext } from 'node:vm';
+import ts from 'typescript';
+import { chooseConnectedMode } from '../lib/connected-studio/capability.ts';
 
 // PLAN-SPF-V1 Task 7: the structural contracts of the connected-studio host. The runtime behavior
 // (lifecycle, gates, labels, Pause, fallback) is proved in the browser by
-// tests/e2e/connected-studio-runtime.spec.ts; Node cannot load a `.tsx` module, so this file asserts
+// tests/e2e/connected-studio-runtime.spec.ts; this file also isolates the real effect for delayed-import
+// races (without a browser's eager development chunks). Its source contracts assert
 // the boundaries that must hold in the source regardless of what a browser run happens to exercise:
 // the engine is a dynamic import behind the gates, the diagnostics hook never ships, Home's session
 // flag is only read, the scroll path reads no layout, and the Pause control keeps its target size.
@@ -53,7 +57,7 @@ test('the engine is one dynamic import behind the gates, never a static or serve
     assert.ok(gateAt !== -1 && gateAt < importAt || gate === 'scheduleAfterLoad(activate)', `${gate} guards the import`);
   }
   // A module that fails to load ends in the quiet fallback, never an unhandled rejection.
-  assert.match(enhancement, /import\('\.\/runtime\/create-connected-scene'\)[\s\S]*?\.catch\(\(\) => fallBack\(\)\)/);
+  assert.match(enhancement, /\.catch\(/);
 });
 
 test('activation waits for load, honors every preference and releases the probe context', () => {
@@ -132,4 +136,127 @@ test('labels are decorative, pointer-inert and never below the 11px floor', () =
   assert.ok(size >= 11, `label font-size ${size}px`);
   assert.doesNotMatch(label, /rotate|skew/);
   assert.match(css, /\.mount\[data-connected-state='suspended'\]\s*\{\s*visibility:\s*hidden/);
+});
+
+/**
+ * Exercise the real React effect with a delayed module promise. Only React/DOM and the scene
+ * attachment boundary are substituted: Node cannot mount JSX or create a WebGL context.
+ * Browser tests separately prove attachment, disposal and the focused fallback with a real scene.
+ */
+function delayedHost() {
+  const sceneStart = enhancement.indexOf('function attachLiveScene(');
+  const sceneEnd = enhancement.indexOf('\n/**\n * PLAN-SPF-V1 Task 7:', sceneStart);
+  assert.ok(sceneStart >= 0 && sceneEnd > sceneStart);
+  const isolated = (enhancement.slice(0, sceneStart)
+    + 'function attachLiveScene(options: LiveOptions): LiveScene { return globalThis.attachScene(options); }\n'
+    + enhancement.slice(sceneEnd)).replace(
+      /(?<!typeof )import\('\.\/runtime\/create-connected-scene'\)/, 'globalThis.loadScene()',
+    );
+  const { outputText } = ts.transpileModule(isolated, {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
+  });
+  let effect;
+  let resolveImport;
+  let rejectImport;
+  let attachments = 0;
+  let imports = 0;
+  const media = new Map();
+  const timers = [];
+  const mount = {};
+  const session = { paused: false, contextLost: false };
+  const connection = { saveData: false };
+  const policy = { wide: true, compact: true };
+  const matchMedia = (query) => {
+    if (!media.has(query)) media.set(query, {
+      matches: false, listener: null,
+      addEventListener(_event, listener) { this.listener = listener; }, removeEventListener() {},
+    });
+    return media.get(query);
+  };
+  const document = {
+    readyState: 'complete', hidden: false,
+    querySelector: (selector) => selector.includes('sky-chart') ? null : mount,
+    getElementById: () => null, addEventListener() {}, removeEventListener() {},
+    createElement: () => ({ getContext: () => ({
+      RENDERER: 1,
+      getExtension: (name) => name === 'WEBGL_lose_context' ? { loseContext() {} } : null,
+      getParameter: () => 'hardware',
+    }) }),
+  };
+  const moduleExports = {};
+  runInNewContext(outputText, {
+    exports: moduleExports, process: { env: { NODE_ENV: 'production' } }, document,
+    navigator: { connection },
+    window: {
+      innerWidth: 1440, matchMedia,
+      setTimeout(callback) { timers.push(callback); return timers.length; }, clearTimeout() {},
+      addEventListener() {}, removeEventListener() {},
+    },
+    loadScene() { imports++; return new Promise((resolve, reject) => { resolveImport = resolve; rejectImport = reject; }); },
+    attachScene() { attachments++; return { controller: {}, dispose() {} }; },
+    require(path) {
+      if (path === 'react') return {
+        useEffect(callback) { effect = callback; }, useRef: () => ({ current: null }),
+        useState: () => [false, () => {}],
+      };
+      if (path === 'react/jsx-runtime') return { jsx: () => null, jsxs: () => null };
+      if (path === '@/lib/connected-studio/capability') return { CONNECTED_LIVE_POLICY: policy, chooseConnectedMode };
+      if (path === '@/lib/immersive-home/capability') return { isSoftwareRenderer: () => false };
+      if (path === '@/lib/connected-studio/session') return { readConnectedSession: () => session };
+      if (path === '@/lib/connected-studio/model') return { getTierForWidth: () => 'wide' };
+      return {};
+    },
+  });
+  moduleExports.ConnectedStudioEnhancement({ route: 'services', locale: 'es', capabilityWords: [] });
+  const cleanup = effect();
+  timers.shift()();
+  assert.equal(imports, 1, 'the module was requested before the test changes eligibility');
+  return {
+    session, connection, document, policy, cleanup,
+    preference(query, matches) {
+      const pref = matchMedia(query);
+      pref.matches = matches;
+      pref.listener({ matches });
+    },
+    async finish() {
+      resolveImport({ createConnectedScene() {} });
+      await new Promise((resolve) => setImmediate(resolve));
+      return attachments;
+    },
+    async fail() {
+      rejectImport(new Error('optional module unavailable'));
+      await new Promise((resolve) => setImmediate(resolve));
+      return attachments;
+    },
+  };
+}
+
+for (const [name, change] of [
+  ['reduced motion', (host) => host.preference('(prefers-reduced-motion: reduce)', true)],
+  ['forced colors', (host) => host.preference('(forced-colors: active)', true)],
+  ['Save-Data', (host) => { host.connection.saveData = true; }],
+  ['session loss', (host) => { host.session.contextLost = true; }],
+  ['tier policy', (host) => { host.policy.wide = false; }],
+  ['hidden document', (host) => { host.document.hidden = true; }],
+]) {
+  test(`a pending import cannot attach after ${name} rejects it`, async () => {
+    const host = delayedHost();
+    change(host);
+    assert.equal(await host.finish(), 0);
+  });
+}
+
+test('an eligible delayed import attaches once', async () => {
+  const host = delayedHost();
+  assert.equal(await host.finish(), 1);
+});
+
+test('a delayed import cannot attach after route cleanup', async () => {
+  const host = delayedHost();
+  host.cleanup();
+  assert.equal(await host.finish(), 0);
+});
+
+test('a rejected optional import is handled without attaching a scene', async () => {
+  assert.equal(await delayedHost().fail(), 0);
 });

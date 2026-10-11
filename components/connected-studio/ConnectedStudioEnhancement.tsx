@@ -329,8 +329,10 @@ type LiveOptions = {
   route: ConnectedRoute;
   words: CapabilityWords;
   startPaused: boolean;
+  livePolicy: ConnectedLivePolicy;
   publish: (reading: (() => LiveReading) | null) => void;
   onContextLost(): void;
+  onIneligible(): void;
 };
 
 type LiveScene = { controller: ConnectedController; dispose(): void };
@@ -435,6 +437,10 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       remeasureFrame = 0;
       layout = readLayout();
       tier = getTierForWidth(layout.viewportWidth);
+      if (options.livePolicy[getQualityForTier(tier)] !== true) {
+        options.onIneligible();
+        return;
+      }
       graph = getConnectedGraph(getQualityForTier(tier));
       sizeScene();
       if (graph !== labelledGraph) {
@@ -507,7 +513,6 @@ function attachLiveScene(options: LiveOptions): LiveScene {
  * the clock and scheduling, and the dynamically imported engine owns the GPU.
  */
 export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: ConnectedStudioEnhancementProps) {
-  const anchorRef = useRef<HTMLSpanElement>(null);
   const controllerRef = useRef<ConnectedController | null>(null);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const [live, setLive] = useState(false);
@@ -516,11 +521,16 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
   const [fallbackHeld, setFallbackHeld] = useState(false);
 
   useEffect(() => {
-    const anchor = anchorRef.current;
-    const mount = anchor?.closest('[data-connected-ground]')?.querySelector<HTMLElement>('[data-connected-mount]');
+    const mount = document.querySelector<HTMLElement>(
+      `[data-connected-ground][data-connected-route="${route}"][data-connected-locale="${locale}"] [data-connected-mount]`,
+    );
     if (!mount) return;
     const publish = installDiagnostics(route);
     let cancelled = false;
+    let stopped = false;
+    let ready = false;
+    let importing = false;
+    let engine: Promise<typeof import('./runtime/create-connected-scene')> | null = null;
     let liveScene: LiveScene | null = null;
     let deferTimer = 0;
     let deferrals = 0;
@@ -530,6 +540,8 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
      * that holds focus stays in place as the inactive "Static background" control; any other goes away.
      */
     const fallBack = (mode: 'failed' | 'static' = 'failed') => {
+      stopped = true;
+      window.clearTimeout(deferTimer);
       liveScene?.dispose();
       liveScene = null;
       controllerRef.current = null;
@@ -539,20 +551,10 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
       setLive(false);
     };
 
-    const activate = () => {
-      // One live renderer: while Home's renderer is still mounted, wait for it instead of creating a second
-      // context. A visitor who left Home has released it by the time they read this page, so the wait is short.
-      if (document.querySelector(HOME_RENDERER_SELECTOR) && deferrals < MAX_DEFERRALS) {
-        deferrals += 1;
-        deferTimer = window.setTimeout(activate, DEFERRAL_INTERVAL_MS);
-        return;
-      }
-      // Every condition is read now, at activation, so a preference or a session that changed while the
-      // page loaded is honored. The cheap gates run first: a page that cannot go live never probes.
+    const readEligibility = () => {
       const preferences = readPreferences();
       const session = readConnectedSession();
       const hook = readTestHook();
-      if (preferences.forcedColors) return;
       const gate = {
         reducedMotion: preferences.reducedMotion,
         saveData: preferences.saveData,
@@ -562,23 +564,66 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
         tier: getTierForWidth(window.innerWidth),
         livePolicy: hook.livePolicy ?? CONNECTED_LIVE_POLICY,
       };
-      if (chooseConnectedMode({ ...gate, webgl2: true, softwareRenderer: false }) !== 'webgl') return;
-      const probe = probeWebgl();
-      if (chooseConnectedMode({ ...gate, webgl2: probe.available, softwareRenderer: probe.softwareRenderer && !hook.allowSoftwareRenderer }) !== 'webgl') {
+      return { preferences, session, hook, gate };
+    };
+
+    const isEligible = ({ preferences, gate }: ReturnType<typeof readEligibility>) =>
+      !preferences.forcedColors && chooseConnectedMode({ ...gate, webgl2: true, softwareRenderer: false }) === 'webgl';
+
+    const activate = () => {
+      if (cancelled || stopped || importing || liveScene || document.hidden) return;
+      // One live renderer: while Home's renderer is still mounted, wait for it instead of creating a second
+      // context. A visitor who left Home has released it by the time they read this page, so the wait is short.
+      if (document.querySelector(HOME_RENDERER_SELECTOR)) {
+        if (deferrals < MAX_DEFERRALS) {
+          deferrals += 1;
+          deferTimer = window.setTimeout(activate, DEFERRAL_INTERVAL_MS);
+        } else {
+          stopped = true;
+        }
         return;
       }
-      counters.imports += 1;
-      import('./runtime/create-connected-scene')
+      // Every condition is read now, at activation, so a preference or a session that changed while the
+      // page loaded is honored. The cheap gates run first: a page that cannot go live never probes.
+      const eligibility = readEligibility();
+      if (!isEligible(eligibility)) {
+        stopped = true;
+        return;
+      }
+      const { gate, hook } = eligibility;
+      const probe = probeWebgl();
+      if (chooseConnectedMode({ ...gate, webgl2: probe.available, softwareRenderer: probe.softwareRenderer && !hook.allowSoftwareRenderer }) !== 'webgl') {
+        stopped = true;
+        return;
+      }
+      importing = true;
+      if (!engine) {
+        counters.imports += 1;
+        engine = import('./runtime/create-connected-scene');
+      }
+      engine
         .then(({ createConnectedScene }) => {
-          if (cancelled) return;
+          importing = false;
+          if (cancelled || stopped || document.hidden) return;
+          if (document.querySelector(HOME_RENDERER_SELECTOR)) {
+            activate();
+            return;
+          }
+          const current = readEligibility();
+          if (!isEligible(current)) {
+            fallBack('static');
+            return;
+          }
           let lostEarly = false;
           liveScene = attachLiveScene({
             createConnectedScene,
             mount,
             route,
             words: capabilityWords,
-            startPaused: session.paused,
+            startPaused: current.session.paused,
+            livePolicy: current.gate.livePolicy,
             publish,
+            onIneligible: () => fallBack('static'),
             onContextLost: () => {
               // The loss suppresses every connected route for the session; Home's own flag is only read.
               markConnectedContextLost();
@@ -588,20 +633,33 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
           });
           controllerRef.current = liveScene.controller;
           setSlot(document.getElementById(`connected-pause-${route}`));
-          setPaused(session.paused);
+          setPaused(current.session.paused);
           setLive(true);
           if (lostEarly) fallBack();
         })
-        .catch(() => fallBack());
+        .catch(() => {
+          importing = false;
+          if (!cancelled) fallBack();
+        });
     };
 
-    const cancelActivation = scheduleAfterLoad(activate);
+    const cancelActivation = scheduleAfterLoad(() => {
+      ready = true;
+      activate();
+    });
+    // A tab opened in the background waits for visibility. A cached module can be attached when
+    // shown, but a failed or permanently rejected activation never retries.
+    const onVisibility = () => {
+      if (document.hidden) window.clearTimeout(deferTimer);
+      else if (ready) activate();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
 
     // Reduced motion turned on while the scene runs ends it at once; turning it off again never restarts it.
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const forcedColors = window.matchMedia('(forced-colors: active)');
     const onPreference = (event: MediaQueryListEvent) => {
-      if (event.matches && liveScene) fallBack('static');
+      if (event.matches) fallBack('static');
     };
     reducedMotion.addEventListener('change', onPreference);
     forcedColors.addEventListener('change', onPreference);
@@ -610,6 +668,7 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
       cancelled = true;
       cancelActivation();
       window.clearTimeout(deferTimer);
+      document.removeEventListener('visibilitychange', onVisibility);
       reducedMotion.removeEventListener('change', onPreference);
       forcedColors.removeEventListener('change', onPreference);
       liveScene?.dispose();
@@ -630,7 +689,6 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
 
   return (
     <>
-      <span ref={anchorRef} aria-hidden="true" hidden />
       {(live || fallbackHeld) && slot
         ? createPortal(
             <ConnectedPauseControl

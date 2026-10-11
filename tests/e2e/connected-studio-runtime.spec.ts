@@ -606,3 +606,72 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
     await expect.poll(async () => Math.abs(((await readConnected(page))?.progress ?? 0) - expected), { timeout: 5_000 }).toBeLessThan(0.02);
   });
 });
+
+test.describe('review regressions', () => {
+  test.afterEach(async ({ page }) => { await page.goto('about:blank'); });
+
+  for (const scenario of [
+    { name: 'wide to compact', start: 1440, end: 390, policy: { wide: true, compact: false } },
+    { name: 'compact to wide', start: 390, end: 1440, policy: { wide: false, compact: true } },
+  ]) {
+    test(`resizing ${scenario.name} respects the disabled destination policy and focused fallback`, async ({ page }) => {
+      await page.setViewportSize({ width: scenario.start, height: 900 });
+      await enableLiveForTest(page, scenario.policy);
+      await gotoConnected(page, 'services', 'en');
+      await expectLive(page);
+      await pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.en.pause }).focus();
+      await page.setViewportSize({ width: scenario.end, height: 900 });
+      await expect(connectedCanvas(page)).toHaveCount(0);
+      const fallback = pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.en.staticBackground });
+      await expect(fallback).toBeFocused();
+      await expect(fallback).toHaveAttribute('aria-disabled', 'true');
+      await expectStopped(page);
+    });
+  }
+
+  test('a page initialized in a hidden tab activates once when shown', async ({ page }) => {
+    await enableLiveForTest(page);
+    await page.addInitScript(() => {
+      let hidden = true;
+      Object.defineProperty(document, 'hidden', { configurable: true, get: () => hidden });
+      (window as unknown as { __showConnected(): void }).__showConnected = () => {
+        hidden = false;
+        document.dispatchEvent(new Event('visibilitychange'));
+      };
+    });
+    await gotoConnected(page, 'services', 'es');
+    await expectStatic(page, 'services');
+    await page.evaluate(() => (window as unknown as { __showConnected(): void }).__showConnected());
+    await expectLive(page);
+    const imports = (await readConnected(page))?.imports;
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    await page.waitForTimeout(500);
+    expect((await readConnected(page))?.imports).toBe(imports);
+  });
+
+  test('Home ownership still prevents a second context after the bounded deferral expires', async ({ page }) => {
+    const contexts = await trackWebglContexts(page);
+    await enableLiveForTest(page);
+    await page.addInitScript(() => {
+      document.addEventListener('DOMContentLoaded', () => {
+        const home = document.createElement('canvas');
+        home.dataset.skyChartCanvas = '';
+        document.body.appendChild(home);
+        const gl = home.getContext('webgl2');
+        (window as unknown as { __releaseRetainedHome(): void }).__releaseRetainedHome = () => {
+          gl?.getExtension('WEBGL_lose_context')?.loseContext();
+          home.remove();
+        };
+      });
+    });
+    await gotoConnected(page, 'projects', 'en');
+    await page.waitForTimeout(11_500);
+    await expect(connectedCanvas(page)).toHaveCount(0);
+    expect((await readConnected(page))?.imports).toBe(0);
+    expect(await contexts.maxAlive()).toBe(1);
+    await page.evaluate(() => (window as unknown as { __releaseRetainedHome(): void }).__releaseRetainedHome());
+    // Exhausted deferral stays static without another initialization attempt.
+    await page.waitForTimeout(500);
+    await expect(connectedCanvas(page)).toHaveCount(0);
+  });
+});
