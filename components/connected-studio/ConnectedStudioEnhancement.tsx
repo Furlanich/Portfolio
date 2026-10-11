@@ -128,12 +128,14 @@ function readTestHook(): { allowSoftwareRenderer: boolean; livePolicy?: Connecte
   };
 }
 
-/** Preferences known at activation. With either set, the optional engine is never fetched. */
-function readPreferences(): { reducedMotion: boolean; saveData: boolean } {
+/** Preferences known at activation. With reduced motion, Save-Data or forced colors set, the optional engine is never fetched. */
+function readPreferences(): { reducedMotion: boolean; saveData: boolean; forcedColors: boolean } {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
   return {
     reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     saveData: connection?.saveData === true,
+    // Forced colors removes the decorative environment (DESIGN-SPF-V1), so the scene would draw unseen.
+    forcedColors: window.matchMedia('(forced-colors: active)').matches,
   };
 }
 
@@ -404,6 +406,7 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
       const preferences = readPreferences();
       const session = readConnectedSession();
       const hook = readTestHook();
+      if (preferences.forcedColors) return;
       const gate = {
         reducedMotion: preferences.reducedMotion,
         saveData: preferences.saveData,
@@ -450,16 +453,19 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
 
     // Reduced motion turned on while the scene runs ends it at once; turning it off again never restarts it.
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const onReducedMotion = () => {
-      if (reducedMotion.matches && liveScene) fallBack('static');
+    const forcedColors = window.matchMedia('(forced-colors: active)');
+    const onPreference = (event: MediaQueryListEvent) => {
+      if (event.matches && liveScene) fallBack('static');
     };
-    reducedMotion.addEventListener('change', onReducedMotion);
+    reducedMotion.addEventListener('change', onPreference);
+    forcedColors.addEventListener('change', onPreference);
 
     return () => {
       cancelled = true;
       cancelActivation();
       window.clearTimeout(deferTimer);
-      reducedMotion.removeEventListener('change', onReducedMotion);
+      reducedMotion.removeEventListener('change', onPreference);
+      forcedColors.removeEventListener('change', onPreference);
       liveScene?.dispose();
       liveScene = null;
       controllerRef.current = null;
