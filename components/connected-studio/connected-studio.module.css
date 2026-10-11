@@ -78,6 +78,40 @@
 }
 
 /*
+ * The projected capability words (Task 7). Decorative, pointer-inert, upright and never below 12px
+ * (the spec's floor is about 11px). Position and visibility arrive from the runtime as a transform and an
+ * opacity, so nothing here lays out against the page. A suspended scene (hidden tab, Footer handoff)
+ * hides the whole mount.
+ */
+.labels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.06em;
+  color: var(--sky-glow);
+  text-shadow: 0 0 8px rgba(6, 18, 31, 0.95);
+  opacity: 0;
+  will-change: transform;
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+
+.mount[data-connected-state='suspended'] {
+  visibility: hidden;
+}
+
+/*
  * The hero Pause control (Task 7). It lives in the slot the page reserved inside the introduction
  * plate, so it is neither fixed nor over body copy. 44px in both directions, the App Bar's focus
  * treatment, and an explicit-property hover (fine pointers only) inside the spec's 160-220ms.

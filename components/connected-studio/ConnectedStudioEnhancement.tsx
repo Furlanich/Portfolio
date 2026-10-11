@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
 import { CONNECTED_LIVE_POLICY, chooseConnectedMode } from '@/lib/connected-studio/capability';
 import { createConnectedController } from '@/lib/connected-studio/controller';
+import { resolveLabelVisibility } from '@/lib/connected-studio/labels';
 import { getConnectedGraph, getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
 import { markConnectedContextLost, readConnectedSession, setConnectedPaused } from '@/lib/connected-studio/session';
 import { isSoftwareRenderer } from '@/lib/immersive-home/capability';
@@ -15,12 +16,18 @@ import type {
   ConnectedRoute,
   ConnectedTier,
   ControllerOptions,
+  GraphDefinition,
+  LabelBox,
+  LabelProjection,
+  OccluderRect,
   SceneHandle,
   SceneLayout,
+  ScenePose,
   SceneSnapshot,
 } from '@/lib/connected-studio/types';
 import type { Locale } from '@/lib/locales';
 import { ConnectedPauseControl } from './ConnectedPauseControl';
+import styles from './connected-studio.module.css';
 
 type ConnectedStudioEnhancementProps = {
   route: ConnectedRoute;
@@ -210,6 +217,109 @@ function createBrowserScheduler(): { scheduler: ControllerOptions['scheduler']; 
   };
 }
 
+type LabelEntry = {
+  id: string;
+  element: HTMLElement;
+  width: number;
+  height: number;
+  depthScale: number;
+  visible: boolean;
+  x: number;
+  y: number;
+};
+
+/** Document-space rectangle of a foreground block the labels must stay clear of. */
+type MaskRect = { left: number; docTop: number; width: number; height: number };
+
+/**
+ * The projected DOM labels (DESIGN-SPF-V1, "Motion and interaction contract"): one upright, decorative,
+ * pointer-inert word per node, placed from the engine's projections and then clamped, occlusion-checked
+ * and de-overlapped by `resolveLabelVisibility` (PC-2). Sizes and the reading masks are measured in one
+ * batch (`measure`), so a frame reads no layout: it only reads the scroll offset and the App Bar.
+ */
+function createLabelLayer(mount: HTMLElement, words: CapabilityWords) {
+  const host = document.createElement('div');
+  host.setAttribute('data-connected-labels', '');
+  host.className = styles.labels;
+  mount.appendChild(host);
+  let entries: LabelEntry[] = [];
+  let byId = new Map<string, LabelEntry>();
+  let masks: MaskRect[] = [];
+  let appBar: HTMLElement | null = null;
+  let viewport = { width: 0, height: 0 };
+
+  return {
+    /** One element per node of the graph in use; call again when the graph changes. */
+    rebuild(graph: GraphDefinition) {
+      host.replaceChildren();
+      entries = graph.nodes.map((node) => {
+        const element = document.createElement('span');
+        element.className = styles.label;
+        element.setAttribute('data-connected-label', '');
+        element.dataset.nodeId = node.id;
+        element.dataset.visible = 'false';
+        element.textContent = words[node.capabilityIndex];
+        host.appendChild(element);
+        return { id: node.id, element, width: 0, height: 0, depthScale: node.depthScale, visible: false, x: 0, y: 0 };
+      });
+      byId = new Map(entries.map((entry) => [entry.id, entry]));
+    },
+    /** Batched layout reads: label sizes, the viewport the labels live in, and the foreground masks. */
+    measure() {
+      for (const entry of entries) {
+        entry.width = entry.element.offsetWidth;
+        entry.height = entry.element.offsetHeight;
+      }
+      viewport = { width: mount.clientWidth, height: mount.clientHeight };
+      const scrollY = window.scrollY;
+      masks = Array.from(document.querySelectorAll<HTMLElement>('[data-connected-reading-mask]')).map((element) => {
+        const rect = element.getBoundingClientRect();
+        return { left: rect.left, docTop: rect.top + scrollY, width: rect.width, height: rect.height };
+      });
+      appBar = document.querySelector<HTMLElement>('[data-app-bar]');
+    },
+    update(projections: readonly LabelProjection[]) {
+      const scrollY = window.scrollY;
+      const boxes: LabelBox[] = [];
+      for (const projection of projections) {
+        const entry = byId.get(projection.id);
+        if (!entry || !projection.inView) continue;
+        boxes.push({
+          id: entry.id,
+          left: projection.xPx - entry.width / 2,
+          top: projection.yPx,
+          width: entry.width,
+          height: entry.height,
+          depthScale: projection.depthScale,
+        });
+      }
+      const occluders: OccluderRect[] = masks.map((mask) => ({ left: mask.left, top: mask.docTop - scrollY, width: mask.width, height: mask.height }));
+      if (appBar) {
+        const rect = appBar.getBoundingClientRect();
+        occluders.push({ left: rect.left, top: rect.top, width: rect.width, height: rect.height });
+      }
+      const shown = new Map(resolveLabelVisibility(boxes, occluders, viewport).filter((result) => result.visible).map((result) => [result.id, result]));
+      for (const entry of entries) {
+        const result = shown.get(entry.id);
+        const visible = result !== undefined;
+        if (result && (entry.x !== result.left || entry.y !== result.top)) {
+          entry.x = result.left;
+          entry.y = result.top;
+          entry.element.style.transform = `translate3d(${result.left}px, ${result.top}px, 0)`;
+        }
+        if (visible !== entry.visible) {
+          entry.visible = visible;
+          entry.element.dataset.visible = String(visible);
+          entry.element.style.opacity = visible ? String(0.62 + 0.38 * entry.depthScale) : '0';
+        }
+      }
+    },
+    dispose() {
+      host.remove();
+    },
+  };
+}
+
 type LiveOptions = {
   createConnectedScene: typeof import('./runtime/create-connected-scene').createConnectedScene;
   mount: HTMLElement;
@@ -259,12 +369,24 @@ function attachLiveScene(options: LiveOptions): LiveScene {
     };
     sizeScene();
 
+    const labelLayer = createLabelLayer(options.mount, options.words);
+    releases.push(labelLayer.dispose);
+    let labelledGraph = graph;
+    labelLayer.rebuild(graph);
+    labelLayer.measure();
+    let lastPose: ScenePose | null = null;
+    const drawLabels = (pose: ScenePose) => labelLayer.update(scene.projectLabels(pose));
+
     const timing = createBrowserScheduler();
     releases.push(timing.cancelAll);
     const controller = createConnectedController({
       clock: { now: () => performance.now() },
       scheduler: timing.scheduler,
-      render: (pose) => scene.render(pose),
+      render: (pose) => {
+        scene.render(pose);
+        lastPose = pose;
+        drawLabels(pose);
+      },
       getLayout: () => layout,
     });
     releases.push(() => controller.dispose());
@@ -281,6 +403,16 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         visible: !document.hidden,
         footerDominant: isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight),
       });
+      // A suspended scene (hidden tab, Footer handoff) is hidden; a paused one keeps its pose, but its
+      // labels still follow the content that scrolls past them.
+      const state = controller.snapshot().state;
+      options.mount.dataset.connectedState = state;
+      if (state === 'paused' && lastPose && !labelFrame) labelFrame = window.requestAnimationFrame(refreshLabels);
+    };
+    let labelFrame = 0;
+    const refreshLabels = () => {
+      labelFrame = 0;
+      if (lastPose) drawLabels(lastPose);
     };
     const onScroll = () => {
       const now = performance.now();
@@ -300,7 +432,13 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       tier = getTierForWidth(layout.viewportWidth);
       graph = getConnectedGraph(getQualityForTier(tier));
       sizeScene();
+      if (graph !== labelledGraph) {
+        labelledGraph = graph;
+        labelLayer.rebuild(graph);
+      }
+      labelLayer.measure();
       push(0);
+      if (controller.snapshot().state !== 'live' && lastPose) drawLabels(lastPose);
     };
     const scheduleRemeasure = () => {
       if (!remeasureFrame) remeasureFrame = window.requestAnimationFrame(remeasure);
@@ -316,6 +454,8 @@ function attachLiveScene(options: LiveOptions): LiveScene {
     contentObserver.observe(document.documentElement);
     releases.push(() => {
       window.cancelAnimationFrame(remeasureFrame);
+      window.cancelAnimationFrame(labelFrame);
+      delete options.mount.dataset.connectedState;
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', scheduleRemeasure);
       window.visualViewport?.removeEventListener('resize', scheduleRemeasure);

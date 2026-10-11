@@ -252,3 +252,46 @@ export async function expectStopped(page: Page, settleMs = 800) {
   expect(later?.renderCount, 'a stopped scene draws nothing').toBe(first?.renderCount);
   expect(later?.schedulerPending).toBe(0);
 }
+
+export type LabelGeometry = {
+  labels: { id: string; text: string; visible: boolean; fontSize: number; upright: boolean; pointerEvents: string; left: number; top: number; right: number; bottom: number }[];
+  occluders: { name: string; left: number; top: number; right: number; bottom: number }[];
+  viewport: { width: number; height: number };
+};
+
+/**
+ * Reads the labels and the things they must stay clear of from the live DOM, independently of the
+ * runtime's own bookkeeping: a label counts as visible only if it computes to non-zero opacity.
+ */
+export const readLabelGeometry = (page: Page): Promise<LabelGeometry> =>
+  page.evaluate(() => {
+    const rect = (element: Element) => {
+      const { left, top, right, bottom } = element.getBoundingClientRect();
+      return { left, top, right, bottom };
+    };
+    const labels = Array.from(document.querySelectorAll<HTMLElement>('[data-connected-label]')).map((element) => {
+      const style = getComputedStyle(element);
+      const transform = style.transform === 'none' ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(style.transform);
+      return {
+        id: element.dataset.nodeId ?? '',
+        text: element.textContent ?? '',
+        visible: parseFloat(style.opacity) > 0.01 && style.visibility !== 'hidden' && style.display !== 'none',
+        fontSize: parseFloat(style.fontSize),
+        upright: Math.abs(transform.b) < 1e-6 && Math.abs(transform.c) < 1e-6,
+        pointerEvents: style.pointerEvents,
+        ...rect(element),
+      };
+    });
+    const occluders = [
+      ...Array.from(document.querySelectorAll('[data-connected-reading-mask]')).map((element) => ({ name: 'reading-mask', ...rect(element) })),
+      ...Array.from(document.querySelectorAll('[data-app-bar]')).map((element) => ({ name: 'app-bar', ...rect(element) })),
+    ];
+    return { labels, occluders, viewport: { width: window.innerWidth, height: window.innerHeight } };
+  });
+
+type Box = { left: number; top: number; right: number; bottom: number };
+
+/** Strict overlap with a sub-pixel tolerance, so rectangles that only touch do not count. */
+export function overlaps(a: Box, b: Box, tolerance = 0.5): boolean {
+  return a.left < b.right - tolerance && b.left < a.right - tolerance && a.top < b.bottom - tolerance && b.top < a.bottom - tolerance;
+}

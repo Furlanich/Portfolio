@@ -13,6 +13,8 @@ import {
   gotoConnected,
   holdPageLoad,
   liveContexts,
+  overlaps,
+  readLabelGeometry,
   navigateInApp,
   pauseLabels,
   pauseSlot,
@@ -486,6 +488,78 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
       expect(stopped?.controller).toBe('suspended');
       expect(stopped?.pendingCallbacks).toBe(0);
       expect(stopped?.schedulerPending).toBe(0);
+      await context.close();
+    });
+  }
+
+  // The approved vocabulary, restated on purpose (docs/product/pages/services.md, Revision 5 capability words).
+  const approvedWords = {
+    es: ['Sitios web', 'Apps', 'Chatbots', 'Agentes', 'Automatización', 'Consultoría', 'Soporte', 'Modernización'],
+    en: ['Websites', 'Apps', 'Chatbots', 'Agents', 'Automation', 'Consulting', 'Support', 'Modernization'],
+  } as const;
+
+  for (const scenario of [
+    { width: 1440, height: 900, locale: 'es', labels: 16 },
+    { width: 820, height: 1180, locale: 'en', labels: 16 },
+    { width: 390, height: 844, locale: 'es', labels: 8 },
+  ] as const) {
+    test(`every node carries an upright, pointer-inert, readable word at ${scenario.width}px (${scenario.locale})`, async ({ browser }) => {
+      const context = await browser.newContext({ viewport: { width: scenario.width, height: scenario.height } });
+      const page = await context.newPage();
+      await enableLiveForTest(page);
+      await gotoConnected(page, 'services', scenario.locale);
+      await expectLive(page);
+      await expect.poll(async () => (await readLabelGeometry(page)).labels.length).toBe(scenario.labels);
+      const { labels } = await readLabelGeometry(page);
+      const words = approvedWords[scenario.locale];
+      // Each word is assigned to two wide nodes or one compact node, in the approved vocabulary.
+      const perWord = scenario.labels / words.length;
+      for (const word of words) expect(labels.filter((label) => label.text === word)).toHaveLength(perWord);
+      for (const label of labels) {
+        expect(label.fontSize, `${label.text} is never smaller than about 11px`).toBeGreaterThanOrEqual(11);
+        expect(label.upright, `${label.text} never rotates`).toBe(true);
+        expect(label.pointerEvents).toBe('none');
+      }
+      expect(await page.locator('[data-connected-ground]').getAttribute('aria-hidden')).toBe('true');
+      await context.close();
+    });
+  }
+
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    test(`no label overlaps another label, a reading mask or the App Bar, or leaves the viewport, at ${width}px`, async ({ browser }) => {
+      const height = width >= 1024 ? 900 : width >= 768 ? 1024 : 844;
+      const context = await browser.newContext({ viewport: { width, height } });
+      const page = await context.newPage();
+      await enableLiveForTest(page);
+      let visibleTotal = 0;
+      for (const [route, locale] of [['services', 'es'], ['projects', 'en']] as const) {
+        await gotoConnected(page, route, locale);
+        await expectLive(page);
+        const scrollable = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+        for (const fraction of [0, 0.25, 0.55, 0.85]) {
+          await scrollInstant(page, Math.round(scrollable * fraction));
+          await page.waitForTimeout(900);
+          const { labels, occluders, viewport } = await readLabelGeometry(page);
+          const visible = labels.filter((label) => label.visible);
+          visibleTotal += visible.length;
+          const where = `${route} ${locale} at ${Math.round(fraction * 100)}%`;
+          for (const label of visible) {
+            expect(label.left, `${where} ${label.text} left edge`).toBeGreaterThanOrEqual(-0.5);
+            expect(label.top, `${where} ${label.text} top edge`).toBeGreaterThanOrEqual(-0.5);
+            expect(label.right, `${where} ${label.text} right edge`).toBeLessThanOrEqual(viewport.width + 0.5);
+            expect(label.bottom, `${where} ${label.text} bottom edge`).toBeLessThanOrEqual(viewport.height + 0.5);
+            for (const occluder of occluders) {
+              expect(overlaps(label, occluder), `${where} ${label.text} overlaps a ${occluder.name}`).toBe(false);
+            }
+          }
+          for (let i = 0; i < visible.length; i += 1) {
+            for (let j = i + 1; j < visible.length; j += 1) {
+              expect(overlaps(visible[i], visible[j]), `${where} ${visible[i].text} overlaps ${visible[j].text}`).toBe(false);
+            }
+          }
+        }
+      }
+      expect(visibleTotal, 'the check is not vacuous: some labels are visible at this width').toBeGreaterThan(0);
       await context.close();
     });
   }
