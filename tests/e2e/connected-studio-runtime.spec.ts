@@ -563,4 +563,44 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
       await context.close();
     });
   }
+
+  test('the first scroll notch accelerates the scene and starts connection growth, then it settles back to a gentle rotation', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'en');
+    await expectLive(page);
+    const idle = await readConnected(page);
+    expect(idle?.targetFps, 'ambient cadence at rest').toBe(30);
+    expect(idle?.edgeGrowth.every((growth) => growth === 0)).toBe(true);
+
+    // A real wheel notch, not a teleport: the browser turns it into a short run of scroll events.
+    await page.mouse.move(700, 500);
+    await page.mouse.wheel(0, 40);
+    // The impulse lasts a few hundred milliseconds, so the page records the highest one any frame carried.
+    await expect.poll(async () => (await readConnected(page))?.peakScrollActivity ?? 0).toBeGreaterThan(0.02);
+    await expect.poll(async () => (await readConnected(page))?.targetFps, { timeout: 5_000 }).toBe(30);
+    const settled = await readConnected(page);
+    expect(settled?.edgeGrowth.some((growth) => growth > 0), 'growth started with the first scroll').toBe(true);
+  });
+
+  test('scrolling back reverses growth, and an anchor jump lands on the current geometry without replaying the page', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'es');
+    await expectLive(page);
+    const grown = async () => ((await readConnected(page))?.edgeGrowth ?? []).reduce((sum, growth) => sum + growth, 0);
+
+    await scrollInstant(page, 2_400);
+    await expect.poll(grown).toBeGreaterThan(8);
+    const deep = await grown();
+    await scrollInstant(page, 400);
+    await expect.poll(grown).toBeLessThan(deep);
+
+    // Jump to the working-boundaries anchor: the pose converges on the new scroll state within a moment.
+    await page.evaluate(() => document.getElementById('condiciones')!.scrollIntoView({ behavior: 'instant', block: 'start' }));
+    const expected = await page.evaluate(() => {
+      const footerTop = document.querySelector<HTMLElement>('[data-site-footer]')!.getBoundingClientRect().top + window.scrollY;
+      return Math.min(1, Math.max(0, window.scrollY / Math.max(1, footerTop - 0.7 * window.innerHeight)));
+    });
+    expect(expected).toBeGreaterThan(0.3);
+    await expect.poll(async () => Math.abs(((await readConnected(page))?.progress ?? 0) - expected), { timeout: 5_000 }).toBeLessThan(0.02);
+  });
 });

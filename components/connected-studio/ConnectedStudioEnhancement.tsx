@@ -47,6 +47,8 @@ export type ConnectedDiagnostics = {
   mode: 'static' | 'live' | 'failed';
   controller: SceneSnapshot['state'] | 'none';
   renderCount: number;
+  /** The highest scroll impulse any drawn frame has carried since the scene attached (0 to 1). */
+  peakScrollActivity: number;
   /** The controller's own pending count. */
   pendingCallbacks: number;
   /** Timers and animation frames the browser scheduler actually holds; zero whenever the scene is stopped. */
@@ -73,6 +75,7 @@ const STATIC_READING: LiveReading = {
   mode: 'static',
   controller: 'none',
   renderCount: 0,
+  peakScrollActivity: 0,
   pendingCallbacks: 0,
   schedulerPending: 0,
   targetFps: 0,
@@ -375,6 +378,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
     labelLayer.rebuild(graph);
     labelLayer.measure();
     let lastPose: ScenePose | null = null;
+    let peakScrollActivity = 0;
     const drawLabels = (pose: ScenePose) => labelLayer.update(scene.projectLabels(pose));
 
     const timing = createBrowserScheduler();
@@ -385,6 +389,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       render: (pose) => {
         scene.render(pose);
         lastPose = pose;
+        if (process.env.NODE_ENV !== 'production') peakScrollActivity = Math.max(peakScrollActivity, pose.scrollActivity);
         drawLabels(pose);
       },
       getLayout: () => layout,
@@ -474,6 +479,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         mode: 'live',
         controller: snapshot.state,
         renderCount: info.renderCount,
+        peakScrollActivity,
         pendingCallbacks: snapshot.pendingCallbacks,
         schedulerPending: timing.size(),
         targetFps: snapshot.targetFps,
