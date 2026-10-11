@@ -52,6 +52,8 @@ export type ConnectedDiagnostics = {
   drawCalls: number;
   pixelRatio: number;
   tier: ConnectedTier | null;
+  /** The cached layout the controller reads: where the Footer starts in the document, and the viewport. */
+  layout: SceneLayout | null;
   /** Times the dynamic engine import was started. */
   imports: number;
 };
@@ -74,6 +76,7 @@ const STATIC_READING: LiveReading = {
   drawCalls: 0,
   pixelRatio: 0,
   tier: null,
+  layout: null,
 };
 
 /** Installs the diagnostics hook; production builds never do. Returns the setter for the live reading. */
@@ -285,22 +288,38 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       lastAt = now;
       push(velocity);
     };
-    const onResize = () => {
+    // Layout is read in one batch, outside the scroll path, whenever anything that moves the Footer or
+    // the viewport changes: a resize or orientation change, the visual viewport (mobile browser chrome),
+    // late fonts and content that grows or wraps differently. Several triggers in a frame share one read.
+    let remeasureFrame = 0;
+    const remeasure = () => {
+      remeasureFrame = 0;
       layout = readLayout();
       tier = getTierForWidth(layout.viewportWidth);
       graph = getConnectedGraph(getQualityForTier(tier));
       sizeScene();
       push(0);
     };
+    const scheduleRemeasure = () => {
+      if (!remeasureFrame) remeasureFrame = window.requestAnimationFrame(remeasure);
+    };
     // A hidden tab stops all scheduled work; showing it again resumes from the current scroll state.
     const onVisibility = () => push(0);
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', scheduleRemeasure);
+    window.visualViewport?.addEventListener('resize', scheduleRemeasure);
     document.addEventListener('visibilitychange', onVisibility);
+    document.fonts?.addEventListener('loadingdone', scheduleRemeasure);
+    const contentObserver = new ResizeObserver(scheduleRemeasure);
+    contentObserver.observe(document.documentElement);
     releases.push(() => {
+      window.cancelAnimationFrame(remeasureFrame);
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', scheduleRemeasure);
+      window.visualViewport?.removeEventListener('resize', scheduleRemeasure);
       document.removeEventListener('visibilitychange', onVisibility);
+      document.fonts?.removeEventListener('loadingdone', scheduleRemeasure);
+      contentObserver.disconnect();
     });
     push(0);
     // A stored Pause starts from one drawn frame on the current pose, then holds.
@@ -323,6 +342,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         drawCalls: info.drawCalls,
         pixelRatio: info.pixelRatio,
         tier,
+        layout,
       };
     });
     releases.push(() => options.publish(null));

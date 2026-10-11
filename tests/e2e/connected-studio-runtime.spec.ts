@@ -382,4 +382,53 @@ test('a focused Pause control keeps focus and becomes the inactive Static backgr
     await expect(pauseSlot(page, 'projects').getByRole('button')).toHaveCount(0);
     await expectStopped(page);
   });
+
+test('resizing across a tier rebuilds the graph in the same renderer without a second context', async ({ page }) => {
+    const contexts = await trackWebglContexts(page);
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'en');
+    await expectLive(page);
+    expect((await readConnected(page))?.nodes).toHaveLength(16);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect.poll(async () => (await readConnected(page))?.tier).toBe('compact');
+    await expect.poll(async () => (await readConnected(page))?.nodes.length).toBe(8);
+    expect((await readConnected(page))?.edgeGrowth).toHaveLength(13);
+    expect((await readConnected(page))?.pixelRatio ?? 9).toBeLessThanOrEqual(1.25);
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await expect.poll(async () => (await readConnected(page))?.nodes.length).toBe(16);
+    expect((await readConnected(page))?.edgeGrowth).toHaveLength(33);
+    expect(await contexts.events(), 'the same renderer and context: probe, then engine, nothing else').toHaveLength(3);
+    expect(await contexts.maxAlive()).toBe(1);
+  });
+
+  test('content that changes height after activation re-measures the Footer geometry', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'projects', 'es');
+    await expectLive(page);
+    const before = (await readConnected(page))?.layout?.footerDocumentTop ?? 0;
+    expect(before).toBeGreaterThan(0);
+
+    // A late font or a longer translation grows the document; the cached geometry must follow.
+    await page.evaluate(() => {
+      const spacer = document.createElement('div');
+      spacer.style.height = '1500px';
+      spacer.setAttribute('data-test-spacer', '');
+      document.querySelector('main')!.appendChild(spacer);
+    });
+    await expect.poll(async () => (await readConnected(page))?.layout?.footerDocumentTop ?? 0).toBeGreaterThan(before + 1_000);
+  });
+
+  test('a restored scroll position starts on the current geometry without replaying the page', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'es');
+    await expectLive(page);
+    await scrollInstant(page, 2_400);
+    await expect.poll(async () => (await readConnected(page))?.progress ?? 0).toBeGreaterThan(0.2);
+    await page.reload();
+    await expectLive(page);
+    const first = await readConnected(page);
+    expect(first?.progress, 'the first drawn frame is already at the restored scroll').toBeGreaterThan(0.2);
+  });
 });
