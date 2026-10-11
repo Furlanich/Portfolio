@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
+import { allowSoftwareRenderer, expectActive } from './support/sky-chart';
 import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 import {
   connectedCanvas,
@@ -9,6 +10,8 @@ import {
   expectStatic,
   gotoConnected,
   holdPageLoad,
+  liveContexts,
+  navigateInApp,
   pauseLabels,
   pauseSlot,
   readConnected,
@@ -207,5 +210,58 @@ test('a renderer that fails after the probe returns quietly to static', async ({
     await seedSession(page, {});
     await gotoConnected(page, 'projects', 'en');
     await expectStatic(page, 'projects');
+  });
+
+test('one live renderer across the whole navigation journey', async ({ page }) => {
+    const contexts = await trackWebglContexts(page);
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'es');
+    await expectLive(page);
+    await navigateInApp(page, stableRoutes.projects.es);
+    await expect(connectedCanvas(page)).toHaveCount(1);
+    await expectLive(page);
+    await navigateInApp(page, stableRoutes.services.es);
+    await expectLive(page);
+    expect(await contexts.maxAlive(), 'never two live contexts').toBe(1);
+
+    await navigateInApp(page, stableRoutes.home.es);
+    await expect(page.locator('canvas')).toHaveCount(0);
+    await expect.poll(async () => liveContexts(await contexts.events())).toBe(0);
+    expect((await readConnected(page))?.mode).toBe('static');
+  });
+
+  test('a renderer that is still mounted from Home defers activation instead of creating a second context', async ({ page }) => {
+    const contexts = await trackWebglContexts(page);
+    await enableLiveForTest(page);
+    await page.addInitScript(() => {
+      document.addEventListener('DOMContentLoaded', () => {
+        const home = document.createElement('canvas');
+        home.setAttribute('data-sky-chart-canvas', '');
+        document.body.appendChild(home);
+        (window as unknown as { __releaseHome(): void }).__releaseHome = () => home.remove();
+      });
+    });
+    await gotoConnected(page, 'projects', 'en');
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(2_000);
+    expect((await readConnected(page))?.imports, 'activation is deferred while Home still renders').toBe(0);
+    expect(await contexts.events()).toEqual([]);
+
+    await page.evaluate(() => (window as unknown as { __releaseHome(): void }).__releaseHome());
+    await expectLive(page);
+    expect(await contexts.maxAlive()).toBe(1);
+  });
+
+  test('navigating from a live Home to a connected route never holds two contexts', async ({ page }) => {
+    test.slow();
+    const contexts = await trackWebglContexts(page);
+    await allowSoftwareRenderer(page);
+    await enableLiveForTest(page);
+    await page.goto(appUrl(stableRoutes.home.es));
+    await expectActive(page);
+    await navigateInApp(page, stableRoutes.services.es);
+    await expectLive(page);
+    await expect(page.locator('canvas[data-sky-chart-canvas]')).toHaveCount(0);
+    expect(await contexts.maxAlive(), 'Home released its context before Services created one').toBe(1);
   });
 });

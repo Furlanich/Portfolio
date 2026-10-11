@@ -139,6 +139,11 @@ function readLayout(): SceneLayout {
   };
 }
 
+/** Home's canvas (`create-sky-chart-scene`). Connected routes read its presence and never touch it. */
+const HOME_RENDERER_SELECTOR = 'canvas[data-sky-chart-canvas]';
+const DEFERRAL_INTERVAL_MS = 250;
+const MAX_DEFERRALS = 40;
+
 /** Idle time after `load` before the optional engine starts, so first paint and layout always come first. */
 const ACTIVATION_DELAY_MS = 250;
 
@@ -337,6 +342,8 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     const publish = installDiagnostics(route);
     let cancelled = false;
     let liveScene: LiveScene | null = null;
+    let deferTimer = 0;
+    let deferrals = 0;
 
     /** Quietly back to the complete static background: release everything, report it, show nothing. */
     const fallBack = () => {
@@ -348,6 +355,13 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     };
 
     const activate = () => {
+      // One live renderer: while Home's renderer is still mounted, wait for it instead of creating a second
+      // context. A visitor who left Home has released it by the time they read this page, so the wait is short.
+      if (document.querySelector(HOME_RENDERER_SELECTOR) && deferrals < MAX_DEFERRALS) {
+        deferrals += 1;
+        deferTimer = window.setTimeout(activate, DEFERRAL_INTERVAL_MS);
+        return;
+      }
       // Every condition is read now, at activation, so a preference or a session that changed while the
       // page loaded is honored. The cheap gates run first: a page that cannot go live never probes.
       const preferences = readPreferences();
@@ -400,6 +414,7 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
     return () => {
       cancelled = true;
       cancelActivation();
+      window.clearTimeout(deferTimer);
       liveScene?.dispose();
       liveScene = null;
       controllerRef.current = null;

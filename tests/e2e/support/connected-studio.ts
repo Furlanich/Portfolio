@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 import type { ConnectedDiagnostics } from '../../../components/connected-studio/ConnectedStudioEnhancement';
 import type { ConnectedLivePolicy, ConnectedRoute } from '../../../lib/connected-studio/types';
-import { appUrl, stableRoutes } from './paths';
+import { appPathname, appUrl, stableRoutes } from './paths';
 import { setConnectedTestHook } from './connected-studio-test-hooks';
 
 // PLAN-SPF-V1 Task 7: helpers for the connected-studio runtime, responsive and accessibility specs.
@@ -191,4 +191,27 @@ export function observePageErrors(page: Page): { errors: string[] } {
   const seen = { errors: [] as string[] };
   page.on('pageerror', (error) => seen.errors.push(error.message));
   return seen;
+}
+
+/**
+ * A real client-side navigation through the visible App Bar link, so the previous page unmounts
+ * instead of unloading. Home is reached through the brand link, which targets its site-top anchor.
+ */
+export async function navigateInApp(page: Page, route: string) {
+  const pathname = appPathname(route);
+  const isHome = route === stableRoutes.home.es || route === stableRoutes.home.en;
+  const link = isHome
+    ? page.locator('a[data-app-bar-brand]:visible').first()
+    : page.locator(`a[data-app-bar-nav-link][href="${pathname}"]:visible`).first();
+  // Pre-existing and outside this task: with the global `html { scroll-behavior: smooth }`, a Next route
+  // transition in Playwright Chromium lands at the bottom of the new page (instant scrolling lands at the
+  // top). The journey tests need a known starting scroll, so they navigate with instant scrolling.
+  await page.addStyleTag({ content: 'html { scroll-behavior: auto !important; }' });
+  await link.click();
+  await page.waitForURL((url) => url.pathname === pathname);
+}
+
+/** Contexts still alive after a sequence of recorded events. */
+export function liveContexts(events: readonly WebglEvent[]): number {
+  return events.filter((event) => event.type === 'create').length - events.filter((event) => event.type === 'lose').length;
 }
