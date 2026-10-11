@@ -295,4 +295,42 @@ test('a hidden tab stops all scheduled work and resumes only when visible again'
     await expect.poll(async () => (await readConnected(page))?.controller).toBe('live');
     expect((await readConnected(page))?.progress).toBeLessThan(0.05);
   });
+
+test('Pause persists across connected routes and locales, and Resume samples the current pose', async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, 'services', 'es');
+    await expectLive(page);
+
+    await pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.es.pause }).click();
+    const resumeEs = pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.es.resume });
+    await expect(resumeEs).toHaveAttribute('aria-pressed', 'true');
+    await expectStopped(page);
+    expect((await readConnected(page))?.controller).toBe('paused');
+    expect((await readSession(page)).paused).toBe('1');
+
+    // Scrolling while paused must not advance the canvas.
+    const frozen = await readConnected(page);
+    await scrollInstant(page, 1_800);
+    await page.waitForTimeout(600);
+    expect((await readConnected(page))?.progress).toBe(frozen?.progress);
+
+    // The same session on the other route and the other locale starts paused too.
+    await navigateInApp(page, stableRoutes.projects.es);
+    await expect(pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.es.resume })).toHaveAttribute('aria-pressed', 'true');
+    expect((await readConnected(page))?.controller).toBe('paused');
+    await page.locator('a[hreflang="en"]:visible').first().click();
+    await page.waitForURL((url) => url.pathname === appPathname(stableRoutes.projects.en));
+    await expect(pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.en.resume })).toHaveAttribute('aria-pressed', 'true');
+    expect((await readConnected(page))?.controller).toBe('paused');
+
+    // Resume lands on the current scroll state at once instead of catching up through unseen frames.
+    // The keyboard activates the focused control from wherever the page is scrolled, with no scroll into view.
+    await pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.en.resume }).evaluate((element) => (element as HTMLElement).focus({ preventScroll: true }));
+    await scrollInstant(page, 1_800);
+    await page.keyboard.press('Space');
+    await expect(pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.en.pause })).toHaveAttribute('aria-pressed', 'false');
+    await expect.poll(async () => (await readConnected(page))?.controller).toBe('live');
+    await expect.poll(async () => (await readConnected(page))?.progress ?? 0).toBeGreaterThan(0.1);
+    expect((await readSession(page)).paused).toBe('0');
+  });
 });

@@ -6,7 +6,7 @@ import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
 import { CONNECTED_LIVE_POLICY, chooseConnectedMode } from '@/lib/connected-studio/capability';
 import { createConnectedController } from '@/lib/connected-studio/controller';
 import { getConnectedGraph, getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
-import { markConnectedContextLost, readConnectedSession } from '@/lib/connected-studio/session';
+import { markConnectedContextLost, readConnectedSession, setConnectedPaused } from '@/lib/connected-studio/session';
 import { isSoftwareRenderer } from '@/lib/immersive-home/capability';
 import type {
   CapabilityWords,
@@ -435,6 +435,7 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
   const toggle = () => {
     const next = !paused;
     setPaused(next);
+    setConnectedPaused(next);
     if (next) controllerRef.current?.pause();
     else controllerRef.current?.resume();
   };
