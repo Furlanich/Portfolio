@@ -31,7 +31,7 @@ Acceptance evidence for [PLAN-SPF-V1](../../plans/active/services-projects-foote
 - [Task 5 — connected engine](task-5.md)
 - [Task 6 — Atlas Services composition, owner-approved transfers and review correction](task-6.md)
 - [Task 7 — connected enhancement (merged; its W5 checkpoint is RED)](task-7.md)
-- Task 8
+- [Task 8 — matched static posters and responsive project imagery (PR open, owner approvals pending)](task-8.md)
 - Task 9
 - Task 10
 
