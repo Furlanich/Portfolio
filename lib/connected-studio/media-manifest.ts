@@ -17,8 +17,9 @@ export type ConnectedPosterEntry = {
   /** Byte ceiling: 150KiB wide, 80KiB compact. */
   maxBytes: number;
   /**
-   * False until PLAN-SPF-V1 Task 8 renders and commits the file. While false, the Ground shows its
-   * pure CSS chart and never references the missing URL.
+   * True once the file is committed within its byte ceiling (PLAN-SPF-V1 Task 8 published all four,
+   * captured by `scripts/capture-connected-studio-posters.mjs`). While false, the Ground shows its pure
+   * CSS chart and never references the missing URL; the chart also remains the fallback if the image fails.
    */
   published: boolean;
 };
@@ -32,7 +33,7 @@ function poster(route: ConnectedRoute, quality: ConnectedQuality): ConnectedPost
     width: wide ? 1920 : 900,
     height: wide ? 1080 : 1600,
     maxBytes: (wide ? 150 : 80) * KIB,
-    published: false,
+    published: true,
   });
 }
 
