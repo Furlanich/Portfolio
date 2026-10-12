@@ -502,3 +502,28 @@ test('without a start pose the first live frame is the scroll pose, as before', 
   harness.controller.update(update({ scrollY: 2000 }));
   assert.ok(Math.abs(harness.renders[0].progress - 2000 / (5000 - 0.7 * 900)) < 1e-9);
 });
+
+test('a layout change while the start pose is settling keeps easing: it does not snap to the scroll pose', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update());
+  harness.advance(100);
+  const before = harness.renders[harness.renders.length - 1].progress;
+  assert.ok(before > 0.4, `the settle is still under way (progress ${before})`);
+  // Fonts and images move the Footer after activation: the layout is measured again.
+  harness.setLayout({ footerDocumentTop: 5200, viewportWidth: 1440, viewportHeight: 900 });
+  harness.controller.update(update());
+  const right = harness.renders[harness.renders.length - 1].progress;
+  assert.ok(right > before - 0.05, `the start pose survives a layout change (was ${before}, now ${right})`);
+  harness.advance(4000);
+  assert.ok(harness.renders[harness.renders.length - 1].progress < 0.005, 'and it still settles on the scroll pose');
+});
+
+test('a layout change after the settle lands on the current geometry, as before', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update({ scrollY: 2000 }));
+  harness.advance(4000);
+  harness.setLayout({ footerDocumentTop: 6000, viewportWidth: 1440, viewportHeight: 900 });
+  harness.controller.update(update({ scrollY: 2000 }));
+  const last = harness.renders[harness.renders.length - 1];
+  assert.ok(Math.abs(last.progress - 2000 / (6000 - 0.7 * 900)) < 1e-6, 'the pose lands on the new target without replay');
+});

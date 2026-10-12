@@ -170,10 +170,9 @@ export function createConnectedController(options: ControllerOptions): Connected
       lastUpdateAt = options.clock.now();
       targetProgress = measureConnectedProgress(next.scrollY, measured.footerDocumentTop, measured.viewportHeight);
       // A new layout, graph or tier lands on the current geometry; only the idle angle carries over.
-      if (changed && pose) {
-        settleStartedAt = undefined;
-        pose = { ...pose, progress: targetProgress, scrollActivity: 0 };
-      }
+      // While the start pose is easing, fonts and images measuring the page again must not cancel it: it
+      // keeps easing toward the (new) target. After the settle a changed layout lands on the geometry as before.
+      if (changed && pose && settleStartedAt === undefined) pose = { ...pose, progress: targetProgress, scrollActivity: 0 };
       const wasLive = state === 'live';
       reconcile();
       if (!wasLive || state !== 'live') return;
