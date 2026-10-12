@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - REVIEW-SPF-TASK-8-2026-10-12
   - GOV-AGENT-USAGE
   - PLAN-SPF-V1
   - REVIEW-SPF-PLAN-2026-09-30
@@ -77,6 +78,10 @@ Front matter records the overall governance status of a document. In mixed-statu
 - [Marketing and presentation audit](reviews/marketing-presentation-2026-09-15/index.md): deployed bilingual review, evidence, scores and proposed corrections; no new copy/design approval. [T6 comparison](reviews/marketing-presentation-excellence-v1/index.md) records the post-T1–T5 status without replacing the original review.
 - [Research references](references/market-and-design-references.md): external sources that informed earlier positioning and evidence discussions.
 - [Domain glossary](../CONTEXT.md): canonical project-specific terminology.
+
+## Independent implementation reviews
+
+The [Task 8 / PR #132 independent review](reviews/services-projects-footer-task-8-review-2026-10-12/index.md) pins head 07d1c927 and recommends corrections for two live handoff defects and one approval-status inconsistency. All three findings and the remaining Task 8 acceptance gates are OPEN; implementation and visual approval are not inferred from this review.
 
 ## Current documentation stage
 
