@@ -1,11 +1,11 @@
 import {
   BufferAttribute,
   BufferGeometry,
+  CircleGeometry,
   Color,
   DataTexture,
   DoubleSide,
   DynamicDrawUsage,
-  Euler,
   Group,
   IcosahedronGeometry,
   InstancedMesh,
@@ -14,12 +14,11 @@ import {
   Matrix4,
   Mesh,
   MeshBasicMaterial,
-  MeshLambertMaterial,
   Points,
   PointsMaterial,
   Quaternion,
   RGBAFormat,
-  TorusGeometry,
+  RingGeometry,
   UnsignedByteType,
   Vector3,
 } from 'three';
@@ -38,26 +37,22 @@ export const CAMERA_NEAR = 1;
 export const CAMERA_FAR = 40;
 export const HALF_FOV_TAN = Math.tan((CAMERA_FOV_DEGREES * Math.PI) / 360);
 
-/** Proportions from DESIGN-SPF-V1 (Scene integration): node 0.22, primary ring 0.39, path 0.025. */
-export const NODE_RADIUS = 0.22;
-export const RING_RADIUS = 0.39;
-const CORE_RADIUS = 0.05;
 /**
- * The second tilted orbit (DESIGN-SPF-V1, Scene integration: wide and tablet only; compact has one ring).
- * It shares the primary ring's pose and is turned about the ring's own Y axis, so the two planes share a
- * diameter, and is drawn larger so the orbits nest and never touch. Sonnet tuning (PC-7): the angle and
- * the scale are accepted only through owner review of the rendered engine.
+ * The node look (owner direction, 2026-10-12, superseding DESIGN-SPF-V1's sphere-and-orbit proportions): a
+ * simple white dot inside one thin outer ring, flat and turned to face the camera, as on Home. A small bead
+ * rides the ring and turns with the slow idle rotation, which is how "nodes/rings rotate slowly at rest" stays
+ * visible on a flat node. Scene units at node scale 1; the ring is the label anchor (connected-labels.ts).
  */
-const SECOND_ORBIT_TILT = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), 1.05);
-const SECOND_ORBIT_SCALE = 1.22;
-/** Where the light core sits on the node body, toward the key light (unit-ish, times the body radius). */
-const CORE_OFFSET = new Vector3(0.45, 0.42, 0.78);
+export const RING_RADIUS = 0.39;
+export const NODE_RADIUS = 0.14;
+const RING_THICKNESS = 0.03;
+const BEAD_RADIUS = 0.05;
 
 /** Target on-screen ring diameter in CSS px at the reference viewport height (Sonnet tuning, PC-7). */
 const RING_DIAMETER_PX: Record<ConnectedTier, { px: number; referenceHeight: number }> = {
-  wide: { px: 80, referenceHeight: 900 },
-  tablet: { px: 66, referenceHeight: 1024 },
-  compact: { px: 46, referenceHeight: 844 },
+  wide: { px: 44, referenceHeight: 900 },
+  tablet: { px: 38, referenceHeight: 1024 },
+  compact: { px: 30, referenceHeight: 844 },
 };
 /** Path tube radius in CSS px, so connections read the same at any viewport size. */
 const PATH_RADIUS_PX: Record<ConnectedTier, number> = { wide: 1.7, tablet: 1.5, compact: 1.4 };
@@ -176,7 +171,7 @@ const PATH_TAIL_COLOR = new Color(0x6fa8e0).multiplyScalar(0.7);
 const PATH_HEAD_COLOR = new Color(0xd3e6f7);
 
 /** What each drawable is, for diagnostics and tests. Never shown to a visitor. */
-export type ConnectedRole = 'nodes' | 'cores' | 'rings' | 'paths' | 'skeleton' | 'tracers' | 'points';
+export type ConnectedRole = 'nodes' | 'rings' | 'beads' | 'paths' | 'skeleton' | 'tracers' | 'points';
 
 function tag<T extends { userData: Record<string, unknown> }>(object: T, role: ConnectedRole, extra: Record<string, unknown> = {}): T {
   object.userData.connectedRole = role;
@@ -197,7 +192,7 @@ export type ConnectedGraphBatch = {
 function instanced(
   tracker: ResourceTracker,
   geometry: BufferGeometry,
-  material: MeshBasicMaterial | MeshLambertMaterial,
+  material: MeshBasicMaterial,
   count: number,
   role: ConnectedRole,
 ): InstancedMesh {
@@ -207,40 +202,46 @@ function instanced(
   return tag(mesh, role);
 }
 
-type NodeState = { tiltX: number; tiltZ: number };
-
 /**
  * Builds everything the graph draws into a handful of batched drawables: three instanced meshes for
- * the nodes, cores and rings (two orbits of rings per node on wide, one on compact), one dynamic tube batch for the grown paths and one line batch for the
- * faint skeleton. Connections are never one object each.
+ * the white node dots, their rings and the beads that ride them, one dynamic tube batch for the grown paths and one
+ * line batch for the faint skeleton. Connections are never one object each.
  */
 export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracker): ConnectedGraphBatch {
   const group = new Group();
   const nodeCount = graph.nodes.length;
   const edgeCount = graph.edges.length;
-  const orbits = graph.quality === 'wide' ? 2 : 1;
 
+  // The dot is the node: flat, white, drawn over the paths that end at it (the polygon offset beats the tube at the same depth).
   const nodes = instanced(
     tracker,
-    new IcosahedronGeometry(NODE_RADIUS, 1),
-    new MeshLambertMaterial({ color: 0x004589, flatShading: true }),
+    new CircleGeometry(NODE_RADIUS, 32),
+    new MeshBasicMaterial({ color: 0xf9f6ee, fog: false, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }),
     nodeCount,
     'nodes',
   );
   // Nearer nodes read a little brighter (their depthScale is larger), with a seeded wobble so they are not clones.
   const tint = new Color();
   graph.nodes.forEach((node, index) => {
-    const brightness = 0.82 + ((node.depthScale - 0.7) / 0.3) * 0.38 + (node.seed - 0.5) * 0.1;
-    nodes.setColorAt(index, tint.setScalar(brightness));
+    const brightness = 0.84 + ((node.depthScale - 0.7) / 0.3) * 0.16 + (node.seed - 0.5) * 0.06;
+    nodes.setColorAt(index, tint.setScalar(Math.min(1, brightness)));
   });
   if (nodes.instanceColor) nodes.instanceColor.needsUpdate = true;
-  const cores = instanced(tracker, new IcosahedronGeometry(1, 0), new MeshBasicMaterial({ color: 0xf9f6ee, fog: false }), nodeCount, 'cores');
+  // One thin outer ring per node on every tier: flat, light, with no second orbit.
   const rings = instanced(
     tracker,
-    new TorusGeometry(RING_RADIUS, 0.02, 6, 48),
-    new MeshBasicMaterial({ color: 0x9cc4ec }),
-    nodeCount * orbits,
+    new RingGeometry(RING_RADIUS - RING_THICKNESS / 2, RING_RADIUS + RING_THICKNESS / 2, 64),
+    new MeshBasicMaterial({ color: 0xcfe2f5 }),
+    nodeCount,
     'rings',
+  );
+  // The bead rides the ring at the node's rotation angle, so the idle rotation stays visible on a flat node.
+  const beads = instanced(
+    tracker,
+    new CircleGeometry(BEAD_RADIUS, 16),
+    new MeshBasicMaterial({ color: 0xffffff, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
+    nodeCount,
+    'beads',
   );
 
   const verticesPerEdge = (PATH_SEGMENTS + 1) * PATH_SIDES;
@@ -289,7 +290,7 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
   const distant = createDistantPoints(graph.quality, tracker);
   const points = distant.points;
 
-  const drawables = [points, skeleton, paths, nodes, rings, cores, tracers] as const;
+  const drawables = [points, skeleton, paths, rings, nodes, beads, tracers] as const;
   for (const drawable of drawables) group.add(drawable);
 
   // Static per-graph facts, resolved once so a render never searches by id.
@@ -298,17 +299,16 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
   if (edgeEnds.some(([from, to]) => from === undefined || to === undefined)) {
     throw new Error('connected-studio: a connection names a node the graph does not contain');
   }
-  const nodeStates: NodeState[] = graph.nodes.map((node) => ({ tiltX: 0.5 + node.seed, tiltZ: (node.seed - 0.5) * 1.2 }));
   const bowSigns = graph.edges.map((_, index) => (((index + 1) * 2654435761) >>> 0) % 2 === 0 ? 1 : -1);
   const worldPositions = new Float64Array(nodeCount * 3);
 
   const matrix = new Matrix4();
   const quaternion = new Quaternion();
-  const orbit = new Quaternion();
-  const euler = new Euler();
+  const facing = new Vector3();
   const position = new Vector3();
   const scale = new Vector3();
-  const coreOffset = new Vector3();
+  const beadOffset = new Vector3();
+  const forward = new Vector3(0, 0, 1);
   const from = new Vector3();
   const to = new Vector3();
   const control = new Vector3();
@@ -355,32 +355,25 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
         position,
       );
       worldPositions.set([position.x, position.y, position.z], index * 3);
-      const rotation = posed?.rotation ?? [0, 0, 0];
       const radius = layout.nodeScale * finiteOr(posed?.scale ?? node.depthScale, node.depthScale);
-      const rotX = finiteOr(rotation[0], 0);
-      const rotY = finiteOr(rotation[1], 0);
-      const rotZ = finiteOr(rotation[2], 0);
-
+      // Dot, ring and bead turn to face the camera, so a ring reads as a circle across the whole viewport.
+      facing.set(-position.x, -position.y, CAMERA_Z - position.z).normalize();
+      quaternion.setFromUnitVectors(forward, facing);
       scale.setScalar(radius);
-      quaternion.setFromEuler(euler.set(rotX, rotY, rotZ, 'YXZ'));
       nodes.setMatrixAt(index, matrix.compose(position, quaternion, scale));
-
-      quaternion.setFromEuler(euler.set(rotX + nodeStates[index].tiltX, rotY, rotZ + nodeStates[index].tiltZ, 'YXZ'));
       rings.setMatrixAt(index, matrix.compose(position, quaternion, scale));
-      if (orbits > 1) {
-        // The second orbit fills the second half of the same instanced mesh, so it costs no draw call.
-        orbit.copy(quaternion).multiply(SECOND_ORBIT_TILT);
-        scale.setScalar(radius * SECOND_ORBIT_SCALE);
-        rings.setMatrixAt(nodeCount + index, matrix.compose(position, orbit, scale));
-      }
 
-      coreOffset.copy(CORE_OFFSET).multiplyScalar(NODE_RADIUS * radius).add(position);
-      scale.setScalar(CORE_RADIUS * radius);
-      cores.setMatrixAt(index, matrix.compose(coreOffset, quaternion.identity(), scale));
+      // The bead's angle is the node's slow rotation about the vertical axis, the same value the model advances at rest.
+      const angle = finiteOr((posed?.rotation ?? [0, 0, 0])[1], 0);
+      beadOffset
+        .set(Math.cos(angle) * RING_RADIUS * radius, Math.sin(angle) * RING_RADIUS * radius, 0)
+        .applyQuaternion(quaternion)
+        .add(position);
+      beads.setMatrixAt(index, matrix.compose(beadOffset, quaternion, scale));
     });
     nodes.instanceMatrix.needsUpdate = true;
     rings.instanceMatrix.needsUpdate = true;
-    cores.instanceMatrix.needsUpdate = true;
+    beads.instanceMatrix.needsUpdate = true;
 
     let activeTracers = 0;
     graph.edges.forEach((edge, index) => {
