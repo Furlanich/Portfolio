@@ -15,7 +15,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-10-11
+last_verified: 2026-10-12
 ---
 
 # Services, Projects and Footer v1 acceptance
@@ -39,6 +39,6 @@ Follow-up record: [Task 3/5 receipt corrections](task-3-5-corrections.md). The t
 
 ## Next session
 
-The [W3 handoff](w3-handoff.md) is the historical Task 4 startup record. Task 4 and its correction are now human-merged; the [W3 receipt](w3-checkpoint.md) records PASS on `ddc78aed`, failed attempts/reruns and serial lock releases. Task 6 then merged through PR #124, and the [W4 receipt](w4-checkpoint.md) records PASS on `9279838f`, one cold-start failed attempt and the serial lock releases. Task 7 then merged through PR #126, and the [W5 receipt](w5-checkpoint.md) records the checkpoint as **RED** on `4da0720e`: the `#site-top` link change breaks `measure:immersive` and two Home specs outside Task 7's write set. A draft fix ([PR #128](https://github.com/Furlanich/Portfolio/pull/128)) updates the stale expectations; with them corrected, `measure:immersive` shows a Home baseline change (Finding 4) that the owner accepted on 2026-10-11. W6 / Task 8 stays locked until a fresh green W5. Overall acceptance stays PROPOSED, with existing manual/final gates OPEN.
+The [W3 handoff](w3-handoff.md) is the historical Task 4 startup record. Task 4 and its correction are now human-merged; the [W3 receipt](w3-checkpoint.md) records PASS on `ddc78aed`, failed attempts/reruns and serial lock releases. Task 6 then merged through PR #124, and the [W4 receipt](w4-checkpoint.md) records PASS on `9279838f`, one cold-start failed attempt and the serial lock releases. Task 7 then merged through PR #126, and the [W5 receipt](w5-checkpoint.md) records the checkpoint as **RED** on `4da0720e` (the `#site-top` link change broke `measure:immersive` and two Home specs outside Task 7's write set), then a fresh rerun on `986217fb` that **passes with disclosed load-sensitive failures**, after [PR #128](https://github.com/Furlanich/Portfolio/pull/128) fixed the expectations and the owner accepted the resulting Home baseline change (Finding 4) on 2026-10-11. W6 / Task 8 may start under its existing packet. Overall acceptance stays PROPOSED, with existing manual/final gates OPEN.
 
 [Receipt template](../../plans/active/services-projects-footer-v1.md#receipt-template)
