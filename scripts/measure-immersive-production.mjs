@@ -257,8 +257,12 @@ try {
     }, null, { timeout: 30_000 });
     await page.waitForTimeout(800);
   };
-  // One warm-up remount so router and prefetch listeners are already established.
-  await remount();
+  // Warm-up remounts so router, prefetch and connected-studio host listeners are already established.
+  // The Services visit mounts that host; the count reads 528 after the first remount and 529, flat, from the
+  // second (measured at 4da0720e), so a single warm-up sampled it before it levelled off.
+  for (let warmUp = 0; warmUp < 3; warmUp += 1) {
+    await remount();
+  }
   const afterTraversal = await readCounts();
   for (let cycle = 0; cycle < 5; cycle += 1) {
     await remount();
