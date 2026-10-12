@@ -13,7 +13,7 @@ related:
   - IA-SITE
   - PROJECT-EVIDENCE
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
-last_verified: 2026-10-05
+last_verified: 2026-10-12
 ---
 
 # Services, Projects and Footer — connected studio v1
@@ -101,7 +101,7 @@ Keep the current global demonstration disclosure. The Contact form still simulat
 
 One decorative canvas per active route, fixed behind the semantic page and masked by content scrims. Stop/hide the environment as the opaque Footer takes over. Both pages use a field spread across the visible viewport rather than a cluster moving into one side lane. Wide/tablet uses 16 nodes and 33 connections; compact uses eight nodes and 13 connections. Each of the eight capability words appears twice in the wide field and once in compact. A readable dispersed arrangement and bounded local travel prevent collisions/offscreen escape; density is deliberately short of all-to-all wiring. Avoid one canvas per card or service.
 
-Revision 5 retains faceted Azure nodes, small Bone light cores, clear rings, curved paths and brighter growing segments. Wide mode has a faint complete connection skeleton and a second tilted orbit; compact simplifies both. Gentle directional lighting and fog separate nearer/larger nodes from smaller distant ones. Connections are batched low-poly geometry, allowing greater density without one draw call per path. No bloom pipeline, film, model download, reflective HDR texture, logo sculpture or particle storm.
+Revision 5 retains faceted Azure nodes, small Bone light cores, clear rings, curved paths and brighter growing segments (the node look was amended by the owner on 2026-10-12: see [Approved bounded supersessions](#approved-bounded-supersessions)). Wide mode has a faint complete connection skeleton and a second tilted orbit; compact simplifies both. Gentle directional lighting and fog separate nearer/larger nodes from smaller distant ones. Connections are batched low-poly geometry, allowing greater density without one draw call per path. No bloom pipeline, film, model download, reflective HDR texture, logo sculpture or particle storm.
 
 The candidate reference uses node radius 0.22, primary ring radius 0.39 and path radius 0.025 in scene units, with depth-scaled size and a lighter compact variant. These describe visible proportions, not production acceptance tests. Preserve perceived clarity and depth; exact geometry may be optimized if the approved rendering remains equivalent.
 
@@ -213,6 +213,8 @@ Home alignment is limited to retained service family wording/evidence destinatio
 | Existing Services catalogue and approved copy | Atlas composition and proposed buyer-oriented copy table | Three stable families/IDs, commercial/authorization boundaries |
 | Existing shared Footer composition/copy | Azure conclusion, complete foreground mark + protected watermark, proposed Footer copy | Real direct channels, approved routing, demonstration disclosure |
 | MPC detail navigation | Founder context + approved external source | Educational/group/fictional-business facts and evidence record |
+| Revision 5 faceted Azure nodes, Bone light cores, tilted rings and the wide second orbit (Scene integration) | **Owner direction, 2026-10-12:** each node is a simple white dot with one thin outer ring, flat and facing the camera, as Home's markers are, on every tier. A small bead rides each ring at the node's slow rotation angle, so "nodes/rings rotate slowly at rest" stays visible on a flat node. No sphere, no tilted ring, no second orbit | Node counts (16 and 8), connections and paths, depth scale, the 1–1.4°/s rotation rate, upright labels, the draw-call and DPR budgets |
+| The live scene starts on the scroll-driven pose | **Owner direction, 2026-10-12:** the live scene's first frame is the static poster's pose (scroll progress 0.60, idle angle 0.50 rad), then it eases to the scroll-driven pose with a 0.5s time constant, so the fade from poster to canvas has no jump | Every static preference path, Pause, the fallbacks and the damping and decay constants |
 
 Persist these approved exceptions through the owning records and a new runtime decision rather than editing immutable ADR history. Outside these rows, approved visual/interaction requirements outrank skill defaults and discretionary agent taste. References above to “candidate” or “proposed” geometry/budget values describe the approved Revision 5 design target, not measured production compliance.
 

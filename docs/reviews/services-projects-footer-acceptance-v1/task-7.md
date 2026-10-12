@@ -81,3 +81,7 @@ Final pre-push checkpoint for this follow-up: all 16 modified-click controls pas
 ## Owner visual acceptance on 2026-10-11
 
 The owner gave Task 7 their visual acceptance in the session chat on 2026-10-11, in answer to the W5 readiness evaluation. It is recorded as closing open item (b) above (the motion review, the chip styling and the host constants). It does not close the other open items: (a) a fresh separate-session independent review, (c) the chapter-composition difference, (d) the OD-4 screen-reader, zoom and device checks, (e) the smooth-scroll observation (already marked resolved by the corrections), (f) a completed `browser` check (it was `CANCELLED` on PR #126) or (g) Task 9 hardware evidence. This entry appends to the receipt; nothing above it is rewritten.
+
+## Follow-up by Task 8 on 2026-10-12
+
+By the owner's direction, the Task 8 PR changes files this receipt describes: the node look in `connected-geometry.ts` (a flat white dot and one thin ring in place of the blue sphere, the tilted ring and the second orbit; the `cores` role is gone and a `beads` role is new) and a start pose in `controller.ts` and the host (the first live frame is the poster's pose, easing to the scroll pose over about three seconds). Two tests here were adjusted with an `expectSettled` helper and two start-pose tests were added. See the [Task 8 receipt](task-8.md), Rulings 7 and 8. Nothing above is rewritten.
