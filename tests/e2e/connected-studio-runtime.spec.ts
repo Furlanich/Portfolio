@@ -9,6 +9,7 @@ import {
   enableLiveForTest,
   expectFellBack,
   expectLive,
+  expectSettled,
   expectStopped,
   expectStatic,
   gotoConnected,
@@ -25,6 +26,7 @@ import {
   seedSession,
   trackWebglContexts,
 } from './support/connected-studio';
+import { CONNECTED_POSTER_POSE } from '../../lib/connected-studio/media-manifest';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 // PLAN-SPF-V1 Task 7: the optional live scene behind Services and Projects. WebGL here runs on
@@ -40,6 +42,8 @@ test.describe('connected runtime', () => {
     await enableLiveForTest(page);
     await gotoConnected(page, 'services', 'es');
     await expectLive(page);
+    // Positions are steady at rest, which starts once the scene has settled from its start pose.
+    await expectSettled(page);
 
     const canvas = connectedCanvas(page);
     await expect(canvas).toHaveAttribute('aria-hidden', 'true');
@@ -570,9 +574,11 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
     await enableLiveForTest(page);
     await gotoConnected(page, 'services', 'en');
     await expectLive(page);
+    await expectSettled(page);
     const idle = await readConnected(page);
     expect(idle?.targetFps, 'ambient cadence at rest').toBe(30);
-    expect(idle?.edgeGrowth.every((growth) => growth === 0)).toBe(true);
+    // Settling approaches progress 0 asymptotically, so growth is negligible rather than exactly zero.
+    expect(idle?.edgeGrowth.every((growth) => growth < 0.01)).toBe(true);
 
     // A real wheel notch, not a teleport: the browser turns it into a short run of scroll events.
     await page.mouse.move(700, 500);
@@ -675,3 +681,40 @@ test.describe('review regressions', () => {
     await expect(connectedCanvas(page)).toHaveCount(0);
   });
 });
+
+// Owner direction, 2026-10-12: the live scene's first frame is the static poster's pose, so the fade from poster to
+// canvas has no jump; it then eases to the scroll-driven pose. Time is held with Playwright's fake clock so the
+// first frame can be read before any later frame runs, which makes the proof exact and not a race.
+for (const route of ['services', 'projects'] as const) {
+  test(`the ${route} live scene starts on the poster pose and then settles on the scroll pose`, async ({ page }) => {
+    // `install` alone leaves time flowing; `pauseAt` holds it until `runFor` steps it.
+    const start = new Date('2026-01-01T00:00:00Z');
+    await page.clock.install({ time: start });
+    await page.clock.pauseAt(new Date(start.getTime() + 1_000));
+    await enableLiveForTest(page);
+    await gotoConnected(page, route, 'es');
+    // Activation waits for load and a timer, which the clock steps through; the import and first draw are not timers.
+    for (let attempt = 0; attempt < 80; attempt += 1) {
+      await page.clock.runFor(250);
+      if (((await readConnected(page))?.imports ?? 0) > 0) break;
+      await page.waitForTimeout(100);
+    }
+    await expect.poll(async () => (await readConnected(page))?.renderCount ?? 0, { timeout: 60_000 }).toBeGreaterThan(0);
+
+    const first = await readConnected(page);
+    // Time is held, so any further frame (a layout re-measure) draws the same pose.
+    expect(first?.progress).toBeCloseTo(CONNECTED_POSTER_POSE.progress, 6);
+    expect(first?.idleAngleRadians).toBeCloseTo(CONNECTED_POSTER_POSE.idleAngleRadians, 6);
+    expect(first?.edgeGrowth.some((growth) => growth > 0), 'connections are already grown at the start pose').toBe(true);
+
+    // Half a second later the progress is between the pose and the page top; after the settle it is the scroll pose.
+    await page.clock.runFor(500);
+    const midway = await readConnected(page);
+    expect(midway!.progress).toBeLessThan(first!.progress);
+    expect(midway!.progress).toBeGreaterThan(0.05);
+    await page.clock.runFor(4000);
+    const settled = await readConnected(page);
+    expect(settled!.progress, 'at the top of the page the scene settles on progress 0').toBeLessThan(0.01);
+    expect(settled!.idleAngleRadians, 'the rotation carried on from the start angle').toBeGreaterThan(first!.idleAngleRadians);
+  });
+}
