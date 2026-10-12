@@ -151,7 +151,7 @@ for (const homeCase of homeCases) {
     await expect(main.getByText(homeCase.label, { exact: true })).toBeVisible();
 
     await expect(main.getByRole('link', { name: homeCase.primary[0], exact: true }).first()).toHaveAttribute('href', appPathname(homeCase.primary[1]));
-    await expect(main.getByRole('link', { name: homeCase.secondary[0], exact: true }).first()).toHaveAttribute('href', appPathname(homeCase.secondary[1]));
+    await expect(main.getByRole('link', { name: homeCase.secondary[0], exact: true }).first()).toHaveAttribute('href', `${appPathname(homeCase.secondary[1])}#site-top`);
 
     await expect(main.locator('canvas, video, img')).toHaveCount(0);
 
