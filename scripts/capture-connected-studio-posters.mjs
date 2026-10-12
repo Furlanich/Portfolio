@@ -13,11 +13,11 @@
 // Frozen capture settings (one shared poster family; identical for Services and Projects):
 //   - tier, viewport, device scale: wide 1920x1080 at 1x; compact 450x800 at 2x (900x1600 pixels,
 //     and 450 CSS pixels select the compact tier).
-//   - progress `CONNECTED_POSTER_POSE.progress` (0.60): the scene's stronger composition, with most connections grown and every node in
-//     frame. Reached by scrolling, then corrected until the diagnostics read it within 0.003.
-//   - idle angle `CONNECTED_POSTER_POSE.idleAngleRadians` (0.50 rad): the slow rotation integrates real time, so the script waits until the
-//     diagnostics read just under the target and then pauses the scene through the page's own
-//     Pause control. A paused scene stops drawing, so the pose cannot move during the capture.
+//   - the pose is the live scene's own first frame. The controller starts on `CONNECTED_POSTER_POSE` (progress
+//     0.60: most connections grown and every node in frame; idle angle 0.50 rad), so the poster is that frame by
+//     construction. The script holds time with Playwright's fake clock, lets the page run until the scene has
+//     drawn, and reads the pose back from the diagnostics (progress and angle within 1e-6). Time is held, so a
+//     second frame (the page re-measuring its layout) draws the same pose and nothing drifts during the capture.
 //   - label treatment: none. The accessible vocabulary lives in the page's HTML legend; the DOM label
 //     chips and the Next.js development overlay are hidden before the capture, so no text is rasterized.
 //   - the capture is the viewport with everything but the Ground hidden (`visibility`, so nothing
@@ -45,11 +45,9 @@ const VIEWPORTS = {
 };
 // The pose is one definition shared with the live scene (its first frame), so the poster and the canvas agree.
 const TARGET_PROGRESS = CONNECTED_POSTER_POSE.progress;
-const PROGRESS_TOLERANCE = 0.003;
 const TARGET_IDLE_ANGLE = CONNECTED_POSTER_POSE.idleAngleRadians;
-const ANGLE_TOLERANCE = 0.01;
-// The pause lands a few frames after the trigger (about 0.007 rad under SwiftShader), so trigger early.
-const ANGLE_LEAD = 0.004;
+/** How exactly the first frame must equal the pose: it is the same arithmetic, so only float rounding is allowed. */
+const POSE_TOLERANCE = 1e-6;
 const QUALITY_STEPS = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1];
 
 function isPortInUse(portNumber) {
@@ -178,34 +176,20 @@ for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => process.exi
 
 const readDiagnostics = (page) => page.evaluate(() => window.__FURLANICH_CONNECTED__?.read() ?? null);
 
-/** Scrolls until the diagnostics report the target progress, correcting from what they read. */
-async function scrollToProgress(page, target) {
-  const layout = (await readDiagnostics(page)).layout;
-  let scrollY = Math.round(target * (layout.footerDocumentTop - layout.viewportHeight));
-  for (let attempt = 0; attempt < 6; attempt += 1) {
-    await page.evaluate((y) => window.scrollTo(0, y), scrollY);
-    // The live scene starts on the poster pose and settles on the scroll pose for about 3s (START_SETTLE).
-    await page.waitForTimeout(attempt === 0 ? 3400 : 1800);
-    const { progress } = await readDiagnostics(page);
-    if (Math.abs(progress - target) <= PROGRESS_TOLERANCE) return { scrollY, progress };
-    // Progress is linear in the scroll position; rescale from the reading.
-    scrollY = Math.round(scrollY * (target / Math.max(progress, 0.01)));
-  }
-  throw new Error(`could not reach progress ${target} within ${PROGRESS_TOLERANCE}`);
-}
-
-/** Waits for the slow idle rotation to reach the target angle, then pauses through the page's own control. */
-async function pauseAtAngle(page, targetAngle) {
-  const deadline = Date.now() + 120_000;
-  for (;;) {
+/**
+ * Lets the page run, with time held by the fake clock, until the live scene has drawn its first frame. Activation
+ * waits for `load` and a 250 ms timer, which the clock steps through; the dynamic import and the first draw are
+ * asynchronous work, not timers, so they finish between the steps. The clock is never stepped again after that,
+ * so the controller's next tick (a timer) cannot fire and the pose cannot move.
+ */
+async function drawFirstFrame(page) {
+  for (let attempt = 0; attempt < 80; attempt += 1) {
+    await page.clock.runFor(250);
     const reading = await readDiagnostics(page);
-    if (reading.idleAngleRadians >= targetAngle - ANGLE_LEAD) break;
-    if (Date.now() > deadline) throw new Error(`the idle angle did not reach ${targetAngle} (read ${reading.idleAngleRadians})`);
-    await page.waitForTimeout(40);
+    if (reading && reading.imports > 0) break;
+    await page.waitForTimeout(100);
   }
-  // A DOM click does not scroll, unlike Playwright's own, which would change the progress.
-  await page.evaluate(() => document.querySelector('[data-connected-pause]').click());
-  await page.waitForFunction(() => window.__FURLANICH_CONNECTED__.read().schedulerPending === 0, null, { timeout: 10_000 });
+  await page.waitForFunction(() => (window.__FURLANICH_CONNECTED__?.read().renderCount ?? 0) > 0, null, { timeout: 120_000 });
   return readDiagnostics(page);
 }
 
@@ -246,35 +230,31 @@ try {
     const file = path.basename(entry.src);
     const context = await browser.newContext({ viewport, deviceScaleFactor, reducedMotion: 'no-preference', locale: 'es-AR' });
     const page = await context.newPage();
+    // `install` alone leaves time flowing; `pauseAt` holds it until `runFor` steps it.
+    const clockStart = new Date('2026-01-01T00:00:00Z');
+    await page.clock.install({ time: clockStart });
+    await page.clock.pauseAt(new Date(clockStart.getTime() + 1_000));
     await page.addInitScript(() => {
       window.__FURLANICH_CONNECTED_TEST__ = { allowSoftwareRenderer: true, livePolicy: { wide: true, compact: true } };
     });
     await page.goto(`${origin}${ROUTE_PATHS[entry.route]}`, { waitUntil: 'load' });
-    await page.waitForFunction(
-      () => {
-        const reading = window.__FURLANICH_CONNECTED__?.read();
-        return reading?.mode === 'live' && reading.renderCount > 0;
-      },
-      null,
-      { timeout: 120_000 },
-    );
-    const tier = (await readDiagnostics(page)).tier;
-    if (tier !== entry.quality) throw new Error(`${file}: the page selected tier "${tier}", expected "${entry.quality}"`);
-
-    const scrolled = await scrollToProgress(page, TARGET_PROGRESS);
-    const pose = await pauseAtAngle(page, TARGET_IDLE_ANGLE);
-    if (Math.abs(pose.progress - TARGET_PROGRESS) > PROGRESS_TOLERANCE) throw new Error(`${file}: progress drifted to ${pose.progress}`);
-    if (Math.abs(pose.idleAngleRadians - TARGET_IDLE_ANGLE) > ANGLE_TOLERANCE) throw new Error(`${file}: idle angle read ${pose.idleAngleRadians}`);
+    const pose = await drawFirstFrame(page);
+    if (pose.mode !== 'live' || pose.renderCount < 1) throw new Error(`${file}: expected the live scene to have drawn, got mode ${pose.mode} and renderCount ${pose.renderCount}`);
+    if (pose.tier !== entry.quality) throw new Error(`${file}: the page selected tier "${pose.tier}", expected "${entry.quality}"`);
+    if (Math.abs(pose.progress - TARGET_PROGRESS) > POSE_TOLERANCE) throw new Error(`${file}: progress read ${pose.progress}, expected ${TARGET_PROGRESS}`);
+    if (Math.abs(pose.idleAngleRadians - TARGET_IDLE_ANGLE) > POSE_TOLERANCE) throw new Error(`${file}: idle angle read ${pose.idleAngleRadians}, expected ${TARGET_IDLE_ANGLE}`);
 
     // Everything but the Ground is hidden without changing layout, and no text is rasterized.
     await page.addStyleTag({
       content:
         'body *:not([data-connected-ground]):not([data-connected-ground] *) { visibility: hidden !important; }' +
         '[data-connected-ground], [data-connected-ground] canvas { visibility: visible !important; }' +
-        '[data-connected-labels], nextjs-portal, #__next-build-watcher { display: none !important; }',
+        '[data-connected-labels], nextjs-portal, #__next-build-watcher { display: none !important; }' +
+        // The published poster sits under the canvas: capturing over it would bake the previous poster into the new one.
+        '[data-connected-poster] { display: none !important; }',
     });
     await page.locator('nextjs-portal').evaluateAll((nodes) => nodes.forEach((node) => node.remove()));
-    await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    // No animation-frame wait: time is held, so frames never fire, and the screenshot forces its own paint.
 
     const png = await page.screenshot({ type: 'png' });
     const encoded = await encodeWebp(page, png, entry.maxBytes);
@@ -285,7 +265,7 @@ try {
     console.log(
       `${file}: ${entry.width}x${entry.height}, q=${encoded.quality}, ${encoded.bytes.length} bytes ` +
         `(${(encoded.bytes.length / KIB).toFixed(1)} KiB of ${(entry.maxBytes / KIB).toFixed(0)} KiB); ` +
-        `tier=${tier} progress=${pose.progress.toFixed(4)} idleAngle=${pose.idleAngleRadians.toFixed(4)} scrollY=${scrolled.scrollY}`,
+        `tier=${pose.tier} progress=${pose.progress.toFixed(6)} idleAngle=${pose.idleAngleRadians.toFixed(6)} renderCount=${pose.renderCount}`,
     );
     await context.close();
   }
