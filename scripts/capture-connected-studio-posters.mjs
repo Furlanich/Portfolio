@@ -13,9 +13,9 @@
 // Frozen capture settings (one shared poster family; identical for Services and Projects):
 //   - tier, viewport, device scale: wide 1920x1080 at 1x; compact 450x800 at 2x (900x1600 pixels,
 //     and 450 CSS pixels select the compact tier).
-//   - progress 0.60: the scene's stronger composition, with most connections grown and every node in
+//   - progress `CONNECTED_POSTER_POSE.progress` (0.60): the scene's stronger composition, with most connections grown and every node in
 //     frame. Reached by scrolling, then corrected until the diagnostics read it within 0.003.
-//   - idle angle 0.50 rad: the slow rotation integrates real time, so the script waits until the
+//   - idle angle `CONNECTED_POSTER_POSE.idleAngleRadians` (0.50 rad): the slow rotation integrates real time, so the script waits until the
 //     diagnostics read just under the target and then pauses the scene through the page's own
 //     Pause control. A paused scene stops drawing, so the pose cannot move during the capture.
 //   - label treatment: none. The accessible vocabulary lives in the page's HTML legend; the DOM label
@@ -29,7 +29,7 @@ import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { connectedMediaManifest } from '../lib/connected-studio/media-manifest.ts';
+import { CONNECTED_POSTER_POSE, connectedMediaManifest } from '../lib/connected-studio/media-manifest.ts';
 
 const root = process.cwd();
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 3120);
@@ -43,9 +43,10 @@ const VIEWPORTS = {
   wide: { viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 },
   compact: { viewport: { width: 450, height: 800 }, deviceScaleFactor: 2 },
 };
-const TARGET_PROGRESS = 0.6;
+// The pose is one definition shared with the live scene (its first frame), so the poster and the canvas agree.
+const TARGET_PROGRESS = CONNECTED_POSTER_POSE.progress;
 const PROGRESS_TOLERANCE = 0.003;
-const TARGET_IDLE_ANGLE = 0.5;
+const TARGET_IDLE_ANGLE = CONNECTED_POSTER_POSE.idleAngleRadians;
 const ANGLE_TOLERANCE = 0.01;
 // The pause lands a few frames after the trigger (about 0.007 rad under SwiftShader), so trigger early.
 const ANGLE_LEAD = 0.004;
@@ -183,7 +184,8 @@ async function scrollToProgress(page, target) {
   let scrollY = Math.round(target * (layout.footerDocumentTop - layout.viewportHeight));
   for (let attempt = 0; attempt < 6; attempt += 1) {
     await page.evaluate((y) => window.scrollTo(0, y), scrollY);
-    await page.waitForTimeout(1800);
+    // The live scene starts on the poster pose and settles on the scroll pose for about 3s (START_SETTLE).
+    await page.waitForTimeout(attempt === 0 ? 3400 : 1800);
     const { progress } = await readDiagnostics(page);
     if (Math.abs(progress - target) <= PROGRESS_TOLERANCE) return { scrollY, progress };
     // Progress is linear in the scroll position; rescale from the reading.

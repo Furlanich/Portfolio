@@ -44,6 +44,17 @@ export const connectedMediaManifest: readonly ConnectedPosterEntry[] = Object.fr
   poster('projects', 'compact'),
 ]);
 
+/**
+ * The pose every poster is captured at, and the live scene's first frame: scroll progress 0.60 (most
+ * connections grown, every node in frame) and a slow-rotation angle of 0.50 radians. One definition for
+ * the capture script and the host, so the fade from poster to canvas has no jump; the controller then
+ * eases from here to the scroll-driven pose. Changing it means re-capturing the four posters.
+ */
+export const CONNECTED_POSTER_POSE: Readonly<{ progress: number; idleAngleRadians: number }> = Object.freeze({
+  progress: 0.6,
+  idleAngleRadians: 0.5,
+});
+
 export function getConnectedPoster(route: ConnectedRoute, quality: ConnectedQuality): ConnectedPosterEntry {
   const entry = connectedMediaManifest.find((candidate) => candidate.route === route && candidate.quality === quality);
   if (!entry) throw new RangeError(`No connected poster for route "${String(route)}" and quality "${String(quality)}"`);

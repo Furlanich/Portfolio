@@ -6,6 +6,7 @@ import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
 import { CONNECTED_LIVE_POLICY, chooseConnectedMode } from '@/lib/connected-studio/capability';
 import { createConnectedController } from '@/lib/connected-studio/controller';
 import { resolveLabelVisibility } from '@/lib/connected-studio/labels';
+import { CONNECTED_POSTER_POSE } from '@/lib/connected-studio/media-manifest';
 import { getConnectedGraph, getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
 import { markConnectedContextLost, readConnectedSession, setConnectedPaused } from '@/lib/connected-studio/session';
 import { isSoftwareRenderer } from '@/lib/immersive-home/capability';
@@ -395,6 +396,8 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         drawLabels(pose);
       },
       getLayout: () => layout,
+      // The first live frame is the poster's pose, so the fade from poster to canvas has no jump.
+      startPose: CONNECTED_POSTER_POSE,
     });
     releases.push(() => controller.dispose());
 

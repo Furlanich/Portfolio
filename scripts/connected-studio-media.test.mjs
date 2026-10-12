@@ -140,3 +140,15 @@ test('no page preloads a poster or either project illustration', () => {
     assert.doesNotMatch(source, /rel=["']preload["']|preload\(|fetchPriority=["']high["']|priority(?:=|\s|\})/, `${file} adds no preload or priority hint for artwork`);
   }
 });
+
+// --- the start pose (owner direction, 2026-10-12): the poster's pose is the live scene's first frame ---------
+
+test("one pose is shared by the poster capture and the live scene's first frame", async () => {
+  const { CONNECTED_POSTER_POSE } = await import('../lib/connected-studio/media-manifest.ts');
+  assert.deepEqual({ ...CONNECTED_POSTER_POSE }, { progress: 0.6, idleAngleRadians: 0.5 });
+  const capture = readFileSync(`${root}scripts/capture-connected-studio-posters.mjs`, 'utf8');
+  assert.match(capture, /CONNECTED_POSTER_POSE/, 'the capture script reads the shared pose');
+  assert.doesNotMatch(capture, /const TARGET_PROGRESS = 0\.6|const TARGET_IDLE_ANGLE = 0\.5/, 'and does not repeat its numbers');
+  const host = readFileSync(`${root}components/connected-studio/ConnectedStudioEnhancement.tsx`, 'utf8');
+  assert.match(host, /startPose:\s*CONNECTED_POSTER_POSE/, 'the host starts the controller on it');
+});

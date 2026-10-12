@@ -19,6 +19,25 @@ const ACTIVE_INTERVAL_MS = 1000 / ACTIVE_FPS;
 const ACTIVE_ACTIVITY_THRESHOLD = 0.02;
 /** A velocity older than this is a scroll that already ended: no scroll event means no input. */
 const VELOCITY_STALE_MS = 120;
+/**
+ * The start pose eases to the scroll pose with this time constant, slower than the normal progress damping
+ * so the network visibly settles instead of snapping. After six time constants the offset is under 0.3%
+ * and the settle ends. Sonnet tuning (PC-7): accepted only through owner review of the rendered scene.
+ */
+const START_SETTLE_SECONDS = 0.5;
+const START_SETTLE_END_SECONDS = START_SETTLE_SECONDS * 6;
+
+type StartPose = NonNullable<ControllerOptions['startPose']>;
+
+function validStartPose(pose: ControllerOptions['startPose']): pose is StartPose {
+  return (
+    pose !== undefined &&
+    Number.isFinite(pose.progress) &&
+    pose.progress >= 0 &&
+    pose.progress <= 1 &&
+    Number.isFinite(pose.idleAngleRadians)
+  );
+}
 
 function sameLayout(a: SceneLayout | undefined, b: SceneLayout): boolean {
   return (
@@ -43,6 +62,10 @@ export function createConnectedController(options: ControllerOptions): Connected
   let renderCount = 0;
   let lastRenderAt = options.clock.now();
   let lastUpdateAt = options.clock.now();
+  /** Spent on the first live frame: Pause, Resume, a hidden tab and a resize never replay it. */
+  let pendingStart: StartPose | undefined = validStartPose(options.startPose) ? options.startPose : undefined;
+  let settleFrom = 0;
+  let settleStartedAt: number | undefined;
 
   function isActive(): boolean {
     return pose !== undefined && pose.scrollActivity > ACTIVE_ACTIVITY_THRESHOLD;
@@ -70,10 +93,16 @@ export function createConnectedController(options: ControllerOptions): Connected
     if (!input) return;
     const now = options.clock.now();
     const stale = now - lastUpdateAt > VELOCITY_STALE_MS;
+    let progress = targetProgress;
+    if (settleStartedAt !== undefined) {
+      const elapsed = (now - settleStartedAt) / 1000;
+      if (elapsed >= START_SETTLE_END_SECONDS) settleStartedAt = undefined;
+      else progress = targetProgress + (settleFrom - targetProgress) * Math.exp(-elapsed / START_SETTLE_SECONDS);
+    }
     pose = sampleConnectedPose(pose, {
       graph: input.graph,
       tier: input.tier,
-      progress: targetProgress,
+      progress,
       velocityPxPerSecond: stale ? 0 : input.velocityPxPerSecond,
       deltaSeconds: (now - lastRenderAt) / 1000,
     });
@@ -104,6 +133,7 @@ export function createConnectedController(options: ControllerOptions): Connected
       // by the model's completion-before-hiding rule), then no further work or draws. A hidden
       // tab draws nothing, so only the Footer takes this frame.
       if (state === 'live' && input && isConnectedTier(input.tier) && input.visible && input.footerDominant) {
+        settleStartedAt = undefined;
         if (pose) pose = { ...pose, progress: targetProgress, scrollActivity: 0 };
         renderNow();
       }
@@ -115,8 +145,17 @@ export function createConnectedController(options: ControllerOptions): Connected
     // Entering live (first show, un-hide, Footer left, Resume) samples the current state: the pose
     // lands on the current scroll and rotation continues without integrating unseen time.
     state = 'live';
-    if (pose) pose = { ...pose, progress: targetProgress, scrollActivity: 0 };
     lastRenderAt = options.clock.now();
+    if (pendingStart && !pose) {
+      // The very first live frame: the poster's pose, easing to the scroll pose from here.
+      pose = { progress: pendingStart.progress, idleAngleRadians: pendingStart.idleAngleRadians, scrollActivity: 0, nodes: [], edges: [] };
+      settleFrom = pendingStart.progress;
+      settleStartedAt = lastRenderAt;
+    } else if (pose) {
+      settleStartedAt = undefined;
+      pose = { ...pose, progress: targetProgress, scrollActivity: 0 };
+    }
+    pendingStart = undefined;
     renderNow();
     scheduleAt(lastRenderAt + ambientIntervalMs());
   }
@@ -131,7 +170,10 @@ export function createConnectedController(options: ControllerOptions): Connected
       lastUpdateAt = options.clock.now();
       targetProgress = measureConnectedProgress(next.scrollY, measured.footerDocumentTop, measured.viewportHeight);
       // A new layout, graph or tier lands on the current geometry; only the idle angle carries over.
-      if (changed && pose) pose = { ...pose, progress: targetProgress, scrollActivity: 0 };
+      if (changed && pose) {
+        settleStartedAt = undefined;
+        pose = { ...pose, progress: targetProgress, scrollActivity: 0 };
+      }
       const wasLive = state === 'live';
       reconcile();
       if (!wasLive || state !== 'live') return;

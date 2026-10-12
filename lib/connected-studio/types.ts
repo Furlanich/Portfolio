@@ -153,6 +153,12 @@ export type ControllerOptions = {
    * refreshes on resize, font load and content change; it must never force layout from here.
    */
   getLayout(): SceneLayout;
+  /**
+   * The pose of the matched static poster (`CONNECTED_POSTER_POSE`). The first live frame is this pose, so
+   * the fade from poster to canvas has no jump, and the scene then eases to the scroll-driven pose. An
+   * invalid pose (non-finite, or progress outside 0..1) is ignored: the scene starts on the scroll pose.
+   */
+  readonly startPose?: { readonly progress: number; readonly idleAngleRadians: number };
 };
 
 export type ConnectedController = {
