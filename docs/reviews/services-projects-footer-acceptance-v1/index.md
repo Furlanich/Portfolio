@@ -3,6 +3,7 @@ id: REVIEW-SPF-ACCEPTANCE-V1
 type: acceptance-record
 status: PROPOSED
 related:
+  - REVIEW-SPF-TASK-8-2026-10-12
   - REVIEW-SPF-PLAN-2026-09-30
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
@@ -37,6 +38,10 @@ Acceptance evidence for [PLAN-SPF-V1](../../plans/active/services-projects-foote
 - Task 10
 
 Follow-up record: [Task 3/5 receipt corrections](task-3-5-corrections.md). The task receipts remain subject to their stated owner approvals; this follow-up does not record final acceptance.
+
+## Independent implementation reviews
+
+- [Task 8 / PR #132, reviewed head 07d1c927](../services-projects-footer-task-8-review-2026-10-12/index.md): **request corrections**; one Standards P2 and two Spec P2 findings remain OPEN. The review records reproducible live-composition and projection defects, pending bead approval, and fresh validation. Task 8 owner/baseline/CI/W6 gates remain OPEN.
 
 ## Next session
 
