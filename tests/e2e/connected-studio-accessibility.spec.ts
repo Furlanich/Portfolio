@@ -34,6 +34,10 @@ async function blockingViolations(page: Page) {
 test.use({ launchOptions: { args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] } });
 
 test.describe('static background', () => {
+  // The page hydrates on a CPU that software-rendered live cases in the other worker are using; the default 30 s
+  // was not always enough for that, and these cases wait for the hydrated page before asserting that nothing started.
+  test.describe.configure({ timeout: 60_000 });
+
   for (const { route, locale } of pages) {
     test(`${route} ${locale} has no critical or serious axe violations and no live control`, async ({ page }) => {
       await gotoConnected(page, route, locale);

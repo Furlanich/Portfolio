@@ -66,11 +66,13 @@ export type ConnectedDiagnostics = {
   layout: SceneLayout | null;
   /** Times the dynamic engine import was started. */
   imports: number;
+  /** Times the bounded wait for Home's renderer ran out, after which the page stays static. */
+  deferralsExhausted: number;
 };
 
-type LiveReading = Omit<ConnectedDiagnostics, 'route' | 'imports'>;
+type LiveReading = Omit<ConnectedDiagnostics, 'route' | 'imports' | 'deferralsExhausted'>;
 
-const counters = { imports: 0 };
+const counters = { imports: 0, deferralsExhausted: 0 };
 
 const STATIC_READING: LiveReading = {
   mode: 'static',
@@ -95,7 +97,7 @@ function installDiagnostics(route: ConnectedRoute): (reading: (() => LiveReading
   if (process.env.NODE_ENV === 'production') return () => undefined;
   let reading: (() => LiveReading) | null = null;
   (window as typeof window & { __FURLANICH_CONNECTED__?: { read(): ConnectedDiagnostics } }).__FURLANICH_CONNECTED__ = {
-    read: () => ({ route, imports: counters.imports, ...(reading ? reading() : STATIC_READING) }),
+    read: () => ({ route, imports: counters.imports, deferralsExhausted: counters.deferralsExhausted, ...(reading ? reading() : STATIC_READING) }),
   };
   return (next) => {
     reading = next;
@@ -618,6 +620,7 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
           deferTimer = window.setTimeout(activate, DEFERRAL_INTERVAL_MS);
         } else {
           stopped = true;
+          counters.deferralsExhausted += 1;
         }
         return;
       }
