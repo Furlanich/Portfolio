@@ -37,6 +37,10 @@ import { appPathname, appUrl, stableRoutes } from './support/paths';
 // Software rendering shares the CPU and the first test after a source edit meets a cold dev recompile.
 test.describe.configure({ timeout: 60_000 });
 
+// A control that appears only once the next page has hydrated and its scene is live: a loaded runner needs more
+// than the default five seconds (PR #132's CI saw it appear after the window, with the page otherwise correct).
+const NEW_PAGE_CONTROL_TIMEOUT_MS = 30_000;
+
 test.describe('connected runtime', () => {
   test('eligible connected page starts a gently rotating scene with an accessible Pause control', async ({ page }) => {
     await enableLiveForTest(page);
@@ -64,7 +68,13 @@ test.describe('connected runtime', () => {
       .poll(async () => (await readConnected(page))?.idleAngleRadians ?? first!.idleAngleRadians, { timeout: 15_000 })
       .not.toBe(first!.idleAngleRadians);
     const later = await readConnected(page);
-    expect(later!.nodes.map((node) => node.position)).toEqual(first!.nodes.map((node) => node.position));
+    // The settle ends by closing its last fraction of progress through the normal damping, so positions are
+    // steady to far below a visible distance rather than bit-for-bit equal.
+    later!.nodes.forEach((node, index) => {
+      node.position.forEach((value, axis) => {
+        expect(Math.abs(value - first!.nodes[index].position[axis]), `node ${index} axis ${axis} is steady at rest`).toBeLessThan(1e-6);
+      });
+    });
   });
 
   test('reduced motion requests no engine and keeps the static background', async ({ page }) => {
@@ -244,6 +254,9 @@ test('one live renderer across the whole navigation journey', async ({ page }) =
   test('a renderer that is still mounted from Home defers activation instead of creating a second context', async ({ page }) => {
     const contexts = await trackWebglContexts(page);
     await enableLiveForTest(page);
+    // The deferral is 40 polls of 250 ms that start when the page hydrates, and a loaded runner hydrates and fires
+    // timers late. A fixed sleep after `load` ended inside the window on PR #132's CI, and the released Home then let
+    // the scene start, so the test waits for the page's own report that the deferral ran out.
     await page.addInitScript(() => {
       document.addEventListener('DOMContentLoaded', () => {
         const home = document.createElement('canvas');
@@ -324,11 +337,11 @@ test('Pause persists across connected routes and locales, and Resume samples the
 
     // The same session on the other route and the other locale starts paused too.
     await navigateInApp(page, stableRoutes.projects.es);
-    await expect(pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.es.resume })).toHaveAttribute('aria-pressed', 'true');
+    await expect(pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.es.resume })).toHaveAttribute('aria-pressed', 'true', { timeout: NEW_PAGE_CONTROL_TIMEOUT_MS });
     expect((await readConnected(page))?.controller).toBe('paused');
     await page.locator('a[hreflang="en"]:visible').first().click();
     await page.waitForURL((url) => url.pathname === appPathname(stableRoutes.projects.en));
-    await expect(pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.en.resume })).toHaveAttribute('aria-pressed', 'true');
+    await expect(pauseSlot(page, 'projects').getByRole('button', { name: pauseLabels.en.resume })).toHaveAttribute('aria-pressed', 'true', { timeout: NEW_PAGE_CONTROL_TIMEOUT_MS });
     expect((await readConnected(page))?.controller).toBe('paused');
 
     // Resume lands on the current scroll state at once instead of catching up through unseen frames.
@@ -580,9 +593,14 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
     // Settling approaches progress 0 asymptotically, so growth is negligible rather than exactly zero.
     expect(idle?.edgeGrowth.every((growth) => growth < 0.01)).toBe(true);
 
-    // A real wheel notch, not a teleport: the browser turns it into a short run of scroll events.
+    // A wheel notch as a browser delivers it: a short run of scroll events over a couple of hundred milliseconds.
+    // The scene measures speed from the gap between scroll events, so one lone event after seconds of reading is
+    // only the start of a gesture, and headless Chromium can deliver a single wheel step as exactly that.
     await page.mouse.move(700, 500);
-    await page.mouse.wheel(0, 40);
+    for (let step = 0; step < 4; step += 1) {
+      await page.mouse.wheel(0, 10);
+      await page.waitForTimeout(40);
+    }
     // The impulse lasts a few hundred milliseconds, so the page records the highest one any frame carried.
     await expect.poll(async () => (await readConnected(page))?.peakScrollActivity ?? 0).toBeGreaterThan(0.02);
     await expect.poll(async () => (await readConnected(page))?.targetFps, { timeout: 5_000 }).toBe(30);
@@ -671,13 +689,16 @@ test.describe('review regressions', () => {
       });
     });
     await gotoConnected(page, 'projects', 'en');
-    await page.waitForTimeout(11_500);
+    await expect
+      .poll(async () => (await readConnected(page))?.deferralsExhausted ?? 0, { message: 'the bounded deferral ran out', timeout: 40_000 })
+      .toBeGreaterThan(0);
     await expect(connectedCanvas(page)).toHaveCount(0);
     expect((await readConnected(page))?.imports).toBe(0);
     expect(await contexts.maxAlive()).toBe(1);
     await page.evaluate(() => (window as unknown as { __releaseRetainedHome(): void }).__releaseRetainedHome());
     // Exhausted deferral stays static without another initialization attempt.
     await page.waitForTimeout(500);
+    expect((await readConnected(page))?.imports).toBe(0);
     await expect(connectedCanvas(page)).toHaveCount(0);
   });
 });

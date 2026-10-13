@@ -70,6 +70,11 @@ export async function expectLive(page: Page, timeout = 30_000) {
 /** A page that stays on the static background: no canvas, no Pause control, no engine request. */
 export async function expectStatic(page: Page, route: ConnectedRoute, settleMs = 1_500) {
   await page.waitForLoadState('load');
+  // The diagnostics hook installs when the page hydrates, which a slow runner can do well after `load`. Until
+  // then no gate has run, so every assertion below would pass vacuously (or the hook read would find nothing).
+  await expect
+    .poll(() => readConnected(page), { message: 'the page hydrated and installed its diagnostics hook', timeout: 30_000 })
+    .not.toBeNull();
   // Give any activation attempt time to (not) happen; every gate declines quietly.
   await page.waitForTimeout(settleMs);
   await expect(page.locator('canvas')).toHaveCount(0);
