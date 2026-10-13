@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { expect, test, type Browser, type Page, type Request } from '@playwright/test';
+import { expect, test, type Page, type Request } from '@playwright/test';
 import { CONNECTED_CAPABILITY_WORDS } from '../../lib/connected-studio/content';
+import { buildRouteClosure, chunkImports, crossCheckClosure } from '../../lib/connected-studio/measurement';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
 import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 import {
@@ -65,33 +66,25 @@ async function countDraws(page: Page): Promise<() => Promise<number>> {
 const chunkOf = (request: Request) => decodeURIComponent(new URL(request.url()).pathname).match(/_next\/static\/(chunks\/[A-Za-z0-9._-]+)$/)?.[1] ?? null;
 
 /**
- * The optional engine closure, learned from the browser: the chunks a controlled live load requests that the same
- * page does not request under the shipped (static) policy. Production file names are hashed, so they cannot be
- * guessed; the measurement script proves the same set against the emitted chunk graph.
+ * The emitted export, read from disk: every chunk with the chunks it names in its async loaders. The optional
+ * engine closure of a page is what that page's chunks load lazily and its HTML does not reference. Production
+ * file names are hashed, so they come from here, not from a guess. The functional cross-check below proves the
+ * browser requests exactly this set; `measure:connected-studio` gates its size.
  */
-let engineChunks: string[] | null = null;
-async function learnEngineChunks(browser: Browser, baseURL: string): Promise<string[]> {
-  if (engineChunks) return engineChunks;
-  const load = async (live: boolean) => {
-    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    const page = await context.newPage();
-    const seen = new Set<string>();
-    page.on('request', (request) => {
-      const chunk = chunkOf(request);
-      if (chunk) seen.add(chunk);
-    });
-    if (live) await enableLiveForTest(page);
-    await page.goto(new URL(`.${stableRoutes.services.es}`, baseURL).toString());
-    if (live) await expectLiveProduction(page);
-    else await page.waitForTimeout(2_000);
-    await closeContext(context);
-    return seen;
-  };
-  const shipped = await load(false);
-  const live = await load(true);
-  engineChunks = [...live].filter((chunk) => !shipped.has(chunk));
-  return engineChunks;
+const emittedChunks = (() => {
+  const dir = path.join(outDir, '_next', 'static', 'chunks');
+  return fs
+    .readdirSync(dir)
+    .filter((name) => /\.(js|css)$/.test(name))
+    .map((name) => ({ path: `chunks/${name}`, rawBytes: 0, brotliBytes: 0, imports: chunkImports(fs.readFileSync(path.join(dir, name), 'utf8'), `chunks/${name}`) }));
+})();
+function emittedClosure(pathname: string) {
+  const html = fs.readFileSync(path.join(outDir, ...pathname.split('/').filter(Boolean), 'index.html'), 'utf8');
+  const referenced = [...new Set([...html.matchAll(/_next\/static\/(chunks\/[A-Za-z0-9._-]+\.(?:js|css))/g)].map((match) => match[1]))];
+  return buildRouteClosure({ referenced, chunks: emittedChunks });
 }
+/** The engine chunk files of the Services page; every connected page shares them (the measurement script reports it). */
+const engineChunkNames = (): string[] => emittedClosure(stableRoutes.services.es).closure.chunks.map((item) => item.path);
 const matchesEngine = (names: readonly string[]) => (url: URL) => names.some((name) => url.pathname.endsWith(`/_next/static/${name}`));
 
 const connectedPages = [
@@ -176,21 +169,34 @@ test.describe('the journey through the exported site', () => {
     await page.getByRole('banner').locator('a[hreflang="en"]').click();
     await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.projects.en));
     await expectLiveProduction(page);
-    await page.goto(appUrl(stableRoutes.founder.en));
+    // Follow the rendered Founder link and the Contact action: real client navigations, so the live scene is
+    // disposed by the route change itself and the links are exercised, not replaced by fresh document loads.
+    const founderPath = appPathname(stableRoutes.founder.en);
+    await page.locator(`a[href$="${founderPath}"]:visible`).first().click();
+    await expect(page).toHaveURL((url) => url.pathname === founderPath);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await expect(page.locator('canvas')).toHaveCount(0);
-    await page.goto(appUrl(stableRoutes.contact.en));
+    expect(liveContexts(await contexts.events()), 'leaving the connected route released its context').toBe(0);
+    const contactPath = appPathname(stableRoutes.contact.en);
+    await page.locator(`a[href$="${contactPath}"]:visible`).first().click();
+    await expect(page).toHaveURL((url) => url.pathname === contactPath);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(page.locator('canvas')).toHaveCount(0);
 
+    // Back and forward through that real history.
     await page.goBack();
-    await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.founder.en));
+    await expect(page).toHaveURL((url) => url.pathname === founderPath);
     await page.goBack();
     await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.projects.en));
     await expectLiveProduction(page);
     await expect(connectedCanvas(page)).toHaveCount(1);
     await page.goForward();
-    await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.founder.en));
-    expect(await contexts.maxAlive()).toBeLessThanOrEqual(1);
+    await expect(page).toHaveURL((url) => url.pathname === founderPath);
+    await expect(page.locator('canvas')).toHaveCount(0);
+    await page.goForward();
+    await expect(page).toHaveURL((url) => url.pathname === contactPath);
+    expect(await contexts.maxAlive(), 'never two live contexts').toBeLessThanOrEqual(1);
+    expect(liveContexts(await contexts.events()), 'no context outlives the connected route').toBe(0);
     errors();
   });
 
@@ -288,8 +294,8 @@ test.describe('session loss, import races and failures', () => {
     expect(errors.errors).toEqual([]);
   });
 
-  test('a stored session loss keeps every connected page static without fetching the engine', async ({ page, browser, baseURL }) => {
-    const names = await learnEngineChunks(browser, baseURL!);
+  test('a stored session loss keeps every connected page static without fetching the engine', async ({ page }) => {
+    const names = engineChunkNames();
     expect(names.length, 'the learned engine closure is not empty').toBeGreaterThan(0);
     const requested: string[] = [];
     page.on('request', (request) => {
@@ -306,8 +312,8 @@ test.describe('session loss, import races and failures', () => {
     expect(requested).toEqual([]);
   });
 
-  test('leaving while the engine import is still in flight creates no late canvas, context or error', async ({ page, browser, baseURL }) => {
-    const names = await learnEngineChunks(browser, baseURL!);
+  test('leaving while the engine import is still in flight creates no late canvas, context or error', async ({ page }) => {
+    const names = engineChunkNames();
     const errors = observeUnexpectedBrowserErrors(page);
     const contexts = await trackWebglContexts(page);
     await enableLiveForTest(page);
@@ -329,8 +335,8 @@ test.describe('session loss, import races and failures', () => {
     errors();
   });
 
-  test('a delayed import that resolves on another connected route yields exactly one scene', async ({ page, browser, baseURL }) => {
-    const names = await learnEngineChunks(browser, baseURL!);
+  test('a delayed import that resolves on another connected route yields exactly one scene', async ({ page }) => {
+    const names = engineChunkNames();
     const errors = observePageErrors(page);
     const contexts = await trackWebglContexts(page);
     await enableLiveForTest(page);
@@ -349,8 +355,8 @@ test.describe('session loss, import races and failures', () => {
     expect(errors.errors).toEqual([]);
   });
 
-  test('a failed engine module stays static without an unhandled error or a retry', async ({ page, browser, baseURL }) => {
-    const names = await learnEngineChunks(browser, baseURL!);
+  test('a failed engine module stays static without an unhandled error or a retry', async ({ page }) => {
+    const names = engineChunkNames();
     const errors = observePageErrors(page);
     let attempts = 0;
     await enableLiveForTest(page);
@@ -434,8 +440,8 @@ test.describe('preferences and capability gates fetch no engine', () => {
   ];
   for (const gate of gates) {
     for (const connected of [connectedPages[0], connectedPages[3]]) {
-      test(`${gate.name} on ${connected.route}/${connected.locale} stays static and requests no engine chunk`, async ({ page, browser, baseURL }) => {
-        const names = await learnEngineChunks(browser, baseURL!);
+      test(`${gate.name} on ${connected.route}/${connected.locale} stays static and requests no engine chunk`, async ({ page }) => {
+        const names = engineChunkNames();
         const errors = observeUnexpectedBrowserErrors(page);
         const requested: string[] = [];
         page.on('request', (request) => {
@@ -455,8 +461,8 @@ test.describe('preferences and capability gates fetch no engine', () => {
   }
 
   for (const connected of [connectedPages[1], connectedPages[2]]) {
-    test(`the shipped policy keeps ${connected.route}/${connected.locale} static even when the software gate is open`, async ({ page, browser, baseURL }) => {
-      const names = await learnEngineChunks(browser, baseURL!);
+    test(`the shipped policy keeps ${connected.route}/${connected.locale} static even when the software gate is open`, async ({ page }) => {
+      const names = engineChunkNames();
       const requested: string[] = [];
       page.on('request', (request) => {
         const chunk = chunkOf(request);
@@ -469,8 +475,8 @@ test.describe('preferences and capability gates fetch no engine', () => {
       expect(requested).toEqual([]);
     });
 
-    test(`a software renderer is rejected on ${connected.route}/${connected.locale} even with the live policy on`, async ({ page, browser, baseURL }) => {
-      const names = await learnEngineChunks(browser, baseURL!);
+    test(`a software renderer is rejected on ${connected.route}/${connected.locale} even with the live policy on`, async ({ page }) => {
+      const names = engineChunkNames();
       const requested: string[] = [];
       page.on('request', (request) => {
         const chunk = chunkOf(request);
@@ -485,10 +491,64 @@ test.describe('preferences and capability gates fetch no engine', () => {
   }
 });
 
+test.describe('the emitted closure and the browser agree (functional evidence)', () => {
+  // Controlled test evidence: the hook and SwiftShader are the only way to exercise the engine while both live
+  // tiers are off. Sizes and budgets are gated by `measure:connected-studio`, which never sets the hook.
+  const cases = [
+    ...connectedPages.map((connected) => ({ connected, quality: 'wide', viewport: { width: 1440, height: 900 } })),
+    { connected: connectedPages[0], quality: 'compact', viewport: { width: 390, height: 844 } },
+    { connected: connectedPages[3], quality: 'compact', viewport: { width: 390, height: 844 } },
+  ];
+  for (const { connected, quality, viewport } of cases) {
+    test(`${connected.route}/${connected.locale} at ${quality} width: the live load requests exactly the emitted closure`, async ({ browser, baseURL }) => {
+      const { entries, closure } = emittedClosure(connected.pathname);
+      expect(entries.length, 'the page has optional entries to measure').toBeGreaterThan(0);
+      expect(closure.violations).toEqual([]);
+      const load = async (live: boolean) => {
+        const context = await browser.newContext({ baseURL, viewport });
+        const page = await context.newPage();
+        const seen = new Set<string>();
+        page.on('request', (request) => {
+          const chunk = chunkOf(request);
+          if (chunk) seen.add(chunk);
+        });
+        if (live) await enableLiveForTest(page);
+        await page.goto(appUrl(connected.pathname));
+        if (live) await expectLiveProduction(page);
+        else await page.waitForTimeout(2_000);
+        await closeContext(context);
+        return seen;
+      };
+      const shipped = await load(false);
+      const live = await load(true);
+      const extra = [...live].filter((chunk) => !shipped.has(chunk));
+      expect(crossCheckClosure({ requested: extra, closure })).toEqual({ missingFromRequests: [], unexpectedRequests: [] });
+    });
+  }
+
+  test('a second connected route reuses the engine chunks from the HTTP cache', async ({ page }) => {
+    const names = engineChunkNames();
+    await enableLiveForTest(page);
+    await page.goto(appUrl(stableRoutes.services.es));
+    await expectLiveProduction(page);
+    await page.goto(appUrl(stableRoutes.projects.es));
+    await expectLiveProduction(page);
+    const entries = await page.evaluate(() =>
+      performance.getEntriesByType('resource').map((entry) => ({ name: entry.name, transferSize: (entry as PerformanceResourceTiming).transferSize, encodedBodySize: (entry as PerformanceResourceTiming).encodedBodySize })),
+    );
+    const engine = entries.filter((entry) => names.some((name) => entry.name.endsWith(`/_next/static/${name}`)));
+    expect(engine.length, 'the second route loaded every engine chunk').toBe(names.length);
+    for (const entry of engine) {
+      expect(entry.transferSize, `${entry.name} comes from the cache`).toBe(0);
+      expect(entry.encodedBodySize).toBeGreaterThan(0);
+    }
+  });
+});
+
 test.describe('loading discipline', () => {
   for (const connected of connectedPages) {
-    test(`${connected.route}/${connected.locale} preloads neither the engine nor the project illustrations`, async ({ page, browser, baseURL }) => {
-      const names = await learnEngineChunks(browser, baseURL!);
+    test(`${connected.route}/${connected.locale} preloads neither the engine nor the project illustrations`, async ({ page }) => {
+      const names = engineChunkNames();
       await page.goto(appUrl(connected.pathname));
       const hints = await page.locator('link[rel="preload"], link[rel="modulepreload"], link[rel="prefetch"]').evaluateAll((links) =>
         links.map((link) => ({ rel: link.getAttribute('rel') ?? '', as: link.getAttribute('as') ?? '', href: link.getAttribute('href') ?? '' })),
