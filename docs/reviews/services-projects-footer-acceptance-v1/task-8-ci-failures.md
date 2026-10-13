@@ -6,7 +6,7 @@ Agent usage: `SINGLE_AGENT` Claude Sonnet 5.5, subagents 0/0 (none). Branch `cod
 
 ## What failed and why
 
-The run listed seven cases beyond the baselines. Two are deterministic and I reproduced them locally; five depend on how late a loaded runner hydrates the page, which I could not reproduce on this machine (a 6× CPU throttle passed), so those causes are inferred from the traces and from the code, and PR CI is their proof.
+The run listed seven cases beyond the baselines. Two are deterministic and I reproduced them locally; five depend on how late a loaded runner hydrates the page, which I could not reproduce on this machine (a 6× CPU throttle passed), so those causes are inferred from the traces and from the code. A later CI run supports the split: [PR #134 CI run `38393064320`](https://github.com/Furlanich/Portfolio/actions/runs/38393064320) ran the same merged code with the eleven Linux baselines added, finished in 41.8 minutes instead of 60, and failed only the first-scroll-notch case (a peak of 0.0056 against the 0.02 required, close to the 0.0065 and 0.0048 I measured locally). The position comparison also passed there, so its drift is timing-dependent rather than constant, but the five hydration-dependent cases and all eleven baselines passed, which is what a timing cause predicts and a code defect does not.
 
 | Case | Cause | Evidence | Fix |
 | --- | --- | --- | --- |
@@ -27,4 +27,5 @@ The scene's impulse comes from the gap between scroll events. A lone scroll even
 - RED, local, CI settings (`CI=1`, `NEXT_PUBLIC_BASE_PATH=/Portfolio`, workers 2): the six runtime cases gave 3 failed and 3 passed; the failures were the position comparison, the notch and a context teardown stall on Pause. The other three runtime cases passed locally, and the accessibility case passed when run alone, which is why their causes are inferred.
 - Mutation: with `MAX_DEFERRALS` raised from 40 to 400 the Home ownership case fails ("the bounded deferral ran out", 0 against a required value above 0); with the shipped value it passes 12 of 12 (three repeats). A first version that stepped Playwright's fake clock instead survived the same mutation, and a second still raced: `runFor` advances from the clock's install, not from now. I dropped the fake clock.
 - GREEN: `connected-studio-runtime.spec.ts` and `connected-studio-accessibility.spec.ts`, `immersive-chromium` and `accessibility-chromium`, `--workers=1 --retries=0`, `NEXT_PUBLIC_BASE_PATH=/Portfolio` and `CI=1` → **70 passed**, exit 0 (6.3 minutes).
+- CI evidence before the fixes: the PR #134 run above (same code, one failure, the notch). The fixed tests have not yet run on CI.
 - Open: the `SwiftShader` context teardown stall, which this machine shows when two live cases run at once, is not changed and did not occur in the final run. PR CI on this branch is the proof for the three cases I could not reproduce.
