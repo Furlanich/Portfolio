@@ -1,0 +1,79 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+
+// PLAN-SPF-V1 Task 9: the deterministic helper behind the production measurement scripts. It decides
+// what the optional engine/runtime closure of a connected route costs, from the emitted chunk graph
+// (path, sizes and the chunks each one pulls in). Browser I/O stays in the scripts.
+
+const { crossCheckClosure, measureOptionalClosure, OPTIONAL_CLOSURE_LIMIT_BYTES } = await import('../lib/connected-studio/measurement.ts');
+
+const KIB = 1024;
+const chunk = (path, brotliKiB, imports = [], rawKiB = brotliKiB * 3) => ({
+  path,
+  brotliBytes: brotliKiB * KIB,
+  rawBytes: rawKiB * KIB,
+  imports,
+});
+
+// An entry plus nested shared dependencies: the entry alone is small, the closure is not. `util` is
+// reachable by two paths and must be counted once.
+const nestedClosure = [
+  chunk('chunks/scene-entry.js', 20, ['chunks/three.js', 'chunks/shared-geometry.js']),
+  chunk('chunks/three.js', 90, ['chunks/shared-geometry.js', 'chunks/util.js']),
+  chunk('chunks/shared-geometry.js', 15, ['chunks/util.js']),
+  chunk('chunks/util.js', 5),
+];
+
+test('optional scene budget counts the complete nested chunk closure once', () => {
+  const report = measureOptionalClosure({ entries: ['chunks/scene-entry.js'], chunks: nestedClosure });
+
+  assert.equal(OPTIONAL_CLOSURE_LIMIT_BYTES, 120 * KIB, 'the cold-route ceiling is 120KiB Brotli');
+  assert.equal(report.brotliBytes, 130 * KIB, 'entry 20 + three 90 + geometry 15 + util 5 (counted once)');
+  assert.equal(report.rawBytes, 130 * 3 * KIB);
+  assert.deepEqual(report.chunks.map((item) => item.path).sort(), [
+    'chunks/scene-entry.js',
+    'chunks/shared-geometry.js',
+    'chunks/three.js',
+    'chunks/util.js',
+  ]);
+  assert.equal(report.withinLimit, false, 'the closure is over the ceiling even though the entry alone is not');
+  assert.equal(report.violations.length, 1);
+  assert.match(report.violations[0], /133120 .*Brotli.*exceeds.*122880/);
+});
+
+test('chunks the matched static route already loads are not counted against the optional closure', () => {
+  const report = measureOptionalClosure({
+    entries: ['chunks/scene-entry.js'],
+    chunks: nestedClosure,
+    alreadyLoaded: ['chunks/shared-geometry.js', 'chunks/util.js'],
+  });
+
+  assert.deepEqual(report.chunks.map((item) => item.path).sort(), ['chunks/scene-entry.js', 'chunks/three.js']);
+  assert.equal(report.brotliBytes, 110 * KIB, 'only the entry and three are absent from the static route');
+  assert.equal(report.withinLimit, true);
+  assert.deepEqual(report.violations, []);
+});
+
+test('a dependency that is missing from the emitted chunk graph is a violation, never a silent undercount', () => {
+  const report = measureOptionalClosure({
+    entries: ['chunks/scene-entry.js'],
+    chunks: [chunk('chunks/scene-entry.js', 10, ['chunks/not-emitted.js'])],
+  });
+
+  assert.equal(report.withinLimit, false);
+  assert.equal(report.violations.length, 1);
+  assert.match(report.violations[0], /chunks\/not-emitted\.js.*not in the emitted chunk graph/);
+});
+
+test('the requested optional scripts and the emitted closure must match exactly', () => {
+  const closure = measureOptionalClosure({ entries: ['chunks/scene-entry.js'], chunks: nestedClosure });
+
+  assert.deepEqual(crossCheckClosure({ requested: closure.chunks.map((item) => item.path), closure }), { missingFromRequests: [], unexpectedRequests: [] });
+
+  const drift = crossCheckClosure({
+    requested: ['chunks/scene-entry.js', 'chunks/three.js', 'chunks/shared-geometry.js', 'chunks/surprise.js'],
+    closure,
+  });
+  assert.deepEqual(drift.missingFromRequests, ['chunks/util.js'], 'an emitted dependency the browser never fetched');
+  assert.deepEqual(drift.unexpectedRequests, ['chunks/surprise.js'], 'a fetched script the emitted graph does not explain');
+});
