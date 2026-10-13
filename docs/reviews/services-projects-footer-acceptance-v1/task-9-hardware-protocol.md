@@ -25,7 +25,7 @@ Per device and per page (Services and Projects, Spanish and English at least onc
 4. Navigate Services → Projects → Services five times through the App Bar, then the locale switch once. Watch for a second canvas, labels from the previous locale, a stuck frame or a growing page.
 5. Sustain 5 minutes of mixed scrolling and idle; note heat and any slowdown.
 
-Measure with the browser's own tools: Chrome DevTools Performance on the desktop and over `chrome://inspect` for the Android phone; Safari Web Inspector on the iPhone through a Mac. Record the 30 fps (wide/tablet) and 20 fps (compact) ambient cap separately from active scrolling. In a paused state the Performance trace must show no animation-frame callbacks and no draws.
+Measure with the browser's own tools: Chrome DevTools Performance on the desktop and over `chrome://inspect` for the Android phone; Safari Web Inspector on the iPhone through a Mac. On the machine that serves the candidate you may also run `node scripts/measure-connected-studio-vitals.mjs --skip-build --expect-mode=live --profile=desktop` (no override: the script fails if the page does not go live by itself, and it requires Pause and Resume to complete); its lab figures are supplementary to the device traces below. Record the 30 fps (wide/tablet) and 20 fps (compact) ambient cap separately from active scrolling. In a paused state the Performance trace must show no animation-frame callbacks and no draws.
 
 ## 3. Pass criteria (from the plan)
 
