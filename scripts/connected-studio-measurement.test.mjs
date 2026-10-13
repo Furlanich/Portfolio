@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 // PLAN-SPF-V1 Task 9: the deterministic helper behind the production measurement scripts. It decides
 // what the optional engine/runtime closure of a connected route costs, from the emitted chunk graph
@@ -8,6 +10,7 @@ import assert from 'node:assert/strict';
 const {
   attributeShifts,
   buildRouteClosure,
+  chunkImports,
   crossCheckClosure,
   measureOptionalClosure,
   missingInteractions,
@@ -137,4 +140,21 @@ test('the route closure is found from the loader names in the route chunks, minu
   assert.equal(route.closure.brotliBytes, 130 * KIB);
   assert.equal(route.closure.withinLimit, false);
   assert.deepEqual(buildRouteClosure({ referenced: ['chunks/static-sibling.js'], chunks }).entries, [], 'no optional entry means an empty, reported closure');
+});
+
+test('the vitals script exits non-zero before building or launching anything when its arguments would yield no samples', () => {
+  const script = fileURLToPath(new URL('./measure-connected-studio-vitals.mjs', import.meta.url));
+  for (const args of [['--journeys=0'], ['--journeys=-1'], ['--journeys=abc'], ['--profile=tablet'], ['--expect-mode=hybrid']]) {
+    const run = spawnSync(process.execPath, [script, '--skip-build', ...args], { encoding: 'utf8', timeout: 30_000 });
+    assert.notEqual(run.status, 0, `${args.join(' ')} must not pass: ${run.stdout.slice(-200)}`);
+    assert.doesNotMatch(run.stdout, /gates passed/, args.join(' '));
+    assert.match(run.stderr, /--journeys|--profile|--expect-mode/, `${args.join(' ')} names the bad argument`);
+  }
+});
+
+test('the imports of a chunk are the other chunk files its async loaders name, each once and never itself', () => {
+  const source = 'e.v(t=>Promise.all(["static/chunks/a.js","static/chunks/b.css","static/chunks/self.js","static/chunks/a.js"].map(t=>e.l(t))))' +
+    ' and a media file "static/media/font.woff2" and a note about static/chunks without a file';
+  assert.deepEqual(chunkImports(source, 'chunks/self.js'), ['chunks/a.js', 'chunks/b.css']);
+  assert.deepEqual(chunkImports('no loaders here', 'chunks/self.js'), []);
 });

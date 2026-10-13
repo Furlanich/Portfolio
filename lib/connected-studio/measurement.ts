@@ -150,3 +150,14 @@ export function attributeShifts(input: {
   const sum = (list: readonly LayoutShiftEntry[]) => list.reduce((total, shift) => total + shift.value, 0);
   return { wholePage: sum(input.shifts), fromEnhancement: sum(attributed), enhancementDetail: attributed };
 }
+
+/**
+ * The chunk files a chunk's source names in its Turbopack async-loader lists ("static/chunks/NAME"),
+ * each once and never itself. Media files and prose that merely mention the directory are not chunks.
+ */
+export function chunkImports(source: string, ownPath: string): string[] {
+  const found = new Set<string>();
+  for (const match of source.matchAll(/static\/(chunks\/[A-Za-z0-9._-]+\.(?:js|css))/g)) found.add(match[1]);
+  found.delete(ownPath);
+  return [...found];
+}
