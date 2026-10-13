@@ -57,3 +57,7 @@ Task 8 is merged, so its locks are released: MEDIA, CONNECTED-GROUND, VISUAL-BAS
 ## Acceptance
 
 The checkpoint is accepted as a record of what ran; it is not owner acceptance of Task 8's design. Still OPEN: the owner's look at the live nodes, the start pose and the bead (no motion recording exists, and the owner approved the four posters and the eleven Windows baselines only); a fresh independent separate-session re-review of the [Task 8 corrections](task-8-review-corrections.md), whose implementer was the original reviewer; the screen-reader, real-zoom and physical-device checks the owner performs under OD-4; the Task 9 hardware evidence; and final SPF acceptance. Both live tiers stay false. Publish as draft until human merge.
+
+## Update on 2026-10-13: open items after the checkpoint
+
+On 2026-10-13 the owner stated, in chat: they approve the live nodes, the start pose and the bead; PR #133's corrections were already re-reviewed by GPT-6.1 Sol; the manual device checks were performed and were successful; and Task 9's hardware evidence is not necessary for now. Against the items listed under Acceptance: the live nodes, start pose and bead are approved; the re-review of the #133 corrections is recorded as done by GPT-6.1 Sol, as the owner stated it; the manual device checks are recorded as performed and successful, as the owner reported them; and Task 9's hardware evidence is deferred. Both live tiers stay false. The checkpoint result is unchanged.
