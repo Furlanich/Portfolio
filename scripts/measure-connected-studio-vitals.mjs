@@ -234,6 +234,9 @@ async function journey(browser, profile, route, locale) {
     }
     completed.push('scroll');
     await page.waitForTimeout(500);
+    // At compact widths the App Bar links live in a closed disclosure: open it with the real control first.
+    const disclosure = page.locator('summary[aria-controls="primary-navigation-panel"]');
+    if (await disclosure.isVisible()) await tap(disclosure);
     const bar = page.locator(`[data-app-bar] a[href^="${basePath}${copy.other}"]:visible`).first();
     if ((await bar.count()) === 0) throw new Error(`${route}/${locale}: no visible App Bar link to ${copy.other}`);
     await tap(bar);
