@@ -22,6 +22,8 @@ function createExport() {
     'proyectos/index.html': '<!doctype html><title>proyectos</title>',
     '_next/static/app.js': 'console.log("chunk");',
     'brand/poster.webp': 'webp',
+    // Windows exports nest the segment-prefetch files that Linux builds name with dots.
+    'servicios/__next.!KGVzKQ/servicios/__PAGE__.txt': 'segment payload',
   };
   for (const [name, content] of Object.entries(files)) {
     const file = path.join(dir, name);
@@ -84,6 +86,17 @@ test('a missing route is a real 404 with the export 404 page and never falls bac
       assert.match(body, /<title>not found<\/title>/, `${missing} serves the export's 404 page`);
       assert.doesNotMatch(body, /<title>(home|proyectos|servicios)<\/title>/, `${missing} must not be rewritten to an index`);
     }
+  });
+});
+
+test('a dotted segment-prefetch URL is served from the nested file a Windows export writes, and a missing one is still a 404', async () => {
+  await withServer('', async (get) => {
+    const hit = await get('/servicios/__next.!KGVzKQ.servicios.__PAGE__.txt?_rsc=abc');
+    assert.equal(hit.status, 200, 'the prefetch request the router sends resolves to the exported segment file');
+    assert.equal(await hit.text(), 'segment payload');
+    assert.match(hit.headers.get('content-type'), /text\/plain/);
+    assert.equal((await get('/servicios/__next.!KGVzKQ.servicios.__MISSING__.txt')).status, 404);
+    assert.equal((await get('/servicios/__next.!KGVzKQ.servicios.__PAGE__.txt/')).status, 404);
   });
 });
 
