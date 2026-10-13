@@ -239,3 +239,13 @@ export function judgeHardware(metrics: HardwareMetrics, tier: 'wide' | 'compact'
   const verdicts = Object.values(rows).map((row) => row.verdict);
   return { verdict: verdicts.includes('FAIL') ? 'FAIL' : verdicts.includes('OPEN') ? 'OPEN' : 'PASS', rows };
 }
+
+/**
+ * The cadence of a run of frames, from their timestamps: intervals divided by the time they span. Counting frames
+ * and dividing by an observation window overstates it when the window is shorter than the frames' own span.
+ */
+export function cadenceFps(timestampsMs: readonly number[]): number | null {
+  if (timestampsMs.length < 2) return null;
+  const span = timestampsMs[timestampsMs.length - 1] - timestampsMs[0];
+  return span > 0 ? ((timestampsMs.length - 1) / span) * 1000 : null;
+}
