@@ -527,3 +527,16 @@ test('a layout change after the settle lands on the current geometry, as before'
   const last = harness.renders[harness.renders.length - 1];
   assert.ok(Math.abs(last.progress - 2000 / (6000 - 0.7 * 900)) < 1e-6, 'the pose lands on the new target without replay');
 });
+
+test('the projection starts on the poster crop and settles without replaying on Resume', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update());
+  assert.equal(harness.renders[0].posterBlend, 1);
+  harness.advance(500);
+  const midway = harness.renders.at(-1).posterBlend;
+  assert.ok(midway > 0 && midway < 0.5);
+  harness.controller.pause(); const frames = harness.renders.length;
+  harness.advance(500); assert.equal(harness.renders.length, frames);
+  harness.controller.resume(); assert.equal(harness.renders.at(-1).posterBlend, 0);
+  harness.advance(4000); assert.equal(harness.renders.at(-1).posterBlend, 0);
+});

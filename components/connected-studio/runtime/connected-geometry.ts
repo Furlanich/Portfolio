@@ -39,7 +39,7 @@ export const HALF_FOV_TAN = Math.tan((CAMERA_FOV_DEGREES * Math.PI) / 360);
 
 /**
  * The node look (owner direction, 2026-10-12, superseding DESIGN-SPF-V1's sphere-and-orbit proportions): a
- * simple white dot inside one thin outer ring, flat and turned to face the camera, as on Home. A small bead
+ * simple white dot inside one thin outer ring, flat and turned to face the camera, as on Home. A proposed bead (owner approval OPEN, Task 8 receipt Ruling 7)
  * rides the ring and turns with the slow idle rotation, which is how "nodes/rings rotate slowly at rest" stays
  * visible on a flat node. Scene units at node scale 1; the ring is the label anchor (connected-labels.ts).
  */
@@ -73,6 +73,8 @@ export type ConnectedLayout = {
   height: number;
   tier: ConnectedTier;
   aspect: number;
+  /** Viewport crop inside the full projection; only set during the initial poster settle. */
+  crop?: { x: number; y: number; width: number; height: number };
   spreadX: number;
   spreadY: number;
   /** `getTravelScale(tier)`: restrains depth on tablet and compact. */
@@ -80,6 +82,8 @@ export type ConnectedLayout = {
   nodeScale: number;
   pathRadius: number;
   tracerRadius: number;
+  /** CSS-size distant sprites follow the poster cover scale during its initial settle. */
+  pointScale?: number;
 };
 
 function clamp(value: number, min: number, max: number): number {
@@ -517,6 +521,7 @@ function createDistantPoints(quality: ConnectedQuality, tracker: ResourceTracker
   return {
     points,
     fit(layout) {
+      material.size = (quality === 'wide' ? 2.2 : 2) * (layout.pointScale ?? 1);
       for (let at = 0; at < field.length; at += 3) {
         const halfHeight = (CAMERA_Z - field[at + 2]) * HALF_FOV_TAN;
         positions[at] = field[at] * halfHeight * layout.aspect;

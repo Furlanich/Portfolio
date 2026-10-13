@@ -94,10 +94,14 @@ export function createConnectedController(options: ControllerOptions): Connected
     const now = options.clock.now();
     const stale = now - lastUpdateAt > VELOCITY_STALE_MS;
     let progress = targetProgress;
+    let posterBlend = 0;
     if (settleStartedAt !== undefined) {
       const elapsed = (now - settleStartedAt) / 1000;
       if (elapsed >= START_SETTLE_END_SECONDS) settleStartedAt = undefined;
-      else progress = targetProgress + (settleFrom - targetProgress) * Math.exp(-elapsed / START_SETTLE_SECONDS);
+      else {
+        posterBlend = Math.exp(-elapsed / START_SETTLE_SECONDS);
+        progress = targetProgress + (settleFrom - targetProgress) * posterBlend;
+      }
     }
     pose = sampleConnectedPose(pose, {
       graph: input.graph,
@@ -106,6 +110,7 @@ export function createConnectedController(options: ControllerOptions): Connected
       velocityPxPerSecond: stale ? 0 : input.velocityPxPerSecond,
       deltaSeconds: (now - lastRenderAt) / 1000,
     });
+    pose = { ...pose, posterBlend };
     lastRenderAt = now;
     renderCount += 1;
     options.render(pose);

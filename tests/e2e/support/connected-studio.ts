@@ -201,6 +201,7 @@ export async function expectFellBack(page: Page, route: ConnectedRoute, timeout 
   await expect.poll(async () => (await readConnected(page))?.mode, { timeout }).toBe('failed');
   await expect(page.locator('canvas')).toHaveCount(0);
   await expect(pauseSlot(page, route).getByRole('button')).toHaveCount(0);
+  await expect(page.locator('[data-connected-poster]')).toHaveCSS('opacity', '1');
   expect((await readConnected(page))?.imports, 'an engine import was attempted').toBeGreaterThan(0);
 }
 

@@ -39,6 +39,8 @@ export type GraphDefinition = {
 };
 
 export type ScenePose = {
+  /** Initial poster projection (1) easing to the responsive field (0); absent means normal projection. */
+  readonly posterBlend?: number;
   readonly progress: number;
   readonly idleAngleRadians: number;
   readonly scrollActivity: number;

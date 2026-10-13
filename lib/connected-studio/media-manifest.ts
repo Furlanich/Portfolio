@@ -2,6 +2,13 @@ import type { ConnectedQuality, ConnectedRoute } from './types';
 
 const KIB = 1024;
 
+/** CSS capture dimensions and cover alignment, shared by the static ground, capture and live projection. */
+export const CONNECTED_POSTER_CAPTURE = Object.freeze({
+  wide: Object.freeze({ width: 1920, height: 1080 }),
+  compact: Object.freeze({ width: 450, height: 800 }),
+  position: Object.freeze({ x: 0.7, y: 0.3 }),
+});
+
 /**
  * Static poster media for the connected routes, one entry per route and graph quality. The poster
  * is the matched static still of the scene's stronger composition (DESIGN-SPF-V1, "Accessibility,
@@ -47,7 +54,7 @@ export const connectedMediaManifest: readonly ConnectedPosterEntry[] = Object.fr
 /**
  * The pose every poster is captured at, and the live scene's first frame: scroll progress 0.60 (most
  * connections grown, every node in frame) and a slow-rotation angle of 0.50 radians. One definition for
- * the capture script and the host, so the fade from poster to canvas has no jump; the controller then
+ * the capture script and the host; projection/crop also use CONNECTED_POSTER_CAPTURE. The controller then
  * eases from here to the scroll-driven pose. Changing it means re-capturing the four posters.
  */
 export const CONNECTED_POSTER_POSE: Readonly<{ progress: number; idleAngleRadians: number }> = Object.freeze({

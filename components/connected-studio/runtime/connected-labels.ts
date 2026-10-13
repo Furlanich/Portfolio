@@ -29,15 +29,15 @@ export function projectConnectedLabels(graph: GraphDefinition, pose: ScenePose, 
     const inFront = depth >= CAMERA_NEAR;
     const pxPerUnit = layout.height / 2 / (HALF_FOV_TAN * Math.max(CAMERA_NEAR, depth));
     const scale = finiteOr(posed?.scale, node.depthScale);
-    const centreX = layout.width / 2 + x * pxPerUnit;
-    const centreY = layout.height / 2 - y * pxPerUnit;
+    const centreX = layout.width / 2 + x * pxPerUnit - (layout.crop?.x ?? 0);
+    const centreY = layout.height / 2 - y * pxPerUnit - (layout.crop?.y ?? 0);
     return {
       id: node.id,
       capabilityIndex: node.capabilityIndex,
       xPx: centreX,
       yPx: centreY + RING_RADIUS * layout.nodeScale * scale * pxPerUnit + LABEL_GAP_PX,
       depthScale: node.depthScale,
-      inView: inFront && centreX >= 0 && centreX <= layout.width && centreY >= 0 && centreY <= layout.height,
+      inView: inFront && centreX >= 0 && centreX <= (layout.crop?.width ?? layout.width) && centreY >= 0 && centreY <= (layout.crop?.height ?? layout.height),
     };
   });
 }

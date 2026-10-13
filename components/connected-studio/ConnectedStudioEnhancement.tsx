@@ -345,7 +345,12 @@ type LiveScene = { controller: ConnectedController; dispose(): void };
  */
 function attachLiveScene(options: LiveOptions): LiveScene {
   const releases: Array<() => void> = [];
+  const ground = options.mount.closest<HTMLElement>('[data-connected-ground]');
+  let released = false;
+  let firstDraw = true;
+  releases.push(() => { if (ground) delete ground.dataset.connectedLive; });
   const dispose = () => {
+    released = true;
     while (releases.length) {
       try {
         releases.pop()?.();
@@ -367,9 +372,14 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       onContextLost: options.onContextLost,
     });
     releases.push(() => scene.dispose());
+    let sceneWidth = options.mount.clientWidth;
+    let sceneHeight = options.mount.clientHeight;
+    let resizePending = false;
     const sizeScene = () => {
+      sceneWidth = options.mount.clientWidth;
+      sceneHeight = options.mount.clientHeight;
       scene.resize(
-        { width: options.mount.clientWidth, height: options.mount.clientHeight, pixelRatio: window.devicePixelRatio || 1, tier },
+        { width: sceneWidth, height: sceneHeight, pixelRatio: window.devicePixelRatio || 1, tier },
         graph,
       );
     };
@@ -382,7 +392,13 @@ function attachLiveScene(options: LiveOptions): LiveScene {
     labelLayer.measure();
     let lastPose: ScenePose | null = null;
     let peakScrollActivity = 0;
-    const drawLabels = (pose: ScenePose) => labelLayer.update(scene.projectLabels(pose));
+    const drawLabels = (pose: ScenePose) => {
+      const projections = scene.projectLabels(pose);
+      // A paused resize stretches the held canvas paint; labels follow it until Resume fits the field.
+      const scaleX = resizePending && sceneWidth > 0 ? options.mount.clientWidth / sceneWidth : 1;
+      const scaleY = resizePending && sceneHeight > 0 ? options.mount.clientHeight / sceneHeight : 1;
+      labelLayer.update(resizePending ? projections.map(label => ({ ...label, xPx: label.xPx * scaleX, yPx: label.yPx * scaleY })) : projections);
+    };
 
     const timing = createBrowserScheduler();
     releases.push(timing.cancelAll);
@@ -390,7 +406,20 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       clock: { now: () => performance.now() },
       scheduler: timing.scheduler,
       render: (pose) => {
+        if (resizePending) {
+          sizeScene();
+          resizePending = false;
+          if (graph !== labelledGraph) {
+            labelledGraph = graph;
+            labelLayer.rebuild(graph);
+          }
+          labelLayer.measure();
+        }
         scene.render(pose);
+        if (firstDraw && !released && scene.diagnostics().renderCount > 0) {
+          if (ground) ground.dataset.connectedLive = 'true';
+          firstDraw = false;
+        }
         lastPose = pose;
         if (process.env.NODE_ENV !== 'production') peakScrollActivity = Math.max(peakScrollActivity, pose.scrollActivity);
         drawLabels(pose);
@@ -445,10 +474,16 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         return;
       }
       graph = getConnectedGraph(getQualityForTier(tier));
-      sizeScene();
-      if (graph !== labelledGraph) {
-        labelledGraph = graph;
-        labelLayer.rebuild(graph);
+      // Resizing a WebGL backing store clears its paint. Pause promises zero draws, so retain that
+      // store and apply the latest viewport/graph at the next live draw instead.
+      resizePending = true;
+      if (controller.snapshot().state !== 'paused') {
+        sizeScene();
+        resizePending = false;
+        if (graph !== labelledGraph) {
+          labelledGraph = graph;
+          labelLayer.rebuild(graph);
+        }
       }
       labelLayer.measure();
       push(0);

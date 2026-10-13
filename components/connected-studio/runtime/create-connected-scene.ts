@@ -3,6 +3,8 @@ import { Color, DirectionalLight, Fog, HemisphereLight, PerspectiveCamera, Scene
 import { CAMERA_FAR, CAMERA_FOV_DEGREES, CAMERA_NEAR, CAMERA_Z, computeConnectedLayout, createGraphBatch } from './connected-geometry.ts';
 import type { ConnectedGraphBatch, ConnectedLayout } from './connected-geometry';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
+import { resolveConnectedProjection } from './connected-projection.ts';
+// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { projectConnectedLabels } from './connected-labels.ts';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { createResourceTracker, disposeConnectedScene } from './dispose-connected-scene.ts';
@@ -193,12 +195,25 @@ export function createConnectedScene(
     throw initError(reason, cause);
   }
   let renderCount = 0;
+  let projectedLayout = layout;
+  const projectCamera = (next: ConnectedLayout) => {
+    camera.aspect = next.aspect;
+    if (next.crop) camera.setViewOffset(next.width, next.height, next.crop.x, next.crop.y, next.crop.width, next.crop.height);
+    else camera.clearViewOffset();
+    camera.updateProjectionMatrix();
+  };
 
   return {
     render(pose: ScenePose) {
       if (disposed || lost) return;
       try {
-        scope.batch.update(pose, layout);
+        const projected = resolveConnectedProjection(scope.graph, pose, layout);
+        if (projected.layout !== projectedLayout) {
+          scope.batch.fit(projected.layout);
+          projectCamera(projected.layout);
+          projectedLayout = projected.layout;
+        }
+        scope.batch.update(projected.pose, projected.layout);
         renderer.render(scene, camera);
         renderCount += 1;
       } catch {
@@ -225,8 +240,7 @@ export function createConnectedScene(
         const ratio = Number.isFinite(viewport.pixelRatio) && viewport.pixelRatio > 0 ? viewport.pixelRatio : 1;
         renderer.setPixelRatio(Math.min(PIXEL_RATIO_CAP[viewport.tier], ratio));
         renderer.setSize(viewport.width, viewport.height, false);
-        camera.aspect = nextLayout.aspect;
-        camera.updateProjectionMatrix();
+        projectCamera(nextLayout);
         if (next) {
           scene.add(next.batch.group);
           scene.remove(scope.batch.group);
@@ -235,6 +249,7 @@ export function createConnectedScene(
           previous.tracker.release();
         }
         layout = nextLayout;
+        projectedLayout = nextLayout;
       } catch {
         // A layout or renderer that cannot follow the viewport is as unusable as a lost context. The graph
         // that was never swapped in is released here; the scene that is still live is the host's to dispose.
@@ -243,7 +258,8 @@ export function createConnectedScene(
       }
     },
     projectLabels(pose: ScenePose): readonly LabelProjection[] {
-      return projectConnectedLabels(scope.graph, pose, layout);
+      const projected = resolveConnectedProjection(scope.graph, pose, layout);
+      return projectConnectedLabels(scope.graph, projected.pose, projected.layout);
     },
     diagnostics(): SceneDiagnostics {
       return {

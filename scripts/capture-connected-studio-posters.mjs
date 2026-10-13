@@ -29,7 +29,7 @@ import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { CONNECTED_POSTER_POSE, connectedMediaManifest } from '../lib/connected-studio/media-manifest.ts';
+import { CONNECTED_POSTER_CAPTURE, CONNECTED_POSTER_POSE, connectedMediaManifest } from '../lib/connected-studio/media-manifest.ts';
 
 const root = process.cwd();
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 3120);
@@ -40,8 +40,8 @@ const KIB = 1024;
 
 const ROUTE_PATHS = { services: '/servicios/', projects: '/proyectos/' };
 const VIEWPORTS = {
-  wide: { viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 },
-  compact: { viewport: { width: 450, height: 800 }, deviceScaleFactor: 2 },
+  wide: { viewport: CONNECTED_POSTER_CAPTURE.wide, deviceScaleFactor: 1 },
+  compact: { viewport: CONNECTED_POSTER_CAPTURE.compact, deviceScaleFactor: 2 },
 };
 // The pose is one definition shared with the live scene (its first frame), so the poster and the canvas agree.
 const TARGET_PROGRESS = CONNECTED_POSTER_POSE.progress;
@@ -249,8 +249,10 @@ try {
       content:
         'body *:not([data-connected-ground]):not([data-connected-ground] *) { visibility: hidden !important; }' +
         '[data-connected-ground], [data-connected-ground] canvas { visibility: visible !important; }' +
+        // Time is held: capture the successful first draw without its CSS handoff transition.
+        '[data-connected-ground] canvas { opacity: 1 !important; transition: none !important; }' +
         '[data-connected-labels], nextjs-portal, #__next-build-watcher { display: none !important; }' +
-        // The published poster sits under the canvas: capturing over it would bake the previous poster into the new one.
+        // Never capture the published poster, even during its handoff fade.
         '[data-connected-poster] { display: none !important; }',
     });
     await page.locator('nextjs-portal').evaluateAll((nodes) => nodes.forEach((node) => node.remove()));

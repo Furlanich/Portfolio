@@ -718,3 +718,61 @@ for (const route of ['services', 'projects'] as const) {
     expect(settled!.idleAngleRadians, 'the rotation carried on from the start angle').toBeGreaterThan(first!.idleAngleRadians);
   });
 }
+
+// SPF-T8-01: publishing a poster must not leave a frozen second graph behind the live canvas.
+for (const route of ['services', 'projects'] as const) {
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 768, height: 1024 }, { width: 390, height: 844 }, { width: 320, height: 800 }]) {
+    test(route + ' at ' + viewport.width + 'px removes the poster after a live draw and restores it on preference fallback', async ({ page }, testInfo) => {
+      const locale = viewport.width < 768 ? 'en' : 'es';
+      await page.setViewportSize(viewport);
+      await enableLiveForTest(page);
+      await gotoConnected(page, route, locale);
+      await expectLive(page);
+      const poster = page.locator('[data-connected-poster]');
+      await expect.poll(() => poster.evaluate(el => getComputedStyle(el).opacity)).toBe('0');
+      await expect(connectedCanvas(page)).toHaveCSS('opacity', '1');
+      await expectSettled(page);
+      await scrollInstant(page, 1500);
+      await scrollInstant(page, 0);
+      await expect.poll(async () => (await readConnected(page))?.edgeGrowth.every(value => value < 0.01)).toBe(true);
+      await pauseSlot(page, route).getByRole('button', { name: pauseLabels[locale].pause, exact: true }).click();
+      await page.screenshot({ path: testInfo.outputPath('corrected-live-top.png') });
+      expect(await poster.evaluate(el => getComputedStyle(el).opacity)).toBe('0');
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await expect(connectedCanvas(page)).toHaveCount(0);
+      await expect.poll(() => poster.evaluate(el => getComputedStyle(el).opacity)).toBe('1');
+    });
+  }
+}
+
+// A poster-free paused scene must retain its last paint through layout remeasurement.
+test('a paused scene retains its painted frame through remeasurement and resize', async ({ page }) => {
+  await enableLiveForTest(page);
+  await gotoConnected(page, 'services', 'es');
+  await expectLive(page);
+  await expectSettled(page);
+  await pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.es.pause }).click();
+  const before = await readConnected(page);
+  const captureStyle = await page.addStyleTag({ content:
+    'body *:not([data-connected-ground]):not([data-connected-ground] *) { visibility: hidden !important; }' +
+    '[data-connected-ground], [data-connected-ground] canvas { visibility: visible !important; }' +
+    '[data-connected-labels], nextjs-portal { display: none !important; }' });
+  const painted = await page.screenshot();
+  await page.evaluate(() => window.dispatchEvent(new Event('resize')));
+  await page.waitForTimeout(600);
+  expect((await page.screenshot()).equals(painted), 'same-size remeasurement retains the frozen paint').toBe(true);
+  const buffer = await connectedCanvas(page).evaluate(canvas => ({ width: (canvas as HTMLCanvasElement).width, height: (canvas as HTMLCanvasElement).height }));
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await page.waitForTimeout(600);
+  expect(await connectedCanvas(page).evaluate(canvas => ({ width: (canvas as HTMLCanvasElement).width, height: (canvas as HTMLCanvasElement).height })), 'paused resize preserves the painted backing store').toEqual(buffer);
+  expect((await readConnected(page))!.renderCount).toBe(before!.renderCount);
+  expect((await readConnected(page))!.pendingCallbacks).toBe(0);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(600);
+  await captureStyle.evaluate(style => (style as HTMLStyleElement).remove());
+  await pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.es.resume }).click();
+  await expect.poll(async () => (await readConnected(page))?.renderCount ?? 0).toBeGreaterThan(before!.renderCount);
+  expect((await readConnected(page))!.tier).toBe('compact');
+  expect((await readConnected(page))!.nodes).toHaveLength(8);
+  expect(await connectedCanvas(page).evaluate(canvas => (canvas as HTMLCanvasElement).width)).toBe(390);
+});

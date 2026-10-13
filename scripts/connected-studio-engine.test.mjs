@@ -1377,3 +1377,70 @@ test('the canvas is decorative, unfocusable, pointer-inert and fills its mount w
   assert.match(style, /position:absolute/);
   assert.equal(fx.mount.children[0], fx.canvas);
 });
+
+// SPF-T8-02: compare real drawn geometry/camera with the poster capture's CSS cover transform.
+function screenPoint(fx, point) {
+  const ndc = point.clone().project(fx.state.lastCamera);
+  return { x: (ndc.x + 1) * fx.viewport.width / 2, y: (1 - ndc.y) * fx.viewport.height / 2 };
+}
+function posterPose(graph, tier, blend = 1) {
+  return { ...sampleConnectedPose({ progress: 0.6, idleAngleRadians: 0.5, scrollActivity: 0, nodes: [], edges: [] },
+    { graph, tier, progress: 0.6, velocityPxPerSecond: 0, deltaSeconds: 0 }), posterBlend: blend };
+}
+for (const viewport of [VIEWPORTS.wide, { width: 768, height: 1024, pixelRatio: 1, tier: 'tablet' },
+  { width: 390, height: 844, pixelRatio: 1, tier: 'compact' }, { width: 320, height: 800, pixelRatio: 1, tier: 'compact' }]) {
+  test('first live frame matches poster nodes, rings and paths at ' + viewport.width + 'x' + viewport.height, () => {
+    const capture = viewport.tier === 'compact' ? { width: 450, height: 800, pixelRatio: 2, tier: 'compact' }
+      : { width: 1920, height: 1080, pixelRatio: 1, tier: 'wide' };
+    const source = createFixture({ viewport: capture });
+    source.handle.resize(capture, source.graph);
+    source.handle.render(posterPose(source.graph, capture.tier, 0));
+    const fx = createFixture({ viewport });
+    fx.handle.resize(viewport, fx.graph);
+    fx.handle.render(posterPose(fx.graph, viewport.tier));
+    const scale = Math.max(viewport.width / capture.width, viewport.height / capture.height);
+    const expected = point => { const xy = screenPoint(source, point); return {
+      x: xy.x * scale + (viewport.width - capture.width * scale) * 0.7,
+      y: xy.y * scale + (viewport.height - capture.height * scale) * 0.3 }; };
+    const check = (actual, wanted, label) => assert.ok(Math.hypot(actual.x - wanted.x, actual.y - wanted.y) < 0.002,
+      label + ': expected ' + JSON.stringify(wanted) + ', got ' + JSON.stringify(actual));
+    for (const role of ['nodes', 'rings', 'beads']) {
+      const base = instancesOf(source, role), drawn = instancesOf(fx, role);
+      drawn.forEach((matrix, index) => {
+        check(screenPoint(fx, translationOf(matrix)), expected(translationOf(base[index])), role + ' centre ' + index);
+        // Also compare a point on the drawable: matching centres alone would miss a size/orientation jump.
+        const local = new Vector3(0.14, 0.08, 0);
+        check(screenPoint(fx, local.clone().applyMatrix4(matrix)), expected(local.clone().applyMatrix4(base[index])), role + ' size ' + index);
+      });
+    }
+    for (const role of ['paths', 'skeleton', 'points']) {
+      const base = drawnByRole(source)[role].geometry.getAttribute('position');
+      const drawn = drawnByRole(fx)[role].geometry.getAttribute('position');
+      for (let index = 0; index < drawn.count; index += 17)
+        check(screenPoint(fx, new Vector3().fromBufferAttribute(drawn, index)), expected(new Vector3().fromBufferAttribute(base, index)), role + ' vertex ' + index);
+    }
+    assert.ok(Math.abs(drawnByRole(fx).points.material.size - drawnByRole(source).points.material.size * scale) < 1e-9, 'distant point sizes also follow the poster cover scale');
+    const labels = fx.handle.projectLabels(posterPose(fx.graph, viewport.tier));
+    const sourceLabels = source.handle.projectLabels(posterPose(source.graph, capture.tier, 0));
+    labels.forEach((label, index) => check({ x: label.xPx, y: label.yPx }, {
+      x: sourceLabels[index].xPx * scale + (viewport.width - capture.width * scale) * 0.7,
+      y: (sourceLabels[index].yPx - 6) * scale + (viewport.height - capture.height * scale) * 0.3 + 6,
+    }, 'label anchor ' + index));
+    // During the settle the label's bottom-of-ring anchor must still follow actual drawn geometry.
+    fx.handle.render(posterPose(fx.graph, viewport.tier, 0.5));
+    const halfway = fx.handle.projectLabels(posterPose(fx.graph, viewport.tier, 0.5));
+    instancesOf(fx, 'rings').forEach((matrix, index) => {
+      const centre = screenPoint(fx, translationOf(matrix));
+      check({ x: halfway[index].xPx, y: centre.y }, centre, 'settling label centre ' + index);
+      assert.ok(halfway[index].yPx > centre.y + 6 && halfway[index].yPx < centre.y + 90, 'settling label stays below its ring');
+      assert.equal(halfway[index].inView, centre.x >= 0 && centre.x <= viewport.width && centre.y >= 0 && centre.y <= viewport.height);
+    });
+    fx.handle.render(posterPose(fx.graph, viewport.tier, 0));
+    const native = createFixture({ viewport }); native.handle.resize(viewport, native.graph);
+    native.handle.render(posterPose(native.graph, viewport.tier, 0));
+    assert.deepEqual(instancesOf(fx, 'nodes').map(m => Array.from(m.elements)), instancesOf(native, 'nodes').map(m => Array.from(m.elements)), 'after settling normal responsive geometry is restored');
+    assert.deepEqual(fx.state.lastCamera.position.toArray(), [0, 0, 12], 'the camera does not move');
+    assert.equal(fx.handle.diagnostics().drawCalls, source.handle.diagnostics().drawCalls, 'no second graph or extra draws');
+    source.handle.dispose(); fx.handle.dispose(); native.handle.dispose();
+  });
+}
