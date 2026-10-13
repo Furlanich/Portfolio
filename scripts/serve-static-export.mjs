@@ -50,6 +50,20 @@ function send(request, response, status, headers, body) {
   response.end(request.method === 'HEAD' ? undefined : body);
 }
 
+/**
+ * Windows exports nest the segment-prefetch files that Linux builds (GitHub Pages) name with dots:
+ * `__next.<group>.<a>.<b>.txt` is written as `__next.<group>/<a>/<b>.txt`. The router requests the dotted
+ * name, so a request that finds no file maps to the nested one. Anything else stays a 404.
+ */
+function nestedSegmentFile(exportRoot, target) {
+  const match = path.basename(target).match(/^__next.(.+).txt$/);
+  if (!match) return null;
+  const [group, ...rest] = match[1].split('.');
+  if (!rest.length) return null;
+  const nested = path.join(path.dirname(target), `__next.${group}`, ...rest) + '.txt';
+  return isInside(exportRoot, nested) && fs.existsSync(nested) ? nested : null;
+}
+
 export function createExportServer({ root, basePath = '' }) {
   const base = normalizeBasePath(basePath);
   const exportRoot = path.resolve(root);
@@ -108,14 +122,19 @@ export function createExportServer({ root, basePath = '' }) {
     }
 
     let stats;
+    let file = target;
     try {
       stats = fs.statSync(target);
     } catch {
-      notFound(request, response);
-      return;
+      const nested = pathname.endsWith('/') ? null : nestedSegmentFile(exportRoot, target);
+      if (!nested) {
+        notFound(request, response);
+        return;
+      }
+      file = nested;
+      stats = fs.statSync(nested);
     }
 
-    let file = target;
     if (stats.isDirectory()) {
       if (!pathname.endsWith('/')) {
         redirect(request, response, `${pathname}/${search}`);
