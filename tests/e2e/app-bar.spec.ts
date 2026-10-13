@@ -157,6 +157,14 @@ test.describe('9. no console errors', () => {
   for (const [name, route] of [
     ['Home', stableRoutes.home.es],
     ['English Services', stableRoutes.services.en],
+    // PLAN-SPF-V1 Task 9: the remaining shared-Footer hosts load and scroll without errors too.
+    ['Spanish Services', stableRoutes.services.es],
+    ['Spanish Projects', stableRoutes.projects.es],
+    ['English Projects', stableRoutes.projects.en],
+    ['Spanish Founder', stableRoutes.founder.es],
+    ['English Founder', stableRoutes.founder.en],
+    ['Spanish Contact', stableRoutes.contact.es],
+    ['English Contact', stableRoutes.contact.en],
   ] as const) {
     test(`${name} loads and scrolls with no console errors`, async ({ page }) => {
       const errors: string[] = [];
