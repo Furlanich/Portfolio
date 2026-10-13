@@ -10,7 +10,7 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-12
+last_verified: 2026-10-13
 ---
 
 # Playwright QA
@@ -81,8 +81,21 @@ Set `PLAYWRIGHT_SERVE_EXPORT=1` to test the exported site instead of the develop
 
 - Build a clean export first (fresh `out/`, never a copy over a stale one), then run `PLAYWRIGHT_SERVE_EXPORT=1 npx playwright test --project=connected-production-chromium`. For the subpath export, build and run with `NEXT_PUBLIC_BASE_PATH=/Portfolio` (the shell notes below apply). The server reads `PLAYWRIGHT_PORT`, `NEXT_PUBLIC_BASE_PATH`, `HOST` and `EXPORT_DIR`.
 - The server mirrors GitHub Pages: files and `<dir>/index.html` under the base path, a 301 from a directory URL to its trailing-slash form, `max-age=600`, GET and HEAD only, and the export's own `404.html` with a real 404 status for everything else. It **never rewrites a missing route to an index**, which is what lets a spec prove a retired route is absent. Paths outside the base path and traversal attempts are 404.
+- A Windows export nests the segment-prefetch files that Linux builds (GitHub Pages) name with dots: the router requests `__next.<group>.<a>.<b>.txt` and Windows writes `__next.<group>/<a>/<b>.txt`. The server maps the dotted request to the nested file when no file has that name, and still answers 404 for a name with no file. Without that mapping every client navigation on Windows logged five 404 console errors that CI never sees.
+- `connected-studio-production.spec.ts` (Task 9) drives the export: the six retired URLs are real 404s with no residual file or link; recognized and unknown fragments and the locale switch; the Home to Contact journey with back and forward and at most one WebGL context at a time; Pause persistence across routes and locales; labels in the current locale only; no listener growth over repeated route changes; a lost context, a delayed or failed engine import and a failed poster; reduced motion, forced colors, Save-Data, no WebGL2, the shipped policy and a rejected software renderer, none of which request the engine; and the no-JavaScript pages. Production builds compile the diagnostics hook out, so the spec observes the DOM, the network and the WebGL API. It learns the hashed engine file names from a controlled live load. Live cases use the controlled test hook on SwiftShader and are functional evidence only.
 - Compose URLs as `appUrl(index) + '#slug'`: `appUrl` appends a trailing slash, so a hash must not be placed inside its route argument.
 - Clean-build, base-path and measurement procedure: [PLAN-SPF-V1, Verification commands](../plans/active/services-projects-footer-v1.md#verification-commands-artifact-hygiene-and-manual-procedure).
+
+### Production measurements (PLAN-SPF-V1 Task 9)
+
+Both scripts serve the clean export they find in `out/`, never `next dev`. They build first unless `--skip-build` is given, and both check that `out/` was exported with the chosen base path (`--base-path=/Portfolio`, run from PowerShell, since Git Bash rewrites the argument). Run them once per base path and keep the reports apart. `--out=<file>` writes the full JSON report; reports are local artifacts, not committed.
+
+| Command | What it measures and gates |
+| --- | --- |
+| `npm run measure:connected-studio` | For Services and Projects in both locales: the emitted chunk graph (raw and Brotli quality 11), the route's optional entries and their complete nested closure, counted once and minus what the static route already loads, at 120 KiB Brotli per cold route. It cross-checks the graph against the browser: the shipped policy and each static-preference path (reduced motion, Save-Data, forced colors, a stored context loss) must request none of the closure, and a controlled live run must request exactly the closure at wide and compact widths. Warm cache reuse on a second connected route is reported separately and is never subtracted from the cold figure. The four posters are checked against 150 KiB (wide) and 80 KiB (compact). The pure accounting lives in `lib/connected-studio/measurement.ts`, tested by `scripts/connected-studio-measurement.test.mjs` |
+| `npm run measure:connected-studio-vitals` | Synthetic lab LCP and INP over ten cold journeys per locale, destination and profile (the Home desktop and mobile profiles and gzip lab server, copied verbatim from `measure-home-web-vitals.mjs`): navigation, Pause and Resume, a fragment link, keyboard focus, scrolling and a link to the other connected route. Gates LCP p75 ≤ 2500 ms, INP p75 ≤ 200 ms and enhancement layout shift = 0; whole-page shift is reported. A `static` variant is the shipped policy; an `enhanced` variant uses the controlled test hook on SwiftShader and is functional evidence, not a hardware result |
+
+Neither script touches `measure-home-web-vitals.mjs` or `production-instrumentation.mjs`. Hardware figures (render and active-interval p95, GPU timers, heat, memory) come only from the owner's device protocol; software-rendered numbers are never labelled as hardware.
 
 ## Failures and evidence
 
@@ -128,4 +141,4 @@ Run it with `npx playwright test --project=immersive-chromium tests/e2e/sky-char
 | `editorial.ts` | Mono-text and sequence-marker assertions for the editorial pages |
 | `connected-studio-test-hooks.ts` | `setConnectedTestHook(page, hook)`: the one test-injection mechanism for the connected routes. It sets `window.__FURLANICH_CONNECTED_TEST__ = { allowSoftwareRenderer?, livePolicy? }` only through `page.addInitScript`, mirroring Home's `__SKY_CHART_ALLOW_SOFTWARE_RENDERER__`, and rejects any other field or a non-boolean value. Functional tests and poster capture may use it and label the result controlled test evidence; production measurements and owner hardware acceptance never set it |
 | `connected-studio.ts` | The runtime-spec helpers: `enableLiveForTest` (the controlled opt-in), `gotoConnected`, `expectLive`, `expectStatic`, `expectFellBack`, `expectStopped`, the `readConnected` reader of the development-only diagnostics hook (its `ConnectedDiagnostics` type lives with the component), `trackWebglContexts` (create and `WEBGL_lose_context` events, never two live), `holdPageLoad`, `controlVisibility`, `seedSession`/`readSession`, `navigateInApp` (a real client-side navigation using the shipped scroll behavior), `readLabelGeometry`/`overlaps` (the label oracle read from the DOM), `observeEnhancementShifts` (layout shift after activation) and `isConnectedEngineRequest`/`observeEngineRequests` (the request-level observer, used against the production export) |
-| `production-instrumentation.mjs` | Browser-level instrumentation for the production measurements (draw calls, label textures, idle frames, backdrop surfaces and layout-shift attribution); shared by `measure:immersive` and `measure:home-vitals`, which cannot use the dev-only debug hook |
+| `production-instrumentation.mjs` | Browser-level instrumentation for the production measurements (draw calls, label textures, idle frames, backdrop surfaces and layout-shift attribution); shared by `measure:immersive` and `measure:home-vitals`, which cannot use the dev-only debug hook. The connected-studio scripts carry their own observers and do not import it |
