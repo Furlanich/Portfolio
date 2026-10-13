@@ -15,7 +15,7 @@ const GRAPH = Object.freeze({
 
 const LAYOUT = Object.freeze({ footerDocumentTop: 5000, viewportWidth: 1440, viewportHeight: 900 });
 
-function createHarness({ layout = LAYOUT } = {}) {
+function createHarness({ layout = LAYOUT, startPose } = {}) {
   let currentLayout = layout;
   let now = 0;
   let nextId = 1;
@@ -53,6 +53,7 @@ function createHarness({ layout = LAYOUT } = {}) {
   const controller = createConnectedController({
     clock,
     scheduler,
+    startPose,
     render: (pose) => {
       renders.push(pose);
       renderTimes.push(now);
@@ -419,4 +420,123 @@ test('fast scrolling into the Footer completes every connection before the scene
   harness.advance(5000);
   assert.equal(harness.renders.length, rendersAtHandoff, 'nothing draws once the Footer dominates');
   assert.equal(harness.pending(), 0);
+});
+
+// --- PLAN-SPF-V1 Task 8 follow-up: the start pose (owner direction, 2026-10-12) ----------------------------
+// The first live frame is the poster's pose, so the fade from poster to canvas has no jump; the scene then
+// eases to the scroll-driven pose with a slower time constant than the normal damping.
+
+const START_POSE = Object.freeze({ progress: 0.6, idleAngleRadians: 0.5 });
+
+test('with a start pose the first live frame is that pose, then the progress eases down to the scroll pose', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update());
+  const first = harness.renders[0];
+  assert.ok(Math.abs(first.progress - 0.6) < 1e-9, `the first frame carries the start progress, got ${first.progress}`);
+  assert.ok(Math.abs(first.idleAngleRadians - 0.5) < 1e-9, `the first frame carries the start angle, got ${first.idleAngleRadians}`);
+  assert.equal(first.scrollActivity, 0);
+  assert.deepEqual(first.edges.map((edge) => edge.growth), [0.6], 'the connection growth matches the start progress');
+
+  harness.advance(250);
+  const midway = harness.renders[harness.renders.length - 1];
+  assert.ok(midway.progress > 0.05 && midway.progress < 0.55, `mid-settle progress is between the pose and the target, got ${midway.progress}`);
+
+  harness.advance(3000);
+  const settled = harness.renders[harness.renders.length - 1];
+  assert.ok(settled.progress < 0.005, `the pose settles on the scroll target (0 at the top), got ${settled.progress}`);
+
+  for (let index = 1; index < harness.renders.length; index += 1) {
+    assert.ok(harness.renders[index].progress <= harness.renders[index - 1].progress + 1e-9, `progress never rises while settling (frame ${index})`);
+    assert.ok(harness.renders[index].idleAngleRadians >= harness.renders[index - 1].idleAngleRadians, 'the rotation carries on from the start angle');
+  }
+  const step = Math.max(...harness.renders.slice(1).map((pose, index) => harness.renders[index].progress - pose.progress));
+  assert.ok(step < 0.08, `no frame jumps by more than 0.08 of progress, largest step ${step}`);
+});
+
+test('the start pose settles onto a scroll position it was not told about, and a scroll mid-settle retargets without a jump', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update({ scrollY: 1000 }));
+  harness.advance(400);
+  harness.controller.update(update({ scrollY: 2000, velocityPxPerSecond: 800 }));
+  harness.advance(80);
+  harness.controller.update(update({ scrollY: 2000, velocityPxPerSecond: 0 }));
+  harness.advance(4000);
+  const target = 2000 / (5000 - 0.7 * 900);
+  const last = harness.renders[harness.renders.length - 1];
+  assert.ok(Math.abs(last.progress - target) < 0.01, `settles on the new target ${target}, got ${last.progress}`);
+  const step = Math.max(...harness.renders.slice(1).map((pose, index) => Math.abs(pose.progress - harness.renders[index].progress)));
+  assert.ok(step < 0.12, `no frame jumps (largest step ${step})`);
+});
+
+test('Pause and Resume never replay the start pose', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update({ scrollY: 2000 }));
+  harness.advance(4000);
+  const settled = harness.renders[harness.renders.length - 1].progress;
+  harness.controller.pause();
+  harness.advance(500);
+  harness.controller.resume();
+  const resumed = harness.renders[harness.renders.length - 1];
+  assert.ok(Math.abs(resumed.progress - settled) < 0.01, `Resume samples the current state, not the start pose (got ${resumed.progress}, was ${settled})`);
+});
+
+test('a scene that starts hidden applies the start pose when it first goes live, not before', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update({ visible: false }));
+  harness.advance(2000);
+  assert.equal(harness.renders.length, 0, 'a hidden scene draws nothing');
+  harness.controller.update(update({ visible: true }));
+  assert.ok(Math.abs(harness.renders[0].progress - 0.6) < 1e-9, 'the first live frame is the start pose');
+});
+
+test('an invalid start pose is ignored and the scene starts on the scroll pose', () => {
+  for (const bad of [{ progress: Number.NaN, idleAngleRadians: 0.5 }, { progress: 1.4, idleAngleRadians: 0.5 }, { progress: 0.6, idleAngleRadians: Number.POSITIVE_INFINITY }, { progress: -0.1, idleAngleRadians: 0 }]) {
+    const harness = createHarness({ startPose: bad });
+    harness.controller.update(update());
+    assert.equal(harness.renders[0].progress, 0, `start pose ${JSON.stringify(bad)} is ignored`);
+  }
+});
+
+test('without a start pose the first live frame is the scroll pose, as before', () => {
+  const harness = createHarness();
+  harness.controller.update(update({ scrollY: 2000 }));
+  assert.ok(Math.abs(harness.renders[0].progress - 2000 / (5000 - 0.7 * 900)) < 1e-9);
+});
+
+test('a layout change while the start pose is settling keeps easing: it does not snap to the scroll pose', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update());
+  harness.advance(100);
+  const before = harness.renders[harness.renders.length - 1].progress;
+  assert.ok(before > 0.4, `the settle is still under way (progress ${before})`);
+  // Fonts and images move the Footer after activation: the layout is measured again.
+  harness.setLayout({ footerDocumentTop: 5200, viewportWidth: 1440, viewportHeight: 900 });
+  harness.controller.update(update());
+  const right = harness.renders[harness.renders.length - 1].progress;
+  assert.ok(right > before - 0.05, `the start pose survives a layout change (was ${before}, now ${right})`);
+  harness.advance(4000);
+  assert.ok(harness.renders[harness.renders.length - 1].progress < 0.005, 'and it still settles on the scroll pose');
+});
+
+test('a layout change after the settle lands on the current geometry, as before', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update({ scrollY: 2000 }));
+  harness.advance(4000);
+  harness.setLayout({ footerDocumentTop: 6000, viewportWidth: 1440, viewportHeight: 900 });
+  harness.controller.update(update({ scrollY: 2000 }));
+  const last = harness.renders[harness.renders.length - 1];
+  assert.ok(Math.abs(last.progress - 2000 / (6000 - 0.7 * 900)) < 1e-6, 'the pose lands on the new target without replay');
+});
+
+test('the projection starts on the poster crop and settles without replaying on Resume', () => {
+  const harness = createHarness({ startPose: START_POSE });
+  harness.controller.update(update());
+  assert.equal(harness.renders[0].posterBlend, 1);
+  harness.advance(500);
+  const midway = harness.renders.at(-1).posterBlend;
+  assert.ok(midway > 0 && midway < 0.5);
+  harness.controller.pause(); const frames = harness.renders.length;
+  harness.advance(500); assert.equal(harness.renders.length, frames);
+  harness.controller.resume(); assert.equal(harness.renders.at(-1).posterBlend, 0);
+  harness.advance(4000); assert.equal(harness.renders.at(-1).posterBlend, 0);
 });

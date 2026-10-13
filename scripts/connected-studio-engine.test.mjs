@@ -274,11 +274,11 @@ test('disposing a constructed connected scene releases every owned GPU resource 
 
 // --- batched graph ------------------------------------------------------------------------------------
 
-/** Every ring instance the scene draws, whichever instanced meshes hold them, as world matrices. */
-function ringInstances(fx) {
+/** The world matrices of every instance of the meshes tagged with `role`. */
+function instancesOf(fx, role) {
   const instances = [];
   fx.state.lastScene.traverse((object) => {
-    if (object.userData.connectedRole !== 'rings') return;
+    if (object.userData.connectedRole !== role) return;
     for (let index = 0; index < object.count; index += 1) {
       const matrix = new Matrix4();
       object.getMatrixAt(index, matrix);
@@ -288,10 +288,13 @@ function ringInstances(fx) {
   return instances;
 }
 
+/** Every ring instance the scene draws, whichever instanced meshes hold them, as world matrices. */
+const ringInstances = (fx) => instancesOf(fx, 'rings');
+
 const translationOf = (matrix) => new Vector3().setFromMatrixPosition(matrix);
 
-/** The unit normal of the plane a ring instance lies in (a torus is built in its local XY plane). */
-const ringNormal = (matrix) => new Vector3(0, 0, 1).transformDirection(matrix);
+/** The unit normal of the plane an instance lies in (a flat disc or ring is built in its local XY plane). */
+const planeNormal = (matrix) => new Vector3(0, 0, 1).transformDirection(matrix);
 
 /** The ring instances centred on each node, in node order, found by position so no instance layout is assumed. */
 function ringsByNode(fx) {
@@ -322,12 +325,13 @@ function drawFixture(viewport, progress = 0.5) {
   return fx;
 }
 
-test('a wide scene batches 16 nodes with their rings and cores and 33 connections into a few drawables', () => {
+test('a wide scene batches 16 nodes, each a white dot with one ring and one bead, and 33 connections into a few drawables', () => {
   const fx = drawFixture(VIEWPORTS.wide);
   const roles = drawnByRole(fx);
-  assert.equal(roles.nodes?.count, 16, 'sixteen faceted nodes in one instanced mesh');
-  assert.equal(roles.cores?.count, 16, 'one light core per node');
-  assert.equal(ringInstances(fx).length, 32, 'a primary ring and a second tilted orbit for each of the sixteen nodes');
+  assert.equal(roles.nodes?.count, 16, 'sixteen white dots in one instanced mesh');
+  assert.equal(roles.rings?.count, 16, 'one ring per node, with no second orbit');
+  assert.equal(roles.beads?.count, 16, 'one bead riding each ring');
+  assert.equal(roles.cores, undefined, 'the dot is the node: there is no separate core');
   assert.equal(roles.paths?.userData.connections, 33, 'thirty-three connections in one path batch');
   assert.equal(roles.skeleton?.userData.connections, 33, 'the faint skeleton covers every connection');
   const { drawables, drawCalls } = fx.handle.diagnostics();
@@ -349,104 +353,122 @@ test('distant points are fewer on compact and share one soft-point texture', () 
   assert.equal(compact.handle.diagnostics().textures, 1);
 });
 
-test('the compact scene is 8 nodes, 13 connections and one ring per node', () => {
+test('the compact scene is 8 nodes, 13 connections and one ring and bead per node', () => {
   const fx = drawFixture(VIEWPORTS.compact);
   const roles = drawnByRole(fx);
   assert.equal(roles.nodes?.count, 8);
-  assert.equal(roles.cores?.count, 8);
-  assert.equal(ringInstances(fx).length, 8, 'one ring per node, not a second orbit of rings');
+  assert.equal(roles.rings?.count, 8, 'one ring per node');
+  assert.equal(roles.beads?.count, 8);
   assert.equal(roles.paths?.userData.connections, 13);
   assert.equal(roles.skeleton?.userData.connections, 13);
   const { drawables } = fx.handle.diagnostics();
   assert.ok(drawables >= 6 && drawables <= 18, `a compact scene stays within 18 drawables, got ${drawables}`);
 });
 
-// --- the second tilted orbit (DESIGN-SPF-V1, Scene integration) -----------------------------------------------
+// --- the node look (owner direction, 2026-10-12: a simple white dot with an outer ring) ---------------------
 
-test('wide and tablet draw a second, differently tilted orbit around every node; compact draws exactly one ring', () => {
-  for (const [viewport, orbits] of [[VIEWPORTS.wide, 2], [VIEWPORTS.tablet, 2], [VIEWPORTS.compact, 1]]) {
+test('on every tier a node is a flat white dot with one thin outer ring: no body sphere and no tilted orbit', () => {
+  for (const viewport of [VIEWPORTS.wide, VIEWPORTS.tablet, VIEWPORTS.compact]) {
     const fx = drawFixture(viewport, 0.5);
-    const perNode = ringsByNode(fx);
-    assert.equal(ringInstances(fx).length, orbits * fx.graph.nodes.length, `${viewport.tier}: ${orbits} ring instance(s) per node in total`);
-    perNode.forEach((rings, index) => {
-      assert.equal(rings.length, orbits, `${viewport.tier} node ${index}: ${orbits} orbit(s) centred on the node`);
-      if (orbits === 2) {
-        const [first, second] = rings;
-        assert.notDeepEqual(Array.from(first.elements), Array.from(second.elements), `${viewport.tier} node ${index}: the two orbits are not coincident`);
-        const sharp = Math.abs(ringNormal(first).dot(ringNormal(second)));
-        assert.ok(sharp < Math.cos((20 * Math.PI) / 180), `${viewport.tier} node ${index}: the orbit planes differ by at least 20 degrees (|cos| ${sharp})`);
-      }
+    const roles = drawnByRole(fx);
+    assert.equal(roles.nodes.geometry.type, 'CircleGeometry', `${viewport.tier}: the node is a flat disc`);
+    assert.equal(roles.rings.geometry.type, 'RingGeometry', `${viewport.tier}: the ring is a flat annulus`);
+    assert.equal(roles.beads.geometry.type, 'CircleGeometry', `${viewport.tier}: the bead is a flat disc`);
+    assert.equal(roles.nodes.material.color.getHex(), 0xf9f6ee, `${viewport.tier}: the dot is the light Bone white`);
+    fx.state.lastScene.traverse((object) => {
+      // The tracer beads along the paths are small icosahedra by design; the node pieces must not be.
+      if (!['nodes', 'rings', 'beads'].includes(object.userData.connectedRole)) return;
+      assert.ok(!['IcosahedronGeometry', 'TorusGeometry', 'SphereGeometry'].includes(object.geometry.type), `${viewport.tier}: no ${object.geometry.type} in a node piece`);
     });
+    ringsByNode(fx).forEach((rings, index) => assert.equal(rings.length, 1, `${viewport.tier} node ${index}: exactly one ring, centred on the node`));
     const { drawables, drawCalls } = fx.handle.diagnostics();
-    assert.ok(drawables <= (orbits === 2 ? 28 : 18), `${viewport.tier}: ${drawables} drawables stays inside its budget`);
+    assert.ok(drawables <= (viewport.tier === 'compact' ? 18 : 28), `${viewport.tier}: ${drawables} drawables stays inside its budget`);
     assert.equal(drawCalls, drawables);
   }
 });
 
-test('both orbits follow a moving node and settle back when it returns, and no other node\'s orbits move', () => {
-  const fx = drawFixture(VIEWPORTS.wide, 1);
-  const base = restPose(fx.graph, 'wide', 1);
-  const snapshot = () => ringsByNode(fx).map((rings) => rings.map((ring) => Array.from(ring.elements)));
-  const before = snapshot();
-  assert.ok(before.every((rings) => rings.length === 2));
-
-  fx.handle.render(movedPose(base, fx.graph.nodes[0].id, [0.6, -0.4, 0.3]));
-  const nodeMatrix = new Matrix4();
-  drawnByRole(fx).nodes.getMatrixAt(0, nodeMatrix);
-  const moved = ringsByNode(fx);
-  assert.equal(moved[0].length, 2, 'both orbits are centred on the node at its new position');
-  moved[0].forEach((ring) => assert.ok(translationOf(ring).distanceTo(translationOf(nodeMatrix)) < 1e-6));
-  const after = snapshot();
-  assert.notDeepEqual(after[0], before[0], 'the moved node\'s orbits moved');
-  assert.deepEqual(after.slice(1), before.slice(1), 'every other node keeps its orbits');
-
-  fx.handle.render(base);
-  assert.deepEqual(snapshot(), before, 'returning the node restores both orbits exactly');
+test('the dot is about a third of the ring radius and the ring is thin, so it reads as a conventional graph node', () => {
+  const fx = drawFixture(VIEWPORTS.wide);
+  const { nodes, rings, beads } = drawnByRole(fx);
+  const dot = nodes.geometry.parameters.radius;
+  const { innerRadius, outerRadius } = rings.geometry.parameters;
+  const centreline = (innerRadius + outerRadius) / 2;
+  assert.ok(dot / centreline > 0.3 && dot / centreline < 0.45, `the dot is ${(dot / centreline).toFixed(2)} of the ring radius`);
+  assert.ok((outerRadius - innerRadius) / outerRadius < 0.12, 'the ring is a thin line, not a band');
+  assert.ok(beads.geometry.parameters.radius < dot * 0.6, 'the bead is smaller than the dot');
 });
 
-test('every ring instance of both orbits is released exactly once, with the GPU copy', () => {
+test('every dot and ring faces the camera, so a ring reads as a circle across the whole viewport', async () => {
+  const { CAMERA_Z } = await import('../components/connected-studio/runtime/connected-geometry.ts');
+  for (const viewport of [VIEWPORTS.wide, VIEWPORTS.compact]) {
+    const fx = drawFixture(viewport, 0.5);
+    const nodes = instancesOf(fx, 'nodes');
+    const rings = ringsByNode(fx);
+    nodes.forEach((dot, index) => {
+      const centre = translationOf(dot);
+      const towardCamera = new Vector3(0, 0, CAMERA_Z).sub(centre).normalize();
+      assert.ok(planeNormal(dot).dot(towardCamera) > 0.99999, `${viewport.tier} node ${index}: the dot faces the camera`);
+      assert.ok(planeNormal(rings[index][0]).dot(towardCamera) > 0.99999, `${viewport.tier} node ${index}: the ring faces the camera`);
+    });
+  }
+});
+
+function turnedPose(pose, angle) {
+  return { ...pose, nodes: pose.nodes.map((node) => ({ ...node, rotation: [0, angle, 0] })) };
+}
+
+test('the bead rides the ring and turns with the rotation angle, the slow rotation the design asks for', async () => {
+  const { RING_RADIUS } = await import('../components/connected-studio/runtime/connected-geometry.ts');
+  const fx = drawFixture(VIEWPORTS.wide, 0.5);
+  const base = restPose(fx.graph, 'wide', 0.5);
+  const beadOffset = () => {
+    const dot = instancesOf(fx, 'nodes')[0];
+    const ring = ringsByNode(fx)[0][0];
+    const bead = instancesOf(fx, 'beads')[0];
+    return { offset: translationOf(bead).sub(translationOf(dot)), ringRadius: RING_RADIUS * ring.getMaxScaleOnAxis(), normal: planeNormal(ring) };
+  };
+  fx.handle.render(turnedPose(base, 0.2));
+  const first = beadOffset();
+  assert.ok(Math.abs(first.offset.length() - first.ringRadius) < 1e-6, `the bead sits on the ring (distance ${first.offset.length()}, ring ${first.ringRadius})`);
+  assert.ok(Math.abs(first.offset.dot(first.normal)) < 1e-6, 'the bead lies in the ring plane');
+  fx.handle.render(turnedPose(base, 0.7));
+  const second = beadOffset();
+  assert.ok(Math.abs(second.offset.length() - second.ringRadius) < 1e-6);
+  const turned = first.offset.angleTo(second.offset);
+  assert.ok(Math.abs(turned - 0.5) < 1e-6, `half a radian of rotation moves the bead half a radian round the ring (got ${turned})`);
+});
+
+test('the ring, dot and bead follow a moving node and settle back when it returns, and no other node\'s pieces move', () => {
+  const fx = drawFixture(VIEWPORTS.wide, 1);
+  const base = restPose(fx.graph, 'wide', 1);
+  const snapshot = () => ['nodes', 'rings', 'beads'].map((role) => instancesOf(fx, role).map((matrix) => Array.from(matrix.elements)));
+  const before = snapshot();
+
+  fx.handle.render(movedPose(base, fx.graph.nodes[0].id, [0.6, -0.4, 0.3]));
+  const centre = translationOf(instancesOf(fx, 'nodes')[0]);
+  assert.ok(translationOf(ringsByNode(fx)[0][0]).distanceTo(centre) < 1e-6, 'the ring is centred on the node at its new position');
+  const after = snapshot();
+  after.forEach((matrices, role) => {
+    assert.notDeepEqual(matrices[0], before[role][0], 'the moved node\'s piece moved');
+    assert.deepEqual(matrices.slice(1), before[role].slice(1), 'every other node keeps its pieces');
+  });
+
+  fx.handle.render(base);
+  assert.deepEqual(snapshot(), before, 'returning the node restores every piece exactly');
+});
+
+test('every ring instance is released exactly once, with the GPU copy', () => {
   const fx = drawFixture(VIEWPORTS.wide);
   const ringMeshes = [];
   fx.state.lastScene.traverse((object) => {
     if (object.userData.connectedRole === 'rings') ringMeshes.push(object);
   });
   assert.ok(ringMeshes.length >= 1 && ringMeshes.every((mesh) => fx.state.gpu.instanced.has(mesh)), 'the renderer holds every ring mesh');
-  assert.equal(ringMeshes.reduce((total, mesh) => total + mesh.count, 0), 32);
+  assert.equal(ringMeshes.reduce((total, mesh) => total + mesh.count, 0), 16);
   fx.handle.dispose();
   for (const mesh of ringMeshes) {
     assert.equal(fx.state.gpu.instanced.has(mesh), false, 'no ring mesh stays on the GPU');
     assert.equal(fx.state.disposeEvents.get(mesh), 1, 'each ring mesh is released exactly once');
-  }
-});
-
-test('the primary ring and the compact appearance are unchanged by the second orbit', () => {
-  // Golden values captured from the base commit (1514860) before the second orbit existed: the first
-  // instance of each pair is the node's primary ring and must stay exactly as it was.
-  const golden = {
-    compact: {
-      0: [-0.103223, -0.10704, -0.474928, 0, 0.323571, 0.347657, -0.148682, 0, 0.363753, -0.339627, -0.002514, 0, 1.132724, 0.827853, 0.207873, 1],
-      4: [0.370894, 0.021625, 0.289009, 0, -0.2898, 0.03265, 0.369467, 0, -0.003073, -0.469066, 0.039041, 0, -1.216664, -0.949132, -0.045173, 1],
-      7: [0.426824, -0.254227, -0.165952, 0, 0.30252, 0.380254, 0.195547, 0, 0.025565, -0.255197, 0.456696, 0, 1.157141, -1.526791, 0.47485, 1],
-    },
-    wide: {
-      0: [-0.704094, -0.074378, -0.492167, 0, 0.345723, 0.540303, -0.576243, 0, 0.358101, -0.667869, -0.411368, 0, 4.622682, -0.654621, 0.865288, 1],
-      9: [0.286759, -0.21643, -0.488955, 0, 0.411824, 0.44328, 0.045311, 0, 0.341057, -0.353285, 0.356397, 0, -2.174372, -1.776381, -1.794536, 1],
-    },
-  };
-  for (const [tier, viewport] of [['compact', VIEWPORTS.compact], ['wide', VIEWPORTS.wide]]) {
-    const fx = drawFixture(viewport, 0.5);
-    const nodes = drawnByRole(fx).nodes;
-    const nodeMatrix = new Matrix4();
-    for (const [index, expected] of Object.entries(golden[tier])) {
-      nodes.getMatrixAt(Number(index), nodeMatrix);
-      const centre = translationOf(nodeMatrix);
-      // The primary ring is the instance centred on the node whose scale is the node's own (the smaller orbit).
-      const orbit = ringsByNode(fx)[Number(index)].sort((a, b) => a.getMaxScaleOnAxis() - b.getMaxScaleOnAxis())[0];
-      assert.equal(translationOf(orbit).distanceTo(centre) < 1e-6, true);
-      Array.from(orbit.elements).forEach((value, at) => {
-        assert.ok(Math.abs(value - expected[at]) < 1e-5, `${tier} node ${index}: primary ring element ${at} is ${value}, expected ${expected[at]}`);
-      });
-    }
   }
 });
 
@@ -1236,7 +1258,7 @@ test('hostile poses never produce non-finite geometry or throw: NaN, missing, un
   assert.doesNotThrow(() => fx.handle.render(hostile));
   const finite = (array) => Array.from(array).every(Number.isFinite);
   const roles = drawnByRole(fx);
-  for (const role of ['nodes', 'cores', 'rings']) assert.ok(finite(roles[role].instanceMatrix.array), `${role} matrices are finite`);
+  for (const role of ['nodes', 'rings', 'beads']) assert.ok(finite(roles[role].instanceMatrix.array), `${role} matrices are finite`);
   assert.ok(finite(roles.paths.geometry.getAttribute('position').array), 'path vertices are finite');
   assert.ok(finite(roles.paths.geometry.getAttribute('color').array));
   assert.ok(finite(roles.skeleton.geometry.getAttribute('position').array));
@@ -1355,3 +1377,70 @@ test('the canvas is decorative, unfocusable, pointer-inert and fills its mount w
   assert.match(style, /position:absolute/);
   assert.equal(fx.mount.children[0], fx.canvas);
 });
+
+// SPF-T8-02: compare real drawn geometry/camera with the poster capture's CSS cover transform.
+function screenPoint(fx, point) {
+  const ndc = point.clone().project(fx.state.lastCamera);
+  return { x: (ndc.x + 1) * fx.viewport.width / 2, y: (1 - ndc.y) * fx.viewport.height / 2 };
+}
+function posterPose(graph, tier, blend = 1) {
+  return { ...sampleConnectedPose({ progress: 0.6, idleAngleRadians: 0.5, scrollActivity: 0, nodes: [], edges: [] },
+    { graph, tier, progress: 0.6, velocityPxPerSecond: 0, deltaSeconds: 0 }), posterBlend: blend };
+}
+for (const viewport of [VIEWPORTS.wide, { width: 768, height: 1024, pixelRatio: 1, tier: 'tablet' },
+  { width: 390, height: 844, pixelRatio: 1, tier: 'compact' }, { width: 320, height: 800, pixelRatio: 1, tier: 'compact' }]) {
+  test('first live frame matches poster nodes, rings and paths at ' + viewport.width + 'x' + viewport.height, () => {
+    const capture = viewport.tier === 'compact' ? { width: 450, height: 800, pixelRatio: 2, tier: 'compact' }
+      : { width: 1920, height: 1080, pixelRatio: 1, tier: 'wide' };
+    const source = createFixture({ viewport: capture });
+    source.handle.resize(capture, source.graph);
+    source.handle.render(posterPose(source.graph, capture.tier, 0));
+    const fx = createFixture({ viewport });
+    fx.handle.resize(viewport, fx.graph);
+    fx.handle.render(posterPose(fx.graph, viewport.tier));
+    const scale = Math.max(viewport.width / capture.width, viewport.height / capture.height);
+    const expected = point => { const xy = screenPoint(source, point); return {
+      x: xy.x * scale + (viewport.width - capture.width * scale) * 0.7,
+      y: xy.y * scale + (viewport.height - capture.height * scale) * 0.3 }; };
+    const check = (actual, wanted, label) => assert.ok(Math.hypot(actual.x - wanted.x, actual.y - wanted.y) < 0.002,
+      label + ': expected ' + JSON.stringify(wanted) + ', got ' + JSON.stringify(actual));
+    for (const role of ['nodes', 'rings', 'beads']) {
+      const base = instancesOf(source, role), drawn = instancesOf(fx, role);
+      drawn.forEach((matrix, index) => {
+        check(screenPoint(fx, translationOf(matrix)), expected(translationOf(base[index])), role + ' centre ' + index);
+        // Also compare a point on the drawable: matching centres alone would miss a size/orientation jump.
+        const local = new Vector3(0.14, 0.08, 0);
+        check(screenPoint(fx, local.clone().applyMatrix4(matrix)), expected(local.clone().applyMatrix4(base[index])), role + ' size ' + index);
+      });
+    }
+    for (const role of ['paths', 'skeleton', 'points']) {
+      const base = drawnByRole(source)[role].geometry.getAttribute('position');
+      const drawn = drawnByRole(fx)[role].geometry.getAttribute('position');
+      for (let index = 0; index < drawn.count; index += 17)
+        check(screenPoint(fx, new Vector3().fromBufferAttribute(drawn, index)), expected(new Vector3().fromBufferAttribute(base, index)), role + ' vertex ' + index);
+    }
+    assert.ok(Math.abs(drawnByRole(fx).points.material.size - drawnByRole(source).points.material.size * scale) < 1e-9, 'distant point sizes also follow the poster cover scale');
+    const labels = fx.handle.projectLabels(posterPose(fx.graph, viewport.tier));
+    const sourceLabels = source.handle.projectLabels(posterPose(source.graph, capture.tier, 0));
+    labels.forEach((label, index) => check({ x: label.xPx, y: label.yPx }, {
+      x: sourceLabels[index].xPx * scale + (viewport.width - capture.width * scale) * 0.7,
+      y: (sourceLabels[index].yPx - 6) * scale + (viewport.height - capture.height * scale) * 0.3 + 6,
+    }, 'label anchor ' + index));
+    // During the settle the label's bottom-of-ring anchor must still follow actual drawn geometry.
+    fx.handle.render(posterPose(fx.graph, viewport.tier, 0.5));
+    const halfway = fx.handle.projectLabels(posterPose(fx.graph, viewport.tier, 0.5));
+    instancesOf(fx, 'rings').forEach((matrix, index) => {
+      const centre = screenPoint(fx, translationOf(matrix));
+      check({ x: halfway[index].xPx, y: centre.y }, centre, 'settling label centre ' + index);
+      assert.ok(halfway[index].yPx > centre.y + 6 && halfway[index].yPx < centre.y + 90, 'settling label stays below its ring');
+      assert.equal(halfway[index].inView, centre.x >= 0 && centre.x <= viewport.width && centre.y >= 0 && centre.y <= viewport.height);
+    });
+    fx.handle.render(posterPose(fx.graph, viewport.tier, 0));
+    const native = createFixture({ viewport }); native.handle.resize(viewport, native.graph);
+    native.handle.render(posterPose(native.graph, viewport.tier, 0));
+    assert.deepEqual(instancesOf(fx, 'nodes').map(m => Array.from(m.elements)), instancesOf(native, 'nodes').map(m => Array.from(m.elements)), 'after settling normal responsive geometry is restored');
+    assert.deepEqual(fx.state.lastCamera.position.toArray(), [0, 0, 12], 'the camera does not move');
+    assert.equal(fx.handle.diagnostics().drawCalls, source.handle.diagnostics().drawCalls, 'no second graph or extra draws');
+    source.handle.dispose(); fx.handle.dispose(); native.handle.dispose();
+  });
+}

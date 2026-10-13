@@ -9,6 +9,7 @@ import {
   enableLiveForTest,
   expectFellBack,
   expectLive,
+  expectSettled,
   expectStopped,
   expectStatic,
   gotoConnected,
@@ -25,6 +26,7 @@ import {
   seedSession,
   trackWebglContexts,
 } from './support/connected-studio';
+import { CONNECTED_POSTER_POSE } from '../../lib/connected-studio/media-manifest';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 // PLAN-SPF-V1 Task 7: the optional live scene behind Services and Projects. WebGL here runs on
@@ -40,6 +42,8 @@ test.describe('connected runtime', () => {
     await enableLiveForTest(page);
     await gotoConnected(page, 'services', 'es');
     await expectLive(page);
+    // Positions are steady at rest, which starts once the scene has settled from its start pose.
+    await expectSettled(page);
 
     const canvas = connectedCanvas(page);
     await expect(canvas).toHaveAttribute('aria-hidden', 'true');
@@ -570,9 +574,11 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
     await enableLiveForTest(page);
     await gotoConnected(page, 'services', 'en');
     await expectLive(page);
+    await expectSettled(page);
     const idle = await readConnected(page);
     expect(idle?.targetFps, 'ambient cadence at rest').toBe(30);
-    expect(idle?.edgeGrowth.every((growth) => growth === 0)).toBe(true);
+    // Settling approaches progress 0 asymptotically, so growth is negligible rather than exactly zero.
+    expect(idle?.edgeGrowth.every((growth) => growth < 0.01)).toBe(true);
 
     // A real wheel notch, not a teleport: the browser turns it into a short run of scroll events.
     await page.mouse.move(700, 500);
@@ -674,4 +680,99 @@ test.describe('review regressions', () => {
     await page.waitForTimeout(500);
     await expect(connectedCanvas(page)).toHaveCount(0);
   });
+});
+
+// Owner direction, 2026-10-12: the live scene's first frame is the static poster's pose, so the fade from poster to
+// canvas has no jump; it then eases to the scroll-driven pose. Time is held with Playwright's fake clock so the
+// first frame can be read before any later frame runs, which makes the proof exact and not a race.
+for (const route of ['services', 'projects'] as const) {
+  test(`the ${route} live scene starts on the poster pose and then settles on the scroll pose`, async ({ page }) => {
+    // `install` alone leaves time flowing; `pauseAt` holds it until `runFor` steps it.
+    const start = new Date('2026-01-01T00:00:00Z');
+    await page.clock.install({ time: start });
+    await page.clock.pauseAt(new Date(start.getTime() + 1_000));
+    await enableLiveForTest(page);
+    await gotoConnected(page, route, 'es');
+    // Activation waits for load and a timer, which the clock steps through; the import and first draw are not timers.
+    for (let attempt = 0; attempt < 80; attempt += 1) {
+      await page.clock.runFor(250);
+      if (((await readConnected(page))?.imports ?? 0) > 0) break;
+      await page.waitForTimeout(100);
+    }
+    await expect.poll(async () => (await readConnected(page))?.renderCount ?? 0, { timeout: 60_000 }).toBeGreaterThan(0);
+
+    const first = await readConnected(page);
+    // Time is held, so any further frame (a layout re-measure) draws the same pose.
+    expect(first?.progress).toBeCloseTo(CONNECTED_POSTER_POSE.progress, 6);
+    expect(first?.idleAngleRadians).toBeCloseTo(CONNECTED_POSTER_POSE.idleAngleRadians, 6);
+    expect(first?.edgeGrowth.some((growth) => growth > 0), 'connections are already grown at the start pose').toBe(true);
+
+    // Half a second later the progress is between the pose and the page top; after the settle it is the scroll pose.
+    await page.clock.runFor(500);
+    const midway = await readConnected(page);
+    expect(midway!.progress).toBeLessThan(first!.progress);
+    expect(midway!.progress).toBeGreaterThan(0.05);
+    await page.clock.runFor(4000);
+    const settled = await readConnected(page);
+    expect(settled!.progress, 'at the top of the page the scene settles on progress 0').toBeLessThan(0.01);
+    expect(settled!.idleAngleRadians, 'the rotation carried on from the start angle').toBeGreaterThan(first!.idleAngleRadians);
+  });
+}
+
+// SPF-T8-01: publishing a poster must not leave a frozen second graph behind the live canvas.
+for (const route of ['services', 'projects'] as const) {
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 768, height: 1024 }, { width: 390, height: 844 }, { width: 320, height: 800 }]) {
+    test(route + ' at ' + viewport.width + 'px removes the poster after a live draw and restores it on preference fallback', async ({ page }, testInfo) => {
+      const locale = viewport.width < 768 ? 'en' : 'es';
+      await page.setViewportSize(viewport);
+      await enableLiveForTest(page);
+      await gotoConnected(page, route, locale);
+      await expectLive(page);
+      const poster = page.locator('[data-connected-poster]');
+      await expect.poll(() => poster.evaluate(el => getComputedStyle(el).opacity)).toBe('0');
+      await expect(connectedCanvas(page)).toHaveCSS('opacity', '1');
+      await expectSettled(page);
+      await scrollInstant(page, 1500);
+      await scrollInstant(page, 0);
+      await expect.poll(async () => (await readConnected(page))?.edgeGrowth.every(value => value < 0.01)).toBe(true);
+      await pauseSlot(page, route).getByRole('button', { name: pauseLabels[locale].pause, exact: true }).click();
+      await page.screenshot({ path: testInfo.outputPath('corrected-live-top.png') });
+      expect(await poster.evaluate(el => getComputedStyle(el).opacity)).toBe('0');
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await expect(connectedCanvas(page)).toHaveCount(0);
+      await expect.poll(() => poster.evaluate(el => getComputedStyle(el).opacity)).toBe('1');
+    });
+  }
+}
+
+// A poster-free paused scene must retain its last paint through layout remeasurement.
+test('a paused scene retains its painted frame through remeasurement and resize', async ({ page }) => {
+  await enableLiveForTest(page);
+  await gotoConnected(page, 'services', 'es');
+  await expectLive(page);
+  await expectSettled(page);
+  await pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.es.pause }).click();
+  const before = await readConnected(page);
+  const captureStyle = await page.addStyleTag({ content:
+    'body *:not([data-connected-ground]):not([data-connected-ground] *) { visibility: hidden !important; }' +
+    '[data-connected-ground], [data-connected-ground] canvas { visibility: visible !important; }' +
+    '[data-connected-labels], nextjs-portal { display: none !important; }' });
+  const painted = await page.screenshot();
+  await page.evaluate(() => window.dispatchEvent(new Event('resize')));
+  await page.waitForTimeout(600);
+  expect((await page.screenshot()).equals(painted), 'same-size remeasurement retains the frozen paint').toBe(true);
+  const buffer = await connectedCanvas(page).evaluate(canvas => ({ width: (canvas as HTMLCanvasElement).width, height: (canvas as HTMLCanvasElement).height }));
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await page.waitForTimeout(600);
+  expect(await connectedCanvas(page).evaluate(canvas => ({ width: (canvas as HTMLCanvasElement).width, height: (canvas as HTMLCanvasElement).height })), 'paused resize preserves the painted backing store').toEqual(buffer);
+  expect((await readConnected(page))!.renderCount).toBe(before!.renderCount);
+  expect((await readConnected(page))!.pendingCallbacks).toBe(0);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(600);
+  await captureStyle.evaluate(style => (style as HTMLStyleElement).remove());
+  await pauseSlot(page, 'services').getByRole('button', { name: pauseLabels.es.resume }).click();
+  await expect.poll(async () => (await readConnected(page))?.renderCount ?? 0).toBeGreaterThan(before!.renderCount);
+  expect((await readConnected(page))!.tier).toBe('compact');
+  expect((await readConnected(page))!.nodes).toHaveLength(8);
+  expect(await connectedCanvas(page).evaluate(canvas => (canvas as HTMLCanvasElement).width)).toBe(390);
 });

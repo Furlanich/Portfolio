@@ -30,8 +30,9 @@ Acceptance evidence for [PLAN-SPF-V1](../../plans/active/services-projects-foote
 - [Task 4 — shared Footer and corrections](task-4.md)
 - [Task 5 — connected engine](task-5.md)
 - [Task 6 — Atlas Services composition, owner-approved transfers and review correction](task-6.md)
-- [Task 7 — connected enhancement (merged; its W5 checkpoint is RED)](task-7.md)
-- Task 8
+- [Task 7 — connected enhancement (merged; W5 passed on a rerun)](task-7.md)
+- [Task 8 — matched static posters and responsive project imagery (PR open, owner approvals pending)](task-8.md)
+- [Task 8 — corrections following independent review #133 (re-review and owner approval OPEN)](task-8-review-corrections.md)
 - Task 9
 - Task 10
 
@@ -39,6 +40,6 @@ Follow-up record: [Task 3/5 receipt corrections](task-3-5-corrections.md). The t
 
 ## Next session
 
-The [W3 handoff](w3-handoff.md) is the historical Task 4 startup record. Task 4 and its correction are now human-merged; the [W3 receipt](w3-checkpoint.md) records PASS on `ddc78aed`, failed attempts/reruns and serial lock releases. Task 6 then merged through PR #124, and the [W4 receipt](w4-checkpoint.md) records PASS on `9279838f`, one cold-start failed attempt and the serial lock releases. Task 7 then merged through PR #126, and the [W5 receipt](w5-checkpoint.md) records the checkpoint as **RED** on `4da0720e` (the `#site-top` link change broke `measure:immersive` and two Home specs outside Task 7's write set), then a fresh rerun on `986217fb` that **passes with disclosed load-sensitive failures**, after [PR #128](https://github.com/Furlanich/Portfolio/pull/128) fixed the expectations and the owner accepted the resulting Home baseline change (Finding 4) on 2026-10-11. W6 / Task 8 may start under its existing packet. Overall acceptance stays PROPOSED, with existing manual/final gates OPEN.
+The [W3 handoff](w3-handoff.md) is the historical Task 4 startup record. Task 4 and its correction are now human-merged; the [W3 receipt](w3-checkpoint.md) records PASS on `ddc78aed`, failed attempts/reruns and serial lock releases. Task 6 then merged through PR #124, and the [W4 receipt](w4-checkpoint.md) records PASS on `9279838f`, one cold-start failed attempt and the serial lock releases. Task 7 then merged through PR #126, and the [W5 receipt](w5-checkpoint.md) records the checkpoint as **RED** on `4da0720e` (the `#site-top` link change broke `measure:immersive` and two Home specs outside Task 7's write set), then a fresh rerun on `986217fb` that **passes with disclosed load-sensitive failures**, after [PR #128](https://github.com/Furlanich/Portfolio/pull/128) fixed the expectations and the owner accepted the resulting Home baseline change (Finding 4) on 2026-10-11. Task 8 implementation and review corrections remain open in [PR #132](https://github.com/Furlanich/Portfolio/pull/132); the [correction receipt](task-8-review-corrections.md) records self-verification and the fresh re-review boundary. W6 follows human merge under the existing packet. Overall acceptance stays PROPOSED, with existing manual/final gates OPEN.
 
 [Receipt template](../../plans/active/services-projects-footer-v1.md#receipt-template)

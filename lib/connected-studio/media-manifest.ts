@@ -2,6 +2,13 @@ import type { ConnectedQuality, ConnectedRoute } from './types';
 
 const KIB = 1024;
 
+/** CSS capture dimensions and cover alignment, shared by the static ground, capture and live projection. */
+export const CONNECTED_POSTER_CAPTURE = Object.freeze({
+  wide: Object.freeze({ width: 1920, height: 1080 }),
+  compact: Object.freeze({ width: 450, height: 800 }),
+  position: Object.freeze({ x: 0.7, y: 0.3 }),
+});
+
 /**
  * Static poster media for the connected routes, one entry per route and graph quality. The poster
  * is the matched static still of the scene's stronger composition (DESIGN-SPF-V1, "Accessibility,
@@ -17,8 +24,9 @@ export type ConnectedPosterEntry = {
   /** Byte ceiling: 150KiB wide, 80KiB compact. */
   maxBytes: number;
   /**
-   * False until PLAN-SPF-V1 Task 8 renders and commits the file. While false, the Ground shows its
-   * pure CSS chart and never references the missing URL.
+   * True once the file is committed within its byte ceiling (PLAN-SPF-V1 Task 8 published all four,
+   * captured by `scripts/capture-connected-studio-posters.mjs`). While false, the Ground shows its pure
+   * CSS chart and never references the missing URL; the chart also remains the fallback if the image fails.
    */
   published: boolean;
 };
@@ -32,7 +40,7 @@ function poster(route: ConnectedRoute, quality: ConnectedQuality): ConnectedPost
     width: wide ? 1920 : 900,
     height: wide ? 1080 : 1600,
     maxBytes: (wide ? 150 : 80) * KIB,
-    published: false,
+    published: true,
   });
 }
 
@@ -42,6 +50,17 @@ export const connectedMediaManifest: readonly ConnectedPosterEntry[] = Object.fr
   poster('projects', 'wide'),
   poster('projects', 'compact'),
 ]);
+
+/**
+ * The pose every poster is captured at, and the live scene's first frame: scroll progress 0.60 (most
+ * connections grown, every node in frame) and a slow-rotation angle of 0.50 radians. One definition for
+ * the capture script and the host; projection/crop also use CONNECTED_POSTER_CAPTURE. The controller then
+ * eases from here to the scroll-driven pose. Changing it means re-capturing the four posters.
+ */
+export const CONNECTED_POSTER_POSE: Readonly<{ progress: number; idleAngleRadians: number }> = Object.freeze({
+  progress: 0.6,
+  idleAngleRadians: 0.5,
+});
 
 export function getConnectedPoster(route: ConnectedRoute, quality: ConnectedQuality): ConnectedPosterEntry {
   const entry = connectedMediaManifest.find((candidate) => candidate.route === route && candidate.quality === quality);

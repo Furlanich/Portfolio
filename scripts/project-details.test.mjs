@@ -73,7 +73,11 @@ test('the dossier is a server-rendered, accessible evidence boundary with no hid
   assert.match(source, /<h2/);
   assert.match(source, /<h3/);
   assert.match(source, /<ul/);
-  assert.match(source, /from 'next\/image'/);
+  // PLAN-SPF-V1 Task 8 (2026-10-12): a plain <img> with srcSet, because next/image does not forward srcSet
+  // and the static export serves the committed derivatives as they are.
+  assert.match(source, /<img/);
+  assert.doesNotMatch(source, /from 'next\/image'/);
+  assert.match(source, /srcSet=/);
   assert.match(source, /loading="lazy"/);
   assert.doesNotMatch(source, /priority/);
   assert.match(source, /target="_blank"/);

@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { withBasePath } from '@/lib/paths';
+import { buildIllustrationSrcSet } from '@/lib/projects/illustration-variants';
 import type { ResolvedProjectDossier } from './content-types';
 import styles from './projects.module.css';
 
@@ -55,13 +55,17 @@ export function ProjectDossier({ dossier, labels }: ProjectDossierProps) {
 
         <figure className={styles.figure}>
           <div className={styles.artFrame}>
-            <Image
+            {/* A plain img: next/image does not forward srcSet, and the static export serves the committed derivatives as they are. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={withBasePath(visual.src)}
+              srcSet={buildIllustrationSrcSet(visual.src, withBasePath)}
               alt={visual.alt}
               width={visual.width}
               height={visual.height}
               sizes="(min-width: 1264px) 540px, (min-width: 1024px) 44vw, calc(100vw - 42px)"
               loading="lazy"
+              decoding="async"
               className={styles.artImage}
             />
           </div>

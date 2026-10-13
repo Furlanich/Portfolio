@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { getConnectedPoster } from '@/lib/connected-studio/media-manifest';
+import { CONNECTED_POSTER_CAPTURE, getConnectedPoster } from '@/lib/connected-studio/media-manifest';
 import type { CapabilityWords, ConnectedRoute } from '@/lib/connected-studio/types';
 import type { Locale } from '@/lib/locales';
 import { withBasePath } from '@/lib/paths';
@@ -31,7 +31,9 @@ export function ConnectedStudioGround({ route, locale, capabilityWords }: Connec
   // The poster URLs arrive as custom properties so they carry the deployment base path, which a
   // root-relative `url()` in a CSS module would not. Unpublished posters set nothing, so the layer
   // never requests a missing file and the CSS chart stays the whole static background.
-  const posterStyle: Record<string, string> = {};
+  const posterStyle: Record<string, string> = {
+    '--connected-poster-position': `${CONNECTED_POSTER_CAPTURE.position.x * 100}% ${CONNECTED_POSTER_CAPTURE.position.y * 100}%`,
+  };
   if (wide.published) posterStyle['--connected-poster-wide'] = `url("${withBasePath(wide.src)}")`;
   if (compact.published) posterStyle['--connected-poster-compact'] = `url("${withBasePath(compact.src)}")`;
 

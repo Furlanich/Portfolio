@@ -73,6 +73,12 @@
   display: block;
   width: 100%;
   height: auto;
+  /*
+   * Task 8: the resolution-only derivatives are whole-pixel sizes (640x360 is 1.7778, the original is
+   * 1.7767), so once one loads the browser's own ratio would replace the reserved box by a fraction of
+   * a pixel. Pinning the ratio keeps the box identical before and after loading: no image-induced shift.
+   */
+  aspect-ratio: 1599 / 900;
   transform-origin: 50% 50%;
   transition: transform 260ms var(--ease-out);
 }

@@ -1,4 +1,5 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page, type Route } from '@playwright/test';
+import { readConnected } from './support/connected-studio';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 // PLAN-SPF-V1 Task 3: the Projects index is the one place where both dossiers live. These tests run
@@ -233,6 +234,194 @@ test.describe('without JavaScript', () => {
         await expect(article.getByRole('link', { name: projectCase.founderAction, exact: true })).toHaveAttribute('href', appPathname(projectCase.founder));
         await expect(article.getByRole('img', { name: dossier.alt, exact: true })).toBeVisible();
       }
+    });
+  }
+});
+
+// PLAN-SPF-V1 Task 8: matched static posters and truthful responsive imagery. Both live tiers stay off in
+// every merged build, so every page here is the static page: a poster (or the CSS chart beneath it), no
+// canvas and no engine. The poster is chosen by the 768px boundary in the Ground's own CSS, and only the
+// matching file is requested.
+
+const posterPattern = /\/brand\/connected-studio\/(services|projects)-(wide|compact)\.webp/;
+
+const connectedPages = [
+  { route: 'services', locale: 'es', path: stableRoutes.services.es },
+  { route: 'services', locale: 'en', path: stableRoutes.services.en },
+  { route: 'projects', locale: 'es', path: stableRoutes.projects.es },
+  { route: 'projects', locale: 'en', path: stableRoutes.projects.en },
+] as const;
+
+/** A file path at the served base path. `appPathname` is for routes and adds a trailing slash. */
+function assetPath(path: string): string {
+  return appPathname('/').slice(0, -1) + path;
+}
+
+function watchPosterRequests(page: Page): string[] {
+  const urls: string[] = [];
+  page.on('request', (request) => {
+    if (posterPattern.test(request.url())) urls.push(new URL(request.url()).pathname);
+  });
+  return urls;
+}
+
+async function waitForLoadedAndSettled(page: Page) {
+  await page.waitForLoadState('load');
+  await page.evaluate(() => document.fonts.ready);
+  // A CSS background image starts when the Ground is styled; a stray second request would arrive well inside this.
+  await page.waitForTimeout(600);
+}
+
+test.describe('static posters', () => {
+  const widths = [
+    { width: 320, quality: 'compact' },
+    { width: 390, quality: 'compact' },
+    { width: 767, quality: 'compact' },
+    { width: 768, quality: 'wide' },
+    { width: 1024, quality: 'wide' },
+    { width: 1440, quality: 'wide' },
+  ] as const;
+
+  for (const { route, locale, path } of connectedPages) {
+    for (const { width, quality } of widths) {
+      test(`${locale} ${route} requests only the ${quality} poster at ${width}px, at the served base path, with no canvas and no engine`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 800 });
+        const requested = watchPosterRequests(page);
+        await page.goto(appUrl(path));
+        await waitForLoadedAndSettled(page);
+
+        expect(requested, 'exactly one poster request, the one for this viewport').toEqual([assetPath(`/brand/connected-studio/${route}-${quality}.webp`)]);
+        // `next dev` lists the engine chunk on every connected page, so the dev-only witness counts imports instead;
+        // a production export has no hook, and the canvas assertion below holds either way.
+        const reading = await readConnected(page);
+        if (reading) {
+          expect(reading.mode, 'a static page').toBe('static');
+          expect(reading.imports, 'the engine import never started').toBe(0);
+        }
+        await expect(page.locator('canvas')).toHaveCount(0);
+        // The poster layer paints the matching file; the CSS chart sits beneath it on the Ground itself.
+        const poster = await page.locator('[data-connected-poster]').evaluate((element) => getComputedStyle(element).backgroundImage);
+        expect(poster).toContain(`${route}-${quality}.webp`);
+      });
+    }
+
+    test(`${locale} ${route} keeps its poster and no canvas under reduced motion`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+      const page = await context.newPage();
+      const requested = watchPosterRequests(page);
+      await page.goto(appUrl(path));
+      await waitForLoadedAndSettled(page);
+      expect(requested).toEqual([assetPath(`/brand/connected-studio/${route}-wide.webp`)]);
+      await expect(page.locator('canvas')).toHaveCount(0);
+      await context.close();
+    });
+
+    test(`${locale} ${route} falls back to the CSS chart and stays complete when its poster fails to load`, async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      const failures: string[] = [];
+      page.on('pageerror', (error) => failures.push(error.message));
+      await page.route(posterPattern, (route) => route.fulfill({ status: 404, body: 'missing' }));
+      await page.goto(appUrl(path));
+      await waitForLoadedAndSettled(page);
+
+      await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toBeVisible();
+      const chart = await page.locator('[data-connected-ground]').evaluate((element) => getComputedStyle(element).backgroundImage);
+      expect(chart, 'the pure CSS chart is the Ground itself').toContain('gradient');
+      await expect(page.locator('canvas')).toHaveCount(0);
+      expect(failures).toEqual([]);
+    });
+  }
+
+  test.describe('without JavaScript', () => {
+    test.use({ javaScriptEnabled: false });
+
+    for (const { route, locale, path } of connectedPages) {
+      test(`${locale} ${route} still paints its poster before any enhancement`, async ({ page }) => {
+        await page.setViewportSize({ width: 1440, height: 900 });
+        const requested = watchPosterRequests(page);
+        await page.goto(appUrl(path));
+        // No page.evaluate here: Firefox cannot run it with JavaScript disabled.
+        await page.waitForLoadState('load');
+        await page.waitForTimeout(800);
+        expect(requested).toEqual([assetPath(`/brand/connected-studio/${route}-wide.webp`)]);
+        await expect(page.locator('canvas')).toHaveCount(0);
+      });
+    }
+  });
+});
+
+test.describe('project illustrations', () => {
+  const projectPages = connectedPages.filter((entry) => entry.route === 'projects');
+  const candidates = [640, 960, 1280, 1599];
+
+  for (const { locale, path } of projectPages) {
+    for (const width of [320, 768, 1024]) {
+      test(`${locale} Projects reserves each illustration's 1599:900 box before it loads, at ${width}px`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 800 });
+        // Hold every illustration request so the box is measured with no pixels in it.
+        const held: Route[] = [];
+        await page.route(/conceptual-[a-z-]+(?:-\d+)?\.webp/, (route) => {
+          held.push(route);
+        });
+        await page.goto(appUrl(path), { waitUntil: 'domcontentloaded' });
+
+        const images = page.locator('main article img');
+        await expect(images).toHaveCount(2);
+        for (let index = 0; index < 2; index += 1) {
+          const image = images.nth(index);
+          await expect(image).toHaveAttribute('width', '1599');
+          await expect(image).toHaveAttribute('height', '900');
+          await expect(image).toHaveAttribute('loading', 'lazy');
+          const box = await image.boundingBox();
+          expect(box, 'the image has a box').not.toBeNull();
+          expect(Math.abs(box!.height - (box!.width * 900) / 1599), `box ${box!.width}x${box!.height} keeps 1599:900`).toBeLessThanOrEqual(1);
+        }
+        await Promise.all(held.map((route) => route.abort()));
+      });
+    }
+
+    test(`${locale} Projects offers the full candidate list and picks one that is sharp without being the original unless needed`, async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(appUrl(path));
+      const images = page.locator('main article img');
+      await expect(images).toHaveCount(2);
+
+      for (let index = 0; index < 2; index += 1) {
+        const image = images.nth(index);
+        const srcset = (await image.getAttribute('srcset')) ?? '';
+        expect(srcset.split(',').map((entry) => Number(entry.trim().split(/\s+/)[1]?.replace('w', ''))), 'every candidate is listed').toEqual(candidates);
+        expect(srcset.split(',').every((entry) => entry.trim().startsWith(appPathname('/projects/'))), 'candidates carry the base path').toBe(true);
+
+        await image.scrollIntoViewIfNeeded();
+        await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0)).toBe(true);
+        const { currentSrc, renderedWidth, density } = await image.evaluate((element: HTMLImageElement) => ({
+          currentSrc: element.currentSrc,
+          renderedWidth: element.getBoundingClientRect().width,
+          density: window.devicePixelRatio,
+        }));
+        // With `w` descriptors `naturalWidth` is density-corrected, so the chosen candidate comes from its file name.
+        const chosen = Number(/-(\d+)\.webp$/.exec(currentSrc)?.[1] ?? 1599);
+        const required = Math.ceil(renderedWidth * density);
+        const smallestSufficient = candidates.find((candidate) => candidate >= required) ?? candidates.at(-1)!;
+        expect(candidates, `the browser chose ${currentSrc}`).toContain(chosen);
+        // Browsers differ on ties, so the choice may be the smallest sufficient candidate or the next one up, never smaller.
+        expect(chosen).toBeGreaterThanOrEqual(smallestSufficient);
+        expect(chosen).toBeLessThanOrEqual(candidates[Math.min(candidates.indexOf(smallestSufficient) + 1, candidates.length - 1)]);
+      }
+    });
+
+    test(`${locale} Projects preloads neither illustration nor poster, and marks both illustrations lazy`, async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(appUrl(path));
+      await waitForLoadedAndSettled(page);
+
+      // Next preloads fonts; the artwork is never preloaded. When a lazy image is fetched is the browser's
+      // own distance threshold (Chromium reaches 2500px when it cannot read the connection), so the
+      // contract asserted here is the attribute, not the moment.
+      const preloaded = await page.locator('link[rel="preload"]').evaluateAll((links) => links.map((link) => (link as HTMLLinkElement).href));
+      expect(preloaded.filter((href) => /connected-studio|conceptual-/.test(href))).toEqual([]);
+      await expect(page.locator('main article img[loading="lazy"]')).toHaveCount(2);
+      await expect(page.locator('main article img[fetchpriority="high"]')).toHaveCount(0);
     });
   }
 });

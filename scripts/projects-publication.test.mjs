@@ -231,8 +231,16 @@ test('removes obsolete project sources and assets after consumer verification', 
 
   assert.deepEqual(
     (await collectFiles('public/projects')).sort(),
+    // Dated 2026-10-12 (PLAN-SPF-V1 Task 8): the two originals plus their six additive resolution-only
+    // derivatives (640, 960 and 1280 wide). Nothing else may live here.
     [
+      'public/projects/general-reservation-system/conceptual-workflow-1280.webp',
+      'public/projects/general-reservation-system/conceptual-workflow-640.webp',
+      'public/projects/general-reservation-system/conceptual-workflow-960.webp',
       'public/projects/general-reservation-system/conceptual-workflow.webp',
+      'public/projects/the-system/conceptual-access-model-1280.webp',
+      'public/projects/the-system/conceptual-access-model-640.webp',
+      'public/projects/the-system/conceptual-access-model-960.webp',
       'public/projects/the-system/conceptual-access-model.webp',
     ],
   );

@@ -41,6 +41,24 @@ export const connectedCanvas = (page: Page) => page.locator('main [data-connecte
 
 export const pauseSlot = (page: Page, route: ConnectedRoute) => page.locator(`#connected-pause-${route}`);
 
+/**
+ * Waits for the start-pose settle to finish. The live scene's first frame is the static poster's pose and it eases
+ * to the scroll-driven pose for about three seconds, so "at rest" starts when the progress stops changing.
+ */
+export async function expectSettled(page: Page, timeout = 20_000) {
+  await expect
+    .poll(
+      async () => {
+        const before = (await readConnected(page))?.progress ?? -1;
+        await page.waitForTimeout(600);
+        const after = (await readConnected(page))?.progress ?? -2;
+        return Math.abs(after - before) < 1e-4;
+      },
+      { timeout },
+    )
+    .toBe(true);
+}
+
 /** Waits for the live scene to be attached and to have drawn at least once. */
 export async function expectLive(page: Page, timeout = 30_000) {
   await expect(connectedCanvas(page)).toHaveCount(1, { timeout });
@@ -183,6 +201,7 @@ export async function expectFellBack(page: Page, route: ConnectedRoute, timeout 
   await expect.poll(async () => (await readConnected(page))?.mode, { timeout }).toBe('failed');
   await expect(page.locator('canvas')).toHaveCount(0);
   await expect(pauseSlot(page, route).getByRole('button')).toHaveCount(0);
+  await expect(page.locator('[data-connected-poster]')).toHaveCSS('opacity', '1');
   expect((await readConnected(page))?.imports, 'an engine import was attempted').toBeGreaterThan(0);
 }
 
