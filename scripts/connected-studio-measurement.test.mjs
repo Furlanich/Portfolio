@@ -5,7 +5,15 @@ import assert from 'node:assert/strict';
 // what the optional engine/runtime closure of a connected route costs, from the emitted chunk graph
 // (path, sizes and the chunks each one pulls in). Browser I/O stays in the scripts.
 
-const { crossCheckClosure, measureOptionalClosure, OPTIONAL_CLOSURE_LIMIT_BYTES } = await import('../lib/connected-studio/measurement.ts');
+const {
+  attributeShifts,
+  buildRouteClosure,
+  crossCheckClosure,
+  measureOptionalClosure,
+  missingInteractions,
+  OPTIONAL_CLOSURE_LIMIT_BYTES,
+  validateVitalsOptions,
+} = await import('../lib/connected-studio/measurement.ts');
 
 const KIB = 1024;
 const chunk = (path, brotliKiB, imports = [], rawKiB = brotliKiB * 3) => ({
@@ -76,4 +84,57 @@ test('the requested optional scripts and the emitted closure must match exactly'
   });
   assert.deepEqual(drift.missingFromRequests, ['chunks/util.js'], 'an emitted dependency the browser never fetched');
   assert.deepEqual(drift.unexpectedRequests, ['chunks/surprise.js'], 'a fetched script the emitted graph does not explain');
+});
+
+// --- Review corrections (PR #138, Sol round 1) ------------------------------------------------------
+
+test('the vitals options reject any argument that would produce no samples', () => {
+  const profiles = ['mobile', 'desktop'];
+  const base = { journeys: '10', profile: undefined, profiles };
+  assert.deepEqual(validateVitalsOptions(base), { journeys: 10, profiles: ['mobile', 'desktop'], expectMode: 'static' });
+  assert.deepEqual(validateVitalsOptions({ ...base, profile: 'mobile', journeys: '3', expectMode: 'live' }), { journeys: 3, profiles: ['mobile'], expectMode: 'live' });
+  for (const journeys of ['0', '-2', 'NaN', 'abc', '1.5', '', undefined]) {
+    assert.throws(() => validateVitalsOptions({ ...base, journeys }), /journeys/, `journeys=${journeys}`);
+  }
+  assert.throws(() => validateVitalsOptions({ ...base, profile: 'tablet' }), /profile.*tablet/);
+  assert.throws(() => validateVitalsOptions({ ...base, expectMode: 'hybrid' }), /expect-mode/);
+});
+
+test('a journey is complete only when every required interaction completed for its mode', () => {
+  const staticDone = ['fragment-link', 'keyboard-focus', 'scroll', 'route-link'];
+  assert.deepEqual(missingInteractions({ mode: 'static', completed: staticDone }), []);
+  assert.deepEqual(missingInteractions({ mode: 'static', completed: staticDone.filter((item) => item !== 'route-link') }), ['route-link']);
+  assert.deepEqual(missingInteractions({ mode: 'live', completed: staticDone }), ['pause', 'resume'], 'a live page also needs Pause and Resume');
+  assert.deepEqual(missingInteractions({ mode: 'live', completed: [...staticDone, 'pause', 'resume'] }), []);
+});
+
+test('the zero enhancement-shift gate sees a shift that rounding to four decimals would hide', () => {
+  const result = attributeShifts({
+    shifts: [
+      { value: 0.00004, time: 1200, enhancement: true },
+      { value: 0.0002, time: 300, enhancement: false },
+    ],
+    fontLoads: [],
+    activationAt: 1000,
+  });
+  assert.equal(result.fromEnhancement, 0.00004, 'the raw sum is kept for the gate');
+  assert.ok(result.fromEnhancement > 0, 'a positive shift fails the exact-zero gate');
+  assert.equal(result.wholePage, 0.00024);
+  assert.equal(result.enhancementDetail.length, 1);
+  // A shift while a web font loads (or within 500 ms of it finishing) is a font swap, not the enhancement.
+  const swap = attributeShifts({ shifts: [{ value: 0.01, time: 1300, enhancement: false }], fontLoads: [[1100, 1200]], activationAt: 1000 });
+  assert.equal(swap.fromEnhancement, 0);
+});
+
+test('the route closure is found from the loader names in the route chunks, minus the chunks the route itself loads', () => {
+  const chunks = [
+    chunk('chunks/page.js', 8, ['chunks/scene-entry.js', 'chunks/static-sibling.js']),
+    chunk('chunks/static-sibling.js', 12),
+    ...nestedClosure,
+  ];
+  const route = buildRouteClosure({ referenced: ['chunks/page.js', 'chunks/static-sibling.js'], chunks });
+  assert.deepEqual(route.entries, ['chunks/scene-entry.js']);
+  assert.equal(route.closure.brotliBytes, 130 * KIB);
+  assert.equal(route.closure.withinLimit, false);
+  assert.deepEqual(buildRouteClosure({ referenced: ['chunks/static-sibling.js'], chunks }).entries, [], 'no optional entry means an empty, reported closure');
 });
