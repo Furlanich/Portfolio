@@ -18,7 +18,7 @@ import {
   trackWebglContexts,
   type ConnectedLocale,
 } from './support/connected-studio';
-import { appPathname, appUrl, normalizeBasePath, stableRoutes } from './support/paths';
+import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 // PLAN-SPF-V1 Task 9: the production journeys. This spec runs only in the `connected-production-chromium`
 // project (PLAYWRIGHT_SERVE_EXPORT=1), against the clean static export in `out/` served by
@@ -30,7 +30,6 @@ import { appPathname, appUrl, normalizeBasePath, stableRoutes } from './support/
 test.describe.configure({ timeout: 120_000 });
 
 const outDir = path.join(process.cwd(), 'out');
-const basePath = normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH ?? '');
 const NEW_PAGE_TIMEOUT_MS = 45_000;
 
 const retiredPaths = [
@@ -412,7 +411,7 @@ test.describe('session loss, import races and failures', () => {
 });
 
 test.describe('preferences and capability gates fetch no engine', () => {
-  const gates: { name: string; arrange(page: Page): Promise<void>; live?: 'software-gate-open' }[] = [
+  const gates: { name: string; arrange(page: Page): Promise<unknown>; live?: 'software-gate-open' }[] = [
     { name: 'reduced motion', arrange: (page) => page.emulateMedia({ reducedMotion: 'reduce' }) },
     { name: 'forced colors', arrange: (page) => page.emulateMedia({ forcedColors: 'active' }) },
     {
@@ -484,6 +483,33 @@ test.describe('preferences and capability gates fetch no engine', () => {
       expect(requested).toEqual([]);
     });
   }
+});
+
+test.describe('loading discipline', () => {
+  for (const connected of connectedPages) {
+    test(`${connected.route}/${connected.locale} preloads neither the engine nor the project illustrations`, async ({ page, browser, baseURL }) => {
+      const names = await learnEngineChunks(browser, baseURL!);
+      await page.goto(appUrl(connected.pathname));
+      const hints = await page.locator('link[rel="preload"], link[rel="modulepreload"], link[rel="prefetch"]').evaluateAll((links) =>
+        links.map((link) => ({ rel: link.getAttribute('rel') ?? '', as: link.getAttribute('as') ?? '', href: link.getAttribute('href') ?? '' })),
+      );
+      expect(hints.filter((hint) => names.some((name) => hint.href.endsWith(name))), 'no hint names an engine chunk').toEqual([]);
+      expect(hints.filter((hint) => /\/projects\//.test(hint.href)), 'no hint names a project illustration').toEqual([]);
+    });
+  }
+
+  test('the second project illustration is not requested until its dossier nears the viewport', async ({ page }) => {
+    const illustrations: string[] = [];
+    page.on('request', (request) => {
+      if (/\/projects\/the-system\/conceptual-access-model/.test(request.url())) illustrations.push(request.url());
+    });
+    await page.goto(appUrl(stableRoutes.projects.en));
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(1_500);
+    expect(illustrations, 'below the fold and lazy, so not fetched at load').toEqual([]);
+    await page.locator('article#the-system').scrollIntoViewIfNeeded();
+    await expect.poll(() => illustrations.length, { timeout: 15_000 }).toBeGreaterThan(0);
+  });
 });
 
 test.describe('without JavaScript', () => {
