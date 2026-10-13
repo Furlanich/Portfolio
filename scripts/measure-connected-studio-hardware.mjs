@@ -23,7 +23,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { chromium, firefox } from 'playwright';
-import { contrastRatio, judgeHardware } from '../lib/connected-studio/measurement.ts';
+import { buildRouteClosure, chunkImports, contrastRatio, judgeHardware } from '../lib/connected-studio/measurement.ts';
 import { createExportServer, normalizeBasePath } from './serve-static-export.mjs';
 
 const root = process.cwd();
@@ -45,6 +45,7 @@ if (!['chromium', 'firefox'].includes(BROWSER)) fail(`--browser must be chromium
 const IDLE_SECONDS = positive('idle-seconds', 120);
 const TRAVERSALS = positive('traversals', 3);
 const HEADED = process.argv.includes('--headed');
+const GPU_TIMERS = !process.argv.includes('--no-gpu-timers'); // a control: without the timer queries, is the frame interval the same?
 const basePath = normalizeBasePath(argument('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
 if (basePath && !/^\/[A-Za-z0-9._-]+$/.test(basePath)) fail(`The base path "${basePath}" is not a plain /segment. Run from PowerShell.`);
 if (!fs.existsSync(path.join(outDir, 'index.html'))) fail('No export in out/. Build the candidate first.');
@@ -69,13 +70,24 @@ const percentile = (values, p) => {
 const round = (value, digits = 2) => (value === null || value === undefined ? value : +value.toFixed(digits));
 
 /** Installed before any page script. Self-contained: it is serialized into the page. */
-function installProbe() {
+function installProbe(options) {
   const hw = { frames: [], current: null, rafCalls: 0, timeoutCalls: 0, longTasks: [], contexts: { alive: 0, max: 0, creates: 0 }, timerExt: undefined, disjoint: 0, pending: [], visibility: [] };
   window.__hw = hw;
   const raf = window.requestAnimationFrame.bind(window);
   window.requestAnimationFrame = (callback) => { hw.rafCalls += 1; return raf(callback); };
   const timeout = window.setTimeout.bind(window);
   window.setTimeout = (...args) => { hw.timeoutCalls += 1; return timeout(...args); };
+  let sampling = false;
+  let lastSample = 0;
+  hw.rafSamples = [];
+  const sampleLoop = (now) => {
+    if (!sampling) return;
+    if (lastSample) hw.rafSamples.push(now - lastSample);
+    lastSample = now;
+    raf(sampleLoop);
+  };
+  hw.startSampler = () => { hw.rafSamples = []; lastSample = 0; sampling = true; raf(sampleLoop); };
+  hw.stopSampler = () => { sampling = false; return hw.rafSamples; };
   document.addEventListener('visibilitychange', () => hw.visibility.push([performance.now(), document.visibilityState]));
   new PerformanceObserver((list) => list.getEntries().forEach((entry) => hw.longTasks.push({ start: entry.startTime, duration: entry.duration }))).observe({ type: 'longtask', buffered: true });
 
@@ -103,7 +115,7 @@ function installProbe() {
   };
   wrap('clear', function () {
     finish();
-    if (hw.timerExt === undefined) hw.timerExt = this.getExtension('EXT_disjoint_timer_query_webgl2') || null;
+    if (hw.timerExt === undefined) hw.timerExt = options.gpuTimers ? this.getExtension('EXT_disjoint_timer_query_webgl2') || null : null;
     const now = performance.now();
     hw.current = { t: now, lastDraw: now, draws: 0, gpuMs: null, query: null, gl: this };
     if (hw.timerExt) {
@@ -169,6 +181,7 @@ const report = {
   tier: TIER,
   browser: BROWSER,
   headed: HEADED,
+  gpuTimersEnabled: GPU_TIMERS,
   basePath: basePath || '/',
   machine: { cpu: os.cpus()[0]?.model, logicalCores: os.cpus().length, memoryGiB: round(os.totalmem() / 1024 ** 3, 1), platform: `${os.platform()} ${os.release()}` },
   setsTestHook: false,
@@ -184,7 +197,7 @@ const report = {
 async function openPage(viewport, deviceScaleFactor = 1) {
   const context = await browser.newContext({ viewport, deviceScaleFactor });
   const page = await context.newPage();
-  await page.addInitScript(installProbe);
+  await page.addInitScript(installProbe, { gpuTimers: GPU_TIMERS });
   return { context, page };
 }
 async function waitLive(page, timeout = 60_000) {
@@ -248,7 +261,7 @@ try {
   await first.page.goto(url(PAGES.services.es.pathname), { waitUntil: 'load' });
   const renderer = await rendererOf(first.page);
   report.renderer = renderer.renderer;
-  report.gpuTimerQueries = renderer.timerQueries;
+  report.gpuTimerQueries = renderer.timerQueries && GPU_TIMERS;
   const hardware = !isSoftware(renderer.renderer);
   const live = hardware && (await waitLive(first.page, BROWSER === 'firefox' ? 30_000 : 60_000));
   report.liveWithoutOverride = live;
@@ -287,6 +300,7 @@ try {
     // ---- 2. Traversals: active cadence, render cost, draw calls, labels, long tasks ----
     const active = [];
     const labelSamples = [];
+    const heroLabels = await labelGeometry(page);
     const traversalStart = await page.evaluate(() => performance.now());
     for (let pass = 0; pass < TRAVERSALS; pass += 1) {
       for (const direction of [1, -1]) {
@@ -313,7 +327,24 @@ try {
     metrics.interactionTaskMaxMs = longTasks.length ? Math.max(...longTasks) : 0; // the Long Tasks API only reports tasks of 50 ms or more
     metrics.pixelRatio = round(await page.evaluate(() => document.querySelector('canvas')?.width / window.innerWidth), 3);
     report.traversals = { count: TRAVERSALS, renders: active.length, intervalsMeasured: intervals.length, intervalP50Ms: round(percentile(intervals, 50), 2), gpuTimedFrames: gpuValues.length, disjointRejections: await page.evaluate(() => window.__hw.disjoint), longTasksMs: longTasks, labels: { samples: labelSamples.length, minVisible: Math.min(...labelSamples.map((s) => s.visible)), maxVisible: Math.max(...labelSamples.map((s) => s.visible)), smallestFontPx: Math.min(...labelSamples.map((s) => s.smallest ?? 99)), allUpright: labelSamples.every((s) => s.allUpright), allInert: labelSamples.every((s) => s.allInert), overlappingMasks: labelSamples.reduce((sum, s) => sum + s.overlappingMasks, 0) } };
-    const labelsOk = report.traversals.labels.minVisible > 0 && report.traversals.labels.smallestFontPx >= 11 && report.traversals.labels.allUpright && report.traversals.labels.allInert && report.traversals.labels.overlappingMasks === 0;
+    report.traversals.labels.atHero = heroLabels;
+    const allLabelSamples = [heroLabels, ...labelSamples];
+    const smallestFont = Math.min(...allLabelSamples.map((s) => s.smallest ?? 99));
+    // Labels hide under a reading plate by design (PC-2); the rule is that the hero shows them, and that no shown label is too small, tilted, interactive or over reading text anywhere.
+    const labelsOk = heroLabels.visible > 0 && smallestFont >= 11 && allLabelSamples.every((s) => s.allUpright && s.allInert) && allLabelSamples.reduce((sum, s) => sum + s.overlappingMasks, 0) === 0;
+
+    // ---- 2b. Control: the same traversal with the scene paused, so the page's own scroll cost is visible ----
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await page.waitForTimeout(1500);
+    await page.locator('#connected-pause-services').getByRole('button', { name: PAGES.services.es.pause, exact: true }).click();
+    await page.waitForTimeout(1000);
+    await page.evaluate(() => window.__hw.startSampler());
+    await scrollThrough(page, 1);
+    await scrollThrough(page, -1);
+    const controlSamples = await page.evaluate(() => window.__hw.stopSampler());
+    await page.locator('#connected-pause-services').getByRole('button', { name: PAGES.services.es.resume, exact: true }).click();
+    const controlIntervals = controlSamples.filter((gap) => gap < 250);
+    report.pageOnlyControl = { note: 'requestAnimationFrame intervals while the page scrolls with the scene paused (no scene draws): the cost of the page itself', samples: controlIntervals.length, intervalP50Ms: round(percentile(controlIntervals, 50), 2), intervalP95Ms: round(percentile(controlIntervals, 95), 2) };
 
     // ---- 3. Pause: zero draws, zero page animation-frame callbacks ----
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
@@ -334,22 +365,29 @@ try {
     if (report.paused.resumedDraws <= 0) failures.push('Resume did not draw again');
 
     // ---- 4. Hidden: a second tab hides the first (headed Chromium only) ----
-    const other = await context.newPage();
-    await other.goto('about:blank');
-    await other.bringToFront();
-    await page.waitForTimeout(500);
+    let windowControl = null;
+    let hiddenFrames = 0;
+    if (HEADED) {
+      const session = await context.newCDPSession(page);
+      const { windowId } = await session.send('Browser.getWindowForTarget');
+      windowControl = { session, windowId };
+      await session.send('Browser.setWindowBounds', { windowId, bounds: { windowState: 'minimized' } });
+    }
+    await page.waitForTimeout(1000);
     const visibility = await page.evaluate(() => document.visibilityState);
     if (visibility === 'hidden') {
       const hiddenBefore = await counters(page);
       await page.waitForTimeout(4000);
-      metrics.hiddenDraws = (await counters(page)).frames - hiddenBefore.frames;
+      hiddenFrames = (await counters(page)).frames;
+      metrics.hiddenDraws = hiddenFrames - hiddenBefore.frames;
     } else {
       metrics.hiddenDraws = null; // not hidden in this mode: the checkpoint stays OPEN rather than being faked
     }
-    report.hidden = { visibilityState: visibility, draws: metrics.hiddenDraws ?? 'not measured (run with --headed so the first tab is really hidden)' };
+    report.hidden = { visibilityState: visibility, draws: metrics.hiddenDraws ?? 'not measured (the page was not hidden: run with --headed so the window can be minimized)', via: HEADED ? 'the real browser window was minimized (CDP Browser.setWindowBounds), then restored' : 'not attempted' };
+    if (windowControl) await windowControl.session.send('Browser.setWindowBounds', { windowId: windowControl.windowId, bounds: { windowState: 'normal' } });
     await page.bringToFront();
-    await other.close();
     await page.waitForTimeout(1500);
+    report.hidden.resumedAfterShow = (await counters(page)).frames > hiddenFrames;
 
     // ---- 5. Footer: the scene is suspended ----
     await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
@@ -379,6 +417,14 @@ try {
     report.routeChanges = { count: 5, listeners: [listenersBefore, listenersAfter], heapMiB: [round(heapBefore / 1048576, 1), round(heapAfter / 1048576, 1)], contextsCreatedInDocument: await page.evaluate(() => window.__hw.contexts.creates) };
 
     // ---- 7. Cold and warm: bytes on the first load, and a second route from the shared HTTP cache ----
+    const emittedDir = path.join(outDir, '_next', 'static', 'chunks');
+    const emitted = fs.readdirSync(emittedDir).filter((name) => /\.(js|css)$/.test(name)).map((name) => ({ path: 'chunks/' + name, rawBytes: 0, brotliBytes: 0, imports: chunkImports(fs.readFileSync(path.join(emittedDir, name), 'utf8'), 'chunks/' + name) }));
+    const engineNames = (pathname) => {
+      const html = fs.readFileSync(path.join(outDir, ...pathname.split('/').filter(Boolean), 'index.html'), 'utf8');
+      const referenced = [...new Set([...html.matchAll(/_next\/static\/(chunks\/[A-Za-z0-9._-]+\.(?:js|css))/g)].map((match) => match[1]))];
+      return buildRouteClosure({ referenced, chunks: emitted }).closure.chunks.map((item) => item.path.split('/').pop());
+    };
+    const engine = new Set(engineNames(PAGES.services.es.pathname));
     const cacheContext = await browser.newContext({ viewport: VIEWPORT });
     const cachePage = await cacheContext.newPage();
     const resources = async () => cachePage.evaluate(() => performance.getEntriesByType('resource').filter((entry) => /\/_next\/static\/chunks\/.+\.js$/.test(entry.name)).map((entry) => ({ name: entry.name.split('/').pop(), transferSize: entry.transferSize, encodedBodySize: entry.encodedBodySize })));
@@ -388,15 +434,17 @@ try {
     await cachePage.goto(url(PAGES.projects.es.pathname), { waitUntil: 'load' });
     await waitLive(cachePage);
     const warm = await resources();
-    const coldNames = new Set(cold.map((entry) => entry.name));
+    const engineCold = cold.filter((entry) => engine.has(entry.name));
+    const engineWarm = warm.filter((entry) => engine.has(entry.name));
     report.cache = {
-      coldChunkRequests: cold.length,
-      coldTransferKiB: round(cold.reduce((sum, entry) => sum + entry.transferSize, 0) / 1024, 1),
-      warmRouteChunks: warm.length,
-      warmServedFromCache: warm.filter((entry) => entry.transferSize === 0 && entry.encodedBodySize > 0).length,
-      warmNewDownloads: warm.filter((entry) => entry.transferSize > 0).map((entry) => entry.name),
+      engineChunks: [...engine],
+      engineColdTransferKiB: round(engineCold.reduce((sum, entry) => sum + entry.transferSize, 0) / 1024, 1),
+      engineColdRequested: engineCold.length,
+      engineWarmServedFromCache: engineWarm.filter((entry) => entry.transferSize === 0 && entry.encodedBodySize > 0).length,
+      engineWarmNewDownloads: engineWarm.filter((entry) => entry.transferSize > 0).map((entry) => entry.name),
+      allChunksColdRequests: cold.length,
+      allChunksWarmFromCache: warm.filter((entry) => entry.transferSize === 0 && entry.encodedBodySize > 0).length,
       note: 'transfer sizes are uncompressed, as the local server sends them; the Brotli size of the closure is gated by measure:connected-studio. Cache reuse is reported apart and never subtracts from the cold figure.',
-      coldChunksReusedByTheSecondRoute: warm.filter((entry) => coldNames.has(entry.name) && entry.transferSize === 0).length,
     };
     await cacheContext.close();
 

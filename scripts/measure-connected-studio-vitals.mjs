@@ -2,7 +2,7 @@
 // (PLAN-SPF-V1 Task 9). These are throttled Chromium journeys over the clean static export, not field
 // data. Usage:
 //   npm run measure:connected-studio-vitals [-- --skip-build] [--journeys=10] [--profile=mobile|desktop]
-//     [--expect-mode=static|live] [--base-path=/Portfolio] [--out=report.json]
+//     [--expect-mode=static|live] [--hardware] [--base-path=/Portfolio] [--out=report.json]
 //
 // The profile constants and the gzip lab server are copied verbatim from scripts/measure-home-web-vitals.mjs
 // (the established method; that script is not importable because it runs on import, and it is not edited
@@ -15,7 +15,9 @@
 // and every journey must stay static. To measure a live tier, build the isolated candidate (the plan's
 // "Isolated candidate evaluation"), run this on hardware with `--expect-mode=live`, and the page must go live
 // without any override; Pause and Resume then become required interactions. Live results that cannot be
-// measured stay OPEN: there is no software-rendered substitute here.
+// measured stay OPEN: there is no software-rendered substitute here. `--hardware` launches new-headless Chromium so it can use
+// the machine's GPU instead of the bundled software-rendered headless shell, and the run fails if the renderer is a
+// software one: a live number is only reported from real hardware WebGL2.
 //
 // Each journey is a cold navigation (a fresh context) followed by required interactions: an in-page
 // fragment link, keyboard focus movement, scrolling and a link to the other connected route (plus Pause and
@@ -67,6 +69,7 @@ try {
   process.exit(1);
 }
 const { journeys: JOURNEYS_PER_LOCALE, profiles: SELECTED_PROFILES, expectMode: EXPECT_MODE } = options;
+const HARDWARE = process.argv.includes('--hardware');
 const basePath = normalizeBasePath(argument('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
 if (basePath && !/^\/[A-Za-z0-9._-]+$/.test(basePath)) {
   throw new Error(`The base path "${basePath}" is not a plain /segment. Run from PowerShell, or set MSYS2_ARG_CONV_EXCL=* in Git Bash.`);
@@ -272,8 +275,25 @@ async function journey(browser, profile, route, locale) {
   }
 }
 
-const browser = await chromium.launch();
+const browser = await chromium.launch(HARDWARE ? { channel: 'chromium' } : {});
+let rendererName = null;
+if (HARDWARE) {
+  const probePage = await browser.newPage();
+  rendererName = await probePage.evaluate(() => {
+    const gl = document.createElement('canvas').getContext('webgl2');
+    const info = gl?.getExtension('WEBGL_debug_renderer_info');
+    return gl ? String(info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER)) : null;
+  });
+  await probePage.close();
+  if (!rendererName || /swiftshader|llvmpipe|software|softpipe|microsoft basic/i.test(rendererName)) {
+    await browser.close();
+    server.close();
+    console.error(`measure-connected-studio-vitals: --hardware needs a hardware renderer, got "${rendererName}"`);
+    process.exit(1);
+  }
+}
 const report = {
+  renderer: rendererName,
   kind: 'synthetic lab measurement (not field data)',
   basePath: basePath || '/',
   expectedMode: EXPECT_MODE,
