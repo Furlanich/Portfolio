@@ -1,6 +1,6 @@
 # Task 9 — hardware and screen-reader protocol (owner-executed, OD-4)
 
-Status: **prepared, not run.** The owner stated on 2026-10-13 that Task 9's hardware evidence is not necessary for now ([plan Progress](../../plans/active/services-projects-footer-v1.md#progress)). Under OD-4 the items below therefore stay **OPEN** and both `CONNECTED_LIVE_POLICY` tiers stay `false`. Nothing here is a result. Run it when a tier is to be turned on; that turn-on is a bounded follow-up PR (Claude Sonnet 5.5 implements, GPT-6.1 Sol reviews, the owner merges) that carries the filled sheet.
+Status: **partly run.** The owner deferred hardware evidence on 2026-10-13 ([plan Progress](../../plans/active/services-projects-footer-v1.md#progress)) and then asked for the open items to be addressed. What one desktop could provide is in section 6; **the wide tier does not pass** (one failed row), the compact tier and every phone, iPhone and screen-reader item remain **OPEN**, and both `CONNECTED_LIVE_POLICY` tiers stay `false`. A candidate run is evidence for the owner's decision, not the owner's acceptance. A tier still turns on only through a bounded follow-up PR carrying the filled sheet.
 
 Rules that do not bend:
 
@@ -72,15 +72,52 @@ Heat after 5 minutes: <none|warm|hot>   Memory trend: <flat|growing>   Notes: <t
 Screen reader (if applicable): <NVDA + Firefox | VoiceOver iOS> ....... <PASS|FAIL|OPEN>
 ```
 
-## 6. Current status of every item
+## 6. Candidate run on the desktop, 2026-10-13 (automated by `scripts/measure-connected-studio-hardware.mjs`)
+
+Machine: Intel Core i3-8100 (4 cores, 3.6 GHz), 24 GB, NVIDIA GeForce RTX 2060, Windows 11; Chromium (new headless and headed) through ANGLE/Direct3D 11, `EXT_disjoint_timer_query_webgl2` available, 0 disjoint rejections. Source: the Task 9 branch with only `CONNECTED_LIVE_POLICY = { wide: true, compact: false }` changed, uncommitted, clean root export (diff saved as `candidate-policy.diff`, SHA as `candidate-source-sha.txt`, both in the git-ignored `.superpowers/reports/`). The script sets no test hook and passes no software-renderer flag; the page went live by itself. The candidate was deleted afterwards and `capability.ts` restored (no diff).
+
+| Row (wide tier) | Limit | Measured | Verdict |
+| --- | --- | --- | --- |
+| Active-scroll frame interval p95 | ≤ 20 ms | **34.1 ms** (median 17.5 ms; 1690 renders over 3 up/down traversals) | **FAIL** |
+| Per-render CPU submit time p95 (CPU-only estimate) | ≤ 20 ms | 0.4 ms | PASS |
+| Per-render GPU time p95 (timer queries) | ≤ 20 ms | 17.6 ms (idle p95 4.2 ms) | PASS, close to the limit |
+| Scene interaction task | < 50 ms | no task reached 50 ms (the Long Tasks API reports only tasks of 50 ms or more) | PASS |
+| Draw calls per frame (max) | ≤ 28 | 7 | PASS |
+| Canvas pixel ratio | ≤ 1.5 | 0.99 | PASS |
+| Ambient cadence, 120 s visible idle | ≤ 30 fps | 20.7 fps (2486 renders) | PASS |
+| Paused: draws and page animation-frame callbacks over 4 s | 0 | 0 and 0; Resume drew again | PASS |
+| Footer: draws over 4 s | 0 | 0 | PASS |
+| Hidden: draws | 0 | **not measured**: the page stayed `visible` even when the window was minimized (Playwright's launch flags disable occlusion handling) | **OPEN** |
+| Contexts alive after 5 route changes | ≤ 1 | 1 (19 created over the run, each released) | PASS |
+| Listener growth over 5 route changes | ≤ 2 | 0 (528 to 528); heap 8.4 to 8.9 MiB | PASS |
+| Labels | the hero shows them; none smaller than 11 px, tilted, interactive or over reading text | 4 of 16 visible at the hero, smallest 12 px, all upright and inert, 0 over masks (labels hide under reading plates by design, PC-2) | PASS |
+
+**The failed row is real and it is the scene, not the page.** Scrolling the same page with the scene paused gives a `requestAnimationFrame` interval p95 of 16.8 ms (p50 16.7); with the scene live it is 34.1 ms. A control run with the GPU timer queries switched off gives 33.9 ms, so the measurement is not the cause. Reading `lib/connected-studio/controller.ts` and the host scheduler (`createBrowserScheduler` in `ConnectedStudioEnhancement.tsx`) points at a probable cause, **a hypothesis not yet proven by a fix**: the active cadence is "due at the last render plus 16.67 ms", the host waits for that time with a timer and only then requests an animation frame, so a timer that lands just after a vsync pushes the frame to the next one and some frames take two refreshes (a 17.5 ms median with a 34 ms tail fits that pattern). Under the plan's budget rule this is a recorded defect: RED it, fix it within the approved design (for example by driving the 60 fps active cadence from the animation frame itself, not from a timer), and repeat the run. That touches the Task 7 host and controller, so it needs the lock transfer the plan requires and is not done in this PR.
+
+Other figures from the same run:
+
+- **Live-tier vitals on the hardware** (`measure-connected-studio-vitals.mjs --hardware --expect-mode=live --profile=desktop`, ten journeys per locale, no override, Pause and Resume required): all 40 journeys went live by themselves; Services LCP p75 504 ms, INP p75 32 ms; Projects LCP p75 784 ms, INP p75 40 ms; enhancement layout shift 0 (unrounded); whole-page shift 0.
+- **Cold and warm engine cost:** the two engine chunks are 560.3 KiB raw as the local server sends them (the Brotli size, 114.4 KiB, is gated by `measure:connected-studio`). A second connected route, loaded as a full navigation in the same context, served both engine chunks (2 of 2) and all 15 page chunks from the HTTP cache with no new download. Cache reuse is reported apart and never reduces the cold figure.
+- **200% and 400% zoom (viewport-equivalent: 720x450 at DPR 2 and 320x256 at DPR 4, both pages, both locales):** no horizontal scroll, no overflowing element, the H1 inside the viewport and the Footer reachable in all 8 cases. Both widths fall in the compact tier, which this candidate keeps off, so the pages were static there: **live behavior under zoom is OPEN** until a compact candidate exists. This is not Ctrl-plus in the browser UI.
+- **Contrast, measured from rendered pixels** (the text is hidden, the viewport screenshotted, and the WCAG ratio of the text colour against the pixels behind its box taken; the gate is the 5th percentile over the box, the single worst pixel is also recorded; text covered by another element is skipped): 362 samples across both pages, static and live, 0 below their requirement; lowest 5.5:1 against 4.5:1. This replaces the axe-only claim with a computed one; it is not a human review of the design, which the owner may still do.
+- **Accessibility tree** (a proxy for assistive technology, not a screen-reader result): exactly one level-1 heading in both modes; one Pause button when live and none when static; the canvas and labels are not exposed.
+- **Firefox:** with the same candidate, the page went live by itself with exactly one canvas and one Pause control. Firefox masks its renderer string ("GeForce GTX 980 … or similar" on this RTX 2060 machine), so this shows a non-software renderer, not a precise GPU. No timing or GPU figures were taken in Firefox. WebKit was not tried: it needs a hardware path that the owner's Safari provides.
+
+## 7. Current status of every item
 
 | Item | Status | Reason |
 | --- | --- | --- |
-| Desktop hardware (wide and tablet tier) | OPEN | not run; the owner deferred hardware evidence on 2026-10-13 |
-| Android phone, ≤ 4 cores, Chrome (compact tier) | OPEN | same |
-| iPhone, Safari (compact tier) | OPEN | same |
-| NVDA with Firefox | OPEN | same |
-| VoiceOver on iOS | OPEN | same |
-| `CONNECTED_LIVE_POLICY` | `{ wide: false, compact: false }` | OD-4: a tier is enabled only with passing evidence |
+| Desktop hardware (wide and tablet tier) | **FAIL (candidate evidence), hidden OPEN** | the active-scroll frame interval p95 is 34.1 ms against 20 ms on the RTX 2060 (section 6); every other measured row passes; the hidden checkpoint could not be reached by automation and needs a manual run |
+| Android phone, ≤ 4 cores, Chrome (compact tier) | OPEN | not run; needs the phone |
+| iPhone, Safari (compact tier) | OPEN | not run; needs the phone |
+| NVDA with Firefox | OPEN | NVDA is not installed here and installing it is not part of this work; the accessibility-tree dump is a proxy only |
+| VoiceOver on iOS | OPEN | needs the iPhone |
+| Live behavior under real 200% zoom | OPEN | only the viewport-equivalent layout was checked, and only static (the compact tier is off) |
+| Hardware live Firefox | partly done | live activation observed; no timings |
+| Hardware live WebKit | OPEN | not run |
+| Contrast | computed PASS, human review optional | 362 rendered-pixel samples, lowest 5.5:1 |
+| Live-tier vitals | PASS on the desktop candidate | section 6; the compact tier has none |
+| Warm-cache figures from a real live run | done on the desktop candidate | section 6 |
+| `CONNECTED_LIVE_POLICY` | `{ wide: false, compact: false }` | OD-4: a tier is enabled only with passing evidence, and the wide tier has a failing row |
 
 The owner also stated on 2026-10-13 that the manual device checks of Task 8 were successful. That statement is recorded in the Task 8 and W6 receipts as the owner gave it; this repository holds no per-device sheet for it, so it is not repeated here as a PASS for any row above.
