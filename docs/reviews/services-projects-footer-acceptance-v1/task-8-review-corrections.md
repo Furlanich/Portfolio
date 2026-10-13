@@ -63,3 +63,7 @@ The owner's correction instruction covers the necessary host/runtime/controller 
 ## Acceptance and scope
 
 Poster files, project derivatives/originals, baseline images, public copy, Home, budgets, rotation rate and shipped live policy `{ wide: false, compact: false }` are unchanged by the corrections. At the capture dimensions the new projection is identical to the original capture, so the posters need no regeneration. Existing nine poster/two Projects Windows baselines still require owner approval; Linux adoption, real-device/hardware/performance evidence, screen reader/zoom/manual checks, completed PR CI, fresh correction re-review and W6 remain OPEN. This receipt records self-verification only.
+
+## Re-review and owner approval on 2026-10-13
+
+On 2026-10-13 the owner stated, in chat: they approve the live nodes, the start pose and the bead; PR #133's corrections were already re-reviewed by GPT-6.1 Sol; the manual device checks were performed and were successful; and Task 9's hardware evidence is not necessary for now. The "re-review OPEN" and "bead approval OPEN" statuses above were true when written and are superseded by that statement for the re-review (recorded as stated; no separate review record was supplied to this session) and for the bead and the live look (owner-approved). Nothing earlier in this receipt is rewritten.
