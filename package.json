@@ -19,6 +19,8 @@
     "verify:static-export": "node scripts/verify-static-export.mjs",
     "measure:immersive": "node scripts/measure-immersive-production.mjs",
     "measure:home-vitals": "node scripts/measure-home-web-vitals.mjs",
+    "measure:connected-studio": "node scripts/measure-connected-studio-production.mjs",
+    "measure:connected-studio-vitals": "node scripts/measure-connected-studio-vitals.mjs",
     "typecheck": "tsc --noEmit --incremental false",
     "validate": "npm run docs:check && npm test && npm run lint && npm run typecheck && npm run build"
   },
