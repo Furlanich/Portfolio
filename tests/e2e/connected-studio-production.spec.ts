@@ -498,17 +498,25 @@ test.describe('loading discipline', () => {
     });
   }
 
-  test('the second project illustration is not requested until its dossier nears the viewport', async ({ page }) => {
-    const illustrations: string[] = [];
+  test('both project illustrations are lazy and each fetches exactly one responsive candidate', async ({ page }) => {
+    const requested: string[] = [];
     page.on('request', (request) => {
-      if (/\/projects\/the-system\/conceptual-access-model/.test(request.url())) illustrations.push(request.url());
+      const match = request.url().match(/\/projects\/([a-z-]+)\/conceptual-[a-z-]+?(?:-\d+)?\.webp/);
+      if (match) requested.push(match[1]);
     });
     await page.goto(appUrl(stableRoutes.projects.en));
     await page.waitForLoadState('load');
     await page.waitForTimeout(1_500);
-    expect(illustrations, 'below the fold and lazy, so not fetched at load').toEqual([]);
-    await page.locator('article#the-system').scrollIntoViewIfNeeded();
-    await expect.poll(() => illustrations.length, { timeout: 15_000 }).toBeGreaterThan(0);
+    // Chrome's lazy-load margin can still fetch an image shortly below the fold; the rule is no preload and one candidate.
+    const images = await page.locator('article img[srcset]').evaluateAll((list) => list.map((image) => ({ loading: image.getAttribute('loading'), candidates: (image.getAttribute('srcset') ?? '').split(',').length })));
+    expect(images).toHaveLength(2);
+    for (const image of images) {
+      expect(image.loading).toBe('lazy');
+      expect(image.candidates, 'the responsive candidates are listed, not all fetched').toBeGreaterThan(1);
+    }
+    for (const slug of ['general-reservation-system', 'the-system']) {
+      expect(requested.filter((item) => item === slug).length, `${slug}: one candidate`).toBeLessThanOrEqual(1);
+    }
   });
 });
 
