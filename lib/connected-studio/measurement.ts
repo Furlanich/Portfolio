@@ -161,3 +161,81 @@ export function chunkImports(source: string, ownPath: string): string[] {
   found.delete(ownPath);
   return [...found];
 }
+
+export type Rgb = readonly [number, number, number];
+export type Verdict = 'PASS' | 'FAIL' | 'OPEN';
+
+const channel = (value: number): number => {
+  const unit = value / 255;
+  return unit <= 0.03928 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4;
+};
+const luminance = ([r, g, b]: Rgb): number => 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+
+/** WCAG 2 contrast ratio, symmetric, from 1 to 21. */
+export function contrastRatio(a: Rgb, b: Rgb): number {
+  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (dark + 0.05);
+}
+
+/** The lowest contrast of a text colour against every background sample behind it: the worst pixel decides. */
+export function worstContrast(text: Rgb, backgrounds: readonly Rgb[]): number {
+  if (!backgrounds.length) throw new Error('worstContrast needs at least one background sample');
+  return Math.min(...backgrounds.map((background) => contrastRatio(text, background)));
+}
+
+/**
+ * A measured value against its limit. A missing value is OPEN, never a passing zero: "max" is inclusive
+ * (value <= limit), "below" is strict (value < limit).
+ */
+export function judgeMetric(value: number | null | undefined, limit: number, direction: 'max' | 'below' = 'max'): Verdict {
+  if (typeof value !== 'number' || Number.isNaN(value)) return 'OPEN';
+  return (direction === 'max' ? value <= limit : value < limit) ? 'PASS' : 'FAIL';
+}
+
+export type HardwareMetrics = {
+  activeIntervalP95Ms?: number | null;
+  renderCpuP95Ms?: number | null;
+  renderGpuP95Ms?: number | null;
+  interactionTaskMaxMs?: number | null;
+  drawCallsMax?: number | null;
+  pixelRatio?: number | null;
+  ambientFps?: number | null;
+  pausedDraws?: number | null;
+  pausedRafCalls?: number | null;
+  hiddenDraws?: number | null;
+  footerDraws?: number | null;
+  maxContexts?: number | null;
+  listenerGrowth?: number | null;
+};
+
+/**
+ * The plan's pass criteria (Task 9, hardware protocol) per tier. Every row must pass for the tier; a row that
+ * fails fails the run even if another is unmeasured, and an unmeasured row leaves the run OPEN. The CPU submit
+ * time is a CPU-only estimate and is never called a GPU measurement: the GPU row needs timer queries.
+ */
+export function judgeHardware(metrics: HardwareMetrics, tier: 'wide' | 'compact'): {
+  verdict: Verdict;
+  rows: Record<keyof HardwareMetrics, { value: number | null | undefined; limit: number; verdict: Verdict }>;
+} {
+  const wide = tier === 'wide';
+  const limits: Record<keyof HardwareMetrics, [number, 'max' | 'below']> = {
+    activeIntervalP95Ms: [20, 'max'],
+    renderCpuP95Ms: [20, 'max'],
+    renderGpuP95Ms: [20, 'max'],
+    interactionTaskMaxMs: [50, 'below'],
+    drawCallsMax: [wide ? 28 : 18, 'max'],
+    pixelRatio: [wide ? 1.5 : 1.25, 'max'],
+    ambientFps: [wide ? 30 : 20, 'max'],
+    pausedDraws: [0, 'max'],
+    pausedRafCalls: [0, 'max'],
+    hiddenDraws: [0, 'max'],
+    footerDraws: [0, 'max'],
+    maxContexts: [1, 'max'],
+    listenerGrowth: [2, 'max'],
+  };
+  const rows = Object.fromEntries(
+    (Object.keys(limits) as (keyof HardwareMetrics)[]).map((key) => [key, { value: metrics[key], limit: limits[key][0], verdict: judgeMetric(metrics[key], limits[key][0], limits[key][1]) }]),
+  ) as Record<keyof HardwareMetrics, { value: number | null | undefined; limit: number; verdict: Verdict }>;
+  const verdicts = Object.values(rows).map((row) => row.verdict);
+  return { verdict: verdicts.includes('FAIL') ? 'FAIL' : verdicts.includes('OPEN') ? 'OPEN' : 'PASS', rows };
+}

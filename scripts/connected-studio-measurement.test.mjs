@@ -11,11 +11,15 @@ const {
   attributeShifts,
   buildRouteClosure,
   chunkImports,
+  contrastRatio,
   crossCheckClosure,
+  judgeHardware,
+  judgeMetric,
   measureOptionalClosure,
   missingInteractions,
   OPTIONAL_CLOSURE_LIMIT_BYTES,
   validateVitalsOptions,
+  worstContrast,
 } = await import('../lib/connected-studio/measurement.ts');
 
 const KIB = 1024;
@@ -157,4 +161,41 @@ test('the imports of a chunk are the other chunk files its async loaders name, e
     ' and a media file "static/media/font.woff2" and a note about static/chunks without a file';
   assert.deepEqual(chunkImports(source, 'chunks/self.js'), ['chunks/a.js', 'chunks/b.css']);
   assert.deepEqual(chunkImports('no loaders here', 'chunks/self.js'), []);
+});
+
+// --- Hardware candidate evidence (verdicts and contrast) ---------------------------------------------
+
+test('contrast ratios follow WCAG 2 and the worst background decides', () => {
+  assert.equal(Math.round(contrastRatio([0, 0, 0], [255, 255, 255])), 21);
+  assert.equal(contrastRatio([255, 255, 255], [0, 0, 0]), contrastRatio([0, 0, 0], [255, 255, 255]), 'symmetric');
+  // #777777 on white is the classic 4.48:1 near-miss.
+  assert.equal(+contrastRatio([0x77, 0x77, 0x77], [255, 255, 255]).toFixed(2), 4.48);
+  // Light text over a mostly dark field with one bright patch: the bright patch is the worst case.
+  const worst = worstContrast([249, 246, 238], [[6, 18, 31], [10, 30, 51], [200, 200, 200]]);
+  assert.equal(+worst.toFixed(2), +contrastRatio([249, 246, 238], [200, 200, 200]).toFixed(2));
+  assert.throws(() => worstContrast([0, 0, 0], []), /background/);
+});
+
+test('a metric that was not measured is OPEN, never a passing zero', () => {
+  assert.equal(judgeMetric(12, 20), 'PASS');
+  assert.equal(judgeMetric(20, 20), 'PASS', 'a max limit is inclusive');
+  assert.equal(judgeMetric(21, 20), 'FAIL');
+  assert.equal(judgeMetric(0, 20), 'PASS', 'a measured zero is a real zero');
+  for (const missing of [null, undefined, Number.NaN]) assert.equal(judgeMetric(missing, 20), 'OPEN');
+  assert.equal(judgeMetric(49.9, 50, 'below'), 'PASS');
+  assert.equal(judgeMetric(50, 50, 'below'), 'FAIL', 'the scene interaction task must stay strictly under 50 ms');
+});
+
+test('the hardware verdict is PASS only when every row passes, FAIL if any fails and OPEN if any is unmeasured', () => {
+  const passing = {
+    activeIntervalP95Ms: 16.7, renderCpuP95Ms: 3, renderGpuP95Ms: 2, interactionTaskMaxMs: 30, drawCallsMax: 20,
+    pixelRatio: 1, ambientFps: 30, pausedDraws: 0, pausedRafCalls: 0, hiddenDraws: 0, footerDraws: 0, maxContexts: 1, listenerGrowth: 0,
+  };
+  assert.equal(judgeHardware(passing, 'wide').verdict, 'PASS');
+  assert.equal(judgeHardware({ ...passing, drawCallsMax: 29 }, 'wide').verdict, 'FAIL');
+  assert.equal(judgeHardware({ ...passing, drawCallsMax: 20 }, 'compact').verdict, 'FAIL', 'compact allows 18 draw calls');
+  assert.equal(judgeHardware({ ...passing, ambientFps: 30 }, 'compact').verdict, 'FAIL', 'compact ambient cadence is 20 fps');
+  assert.equal(judgeHardware({ ...passing, renderGpuP95Ms: null }, 'wide').verdict, 'OPEN', 'no GPU timer, no GPU claim');
+  assert.equal(judgeHardware({ ...passing, renderGpuP95Ms: null, drawCallsMax: 99 }, 'wide').verdict, 'FAIL', 'a failure outranks an unmeasured row');
+  assert.equal(judgeHardware({ ...passing, pausedDraws: 3 }, 'wide').rows.pausedDraws.verdict, 'FAIL');
 });
