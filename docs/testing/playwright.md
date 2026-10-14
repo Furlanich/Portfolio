@@ -10,7 +10,7 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 ---
 
 # Playwright QA
@@ -49,7 +49,7 @@ Mobile WebKit link tabbing depends on host Safari Full Keyboard Access, so exact
 
 PR #126 correction coverage also checks initially hidden activation, both disabled-tier resize directions, and a retained Home renderer beyond the bounded deferral. The Node host suite executes the actual React effect with a deferred optional-module promise to test changed preferences/session/policy/visibility, cancellation, eligible attachment and import rejection. Navigation regressions use the shipped smooth-scroll CSS: ordinary Services/Projects links from Header, Footer and page content use the existing `#site-top` target and land at the top in both locales. The render-nothing `PageTopNavigation` leaf finishes an explicit click after Next's layout scroll/focus; modified clicks and browser history do not request this reset. Intentional dossier and service-section fragments retain their anchor behavior.
 
-`playwright.config.ts` registers the connected-studio spec families for Services, Projects and the shared Footer ahead of the specs themselves, so each later task adds its spec without a config change. The specs land in PLAN-SPF-V1 Tasks 3–9. Until a spec exists, `npx playwright test --list` shows no tests for it, and "no tests found" is never a pass for a spec that does exist. `scripts/connected-studio-harness.test.mjs` asserts this table against the listed project configuration.
+`playwright.config.ts` registered the connected-studio spec families for Services, Projects and the shared Footer ahead of the specs themselves, so each task added its spec without a config change. All of them now exist (PLAN-SPF-V1 Tasks 3 to 9) and every row below lists tests; "no tests found" is never a pass for a spec that exists. `scripts/connected-studio-harness.test.mjs` asserts this table against the listed project configuration.
 
 | Spec (`tests/e2e/`) | Projects |
 | --- | --- |

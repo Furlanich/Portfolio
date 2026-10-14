@@ -18,7 +18,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - PLAN-SPF-V1
-last_verified: 2026-10-05
+last_verified: 2026-10-14
 ---
 
 # Current system
@@ -26,6 +26,8 @@ last_verified: 2026-10-05
 ## Scope
 
 This record includes the retained pre-cutover personal-portfolio implementation and the current Task 2 commercial homepage, Projects index, Task 3 project-detail and Privacy state, and Task 4 project cleanup. The fourteen approved foundation routes implement the documented Spanish-root and English-/en/ route pairs; the current Projects slice adds six paired static detail artifacts for the three approved slugs. Obsolete project JSON, project-only types/exports, animated Card code, and unapproved legacy SVG assets are retired; unrelated founder data and shared primitives remain available to their consumers.
+
+Since 2026-10-14 it also records the Services, Projects and Footer v1 implementation as shipped (see "Current Services, Projects and Footer v1 implementation" below); where an earlier Projects section here describes the three image-free cards, the six detail artifacts or twenty exported routes, that section is dated history and the SPF section is current.
 
 Since 2026-10-05 it also records the Sky Chart Home and App Bar as shipped (see "Current Sky Chart Home and App Bar implementation" below). Where an older section here describes the sticky white-Surface header or the C2 homepage instrument, that section is dated history and the Sky Chart section is current.
 
@@ -168,12 +170,16 @@ Content is oriented toward personal credentials and recruiters rather than the a
 
 ## Current Projects index implementation — Task 2
 
+> **Dated history (2026-10-14).** Superseded by PLAN-SPF-V1: the Projects index now renders two inline dossiers and the project-detail routes and the third (MPC) card are retired. See "Current Services, Projects and Footer v1 implementation" below.
+
 - `/proyectos/` and `/en/work/` render one shared `ProjectsPage` Server Component with three image-free cards in approved order: General Reservation System, The-System, then MPC Administración.
 - The typed public manifest is the only project enumeration source. All three entries are `limited`, detail-destination records with approved repository evidence and labeled conceptual visuals; the index remains card-only and image-free. The removed legacy project JSON is no longer an application source.
 - Cards expose maturity, context, evidence signal, natural summaries, two or three non-interactive capability tags, and one explicit source link. The publication-scope note and inquiry CTA remain visible in normal reading order; no filter, group, empty state, whole-card interaction, or client boundary was added. Detail assets are labeled conceptual and are not runtime evidence.
 - Shared header/footer navigation now exposes localized Projects/Work and Privacy links, while the language switch maps index, Privacy, and detail routes while detail pages preserve the stable slug (`/proyectos/[projectSlug]/` ↔ `/en/work/[projectSlug]/`). Normal and `/Portfolio` static artifact verification covers twenty routes: fourteen foundation/index artifacts plus six paired detail artifacts. The current Playwright baseline exercises the public foundation, Services, Projects, Privacy, and nested Founder routes without changing their product behavior.
 
 ## Current Projects cleanup implementation — Task 4
+
+> **Dated history (2026-10-14).** `public/projects/` no longer holds only three detail visuals, and the export no longer has twenty artifacts: see "Current Services, Projects and Footer v1 implementation" below for the current set.
 
 - Consumer search proved that `data/projects.json`, the project-only `Project` type/export, and `components/core/Card.tsx` had no active consumers. They were removed without deleting the unrelated founder datasets or shared foundation/commercial primitives.
 - The eight unapproved legacy SVGs were removed after confirming the three approved conceptual WebPs were present under stable slug directories. `public/projects/` now contains only those three approved detail visuals.
@@ -222,6 +228,38 @@ Delivered by [`PLAN-SKY-CHART-HOME-REDESIGN-V2`](../plans/completed/sky-chart-ho
 - **Production measurements:** `measure:immersive` gates the lazy runtime chunk plus `three`, draw calls, label textures, idle frames, pixel ratio, backdrop surfaces and the canvas and listener lifecycle on a production build at the root base path. `measure:home-vitals` gates LCP, INP and whole-page CLS (≤0.1). Both observe the WebGL API and the browser through `tests/e2e/support/production-instrumentation.mjs`. The `/Portfolio` build is covered by the acceptance spec and `verify:static-export`.
 - **Known limits:** SwiftShader frame and interaction numbers are advisory, Firefox and WebKit never activate the runtime in headless automation, and no real-device or screen-reader result exists yet (see the acceptance record).
 
+## Current Services, Projects and Footer v1 implementation — PLAN-SPF-V1
+
+Delivered by [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md) (Tasks 1 to 9 merged); the evidence, open items and owners are in the [acceptance record](../reviews/services-projects-footer-acceptance-v1/index.md). The architecture map ([ARCHITECTURE-MAP](../../ARCHITECTURE.md#services-projects-and-footer-v1-current-implementation)) owns the summary; this section records the implementation facts. Routes, static export, trailing slashes and the optional base path are unchanged and no dependency was added. Both live tiers are off.
+
+### Projects
+
+- `/proyectos/` and `/en/work/` render one shared `ProjectsPage` with the introduction, the capability legend and two complete dossiers (`components/projects/ProjectDossier.tsx`): General Reservation System, then The-System. Each has its context, problem, implemented scope, source, evidence, limitations and permitted concept. The fragments are `#general-reservation-system` and `#the-system`.
+- There are no project-detail routes. The six URLs `/proyectos/{general-reservation-system,the-system,mpc-administracion}/` and `/en/work/{general-reservation-system,the-system,mpc-administracion}/` are retired with no redirect or compatibility page. MPC remains only as 2021 educational, group, fictional context on Founder; Busesfy, Chrono and Documancer stay excluded.
+- `lib/projects/publication.ts` is the typed, fail-closed publication module: `publishedProjectManifest`, `validateProjectManifest`, `validateProjectContent` and `getPublishedProjectDossiers(content, locale)`, which resolves exactly two dossiers. `lib/site-routes.ts` exposes `getProjectDossierHref`, and `lib/project-dossier-navigation.ts` lets the language switch keep a known dossier fragment on a Projects index and otherwise land on the equivalent index.
+
+### The connected scene
+
+- The scene is optional and sits behind readable server HTML. `lib/connected-studio/` holds the pure logic (`types`, `model`, `labels`, `controller`, `capability`, `session`, `content`, `media-manifest`, `frame-scheduler`, `measurement`); `components/connected-studio/` holds `ConnectedStudioGround` (server), `ConnectedStudioEnhancement` (the thin client lifecycle leaf) and `ConnectedPauseControl`; `components/connected-studio/runtime/` holds the Three engine, loaded by a dynamic import inside the client leaf after load, visibility, preferences, policy and a coarse WebGL probe.
+- `chooseConnectedMode` fails closed: every condition must be the exact expected boolean, including `CONNECTED_LIVE_POLICY[tier]`. The shipped policy is `{ wide: false, compact: false }`, so no page imports the engine. A test-only hook (`window.__FURLANICH_CONNECTED_TEST__`, set through `addInitScript`) lets the specs open the gate; production measurements never set it.
+- Wide and tablet use 16 nodes and 33 connections, compact 8 and 13; reduced motion, Save-Data, forced colors, no WebGL2, a software renderer, a context loss (session-wide) and a module or image failure all keep the static page. Pause persists across the connected routes and locales for the session.
+- The host scheduler runs frames on animation frames (PR #139). On the desktop candidate the live scene's cadence during scroll is not reliably within its budget; see the acceptance record.
+
+### Media
+
+- Four posters, `public/brand/connected-studio/{services,projects}-{wide,compact}.webp`: 87,164 bytes wide (1920×1080, ceiling 150 KiB) and 50,434 bytes compact (900×1600, ceiling 80 KiB), identical for both routes, selected by CSS at 768 px.
+- The two concept images keep their original 1599×900 WebPs and add 640, 960 and 1280 pixel derivatives (`conceptual-workflow-{640,960,1280}.webp`: 16,232, 28,012 and 37,144 bytes; `conceptual-access-model-{640,960,1280}.webp`: 18,492, 25,970 and 36,710 bytes), listed in the dossier image's `srcset` by `lib/projects/illustration-variants.ts`. The deleted MPC concept (`public/projects/mpc-administracion/`) is gone.
+
+### Footer
+
+- `components/foundation/SiteFooter.tsx` renders the protected-mark Azure conclusion with `data-site-footer`: the whole Bone mark beside FURLANICH (`FooterBrandSignature`), a complete static watermark, WhatsApp as the primary action, then email and phone, from `footer-content.ts`. It is on all fourteen foundation routes (Home, Services, Projects, Studio, Founder, Privacy and Contact in both locales). There is no Footer WebGL.
+
+### Static export, base path and verification
+
+- The export has fourteen routes at the root and under `/Portfolio`, with no project-detail artifact; `npm run verify:static-export` checks both and fails on any retired artifact, payload link or leaked identity.
+- `scripts/serve-static-export.mjs` serves a clean `out/` like GitHub Pages: files and `<dir>/index.html` under the base path, a 301 from a directory without its slash, `max-age=600`, and a real 404 for anything else, never an index; on a Windows export it maps the dotted segment-prefetch request to the nested file. `PLAYWRIGHT_SERVE_EXPORT=1` runs only `connected-production-chromium` against it.
+- Measurements: `npm run measure:connected-studio` (the optional engine closure, 114.4 KiB Brotli in two chunks against 120 KiB; the posters), `npm run measure:connected-studio-vitals` (synthetic lab LCP and INP, enhancement layout shift) and the hardware-candidate script `scripts/measure-connected-studio-hardware.mjs` run by hand against a private candidate. None sets the connected test hook. The [W7 checkpoint](../reviews/services-projects-footer-acceptance-v1/w7-checkpoint.md) records the results on merged `main` at `77ccb9f1`.
+
 ## Environment
 
 Local `.env` files exist and are intentionally not documented or read into the knowledge base. Public documentation must never reproduce secrets.
@@ -237,4 +275,4 @@ The local browser layer is independently runnable through `test:e2e` and `test:a
 
 MKT-DOC-001 synchronization at main 7062bda: Studio and Founder are fully materialized as distinct ES/EN route pairs, with shared server compositions and route-owned content. Navigation targets Studio; Founder remains nested/secondary. The [completed Studio/Founder plan](../plans/completed/studio-founder-completion.md) records PR #40 and preserved biography, experience, education, capabilities, CV and professional links. Earlier minimum-Founder and pre-cutover descriptions above are dated history, not outstanding implementation work.
 
-The three permitted project records have six static details and approved captioned conceptual visuals; no runtime-evidence upgrade follows. The current index still includes MPC. The [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/marketing-presentation-excellence-v1.md) records the T1–T6 delivery of the editorial selection/publication boundary, localized disclosure rendering, accepted navigation/presentation revisions and final audit. Those changes remain bounded by their approved owners; D03 and the runtime-evidence limits remain effective, and the header remains a native server-rendered disclosure.
+The three permitted project records had six static details and approved captioned conceptual visuals when this baseline was recorded; no runtime-evidence upgrade followed. The index then included MPC (since retired from the index by PLAN-SPF-V1, which keeps it only as 2021 educational context on Founder). The [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/marketing-presentation-excellence-v1.md) records the T1–T6 delivery of the editorial selection/publication boundary, localized disclosure rendering, accepted navigation/presentation revisions and final audit. Those changes remain bounded by their approved owners; D03 and the runtime-evidence limits remain effective, and the header remains a native server-rendered disclosure.
