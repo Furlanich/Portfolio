@@ -10,7 +10,7 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-13
+last_verified: 2026-10-14
 ---
 
 # Playwright QA
@@ -49,7 +49,7 @@ Mobile WebKit link tabbing depends on host Safari Full Keyboard Access, so exact
 
 PR #126 correction coverage also checks initially hidden activation, both disabled-tier resize directions, and a retained Home renderer beyond the bounded deferral. The Node host suite executes the actual React effect with a deferred optional-module promise to test changed preferences/session/policy/visibility, cancellation, eligible attachment and import rejection. Navigation regressions use the shipped smooth-scroll CSS: ordinary Services/Projects links from Header, Footer and page content use the existing `#site-top` target and land at the top in both locales. The render-nothing `PageTopNavigation` leaf finishes an explicit click after Next's layout scroll/focus; modified clicks and browser history do not request this reset. Intentional dossier and service-section fragments retain their anchor behavior.
 
-`playwright.config.ts` registers the connected-studio spec families for Services, Projects and the shared Footer ahead of the specs themselves, so each later task adds its spec without a config change. The specs land in PLAN-SPF-V1 Tasks 3–9. Until a spec exists, `npx playwright test --list` shows no tests for it, and "no tests found" is never a pass for a spec that does exist. `scripts/connected-studio-harness.test.mjs` asserts this table against the listed project configuration.
+`playwright.config.ts` registered the connected-studio spec families for Services, Projects and the shared Footer ahead of the specs themselves, so each task added its spec without a config change. All of them now exist (PLAN-SPF-V1 Tasks 3 to 9) and every row below lists tests; "no tests found" is never a pass for a spec that exists. `scripts/connected-studio-harness.test.mjs` asserts this table against the listed project configuration.
 
 | Spec (`tests/e2e/`) | Projects |
 | --- | --- |
@@ -84,7 +84,7 @@ Set `PLAYWRIGHT_SERVE_EXPORT=1` to test the exported site instead of the develop
 - A Windows export nests the segment-prefetch files that Linux builds (GitHub Pages) name with dots: the router requests `__next.<group>.<a>.<b>.txt` and Windows writes `__next.<group>/<a>/<b>.txt`. The server maps the dotted request to the nested file when no file has that name, and still answers 404 for a name with no file. Without that mapping every client navigation on Windows logged five 404 console errors that CI never sees.
 - `connected-studio-production.spec.ts` (Task 9) drives the export: the six retired URLs are real 404s with no residual file or link; recognized and unknown fragments and the locale switch; the Home → Services → Projects → locale switch → Founder → Contact journey, following the rendered Founder link and Contact action, with back and forward through that real history, the scene disposed on each route change and at most one WebGL context at a time; Pause persistence across routes and locales; labels in the current locale only; no listener growth over repeated route changes; a lost context, a delayed or failed engine import and a failed poster; reduced motion, forced colors, Save-Data, no WebGL2, the shipped policy and a rejected software renderer, none of which request the engine; the loading rules (no preload hints, lazy illustrations); a functional cross-check that a live load requests exactly the closure the emitted export names, and that a second route reuses it from the HTTP cache; and the no-JavaScript pages. Production builds compile the diagnostics hook out, so the spec observes the DOM, the network and the WebGL API. Engine chunk names are read from the emitted export, since the file names are hashed. Live cases use the controlled test hook on SwiftShader and are functional evidence only.
 - Compose URLs as `appUrl(index) + '#slug'`: `appUrl` appends a trailing slash, so a hash must not be placed inside its route argument.
-- Clean-build, base-path and measurement procedure: [PLAN-SPF-V1, Verification commands](../plans/active/services-projects-footer-v1.md#verification-commands-artifact-hygiene-and-manual-procedure).
+- Clean-build, base-path and measurement procedure: [PLAN-SPF-V1, Verification commands](../plans/completed/services-projects-footer-v1.md#verification-commands-artifact-hygiene-and-manual-procedure).
 
 ### Production measurements (PLAN-SPF-V1 Task 9)
 

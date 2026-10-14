@@ -16,7 +16,7 @@ last_verified: 2026-10-07
 
 ## Context
 
-The FURLANICH ADE runs work through Claude Code and Codex. It uses repository Skills, vendored third-party Skills, user-level plugins and the ADE v2 plan mechanics: task/PR packets, waves, locks, receipts and independent review. Those mechanics come from the [Sky Chart plan](../plans/completed/sky-chart-home-redesign-v2.md#24-sequential-integration-procedure) and [PLAN-SPF-V1](../plans/active/services-projects-footer-v1.md#model-routing). The [current-state findings](../plans/completed/ade-agent-usage-optimization-v1.md#current-state-findings) map every layer.
+The FURLANICH ADE runs work through Claude Code and Codex. It uses repository Skills, vendored third-party Skills, user-level plugins and the ADE v2 plan mechanics: task/PR packets, waves, locks, receipts and independent review. Those mechanics come from the [Sky Chart plan](../plans/completed/sky-chart-home-redesign-v2.md#24-sequential-integration-procedure) and [PLAN-SPF-V1](../plans/completed/services-projects-footer-v1.md#model-routing). The [current-state findings](../plans/completed/ade-agent-usage-optimization-v1.md#current-state-findings) map every layer.
 
 ## Problem
 

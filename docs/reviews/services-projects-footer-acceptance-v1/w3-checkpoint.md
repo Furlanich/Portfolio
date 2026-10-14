@@ -13,7 +13,7 @@ last_verified: 2026-10-09
 
 # W3 checkpoint — 2026-10-09
 
-**Checkpoint result: PASS**, completed at 2026-10-09T19:53:18Z (16:53:18 America/Buenos_Aires). This is fresh post-merge evidence for the [W3 checkpoint](../../plans/active/services-projects-footer-v1.md#wave-checkpoints), not final SPF acceptance or a new design approval. The receipt stays PROPOSED pending this documentation PR's independent review and human merge.
+**Checkpoint result: PASS**, completed at 2026-10-09T19:53:18Z (16:53:18 America/Buenos_Aires). This is fresh post-merge evidence for the [W3 checkpoint](../../plans/completed/services-projects-footer-v1.md#wave-checkpoints), not final SPF acceptance or a new design approval. The receipt stays PROPOSED pending this documentation PR's independent review and human merge.
 
 ## Source and execution
 
@@ -70,7 +70,7 @@ Historical transfers are mirrored from Task 4's append-only receipt, retaining o
 | SERVICES / CONNECTED-GROUND | Released at W2 by Task 3; whole Services test transfer already recorded | Available to Task 6 under exact packet, Ground static defects only; no dispatch/acquisition claimed |
 | PLAN-RECORD / checkpoint docs | Current orchestrator, session start, 2026-10-09 | Retains Progress coordination; docs-only branch mirrors ledger for human review |
 
-`sky-chart-acceptance.spec.ts` stayed read-only; no conditional Footer-region transfer was needed. Task 6 records its own acquisitions under the existing [write set](../../plans/active/services-projects-footer-v1.md#task-6-pr-6-deliver-the-atlas-services-composition-and-boundaries). Releases are not blanket later-task permission.
+`sky-chart-acceptance.spec.ts` stayed read-only; no conditional Footer-region transfer was needed. Task 6 records its own acquisitions under the existing [write set](../../plans/completed/services-projects-footer-v1.md#task-6-pr-6-deliver-the-atlas-services-composition-and-boundaries). Releases are not blanket later-task permission.
 
 ## Next boundary and acceptance
 

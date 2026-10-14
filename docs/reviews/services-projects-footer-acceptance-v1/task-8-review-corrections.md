@@ -1,6 +1,6 @@
 # Task 8 — corrections following independent review, 2026-10-12
 
-Scope: owner-authorized corrections to [PR #132](https://github.com/Furlanich/Portfolio/pull/132), following [independent review #133](https://github.com/Furlanich/Portfolio/pull/133) of pinned head `07d1c9279c0ca07f4b0913b6221deae68bc68d2f`. Authority: [PLAN-SPF-V1](../../plans/active/services-projects-footer-v1.md), [DESIGN-SPF-V1](../../design/services-projects-footer-v1.md), original [Task 8 receipt](task-8.md). This is an implementation/self-verification receipt; it does not supersede the independent review or grant acceptance.
+Scope: owner-authorized corrections to [PR #132](https://github.com/Furlanich/Portfolio/pull/132), following [independent review #133](https://github.com/Furlanich/Portfolio/pull/133) of pinned head `07d1c9279c0ca07f4b0913b6221deae68bc68d2f`. Authority: [PLAN-SPF-V1](../../plans/completed/services-projects-footer-v1.md), [DESIGN-SPF-V1](../../design/services-projects-footer-v1.md), original [Task 8 receipt](task-8.md). This is an implementation/self-verification receipt; it does not supersede the independent review or grant acceptance.
 
 Agent usage: primary GPT-6 (Codex; exact provider model identifier/settings unavailable); subagents 0/0 (none). SINGLE_AGENT / IMPLEMENTATION. The initially independent reviewer became the correction implementer at the owner's request. Fresh separate-session re-review is OPEN.
 

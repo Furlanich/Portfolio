@@ -10,7 +10,8 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - DESIGN-SPF-V1
   - PLAN-SPF-V1
-last_verified: 2026-10-10
+  - REVIEW-SPF-ACCEPTANCE-V1
+last_verified: 2026-10-14
 ---
 
 # Visual regression policy
@@ -60,3 +61,4 @@ PLAN-SPF-V1 assigns these baselines to one task at a time, in the order Task 3 (
 - The Home-section and Services/Projects captures retain the old neighboring Footer separator through capture-only CSS (`border-top: 1px solid #D3D4D2`). Fractional element bounds can include one pixel of the following Footer; otherwise the approved Azure redesign changes unrelated Home/Projects snapshots. Their subjects and existing baseline files stay unchanged. The Footer's own spec captures the actual production surface without this separator. This narrow capture-boundary transfer belongs to the owner-authorized Task 4 correction, recorded in its receipt.
 - Reduced motion is on for the `visual-chromium` project, so there is no hover state, zoom or canvas in any capture.
 - Windows baselines are captured locally. Linux baselines are adopted from the failed CI run's `*-actual.png` files for exactly these cases and never in bulk.
+- **Acceptance link (2026-10-14).** PLAN-SPF-V1 Tasks 9 and 10 changed no baseline. The approval state of each row above is exactly what its receipt records; the [acceptance record](../reviews/services-projects-footer-acceptance-v1/index.md) lists the approvals that remain OPEN. Nothing here is rewritten by that record.

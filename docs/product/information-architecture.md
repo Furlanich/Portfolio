@@ -53,7 +53,7 @@ English is secondary:
 
 Project detail pages exist only when the disclosure level supports meaningful content. Restricted production summaries do not require a detail route.
 
-**Dated target note — 2026-10-05:** the [project-slug] detail routes are retired by [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) (PLAN-SPF-V1 Task 3). Until that task merges, the tree above describes the current implementation.
+**Dated target note — 2026-10-05:** the [project-slug] detail routes are retired by [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) (PLAN-SPF-V1 Task 3). Until that task merges, the tree above describes the current implementation. **Update — 2026-10-14:** Task 3 merged ([PR #108](https://github.com/Furlanich/Portfolio/pull/108)); the `[project-slug]` detail routes in the tree above no longer exist and are historical (see the [acceptance record](../reviews/services-projects-footer-acceptance-v1/index.md)).
 
 ## Primary navigation
 
@@ -227,7 +227,7 @@ The [completed PLAN-MARKETING-PRESENTATION-EXCELLENCE](../plans/completed/market
 
 ## SPF-V1 proposed Footer copy and route retirement
 
-**APPROVED by the owner — 2026-09-30, Revision 5 written specification and copy.** The owner requested definitive deletion of all three ES/EN project-detail pairs, with no compatibility pages or redirects; MPC stays on Founder; GRS and The-System are complete index dossiers. Footer copy/composition and the bounded route/runtime supersessions are approved. The actual route tree is still unchanged. See the [connected-studio specification](../design/services-projects-footer-v1.md) and [accepted RFC](../rfcs/services-projects-footer-redesign-v1.md).
+**APPROVED by the owner — 2026-09-30, Revision 5 written specification and copy.** The owner requested definitive deletion of all three ES/EN project-detail pairs, with no compatibility pages or redirects; MPC stays on Founder; GRS and The-System are complete index dossiers. Footer copy/composition and the bounded route/runtime supersessions are approved. **Dated implementation note — 2026-10-14:** implemented by PLAN-SPF-V1 Task 3 ([PR #108](https://github.com/Furlanich/Portfolio/pull/108)); the six detail routes are retired and the exported route tree no longer contains them ([acceptance record](../reviews/services-projects-footer-acceptance-v1/index.md)). See the [connected-studio specification](../design/services-projects-footer-v1.md) and [accepted RFC](../rfcs/services-projects-footer-redesign-v1.md).
 
 The target route set retains `/proyectos/` and `/en/work/`. GRS/The-System dossier fragments are `general-reservation-system` and `the-system` in both locales. Services evidence uses the index plus the GRS fragment. Language switching preserves a matching known dossier fragment; unknown fragments fall back to the equivalent index route. No new redirect/rewriting/hosting architecture is selected.
 

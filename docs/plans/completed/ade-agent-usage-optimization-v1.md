@@ -25,7 +25,7 @@ last_verified: 2026-10-07
 
 **Tech stack:** Node test runner (`node --test scripts/*.test.mjs`), `scripts/validate-repository-docs.mjs`, Claude Code 2.1.286 (installed), Codex CLI 0.162.0-alpha.2 (installed). No new dependencies.
 
-**Spec:** The owner's ADE Agent-Usage Optimization brief of 2026-10-07, the [engineering lifecycle](../../governance/engineering-lifecycle.md) and the ADE v2 precedent in [PLAN-SPF-V1](../active/services-projects-footer-v1.md#model-routing).
+**Spec:** The owner's ADE Agent-Usage Optimization brief of 2026-10-07, the [engineering lifecycle](../../governance/engineering-lifecycle.md) and the ADE v2 precedent in [PLAN-SPF-V1](../completed/services-projects-footer-v1.md#model-routing).
 
 ## Current-state findings
 
@@ -36,7 +36,7 @@ last_verified: 2026-10-07
 | Repository instructions | [`AGENTS.md`](../../../AGENTS.md) | Routes to docs, lifecycle, Skills; work contract; `codex/` branches | **No agent-usage rule at all.** Silent on subagents, concurrency, models. |
 | Governance | [Engineering lifecycle](../../governance/engineering-lifecycle.md) | Classifies work, RFC/ADR/plan paths, autonomy and escalation | Silent on delegation. "Agents may inspect, research, ..." without limits. |
 | Plan template | [`docs/plans/template.md`](../template.md) | Section headings only | **No per-task execution section.** No task packet shape. |
-| ADE v2 mechanics | [Sky Chart plan §§16–26](../completed/sky-chart-home-redesign-v2.md#24-sequential-integration-procedure), [PLAN-SPF-V1](../active/services-projects-footer-v1.md#model-routing) | Orchestrator dispatches each task; waves; locks; receipts; independent review | The orchestrator spawns each task as a **subagent** (the SPF ledger in `.superpowers/sdd/services-projects-footer-v1/progress.md` records "Agent model=sonnet, general-purpose" for Tasks 3 and 5). The SPF plan also lets a Sonnet packet hand subtasks to Luna "as a bounded checklist batch", and its header recommends `superpowers:subagent-driven-development`. |
+| ADE v2 mechanics | [Sky Chart plan §§16–26](../completed/sky-chart-home-redesign-v2.md#24-sequential-integration-procedure), [PLAN-SPF-V1](../completed/services-projects-footer-v1.md#model-routing) | Orchestrator dispatches each task; waves; locks; receipts; independent review | The orchestrator spawns each task as a **subagent** (the SPF ledger in `.superpowers/sdd/services-projects-footer-v1/progress.md` records "Agent model=sonnet, general-purpose" for Tasks 3 and 5). The SPF plan also lets a Sonnet packet hand subtasks to Luna "as a bounded checklist batch", and its header recommends `superpowers:subagent-driven-development`. |
 | Claude project config | `.claude/settings.json` | Enables the `brag` plugin only | **No env caps, no permission rules on `Agent`.** |
 | Claude local config (tracked) | `.claude/settings.local.json` | Impeccable hooks | None. |
 | Claude custom agents | `.claude/agents/impeccable-*.md` (4) | `model: inherit`, `maxTurns` 12–30, all omit the `Agent` tool | `model: inherit` runs them on the session model (Opus in an Opus session). |
