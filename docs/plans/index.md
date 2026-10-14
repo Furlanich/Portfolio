@@ -3,6 +3,7 @@ id: PLAN-INDEX
 type: execution-plan-index
 status: APPROVED
 related:
+  - REVIEW-SFC-PLAN-2026-10-14
   - PLAN-SFC-V1
   - REVIEW-SPF-PLAN-2026-09-30
   - PLAN-SPF-V1
@@ -38,7 +39,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-- [PLAN-SFC-V1](active/studio-founder-contact-v1.md): **PROPOSED — revision 1, 2026-10-14; execution NOT AUTHORIZED.** Fifteen ADE v2 task/PR packets for the approved Atlas Studio/Founder/Contact/legal design and shared proximity/strings. GPT-6 Luna High / Claude Sonnet 5 High implementation targets, isolated single-agent worktrees, disjoint waves, strict TDD and separate legal/processor/hardware/activation gates. Q14 approved the complete written design; Q15 approved controlled predeployment probe and immediate deployed-form verification/rollback. Next gate is independent **Claude Opus 5.5 High review-only**, followed by critical finding dispositions and planning-authority revisions. No task has started; current demo/live policies remain effective.
+- [PLAN-SFC-V1](active/studio-founder-contact-v1.md): **PROPOSED revision 2 — 2026-10-14; execution NOT AUTHORIZED.** Nineteen ADE task/PR packets, after [Opus 5.5 High's revision-required review](../reviews/studio-founder-contact-plan-review-2026-10-14.md). Q16 authorizes exact Sonnet 5.5 High/GPT-6 Luna High targets, Q17 coordinated integration-branch release, Q18 copy corrections. Added early risk/shared projection/export ownership/candidate CI/actual integration/static-cost/hardware lanes and planning-authority closeout; retains strict TDD/isolated disjoint ownership. Commercial release does not depend on hardware qualification. All35 findings have critical dispositions; independent re-review/owner acceptance are next. No task started; current demo/live decisions remain effective.
 
 ## Completed
 

@@ -30,6 +30,8 @@ last_verified: 2026-10-14
 
 The owner confirmed the existing GitHub Pages origin and `/Portfolio` for the future commercial release as well as the current demonstration. Real transmission still requires the accepted supersession and matching verified disclosure. This does not change hosting, publish the legal drafts or remove the current demonstration's accurate copy before activation.
 
+Q18 approves the exact corrected Studio H1 and acceptance-only commercial success copy in the page owners. Q17 moves every demo-dependent Studio/Founder/Home/Services/intake/legal change into the coordinated final main release. Original legal wording remains professionally gated; final canonical public-copy blocks and typed-export equivalence are assigned in plan revision 2. Ordinary Terms metadata is specified; new OpenGraph/share imagery remains knowingly deferred outside this initiative.
+
 ## Connected-page copy and fragments — APPROVED 2026-09-30
 
 [DESIGN-SPF-V1](../design/services-projects-footer-v1.md) and linked owning SPF-V1 tables approve the exact Services/Projects/Footer ES/EN copy and eight capability words. Preserve the three family IDs and existing localized service/process fragments. Projects locale switching retains only recognized `general-reservation-system` or `the-system` fragments; unknown fragments use the equivalent index. Both dossier languages retain complete permitted evidence/limitations/concept captions; MPC's Founder action uses the approved source. No inferred translation or publication permission is added. Document-wide PROPOSED status remains unchanged for unrelated open content strategy.

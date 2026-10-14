@@ -41,15 +41,17 @@ This field-level selection closes copy ambiguity for [DESIGN-SFC-V1](../../desig
 
 | Field | Spanish | English |
 | --- | --- | --- |
-| Studio H1 | Un estudio con dirección técnica de principio a fin | A studio with technical leadership from start to finish |
+| Studio H1 | Software a medida con responsabilidad técnica directa. | Custom software with direct technical accountability. |
 | Studio positioning | FURLANICH diseña, desarrolla y mejora software a medida para negocios que necesitan resolver procesos concretos. | FURLANICH designs, builds, and improves custom software for businesses with concrete operational needs. |
-| Studio graph caption | Responsabilidad central, especialidades conectadas. | Central accountability, connected specialisms. |
-| Studio closing description | Omit the demonstration-only sentence; no replacement paragraph | Omit the demonstration-only sentence; no replacement paragraph |
+| Studio graph caption | Responsabilidad central, especialidades conectadas. | Central accountability, connected specialties. |
+| Studio closing description | Omit the demonstration-only sentence only at the coordinated commercial release; no replacement paragraph | Omit the demonstration-only sentence only at the coordinated commercial release; no replacement paragraph |
 | Founder capability introduction | Capacidades para construir y mejorar sistemas | Capabilities for building and improving systems |
 | Founder Projects bridge description | Los proyectos públicos permiten explorar código, contexto y límites. | The public projects let you explore code, context and limitations. |
 | Both pages' final Contact action | Iniciar una consulta | Start an inquiry |
 
 Studio retains the existing eyebrow, accountability/collaborator headings and approved positive paragraphs, four complete principles and their introduction, location/availability, short Founder bridge, and final heading. Its positioning is shortened because the accountability and collaboration sections carry the remaining operating-model facts. It does not repeat the full Founder biography. The separate five-line operating-model list is omitted; its facts remain in the introduction, accountability, collaborator and location sections.
+
+**Q18 amendment APPROVED — 2026-10-14:** the software-focused H1 above replaces the repeated technical-direction H1 selected in revision 1. The caption uses natural US English “specialties”. Both intro actions remain. Q17 stages all page changes on a nondeployed integration branch; every demonstration-dependent Studio/Founder ending/action change takes effect in the same commercial release as Contact/Privacy/Terms/Home/Services. It must not imply working intake while the public form still simulates.
 
 Founder retains the approved role context, name and complete three-paragraph biography before professional links. The short `header.opening` is omitted because the biography already supplies it; no fact is removed. Professional links are underlined text actions with equal secondary treatment, not a solid CV button; their new position follows the owner-confirmed hierarchy. Experience, education, MPC, grouped capabilities, Projects bridge heading/action and final Contact heading/description remain complete. Do not add the employer to the experience timeline, a technology-logo wall, a project-card catalogue or a portrait.
 

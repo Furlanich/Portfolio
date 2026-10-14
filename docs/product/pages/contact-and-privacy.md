@@ -187,9 +187,9 @@ Exact real-submission form and state copy is retained here for the separately ga
 
 **Success**
 
-> Consulta enviada.
+> Mensaje aceptado.
 >
-> Gracias por escribirnos. Samuel revisará personalmente tu mensaje.
+> Tu consulta fue aceptada para su envío. Si necesitás confirmar que Samuel la recibió, usá una opción de contacto directo.
 
 **Failure**
 
@@ -269,9 +269,9 @@ Exact real-submission form and state copy is retained here for the separately ga
 
 **Success**
 
-> Inquiry sent.
+> Message accepted.
 >
-> Thanks for getting in touch. Samuel will personally review your message.
+> Your inquiry was accepted for sending. If you need to confirm Samuel received it, use a direct contact option.
 
 **Failure**
 
@@ -287,7 +287,7 @@ Exact real-submission form and state copy is retained here for the separately ga
 
 **Founder-context link:** `View Samuel's background` → `/en/about/samuel-furlanich/`.
 
-The success message confirms only that the selected provider accepted the submission. It does not claim that Samuel has read it. The failure message never exposes a raw provider response or error identifier.
+**Q18 amendment APPROVED — 2026-10-14:** the success heading/body above supersede “Consulta enviada” / “Inquiry sent” and their guaranteed-review phrasing for commercial activation. They confirm only provider acceptance, not inbox delivery or reading. The failure message never exposes raw provider prose/error identifiers. Demonstration success remains separately mode-owned and unchanged.
 
 ## Form fields and limits — APPROVED
 
@@ -563,6 +563,8 @@ Proposed WhatsApp prefilled message:
 
 > Hola, Samuel. Me contacto desde el sitio de FURLANICH porque quisiera conversar sobre una solución para mi negocio.
 
+This remains an unapproved proposal and is **deferred from PLAN-SFC-V1**. Preserve the current WhatsApp href without adding a prefill or copying form values. No English prefill is needed for a feature not selected for this release.
+
 ### Formspree Free readiness checklist — PROPOSED operational requirements
 
 The owner approved this checklist as a required gate in Q14; its observed account facts remain OPEN until verified. The heading is retained for existing references. Q15 clarifies the release order: legal/account readiness and a labeled owner-run provider probe precede deployment; actual two-locale deployed-form delivery/deletion checks immediately follow the coordinated release, with rollback on failure. These are distinct receipts; the predeployment probe cannot be described as new deployed-form evidence.
@@ -823,6 +825,8 @@ If you choose WhatsApp, email or phone, you use a channel independent of the for
 
 [DESIGN-SFC-V1](../../design/studio-founder-contact-v1.md) retains the dormant commercial H1, introduction, response expectation, four field labels/helpers/errors, required-fields note, privacy context/link, submit/submitting labels, success heading/body and retry label exactly as recorded above. The success confirms provider acceptance, not inbox delivery or reading. A static page cannot detect every exhausted-quota acceptance; the owner checklist owns monitoring and recovery.
 
+The commercial success text now includes the owner-approved Q18 correction. The empty-message error deliberately retains the actionable wording used by the H1, in its associated field context; no new factual claim or error condition is introduced. Legal text and actual processor facts still require professional/operational closure.
+
 The following changes are exact candidate replacements for commercial activation. They do not alter the active demonstration's wording.
 
 | State / field | Spanish | English |
@@ -836,7 +840,21 @@ The following changes are exact candidate replacements for commercial activation
 | Alternative-channel note | WhatsApp, correo y teléfono son canales independientes. Los datos del formulario no se copian a esos enlaces. | WhatsApp, email and phone are independent channels. Form information is not copied into those links. |
 | No-JavaScript / before-hydration fallback | Para enviar el formulario, activá JavaScript. También podés escribirnos por WhatsApp, correo o teléfono. | Enable JavaScript to submit the form. You can also contact us on WhatsApp, by email or by phone. |
 | Quiet Terms link | Términos y condiciones | Terms and Conditions |
+| Serialized request-too-large message error | La consulta es demasiado larga para enviarla. Acortá el mensaje e intentá nuevamente. | This inquiry is too large to send. Shorten the message and try again. |
 
 Use the existing approved bilingual Pause/Resume/Static-background labels from [IA-SITE](../information-architecture.md#spf-v1-proposed-footer-copy-and-route-retirement). Contact's decorative node words are `Contexto / Context`, `Consulta / Inquiry`, `Conversación / Conversation`; no public graph interaction instruction or hidden essential step is introduced.
 
 In commercial mode, remove the demo notice, reserved failure-email helper and simulated labels together with the accepted mode transition. A missing/invalid endpoint produces the clearly unavailable state above and direct alternatives; it never silently selects the demo adapter or reports simulated success.
+
+### Review clarification: legal chrome and canonical public text
+
+These construction strings are proposed with plan revision 2; they do not supply missing statutory content or an effective date.
+
+| Field | Spanish | English |
+| --- | --- | --- |
+| Contents navigation label | Contenido | Contents |
+| Reviewed update-date label | Última actualización | Last updated |
+| Reciprocal Privacy action | Ver la política de privacidad | Read the Privacy Policy |
+| Reciprocal Terms action | Ver los términos y condiciones | Read the Terms and Conditions |
+
+Final publishable Privacy strings, their exact order and links are canonical in this owning Markdown record's bounded `SFC-PUBLIC-COPY-ES/EN` JSON fences, created from the original draft in the legal-template task and finalized only after professional review. They are compared in full to typed code exports. The readiness manifest binds both canonical blocks and typed modules with hashes and an equivalence check; hashing TypeScript alone is insufficient. Earlier prose drafts remain identifiable history, not a second final-copy authority. Review approval references/dates come from the actual owner/counsel; no generated date is legal evidence.

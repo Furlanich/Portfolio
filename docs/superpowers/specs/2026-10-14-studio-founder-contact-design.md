@@ -30,7 +30,7 @@ Revision 1 was approved by the owner on 2026-10-14 (Q14), including the linked c
 
 The owner's Q14 answer was: “Approve revision 1; author the ADE v2 plan”. It does not authorize production implementation, form activation, unverified legal claims, a paid plan or live graph enablement. Q15 permits a predeployment provider probe followed by immediate actual deployed-form receipts and rollback on failure, after all legal/account gates pass.
 
-[PLAN-SFC-V1](../../plans/active/studio-founder-contact-v1.md) revision 1 is now PROPOSED and must undergo the separately requested Claude Opus 5.5 High review-only session. Findings will be evaluated critically and justified revisions returned in the review-ready plan. Claude is not the master-plan author. Actual task execution, independent PR review and human merges remain later gates.
+[PLAN-SFC-V1](../../plans/active/studio-founder-contact-v1.md) is now **PROPOSED revision 2** after the independent Opus 5.5 High revision-required review. [The planning authority's dispositions](../../reviews/studio-founder-contact-plan-review-2026-10-14.md) address all 35 findings; Q16–18 approve exact model/staging/copy changes, while proposed construction/projection/focus clarifications await revised-plan acceptance. Independent read-only re-review is next. Claude is not the master-plan author; task execution/governance/human merges remain later gates.
 
 ## Explicit unresolved release evidence
 

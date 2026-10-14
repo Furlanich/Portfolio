@@ -40,6 +40,20 @@ The owner approved `/terminos/` and `/en/terms/` through the complete written de
 
 Use a quiet, complete reading surface subordinate to the commercial pages, without live WebGL or essential information in a graphic. Footer discoverability, headings, reading measure, anchor navigation, responsive reflow and language equivalence belong to the final design specification.
 
+## Review clarification: metadata, chrome and canonical text
+
+Proposed with PLAN-SFC-V1 revision 2, subject to final professional wording review:
+
+| Field | Spanish | English |
+| --- | --- | --- |
+| Document title | Términos y condiciones \| FURLANICH | Terms and Conditions \| FURLANICH |
+| Description | Condiciones de uso del sitio FURLANICH y de las consultas iniciales, bajo la responsabilidad de Samuel Furlanich. | Terms for using the FURLANICH website and making initial inquiries, under the responsibility of Samuel Furlanich. |
+| Contents navigation | Contenido | Contents |
+| Reviewed update label | Última actualización | Last updated |
+| Reciprocal Privacy link | Ver la política de privacidad | Read the Privacy Policy |
+
+No invented effective date is supplied. Final public strings/order/links are canonical in this owner's bounded `SFC-PUBLIC-COPY-ES/EN` JSON fences, created faithfully from the original draft and finalized after professional review. Full typed-export equivalence plus both source/code hashes binds what counsel approved to what ships. Historical drafts remain traceable. New OpenGraph/share imagery and sitemap/robots work remain outside this release; existing ordinary route metadata/equivalence includes Terms.
+
 ## Legal and release boundary
 
 Professional Argentine legal review remains **OPEN** and required before publication of final legal wording. Counsel must review scope, responsible-party/address disclosure, lawful terms, any jurisdiction language, IP wording, privacy consistency and the relationship to separately agreed engagements. This document approves the product scope, not legal sufficiency.

@@ -3,10 +3,12 @@ id: TEST-TASTE-AUDIT
 type: testing-evidence
 status: APPROVED
 related:
+  - DESIGN-SFC-V1
+  - PLAN-SFC-V1
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - SPEC-FRONTEND-TESTING-CAPABILITY-HARDENING
-last_verified: 2026-09-08
+last_verified: 2026-10-14
 ---
 
 # Taste v1 existing-homepage audit
@@ -27,7 +29,9 @@ Observed across the three viewports:
 
 Taste v1 usefully reinforces concrete copy, one accent color, left-aligned hierarchy, no neon/gradient decoration, purposeful whitespace, stable mobile collapse, and avoiding gratuitous cards. Future audits should continue watching repetition and ensure every bordered group serves comparison or hierarchy.
 
-## Repository overrides
+## Repository overrides — historical 2026-09-08
+
+This table describes that earlier audit's baseline, not the current typography/runtime/material specification. Sky Chart/SPF and the approved SFC written design subsequently supplied scoped replacements. Preserve the audit evidence above; use the current authority below for new work.
 
 The approved repository design overrides the following Taste v1 defaults:
 
@@ -44,3 +48,11 @@ The approved repository design overrides the following Taste v1 defaults:
 | Active-state transforms and spring physics | Approved controls do not move or scale |
 
 Authority remains: approved product requirements → `DESIGN-VISUAL` and `DESIGN-IX-A11Y` → accepted architecture → Taste v1 → agent aesthetic judgment. Taste is critique, not product authority.
+
+## Current scope-specific authority — 2026-10-14
+
+- Instrument Sans and IBM Plex Mono are the approved identity fonts; the historical Inter row is not current implementation permission.
+- Home, Services/Projects and the SFC editorial pages have named container/type/material targets in their owning design specs. SFC's approved 1180px editorial inner measure does not retune Services/Projects' 1200px inner grid or Home.
+- Approved A.2 graph physics are decorative scene motion; controls never translate/scale. Existing SPF ambient and new-page sleep differ explicitly. The old blanket no-perpetual-motion audit rule does not erase those later decisions.
+- Opaque SFC plate/scrim variants are scoped; Home's default translucent AtlasPlate remains protected.
+- Repository `frontend-implementation` steps 5/12 own the preconstruction/postimplementation Taste audits. They are bounded critique procedures, not named vendored Taste commands. Record actual viewport/element/evidence, severity, proposed correction, accepted/adapted/rejected decision and governing requirement in the task receipt. PLAN-SFC-V1's Skill matrix defines the Impeccable/Emil questions and outputs; inline degraded runs follow GOV-AGENT-USAGE.
