@@ -19,7 +19,7 @@ last_verified: 2026-10-14
 
 # Studio, Founder, Contact and legal — design discovery
 
-This is an in-progress design review, not an approved final specification or an ADE v2 implementation plan. The owner selected Direction A for refinement. Final visual/motion approval, written design approval, commercial processor facts and professional legal review remain OPEN. No product code, deployment configuration, live policy or immutable ADR is changed.
+This discovery records the three alternatives and the owner's A.2 motion/composition decisions. The complete [written-review package](../../superpowers/specs/2026-10-14-studio-founder-contact-design.md) is now PROPOSED, not an approved final specification or an ADE v2 implementation plan. A.2 strings, page-specific graph meanings and target hierarchies are confirmed for that written design. Complete written approval, commercial processor receipts and professional legal review remain OPEN. No product code, deployment configuration, live policy or immutable ADR is changed.
 
 Agent usage: one primary Codex session; subagents 0/0. Grilling research and Impeccable assessment run inline under GOV-AGENT-USAGE. This is not an independent review.
 
@@ -80,9 +80,11 @@ The owner requested a wider, more responsive graph whose movement fades through 
 
 These are **PROPOSED probe inputs**, not a frozen implementation specification or permission to exceed existing performance gates. The comparison now uses direct Three.js perspective geometry but still does not reproduce the production engine's full graph topology, scroll choreography, posterior continuity, label handling, capability gates or resource lifecycle. Production code must be written test-first from the approved specification, not copied from this experiment.
 
-## A.2 — flexible strings, pending owner feel-check
+## A.2 — flexible strings, selected for the written design
 
 The owner retained A.1's node motion and requested flexible strings rather than rigid edges. A.2 leaves the node model, width and amplitude intact. Each edge has pinned ends attached to the current node positions and five interior transverse samples with independent velocity. Local pointer proximity and endpoint movement excite the interior; tension shares movement with neighboring samples, damping dissipates it, and the renderer interpolates the samples into a continuous curve. There is no idle wobble, gravity sag, background tap, dragged edge or hit target.
+
+The owner selected this string candidate and the page-specific meanings below on 2026-10-14 (Q12–13), for incorporation into the written design. That closes the motion-direction frontier; it does not approve a previously unwritten specification or implementation plan.
 
 Candidate interior spring values are tension 90, restoring stiffness 32 and damping 7, with the existing 120Hz maximum integration step. Interior travel is bounded at 16 CSS px wide / 6px compact / 4px on Contact. Contact nodes stay fixed; its strings bend and emphasize quietly. These numbers describe the experiment; acceptance requires the approved production model and rendering/performance receipts. No rope/physics package is proposed.
 
@@ -152,15 +154,34 @@ The unchanged repository suite passed **519/519** on 2026-10-14. An initial sand
 
 Figma is connected and reports a Starter/View seat; no design-file write was attempted. Interactive HTML served the motion comparison. No dedicated Three.js skill or relevant Formspree connector was found in the inspected sources/plugin search, so no speculative plugin was installed.
 
+The written design explicitly resolves remaining skill conflicts: retain the already approved Studio category/Founder context despite Impeccable's generic eyebrow ban; use the existing brand and opaque page plates rather than changing Home's translucent material; preserve Services/Projects ambient rotation while the new pages stop at rest; keep forms/links physically still despite motion-oriented suggestions. These are bounded adaptations to repository authority and owner choices, not permission to ignore accessibility or craft checks.
+
+Emil motion review, adapted to the selected brief:
+
+| Before | After | Why |
+| --- | --- | --- |
+| Passive field / abrupt pointer response | Bounded local yield and retained velocity | The graph acknowledges proximity without moving controls |
+| Rigid edge response | Pinned flexible interior with damped settling | Connections continue the physical response without an endless loop |
+| Same activity behind every page | Quieter Contact, suspended during form focus/submission | Protect the inquiry task and reading |
+
+## Complete written-design reference
+
+The [full-content gallery](assets/gallery.md#written-design-revision-1) accompanies DESIGN-SFC-V1 revision 1. It uses the complete retained Studio/Founder/Contact copy plus the original legal drafts and explicit editorial review markers. The Founder internship, three biography paragraphs, all capability groups and MPC qualifications remain visible. The prototype header/Footer/toolbar are study navigation; the production shared App Bar/Footer stay governed by their existing owners.
+
+The standalone mockup checked five page types × two languages × five widths (320, 390, 768, 1024, 1440): 50 views with no document overflow or page-script errors, full Founder-content checks and no canvas on legal pages. It illustrates real reading length. It is not a no-JavaScript/static-export/browser/hardware/processor acceptance test of the future production implementation. Updated production FOV, exact normalized input/host lifecycle, pooled geometry and account configuration still require the specification's strict TDD and receipts.
+
+One bounded visual correction aligned the full-copy type scale, paragraph color and two-column legal contents, then repeated the 50-view check. A later targeted content-boundary check correctly failed when an appended internal Contact section leaked into the English legal mockup through an overly broad Markdown extraction. Bounding extraction at the next owning section fixed it; targeted legal checks preserve the intended review markers while excluding unrelated instructions. This is a throwaway-renderer correction, not a production legal test or a further visual-polishing cycle.
+
+Written-package verification, 2026-10-14: the targeted legal check passes 20 ES/EN views at the five widths, with one H1, no canvas/overflow and no unrelated internal Contact section. Fresh `npm test` passes 519/519; `npm run docs:check` passes 396 Markdown files, 116 document IDs and 38 Skills; whitespace/diff checks pass. Existing Node module-type warnings remain. No product implementation, account mutation, external inquiry, full `npm run validate`, browser-matrix, hardware or professional legal acceptance is claimed.
+
 ## Open decision frontier and next gate
 
-- Owner feel-check of A.2's strings and page-specific compositions; A.1 node motion is retained.
-- Final written design approval, including complete bilingual copy, responsive specification, legal route names, reduced-motion/fallback and measured production feasibility boundaries.
+- Owner review of the complete written specification, linked exact copy and bounded RFC. A.2 motion/composition and the hierarchy frontier are closed; the full written artifact has not yet been approved.
 - Formspree Free account settings and operations: validation, domain restriction, CAPTCHA, quota, storage, retention, notification, material subprocessors and processing/transfer facts. The exact owner actions are in the [readiness checklist](../../product/pages/contact-and-privacy.md#formspree-free-readiness-checklist-proposed-operational-requirements); no account setting or paid upgrade has been performed.
 - Original ES/EN Privacy and Terms draft with professional Argentine review markers; address sufficiency, consent/transfer mechanism and any required disclosures remain OPEN.
 - The first original bilingual drafts now live in their [Privacy](../../product/pages/contact-and-privacy.md#original-commercial-privacy-draft-proposed-professional-review-required) and [Terms](../../product/pages/terms-and-conditions.md#original-spanish-draft-proposed-professional-review-required) owners. They are explicitly unapproved and non-publishable; provider/retention/transfer and legal-review gaps remain visible.
 - Hardware feasibility within retained budgets, including the unresolved connected presentation tail; no tier enablement inferred.
-- New governance RFC and, after acceptance, superseding ADR for the demonstration/public-intake and new route-runtime boundaries.
+- Governance acceptance of the [proposed RFC](../../rfcs/studio-founder-contact-commercial-atlas-v1.md) and, after acceptance, a superseding ADR for the demonstration/public-intake and new route-runtime boundaries.
 - Then and only then: ADE v2 plan using the user-requested GPT-6 Luna High / Claude Sonnet 5 High implementation providers, exact identifiers verified before execution, and independent Claude Opus 5.5 High review-only in a separate session.
 
 Task-level concurrency must follow current GOV-AGENT-USAGE: independent top-level task sessions/worktrees with disjoint write sets and resources. Literal implementation subagents cannot silently override that policy. No provider-version substitution or delegation has occurred in this discovery.

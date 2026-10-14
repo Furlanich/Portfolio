@@ -751,6 +751,10 @@ Usamos esta información para entender la consulta, evaluar si podemos ayudarte 
 
 GitHub Pages aloja las páginas del sitio. Al enviar el formulario, tu navegador transmite la consulta a Formspree, que interviene en su procesamiento y en el envío de la notificación al correo de Samuel, gestionado mediante Gmail. Los proveedores pueden tratar información técnica necesaria para operar y proteger sus servicios.
 
+**Preferencias del fondo gráfico**
+
+El sitio puede guardar durante la sesión tu preferencia de pausa y una marca técnica de fallo gráfico para evitar nuevos intentos de animación. Estos valores no contienen los datos del formulario. Si el navegador no permite ese almacenamiento, la página mantiene una alternativa estática o una preferencia temporal en memoria.
+
 **Proveedores y transferencias internacionales**
 
 **[BLOQUE EDITORIAL — NO PUBLICAR: completar los proveedores materiales, países y mecanismo de transferencia verificados; revisión profesional argentina obligatoria. No afirmar que un contrato europeo resuelve por sí solo las exigencias argentinas.]**
@@ -789,6 +793,10 @@ We use this information to understand your inquiry, assess whether we can help a
 
 GitHub Pages hosts the website pages. When you submit the form, your browser sends the inquiry to Formspree, which processes it and sends a notification to Samuel's email, managed through Gmail. Providers may process technical information needed to operate and protect their services.
 
+**Graphic background preferences**
+
+The site may store your pause preference and a technical graphics-failure flag for the browsing session to avoid repeated animation attempts. These values contain no form information. If browser storage is unavailable, the page uses a static alternative or a temporary preference held in memory.
+
 **Providers and international transfers**
 
 **[EDITORIAL BLOCK — DO NOT PUBLISH: complete the verified material providers, countries and transfer mechanism; professional Argentine legal review required. Do not assume European contractual terms alone establish the applicable Argentine safeguards.]**
@@ -806,3 +814,25 @@ You can request access, correction, updating or deletion of your information by 
 **Other channels and changes**
 
 If you choose WhatsApp, email or phone, you use a channel independent of the form and subject to the services involved in that communication. Form values are not automatically copied into those links. The published policy will show its update date.
+
+## Atlas commercial interaction copy — PROPOSED for written review, 2026-10-14
+
+[DESIGN-SFC-V1](../../design/studio-founder-contact-v1.md) retains the dormant commercial H1, introduction, response expectation, four field labels/helpers/errors, required-fields note, privacy context/link, submit/submitting labels, success heading/body and retry label exactly as recorded above. The success confirms provider acceptance, not inbox delivery or reading. A static page cannot detect every exhausted-quota acceptance; the owner checklist owns monitoring and recovery.
+
+The following changes are exact candidate replacements for commercial activation. They do not alter the active demonstration's wording.
+
+| State / field | Spanish | English |
+| --- | --- | --- |
+| Network, timeout or unrecognized response heading | No pudimos confirmar el envío. | We couldn't confirm your submission. |
+| Network, timeout or unrecognized response body | Tus datos siguen en el formulario. Podés reintentar o escribirnos por WhatsApp. Si el primer envío fue recibido, un reintento puede generar otra copia de la consulta. | Your information is still in the form. You can try again or contact us on WhatsApp. If the first submission was received, retrying may create another copy of your inquiry. |
+| Rate-limited heading | El envío está temporalmente limitado. | Submissions are temporarily limited. |
+| Rate-limited body | Tus datos siguen en el formulario. Intentá más tarde o escribinos por WhatsApp. | Your information is still in the form. Try later or contact us on WhatsApp. |
+| Unavailable configuration heading | El formulario no está disponible. | The form is unavailable. |
+| Unavailable configuration body | Podés escribirnos por WhatsApp, correo o teléfono. Los datos que completaste siguen en esta página. | You can contact us on WhatsApp, by email or by phone. The information you entered remains on this page. |
+| Alternative-channel note | WhatsApp, correo y teléfono son canales independientes. Los datos del formulario no se copian a esos enlaces. | WhatsApp, email and phone are independent channels. Form information is not copied into those links. |
+| No-JavaScript / before-hydration fallback | Para enviar el formulario, activá JavaScript. También podés escribirnos por WhatsApp, correo o teléfono. | Enable JavaScript to submit the form. You can also contact us on WhatsApp, by email or by phone. |
+| Quiet Terms link | Términos y condiciones | Terms and Conditions |
+
+Use the existing approved bilingual Pause/Resume/Static-background labels from [IA-SITE](../information-architecture.md#spf-v1-proposed-footer-copy-and-route-retirement). Contact's decorative node words are `Contexto / Context`, `Consulta / Inquiry`, `Conversación / Conversation`; no public graph interaction instruction or hidden essential step is introduced.
+
+In commercial mode, remove the demo notice, reserved failure-email helper and simulated labels together with the accepted mode transition. A missing/invalid endpoint produces the clearly unavailable state above and direct alternatives; it never silently selects the demo adapter or reports simulated success.

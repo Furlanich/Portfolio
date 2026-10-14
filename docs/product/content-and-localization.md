@@ -3,6 +3,8 @@ id: CONTENT-LOCALIZATION
 type: content-strategy
 status: PROPOSED
 related:
+  - DESIGN-SFC-V1
+  - PAGE-TERMS
   - DESIGN-SPF-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - BRAND-POSITIONING
@@ -17,10 +19,16 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-30
+last_verified: 2026-10-14
 ---
 
 # Content and localization
+
+## Atlas written-review content — PROPOSED, 2026-10-14
+
+[DESIGN-SFC-V1](../design/studio-founder-contact-v1.md) links the exact Studio/Founder field selection and complete retained professional facts, revised commercial Contact state copy, original bilingual Privacy/Terms drafts and bounded Home/Services activation consistency text. The page owners remain authoritative. Existing Spanish voseo and natural US English conventions apply; neither polished translation nor a rendered mockup approves legal sufficiency or unknown processor facts. Terms routes/labels and equivalence are proposed in IA-SITE.
+
+The owner confirmed the existing GitHub Pages origin and `/Portfolio` for the future commercial release as well as the current demonstration. Real transmission still requires the accepted supersession and matching verified disclosure. This does not change hosting, publish the legal drafts or remove the current demonstration's accurate copy before activation.
 
 ## Connected-page copy and fragments — APPROVED 2026-09-30
 

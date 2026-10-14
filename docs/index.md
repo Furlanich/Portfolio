@@ -3,6 +3,10 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - DESIGN-SFC-V1
+  - SPEC-SFC-V1
+  - RFC-SFC-COMMERCIAL-ATLAS-V1
+  - PAGE-TERMS
   - REVIEW-SPF-TASK-8-2026-10-12
   - GOV-AGENT-USAGE
   - PLAN-SPF-V1
@@ -85,7 +89,7 @@ The [Task 8 / PR #132 independent review](reviews/services-projects-footer-task-
 
 ## Current documentation stage
 
-The [Studio/Founder/Contact/legal discovery](reviews/studio-founder-contact-design-2026-10-14/index.md) is **PROPOSED / in progress**. The owner selected Direction A for refinement, quieter Contact, stronger inertial graph response, native-scroll-only touch behavior, the existing GitHub Pages host, text-led Founder and website-use/inquiry Terms. Final design/spec approval and ADE v2 planning have not occurred. [Contact/Privacy](product/pages/contact-and-privacy.md#owner-facts-for-the-proposed-commercial-activation-approved-2026-10-14) owns the newly confirmed responsible-party and provider facts; [Terms](product/pages/terms-and-conditions.md) owns the approved scope and still-open wording. Current demonstration/live-policy decisions remain effective.
+The [Studio/Founder/Contact/legal written-review package](superpowers/specs/2026-10-14-studio-founder-contact-design.md) is **PROPOSED — revision 1**. After the three-direction discovery, the owner selected A.2 yielding/string motion, quieter Contact, page-specific graph meanings and the retained hierarchies for the written design. [DESIGN-SFC-V1](design/studio-founder-contact-v1.md) and its [bounded RFC](rfcs/studio-founder-contact-commercial-atlas-v1.md) await review; final written-spec approval and ADE v2 planning have not occurred. [Contact/Privacy](product/pages/contact-and-privacy.md#owner-facts-for-the-proposed-commercial-activation-approved-2026-10-14) owns confirmed responsible-party/Formspree Free facts and explicit account/legal gates; [Terms](product/pages/terms-and-conditions.md) owns its scope and unapproved original bilingual draft. Current demonstration/live-policy decisions remain effective.
 
 The [Services/Projects/Footer design](design/services-projects-footer-v1.md) follows the merged Sky Chart Home/App Bar and the [Aureon comparison](reviews/aureon-comparison-2026-09-29.md). Its [review package](reviews/services-projects-footer-design-2026-09-30/index.md) contains three alternatives and the approved Revision 5 field: localized capability words, slow idle rotation and rapid fluid connections from the first scroll. On 2026-09-30 the owner approved the written specification and linked ES/EN copy, then authorized ADE v2 planning and independent review. [RFC-SPF-REDESIGN-V1](rfcs/services-projects-footer-redesign-v1.md) records the accepted narrow runtime/IA supersessions. The design approval itself changed no production files. Subsequent implementation follows the approved plan and human PR merges. Historical implementation descriptions below remain records of delivered baselines; current SPF delivery is summarized next.
 

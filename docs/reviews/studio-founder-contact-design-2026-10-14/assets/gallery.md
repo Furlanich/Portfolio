@@ -62,3 +62,23 @@ The owner retained A.1 node motion and asked for strings. These captures show th
 ![A.2 Founder compact](a2-founder-es-390.png)
 
 ![A.2 Contact compact](a2-contact-es-390.png)
+
+## Written design revision 1
+
+Intentional design references for the complete written-review package, using full retained page content and the original legal drafts. These are not approved regression-test goldens or production acceptance. Editorial legal review markers and the comparison toolbar are prototype-only. Production preserves the existing shared App Bar/Footer rather than this study navigation.
+
+![Full-copy Studio wide](written-studio-es-1440.png)
+
+![Full-copy Studio compact](written-studio-es-390.png)
+
+![Complete Founder opening wide](written-founder-es-1440.png)
+
+![Complete Founder opening compact](written-founder-es-390.png)
+
+![Contact wide](written-contact-es-1440.png)
+
+![Contact compact](written-contact-es-390.png)
+
+![Terms reading surface wide](written-terms-es-1440.png)
+
+![Privacy reading surface compact](written-privacy-es-390.png)

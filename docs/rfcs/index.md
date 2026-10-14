@@ -3,6 +3,7 @@ id: RFC-INDEX
 type: rfc-index
 status: APPROVED
 related:
+  - RFC-SFC-COMMERCIAL-ATLAS-V1
   - RFC-SPF-REDESIGN-V1
   - DESIGN-SPF-V1
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
@@ -21,10 +22,14 @@ related:
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
   - RFC-ADE-AGENT-USAGE-V1
   - PLAN-ADE-AGENT-USAGE-V1
-last_verified: 2026-10-07
+last_verified: 2026-10-14
 ---
 
 # RFCs
+
+## Proposed commercial Atlas and inquiry activation
+
+- [RFC-SFC-COMMERCIAL-ATLAS-V1](studio-founder-contact-commercial-atlas-v1.md): **PROPOSED — 2026-10-14**, linked to [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md). Bounded Studio/Founder/Contact/legal redesign, shared proximity/strings, new Terms pair and a separately gated real Formspree inquiry flow. Prior demo/runtime ADRs remain immutable and effective until accepted supersession; no production activation or implementation plan exists yet.
 
 ## ADE agent usage
 

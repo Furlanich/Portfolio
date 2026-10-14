@@ -32,6 +32,8 @@ The original bilingual draft below is **PROPOSED**, with final wording **OPEN pe
 
 Responsible-party facts are owned by [Contact/Privacy](contact-and-privacy.md#owner-facts-for-the-proposed-commercial-activation-approved-2026-10-14). Do not invent company, tax, registration or address information.
 
+The owner supplied [Aureon's Privacy page](https://aureon.ar/legal/privacidad) and [Terms page](https://aureon.ar/legal/terminos) as structural inspiration only. Their text, business terms and legal facts are not FURLANICH requirements; the drafts below are original.
+
 ## Routes and presentation — PROPOSED
 
 Candidate routes: `/terminos/` and `/en/terms/`, preserving static export, trailing slashes, locale equivalence and `/Portfolio`. No route is implemented or approved by the candidate naming alone.

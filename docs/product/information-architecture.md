@@ -16,10 +16,18 @@ related:
   - PAGE-PRIVACY
   - CONTENT-LOCALIZATION
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-10-05
+last_verified: 2026-10-14
 ---
 
 # Information architecture
+
+## Atlas legal destinations — PROPOSED, 2026-10-14
+
+[DESIGN-SFC-V1](../design/studio-founder-contact-v1.md) proposes the new `terms` route pair `/terminos/` and `/en/terms/`. Retain `privacy` at `/privacidad/` and `/en/privacy/`. Register Terms in the same static localized route/equivalence and metadata architecture; do not add a client-side routing layer or a duplicate Privacy path.
+
+Footer legal utilities become `Privacidad` → localized Privacy and `Términos y condiciones` → localized Terms; English `Privacy` and `Terms and Conditions`. Both remain subordinate ordinary links, outside primary commercial navigation and outside the professional-link group. Legal pages reciprocally link Privacy/Terms; Contact's quiet legal links are owned by PAGE-CONTACT. The existing Footer composition, protected whole-mark watermark and direct-channel prominence are unchanged.
+
+The new pair raises the foundation count from fourteen to sixteen. Canonical/alternate links, locale switching, sitemap/export verification and real static 404 behavior must include Terms, preserve `/Portfolio`, and retain every project-detail retirement. This target is not implemented or approved through naming alone.
 
 ## Sitemap
 

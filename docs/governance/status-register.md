@@ -3,6 +3,8 @@ id: GOV-STATUS
 type: decision-register
 status: APPROVED
 related:
+  - DESIGN-SFC-V1
+  - RFC-SFC-COMMERCIAL-ATLAS-V1
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
@@ -49,10 +51,14 @@ related:
   - PLAN-ADE-AGENT-USAGE-V1
   - ADR-ADE-AGENT-USAGE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-12
+last_verified: 2026-10-14
 ---
 
 # Product knowledge status register
+
+## Studio, Founder, Contact and legal — written review, 2026-10-14
+
+**APPROVED for writing the design:** A.2 yielding/string motion, the three page-specific graph meanings, retained target hierarchies, existing GitHub Pages `/Portfolio`, text-led Founder, Terms limited to website use/inquiries, and owner-supplied identity/contact/Formspree Free facts. **PROPOSED:** the complete [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md), linked copy and [RFC-SFC-COMMERCIAL-ATLAS-V1](../rfcs/studio-founder-contact-commercial-atlas-v1.md). [SPEC-SFC-V1](../superpowers/specs/2026-10-14-studio-founder-contact-design.md) requests written review before ADE planning. Legal, account, delivery/deletion and hardware evidence remain OPEN release gates. Current demo/live-policy decisions and immutable ADR history are unchanged.
 
 ## ADE agent usage — 2026-10-07
 
