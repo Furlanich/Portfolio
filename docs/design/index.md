@@ -24,7 +24,7 @@ last_verified: 2026-10-14
 
 ## Studio, Founder, Contact and legal — written review
 
-[DESIGN-SFC-V1](studio-founder-contact-v1.md) is **PROPOSED — revision 1, 2026-10-14**, with [SPEC-SFC-V1](../superpowers/specs/2026-10-14-studio-founder-contact-design.md) as the review entry point. The owner confirmed A.2 string motion, page-specific compositions and target hierarchies for this written design. The complete specification, linked copy and [bounded supersession RFC](../rfcs/studio-founder-contact-commercial-atlas-v1.md) await owner review before ADE v2 planning. Current demonstration and connected live-policy decisions remain effective; no implementation or legal/hardware acceptance is inferred.
+[DESIGN-SFC-V1](studio-founder-contact-v1.md) written revision 1 is **APPROVED — 2026-10-14 (Q14)**, with [SPEC-SFC-V1](../superpowers/specs/2026-10-14-studio-founder-contact-design.md) recording the complete design/copy/bounded-scope approval. Q15 approves its controlled release ordering. [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) is PROPOSED for independent Claude Opus 5.5 High review-only before execution. The [RFC](../rfcs/studio-founder-contact-commercial-atlas-v1.md) still requires Governance PR acceptance. Current demonstration and connected live-policy decisions remain effective; no implementation or legal/hardware acceptance is inferred.
 
 ## Services, Projects and Footer — proposed connected studio
 

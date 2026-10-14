@@ -34,9 +34,9 @@ Responsible-party facts are owned by [Contact/Privacy](contact-and-privacy.md#ow
 
 The owner supplied [Aureon's Privacy page](https://aureon.ar/legal/privacidad) and [Terms page](https://aureon.ar/legal/terminos) as structural inspiration only. Their text, business terms and legal facts are not FURLANICH requirements; the drafts below are original.
 
-## Routes and presentation — PROPOSED
+## Routes and presentation — APPROVED target, 2026-10-14
 
-Candidate routes: `/terminos/` and `/en/terms/`, preserving static export, trailing slashes, locale equivalence and `/Portfolio`. No route is implemented or approved by the candidate naming alone.
+The owner approved `/terminos/` and `/en/terms/` through the complete written design in Q14, preserving static export, trailing slashes, locale equivalence and `/Portfolio`. This is a target decision; governance acceptance and implementation remain later gates. The original legal drafts remain nonpublishable pending professional review.
 
 Use a quiet, complete reading surface subordinate to the commercial pages, without live WebGL or essential information in a graphic. Footer discoverability, headings, reading measure, anchor navigation, responsive reflow and language equivalence belong to the final design specification.
 

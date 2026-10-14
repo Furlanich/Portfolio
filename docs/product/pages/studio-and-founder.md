@@ -29,11 +29,13 @@ The owner retained these reading sequences during the [current design discovery]
 - Studio: identity and operating model → direct accountability/collaborators → principles → location/availability → concise Founder bridge → Contact.
 - Founder: name and biography → CV/LinkedIn/GitHub → experience → education → capabilities → evidence/Projects bridge → Contact.
 
-This is approval of the redesign's target hierarchy, not final visual approval or permission to implement. For the new design it replaces the later editorial outline below that moved experience before biography and professional links below capabilities. The full approved biography, both source-backed experience entries, education and MPC qualifications, capability groups, professional destinations and evidence limits remain intact. Clever Soft SA stays narrative-only. No portrait or new project claim is approved.
+This target hierarchy replaces the later editorial outline below that moved experience before biography and professional links below capabilities. The owner subsequently approved the complete written design and linked copy in Q14 on 2026-10-14; implementation still requires governance/plan review. The full approved biography, both source-backed experience entries, education and MPC qualifications, capability groups, professional destinations and evidence limits remain intact. Clever Soft SA stays narrative-only. No portrait or new project claim is approved.
 
-The owner selected A.2's yielding/string motion and page-specific compositions for the written design on 2026-10-14. The complete [written specification](../../design/studio-founder-contact-v1.md) remains PROPOSED pending review. The eventual governance record must name the exact visual and runtime constraints it supersedes. Current production presentation and existing ADR history are unchanged by this target decision.
+The owner selected A.2's yielding/string motion and page-specific compositions and approved the complete [written specification](../../design/studio-founder-contact-v1.md) revision 1 in Q14 on 2026-10-14. The eventual governance record must name the exact visual and runtime constraints it supersedes. Current production presentation and existing ADR history are unchanged by this target decision.
 
-## Atlas redesign copy selection — PROPOSED for written review, 2026-10-14
+## Atlas redesign copy selection
+
+**APPROVED Q14 — 2026-10-14**, as part of complete written revision 1. Effective through the governed implementation checkpoints; not permission to implement before independent plan review.
 
 This field-level selection closes copy ambiguity for [DESIGN-SFC-V1](../../design/studio-founder-contact-v1.md). Unlisted factual content retains its exact approved wording below. The renderable comparison includes the complete biography, both experience entries, both education entries, the entire MPC qualification, all four capability groups and professional/evidence destinations. The earlier abbreviated comparison is not copy authority.
 

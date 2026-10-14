@@ -1,7 +1,7 @@
 ---
 id: SPEC-SFC-V1
 type: design-specification
-status: PROPOSED
+status: APPROVED
 related:
   - DESIGN-SFC-V1
   - RFC-SFC-COMMERCIAL-ATLAS-V1
@@ -16,21 +16,21 @@ last_verified: 2026-10-14
 
 # Written design review — Studio, Founder, Contact and legal
 
-Revision 1 is ready for owner review. This is the Brainstorming architectural written-spec stage, not an ADE v2 implementation plan. A.2 strings, page-specific compositions and the target hierarchies were selected for writing this artifact; the complete artifact has not yet been approved.
+Revision 1 was approved by the owner on 2026-10-14 (Q14), including the linked copy selections and bounded supersession scope. This records completion of the Brainstorming architectural written-spec stage and authorization to author the ADE v2 plan. The owner subsequently approved the controlled GitHub Pages release sequence in Q15, now recorded in the canonical design.
 
 ## Review package and authority
 
 1. [Canonical design specification](../../design/studio-founder-contact-v1.md): intent, exact page geometry/hierarchy/responsiveness, graph profiles/physics, complete interaction/fallback/lifecycle requirements, Contact states and architecture/performance/verification boundaries. Target visual rules live in `docs/design/` under the repository's knowledge policy; this entry point does not duplicate their authority.
 2. [Proposed bounded supersessions](../../rfcs/studio-founder-contact-commercial-atlas-v1.md): demo-to-commercial migration, new runtime/page scope and Terms, preserving prior ADR/history. Governance acceptance is still required before implementation.
-3. [Studio/Founder copy selection](../../product/pages/studio-and-founder.md#atlas-redesign-copy-selection-proposed-for-written-review-2026-10-14): exact deltas and the complete retained factual content.
-4. [Contact state-copy selection](../../product/pages/contact-and-privacy.md#atlas-commercial-interaction-copy-proposed-for-written-review-2026-10-14), [owner Formspree checklist](../../product/pages/contact-and-privacy.md#formspree-free-readiness-checklist-proposed-operational-requirements), [Privacy draft](../../product/pages/contact-and-privacy.md#original-commercial-privacy-draft-proposed-professional-review-required), [Terms draft](../../product/pages/terms-and-conditions.md): original copy, facts and explicit account/professional-review gates.
+3. [Studio/Founder copy selection](../../product/pages/studio-and-founder.md#atlas-redesign-copy-selection): exact deltas and the complete retained factual content.
+4. [Contact state-copy selection](../../product/pages/contact-and-privacy.md#atlas-commercial-interaction-copy), [owner Formspree checklist](../../product/pages/contact-and-privacy.md#formspree-free-readiness-checklist-proposed-operational-requirements), [Privacy draft](../../product/pages/contact-and-privacy.md#original-commercial-privacy-draft-proposed-professional-review-required), [Terms draft](../../product/pages/terms-and-conditions.md): original copy, facts and explicit account/professional-review gates.
 5. [Design discovery and reference gallery](../../reviews/studio-founder-contact-design-2026-10-14/index.md): three structural alternatives, selected motion/compositions, rendered full-copy comparison and skill dispositions. These references do not approve golden baselines or hardware/legal acceptance.
 
-## Approval requested
+## Approval recorded
 
-Review the complete written specification and its linked copy and supersession scope. Approval authorizes the planning authority to write the ADE v2 implementation plan; it does not authorize production implementation, form activation, unverified legal claims, a paid plan or live graph enablement.
+The owner's Q14 answer was: “Approve revision 1; author the ADE v2 plan”. It does not authorize production implementation, form activation, unverified legal claims, a paid plan or live graph enablement. Q15 permits a predeployment provider probe followed by immediate actual deployed-form receipts and rollback on failure, after all legal/account gates pass.
 
-The future master plan must then undergo the separately requested Claude Opus 5.5 High review-only session. Findings will be evaluated critically and justified revisions returned in the review-ready plan. Claude is not the master-plan author. Actual task execution, independent PR review and human merges remain later gates.
+[PLAN-SFC-V1](../../plans/active/studio-founder-contact-v1.md) revision 1 is now PROPOSED and must undergo the separately requested Claude Opus 5.5 High review-only session. Findings will be evaluated critically and justified revisions returned in the review-ready plan. Claude is not the master-plan author. Actual task execution, independent PR review and human merges remain later gates.
 
 ## Explicit unresolved release evidence
 

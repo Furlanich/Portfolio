@@ -70,7 +70,7 @@ These are narrow supersessions. This RFC does not make blanket commercial contra
 
 Separate knowledge approval, implementation and activation. On accepted governance, record a new ADR that explicitly supersedes the named portions of the demo/runtime decisions, links their immutable history and retains release gates. Update current-requirement owners and architecture facts only as the accepted target is implemented; do not rewrite historical delivery receipts as if they had used Formspree.
 
-Migrate demo-specific expectations into explicit mode tests and add failing commercial-mode tests before production behavior. A mode-specific zero-transmission test is retained; do not delete all privacy tests to obtain green. Future ordinary CI mocks the provider and never sends real inquiries. The account checklist, professional review and labeled deployed ES/EN delivery/deletion receipts precede activation.
+Migrate demo-specific expectations into explicit mode tests and add failing commercial-mode tests before production behavior. A mode-specific zero-transmission test is retained; do not delete all privacy tests to obtain green. Future ordinary CI mocks the provider and never sends real inquiries. The account checklist, professional review and owner-run live provider probe precede deployment. Q15 authorizes immediate actual deployed ES/EN delivery/deletion checks after the coordinated deployment, with rollback on failure; the predeployment probe is not a deployed-form receipt.
 
 Coordinate real Contact, final Privacy/Terms, Home/Services consistency wording and deployment configuration as one checkpoint. A missing endpoint fails the commercial release check; a runtime failure exposes unavailable recovery, not a simulation. Do not publish the new real-intake policy over an unchanged demo or send real values under the old zero-transmission notice.
 
@@ -88,6 +88,6 @@ These facts are release gates, not open design choices delegated to an implement
 
 ## Recommendation and status
 
-Recommend approval of the linked written design and this narrowly scoped proposal after owner review, followed by the requested ADE v2 master plan and separate Claude Opus 5.5 High review-only gate. The reviewer does not rewrite the master plan. Implementation follows only after plan/review/governance gates; every task/PR keeps its required provider, ownership, RED/verification and human-review boundaries.
+The owner has approved the linked written design and narrowly bounded proposal scope. Recommend Governance PR acceptance and independent Claude Opus 5.5 High review-only of [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md). The reviewer does not rewrite the master plan. Implementation follows only after plan/review/governance gates; every task/PR keeps its required provider, ownership, RED/verification and human-review boundaries.
 
-**PROPOSED — 2026-10-14.** No Governance PR acceptance, new ADR, implementation plan, production mutation, account setting change, live form submission or tier enablement is implied. No plan is authored by Claude and no independent review has run in this design session.
+**Owner-approved bounded scope — 2026-10-14 (Q14); RFC remains PROPOSED pending its Governance PR acceptance.** Q15 approves the controlled release sequence recorded above. ADE plan authoring is authorized; implementation, account mutation, activation and live graph enablement remain later gates. The master plan is authored by this planning authority; no independent Claude review has run in this design session.

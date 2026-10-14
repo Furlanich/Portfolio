@@ -23,7 +23,9 @@ last_verified: 2026-10-14
 
 # Spanish homepage
 
-## Commercial inquiry consistency — PROPOSED, 2026-10-14
+## Commercial inquiry consistency — APPROVED target, 2026-10-14
+
+Approved with written revision 1 in Q14; effective only at the coordinated commercial activation.
 
 Only after the accepted [commercial activation](../../design/studio-founder-contact-v1.md#commercial-contact-and-activation) replaces demonstration mode, replace the final CTA's `demoStatement` with:
 

@@ -29,7 +29,7 @@ last_verified: 2026-10-14
 
 ## Proposed commercial Atlas and inquiry activation
 
-- [RFC-SFC-COMMERCIAL-ATLAS-V1](studio-founder-contact-commercial-atlas-v1.md): **PROPOSED — 2026-10-14**, linked to [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md). Bounded Studio/Founder/Contact/legal redesign, shared proximity/strings, new Terms pair and a separately gated real Formspree inquiry flow. Prior demo/runtime ADRs remain immutable and effective until accepted supersession; no production activation or implementation plan exists yet.
+- [RFC-SFC-COMMERCIAL-ATLAS-V1](studio-founder-contact-commercial-atlas-v1.md): **owner-approved bounded scope Q14, 2026-10-14; PROPOSED pending Governance PR acceptance.** Linked [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md) is approved; [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) is a draft for independent review. Q15 clarifies predeployment provider probe and immediate real deployed receipts/rollback. Prior demo/runtime ADRs remain immutable and effective until the accepted supersession and implementation checkpoints; no activation or execution has occurred.
 
 ## ADE agent usage
 

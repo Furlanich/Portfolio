@@ -24,7 +24,9 @@ last_verified: 2026-10-14
 
 # Services page
 
-## Commercial inquiry consistency — PROPOSED, 2026-10-14
+## Commercial inquiry consistency — APPROVED target, 2026-10-14
+
+Approved with written revision 1 in Q14; effective only at the coordinated commercial activation.
 
 At the accepted [commercial activation](../../design/studio-founder-contact-v1.md#commercial-contact-and-activation), replace only the final CTA description's demonstration instruction with:
 

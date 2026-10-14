@@ -3,6 +3,7 @@ id: GOV-STATUS
 type: decision-register
 status: APPROVED
 related:
+  - PLAN-SFC-V1
   - DESIGN-SFC-V1
   - RFC-SFC-COMMERCIAL-ATLAS-V1
   - DESIGN-SPF-V1
@@ -58,7 +59,7 @@ last_verified: 2026-10-14
 
 ## Studio, Founder, Contact and legal — written review, 2026-10-14
 
-**APPROVED for writing the design:** A.2 yielding/string motion, the three page-specific graph meanings, retained target hierarchies, existing GitHub Pages `/Portfolio`, text-led Founder, Terms limited to website use/inquiries, and owner-supplied identity/contact/Formspree Free facts. **PROPOSED:** the complete [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md), linked copy and [RFC-SFC-COMMERCIAL-ATLAS-V1](../rfcs/studio-founder-contact-commercial-atlas-v1.md). [SPEC-SFC-V1](../superpowers/specs/2026-10-14-studio-founder-contact-design.md) requests written review before ADE planning. Legal, account, delivery/deletion and hardware evidence remain OPEN release gates. Current demo/live-policy decisions and immutable ADR history are unchanged.
+**APPROVED Q14:** complete [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md) written revision 1, linked copy selections and bounded [RFC scope](../rfcs/studio-founder-contact-commercial-atlas-v1.md); author ADE v2 plan. **APPROVED Q15:** predeployment legal/account/provider-probe gates, atomic commercial deployment and immediate actual two-locale delivery/deletion checks with rollback on failure. [SPEC-SFC-V1](../superpowers/specs/2026-10-14-studio-founder-contact-design.md) records approval. **PROPOSED:** [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) revision 1, fifteen task/PR packets, pending independent Claude Opus 5.5 High read-only review and justified revisions. RFC Governance PR acceptance remains pending. Execution/activation are not authorized by design approval; legal, account, live delivery/deletion and hardware evidence remain OPEN. Current demo/live-policy decisions and immutable ADR history are unchanged.
 
 ## ADE agent usage — 2026-10-07
 

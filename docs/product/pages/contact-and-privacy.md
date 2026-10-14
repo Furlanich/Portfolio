@@ -565,6 +565,8 @@ Proposed WhatsApp prefilled message:
 
 ### Formspree Free readiness checklist — PROPOSED operational requirements
 
+The owner approved this checklist as a required gate in Q14; its observed account facts remain OPEN until verified. The heading is retained for existing references. Q15 clarifies the release order: legal/account readiness and a labeled owner-run provider probe precede deployment; actual two-locale deployed-form delivery/deletion checks immediately follow the coordinated release, with rollback on failure. These are distinct receipts; the predeployment probe cannot be described as new deployed-form evidence.
+
 This is an owner-action checklist for a later commercial activation, not an implementation plan or permission to enable transmission. The ADE plan must assign it a named human prerequisite and carry the receipts into the activation checkpoint. Samuel performs authenticated account actions; implementers must not guess that an unverified setting is enabled. If a dashboard label or capability differs, record the observed control and resolve the difference before release.
 
 | Owner action | Exact intended configuration / evidence |
@@ -576,7 +578,7 @@ This is an owner-action checklist for a later commercial activation, not an impl
 | Confirm the challenge posture | Record the current Spam protection/reCAPTCHA setting. The proposed baseline uses automatic provider filtering, the implemented `_gotcha` input and domain restriction, without a CAPTCHA script or provider redirect. If disabling an existing challenge is needed, Samuel makes that explicit configuration decision at activation. A later challenge requires a reviewed accessible flow and matching Privacy/processor updates. |
 | Verify storage and deletion | Inspect Inbox, Spam and Over Limit, plus any available storage controls. Verify deletion with labeled synthetic data in Formspree and Gmail; document provider log/backup exceptions. A Free-plan history window is not proof of full erasure. Apply the existing operational retention targets only after their feasibility and legal wording are verified. |
 | Verify quota and monitoring | Check the account-wide remaining allowance and reset date. Proposed operation: inspect Inbox, Spam, Over Limit and quota each business day, and act on threshold notifications. At the first 75% notice, decide whether to upgrade or temporarily replace intake with an accurately labeled direct-contact state before capacity is exhausted. No paid upgrade is authorized by this checklist. |
-| Close the activation receipt | After governance and legal gates pass, complete a labeled synthetic inquiry from each deployed locale and verify provider acceptance, dashboard presence, Gmail delivery/Reply-To, and deletion. Retain redacted outcomes and dates, never the inquiry body, account credentials or tokens. Verify both locales against the same configured form. |
+| Close the activation receipt | After governance/legal/account gates pass, perform a labeled owner-run live provider probe before deployment. Then deploy the coordinated release and immediately submit one labeled inquiry from each actual localized page, verifying acceptance, dashboard, Gmail/Reply-To and deletion. Failed checks trigger the prepared rollback under Q15. Retain redacted outcomes/dates, never inquiry bodies, credentials or tokens. The predeployment probe is not a deployed-form receipt. |
 
 Research checked 2026-10-14: [Free limits](https://help.formspree.io/articles/account-management/account-limits) document 50 submissions per month and 30 days of history. [Over-limit behavior](https://help.formspree.io/articles/form-and-project-settings/over-limit-submissions) can retain submissions while withholding notifications/plugins until reprocessing; a `2xx` acceptance must never imply confirmed inbox delivery. The static frontend cannot reliably infer account quota from every accepted response. Exact exhausted-quota behavior needs a provider receipt/support confirmation; do not send a batch of test submissions to exhaust a real account.
 
@@ -815,7 +817,9 @@ You can request access, correction, updating or deletion of your information by 
 
 If you choose WhatsApp, email or phone, you use a channel independent of the form and subject to the services involved in that communication. Form values are not automatically copied into those links. The published policy will show its update date.
 
-## Atlas commercial interaction copy — PROPOSED for written review, 2026-10-14
+## Atlas commercial interaction copy
+
+**APPROVED Q14 — 2026-10-14**, as the written design's exact commercial state-copy selection. Publication still requires final professional legal/processor review and the activation gates; a required material wording/consent change returns for design review.
 
 [DESIGN-SFC-V1](../../design/studio-founder-contact-v1.md) retains the dormant commercial H1, introduction, response expectation, four field labels/helpers/errors, required-fields note, privacy context/link, submit/submitting labels, success heading/body and retry label exactly as recorded above. The success confirms provider acceptance, not inbox delivery or reading. A static page cannot detect every exhausted-quota acceptance; the owner checklist owns monitoring and recovery.
 

@@ -1,7 +1,7 @@
 ---
 id: DESIGN-SFC-V1
 type: design-spec
-status: PROPOSED
+status: APPROVED
 related:
   - REVIEW-STUDIO-FOUNDER-CONTACT-2026-10-14
   - SPEC-SFC-V1
@@ -28,11 +28,11 @@ last_verified: 2026-10-14
 
 ## Status and intent
 
-**Written specification revision 1 — PROPOSED for owner review.** The owner selected Direction A after three structurally different interactive comparisons, retained A.1 node motion, requested flexible strings, and on 2026-10-14 selected A.2's strings and page-specific compositions for this written design. Page hierarchies, GitHub Pages `/Portfolio`, text-led Founder, Terms scope, responsible-party facts and the existing Formspree Free account are confirmed. Those approvals do not approve this previously unwritten specification, a master implementation plan, live activation or legal sufficiency.
+**Written specification revision 1 — APPROVED by the owner on 2026-10-14 (Q14).** Approval covers this complete design, linked copy selections and bounded supersession scope, and authorizes the ADE v2 plan. The owner selected Direction A after three structurally different interactive comparisons, retained A.1 node motion and A.2 flexible strings/compositions. Approval does not authorize implementation, live activation or legal sufficiency. Governance PR acceptance and independent plan review remain separate gates.
 
 Give prospective clients a coherent next step from Home, Services and Projects: understand the studio and its accountability, examine Samuel's professional depth, and submit a genuine initial inquiry. Studio explains the operating model; Founder supplies professional context; Contact completes a task; legal pages support informed use. Success requires complete readable content and honest intake behavior even when graphics or JavaScript are unavailable.
 
-This document owns proposed visual, responsive, motion and component boundaries. Exact public copy belongs to the page owners linked below. [The discovery record](../reviews/studio-founder-contact-design-2026-10-14/index.md) preserves alternatives, owner decisions, recommendations/dispositions and evidence. [The RFC](../rfcs/studio-founder-contact-commercial-atlas-v1.md) proposes the bounded supersessions; accepted ADRs are not edited here.
+This document owns approved target visual, responsive, motion and component boundaries. Exact public copy belongs to the page owners linked below. [The discovery record](../reviews/studio-founder-contact-design-2026-10-14/index.md) preserves alternatives, owner decisions, recommendations/dispositions and evidence. [The RFC](../rfcs/studio-founder-contact-commercial-atlas-v1.md) carries the owner-approved bounded supersession scope pending Governance PR acceptance; accepted ADRs are not edited here.
 
 ## Scope and fixed boundaries
 
@@ -84,7 +84,7 @@ Retain the repository accessibility target: ordinary meaningful text contrast at
 
 ## Page anatomy
 
-Exact copy selection is owned by [Studio/Founder](../product/pages/studio-and-founder.md#atlas-redesign-copy-selection-proposed-for-written-review-2026-10-14), [Contact states](../product/pages/contact-and-privacy.md#atlas-commercial-interaction-copy-proposed-for-written-review-2026-10-14), [Privacy](../product/pages/contact-and-privacy.md#original-commercial-privacy-draft-proposed-professional-review-required) and [Terms](../product/pages/terms-and-conditions.md). Do not replace approved facts with the earlier abbreviated prototype text.
+Exact copy selection is owned by [Studio/Founder](../product/pages/studio-and-founder.md#atlas-redesign-copy-selection), [Contact states](../product/pages/contact-and-privacy.md#atlas-commercial-interaction-copy), [Privacy](../product/pages/contact-and-privacy.md#original-commercial-privacy-draft-proposed-professional-review-required) and [Terms](../product/pages/terms-and-conditions.md). Do not replace approved facts with the earlier abbreviated prototype text.
 
 ### Studio
 
@@ -231,7 +231,7 @@ The initial design includes no CAPTCHA script, provider redirect or custom chall
 
 Configuration is explicit and fail-closed: a production commercial mode is selected by the accepted activation, with a validated build-time endpoint and release record. This release uses exactly the owner-approved HTTPS Formspree endpoint; reject another host/form, credentials, query/fragment or nonstandard port unless an accepted configuration revision authorizes it. A missing endpoint fails the commercial build/release check; runtime configuration failure still has the safe unavailable state. Development/CI uses injected mock submitters, never the public endpoint. The demo adapter and historical tests remain as a separately testable contract; production has no public mode toggle and does not silently activate from an environment value alone.
 
-The superseding decision, final professionally reviewed legal wording, verified account/transfer/retention facts, mocked browser/error tests, and labeled deployed ES/EN receipt/dashboard/Gmail/deletion evidence all precede public activation. The existing draft describes intended future behavior. Staging may use isolated tests and the matched intended mode; do not publish a commercial Privacy claim while the deployed site still simulates, or publish real intake with the old zero-transmission disclosure. Coordinate Contact, Privacy, Terms, Home/Services consistency copy and deployment mode as one release checkpoint.
+**Release-order clarification approved by the owner on 2026-10-14 (Q15):** the superseding decision, final professionally reviewed legal wording, verified account/transfer/retention facts, mocked browser/error tests and an owner-run labeled live provider probe precede deployment. A provider probe is not evidence of the newly deployed form. Deploy reviewed Contact, Privacy, Terms, Home/Services consistency copy and mode together; immediately verify actual ES/EN form acceptance, dashboard presence, Gmail delivery/Reply-To and deletion. Failed checks trigger the documented rollback. This resolves the impossible ordering of requiring a new deployed-form receipt before publishing that form on static GitHub Pages. It does not waive legal or account gates. Candidate builds remain isolated and cannot be deployed as release artifacts.
 
 ## Legal and content boundaries
 
@@ -296,10 +296,10 @@ For each behavior change: **RED → run and verify the intended failure → mini
 
 Static screenshot comparisons run in controlled Chromium with reduced motion and stable content after approval; Firefox/WebKit supply behavior/layout smoke, not redundant pixel baselines. Ordinary reports stay out of source. The committed design-reference gallery documents the deliberate alternatives, not automatic golden approval. Do not mask a visual regression or update baselines to make tests green. Any test's zero selected tests or unmeasured mode is a failure/missing evidence, not a pass.
 
-Independent plan review is a later gate: Claude Opus 5.5 High, separate top-level review-only session, no rewrite by the reviewer. The master ADE v2 plan remains authored by this planning authority, after written-spec approval. The future plan must use the owner's exact GPT-6 Luna High / Claude Sonnet 5 High implementation choices, verified identifiers and task-level isolation under GOV-AGENT-USAGE. No unavailable-model substitution, implementation dispatch or task packet is authorized by this design artifact.
+Independent plan review is a later gate: Claude Opus 5.5 High, separate top-level review-only session, no rewrite by the reviewer. [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) is authored by this planning authority after Q14 written-spec approval. It uses the owner's exact GPT-6 Luna High / Claude Sonnet 5 High implementation targets, verified identifiers before dispatch and task-level isolation under GOV-AGENT-USAGE. No unavailable-model substitution or implementation task execution is authorized by this design artifact.
 
 ## Current evidence and approval gate
 
 The discovery/gallery contains A/B/C structural comparisons, A.1 inertia and A.2 strings. A full-copy written-design rendering additionally checked all five page types in ES/EN at the five specified widths: 50 views, no overflow/page-script errors, complete three-paragraph biography/internship/MPC checks and no canvas on legal pages. This is a standalone software-rendered HTML reference, not production code, browser-matrix acceptance, hardware performance or a legal/commercial release receipt.
 
-The owner must review this complete written design and its copy/RFC links before ADE planning. Still-open external release facts are explicitly gated: legal sufficiency/transfer/retention, authenticated Formspree configuration/operations, actual delivery/deletion, and physical runtime feasibility. They do not license an implementer to invent content or bypass a gate. Approval of the written design can authorize planning those evidence-gathering gates; it cannot turn an unverified fact into a pass.
+The owner approved this complete written design, linked copy and bounded RFC scope in Q14, and approved the controlled release sequence in Q15. ADE planning is authorized. Still-open external release facts are explicitly gated: legal sufficiency/transfer/retention, authenticated Formspree configuration/operations, actual delivery/deletion, and physical runtime feasibility. They do not license an implementer to invent content or bypass a gate. The plan must undergo independent Claude Opus 5.5 High review before implementation; no such review has occurred here.

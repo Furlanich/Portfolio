@@ -19,7 +19,7 @@ last_verified: 2026-10-14
 
 # Studio, Founder, Contact and legal — design discovery
 
-This discovery records the three alternatives and the owner's A.2 motion/composition decisions. The complete [written-review package](../../superpowers/specs/2026-10-14-studio-founder-contact-design.md) is now PROPOSED, not an approved final specification or an ADE v2 implementation plan. A.2 strings, page-specific graph meanings and target hierarchies are confirmed for that written design. Complete written approval, commercial processor receipts and professional legal review remain OPEN. No product code, deployment configuration, live policy or immutable ADR is changed.
+This discovery records the three alternatives and the owner's A.2 motion/composition decisions. The owner approved the complete [written revision 1 package](../../superpowers/specs/2026-10-14-studio-founder-contact-design.md), linked copy and bounded supersession scope in Q14 on 2026-10-14, authorizing ADE planning. Q15 approves the controlled static-hosting release order. [PLAN-SFC-V1](../../plans/active/studio-founder-contact-v1.md) is PROPOSED for separate independent Claude Opus 5.5 High review-only. Commercial processor receipts, professional legal review and hardware evidence remain OPEN. No product code, deployment configuration, live policy or immutable ADR is changed.
 
 Agent usage: one primary Codex session; subagents 0/0. Grilling research and Impeccable assessment run inline under GOV-AGENT-USAGE. This is not an independent review.
 
@@ -176,12 +176,18 @@ Written-package verification, 2026-10-14: the targeted legal check passes 20 ES/
 
 ## Open decision frontier and next gate
 
-- Owner review of the complete written specification, linked exact copy and bounded RFC. A.2 motion/composition and the hierarchy frontier are closed; the full written artifact has not yet been approved.
+- Complete written specification, linked exact copy and bounded RFC scope: **owner APPROVED Q14**. Q15 approved predeployment legal/account/provider-probe gates followed by coordinated deployment and immediate real two-locale receipts/rollback. Governance PR acceptance is still a separate gate.
 - Formspree Free account settings and operations: validation, domain restriction, CAPTCHA, quota, storage, retention, notification, material subprocessors and processing/transfer facts. The exact owner actions are in the [readiness checklist](../../product/pages/contact-and-privacy.md#formspree-free-readiness-checklist-proposed-operational-requirements); no account setting or paid upgrade has been performed.
 - Original ES/EN Privacy and Terms draft with professional Argentine review markers; address sufficiency, consent/transfer mechanism and any required disclosures remain OPEN.
 - The first original bilingual drafts now live in their [Privacy](../../product/pages/contact-and-privacy.md#original-commercial-privacy-draft-proposed-professional-review-required) and [Terms](../../product/pages/terms-and-conditions.md#original-spanish-draft-proposed-professional-review-required) owners. They are explicitly unapproved and non-publishable; provider/retention/transfer and legal-review gaps remain visible.
 - Hardware feasibility within retained budgets, including the unresolved connected presentation tail; no tier enablement inferred.
 - Governance acceptance of the [proposed RFC](../../rfcs/studio-founder-contact-commercial-atlas-v1.md) and, after acceptance, a superseding ADR for the demonstration/public-intake and new route-runtime boundaries.
-- Then and only then: ADE v2 plan using the user-requested GPT-6 Luna High / Claude Sonnet 5 High implementation providers, exact identifiers verified before execution, and independent Claude Opus 5.5 High review-only in a separate session.
+- [ADE v2 plan revision 1](../../plans/active/studio-founder-contact-v1.md) is now PROPOSED using the requested GPT-6 Luna High / Claude Sonnet 5 High targets. Exact Claude identifiers remain a dispatch preflight gate. Independent Claude Opus 5.5 High review-only in a separate session is next; planning-authority dispositions/revisions and owner authorization precede implementation.
 
 Task-level concurrency must follow current GOV-AGENT-USAGE: independent top-level task sessions/worktrees with disjoint write sets and resources. Literal implementation subagents cannot silently override that policy. No provider-version substitution or delegation has occurred in this discovery.
+
+## ADE planning checkpoint — 2026-10-14
+
+The owner approved complete written revision 1/copy/bounded scope in Q14 and the controlled release sequence in Q15. [PLAN-SFC-V1](../../plans/active/studio-founder-contact-v1.md) revision 1 now contains fifteen provider-assigned task/PR packets with behavioral REDs, exact write sets, forbidden/shared paths, exclusive resources, acyclic dependencies and disjoint W2/W3/W4 waves. Owner Formspree/counsel actions, physical hardware measurement, atomic release/rollback, immediate actual deployed ES/EN receipts and separately gated live tiers are assigned. The plan remains PROPOSED; the required separate Opus 5.5 High read-only review has not run.
+
+Fresh planning verification: `npm run docs:check` passes 397 Markdown files, 117 IDs and 38 Skills. The packet/ownership audit passes fifteen execution blocks/required field sets and the explicit path/DAG checks. `npm test` passes 519/519 after rerunning with localhost permission; the first sandboxed run failed six existing HTTP fixtures with EACCES, without any product/test code change. Diff checks pass. No production build/browser/hardware/legal/delivery claim is made. Agent usage remains one primary Codex session, zero subagents; all changed repository paths are documentation.

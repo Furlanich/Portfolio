@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - PLAN-SFC-V1
   - DESIGN-SFC-V1
   - SPEC-SFC-V1
   - RFC-SFC-COMMERCIAL-ATLAS-V1
@@ -89,7 +90,7 @@ The [Task 8 / PR #132 independent review](reviews/services-projects-footer-task-
 
 ## Current documentation stage
 
-The [Studio/Founder/Contact/legal written-review package](superpowers/specs/2026-10-14-studio-founder-contact-design.md) is **PROPOSED — revision 1**. After the three-direction discovery, the owner selected A.2 yielding/string motion, quieter Contact, page-specific graph meanings and the retained hierarchies for the written design. [DESIGN-SFC-V1](design/studio-founder-contact-v1.md) and its [bounded RFC](rfcs/studio-founder-contact-commercial-atlas-v1.md) await review; final written-spec approval and ADE v2 planning have not occurred. [Contact/Privacy](product/pages/contact-and-privacy.md#owner-facts-for-the-proposed-commercial-activation-approved-2026-10-14) owns confirmed responsible-party/Formspree Free facts and explicit account/legal gates; [Terms](product/pages/terms-and-conditions.md) owns its scope and unapproved original bilingual draft. Current demonstration/live-policy decisions remain effective.
+The owner **APPROVED written revision 1 on 2026-10-14 (Q14)**, including [DESIGN-SFC-V1](design/studio-founder-contact-v1.md), linked copy and [bounded RFC scope](rfcs/studio-founder-contact-commercial-atlas-v1.md), and authorized ADE planning. Q15 approved predeployment legal/account/provider-probe gates followed by coordinated deployment, immediate real two-locale delivery/deletion checks and rollback on failure. [PLAN-SFC-V1](plans/active/studio-founder-contact-v1.md) is **PROPOSED, revision 1**, with fifteen ADE v2 task/PR packets; execution has not begun. Independent Claude Opus 5.5 High review-only is the next gate. Governance PR acceptance, legal/account/delivery/deletion and physical hardware evidence remain separate; current demonstration/live-policy decisions are effective. [Contact/Privacy](product/pages/contact-and-privacy.md#owner-facts-for-the-proposed-commercial-activation-approved-2026-10-14) owns the actual facts/checklist; [Terms](product/pages/terms-and-conditions.md) owns the original draft requiring professional legal review.
 
 The [Services/Projects/Footer design](design/services-projects-footer-v1.md) follows the merged Sky Chart Home/App Bar and the [Aureon comparison](reviews/aureon-comparison-2026-09-29.md). Its [review package](reviews/services-projects-footer-design-2026-09-30/index.md) contains three alternatives and the approved Revision 5 field: localized capability words, slow idle rotation and rapid fluid connections from the first scroll. On 2026-09-30 the owner approved the written specification and linked ES/EN copy, then authorized ADE v2 planning and independent review. [RFC-SPF-REDESIGN-V1](rfcs/services-projects-footer-redesign-v1.md) records the accepted narrow runtime/IA supersessions. The design approval itself changed no production files. Subsequent implementation follows the approved plan and human PR merges. Historical implementation descriptions below remain records of delivered baselines; current SPF delivery is summarized next.
 
