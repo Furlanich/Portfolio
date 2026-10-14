@@ -1,6 +1,6 @@
 # Task 8 — diagnosis and fix of the non-baseline CI failures, 2026-10-13
 
-Scope: the owner asked for the CI failures of [PR #132 CI run `38332528353`](https://github.com/Furlanich/Portfolio/actions/runs/38332528353) (head `44f5dfe1`, identical code to the merged `3f880976`) that were not visual baselines to be diagnosed and fixed before the W6 checkpoint. The eleven visual failures of that run are the Linux baselines adopted in [PR #134](https://github.com/Furlanich/Portfolio/pull/134). Authority: [PLAN-SPF-V1](../../plans/active/services-projects-footer-v1.md), the [Task 8 receipt](task-8.md) and the [correction receipt](task-8-review-corrections.md). The files belong to Tasks 7 and 8; the owner directed this follow-up.
+Scope: the owner asked for the CI failures of [PR #132 CI run `38332528353`](https://github.com/Furlanich/Portfolio/actions/runs/38332528353) (head `44f5dfe1`, identical code to the merged `3f880976`) that were not visual baselines to be diagnosed and fixed before the W6 checkpoint. The eleven visual failures of that run are the Linux baselines adopted in [PR #134](https://github.com/Furlanich/Portfolio/pull/134). Authority: [PLAN-SPF-V1](../../plans/completed/services-projects-footer-v1.md), the [Task 8 receipt](task-8.md) and the [correction receipt](task-8-review-corrections.md). The files belong to Tasks 7 and 8; the owner directed this follow-up.
 
 Agent usage: `SINGLE_AGENT` Claude Sonnet 5.5, subagents 0/0 (none). Branch `codex/spf-ci-live-fixes`, stacked on PR #134's branch so the two do not conflict in the plan.
 

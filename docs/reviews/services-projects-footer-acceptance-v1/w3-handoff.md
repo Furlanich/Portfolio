@@ -13,12 +13,12 @@ last_verified: 2026-10-09
 
 # Wave 3 preparation and Task 4 handoff
 
-The owner authorized a documentation-only W3 handoff PR on 2026-10-09, followed by Task 4 in a separate Claude Sonnet 5.5 session after its human merge. This is the historical preparation record; startup observations and receipt below retain their original provenance. The [Task 4 packet](../../plans/active/services-projects-footer-v1.md#task-4-pr-4-build-the-shared-protected-mark-azure-conclusion) owns implementation and acceptance. At preparation, Task 4 and W3 were pending. Current status: PRs #121/#122 are merged and the [W3 checkpoint passed](w3-checkpoint.md) on `ddc78aed`; its receipt owns the releases and next-wave boundary.
+The owner authorized a documentation-only W3 handoff PR on 2026-10-09, followed by Task 4 in a separate Claude Sonnet 5.5 session after its human merge. This is the historical preparation record; startup observations and receipt below retain their original provenance. The [Task 4 packet](../../plans/completed/services-projects-footer-v1.md#task-4-pr-4-build-the-shared-protected-mark-azure-conclusion) owns implementation and acceptance. At preparation, Task 4 and W3 were pending. Current status: PRs #121/#122 are merged and the [W3 checkpoint passed](w3-checkpoint.md) on `ddc78aed`; its receipt owns the releases and next-wave boundary.
 
 ## Verified start state
 
 - Preparation base: `main` / `origin/main` at `39c56466c86b8a572da35a1aa6e8139110f187f6`, verified by fetch on 2026-10-09. [PR #119](https://github.com/Furlanich/Portfolio/pull/119) is merged; its `validate` and `browser` checks passed in run `37782845160`. No open PR was listed at this check.
-- Tasks 3 and 5 and their correction are merged. [W2 passed](../../plans/active/services-projects-footer-v1.md#progress) on `6c7f309` and released Task 4's test and baseline paths. Its recorded results include 439 Node tests, 1602 browser passes / 89 skips, 14 accessibility passes and both 14-route exports. These are prior W2 evidence, not fresh W3 results.
+- Tasks 3 and 5 and their correction are merged. [W2 passed](../../plans/completed/services-projects-footer-v1.md#progress) on `6c7f309` and released Task 4's test and baseline paths. Its recorded results include 439 Node tests, 1602 browser passes / 89 skips, 14 accessibility passes and both 14-route exports. These are prior W2 evidence, not fresh W3 results.
 - Task 4 is **not started**. `.worktrees/spf-4` was absent from the worktree inventory. Create it from current merged `main` after this handoff PR merges; do not use the preparation branch as the implementation base.
 - Full Task 3/5 owner acceptance, their disclosed LOW preflight omission and owner rendered/hardware approval remain OPEN in the existing receipts. `CONNECTED_LIVE_POLICY` is still `{ wide: false, compact: false }`; Task 4 cannot change it.
 - The Sonnet provider was historically resolved to `claude-sonnet-5-5` on `firstParty` (Task 1 and later receipts). The new session must verify and record its actual model/provider/settings before implementation. No new provider verification or substitute authorization is claimed here.
@@ -27,7 +27,7 @@ The owner authorized a documentation-only W3 handoff PR on 2026-10-09, followed 
 
 The orchestrator holds PLAN-RECORD. This preparation acquired only the plan's Progress, documentation summaries and this handoff; it acquired no implementation path. After merge, the Task 4 session records acquisition of FOOTER, VISUAL-BASELINES (new Footer subtree) and SHARED-TESTS (the Task 4 blocks) in `task-4.md`. Progress mirroring remains with the orchestrator. No Task 3 or Task 5 implementation session should resume editing these released paths.
 
-Use the packet's complete [write set](../../plans/active/services-projects-footer-v1.md#task-4-pr-4-build-the-shared-protected-mark-azure-conclusion):
+Use the packet's complete [write set](../../plans/completed/services-projects-footer-v1.md#task-4-pr-4-build-the-shared-protected-mark-azure-conclusion):
 
 | Boundary | Permitted paths or blocks |
 | --- | --- |
@@ -98,7 +98,7 @@ record W3 passed: the orchestrator runs W3 after the Footer PR merges.
 
 Task 4 must run every command, host/locale/responsive state and objective gate in its packet, including the unchanged `immersive-chromium` Home acceptance, axe, root and `/Portfolio` clean builds/exports and a `/Portfolio` Footer-spec run. Its reference images are `revision-footer-1440.png` and `revision-footer-390.png` under the [approved media package](../services-projects-footer-design-2026-09-30/index.md). Baseline approval on Windows and Linux and rendered watermark contrast are owner gates; automation cannot approve them.
 
-After the human merges the Task 4 PR, the orchestrator runs the plan's [W3 commands](../../plans/active/services-projects-footer-v1.md#wave-checkpoints) in a clean worktree on merged `main` after fresh `npm ci`, records the source SHA/results and releases locks. W4 / Task 6 remains gated on that green checkpoint and merged Tasks 3, 4 and 5.
+After the human merges the Task 4 PR, the orchestrator runs the plan's [W3 commands](../../plans/completed/services-projects-footer-v1.md#wave-checkpoints) in a clean worktree on merged `main` after fresh `npm ci`, records the source SHA/results and releases locks. W4 / Task 6 remains gated on that green checkpoint and merged Tasks 3, 4 and 5.
 
 ## Preparation receipt
 

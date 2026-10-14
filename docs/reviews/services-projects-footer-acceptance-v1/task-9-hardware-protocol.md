@@ -1,6 +1,6 @@
 # Task 9 — hardware and screen-reader protocol (owner-executed, OD-4)
 
-Status: **partly run.** The owner deferred hardware evidence on 2026-10-13 ([plan Progress](../../plans/active/services-projects-footer-v1.md#progress)) and then asked for the open items to be addressed. What one desktop could provide is in section 6; **the wide tier does not pass** (one failed row), the compact tier and every phone, iPhone and screen-reader item remain **OPEN**, and both `CONNECTED_LIVE_POLICY` tiers stay `false`. A candidate run is evidence for the owner's decision, not the owner's acceptance. A tier still turns on only through a bounded follow-up PR carrying the filled sheet.
+Status: **partly run.** The owner deferred hardware evidence on 2026-10-13 ([plan Progress](../../plans/completed/services-projects-footer-v1.md#progress)) and then asked for the open items to be addressed. What one desktop could provide is in section 6; **the wide tier does not pass** (one failed row), the compact tier has no measured evidence, and both `CONNECTED_LIVE_POLICY` tiers stay `false`. On 2026-10-14 the owner directed that the manual device checks reported on 2026-10-13 be recorded as PASS on the owner's attestation; section 7 shows each row. A candidate run is evidence for the owner's decision, not the owner's acceptance. A tier still turns on only through a bounded follow-up PR carrying the filled sheet.
 
 Rules that do not bend:
 
@@ -11,7 +11,7 @@ Rules that do not bend:
 ## 1. Candidate build (private worktree, never committed)
 
 1. In a private worktree off current `main`, edit only the `CONNECTED_LIVE_POLICY` values in `lib/connected-studio/capability.ts` for the tier under test (`wide: true` covers wide and tablet; `compact: true` covers compact). Record the source SHA and keep `git diff` of that edit.
-2. Clean `.next` and `out` (see the plan's [cleaning note](../../plans/active/services-projects-footer-v1.md#verification-commands-artifact-hygiene-and-manual-procedure)), then `npm run build`. For the subpath export, build with `NEXT_PUBLIC_BASE_PATH=/Portfolio` from PowerShell.
+2. Clean `.next` and `out` (see the plan's [cleaning note](../../plans/completed/services-projects-footer-v1.md#verification-commands-artifact-hygiene-and-manual-procedure)), then `npm run build`. For the subpath export, build with `NEXT_PUBLIC_BASE_PATH=/Portfolio` from PowerShell.
 3. Serve it on the local network: `HOST=0.0.0.0 PLAYWRIGHT_PORT=3290 node scripts/serve-static-export.mjs`. Open `http://<desktop-ip>:3290/servicios/` on each device.
 4. Afterwards restore both values to `false`, delete the candidate build and do not push the candidate.
 
@@ -107,17 +107,17 @@ Other figures from the same run:
 
 | Item | Status | Reason |
 | --- | --- | --- |
-| Desktop hardware (wide and tablet tier) | **NOT RELIABLY MET (candidate evidence), hidden OPEN** | before the pacing fix the active-scroll frame interval p95 was 34.1 ms against 20 ms on the RTX 2060 (section 6); after it, two of four runs pass (18.1, 18.6 ms) and two fail (33.3, 32.0 ms), see [the frame-pacing receipt](task-9-frame-pacing.md); every other measured row passes; the hidden checkpoint could not be reached by automation and needs a manual run |
-| Android phone, ≤ 4 cores, Chrome (compact tier) | OPEN | not run; needs the phone |
-| iPhone, Safari (compact tier) | OPEN | not run; needs the phone |
-| NVDA with Firefox | OPEN | NVDA is not installed here and installing it is not part of this work; the accessibility-tree dump is a proxy only |
-| VoiceOver on iOS | OPEN | needs the iPhone |
-| Live behavior under real 200% zoom | OPEN | only the viewport-equivalent layout was checked, and only static (the compact tier is off) |
+| Desktop hardware (wide and tablet tier) | **NOT RELIABLY MET (candidate evidence); hidden-tab checkpoint PASS on attestation** | before the pacing fix the active-scroll frame interval p95 was 34.1 ms against 20 ms on the RTX 2060 (section 6); after it, two of four runs pass (18.1, 18.6 ms) and two fail (33.3, 32.0 ms), see [the frame-pacing receipt](task-9-frame-pacing.md); every other measured row passes; the hidden checkpoint could not be reached by automation and is PASS on the owner's attestation of 2026-10-14 |
+| Android phone, ≤ 4 cores, Chrome (compact tier) | **PASS on the owner's attestation (2026-10-14); no figures** | the sheet in section 5 is not filled; the tier stays off until a PR carries it |
+| iPhone, Safari (compact tier) | **PASS on the owner's attestation (2026-10-14); no figures** | as above |
+| NVDA with Firefox | **PASS on the owner's attestation (2026-10-14); no figures** | NVDA is not installed here and installing it is not part of this work; the accessibility-tree dump is a proxy only |
+| VoiceOver on iOS | **PASS on the owner's attestation (2026-10-14); no figures** | recorded by the owner, not by an agent |
+| Live behavior under real 200% zoom | **PASS on the owner's attestation (2026-10-14); no figures** | the agent's own check was only the viewport-equivalent layout was checked, and only static (the compact tier is off) |
 | Hardware live Firefox | partly done | live activation observed; no timings |
-| Hardware live WebKit | OPEN | not run |
+| Hardware live WebKit | **PASS on the owner's attestation (2026-10-14); no figures** | not run by an agent |
 | Contrast | computed PASS, human review optional | 362 rendered-pixel samples, lowest 5.5:1 |
 | Live-tier vitals | PASS on the desktop candidate | section 6; the compact tier has none |
 | Warm-cache figures from a real live run | done on the desktop candidate | section 6 |
 | `CONNECTED_LIVE_POLICY` | `{ wide: false, compact: false }` | OD-4: a tier is enabled only with passing evidence, and the wide tier fails the active-interval row in half of the runs |
 
-The owner also stated on 2026-10-13 that the manual device checks of Task 8 were successful. That statement is recorded in the Task 8 and W6 receipts as the owner gave it; this repository holds no per-device sheet for it, so it is not repeated here as a PASS for any row above.
+The owner also stated on 2026-10-13 that the manual device checks of Task 8 were successful. That statement is recorded in the Task 8 and W6 receipts as the owner gave it. This repository holds no per-device sheet for it; on 2026-10-14 the owner directed that it be recorded as PASS, so the rows marked "on the owner's attestation" above carry it. It is an attestation, not a measurement, and it does not change the measured desktop row or the live policy.

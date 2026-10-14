@@ -13,7 +13,7 @@ last_verified: 2026-10-10
 
 # W4 checkpoint — 2026-10-10
 
-**Checkpoint result: PASS**, completed at 2026-10-10T20:15:19-03:00 (the end of the final full-matrix command). This is fresh post-merge evidence for the [W4 checkpoint](../../plans/active/services-projects-footer-v1.md#wave-checkpoints), not final SPF acceptance or a new design approval. The receipt stays PROPOSED pending this documentation PR's independent review and human merge.
+**Checkpoint result: PASS**, completed at 2026-10-10T20:15:19-03:00 (the end of the final full-matrix command). This is fresh post-merge evidence for the [W4 checkpoint](../../plans/completed/services-projects-footer-v1.md#wave-checkpoints), not final SPF acceptance or a new design approval. The receipt stays PROPOSED pending this documentation PR's independent review and human merge.
 
 ## Source and execution
 
