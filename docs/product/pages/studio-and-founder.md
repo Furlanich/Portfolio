@@ -17,10 +17,21 @@ related:
   - DESIGN-IX-A11Y
   - PAGE-PROJECTS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-30
+last_verified: 2026-10-14
 ---
 
 # Studio and founder pages
+
+## Redesign target hierarchy — APPROVED 2026-10-14, final design OPEN
+
+The owner retained these reading sequences during the [current design discovery](../../reviews/studio-founder-contact-design-2026-10-14/index.md):
+
+- Studio: identity and operating model → direct accountability/collaborators → principles → location/availability → concise Founder bridge → Contact.
+- Founder: name and biography → CV/LinkedIn/GitHub → experience → education → capabilities → evidence/Projects bridge → Contact.
+
+This is approval of the redesign's target hierarchy, not final visual approval or permission to implement. For the new design it replaces the later editorial outline below that moved experience before biography and professional links below capabilities. The full approved biography, both source-backed experience entries, education and MPC qualifications, capability groups, professional destinations and evidence limits remain intact. Clever Soft SA stays narrative-only. No portrait or new project claim is approved.
+
+The selected dark Atlas direction remains PROPOSED pending its final motion/composition and written-spec review. The eventual governance record must name the exact visual and runtime constraints it supersedes. Current production presentation and existing ADR history are unchanged by this target decision.
 
 ## SPF-V1 Founder alignment — target decision approved, presentation proposed
 

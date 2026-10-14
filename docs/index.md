@@ -44,7 +44,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-10-12
+last_verified: 2026-10-14
 ---
 
 # FURLANICH project knowledge
@@ -84,6 +84,8 @@ Front matter records the overall governance status of a document. In mixed-statu
 The [Task 8 / PR #132 independent review](reviews/services-projects-footer-task-8-review-2026-10-12/index.md) pinned head 07d1c927 and recommended corrections for two live handoff defects and one approval-status inconsistency. They were corrected in [PR #133](https://github.com/Furlanich/Portfolio/pull/133) and the Task 8 gates closed on 2026-10-13 (dated entry: 2026-10-14; see the [acceptance record](reviews/services-projects-footer-acceptance-v1/index.md#independent-implementation-reviews)).
 
 ## Current documentation stage
+
+The [Studio/Founder/Contact/legal discovery](reviews/studio-founder-contact-design-2026-10-14/index.md) is **PROPOSED / in progress**. The owner selected Direction A for refinement, quieter Contact, stronger inertial graph response, native-scroll-only touch behavior, the existing GitHub Pages host, text-led Founder and website-use/inquiry Terms. Final design/spec approval and ADE v2 planning have not occurred. [Contact/Privacy](product/pages/contact-and-privacy.md#owner-facts-for-the-proposed-commercial-activation-approved-2026-10-14) owns the newly confirmed responsible-party and provider facts; [Terms](product/pages/terms-and-conditions.md) owns the approved scope and still-open wording. Current demonstration/live-policy decisions remain effective.
 
 The [Services/Projects/Footer design](design/services-projects-footer-v1.md) follows the merged Sky Chart Home/App Bar and the [Aureon comparison](reviews/aureon-comparison-2026-09-29.md). Its [review package](reviews/services-projects-footer-design-2026-09-30/index.md) contains three alternatives and the approved Revision 5 field: localized capability words, slow idle rotation and rapid fluid connections from the first scroll. On 2026-09-30 the owner approved the written specification and linked ES/EN copy, then authorized ADE v2 planning and independent review. [RFC-SPF-REDESIGN-V1](rfcs/services-projects-footer-redesign-v1.md) records the accepted narrow runtime/IA supersessions. The design approval itself changed no production files. Subsequent implementation follows the approved plan and human PR merges. Historical implementation descriptions below remain records of delivered baselines; current SPF delivery is summarized next.
 

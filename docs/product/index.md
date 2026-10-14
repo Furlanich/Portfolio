@@ -10,9 +10,10 @@ related:
   - PAGE-PROJECTS
   - PAGE-CONTACT
   - PAGE-PRIVACY
+  - PAGE-TERMS
   - PROJECT-INVENTORY
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-last_verified: 2026-09-10
+last_verified: 2026-10-14
 ---
 
 # Product documentation
@@ -42,6 +43,7 @@ Product documentation defines what the FURLANICH website is, who it serves, why 
 - [`PAGE-PROJECTS` and `PAGE-PROJECT-DETAIL`](pages/projects.md)
 - [`PAGE-STUDIO` and `PAGE-FOUNDER`](pages/studio-and-founder.md)
 - [`PAGE-CONTACT` and `PAGE-PRIVACY`](pages/contact-and-privacy.md)
+- [`PAGE-TERMS`](pages/terms-and-conditions.md): proposed bilingual page; website-use/inquiry scope approved, wording and release pending professional review.
 
 `PAGE-NOT-FOUND` is defined at the responsibility level in the information architecture because no detailed content design has been approved.
 

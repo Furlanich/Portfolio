@@ -18,7 +18,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - REF-CONTACT-DEMO-KIT
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-16
+last_verified: 2026-10-14
 ---
 
 # Contact and privacy pages
@@ -504,6 +504,8 @@ Professional Argentine legal review is a **RELEASE BLOCKER** and must address th
 
 ## Analytics and secondary-use restraint — APPROVED
 
+The [original commercial Privacy draft](#original-commercial-privacy-draft-proposed-professional-review-required) below is a non-publishable candidate for the separately gated activation; it does not replace the current demonstration disclosure.
+
 - Do not add a marketing subscription, CRM synchronization, lead enrichment, advertising pixel, or content-bearing analytics event in this initiative.
 - Inquiry fields, success/failure payloads, provider error bodies, email addresses, messages, and company names never enter analytics, logs intended for product telemetry, URL paths, fragments, or query strings.
 - A future content-free event such as `inquiry_submission_succeeded` requires separate analytics/privacy approval and may contain only an allowlisted locale/source identifier and non-identifying state. It is not part of launch scope.
@@ -547,9 +549,38 @@ The form is the primary interactive demonstration. WhatsApp is secondary, follow
 - WhatsApp URI: `https://wa.me/5491150117565`
 - Location: Buenos Aires, Argentina; Chivilcoy may appear in contact or biography context.
 
+### Owner facts for the proposed commercial activation — APPROVED 2026-10-14
+
+The owner confirmed Samuel Furlanich as the responsible party operating under the FURLANICH brand and supplied `Chivilcoy 6620, Buenos Aires, Argentina` as the legal address to use in the draft. Do not infer a separate incorporated company, tax identifier, street, number, or registration. Whether the supplied locality/postcode satisfies the required address disclosure remains **OPEN pending professional Argentine legal review**.
+
+The owner confirmed `samuelfurlanich@gmail.com` for inquiry notifications and privacy requests and supplied the existing public Formspree endpoint `https://formspree.io/f/meaqwnbr`. The owner also confirmed the account uses the basic Free plan. These are owner-supplied facts, not verified dashboard configuration, recipient verification, spam settings, storage, international-transfer safeguards, delivery or deletion.
+
+The owner accepted provider filtering plus a real honeypot as the initial abuse posture, with an interactive challenge introduced only when verified abuse justifies it. Account actions below are still pending; no account settings have been changed during design discovery.
+
+This initiative retains GitHub Pages and the `/Portfolio` base path. The [design discovery](../../reviews/studio-founder-contact-design-2026-10-14/index.md) records the chosen direction for refinement. It does not activate the form: the current demonstration decision remains effective until an accepted superseding decision and the existing commercial release gates are satisfied.
+
 Proposed WhatsApp prefilled message:
 
 > Hola, Samuel. Me contacto desde el sitio de FURLANICH porque quisiera conversar sobre una solución para mi negocio.
+
+### Formspree Free readiness checklist — PROPOSED operational requirements
+
+This is an owner-action checklist for a later commercial activation, not an implementation plan or permission to enable transmission. The ADE plan must assign it a named human prerequisite and carry the receipts into the activation checkpoint. Samuel performs authenticated account actions; implementers must not guess that an unverified setting is enabled. If a dashboard label or capability differs, record the observed control and resolve the difference before release.
+
+| Owner action | Exact intended configuration / evidence |
+| --- | --- |
+| Select the existing form | Sign in to Formspree, open the form whose Integration endpoint is `https://formspree.io/f/meaqwnbr`, and confirm owner access and active status. Do not create a second production form. |
+| Confirm notifications | In the form's Workflow, retain one email notification action to the verified `samuelfurlanich@gmail.com` recipient. Confirm the submitter's `email` maps to Reply-To. Disable unapproved integrations, marketing actions and visitor autoresponders; no new processor is inferred. |
+| Restrict the project origin | In Project Settings → Restrict to Domain, use `furlanich.github.io`, without protocol or `/Portfolio`. This is a referrer-based spam filter, not authentication or a path restriction. Keep localhost QA mocked; use the deployed `/Portfolio` routes for the labeled live receipt. Implementers must verify compatible referrer policy and test browser behavior. |
+| Match server validation | In Workflow → Validation, add `name` as required text, maximum 100; `email` as required email, maximum 254; `company` as optional text, maximum 120; and `message` as required text, maximum 4000. Preserve `locale` and `source` metadata. These limits match the retained inquiry contract. Verify Unicode-length and multiline behavior against client validation; resolve a difference explicitly. |
+| Confirm the challenge posture | Record the current Spam protection/reCAPTCHA setting. The proposed baseline uses automatic provider filtering, the implemented `_gotcha` input and domain restriction, without a CAPTCHA script or provider redirect. If disabling an existing challenge is needed, Samuel makes that explicit configuration decision at activation. A later challenge requires a reviewed accessible flow and matching Privacy/processor updates. |
+| Verify storage and deletion | Inspect Inbox, Spam and Over Limit, plus any available storage controls. Verify deletion with labeled synthetic data in Formspree and Gmail; document provider log/backup exceptions. A Free-plan history window is not proof of full erasure. Apply the existing operational retention targets only after their feasibility and legal wording are verified. |
+| Verify quota and monitoring | Check the account-wide remaining allowance and reset date. Proposed operation: inspect Inbox, Spam, Over Limit and quota each business day, and act on threshold notifications. At the first 75% notice, decide whether to upgrade or temporarily replace intake with an accurately labeled direct-contact state before capacity is exhausted. No paid upgrade is authorized by this checklist. |
+| Close the activation receipt | After governance and legal gates pass, complete a labeled synthetic inquiry from each deployed locale and verify provider acceptance, dashboard presence, Gmail delivery/Reply-To, and deletion. Retain redacted outcomes and dates, never the inquiry body, account credentials or tokens. Verify both locales against the same configured form. |
+
+Research checked 2026-10-14: [Free limits](https://help.formspree.io/articles/account-management/account-limits) document 50 submissions per month and 30 days of history. [Over-limit behavior](https://help.formspree.io/articles/form-and-project-settings/over-limit-submissions) can retain submissions while withholding notifications/plugins until reprocessing; a `2xx` acceptance must never imply confirmed inbox delivery. The static frontend cannot reliably infer account quota from every accepted response. Exact exhausted-quota behavior needs a provider receipt/support confirmation; do not send a batch of test submissions to exhaust a real account.
+
+[Workflow validation](https://help.formspree.io/articles/building-your-form/getting-started-with-workflow/), [domain restriction](https://help.formspree.io/articles/form-and-project-settings/restrict-to-domain), [honeypot](https://help.formspree.io/articles/building-your-form/honeypot-spam-filtering) and [reCAPTCHA settings](https://help.formspree.io/articles/form-and-project-settings/recaptcha-settings) support the proposed checklist. Their documented capabilities do not establish this account's actual settings. The hidden honeypot must carry its actual value through the adapter; an always-empty constant is not a bot trap. Hide it from the accessibility tree, tab order and autofill, and test the flagged-payload/provider outcome without treating an undisclosed local drop as ordinary visitor success.
 
 ## Response expectation — APPROVED
 
@@ -682,3 +713,96 @@ Names of the four fields, required/optional wording, individual validation error
 Current public Contact remains a simulation. Existing dormant commercial fields, consent/data-use copy, provider acceptance language and response expectation remain in their original sections for future review. No public toggle, environment-only activation or dual-purpose submit button is proposed. Future provider/legal/operational work must revisit all mode-specific strings and prove actual delivery/deletion before any activation; this RFC does not perform or close those gates.
 
 **Disposition D03:** the global notice, mode/placement contract and bilingual replacements are REJECTED together. Existing demonstration presentation and adapter/current-deployment boundaries remain in force. This rejection does not activate commercial intake or alter the ADR.
+
+## Original commercial Privacy draft — PROPOSED, professional review required
+
+**NOT PUBLISHABLE.** This original draft describes the intended public inquiry flow, not the currently deployed local simulation. It uses the owner-confirmed identity/contact facts and the retained inquiry architecture. Account-specific processor, storage, transfer, notice/consent and legal facts remain OPEN. Publication requires the accepted commercial supersession, a verified matching deployment and professional Argentine legal review.
+
+### Editorial gates applying to both languages
+
+| Topic | Known input | Still required before final copy |
+| --- | --- | --- |
+| Responsible party | Owner-confirmed person/brand and supplied locality/postcode | Counsel confirms complete required identification/address disclosure |
+| Submission and notification | Owner-supplied Formspree endpoint and Gmail destination | Verify owner-controlled account, actual recipient, sender/Reply-To, validation, spam/CAPTCHA and delivery |
+| Provider chain | GitHub Pages, Formspree and Google/Gmail are named in the intended architecture | Confirm material Formspree infrastructure/email/security subprocessors and actual processing locations |
+| Retention | Existing operational targets: disable unnecessary provider copies or delete within 30 days after receipt/triage; mailbox-only non-converted inquiries within 12 months after last substantive contact | Verify dashboard, spam, notifications, backups/log exceptions, deletion operations and counsel approval; do not claim automatic enforcement |
+| Transfers/consent/rights | Professional Argentine review is required by the owning requirement | Decide applicable transfer safeguard, notice/consent treatment, any registration/mandatory statement and response protocol |
+| Cookies and metadata | No added marketing analytics/pixels or secondary inquiry use is approved | Inspect deployed requests and actual provider configuration before stating specific cookie/metadata practices |
+
+Formspree's [current privacy policy](https://formspree.io/legal/privacy-policy/) describes US/international processing and technical metadata. It does not establish this form's complete processor chain or an Argentine transfer mechanism. The owner confirmed Free; actual settings remain unverified. The [readiness checklist](#formspree-free-readiness-checklist-proposed-operational-requirements) owns the operational follow-up. [AAIP obligations](https://www.argentina.gob.ar/aaip/datospersonales/responsables/obligaciones) and [international transfers](https://www.argentina.gob.ar/transferencias-internacionales) inform counsel's review, not an agent finding of compliance.
+
+### Spanish candidate
+
+#### Política de privacidad
+
+**Responsable y contacto**
+
+Samuel Furlanich, quien actúa bajo la marca FURLANICH, es el responsable del tratamiento de las consultas recibidas a través de este sitio. El domicilio informado es Chivilcoy 6620, Buenos Aires, Argentina. Para consultas sobre privacidad o para ejercer tus derechos, escribí a samuelfurlanich@gmail.com.
+
+**Qué información solicita el formulario**
+
+Solicitamos tu nombre, correo electrónico y una descripción de lo que necesitás resolver. El nombre de la empresa es opcional. El envío también identifica el idioma y la página desde la que se realiza. No solicitamos archivos adjuntos, contraseñas, credenciales ni datos sensibles.
+
+**Para qué la usamos**
+
+Usamos esta información para entender la consulta, evaluar si podemos ayudarte y responderte. También se aplican controles para prevenir spam y abuso. El formulario no te suscribe a comunicaciones comerciales ni autoriza un uso publicitario de tu mensaje.
+
+**Cómo se procesa la consulta**
+
+GitHub Pages aloja las páginas del sitio. Al enviar el formulario, tu navegador transmite la consulta a Formspree, que interviene en su procesamiento y en el envío de la notificación al correo de Samuel, gestionado mediante Gmail. Los proveedores pueden tratar información técnica necesaria para operar y proteger sus servicios.
+
+**Proveedores y transferencias internacionales**
+
+**[BLOQUE EDITORIAL — NO PUBLICAR: completar los proveedores materiales, países y mecanismo de transferencia verificados; revisión profesional argentina obligatoria. No afirmar que un contrato europeo resuelve por sí solo las exigencias argentinas.]**
+
+**Conservación**
+
+**[BLOQUE EDITORIAL — NO PUBLICAR: convertir los objetivos de 30 días / 12 meses de la tabla anterior en una cláusula pública únicamente después de verificar su operación, sus excepciones y la aprobación profesional. No prometer borrado automático ni desaparición inmediata de copias de respaldo.]**
+
+**Tus solicitudes**
+
+Podés solicitar acceso, rectificación, actualización o supresión de tus datos escribiendo al correo indicado. Para tramitar la solicitud, podremos pedir información proporcionada para comprobar tu identidad. Cualquier excepción de conservación que corresponda deberá explicarse al responder.
+
+**[REVISIÓN PROFESIONAL: completar el texto y los plazos exigibles, la información sobre la autoridad de control y cualquier otra mención obligatoria.]**
+
+**Otros canales y cambios**
+
+Si elegís WhatsApp, correo o teléfono, usás un canal independiente del formulario y sujeto a los servicios que intervengan en esa comunicación. Los valores del formulario no se copian automáticamente a esos enlaces. La versión publicada de esta política indicará su fecha de actualización.
+
+### English candidate
+
+#### Privacy Policy
+
+**Responsible party and contact**
+
+Samuel Furlanich, operating under the FURLANICH brand, is responsible for handling inquiries received through this website. The supplied address is Chivilcoy 6620, Buenos Aires, Argentina. For privacy questions or to exercise your rights, contact samuelfurlanich@gmail.com.
+
+**Information requested by the form**
+
+We request your name, email address and a description of what you need to solve. Your company name is optional. The submission also identifies its language and source page. We do not request attachments, passwords, credentials or sensitive information.
+
+**How we use it**
+
+We use this information to understand your inquiry, assess whether we can help and respond to you. Controls also help prevent spam and abuse. The form does not subscribe you to marketing communications or authorize advertising use of your message.
+
+**How an inquiry is processed**
+
+GitHub Pages hosts the website pages. When you submit the form, your browser sends the inquiry to Formspree, which processes it and sends a notification to Samuel's email, managed through Gmail. Providers may process technical information needed to operate and protect their services.
+
+**Providers and international transfers**
+
+**[EDITORIAL BLOCK — DO NOT PUBLISH: complete the verified material providers, countries and transfer mechanism; professional Argentine legal review required. Do not assume European contractual terms alone establish the applicable Argentine safeguards.]**
+
+**Retention**
+
+**[EDITORIAL BLOCK — DO NOT PUBLISH: turn the table's 30-day / 12-month operational targets into public wording only after verifying their operation, exceptions and professional approval. Do not promise automatic erasure or immediate disappearance of backup copies.]**
+
+**Your requests**
+
+You can request access, correction, updating or deletion of your information by contacting the email address above. We may request proportionate information to verify your identity when handling a request. Any applicable retention exception must be explained in the response.
+
+**[PROFESSIONAL REVIEW: complete applicable wording and time limits, supervisory-authority information and any other required statement.]**
+
+**Other channels and changes**
+
+If you choose WhatsApp, email or phone, you use a channel independent of the form and subject to the services involved in that communication. Form values are not automatically copied into those links. The published policy will show its update date.
