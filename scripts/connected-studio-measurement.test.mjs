@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 const {
   attributeShifts,
   buildRouteClosure,
+  cadenceFps,
   chunkImports,
   contrastRatio,
   crossCheckClosure,
@@ -198,4 +199,15 @@ test('the hardware verdict is PASS only when every row passes, FAIL if any fails
   assert.equal(judgeHardware({ ...passing, renderGpuP95Ms: null }, 'wide').verdict, 'OPEN', 'no GPU timer, no GPU claim');
   assert.equal(judgeHardware({ ...passing, renderGpuP95Ms: null, drawCallsMax: 99 }, 'wide').verdict, 'FAIL', 'a failure outranks an unmeasured row');
   assert.equal(judgeHardware({ ...passing, pausedDraws: 3 }, 'wide').rows.pausedDraws.verdict, 'FAIL');
+});
+
+test('cadence is measured from the frame timestamps, not from a window that may be longer than the frames', () => {
+  const at30 = Array.from({ length: 91 }, (_, i) => i * (1000 / 30));
+  assert.ok(Math.abs(cadenceFps(at30) - 30) < 1e-9, 'ninety intervals of 33.33 ms are exactly 30 fps');
+  // 907 frames at 30 fps are 30.2 s of rendering: dividing the count by a 30 s window would say 30.23 fps.
+  const long = Array.from({ length: 907 }, (_, i) => i * (1000 / 30));
+  assert.ok(Math.abs(cadenceFps(long) - 30) < 1e-9, 'the span of the frames decides, not the length of the observation window');
+  assert.equal(cadenceFps([100]), null, 'one frame has no cadence');
+  assert.equal(cadenceFps([]), null);
+  assert.equal(cadenceFps([5, 5]), null, 'no elapsed time, no cadence');
 });

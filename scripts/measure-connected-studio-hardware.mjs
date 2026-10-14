@@ -23,7 +23,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { chromium, firefox } from 'playwright';
-import { buildRouteClosure, chunkImports, contrastRatio, judgeHardware } from '../lib/connected-studio/measurement.ts';
+import { buildRouteClosure, cadenceFps, chunkImports, contrastRatio, judgeHardware } from '../lib/connected-studio/measurement.ts';
 import { createExportServer, normalizeBasePath } from './serve-static-export.mjs';
 
 const root = process.cwd();
@@ -294,8 +294,8 @@ try {
     await page.waitForTimeout(IDLE_SECONDS * 1000);
     const idle = await framesSince(page, idleFrom);
     const heapIdleEnd = await cdpMetric('JSHeapUsedSize');
-    metrics.ambientFps = round(idle.length / IDLE_SECONDS, 1);
-    report.idle = { seconds: IDLE_SECONDS, renders: idle.length, fps: metrics.ambientFps, gpuP95Ms: round(percentile(idle.map((f) => f.gpuMs).filter((v) => v !== null), 95), 3), heapStartMiB: round(heapStart / 1048576, 1), heapEndMiB: round(heapIdleEnd / 1048576, 1) };
+    metrics.ambientFps = round(cadenceFps(idle.map((frame) => frame.t)), 1);
+    report.idle = { seconds: IDLE_SECONDS, renders: idle.length, fps: metrics.ambientFps, fpsMethod: 'intervals over the span of the frame timestamps', gpuP95Ms: round(percentile(idle.map((f) => f.gpuMs).filter((v) => v !== null), 95), 3), heapStartMiB: round(heapStart / 1048576, 1), heapEndMiB: round(heapIdleEnd / 1048576, 1) };
 
     // ---- 2. Traversals: active cadence, render cost, draw calls, labels, long tasks ----
     const active = [];

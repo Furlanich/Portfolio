@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
 import { CONNECTED_LIVE_POLICY, chooseConnectedMode } from '@/lib/connected-studio/capability';
 import { createConnectedController } from '@/lib/connected-studio/controller';
+import { createFrameScheduler, type FrameEnvironment } from '@/lib/connected-studio/frame-scheduler';
 import { resolveLabelVisibility } from '@/lib/connected-studio/labels';
 import { CONNECTED_POSTER_POSE } from '@/lib/connected-studio/media-manifest';
 import { getConnectedGraph, getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
@@ -16,7 +17,6 @@ import type {
   ConnectedLivePolicy,
   ConnectedRoute,
   ConnectedTier,
-  ControllerOptions,
   GraphDefinition,
   LabelBox,
   LabelProjection,
@@ -183,45 +183,14 @@ function scheduleAfterLoad(callback: () => void): () => void {
   };
 }
 
-/**
- * The controller's scheduler on the browser clock: a timer for the interval, then one animation frame
- * so a draw lands on a frame boundary. Cancelling clears whichever stage is pending.
- */
-function createBrowserScheduler(): { scheduler: ControllerOptions['scheduler']; cancelAll(): void; size(): number } {
-  const pending = new Map<number, { timeout: number; frame: number }>();
-  let nextId = 1;
-  const clear = (entry: { timeout: number; frame: number }) => {
-    window.clearTimeout(entry.timeout);
-    window.cancelAnimationFrame(entry.frame);
-  };
-  return {
-    scheduler: {
-      schedule(callback, delayMs) {
-        const id = nextId++;
-        const entry = { timeout: 0, frame: 0 };
-        entry.timeout = window.setTimeout(() => {
-          entry.frame = window.requestAnimationFrame(() => {
-            pending.delete(id);
-            callback();
-          });
-        }, delayMs);
-        pending.set(id, entry);
-        return id;
-      },
-      cancel(id) {
-        const entry = pending.get(id);
-        if (!entry) return;
-        clear(entry);
-        pending.delete(id);
-      },
-    },
-    cancelAll() {
-      pending.forEach(clear);
-      pending.clear();
-    },
-    size: () => pending.size,
-  };
-}
+/** The browser primitives the frame scheduler runs on. */
+const browserFrameEnvironment: FrameEnvironment = {
+  now: () => performance.now(),
+  setTimeout: (callback, delayMs) => window.setTimeout(callback, delayMs),
+  clearTimeout: (id) => window.clearTimeout(id),
+  requestAnimationFrame: (callback) => window.requestAnimationFrame(() => callback()),
+  cancelAnimationFrame: (id) => window.cancelAnimationFrame(id),
+};
 
 type LabelEntry = {
   id: string;
@@ -402,7 +371,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       labelLayer.update(resizePending ? projections.map(label => ({ ...label, xPx: label.xPx * scaleX, yPx: label.yPx * scaleY })) : projections);
     };
 
-    const timing = createBrowserScheduler();
+    const timing = createFrameScheduler(browserFrameEnvironment);
     releases.push(timing.cancelAll);
     const controller = createConnectedController({
       clock: { now: () => performance.now() },
