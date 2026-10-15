@@ -22,7 +22,7 @@ Acceptance evidence for [PLAN-SFC-V1](../../plans/active/studio-founder-contact-
 ## State
 
 - **Execution authorized, 2026-10-15.** The owner authorized execution in the Claude Code session, waiving the independent re-review gate of plan revision 2 and the Luna assignment of Task 1. See the [Task 1 receipt](task-01.md) for the exact wording, what it does and does not waive, and the rulings.
-- **Task 1 (W0) is in review.** Governance PR 1 targets `main`. Nothing downstream starts until a human merges it and `codex/sfc-integration` is created at the merged SHA.
+- **Task 1 (W0) is in review.** Governance PR 1 is [#142](https://github.com/Furlanich/Portfolio/pull/142), open against `main`. Independent review (Reviewer R) posted two findings on 2026-10-15; both were verified and corrected in a follow-up commit (see the receipt). CI and the human merge are pending. Nothing downstream starts until a human merges it and `codex/sfc-integration` is created at the merged SHA.
 - **Nothing is implemented.** No product code, account, deployment or live setting has changed. The inquiry form stays a local demonstration and the live graph policy stays disabled.
 
 ## Receipts
@@ -35,7 +35,7 @@ Receipts for Tasks 2 to 19 are added by their owners.
 
 | Task | Pull request | Merge commit | Notes |
 | --- | --- | --- | --- |
-| 1 Governance | PENDING (not yet opened) | PENDING | Targets `main`; W0 passes on human merge |
+| 1 Governance | [#142](https://github.com/Furlanich/Portfolio/pull/142) (open, review corrections pushed; CI and human merge pending) | PENDING | Targets `main`; W0 passes on human merge |
 
 ## External gates and owners
 
