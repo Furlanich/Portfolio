@@ -1,0 +1,11 @@
+diff --git a/lib/inquiry/release.ts b/lib/inquiry/release.ts
+index e6e7945..cdec8a6 100644
+--- a/lib/inquiry/release.ts
++++ b/lib/inquiry/release.ts
+@@ -3,4 +3,4 @@ export type InquiryReleaseRecord = { readonly mode: 'demonstration' | 'commercia
+ export const INQUIRY_RELEASE: InquiryReleaseRecord = {
+-  mode: 'demonstration',
+-  releaseId: 'DEMONSTRATION',
++  mode: 'commercial',
++  releaseId: 'QA-CANDIDATE-NOT-FOR-DEPLOYMENT',
+ };

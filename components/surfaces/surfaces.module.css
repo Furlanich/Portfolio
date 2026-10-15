@@ -105,3 +105,77 @@
     background-image: none;
   }
 }
+
+/*
+ * PLAN-SFC-V1 editorial surfaces (DESIGN-SFC-V1, "Visual system and dimensions"). These are scoped
+ * variants: the translucent .atlasPlate above and Home's material are unchanged. Values come from the
+ * owner-approved Q14 specification; no page re-creates them.
+ */
+
+/* Opaque reading plate: padding 40 wide, 32 tablet (768-1023), 24 compact. No blur, shadow or ticks. */
+.editorialPlate {
+  position: relative;
+  background-color: #0A1E33;
+  border: 1px solid #36536C;
+  border-radius: 16px;
+  padding: 24px;
+  color: #B9C3CC;
+}
+
+.editorialPlate :where(h1, h2, h3, h4, h5, h6) {
+  color: #F9F6EE;
+}
+
+@media (min-width: 768px) {
+  .editorialPlate {
+    padding: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .editorialPlate {
+    padding: 40px;
+  }
+}
+
+/* Reading scrim: opaque Abyss backing extending --atlas-scrim-clearance beyond the text. */
+.scrim {
+  position: relative;
+  isolation: isolate;
+}
+
+.scrim::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--atlas-scrim-clearance, 24px));
+  z-index: -1;
+  border-radius: 8px;
+  background-color: #06121F;
+  pointer-events: none;
+}
+
+/* Editorial column: 1180px inner, so 1244px outer with 32px gutters; 20px gutters below 768px. */
+.editorialContainer {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1244px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+@media (min-width: 768px) {
+  .editorialContainer {
+    padding-inline: 32px;
+  }
+}
+
+@media (forced-colors: active) {
+  .editorialPlate {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+  }
+
+  .scrim::before {
+    background-color: Canvas;
+  }
+}

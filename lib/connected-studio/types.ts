@@ -5,7 +5,11 @@
 
 export type Vec3 = readonly [number, number, number];
 
-export type ConnectedRoute = 'services' | 'projects';
+/** Routes whose graph labels are the eight localized capability words. */
+export type LegacyConnectedRoute = 'services' | 'projects';
+/** PLAN-SFC-V1 profile routes: Studio, Founder and Contact bind a few decorative words to node ids. */
+export type ProfileConnectedRoute = 'studio' | 'founder' | 'contact';
+export type ConnectedRoute = LegacyConnectedRoute | ProfileConnectedRoute;
 /** Graph topology: 16 nodes/33 edges (wide) or 8 nodes/13 edges (compact). */
 export type ConnectedQuality = 'wide' | 'compact';
 /** Wide >= 1024, tablet 768-1023, compact < 768 CSS px. */
@@ -16,9 +20,16 @@ export type ConnectedLivePolicy = { readonly wide: boolean; readonly compact: bo
 export type CapabilityIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type CapabilityWords = readonly [string, string, string, string, string, string, string, string];
 
+/**
+ * A decorative word bound to one graph node by id (PLAN-SFC-V1 W1). The new routes never fabricate the
+ * eight services: they bind two to four illustrative words by node id instead.
+ */
+export type ConnectedWordBinding = { readonly nodeId: string; readonly word: string };
+
 export type GraphNode = {
   readonly id: string;
-  readonly capabilityIndex: CapabilityIndex;
+  /** Present on the Services/Projects vocabulary graphs; absent on the profile-route graphs. */
+  readonly capabilityIndex?: CapabilityIndex;
   readonly anchor: Vec3;
   readonly seed: number;
   readonly depthScale: number;
@@ -38,6 +49,32 @@ export type GraphDefinition = {
   readonly edges: readonly GraphEdge[];
 };
 
+/**
+ * PLAN-SFC-V1 W1: the resolved projection frame. Width and height are the full interpolated projection in
+ * CSS px; `crop` is the visible CSS viewport inside it (only set during the initial poster settle). The
+ * spread, depth and node factors are the legacy fit values; Atlas profiles carry spreadX = spreadY =
+ * depthScale = 1 because their depth and tier factors are already applied. CSS dimensions only: the device
+ * pixel ratio never enters a projection. Structurally the same fields as the runtime's ConnectedLayout.
+ */
+export type ConnectedProjectionLayout = {
+  readonly width: number;
+  readonly height: number;
+  readonly tier: ConnectedTier;
+  readonly aspect: number;
+  readonly crop?: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
+  readonly spreadX: number;
+  readonly spreadY: number;
+  readonly depthScale: number;
+  readonly nodeScale: number;
+  readonly pathRadius: number;
+  readonly tracerRadius: number;
+  /** CSS-size distant sprites follow the poster cover scale during its initial settle. */
+  readonly pointScale?: number;
+};
+
+/** A flexible string: seven anchor-space points at s = j/6, endpoints pinned to their nodes. */
+export type EdgeSamplePoints = readonly [Vec3, Vec3, Vec3, Vec3, Vec3, Vec3, Vec3];
+
 export type ScenePose = {
   /** Initial poster projection (1) easing to the responsive field (0); absent means normal projection. */
   readonly posterBlend?: number;
@@ -46,6 +83,16 @@ export type ScenePose = {
   readonly scrollActivity: number;
   readonly nodes: readonly { readonly id: string; readonly position: Vec3; readonly rotation: Vec3; readonly scale: number }[];
   readonly edges: readonly { readonly id: string; readonly growth: number }[];
+  /**
+   * The frame the controller resolved once (native or poster) before interaction. The renderer and the labels
+   * consume it instead of applying a second poster or spread transform; a pose without it uses the pure
+   * legacy fallback. Optional so legacy poses compile and behave unchanged.
+   */
+  readonly projectionLayout?: ConnectedProjectionLayout;
+  /** ID-keyed flexible strings in anchor space. Absent on legacy poses, which keep their rigid paths. */
+  readonly edgeSamples?: readonly { readonly id: string; readonly points: EdgeSamplePoints }[];
+  /** ID-keyed (node or edge) excitation records, each value normalized to 0..1. */
+  readonly excitation?: readonly { readonly id: string; readonly value: number }[];
 };
 
 export type SceneGateInput = {
@@ -96,7 +143,7 @@ export type SceneViewport = {
 
 export type LabelProjection = {
   readonly id: string;
-  readonly capabilityIndex: CapabilityIndex;
+  readonly capabilityIndex?: CapabilityIndex;
   readonly xPx: number;
   readonly yPx: number;
   readonly depthScale: number;

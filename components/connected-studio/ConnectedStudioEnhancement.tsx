@@ -17,10 +17,13 @@ import type {
   ConnectedLivePolicy,
   ConnectedRoute,
   ConnectedTier,
+  ConnectedWordBinding,
   GraphDefinition,
   LabelBox,
   LabelProjection,
+  LegacyConnectedRoute,
   OccluderRect,
+  ProfileConnectedRoute,
   SceneHandle,
   SceneLayout,
   ScenePose,
@@ -30,12 +33,18 @@ import type { Locale } from '@/lib/locales';
 import { ConnectedPauseControl } from './ConnectedPauseControl';
 import styles from './connected-studio.module.css';
 
-type ConnectedStudioEnhancementProps = {
-  route: ConnectedRoute;
-  locale: Locale;
-  /** The localized eight-word vocabulary, for the engine's labels. */
-  capabilityWords: CapabilityWords;
-};
+type ConnectedStudioEnhancementProps = { locale: Locale } & (
+  | {
+      route: LegacyConnectedRoute;
+      /** The localized eight-word vocabulary, for the engine's labels. */
+      capabilityWords: CapabilityWords;
+    }
+  | {
+      route: ProfileConnectedRoute;
+      /** Decorative node words of a profile route; consumed by the PLAN-SFC-V1 Task 11 host. */
+      wordBindings: readonly ConnectedWordBinding[];
+    }
+);
 
 /**
  * The non-production diagnostics shape behind `window.__FURLANICH_CONNECTED__` (development and test
@@ -233,7 +242,7 @@ function createLabelLayer(mount: HTMLElement, words: CapabilityWords) {
         element.setAttribute('data-connected-label', '');
         element.dataset.nodeId = node.id;
         element.dataset.visible = 'false';
-        element.textContent = words[node.capabilityIndex];
+        element.textContent = node.capabilityIndex === undefined ? '' : words[node.capabilityIndex];
         host.appendChild(element);
         return { id: node.id, element, width: 0, height: 0, depthScale: node.depthScale, visible: false, x: 0, y: 0 };
       });
@@ -521,7 +530,11 @@ function attachLiveScene(options: LiveOptions): LiveScene {
  * route. It owns browser layout, scroll, visibility, session and cancellation; the controller owns
  * the clock and scheduling, and the dynamically imported engine owns the GPU.
  */
-export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: ConnectedStudioEnhancementProps) {
+export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProps) {
+  const { route, locale } = props;
+  // Compatibility only (PLAN-SFC-V1 Task 2): the profile routes have no live host until Task 11 lands, so
+  // they keep the complete static background and attach nothing.
+  const capabilityWords = 'capabilityWords' in props ? props.capabilityWords : null;
   const controllerRef = useRef<ConnectedController | null>(null);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const [live, setLive] = useState(false);
@@ -530,6 +543,7 @@ export function ConnectedStudioEnhancement({ route, locale, capabilityWords }: C
   const [fallbackHeld, setFallbackHeld] = useState(false);
 
   useEffect(() => {
+    if (!capabilityWords) return;
     const mount = document.querySelector<HTMLElement>(
       `[data-connected-ground][data-connected-route="${route}"][data-connected-locale="${locale}"] [data-connected-mount]`,
     );

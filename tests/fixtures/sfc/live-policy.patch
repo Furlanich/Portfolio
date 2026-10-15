@@ -1,0 +1,9 @@
+diff --git a/lib/connected-studio/capability.ts b/lib/connected-studio/capability.ts
+index 48e3ac99..5863ef17 100644
+--- a/lib/connected-studio/capability.ts
++++ b/lib/connected-studio/capability.ts
+@@ -8,3 +8,3 @@ import type { ConnectedLivePolicy, ConnectedMode, SceneGateInput } from './types
+  */
+-export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object.freeze({ wide: false, compact: false });
++export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object.freeze({ wide: true, compact: true });
+ 

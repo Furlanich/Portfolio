@@ -1,9 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
+import { runVerifier as runVerifierOn } from './export-test-support.mjs';
 
 // PLAN-SKY-CHART-HOME-REDESIGN-V2 Task 11 / L-04: `verify-static-export.mjs` must require the
 // HOME-IMPACT section ("Position fix", id `impact`) between Services and Proof, with its exact
@@ -13,8 +10,6 @@ import path from 'node:path';
 
 const { homeContent: spanish } = await import('../app/(es)/_content/home.ts');
 const { homeContent: english } = await import('../app/(en)/en/_content/home.ts');
-
-const verifier = path.join(process.cwd(), 'scripts/verify-static-export.mjs');
 
 const locales = {
   es: { content: spanish, file: 'index.html', lang: 'es-AR', processId: 'proceso' },
@@ -52,21 +47,9 @@ function homeHtml(locale, transform = (sections) => sections, tags = 2) {
 }
 
 function runVerifier(transform, tags) {
-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'verify-static-export-'));
-  try {
-    for (const locale of Object.values(locales)) {
-      const target = path.join(directory, locale.file);
-      fs.mkdirSync(path.dirname(target), { recursive: true });
-      fs.writeFileSync(target, homeHtml(locale, transform, tags));
-    }
-    const result = spawnSync(process.execPath, [verifier], {
-      env: { ...process.env, STATIC_EXPORT_DIR: directory, NEXT_PUBLIC_BASE_PATH: '' },
-      encoding: 'utf8',
-    });
-    return `${result.stdout}\n${result.stderr}`;
-  } finally {
-    fs.rmSync(directory, { recursive: true, force: true });
-  }
+  const files = {};
+  for (const locale of Object.values(locales)) files[locale.file] = homeHtml(locale, transform, tags);
+  return runVerifierOn({ files }).output;
 }
 
 const withoutImpact = (sections) => sections.filter(([id]) => id !== 'impact');

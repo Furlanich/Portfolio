@@ -2,7 +2,11 @@ name: Quality
 
 on:
   pull_request:
-    branches: [main]
+    # PLAN-SFC-V1 Q17: reviewed implementation PRs stage on the nondeployed integration branch, so the
+    # same checks cover them as cover main.
+    branches: [main, codex/sfc-integration]
+  # Manual trigger: bootstraps a PR whose own workflow change is not yet on its base branch, run at the
+  # PR's immutable head (docs/testing/playwright.md, "Continuous integration").
   workflow_dispatch:
 
 permissions:
@@ -18,18 +22,25 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      # A QA candidate (commercial release id or live-policy patch) is never deployable: reject the marker
+      # and any unrestored candidate before the rest of validation.
+      - run: node scripts/prepare-sfc-candidate.mjs verify-clean
       - run: npm run validate
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
 
   browser:
     runs-on: ubuntu-latest
-    # Full matrix took 34 minutes in PR #122 and 38 in PR #124. Task 7 then added roughly 220 tests, and the job
-    # was cancelled at the previous 45-minute limit on PRs #126, #127 and #128 (two of them test- or docs-only), so
-    # the true duration above 45 is not yet measured. 75 leaves room for setup, evidence and cache cleanup;
-    # tighten it from the first completed run. Overall resource budget only. Per-test, hook and expect timeouts
-    # are unchanged.
-    timeout-minutes: 75
+    # The single browser job took 51m59s over 2749 cases (PR #141, run 38623461245). PLAN-SFC-V1 splits the
+    # same cases across four shards of two workers each: target 25 minutes per shard, hard limit 35. Measure
+    # the real duration of each shard at every wave; never raise the limit to hide a failure, and never drop
+    # unique coverage. Per-test, hook and expect timeouts are unchanged.
+    timeout-minutes: 35
+    strategy:
+      # A failing shard must not cancel its siblings: every shard's evidence is needed.
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     # Official prebuilt Playwright image: browsers and system libraries come with it, so the job no longer
     # installs them over the network on every run. The tag MUST equal the locked `@playwright/test` version
     # (package.json); change both together. Options follow the Playwright CI and Docker guides:
@@ -45,16 +56,19 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm run test:e2e
+      - run: npx playwright test --shard=${{ matrix.shard }}/4 --workers=2
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
-      - name: Upload Playwright failure artifacts
-        if: failure()
+      # Uploaded whether the shard passed or failed, under a name unique to the run, attempt and shard.
+      - name: Upload Playwright report and traces
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-failure-${{ github.run_attempt }}
+          name: playwright-report-shard-${{ matrix.shard }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             playwright-report/
             test-results/
           if-no-files-found: ignore
           retention-days: 7
+    # The dedicated candidate job (commercial and new-route runtime cases against the QA patches, restored in
+    # an always-run cleanup step) is added by PLAN-SFC-V1 Task 10, when the first implemented cases exist.

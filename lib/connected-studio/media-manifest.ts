@@ -31,7 +31,7 @@ export type ConnectedPosterEntry = {
   published: boolean;
 };
 
-function poster(route: ConnectedRoute, quality: ConnectedQuality): ConnectedPosterEntry {
+function poster(route: ConnectedRoute, quality: ConnectedQuality, published = true): ConnectedPosterEntry {
   const wide = quality === 'wide';
   return Object.freeze({
     route,
@@ -40,7 +40,7 @@ function poster(route: ConnectedRoute, quality: ConnectedQuality): ConnectedPost
     width: wide ? 1920 : 900,
     height: wide ? 1080 : 1600,
     maxBytes: (wide ? 150 : 80) * KIB,
-    published: true,
+    published,
   });
 }
 
@@ -49,6 +49,14 @@ export const connectedMediaManifest: readonly ConnectedPosterEntry[] = Object.fr
   poster('services', 'compact'),
   poster('projects', 'wide'),
   poster('projects', 'compact'),
+  // PLAN-SFC-V1 Task 2 declares the profile-route posters unpublished. Each page packet captures its own
+  // pair and flips `published`; until then the Ground shows only the CSS chart and requests no file.
+  poster('studio', 'wide', false),
+  poster('studio', 'compact', false),
+  poster('founder', 'wide', false),
+  poster('founder', 'compact', false),
+  poster('contact', 'wide', false),
+  poster('contact', 'compact', false),
 ]);
 
 /**
