@@ -540,3 +540,465 @@ test('the projection starts on the poster crop and settles without replaying on 
   harness.controller.resume(); assert.equal(harness.renders.at(-1).posterBlend, 0);
   harness.advance(4000); assert.equal(harness.renders.at(-1).posterBlend, 0);
 });
+
+// --- PLAN-SFC-V1 Task 4: profiles, the resolved frame, inertial interaction and sleep --------------------------------
+// The controller owns cadence and sleep. A new-profile (Atlas) scene sleeps at rest with zero callbacks; Services and
+// Projects keep their capped ambient cadence; active interaction renders at no more than 60fps; the poster or native
+// frame is resolved once before the interaction and travels in the final pose.
+
+const { getConnectedProfile } = await import('../lib/connected-studio/profiles.ts');
+const { computeProjectionLayout, projectAnchor } = await import('../lib/connected-studio/projection.ts');
+const { createConnectedInteraction } = await import('../lib/connected-studio/interaction.ts');
+const { CONNECTED_POSTER_POSE } = await import('../lib/connected-studio/media-manifest.ts');
+
+const VIEWPORTS = { wide: { width: 1440, height: 900 }, compact: { width: 390, height: 844 } };
+const FRAME_MS = 1000 / 60;
+
+function near(actual, expected, tolerance, message) {
+  assert.ok(Math.abs(actual - expected) <= tolerance, `${message ?? 'value'}: ${actual} vs ${expected} (tolerance ${tolerance})`);
+}
+
+function createProfiledHarness({ route = 'studio', tier = 'wide', startPose = CONNECTED_POSTER_POSE, createInteraction = createConnectedInteraction } = {}) {
+  const viewport = VIEWPORTS[tier];
+  const profile = getConnectedProfile(route, tier, viewport);
+  let layout = Object.freeze({ footerDocumentTop: 500000, viewportWidth: viewport.width, viewportHeight: viewport.height });
+  let now = 0;
+  let nextId = 1;
+  const queue = new Map();
+  const renders = [];
+  const renderTimes = [];
+  const scheduler = {
+    schedule(callback, delayMs) {
+      const id = nextId;
+      nextId += 1;
+      queue.set(id, { callback, at: now + delayMs });
+      return id;
+    },
+    cancel(id) {
+      queue.delete(id);
+    },
+  };
+  function advance(ms) {
+    const end = now + ms;
+    for (;;) {
+      let next = null;
+      for (const [id, entry] of queue) if (entry.at <= end && (next === null || entry.at < next.entry.at)) next = { id, entry };
+      if (next === null) break;
+      queue.delete(next.id);
+      now = Math.max(now, next.entry.at);
+      next.entry.callback();
+    }
+    now = end;
+  }
+  const controller = createConnectedController({
+    clock: { now: () => now },
+    scheduler,
+    startPose,
+    profile,
+    createInteraction,
+    getLayout: () => layout,
+    render: (pose) => {
+      renders.push(pose);
+      renderTimes.push(now);
+    },
+  });
+  const nativeFor = (p = profile) => computeProjectionLayout(p, { width: layout.viewportWidth, height: layout.viewportHeight, tier });
+  return {
+    controller,
+    profile,
+    viewport,
+    tier,
+    renders,
+    renderTimes,
+    advance,
+    nativeFor,
+    pending: () => queue.size,
+    now: () => now,
+    setLayout(next) {
+      layout = Object.freeze(next);
+    },
+    update(overrides = {}) {
+      controller.update({ graph: profile.graph, tier, scrollY: 0, velocityPxPerSecond: 0, visible: true, footerDominant: false, ...overrides });
+    },
+    last: () => renders[renders.length - 1],
+  };
+}
+
+/** Where each rest anchor sits in the frame a pose carries (cover crop included). */
+function restCssIn(profile, frame) {
+  return profile.restAnchors.map((rest) => ({
+    id: rest.id,
+    x: rest.u * frame.width - (frame.crop?.x ?? 0),
+    y: rest.v * frame.height - (frame.crop?.y ?? 0),
+  }));
+}
+
+function displacements(profile, pose) {
+  const frame = pose.projectionLayout;
+  const rests = restCssIn(profile, frame);
+  return pose.nodes.map((node, index) => {
+    const css = projectAnchor(node.position, frame);
+    return Math.hypot(css.xPx - rests[index].x, css.yPx - rests[index].y);
+  });
+}
+
+function settleAtRest(harness) {
+  harness.update();
+  harness.advance(4000);
+}
+
+test('an Atlas scene lands on the poster frame, eases to the native frame, then sleeps with zero callbacks', () => {
+  const harness = createProfiledHarness();
+  harness.update();
+  const first = harness.renders[0];
+  assert.equal(first.posterBlend, 1, 'the first live frame is the poster frame');
+  assert.ok(first.projectionLayout.crop, 'the poster frame is cropped to the viewport');
+  first.nodes.forEach((node, index) => {
+    const css = projectAnchor(node.position, first.projectionLayout);
+    const rest = restCssIn(harness.profile, first.projectionLayout)[index];
+    assert.ok(Math.hypot(css.xPx - rest.x, css.yPx - rest.y) < 1e-6, `${node.id} sits at its poster position`);
+  });
+  harness.advance(4000);
+  const settled = harness.last();
+  assert.equal(settled.posterBlend, 0);
+  assert.deepEqual(settled.projectionLayout, harness.nativeFor(), 'the native frame, uncropped');
+  assert.equal(settled.projectionLayout.crop, undefined);
+  assert.deepEqual(settled.nodes.map((node) => node.position), harness.profile.graph.nodes.map((node) => node.anchor));
+  assert.equal(settled.edgeSamples, undefined);
+  assert.equal(settled.excitation, undefined);
+  const snapshot = harness.controller.snapshot();
+  assert.equal(snapshot.state, 'live');
+  assert.equal(snapshot.pendingCallbacks, 0, 'a settled Atlas scene holds no callback');
+  assert.equal(snapshot.targetFps, 0);
+  assert.equal(harness.pending(), 0);
+  const count = harness.renders.length;
+  harness.advance(30000);
+  assert.equal(harness.renders.length, count, 'no frame is drawn while it sleeps');
+});
+
+test('the poster ease of an Atlas scene runs at the ambient cadence, never above it', () => {
+  const harness = createProfiledHarness();
+  harness.update();
+  harness.advance(2000);
+  const gaps = harness.renderTimes.slice(1).map((time, index) => time - harness.renderTimes[index]);
+  assert.ok(gaps.length > 10);
+  assert.ok(Math.min(...gaps) >= 1000 / 30 - 1e-6, `wide ambient is at most 30fps, got a ${Math.min(...gaps)}ms gap`);
+  const compact = createProfiledHarness({ tier: 'compact' });
+  compact.update();
+  compact.advance(2000);
+  const compactGaps = compact.renderTimes.slice(1).map((time, index) => time - compact.renderTimes[index]);
+  assert.ok(Math.min(...compactGaps) >= 1000 / 20 - 1e-6, 'compact ambient is at most 20fps');
+});
+
+test('Services and Projects keep the 30/20fps ambient cadence at rest with a profile', () => {
+  for (const [tier, fps] of [['wide', 30], ['compact', 20]]) {
+    for (const route of ['services', 'projects']) {
+      const harness = createProfiledHarness({ route, tier });
+      harness.update();
+      harness.advance(6000);
+      const snapshot = harness.controller.snapshot();
+      assert.equal(snapshot.pendingCallbacks, 1, `${route} ${tier} keeps its ambient loop`);
+      assert.equal(snapshot.targetFps, fps);
+      const count = harness.renders.length;
+      harness.advance(1000);
+      near(harness.renders.length - count, fps, 1, `${route} ${tier} frames per second`);
+    }
+  }
+});
+
+test('a pointer wakes a sleeping Atlas scene; frames never exceed 60fps; nodes stay within the cap; it sleeps again after the tail', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  assert.equal(harness.pending(), 0);
+  const before = harness.renders.length;
+  harness.update({ pointer: { x: 780, y: 330, vx: 0, vy: 0 } });
+  assert.equal(harness.controller.snapshot().pendingCallbacks, 1, 'the pointer scheduled a frame');
+  let peak = 0;
+  for (let frame = 0; frame < 60; frame += 1) {
+    harness.update({ pointer: { x: 780 + frame * 3, y: 330, vx: 180, vy: 0 } });
+    harness.advance(FRAME_MS);
+    peak = Math.max(peak, ...displacements(harness.profile, harness.last()));
+  }
+  assert.ok(harness.renders.length > before + 20, 'frames were drawn while the pointer moved');
+  assert.ok(peak > 2 && peak <= 34 + 1e-6, `displacement ${peak} is visible and within the 34px cap`);
+  const active = harness.renderTimes.slice(before + 1).map((time, index) => time - harness.renderTimes[before + index]);
+  assert.ok(Math.min(...active) >= 1000 / 60 - 1e-6, `active cadence never exceeds 60fps (smallest gap ${Math.min(...active)}ms)`);
+  assert.equal(harness.last().projectionLayout.crop, undefined);
+  assert.ok(harness.last().edgeSamples.length > 0 && harness.last().excitation.length > 0);
+
+  harness.update({ pointer: null });
+  harness.advance(12000);
+  const asleep = harness.controller.snapshot();
+  assert.equal(asleep.pendingCallbacks, 0, 'asleep again once the tail has settled');
+  assert.equal(asleep.targetFps, 0);
+  assert.deepEqual(harness.last().nodes.map((node) => node.position), harness.profile.graph.nodes.map((node) => node.anchor), 'exactly at rest');
+  const count = harness.renders.length;
+  harness.advance(10000);
+  assert.equal(harness.renders.length, count);
+});
+
+test('pointer exit keeps the tail alive: the scene keeps drawing until motion settles', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  for (let frame = 0; frame < 30; frame += 1) {
+    harness.update({ pointer: { x: 700 + frame * 6, y: 340, vx: 360, vy: 0 } });
+    harness.advance(FRAME_MS);
+  }
+  harness.update({ pointer: null });
+  const at = harness.renders.length;
+  harness.advance(240);
+  assert.ok(harness.renders.length > at + 5, 'the tail is still being drawn 240ms after exit');
+  assert.equal(harness.controller.snapshot().pendingCallbacks, 1);
+});
+
+test('an invalid pointer wakes nothing, and disabling input lets motion damp without new excitation', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  harness.update({ pointer: { x: Number.NaN, y: 100, vx: 0, vy: 0 } });
+  harness.update({ pointer: { x: 100, y: Number.POSITIVE_INFINITY, vx: 0, vy: 0 } });
+  assert.equal(harness.pending(), 0, 'a non-finite pointer is not input');
+  for (let frame = 0; frame < 40; frame += 1) {
+    harness.update({ pointer: { x: 760 + frame * 4, y: 330, vx: 240, vy: 0 } });
+    harness.advance(FRAME_MS);
+  }
+  assert.ok(Math.max(...displacements(harness.profile, harness.last())) > 2);
+  harness.update({ inputEnabled: false, pointer: { x: 900, y: 330, vx: 900, vy: 0 }, scrollDeltaPx: 80 });
+  let previous = Math.max(...displacements(harness.profile, harness.last()));
+  harness.advance(FRAME_MS * 3);
+  for (let frame = 0; frame < 20; frame += 1) {
+    harness.update({ inputEnabled: false, pointer: { x: 900 + frame * 10, y: 330, vx: 600, vy: 0 } });
+    harness.advance(FRAME_MS * 3);
+    const current = Math.max(...displacements(harness.profile, harness.last()));
+    assert.ok(current <= previous + 0.5, `disabled input adds no excitation (${current} after ${previous})`);
+    previous = current;
+  }
+  harness.advance(12000);
+  assert.equal(harness.pending(), 0);
+});
+
+test('classified scroll nudges an Atlas scene; raw scroll alone neither wakes nor moves it', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  const count = harness.renders.length;
+  harness.update({ scrollY: 400, velocityPxPerSecond: 900 });
+  harness.update({ scrollY: 800, velocityPxPerSecond: 900 });
+  harness.advance(2000);
+  assert.equal(harness.renders.length, count, 'scroll with no classified distance does nothing to a sleeping Atlas scene');
+  assert.equal(harness.pending(), 0);
+  for (let frame = 0; frame < 30; frame += 1) {
+    harness.update({ scrollY: 800 + frame * 20, velocityPxPerSecond: 1200, scrollDeltaPx: 20 });
+    harness.advance(FRAME_MS);
+  }
+  const moved = displacements(harness.profile, harness.last());
+  assert.ok(Math.max(...moved) > 0.5 && Math.max(...moved) <= 34 + 1e-6);
+  harness.advance(12000);
+  assert.equal(harness.pending(), 0, 'and it sleeps again');
+});
+
+test('Contact nodes never move while its strings respond, and it sleeps afterwards', () => {
+  const harness = createProfiledHarness({ route: 'contact' });
+  settleAtRest(harness);
+  for (let frame = 0; frame < 60; frame += 1) {
+    harness.update({ pointer: { x: 1000 + frame * 5, y: 300 + (frame % 9) * 10, vx: 300, vy: 100 }, scrollDeltaPx: 30 });
+    harness.advance(FRAME_MS);
+    assert.deepEqual(harness.last().nodes.map((node) => node.position), harness.profile.graph.nodes.map((node) => node.anchor));
+  }
+  assert.ok(harness.last().edgeSamples.length > 0, 'its strings are drawn');
+  harness.update({ pointer: null });
+  harness.advance(12000);
+  assert.equal(harness.pending(), 0);
+});
+
+test('Services keeps chapter progress as its base and adds the pointer response on top, then returns to the ambient cadence', () => {
+  const harness = createProfiledHarness({ route: 'services' });
+  harness.setLayout({ footerDocumentTop: 5000, viewportWidth: 1440, viewportHeight: 900 });
+  harness.update({ scrollY: 2500, velocityPxPerSecond: 0 });
+  harness.advance(4000);
+  const base = harness.last();
+  assert.ok(base.progress > 0.3, 'legacy progress still follows scroll');
+  assert.equal(harness.controller.snapshot().targetFps, 30);
+  for (let frame = 0; frame < 45; frame += 1) {
+    harness.update({ scrollY: 2500, pointer: { x: 720 + frame * 2, y: 450, vx: 120, vy: 0 } });
+    harness.advance(FRAME_MS);
+  }
+  const touched = harness.last();
+  assert.ok(touched.edgeSamples.length === 33 && touched.excitation.length > 0);
+  assert.equal(harness.controller.snapshot().targetFps, 60, 'interaction renders at the active cadence');
+  harness.update({ scrollY: 2500, pointer: null });
+  harness.advance(12000);
+  const after = harness.controller.snapshot();
+  assert.equal(after.targetFps, 30);
+  assert.equal(after.pendingCallbacks, 1);
+  assert.ok(Math.abs(harness.last().progress - base.progress) < 1e-6, 'the chapter pose is untouched');
+});
+
+test('the frame is resolved once before the interaction and the interaction receives it', () => {
+  const calls = [];
+  const spy = (profile) => {
+    const real = createConnectedInteraction(profile);
+    return {
+      step(input) {
+        const pose = real.step(input);
+        calls.push({ input, pose });
+        return pose;
+      },
+      clear: () => real.clear(),
+      isSettled: () => real.isSettled(),
+    };
+  };
+  const harness = createProfiledHarness({ createInteraction: spy });
+  harness.update();
+  harness.advance(500);
+  assert.equal(calls.length, harness.renders.length, 'one interaction step per render');
+  calls.forEach(({ input, pose }, index) => {
+    assert.equal(pose.projectionLayout, input.layout, 'the final pose carries the frame the interaction used');
+    assert.equal(harness.renders[index].projectionLayout, input.layout);
+    const rests = restCssIn(harness.profile, input.layout);
+    input.base.nodes.forEach((node, nodeIndex) => {
+      const css = projectAnchor(node.position, input.layout);
+      assert.ok(Math.hypot(css.xPx - rests[nodeIndex].x, css.yPx - rests[nodeIndex].y) < 1e-6, 'the base pose is already in the resolved frame');
+    });
+  });
+  assert.ok(calls[0].input.layout.crop && calls[0].input.layout.width > harness.viewport.width, 'the first frame is the poster frame');
+});
+
+test('a hidden tab is not replayed and drops the pointer; the first frame back integrates no time', () => {
+  const deltas = [];
+  const spy = (profile) => {
+    const real = createConnectedInteraction(profile);
+    return {
+      step(input) {
+        deltas.push(input.deltaMs);
+        return real.step(input);
+      },
+      clear: () => real.clear(),
+      isSettled: () => real.isSettled(),
+    };
+  };
+  const harness = createProfiledHarness({ createInteraction: spy });
+  settleAtRest(harness);
+  for (let frame = 0; frame < 20; frame += 1) {
+    harness.update({ pointer: { x: 780 + frame * 4, y: 330, vx: 240, vy: 0 } });
+    harness.advance(FRAME_MS);
+  }
+  harness.update({ visible: false });
+  assert.equal(harness.controller.snapshot().state, 'suspended');
+  assert.equal(harness.pending(), 0);
+  harness.advance(60000);
+  deltas.length = 0;
+  harness.update({ visible: true });
+  assert.equal(deltas[0], 0, 'the first frame after the hidden minute integrates no time');
+  assert.ok(!harness.last().excitation?.some((record) => record.value > 0.3), 'the stale pointer was dropped, not replayed');
+  harness.advance(12000);
+  assert.equal(harness.pending(), 0);
+});
+
+test('Pause clears the stimulation at once and nothing is scheduled until Resume', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  for (let frame = 0; frame < 30; frame += 1) {
+    harness.update({ pointer: { x: 780 + frame * 4, y: 330, vx: 240, vy: 0 } });
+    harness.advance(FRAME_MS);
+  }
+  assert.ok(Math.max(...displacements(harness.profile, harness.last())) > 1);
+  harness.controller.pause();
+  assert.equal(harness.controller.snapshot().state, 'paused');
+  assert.equal(harness.pending(), 0);
+  harness.update({ pointer: { x: 800, y: 330, vx: 900, vy: 0 }, scrollDeltaPx: 90 });
+  assert.equal(harness.pending(), 0, 'input while paused schedules nothing');
+  const count = harness.renders.length;
+  harness.advance(5000);
+  assert.equal(harness.renders.length, count);
+  harness.controller.resume();
+  harness.advance(2000);
+  assert.deepEqual(harness.last().nodes.map((node) => node.position), harness.profile.graph.nodes.map((node) => node.anchor), 'resumed at rest, not mid-motion');
+  assert.equal(harness.pending(), 0);
+});
+
+test('a disposed controller keeps no callbacks and a callback the host already queued stays inert', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  harness.update({ pointer: { x: 780, y: 330, vx: 0, vy: 0 } });
+  assert.equal(harness.pending(), 1);
+  harness.controller.dispose();
+  const count = harness.renders.length;
+  harness.advance(5000);
+  assert.equal(harness.renders.length, count);
+  harness.update({ pointer: { x: 790, y: 330, vx: 100, vy: 0 } });
+  assert.equal(harness.pending(), 0);
+  assert.equal(harness.controller.snapshot().state, 'disposed');
+});
+
+test('a new profile on update replaces the interaction: a resize is a state update, not a gesture', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  for (let frame = 0; frame < 30; frame += 1) {
+    harness.update({ pointer: { x: 780 + frame * 4, y: 330, vx: 240, vy: 0 } });
+    harness.advance(FRAME_MS);
+  }
+  const resized = { width: 1200, height: 800 };
+  const next = getConnectedProfile('studio', 'wide', resized);
+  harness.setLayout({ footerDocumentTop: 500000, viewportWidth: resized.width, viewportHeight: resized.height });
+  harness.update({ profile: next, graph: next.graph, pointer: null });
+  const pose = harness.last();
+  assert.deepEqual(pose.nodes.map((node) => node.position), next.graph.nodes.map((node) => node.anchor), 'the new rest pose, nothing replayed');
+  assert.equal(pose.projectionLayout.width, resized.width);
+  harness.advance(12000);
+  assert.equal(harness.pending(), 0);
+});
+
+test('an unusable layout is skipped, not thrown: the render keeps going without a frame or interaction', () => {
+  const harness = createProfiledHarness();
+  harness.setLayout({ footerDocumentTop: 500000, viewportWidth: 0, viewportHeight: 0 });
+  harness.update();
+  harness.advance(500);
+  assert.ok(harness.renders.length > 0);
+  assert.equal(harness.last().projectionLayout, undefined);
+  assert.ok(harness.last().nodes.every((node) => node.position.every(Number.isFinite)));
+});
+
+test('a controller without a profile is unchanged: no frame, no strings, no excitation', () => {
+  const harness = createHarness();
+  harness.controller.update(update());
+  harness.advance(500);
+  const pose = harness.renders[harness.renders.length - 1];
+  assert.equal(pose.projectionLayout, undefined);
+  assert.equal(pose.edgeSamples, undefined);
+  assert.equal(pose.excitation, undefined);
+  harness.controller.update({ ...update(), pointer: { x: 100, y: 100, vx: 500, vy: 0 }, scrollDeltaPx: 50 });
+  harness.advance(500);
+  assert.equal(harness.renders[harness.renders.length - 1].edgeSamples, undefined, 'pointer input without a profile is ignored');
+});
+
+test('the snapshot pose is the final rendered pose, frame included', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  assert.equal(harness.controller.snapshot().pose, harness.last());
+  harness.update({ pointer: { x: 780, y: 330, vx: 200, vy: 0 } });
+  harness.advance(FRAME_MS * 4);
+  assert.equal(harness.controller.snapshot().pose, harness.last());
+  assert.ok(harness.controller.snapshot().pose.projectionLayout);
+});
+
+test('a tier change swaps the profile: the new interaction knows the compact graph, not the wide one', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  for (let frame = 0; frame < 20; frame += 1) {
+    harness.update({ pointer: { x: 780 + frame * 4, y: 330, vx: 240, vy: 0 } });
+    harness.advance(FRAME_MS);
+  }
+  const compact = getConnectedProfile('studio', 'compact', VIEWPORTS.compact);
+  harness.setLayout({ footerDocumentTop: 500000, viewportWidth: VIEWPORTS.compact.width, viewportHeight: VIEWPORTS.compact.height });
+  harness.update({ profile: compact, graph: compact.graph, tier: 'compact', pointer: null });
+  harness.advance(FRAME_MS * 4);
+  assert.equal(harness.last().nodes.length, 8);
+  harness.update({ profile: compact, graph: compact.graph, tier: 'compact', pointer: { x: 100, y: 330, vx: 0, vy: 0 } });
+  for (let frame = 0; frame < 30; frame += 1) {
+    harness.update({ profile: compact, graph: compact.graph, tier: 'compact', pointer: { x: 100 + frame * 3, y: 330, vx: 180, vy: 0 } });
+    harness.advance(FRAME_MS);
+  }
+  const pose = harness.last();
+  assert.equal(pose.nodes.length, 8);
+  assert.deepEqual(pose.edgeSamples.map((sample) => sample.id), compact.graph.edges.map((edge) => edge.id), 'strings follow the compact connections');
+  assert.ok(Math.max(...displacements(compact, pose)) <= 14 + 1e-6, 'the compact cap of 14px applies');
+});

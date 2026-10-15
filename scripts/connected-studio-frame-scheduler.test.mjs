@@ -203,3 +203,75 @@ test('cancelling clears whichever stage is pending, and a stopped scene holds no
   scene.scheduling.cancelAll();
   assert.equal(scene.display.pendingTimers() + scene.display.pendingFrames(), 0, 'disposed: nothing scheduled');
 });
+
+// --- PLAN-SFC-V1 Task 4: a sleeping Atlas scene on the real host scheduler ------------------------------------------
+const { getConnectedProfile } = await import('../lib/connected-studio/profiles.ts');
+const { CONNECTED_POSTER_POSE } = await import('../lib/connected-studio/media-manifest.ts');
+
+function createAtlasScene({ refreshHz = 60 } = {}) {
+  const display = createVirtualDisplay({ refreshHz, spikeRate: 0.05 });
+  const scheduling = createFrameScheduler(display.env);
+  const profile = getConnectedProfile('studio', 'wide', { width: 1440, height: 900 });
+  const renderTimes = [];
+  const controller = createConnectedController({
+    clock: { now: () => display.now() },
+    scheduler: scheduling.scheduler,
+    startPose: CONNECTED_POSTER_POSE,
+    profile,
+    render: () => {
+      renderTimes.push(display.now());
+      display.busy(0.35);
+    },
+    getLayout: () => LAYOUT,
+  });
+  const update = (extra = {}) =>
+    controller.update({ graph: profile.graph, tier: 'wide', scrollY: 0, velocityPxPerSecond: 0, visible: true, footerDominant: false, ...extra });
+  return { display, scheduling, controller, renderTimes, update };
+}
+
+test('a settled Atlas scene holds no timer, no animation frame and no draw; a pointer wakes it at up to 60 fps and it sleeps again', () => {
+  for (const refreshHz of [60, 144]) {
+    const scene = createAtlasScene({ refreshHz });
+    scene.update();
+    scene.display.runUntil(6000);
+    assert.equal(scene.scheduling.size(), 0, `${refreshHz} Hz: nothing pending once the poster ease is over`);
+    assert.equal(scene.display.pendingTimers() + scene.display.pendingFrames(), 0, `${refreshHz} Hz: no timer and no animation frame while asleep`);
+    const asleepDraws = scene.renderTimes.length;
+    scene.display.runUntil(16000);
+    assert.equal(scene.renderTimes.length, asleepDraws, `${refreshHz} Hz: no draws while asleep`);
+
+    const wokenAt = scene.display.now();
+    for (let t = 0; t <= 1000; t += 16) {
+      scene.display.runUntil(wokenAt + t);
+      scene.update({ pointer: { x: 780 + t * 0.2, y: 330, vx: 200, vy: 0 } });
+    }
+    const gaps = intervals(scene.renderTimes.filter((time) => time >= wokenAt), 0);
+    assert.ok(gaps.length > 20, `${refreshHz} Hz: frames were drawn while the pointer moved`);
+    assert.ok(Math.min(...gaps) >= 1000 / 60 - 1.01, `${refreshHz} Hz: active frames never beat 60 fps (smallest gap ${Math.min(...gaps).toFixed(1)} ms)`);
+
+    scene.update({ pointer: null });
+    scene.display.runUntil(scene.display.now() + 12000);
+    assert.equal(scene.scheduling.size(), 0, `${refreshHz} Hz: asleep again after the tail`);
+    assert.equal(scene.display.pendingTimers() + scene.display.pendingFrames(), 0);
+    const settled = scene.renderTimes.length;
+    scene.display.runUntil(scene.display.now() + 8000);
+    assert.equal(scene.renderTimes.length, settled, `${refreshHz} Hz: and no draw follows`);
+  }
+});
+
+test('pausing or hiding an awake Atlas scene cancels the host timer and animation frame at once', () => {
+  const scene = createAtlasScene();
+  scene.update();
+  scene.display.runUntil(6000);
+  for (let t = 0; t <= 300; t += 16) {
+    scene.display.runUntil(6000 + t);
+    scene.update({ pointer: { x: 780 + t, y: 330, vx: 300, vy: 0 } });
+  }
+  assert.ok(scene.scheduling.size() > 0, 'awake: a callback is pending');
+  scene.controller.pause();
+  assert.equal(scene.scheduling.size(), 0);
+  assert.equal(scene.display.pendingTimers() + scene.display.pendingFrames(), 0, 'paused: no timer and no animation frame');
+  scene.controller.resume();
+  scene.update({ visible: false });
+  assert.equal(scene.display.pendingTimers() + scene.display.pendingFrames(), 0, 'hidden: no timer and no animation frame');
+});

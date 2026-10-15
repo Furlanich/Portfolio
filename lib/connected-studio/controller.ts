@@ -1,7 +1,14 @@
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { isConnectedTier, measureConnectedProgress, sampleConnectedPose } from './model.ts';
+// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
+import { computeProjectionLayout, resolvePosterProjection } from './projection.ts';
+// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
+import { createConnectedInteraction } from './interaction.ts';
+import type { ConnectedInteraction } from './interaction';
+import type { ConnectedSceneProfile } from './profiles';
 import type {
   ConnectedController,
+  ConnectedProjectionLayout,
   ConnectedTier,
   ControllerOptions,
   SceneLayout,
@@ -26,8 +33,41 @@ const VELOCITY_STALE_MS = 120;
  */
 const START_SETTLE_SECONDS = 0.5;
 const START_SETTLE_END_SECONDS = START_SETTLE_SECONDS * 6;
+/** A pointer sample that moved less than this since the last one has not moved: its age keeps growing. */
+const POINTER_MOVE_EPSILON_PX = 0.25;
 
 type StartPose = NonNullable<ControllerOptions['startPose']>;
+
+/** CSS px position and px/s velocity of the pointer, as the host measured them. The controller derives its age. */
+export type ConnectedPointerInput = {
+  readonly x: number;
+  readonly y: number;
+  readonly vx: number;
+  readonly vy: number;
+};
+
+export type ConnectedControllerOptions = ControllerOptions & {
+  /** The route profile. Without one the controller behaves exactly as it did before profiles. */
+  readonly profile?: ConnectedSceneProfile;
+  /** Test seam: builds the interaction for a profile. */
+  readonly createInteraction?: (profile: ConnectedSceneProfile) => ConnectedInteraction;
+};
+
+/** `SceneUpdate` plus the optional input of a profiled scene. Every added field may be omitted. */
+export type ConnectedSceneUpdate = SceneUpdate & {
+  /** A new profile (a resize rebuilds the Atlas anchors): the interaction restarts at rest, nothing is replayed. */
+  readonly profile?: ConnectedSceneProfile;
+  /** `undefined` keeps the last sample, `null` removes the pointer, a non-finite sample is ignored. */
+  readonly pointer?: ConnectedPointerInput | null;
+  /** Classified ordinary scroll distance since the previous update, in CSS px. Jumps and restores are not passed. */
+  readonly scrollDeltaPx?: number;
+  /** False removes new excitation at once and lets existing motion damp. Defaults to true. */
+  readonly inputEnabled?: boolean;
+};
+
+export type ProfiledConnectedController = Omit<ConnectedController, 'update'> & {
+  update(input: ConnectedSceneUpdate): void;
+};
 
 function validStartPose(pose: ControllerOptions['startPose']): pose is StartPose {
   return (
@@ -48,13 +88,20 @@ function sameLayout(a: SceneLayout | undefined, b: SceneLayout): boolean {
   );
 }
 
-export function createConnectedController(options: ControllerOptions): ConnectedController {
+function finite(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+export function createConnectedController(options: ConnectedControllerOptions): ProfiledConnectedController {
   let state: SceneSnapshot['state'] = 'static';
   let userPaused = false;
   let input: SceneUpdate | undefined;
   let layout: SceneLayout | undefined;
   let targetProgress = 0;
+  /** The model pose: chapter progress, scroll activity and the idle angle. Never carries the interaction. */
   let pose: ScenePose | undefined;
+  /** The final pose the host drew: the model pose in its resolved frame, plus the interaction when there is one. */
+  let output: ScenePose | undefined;
   let pendingId: number | undefined;
   let pendingDueAt = 0;
   /** Bumped whenever pending work is cancelled, so a callback the host already queued stays inert. */
@@ -67,12 +114,44 @@ export function createConnectedController(options: ControllerOptions): Connected
   let settleFrom = 0;
   let settleStartedAt: number | undefined;
 
+  // Profile, interaction and input. All of it is inert while there is no profile.
+  let profile: ConnectedSceneProfile | undefined = options.profile;
+  let interaction: ConnectedInteraction | undefined;
+  let pointer: { x: number; y: number; vx: number; vy: number; movedAt: number } | undefined;
+  let pendingScroll = 0;
+  let inputEnabled = true;
+  let nativeCache: { profile: ConnectedSceneProfile; width: number; height: number; tier: ConnectedTier; layout: ConnectedProjectionLayout } | undefined;
+
+  function ensureInteraction(): ConnectedInteraction | undefined {
+    if (!profile) return undefined;
+    interaction ??= (options.createInteraction ?? createConnectedInteraction)(profile);
+    return interaction;
+  }
+
+  /** Motion still in flight: the controller must keep drawing until it settles. */
+  function interactionAwake(): boolean {
+    return interaction !== undefined && !interaction.isSettled();
+  }
+
   function isActive(): boolean {
-    return pose !== undefined && pose.scrollActivity > ACTIVE_ACTIVITY_THRESHOLD;
+    return (pose !== undefined && pose.scrollActivity > ACTIVE_ACTIVITY_THRESHOLD) || interactionAwake();
   }
 
   function ambientIntervalMs(): number {
     return 1000 / AMBIENT_FPS[input?.tier ?? 'wide'];
+  }
+
+  function frameIntervalMs(): number {
+    return isActive() ? ACTIVE_INTERVAL_MS : ambientIntervalMs();
+  }
+
+  /**
+   * A scene with the sleep policy holds no callback once its poster ease has ended and its motion has settled; every
+   * other scene (legacy, or no profile) keeps its capped ambient loop.
+   */
+  function wantsFrames(): boolean {
+    if (profile?.ambient !== 'sleep') return true;
+    return interactionAwake() || settleStartedAt !== undefined;
   }
 
   function cancelPending() {
@@ -89,9 +168,62 @@ export function createConnectedController(options: ControllerOptions): Connected
     pendingId = options.scheduler.schedule(() => tick(token), Math.max(0, dueAt - options.clock.now()));
   }
 
+  /** Stops all stimulation at once: a pause, a hidden tab, the Footer and a disposal do not carry motion over. */
+  function clearStimulation() {
+    interaction?.clear();
+    pointer = undefined;
+    pendingScroll = 0;
+  }
+
+  function nativeLayoutFor(active: ConnectedSceneProfile, viewport: SceneLayout, tier: ConnectedTier): ConnectedProjectionLayout | undefined {
+    if (
+      nativeCache &&
+      nativeCache.profile === active &&
+      nativeCache.width === viewport.viewportWidth &&
+      nativeCache.height === viewport.viewportHeight &&
+      nativeCache.tier === tier
+    ) {
+      return nativeCache.layout;
+    }
+    try {
+      const native = computeProjectionLayout(active, { width: viewport.viewportWidth, height: viewport.viewportHeight, tier });
+      nativeCache = { profile: active, width: viewport.viewportWidth, height: viewport.viewportHeight, tier, layout: native };
+      return native;
+    } catch {
+      // An unmeasurable viewport yields no frame and no interaction rather than a non-finite pose.
+      return undefined;
+    }
+  }
+
+  /**
+   * Resolves the native or poster frame once, then lets the interaction act in it: the interaction's CSS caps apply in the
+   * frame the renderer and the labels use, and the final pose carries that frame to them.
+   */
+  function finalize(model: ScenePose, now: number, elapsedMs: number): ScenePose {
+    if (!profile || !input || !layout) return model;
+    const native = nativeLayoutFor(profile, layout, input.tier);
+    if (!native) return model;
+    const framed = resolvePosterProjection(profile, model, native);
+    const stepper = ensureInteraction() as ConnectedInteraction;
+    const scroll = pendingScroll;
+    pendingScroll = 0;
+    return stepper.step({
+      nowMs: now,
+      deltaMs: elapsedMs,
+      base: framed.pose,
+      layout: framed.layout,
+      pointer:
+        inputEnabled && pointer
+          ? { x: pointer.x, y: pointer.y, vx: pointer.vx, vy: pointer.vy, ageSeconds: Math.max(0, (now - pointer.movedAt) / 1000) }
+          : null,
+      scrollDeltaPx: inputEnabled ? scroll : 0,
+    });
+  }
+
   function renderNow() {
     if (!input) return;
     const now = options.clock.now();
+    const elapsedMs = now - lastRenderAt;
     const stale = now - lastUpdateAt > VELOCITY_STALE_MS;
     let progress = targetProgress;
     let posterBlend = 0;
@@ -108,19 +240,21 @@ export function createConnectedController(options: ControllerOptions): Connected
       tier: input.tier,
       progress,
       velocityPxPerSecond: stale ? 0 : input.velocityPxPerSecond,
-      deltaSeconds: (now - lastRenderAt) / 1000,
+      deltaSeconds: elapsedMs / 1000,
+      fixedRest: profile?.nodeStyle === 'atlas',
     });
     pose = { ...pose, posterBlend };
     lastRenderAt = now;
     renderCount += 1;
-    options.render(pose);
+    output = finalize(pose, now, elapsedMs);
+    options.render(output);
   }
 
   function tick(token: number) {
     if (token !== generation || state !== 'live') return;
     pendingId = undefined;
     renderNow();
-    scheduleAt(lastRenderAt + (isActive() ? ACTIVE_INTERVAL_MS : ambientIntervalMs()));
+    if (wantsFrames()) scheduleAt(lastRenderAt + frameIntervalMs());
   }
 
   /** Pause outranks visibility and the Footer; a stopped scene holds no callback and draws nothing. */
@@ -128,6 +262,7 @@ export function createConnectedController(options: ControllerOptions): Connected
     if (state === 'disposed') return;
     if (userPaused) {
       cancelPending();
+      clearStimulation();
       state = 'paused';
       return;
     }
@@ -143,6 +278,7 @@ export function createConnectedController(options: ControllerOptions): Connected
         renderNow();
       }
       cancelPending();
+      clearStimulation();
       if (input) state = 'suspended';
       return;
     }
@@ -162,18 +298,63 @@ export function createConnectedController(options: ControllerOptions): Connected
     }
     pendingStart = undefined;
     renderNow();
-    scheduleAt(lastRenderAt + ambientIntervalMs());
+    if (wantsFrames()) scheduleAt(lastRenderAt + frameIntervalMs());
+  }
+
+  /** Records a host pointer sample; returns whether it is new input that must wake a sleeping scene. */
+  function applyPointer(sample: ConnectedPointerInput | null, now: number): boolean {
+    if (sample === null) {
+      const had = pointer !== undefined;
+      pointer = undefined;
+      return had;
+    }
+    if (!finite(sample.x) || !finite(sample.y)) return false;
+    const vx = finite(sample.vx) ? sample.vx : 0;
+    const vy = finite(sample.vy) ? sample.vy : 0;
+    const moved = !pointer || Math.hypot(sample.x - pointer.x, sample.y - pointer.y) > POINTER_MOVE_EPSILON_PX;
+    pointer = { x: sample.x, y: sample.y, vx, vy, movedAt: moved || !pointer ? now : pointer.movedAt };
+    return moved;
   }
 
   return {
     update(next) {
       if (state === 'disposed') return;
       const measured = options.getLayout();
-      const changed = !input || input.graph !== next.graph || input.tier !== next.tier || !sameLayout(layout, measured);
+      const now = options.clock.now();
+      const nextProfile = next.profile ?? profile;
+      const profileChanged = nextProfile !== profile;
+      if (profileChanged) {
+        // A new profile is a new rest pose (a resize): the old interaction and its stimulation are dropped, not replayed.
+        clearStimulation();
+        interaction = undefined;
+        profile = nextProfile;
+      }
+      const changed =
+        !input || input.graph !== next.graph || input.tier !== next.tier || !sameLayout(layout, measured) || profileChanged;
       input = next;
       layout = measured;
-      lastUpdateAt = options.clock.now();
+      lastUpdateAt = now;
       targetProgress = measureConnectedProgress(next.scrollY, measured.footerDocumentTop, measured.viewportHeight);
+      // Input only matters to a profiled scene that is allowed to draw; everything else drops it.
+      let inputChanged = false;
+      if (profile) {
+        if (next.inputEnabled !== undefined && next.inputEnabled !== inputEnabled) {
+          inputEnabled = next.inputEnabled;
+          if (!inputEnabled) {
+            // New excitation stops at once; the interaction keeps damping what is already moving.
+            pointer = undefined;
+            pendingScroll = 0;
+          }
+          inputChanged = true;
+        }
+        if (inputEnabled && state !== 'paused' && !userPaused) {
+          if (next.pointer !== undefined && applyPointer(next.pointer, now)) inputChanged = true;
+          if (finite(next.scrollDeltaPx) && next.scrollDeltaPx !== 0) {
+            pendingScroll += next.scrollDeltaPx;
+            inputChanged = true;
+          }
+        }
+      }
       // A new layout, graph or tier lands on the current geometry; only the idle angle carries over.
       // While the start pose is easing, fonts and images measuring the page again must not cancel it: it
       // keeps easing toward the (new) target. After the settle a changed layout lands on the geometry as before.
@@ -182,6 +363,13 @@ export function createConnectedController(options: ControllerOptions): Connected
       reconcile();
       if (!wasLive || state !== 'live') return;
       if (changed) renderNow();
+      // New input wakes a sleeping scene and must not wait for a pending ambient frame.
+      if (inputChanged) {
+        const dueAt = Math.max(options.clock.now(), lastRenderAt + ACTIVE_INTERVAL_MS);
+        if (pendingId === undefined || pendingDueAt > dueAt) scheduleAt(dueAt);
+      } else if (changed && pendingId === undefined && wantsFrames()) {
+        scheduleAt(lastRenderAt + frameIntervalMs());
+      }
       // An active scroll must not wait for a pending ambient frame.
       if (next.velocityPxPerSecond !== 0 && pendingId !== undefined) {
         const activeDueAt = lastRenderAt + ACTIVE_INTERVAL_MS;
@@ -197,16 +385,22 @@ export function createConnectedController(options: ControllerOptions): Connected
       reconcile();
     },
     snapshot() {
+      let targetFps = 0;
+      if (state === 'live') {
+        if (profile?.ambient === 'sleep') targetFps = interactionAwake() ? ACTIVE_FPS : settleStartedAt !== undefined ? AMBIENT_FPS[input?.tier ?? 'wide'] : 0;
+        else targetFps = isActive() ? ACTIVE_FPS : AMBIENT_FPS[input?.tier ?? 'wide'];
+      }
       return {
         state,
-        pose: pose ?? { progress: 0, idleAngleRadians: 0, scrollActivity: 0, nodes: [], edges: [] },
+        pose: output ?? pose ?? { progress: 0, idleAngleRadians: 0, scrollActivity: 0, nodes: [], edges: [] },
         pendingCallbacks: pendingId === undefined ? 0 : 1,
         renderCount,
-        targetFps: state === 'live' ? (isActive() ? ACTIVE_FPS : AMBIENT_FPS[input?.tier ?? 'wide']) : 0,
+        targetFps,
       };
     },
     dispose() {
       cancelPending();
+      clearStimulation();
       state = 'disposed';
     },
   };
