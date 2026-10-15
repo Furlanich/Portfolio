@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 // PLAN-SFC-V1 Task 2: the Playwright project partition and the CI shape. Discovery is asked of Playwright
@@ -34,6 +34,7 @@ function listTests(env = {}, { allowMissingExport = false } = {}) {
   const unexpected = (json.errors ?? []).filter((error) => !allowed.test(error.message ?? ''));
   assert.deepEqual(unexpected, [], 'playwright --list reported a configuration error');
   const byProject = new Map();
+  const titlesByProject = new Map();
   const files = new Set();
   const walk = (suite) => {
     for (const spec of suite.specs ?? []) {
@@ -41,6 +42,7 @@ function listTests(env = {}, { allowMissingExport = false } = {}) {
         const entry = byProject.get(t.projectName) ?? new Set();
         entry.add(suite.file ?? spec.file);
         byProject.set(t.projectName, entry);
+        titlesByProject.set(t.projectName, [...(titlesByProject.get(t.projectName) ?? []), spec.title]);
         files.add(spec.file);
       }
     }
@@ -51,7 +53,7 @@ function listTests(env = {}, { allowMissingExport = false } = {}) {
     const count = (s) => (s.specs ?? []).reduce((n, spec) => n + (spec.tests ?? []).length, 0) + (s.suites ?? []).reduce((n, c) => n + count(c), 0);
     return sum + count(suite);
   }, 0);
-  return { projects: json.config.projects.map((project) => project.name), byProject, total, files };
+  return { projects: json.config.projects.map((project) => project.name), byProject, titlesByProject, total, files };
 }
 
 const defaultList = listTests();
@@ -83,6 +85,32 @@ test('commercial and new-route runtime projects exist only in candidate mode', (
   const candidate = listTests({ SFC_TEST_MODE: 'candidate' });
   for (const project of candidateOnly) assert.ok(candidate.projects.includes(project), `${project} exists in candidate mode`);
   assert.ok(candidate.total <= 180, `the candidate list has ${candidate.total} cases, over the 180 planning envelope`);
+});
+
+test('Firefox and WebKit candidate projects select only @cross-browser cases while Chromium selects all', () => {
+  // A throwaway spec in a fixture directory, with one tagged smoke case and one untagged exhaustive case. The
+  // zero-case real candidate list cannot detect a missing tag filter, so this fixture does (and is removed).
+  const directory = `${root}tests/e2e/__sfc_fixture__`;
+  mkdirSync(directory, { recursive: true });
+  try {
+    writeFileSync(
+      `${directory}/contact-commercial.spec.ts`,
+      [
+        "import { test } from '@playwright/test';",
+        "test('fixture smoke journey', { tag: '@cross-browser' }, async () => {});",
+        "test('fixture exhaustive permutation', async () => {});",
+        '',
+      ].join('\n'),
+    );
+    const listed = listTests({ SFC_TEST_MODE: 'candidate' });
+    const titles = (project) => (listed.titlesByProject.get(project) ?? []).filter((title) => title.startsWith('fixture '));
+    assert.deepEqual(titles('contact-commercial-chromium').sort(), ['fixture exhaustive permutation', 'fixture smoke journey']);
+    for (const project of ['contact-commercial-firefox', 'contact-commercial-webkit']) {
+      assert.deepEqual(titles(project), ['fixture smoke journey'], `${project} runs only the tagged smoke case`);
+    }
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test('production export mode defines the connected and the SFC production projects', () => {

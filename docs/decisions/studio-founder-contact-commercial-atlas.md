@@ -3,6 +3,9 @@ id: ADR-SFC-COMMERCIAL-ATLAS-V1
 type: architecture-decision-record
 status: APPROVED
 date: 2026-10-15
+supersedes:
+  - ADR-CONTACT-INQUIRY-DEMO-MODE
+  - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
 related:
   - RFC-SFC-COMMERCIAL-ATLAS-V1
   - DESIGN-SFC-V1
@@ -34,7 +37,7 @@ last_verified: 2026-10-15
 
 ## Scope of supersession
 
-This ADR supersedes, only within the RFC's bounded table and only as each reviewed checkpoint lands:
+This ADR supersedes (the `supersedes` metadata names both records; the qualification below is part of the decision), only within the RFC's bounded table and only as each reviewed checkpoint lands:
 
 - the **demonstration-only** inquiry decision in [ADR-CONTACT-INQUIRY-DEMO-MODE](contact-inquiry-demonstration-mode.md), by a separately gated commercial mode. The testable demo adapter, the zero-transmission test of the demo mode and the no-secret-in-client rule are kept;
 - the **two-route limit** and the passive-proximity and rigid-path behavior of [ADR-CONNECTED-STUDIO-PAGE-RUNTIME](connected-studio-page-runtime.md), by the profile extension and the motion change above. Its gates, one renderer per active route, cancellable activation, Pause and context-loss rules, and static fallback are kept.

@@ -49,6 +49,32 @@ export type GraphDefinition = {
   readonly edges: readonly GraphEdge[];
 };
 
+/**
+ * PLAN-SFC-V1 W1: the resolved projection frame. Width and height are the full interpolated projection in
+ * CSS px; `crop` is the visible CSS viewport inside it (only set during the initial poster settle). The
+ * spread, depth and node factors are the legacy fit values; Atlas profiles carry spreadX = spreadY =
+ * depthScale = 1 because their depth and tier factors are already applied. CSS dimensions only: the device
+ * pixel ratio never enters a projection. Structurally the same fields as the runtime's ConnectedLayout.
+ */
+export type ConnectedProjectionLayout = {
+  readonly width: number;
+  readonly height: number;
+  readonly tier: ConnectedTier;
+  readonly aspect: number;
+  readonly crop?: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
+  readonly spreadX: number;
+  readonly spreadY: number;
+  readonly depthScale: number;
+  readonly nodeScale: number;
+  readonly pathRadius: number;
+  readonly tracerRadius: number;
+  /** CSS-size distant sprites follow the poster cover scale during its initial settle. */
+  readonly pointScale?: number;
+};
+
+/** A flexible string: seven anchor-space points at s = j/6, endpoints pinned to their nodes. */
+export type EdgeSamplePoints = readonly [Vec3, Vec3, Vec3, Vec3, Vec3, Vec3, Vec3];
+
 export type ScenePose = {
   /** Initial poster projection (1) easing to the responsive field (0); absent means normal projection. */
   readonly posterBlend?: number;
@@ -57,6 +83,16 @@ export type ScenePose = {
   readonly scrollActivity: number;
   readonly nodes: readonly { readonly id: string; readonly position: Vec3; readonly rotation: Vec3; readonly scale: number }[];
   readonly edges: readonly { readonly id: string; readonly growth: number }[];
+  /**
+   * The frame the controller resolved once (native or poster) before interaction. The renderer and the labels
+   * consume it instead of applying a second poster or spread transform; a pose without it uses the pure
+   * legacy fallback. Optional so legacy poses compile and behave unchanged.
+   */
+  readonly projectionLayout?: ConnectedProjectionLayout;
+  /** ID-keyed flexible strings in anchor space. Absent on legacy poses, which keep their rigid paths. */
+  readonly edgeSamples?: readonly { readonly id: string; readonly points: EdgeSamplePoints }[];
+  /** ID-keyed (node or edge) excitation records, each value normalized to 0..1. */
+  readonly excitation?: readonly { readonly id: string; readonly value: number }[];
 };
 
 export type SceneGateInput = {

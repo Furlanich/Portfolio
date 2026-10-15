@@ -38,6 +38,11 @@ const contactCommercial = /[\\/]contact-commercial\.spec\.ts$/;
 const sfcRuntime = /[\\/]sfc-runtime\.spec\.ts$/;
 const sfcProduction = /[\\/]sfc-production\.spec\.ts$/;
 
+// The cross-browser smoke tag. Chromium owns the exhaustive state permutations; a case runs on Firefox and
+// WebKit only when it carries `{ tag: '@cross-browser' }`, e.g. `test('submits and recovers', { tag: '@cross-browser' }, ...)`.
+// Untagged cases are Chromium-only, which keeps the candidate list inside its 180-case planning envelope.
+const crossBrowserSmoke = /@cross-browser/;
+
 const swiftshader = { args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] };
 
 // The three project sets, selected at the bottom. Kept in one object so every project is declared at one
@@ -76,11 +81,13 @@ const projectSets = {
     {
       name: 'contact-commercial-firefox',
       testMatch: contactCommercial,
+      grep: crossBrowserSmoke,
       use: { ...devices['Desktop Firefox'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'contact-commercial-webkit',
       testMatch: contactCommercial,
+      grep: crossBrowserSmoke,
       use: { ...devices['Desktop Safari'], viewport: { width: 1440, height: 900 } },
     },
     {

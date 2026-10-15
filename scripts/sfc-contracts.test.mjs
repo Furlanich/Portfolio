@@ -349,3 +349,21 @@ test('export-test-support runs the real verifier against a fixture export', asyn
   }
   assert.equal(existsSync(fixture.directory), false, 'cleanup removes the fixture directory');
 });
+
+// --- ADR metadata (ADR-INDEX: a changed decision names its predecessor in `supersedes`) ----------------------------
+
+test('the commercial Atlas ADR names both partially superseded predecessors in supersedes metadata', () => {
+  const lines = read('docs/decisions/studio-founder-contact-commercial-atlas.md').split(/\r?\n/);
+  const end = lines.indexOf('---', 1);
+  const front = lines.slice(1, end);
+  const start = front.indexOf('supersedes:');
+  assert.ok(start >= 0, 'supersedes metadata is declared');
+  const superseded = [];
+  for (const line of front.slice(start + 1)) {
+    if (!line.startsWith('  - ')) break;
+    superseded.push(line.slice(4).trim());
+  }
+  assert.deepEqual(superseded.sort(), ['ADR-CONNECTED-STUDIO-PAGE-RUNTIME', 'ADR-CONTACT-INQUIRY-DEMO-MODE']);
+  // Retained dependencies stay `related`, not superseded.
+  assert.ok(front.includes('  - ADR-CONTACT-INQUIRY-PIPELINE') && !superseded.includes('ADR-CONTACT-INQUIRY-PIPELINE'));
+});

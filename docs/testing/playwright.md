@@ -162,7 +162,7 @@ PLAN-SFC-V1 Task 2 partitioned the Playwright specs by page owner and added the 
 | New-route accessibility | `sfc-accessibility.spec.ts` | `accessibility-chromium` (the unanchored `/accessibility\.spec\.ts/` pattern already matches it) | Tasks 11 and 12 |
 | New-route production | `sfc-production.spec.ts` | `sfc-production-{chromium,firefox,webkit}`, only with `PLAYWRIGHT_SERVE_EXPORT=1` | Tasks 16 and 18 |
 
-A family with no spec file yet lists nothing; `playwright test --list` then exits 1 with "No tests found" in its report. Chromium owns the exhaustive state permutations. Firefox and WebKit run tagged cross-browser cases for the real form, navigation and focus behavior, not duplicate pixel or permutation coverage.
+A family with no spec file yet lists nothing; `playwright test --list` then exits 1 with "No tests found" in its report. Chromium owns the exhaustive state permutations. Firefox and WebKit run only cases tagged `@cross-browser`, for the real form, navigation and focus behavior, not duplicate pixel or permutation coverage. Tag a case with `test('submits and recovers', { tag: '@cross-browser' }, async ({ page }) => { ... })`; the two candidate projects filter on that tag (`grep` in `playwright.config.ts`), so an untagged case is Chromium-only and cannot duplicate the matrix against the 180-case candidate envelope. `scripts/sfc-ci-budget.test.mjs` proves the filter with a throwaway tagged and untagged fixture.
 
 `SFC_TEST_MODE=candidate` selects the candidate families and replaces the default project set. It selects tests only. The application's own mode comes from committed release records, never from this variable or any environment value.
 
@@ -200,7 +200,7 @@ Each page owns one declarative export requirement map in `scripts/export-require
 ### Continuous integration
 
 - The workflow runs for pull requests to `main` and to `codex/sfc-integration`, and by `workflow_dispatch`. Use the manual trigger at a PR's immutable head to bootstrap a PR that changes the workflow itself; record the run.
-- The `browser` job runs four shards, `--shard=N/4 --workers=2`, with `fail-fast: false` and a 35-minute hard limit (target 25). The last single-job run took 51m59s ([run 38623461245](https://github.com/Furlanich/Portfolio/actions/runs/38623461245)). **The first sharded durations are not measured yet**; Task 2's receipt records them from the first run and each wave re-measures. Do not extend the limit or drop unique coverage to hide a failure.
+- The `browser` job runs four shards, `--shard=N/4 --workers=2`, with `fail-fast: false` and a 35-minute hard limit (target 25). The last single-job run took 51m59s ([run 38623461245](https://github.com/Furlanich/Portfolio/actions/runs/38623461245)). The first four-shard run ([run 38735223527](https://github.com/Furlanich/Portfolio/actions/runs/38735223527), PR #143, all green) took 12m37s, 16m17s, 8m54s and 17m35s per shard, from GitHub's started and completed timestamps; the shards are unbalanced, so each wave re-measures. Do not extend the limit or drop unique coverage to hide a failure.
 - Every shard uploads its report and traces with `if: always()`, named by shard, run and attempt, kept 7 days.
 - The dedicated candidate job joins in Task 10, with an always-run restore step.
 - Local ports: owner sessions use `3200 + task number`, reviewers `3300 + task number`; each checkout has its own `.next` and `out`, and export runs never reuse a server.
