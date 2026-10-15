@@ -320,8 +320,8 @@ test('each page owns one declarative requirement map and the shared verifier onl
   for (const { name, exportName, routes } of partition) {
     assert.doesNotMatch(verifier, new RegExp(`const ${exportName}\\s*=\\s*\\{`), `${exportName} is no longer declared inline`);
     assert.match(verifier, new RegExp(`from '\\./export-requirements/${name}\\.mjs'`), `the verifier imports ${name}`);
-    const module = await import(`./export-requirements/${name}.mjs`);
-    assert.deepEqual(Object.keys(module[exportName]), routes, `${name} requires exactly its two localized routes`);
+    const requirements = await import(`./export-requirements/${name}.mjs`);
+    assert.deepEqual(Object.keys(requirements[exportName]), routes, `${name} requires exactly its two localized routes`);
   }
 });
 
