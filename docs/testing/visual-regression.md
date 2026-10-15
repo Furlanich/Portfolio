@@ -11,7 +11,7 @@ related:
   - DESIGN-SPF-V1
   - PLAN-SPF-V1
   - REVIEW-SPF-ACCEPTANCE-V1
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 ---
 
 # Visual regression policy
@@ -62,3 +62,15 @@ PLAN-SPF-V1 assigns these baselines to one task at a time, in the order Task 3 (
 - Reduced motion is on for the `visual-chromium` project, so there is no hover state, zoom or canvas in any capture.
 - Windows baselines are captured locally. Linux baselines are adopted from the failed CI run's `*-actual.png` files for exactly these cases and never in bulk.
 - **Acceptance link (2026-10-14).** PLAN-SPF-V1 Tasks 9 and 10 changed no baseline. The approval state of each row above is exactly what its receipt records; the [acceptance record](../reviews/services-projects-footer-acceptance-v1/index.md) lists the approvals that remain OPEN. Nothing here is rewritten by that record.
+
+## Baseline bootstrap for PLAN-SFC-V1 (Studio, Founder, Contact, legal)
+
+Applies to Tasks 6, 7, 9, 10, 14 and 16, each updating only its own named visual spec and `-snapshots` directory.
+
+1. Capture the deterministic visual-Chromium, reduced-motion Windows images, inspect expected, actual and diff, and obtain owner approval.
+2. Trigger CI at the **same head**. A missing Linux golden is an explicitly identified baseline-bootstrap failure, never a green acceptance.
+3. Download only the corresponding `*-actual.png` from that run's named shard artifact, inspect each against the approved rendering, and commit it under its exact Linux snapshot name.
+4. Rerun Windows and CI without a bulk update; merge only when clean. If any nonbaseline test also fails, repair it first.
+5. Record hashes, the run, the head and the owner decision in the task receipt. Never rename a Windows image to a Linux name, and never take an image from another head.
+
+Live motion is verified by recordings and behavior, not by animated pixel goldens.
