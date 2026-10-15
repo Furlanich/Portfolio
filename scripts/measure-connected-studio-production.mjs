@@ -46,6 +46,18 @@ const DESTINATIONS = [
   { route: 'projects', locale: 'en', pathname: '/en/work/' },
 ];
 const POSTER_CEILINGS = { wide: 150 * KIB, compact: 80 * KIB };
+// PLAN-SFC-V1 Task 3: the reading, intake and legal routes the commercial redesign changes (Terms does not exist
+// yet; Privacy is its baseline). They have no optional engine: only the chunks their own HTML references are measured.
+const READING_DESTINATIONS = [
+  { route: 'studio', locale: 'es', pathname: '/estudio/' },
+  { route: 'studio', locale: 'en', pathname: '/en/about/' },
+  { route: 'founder', locale: 'es', pathname: '/estudio/samuel-furlanich/' },
+  { route: 'founder', locale: 'en', pathname: '/en/about/samuel-furlanich/' },
+  { route: 'contact', locale: 'es', pathname: '/contacto/' },
+  { route: 'contact', locale: 'en', pathname: '/en/contact/' },
+  { route: 'privacy', locale: 'es', pathname: '/privacidad/' },
+  { route: 'privacy', locale: 'en', pathname: '/en/privacy/' },
+];
 
 if (!process.argv.includes('--skip-build')) {
   execSync('npm run build', { stdio: 'inherit', env: { ...process.env, NEXT_PUBLIC_BASE_PATH: basePath } });
@@ -114,7 +126,7 @@ async function observe(destination, { preference = null, seedLoss = false } = {}
   }
 }
 
-const report = { kind: 'production export measurement (not field data)', basePath: basePath || '/', limitKiB: OPTIONAL_CLOSURE_LIMIT_BYTES / KIB, destinations: [], sharing: null, posters: {}, notes: [] };
+const report = { kind: 'production export measurement (not field data)', basePath: basePath || '/', limitKiB: OPTIONAL_CLOSURE_LIMIT_BYTES / KIB, destinations: [], readingRoutes: [], sharing: null, posters: {}, notes: [] };
 const failures = [];
 
 try {
@@ -169,6 +181,27 @@ try {
       if (bytes > POSTER_CEILINGS[quality]) failures.push(`poster ${route}-${quality} is ${bytes} bytes, above ${POSTER_CEILINGS[quality]}`);
     }
   }
+  // First-load JS of the reading routes: the JS chunks the route's own HTML references, from the emitted export.
+  // This is the static-analysis side of the Task 3 baseline; the browser-observed side is `--startup-baseline` in the vitals script.
+  const chunkByPath = new Map(chunks.map((item) => [item.path, item]));
+  for (const destination of READING_DESTINATIONS) {
+    const referenced = routeChunks(destination.pathname);
+    const missing = referenced.filter((item) => !chunkByPath.has(item));
+    if (missing.length) failures.push(`${destination.route}/${destination.locale}: referenced chunks are not in the emitted export: ${missing.join(', ')}`);
+    const scripts = referenced.filter((item) => item.endsWith('.js')).map((item) => chunkByPath.get(item)).filter(Boolean);
+    const styles = referenced.filter((item) => item.endsWith('.css')).map((item) => chunkByPath.get(item)).filter(Boolean);
+    const total = (list, key) => list.reduce((sum, item) => sum + item[key], 0);
+    report.readingRoutes.push({
+      ...destination,
+      jsChunks: scripts.length,
+      jsBrotliKiB: +(total(scripts, 'brotliBytes') / KIB).toFixed(1),
+      jsRawKiB: +(total(scripts, 'rawBytes') / KIB).toFixed(1),
+      cssBrotliKiB: +(total(styles, 'brotliBytes') / KIB).toFixed(1),
+      chunks: scripts.map((item) => item.path).sort(),
+    });
+  }
+  const headroom = report.destinations.map((item) => ({ destination: `${item.route}/${item.locale}`, brotliKiB: item.closure.brotliKiB, headroomKiB: +(report.limitKiB - item.closure.brotliKiB).toFixed(1), headroomWarning: item.closure.brotliBytes > 118 * KIB }));
+  report.closureHeadroom = headroom;
   report.notes.push('Closure bytes come from the emitted export (raw, Brotli quality 11), not from a network trace. Live-tier behavior and its hardware figures are OPEN until the owner-executed device protocol; nothing here is a live measurement.');
 } catch (error) {
   failures.push(error.message);
@@ -178,7 +211,7 @@ try {
 }
 
 const summary = report.destinations.map((item) => ({ destination: `${item.route}/${item.locale}`, brotliKiB: item.closure.brotliKiB, rawKiB: item.closure.rawKiB, chunks: item.closure.chunks.length, limitKiB: item.closure.limitKiB }));
-console.log(JSON.stringify({ basePath: report.basePath, summary, sharing: report.sharing, posters: report.posters }, null, 2));
+console.log(JSON.stringify({ basePath: report.basePath, summary, closureHeadroom: report.closureHeadroom, readingRoutes: report.readingRoutes.map((item) => ({ route: item.route, locale: item.locale, jsChunks: item.jsChunks, jsBrotliKiB: item.jsBrotliKiB, jsRawKiB: item.jsRawKiB, cssBrotliKiB: item.cssBrotliKiB })), sharing: report.sharing, posters: report.posters }, null, 2));
 const outFile = argument('out');
 if (outFile) fs.writeFileSync(outFile, `${JSON.stringify(report, null, 2)}\n`);
 if (failures.length) {

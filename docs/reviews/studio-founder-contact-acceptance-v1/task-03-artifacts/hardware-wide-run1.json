@@ -1,0 +1,6919 @@
+{
+  "kind": "hardware candidate evidence (one machine; not the owner acceptance, not field data)",
+  "tier": "wide",
+  "browser": "chromium",
+  "headed": false,
+  "gpuTimersEnabled": true,
+  "basePath": "/",
+  "machine": {
+    "cpu": "Intel(R) Core(TM) i3-8100 CPU @ 3.60GHz",
+    "logicalCores": 4,
+    "memoryGiB": 23.9,
+    "platform": "win32 10.0.26300"
+  },
+  "setsTestHook": false,
+  "forcesSoftwareRenderer": false,
+  "limitations": [
+    "Software-rendered numbers are never reported as hardware: a software renderer ends the run with every row OPEN.",
+    "The render CPU time is a CPU-only estimate of draw submission; GPU time comes from timer queries when the extension exists.",
+    "Idle, traversal, Pause, hidden and Footer windows are measured on this machine only; phones need their own runs.",
+    "The 200% and 400% checks are viewport-equivalent, not browser-UI zoom. The accessibility tree is a proxy, not a screen reader."
+  ],
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 2060 (0x00001F08) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "gpuTimerQueries": true,
+  "liveWithoutOverride": true,
+  "idle": {
+    "seconds": 120,
+    "renders": 3541,
+    "fps": 29.4,
+    "fpsMethod": "intervals over the span of the frame timestamps",
+    "gpuP95Ms": 4.188,
+    "heapStartMiB": 6.1,
+    "heapEndMiB": 6.7
+  },
+  "traversals": {
+    "count": 3,
+    "renders": 2386,
+    "intervalsMeasured": 2382,
+    "intervalP50Ms": 16.7,
+    "gpuTimedFrames": 2378,
+    "disjointRejections": 0,
+    "longTasksMs": [],
+    "labels": {
+      "samples": 6,
+      "minVisible": 0,
+      "maxVisible": 0,
+      "smallestFontPx": 99,
+      "allUpright": true,
+      "allInert": true,
+      "overlappingMasks": 0,
+      "atHero": {
+        "total": 16,
+        "visible": 4,
+        "smallest": 12,
+        "allUpright": true,
+        "allInert": true,
+        "overlappingMasks": 0
+      }
+    }
+  },
+  "pageOnlyControl": {
+    "note": "requestAnimationFrame intervals while the page scrolls with the scene paused (no scene draws): the cost of the page itself",
+    "samples": 727,
+    "intervalP50Ms": 16.7,
+    "intervalP95Ms": 16.8
+  },
+  "paused": {
+    "windowSeconds": 4,
+    "draws": 0,
+    "rafCalls": 0,
+    "timeoutCalls": 0,
+    "note": "timeout calls come from the whole page and are reported, not gated",
+    "resumedDraws": 59
+  },
+  "hidden": {
+    "visibilityState": "visible",
+    "draws": "not measured (the page was not hidden: run with --headed so the window can be minimized)",
+    "via": "not attempted",
+    "resumedAfterShow": true
+  },
+  "footer": {
+    "windowSeconds": 4,
+    "draws": 0
+  },
+  "routeChanges": {
+    "count": 5,
+    "listeners": [
+      528,
+      528
+    ],
+    "heapMiB": [
+      9.5,
+      9.5
+    ],
+    "contextsCreatedInDocument": 19
+  },
+  "cache": {
+    "engineChunks": [
+      "1wwnr8s91lzay.js",
+      "0xefnise8yeqz.js"
+    ],
+    "engineColdTransferKiB": 560.3,
+    "engineColdRequested": 2,
+    "engineWarmServedFromCache": 2,
+    "engineWarmNewDownloads": [],
+    "allChunksColdRequests": 15,
+    "allChunksWarmFromCache": 15,
+    "note": "transfer sizes are uncompressed, as the local server sends them; the Brotli size of the closure is gated by measure:connected-studio. Cache reuse is reported apart and never subtracts from the cold figure."
+  },
+  "metrics": {
+    "ambientFps": 29.4,
+    "activeIntervalP95Ms": 18.9,
+    "renderCpuP95Ms": 0.3,
+    "renderGpuP95Ms": 16.91,
+    "drawCallsMax": 7,
+    "interactionTaskMaxMs": 0,
+    "pixelRatio": 1,
+    "pausedDraws": 0,
+    "pausedRafCalls": 0,
+    "hiddenDraws": null,
+    "footerDraws": 0,
+    "listenerGrowth": 0,
+    "maxContexts": 1
+  },
+  "labelsOk": true,
+  "hardwareVerdict": {
+    "verdict": "OPEN",
+    "rows": {
+      "activeIntervalP95Ms": "PASS (18.9 vs 20)",
+      "renderCpuP95Ms": "PASS (0.3 vs 20)",
+      "renderGpuP95Ms": "PASS (16.91 vs 20)",
+      "interactionTaskMaxMs": "PASS (0 vs 50)",
+      "drawCallsMax": "PASS (7 vs 28)",
+      "pixelRatio": "PASS (1 vs 1.5)",
+      "ambientFps": "PASS (29.4 vs 30)",
+      "pausedDraws": "PASS (0 vs 0)",
+      "pausedRafCalls": "PASS (0 vs 0)",
+      "hiddenDraws": "OPEN (not measured vs 0)",
+      "footerDraws": "PASS (0 vs 0)",
+      "maxContexts": "PASS (1 vs 1)",
+      "listenerGrowth": "PASS (0 vs 2)"
+    }
+  },
+  "zoom": [
+    {
+      "zoom": "200%",
+      "route": "services",
+      "locale": "es",
+      "wentLive": true,
+      "innerWidth": 720,
+      "devicePixelRatio": 2,
+      "horizontalScroll": false,
+      "overflowingElements": 0,
+      "h1Visible": true,
+      "pause": {
+        "width": 125,
+        "height": 44,
+        "inViewport": true
+      },
+      "footerPresent": true,
+      "footerReachable": true,
+      "labels": {
+        "total": 8,
+        "visible": 0,
+        "smallest": null,
+        "allUpright": true,
+        "allInert": true,
+        "overlappingMasks": 0
+      },
+      "ok": true
+    },
+    {
+      "zoom": "200%",
+      "route": "services",
+      "locale": "en",
+      "wentLive": true,
+      "innerWidth": 720,
+      "devicePixelRatio": 2,
+      "horizontalScroll": false,
+      "overflowingElements": 0,
+      "h1Visible": true,
+      "pause": {
+        "width": 160,
+        "height": 44,
+        "inViewport": true
+      },
+      "footerPresent": true,
+      "footerReachable": true,
+      "labels": {
+        "total": 8,
+        "visible": 0,
+        "smallest": null,
+        "allUpright": true,
+        "allInert": true,
+        "overlappingMasks": 0
+      },
+      "ok": true
+    },
+    {
+      "zoom": "200%",
+      "route": "projects",
+      "locale": "es",
+      "wentLive": true,
+      "innerWidth": 720,
+      "devicePixelRatio": 2,
+      "horizontalScroll": false,
+      "overflowingElements": 0,
+      "h1Visible": true,
+      "pause": {
+        "width": 125,
+        "height": 44,
+        "inViewport": true
+      },
+      "footerPresent": true,
+      "footerReachable": true,
+      "labels": {
+        "total": 8,
+        "visible": 0,
+        "smallest": null,
+        "allUpright": true,
+        "allInert": true,
+        "overlappingMasks": 0
+      },
+      "ok": true
+    },
+    {
+      "zoom": "200%",
+      "route": "projects",
+      "locale": "en",
+      "wentLive": true,
+      "innerWidth": 720,
+      "devicePixelRatio": 2,
+      "horizontalScroll": false,
+      "overflowingElements": 0,
+      "h1Visible": true,
+      "pause": {
+        "width": 160,
+        "height": 44,
+        "inViewport": true
+      },
+      "footerPresent": true,
+      "footerReachable": true,
+      "labels": {
+        "total": 8,
+        "visible": 0,
+        "smallest": null,
+        "allUpright": true,
+        "allInert": true,
+        "overlappingMasks": 0
+      },
+      "ok": true
+    },
+    {
+      "zoom": "400%",
+      "route": "services",
+      "locale": "es",
+      "wentLive": true,
+      "innerWidth": 320,
+      "devicePixelRatio": 4,
+      "horizontalScroll": false,
+      "overflowingElements": 0,
+      "h1Visible": true,
+      "pause": {
+        "width": 125,
+        "height": 44,
+        "inViewport": true
+      },
+      "footerPresent": true,
+      "footerReachable": true,
+      "labels": {
+        "total": 8,
+        "visible": 0,
+        "smallest": null,
+        "allUpright": true,
+        "allInert": true,
+        "overlappingMasks": 0
+      },
+      "ok": true
+    },
+    {
+      "zoom": "400%",
+      "route": "services",
+      "locale": "en",
+      "wentLive": true,
+      "innerWidth": 320,
+      "devicePixelRatio": 4,
+      "horizontalScroll": false,
+      "overflowingElements": 0,
+      "h1Visible": true,
+      "pause": {
+        "width": 160,
+        "height": 44,
+        "inViewport": true
+      },
+      "footerPresent": true,
+      "footerReachable": true,
+      "labels": {
+        "total": 8,
+        "visible": 0,
+        "smallest": null,
+        "allUpright": true,
+        "allInert": true,
+        "overlappingMasks": 0
+      },
+      "ok": true
+    },
+    {
+      "zoom": "400%",
+      "route": "projects",
+      "locale": "es",
+      "wentLive": true,
+      "innerWidth": 320,
+      "devicePixelRatio": 4,
+      "horizontalScroll": false,
+      "overflowingElements": 0,
+      "h1Visible": true,
+      "pause": {
+        "width": 125,
+        "height": 44,
+        "inViewport": true
+      },
+      "footerPresent": true,
+      "footerReachable": true,
+      "labels": {
+        "total": 8,
+        "visible": 0,
+        "smallest": null,
+        "allUpright": true,
+        "allInert": true,
+        "overlappingMasks": 0
+      },
+      "ok": true
+    },
+    {
+      "zoom": "400%",
+      "route": "projects",
+      "locale": "en",
+      "wentLive": true,
+      "innerWidth": 320,
+      "devicePixelRatio": 4,
+      "horizontalScroll": false,
+      "overflowingElements": 0,
+      "h1Visible": true,
+      "pause": {
+        "width": 160,
+        "height": 44,
+        "inViewport": true
+      },
+      "footerPresent": true,
+      "footerReachable": true,
+      "labels": {
+        "total": 8,
+        "visible": 0,
+        "smallest": null,
+        "allUpright": true,
+        "allInert": true,
+        "overlappingMasks": 0
+      },
+      "ok": true
+    }
+  ],
+  "contrast": {
+    "method": "each text element is hidden, the viewport is screenshotted, and the WCAG contrast between the computed text colour (alpha blended) and the pixels behind its box is recorded: the gate is the 5th percentile over the box (the single worst pixel is reported too), and text covered by another element is skipped; large text is 24 px, or 18.66 px bold, and needs 3:1, everything else 4.5:1",
+    "samples": [
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.69,
+        "worstPixelRatio": 11.69,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "39,58,76",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 16.86,
+        "worstPixelRatio": 16.83,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.41,
+        "worstPixelRatio": 9.41,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Software para que el trabajo avance.",
+        "fontSize": 72,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 173,
+          "width": 608,
+          "height": 146.875
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Sitios, aplicaciones e integraciones par",
+        "fontSize": 20,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 343.875,
+          "width": 608,
+          "height": 84
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Capacidades conectadas · modelo ilustrat",
+        "fontSize": 14,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 957,
+          "top": 411.875,
+          "width": 342,
+          "height": 24
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Sitios web · Apps · Chatbots · Agentes ·",
+        "fontSize": 14,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 957,
+          "top": 443.875,
+          "width": 342,
+          "height": 72
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Encontrá tu punto de partida",
+        "fontSize": 14,
+        "ratio": 15.6,
+        "worstPixelRatio": 4.4,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "84,118,152",
+        "rect": {
+          "left": 120,
+          "top": 592.875,
+          "width": 223.09375,
+          "height": 46
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 11.01,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "43,62,80",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 16.14,
+        "worstPixelRatio": 16.12,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "13,34,56",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.01,
+        "worstPixelRatio": 8.93,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "13,35,56",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.01,
+        "worstPixelRatio": 8.93,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "13,35,56",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.02,
+        "worstPixelRatio": 9.01,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "13,34,56",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Límites del servicio",
+        "fontSize": 18,
+        "ratio": 15.47,
+        "worstPixelRatio": 10.67,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "40,59,77",
+        "rect": {
+          "left": 699.71875,
+          "top": 70.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Diseño, contenido, integraciones, admini",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 110.0625,
+          "width": 579.28125,
+          "height": 112
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Ver condiciones de trabajo",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 699.71875,
+          "top": 230.0625,
+          "width": 199.421875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Evidencia",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 315.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Evidencia disponible: prototipo de reser",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 355.0625,
+          "width": 579.28125,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Examinar el prototipo de reservas",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 699.71875,
+          "top": 419.0625,
+          "width": 251.34375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Contanos qué necesitás resolver",
+        "fontSize": 16,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 699.71875,
+          "top": 504.0625,
+          "width": 292.453125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Las herramientas dejan de trabajar aisla",
+        "fontSize": 44,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 796.265625,
+          "top": 726.0625,
+          "width": 482.734375,
+          "height": 93.25
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Situaciones habituales",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 686.0625,
+          "width": 579.265625,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Información que se copia entre herramien",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 726.0625,
+          "width": 579.265625,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Punto de partida",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 823.0625,
+          "width": 579.265625,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Mapear el flujo actual y comprobar acces",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 863.0625,
+          "width": 579.265625,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 11.52,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "40,59,77",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 16.7,
+        "worstPixelRatio": 16.7,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Un sistema que puede seguir evolucionand",
+        "fontSize": 44,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 250.0625,
+          "width": 482.71875,
+          "height": 93.25
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Diagnóstico, mantenimiento y modernizaci",
+        "fontSize": 22,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 363.3125,
+          "width": 482.71875,
+          "height": 72
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Qué recibís",
+        "fontSize": 18,
+        "ratio": 13.53,
+        "worstPixelRatio": 13.53,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 182,
+          "top": 488.3125,
+          "width": 440.71875,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Un diagnóstico acotado, mejoras prioriza",
+        "fontSize": 16,
+        "ratio": 8.17,
+        "worstPixelRatio": 8.17,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 182,
+          "top": 528.3125,
+          "width": 440.71875,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Situaciones habituales",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 210.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Errores recurrentes, tareas lentas, soft",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 250.0625,
+          "width": 579.28125,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Punto de partida",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 347.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Revisar el código, el entorno y el probl",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 387.0625,
+          "width": 579.28125,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Alcance acordado",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 484.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Definimos prioridades, responsabilidades",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 524.0625,
+          "width": 579.28125,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Límites del servicio",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 621.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Se necesitan accesos autorizados al códi",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 661.0625,
+          "width": 579.28125,
+          "height": 112
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Ver condiciones de trabajo",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 699.71875,
+          "top": 781.0625,
+          "width": 199.421875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Evidencia",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 866.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 10.82,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,63,81",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 15.77,
+        "worstPixelRatio": 15.75,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "16,36,57",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 8.92,
+        "worstPixelRatio": 8.92,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "14,35,56",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Acuerdo de trabajo",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 122.3125,
+          "width": 1118,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Antes de avanzar se acuerdan alcance, en",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 162.3125,
+          "width": 724.59375,
+          "height": 112
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Límites comerciales",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 315.3125,
+          "width": 1118,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "El precio y el plazo se definen después ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 355.3125,
+          "width": 724.59375,
+          "height": 84
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Hosting, dominios, licencias, medios de ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 451.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "El cliente aporta o autoriza contenidos,",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 515.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "El mantenimiento posterior, los cambios ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 579.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Un tiempo de respuesta para consultas co",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 643.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Los términos definitivos de pago, acepta",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 707.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "IA solo cuando aporta valor",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 804.3125,
+          "width": 1118,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.69,
+        "worstPixelRatio": 11.69,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "39,58,76",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 16.86,
+        "worstPixelRatio": 16.83,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.41,
+        "worstPixelRatio": 9.41,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Contanos qué necesitás construir, conect",
+        "fontSize": 17,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 456.875,
+          "width": 704,
+          "height": 56.09375
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Escribinos por WhatsApp",
+        "fontSize": 17,
+        "ratio": 8.79,
+        "worstPixelRatio": 1,
+        "required": 4.5,
+        "textColor": "rgb(0, 69, 137)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 544.96875,
+          "width": 247.59375,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "samuelfurlanich@gmail.com",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 364.4375,
+          "width": 228.09375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "+54 9 11 5011-7565",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 412.4375,
+          "width": 141.890625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Información de contacto",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 460.4375,
+          "width": 195.09375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Buenos Aires, Argentina · Estudio lidera",
+        "fontSize": 14,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 520.4375,
+          "width": 416,
+          "height": 21.6875
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Servicios",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 706.765625,
+          "width": 63.125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Proyectos",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 215.125,
+          "top": 706.765625,
+          "width": 70.4375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Cómo trabajamos",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 317.5625,
+          "top": 706.765625,
+          "width": 124.546875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "El estudio",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 474.109375,
+          "top": 706.765625,
+          "width": 68.421875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Samuel Furlanich",
+        "fontSize": 15,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 706.765625,
+          "width": 120.46875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "LinkedIn",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 1056.46875,
+          "top": 706.765625,
+          "width": 59.625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "GitHub",
+        "fontSize": 15,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 1148.09375,
+          "top": 706.765625,
+          "width": 50.109375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "© 2026 FURLANICH",
+        "fontSize": 13,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 820.015625,
+          "width": 121.390625,
+          "height": 19.5
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Privacidad",
+        "fontSize": 13,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 728.765625,
+          "top": 807.765625,
+          "width": 63.46875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 7.32,
+        "worstPixelRatio": 6.92,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "32,92,150",
+        "rect": {
+          "left": 1279.59375,
+          "top": 807.765625,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.69,
+        "worstPixelRatio": 11.69,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "39,58,76",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 9.43,
+        "worstPixelRatio": 9.41,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 16.83,
+        "worstPixelRatio": 16.83,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Trabajo que podés examinar.",
+        "fontSize": 72,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 173,
+          "width": 608,
+          "height": 146.875
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Código e implementación con su contexto ",
+        "fontSize": 20,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 343.875,
+          "width": 608,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Reservas de transporte",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 161,
+          "top": 423.875,
+          "width": 173.671875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Campañas multiusuario",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 366.671875,
+          "top": 423.875,
+          "width": 178.484375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Capacidades conectadas · modelo ilustrat",
+        "fontSize": 14,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 957,
+          "top": 451.875,
+          "width": 342,
+          "height": 24
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Sitios web · Apps · Chatbots · Agentes ·",
+        "fontSize": 14,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 957,
+          "top": 483.875,
+          "width": 342,
+          "height": 72
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Prototipo de reservas",
+        "fontSize": 13,
+        "ratio": 15.6,
+        "worstPixelRatio": 7.45,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "54,83,108",
+        "rect": {
+          "left": 161,
+          "top": 685.75,
+          "width": 189.8125,
+          "height": 34
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Gestión de reservas para transporte de p",
+        "fontSize": 44,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 743.75,
+          "width": 535,
+          "height": 93.25
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 10.35,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "48,66,83",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 5.52,
+        "worstPixelRatio": 5.5,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "53,69,85",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.87,
+        "worstPixelRatio": 9.84,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "53,69,85",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 5.51,
+        "worstPixelRatio": 5.5,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "53,69,85",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 5.5,
+        "worstPixelRatio": 5.5,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "53,69,85",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Coordinar recorridos, estaciones, asient",
+        "fontSize": 22,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 124,
+          "width": 498.15625,
+          "height": 72
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Repositorio publicado por el fundador co",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 220,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "La oportunidad modelada",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 368.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "El alcance modela una oportunidad de coo",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 408.875,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Alcance implementado",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 744,
+          "top": 368.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Acceso de cuentas y administración",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 408.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Recorridos, estaciones y disponibilidad ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 444.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Creación y cancelación de reservas",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 480.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Autogestión de pasajeros e intercambio d",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 516.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Qué podés comprobar",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 576.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "El resultado público es evidencia de imp",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 616.875,
+          "width": 535,
+          "height": 84
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Límites de la evidencia",
+        "fontSize": 20,
+        "ratio": 13.53,
+        "worstPixelRatio": 13.53,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 765,
+          "top": 597.875,
+          "width": 493,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "La demo documentada no está disponible y",
+        "fontSize": 16,
+        "ratio": 8.17,
+        "worstPixelRatio": 8.17,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 765,
+          "top": 637.875,
+          "width": 493,
+          "height": 112
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Ver código fuente",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 161,
+          "top": 827.875,
+          "width": 133.453125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Sitios y aplicaciones web",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 326.453125,
+          "top": 827.875,
+          "width": 185.734375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Conocer a Samuel",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 544.1875,
+          "top": 827.875,
+          "width": 136.984375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 11.52,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "40,59,77",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 9.13,
+        "worstPixelRatio": 9.12,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,33,56",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 16.33,
+        "worstPixelRatio": 16.31,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "10,33,56",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.13,
+        "worstPixelRatio": 9.12,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,33,56",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.13,
+        "worstPixelRatio": 9.12,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,33,56",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Ver código fuente",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 161,
+          "top": 91.875,
+          "width": 133.453125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Sitios y aplicaciones web",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 326.453125,
+          "top": 91.875,
+          "width": 185.734375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Conocer a Samuel",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 544.1875,
+          "top": 91.875,
+          "width": 136.984375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Laboratorio FURLANICH",
+        "fontSize": 13,
+        "ratio": 15.6,
+        "worstPixelRatio": 7.45,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "54,83,108",
+        "rect": {
+          "left": 161,
+          "top": 261.75,
+          "width": 189.8125,
+          "height": 34
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Gestión multiusuario de campañas de rol",
+        "fontSize": 44,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 319.75,
+          "width": 535,
+          "height": 93.25
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Organizar campañas de rol con identidad,",
+        "fontSize": 22,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 437,
+          "width": 498.15625,
+          "height": 72
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Exploración de laboratorio publicada por",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 533,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "La oportunidad modelada",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 681.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "El laboratorio explora límites de acceso",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 721.875,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Alcance implementado",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 744,
+          "top": 681.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Identidad, autenticación y recuperación ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 721.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Campañas, membresías e invitaciones",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 757.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Permisos multiusuario",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 793.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Abstracciones de suscripción/facturación",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 829.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 11.52,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "40,59,77",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 9.01,
+        "worstPixelRatio": 8.92,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "14,35,56",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 15.97,
+        "worstPixelRatio": 15.96,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "14,35,56",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.03,
+        "worstPixelRatio": 9.02,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "13,34,55",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Abstracciones de suscripción/facturación",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 92.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Qué podés comprobar",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 152.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "El resultado público es evidencia de imp",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 192.875,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Límites de la evidencia",
+        "fontSize": 20,
+        "ratio": 13.53,
+        "worstPixelRatio": 13.53,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 765,
+          "top": 173.875,
+          "width": 493,
+          "height": 28
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "No hay demo pública ni verificación de e",
+        "fontSize": 16,
+        "ratio": 8.17,
+        "worstPixelRatio": 8.17,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 765,
+          "top": 213.875,
+          "width": 493,
+          "height": 140
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Ver código fuente",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 161,
+          "top": 431.875,
+          "width": 133.453125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Sitios y aplicaciones web",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 326.453125,
+          "top": 431.875,
+          "width": 185.734375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Conocer a Samuel",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 544.1875,
+          "top": 431.875,
+          "width": 136.984375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "El contexto importa.",
+        "fontSize": 32,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 589.875,
+          "width": 1118,
+          "height": 35.1875
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Cada dossier mantiene su madurez, relaci",
+        "fontSize": 18,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 641.0625,
+          "width": 815.171875,
+          "height": 64
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.69,
+        "worstPixelRatio": 11.69,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "39,58,76",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 9.43,
+        "worstPixelRatio": 9.41,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 16.83,
+        "worstPixelRatio": 16.83,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Contanos qué necesitás construir, conect",
+        "fontSize": 17,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 457.375,
+          "width": 704,
+          "height": 56.09375
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Escribinos por WhatsApp",
+        "fontSize": 17,
+        "ratio": 8.79,
+        "worstPixelRatio": 1,
+        "required": 4.5,
+        "textColor": "rgb(0, 69, 137)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 545.46875,
+          "width": 247.59375,
+          "height": 48
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "samuelfurlanich@gmail.com",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 364.9375,
+          "width": 228.09375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "+54 9 11 5011-7565",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 412.9375,
+          "width": 141.890625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Información de contacto",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 460.9375,
+          "width": 195.09375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Buenos Aires, Argentina · Estudio lidera",
+        "fontSize": 14,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 520.9375,
+          "width": 416,
+          "height": 21.6875
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Servicios",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 707.265625,
+          "width": 63.125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Proyectos",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 215.125,
+          "top": 707.265625,
+          "width": 70.4375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Cómo trabajamos",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 317.5625,
+          "top": 707.265625,
+          "width": 124.546875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "El estudio",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 474.109375,
+          "top": 707.265625,
+          "width": 68.421875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Samuel Furlanich",
+        "fontSize": 15,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 707.265625,
+          "width": 120.46875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "LinkedIn",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 1056.46875,
+          "top": 707.265625,
+          "width": 59.625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "GitHub",
+        "fontSize": 15,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 1148.09375,
+          "top": 707.265625,
+          "width": 50.109375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "© 2026 FURLANICH",
+        "fontSize": 13,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 820.515625,
+          "width": 121.390625,
+          "height": 19.5
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Privacidad",
+        "fontSize": 13,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 728.765625,
+          "top": 808.265625,
+          "width": 63.46875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "static",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 6.92,
+        "worstPixelRatio": 6.92,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "32,92,150",
+        "rect": {
+          "left": 1279.59375,
+          "top": 808.265625,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.69,
+        "worstPixelRatio": 11.69,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "39,58,76",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 16.86,
+        "worstPixelRatio": 16.86,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "8,30,52",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.41,
+        "worstPixelRatio": 9.41,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Software para que el trabajo avance.",
+        "fontSize": 72,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 173,
+          "width": 608,
+          "height": 146.875
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Sitios, aplicaciones e integraciones par",
+        "fontSize": 20,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 343.875,
+          "width": 608,
+          "height": 84
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Capacidades conectadas · modelo ilustrat",
+        "fontSize": 14,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 957,
+          "top": 411.875,
+          "width": 342,
+          "height": 24
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Sitios web · Apps · Chatbots · Agentes ·",
+        "fontSize": 14,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 957,
+          "top": 443.875,
+          "width": 342,
+          "height": 72
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 0,
+        "text": "Encontrá tu punto de partida",
+        "fontSize": 14,
+        "ratio": 15.6,
+        "worstPixelRatio": 1.2,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "229,226,219",
+        "rect": {
+          "left": 120,
+          "top": 592.875,
+          "width": 223.09375,
+          "height": 46
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 11.01,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "43,62,80",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 16.14,
+        "worstPixelRatio": 16.12,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "13,34,56",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.01,
+        "worstPixelRatio": 8.93,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "13,35,56",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.01,
+        "worstPixelRatio": 8.93,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "13,35,56",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.02,
+        "worstPixelRatio": 9.01,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "13,34,56",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Límites del servicio",
+        "fontSize": 18,
+        "ratio": 15.47,
+        "worstPixelRatio": 10.67,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "40,59,77",
+        "rect": {
+          "left": 699.71875,
+          "top": 70.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Diseño, contenido, integraciones, admini",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 110.0625,
+          "width": 579.28125,
+          "height": 112
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Ver condiciones de trabajo",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 699.71875,
+          "top": 230.0625,
+          "width": 199.421875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Evidencia",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 315.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Evidencia disponible: prototipo de reser",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 355.0625,
+          "width": 579.28125,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Examinar el prototipo de reservas",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 699.71875,
+          "top": 419.0625,
+          "width": 251.34375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Contanos qué necesitás resolver",
+        "fontSize": 16,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 699.71875,
+          "top": 504.0625,
+          "width": 292.453125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Las herramientas dejan de trabajar aisla",
+        "fontSize": 44,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 796.265625,
+          "top": 726.0625,
+          "width": 482.734375,
+          "height": 93.25
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Situaciones habituales",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 686.0625,
+          "width": 579.265625,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Información que se copia entre herramien",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 726.0625,
+          "width": 579.265625,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Punto de partida",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 823.0625,
+          "width": 579.265625,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 1479,
+        "text": "Mapear el flujo actual y comprobar acces",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 863.0625,
+          "width": 579.265625,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 11.52,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "40,59,77",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 16.7,
+        "worstPixelRatio": 16.7,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Un sistema que puede seguir evolucionand",
+        "fontSize": 44,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 250.0625,
+          "width": 482.71875,
+          "height": 93.25
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Diagnóstico, mantenimiento y modernizaci",
+        "fontSize": 22,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 363.3125,
+          "width": 482.71875,
+          "height": 72
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Qué recibís",
+        "fontSize": 18,
+        "ratio": 13.53,
+        "worstPixelRatio": 13.53,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 182,
+          "top": 488.3125,
+          "width": 440.71875,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Un diagnóstico acotado, mejoras prioriza",
+        "fontSize": 16,
+        "ratio": 8.17,
+        "worstPixelRatio": 8.17,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 182,
+          "top": 528.3125,
+          "width": 440.71875,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Situaciones habituales",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 210.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Errores recurrentes, tareas lentas, soft",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 250.0625,
+          "width": 579.28125,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Punto de partida",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 347.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Revisar el código, el entorno y el probl",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 387.0625,
+          "width": 579.28125,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Alcance acordado",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 484.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Definimos prioridades, responsabilidades",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 524.0625,
+          "width": 579.28125,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Límites del servicio",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 621.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Se necesitan accesos autorizados al códi",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 661.0625,
+          "width": 579.28125,
+          "height": 112
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Ver condiciones de trabajo",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 699.71875,
+          "top": 781.0625,
+          "width": 199.421875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 2958,
+        "text": "Evidencia",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 699.71875,
+          "top": 866.0625,
+          "width": 579.28125,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 10.82,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,63,81",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 15.77,
+        "worstPixelRatio": 15.75,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "16,36,57",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 8.92,
+        "worstPixelRatio": 8.92,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "14,35,56",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Acuerdo de trabajo",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 122.3125,
+          "width": 1118,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Antes de avanzar se acuerdan alcance, en",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 162.3125,
+          "width": 724.59375,
+          "height": 112
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Límites comerciales",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 315.3125,
+          "width": 1118,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "El precio y el plazo se definen después ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 355.3125,
+          "width": 724.59375,
+          "height": 84
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Hosting, dominios, licencias, medios de ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 451.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "El cliente aporta o autoriza contenidos,",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 515.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "El mantenimiento posterior, los cambios ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 579.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Un tiempo de respuesta para consultas co",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 643.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "Los términos definitivos de pago, acepta",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 181,
+          "top": 707.3125,
+          "width": 704.59375,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 4437,
+        "text": "IA solo cuando aporta valor",
+        "fontSize": 18,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 804.3125,
+          "width": 1118,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.69,
+        "worstPixelRatio": 11.69,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "39,58,76",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 16.86,
+        "worstPixelRatio": 16.86,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "8,30,52",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.41,
+        "worstPixelRatio": 9.41,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Contanos qué necesitás construir, conect",
+        "fontSize": 17,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 456.875,
+          "width": 704,
+          "height": 56.09375
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Escribinos por WhatsApp",
+        "fontSize": 17,
+        "ratio": 8.79,
+        "worstPixelRatio": 1,
+        "required": 4.5,
+        "textColor": "rgb(0, 69, 137)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 544.96875,
+          "width": 247.59375,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "samuelfurlanich@gmail.com",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 364.4375,
+          "width": 228.09375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "+54 9 11 5011-7565",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 412.4375,
+          "width": 141.890625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Información de contacto",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 460.4375,
+          "width": 195.09375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Buenos Aires, Argentina · Estudio lidera",
+        "fontSize": 14,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 520.4375,
+          "width": 416,
+          "height": 21.6875
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Servicios",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 706.765625,
+          "width": 63.125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Proyectos",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 215.125,
+          "top": 706.765625,
+          "width": 70.4375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Cómo trabajamos",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 317.5625,
+          "top": 706.765625,
+          "width": 124.546875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "El estudio",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 474.109375,
+          "top": 706.765625,
+          "width": 68.421875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Samuel Furlanich",
+        "fontSize": 15,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 706.765625,
+          "width": 120.46875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "LinkedIn",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 1056.46875,
+          "top": 706.765625,
+          "width": 59.625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "GitHub",
+        "fontSize": 15,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 1148.09375,
+          "top": 706.765625,
+          "width": 50.109375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "© 2026 FURLANICH",
+        "fontSize": 13,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 820.015625,
+          "width": 121.390625,
+          "height": 19.5
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "Privacidad",
+        "fontSize": 13,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 728.765625,
+          "top": 807.765625,
+          "width": 63.46875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "services",
+        "scrollY": 5916,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 7.32,
+        "worstPixelRatio": 6.92,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "32,92,150",
+        "rect": {
+          "left": 1279.59375,
+          "top": 807.765625,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.69,
+        "worstPixelRatio": 11.69,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "39,58,76",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 9.43,
+        "worstPixelRatio": 9.43,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,30,52",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 16.83,
+        "worstPixelRatio": 16.83,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Trabajo que podés examinar.",
+        "fontSize": 72,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 173,
+          "width": 608,
+          "height": 146.875
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Código e implementación con su contexto ",
+        "fontSize": 20,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 343.875,
+          "width": 608,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Reservas de transporte",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 161,
+          "top": 423.875,
+          "width": 173.671875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Campañas multiusuario",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 366.671875,
+          "top": 423.875,
+          "width": 178.484375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Capacidades conectadas · modelo ilustrat",
+        "fontSize": 14,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 957,
+          "top": 451.875,
+          "width": 342,
+          "height": 24
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Sitios web · Apps · Chatbots · Agentes ·",
+        "fontSize": 14,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 957,
+          "top": 483.875,
+          "width": 342,
+          "height": 72
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Prototipo de reservas",
+        "fontSize": 13,
+        "ratio": 15.6,
+        "worstPixelRatio": 7.45,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "54,83,108",
+        "rect": {
+          "left": 161,
+          "top": 685.75,
+          "width": 189.8125,
+          "height": 34
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 0,
+        "text": "Gestión de reservas para transporte de p",
+        "fontSize": 44,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 743.75,
+          "width": 535,
+          "height": 93.25
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 10.35,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "48,66,83",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 5.52,
+        "worstPixelRatio": 5.5,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "53,69,85",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 9.87,
+        "worstPixelRatio": 9.84,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "53,69,85",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 5.51,
+        "worstPixelRatio": 5.5,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "53,69,85",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 5.5,
+        "worstPixelRatio": 5.5,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "53,69,85",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Coordinar recorridos, estaciones, asient",
+        "fontSize": 22,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 124,
+          "width": 498.15625,
+          "height": 72
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Repositorio publicado por el fundador co",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 220,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "La oportunidad modelada",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 368.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "El alcance modela una oportunidad de coo",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 408.875,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Alcance implementado",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 744,
+          "top": 368.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Acceso de cuentas y administración",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 408.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Recorridos, estaciones y disponibilidad ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 444.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Creación y cancelación de reservas",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 480.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Autogestión de pasajeros e intercambio d",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 516.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Qué podés comprobar",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 576.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "El resultado público es evidencia de imp",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 616.875,
+          "width": 535,
+          "height": 84
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Límites de la evidencia",
+        "fontSize": 20,
+        "ratio": 13.53,
+        "worstPixelRatio": 13.53,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 765,
+          "top": 597.875,
+          "width": 493,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "La demo documentada no está disponible y",
+        "fontSize": 16,
+        "ratio": 8.17,
+        "worstPixelRatio": 8.17,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 765,
+          "top": 637.875,
+          "width": 493,
+          "height": 112
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Ver código fuente",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 161,
+          "top": 827.875,
+          "width": 133.453125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Sitios y aplicaciones web",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 326.453125,
+          "top": 827.875,
+          "width": 185.734375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 737,
+        "text": "Conocer a Samuel",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 544.1875,
+          "top": 827.875,
+          "width": 136.984375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 11.52,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "40,59,77",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 9.13,
+        "worstPixelRatio": 9.12,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,33,56",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 16.33,
+        "worstPixelRatio": 16.31,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "10,33,56",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.13,
+        "worstPixelRatio": 9.12,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,33,56",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.13,
+        "worstPixelRatio": 9.12,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,33,56",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Ver código fuente",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 161,
+          "top": 91.875,
+          "width": 133.453125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Sitios y aplicaciones web",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 326.453125,
+          "top": 91.875,
+          "width": 185.734375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Conocer a Samuel",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 544.1875,
+          "top": 91.875,
+          "width": 136.984375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Laboratorio FURLANICH",
+        "fontSize": 13,
+        "ratio": 15.6,
+        "worstPixelRatio": 7.45,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "54,83,108",
+        "rect": {
+          "left": 161,
+          "top": 261.75,
+          "width": 189.8125,
+          "height": 34
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Gestión multiusuario de campañas de rol",
+        "fontSize": 44,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 319.75,
+          "width": 535,
+          "height": 93.25
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Organizar campañas de rol con identidad,",
+        "fontSize": 22,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 437,
+          "width": 498.15625,
+          "height": 72
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Exploración de laboratorio publicada por",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 533,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "La oportunidad modelada",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 681.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "El laboratorio explora límites de acceso",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 721.875,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Alcance implementado",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 744,
+          "top": 681.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Identidad, autenticación y recuperación ",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 721.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Campañas, membresías e invitaciones",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 757.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Permisos multiusuario",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 793.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 1473,
+        "text": "Abstracciones de suscripción/facturación",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 829.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.52,
+        "worstPixelRatio": 11.52,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "40,59,77",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 9.01,
+        "worstPixelRatio": 8.92,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "14,35,56",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 15.97,
+        "worstPixelRatio": 15.96,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "14,35,56",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.03,
+        "worstPixelRatio": 9.02,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "13,34,55",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.34,
+        "worstPixelRatio": 9.34,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "9,31,52",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Abstracciones de suscripción/facturación",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 764,
+          "top": 92.875,
+          "width": 515,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Qué podés comprobar",
+        "fontSize": 20,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 152.875,
+          "width": 535,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "El resultado público es evidencia de imp",
+        "fontSize": 16,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 192.875,
+          "width": 535,
+          "height": 56
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Límites de la evidencia",
+        "fontSize": 20,
+        "ratio": 13.53,
+        "worstPixelRatio": 13.53,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 765,
+          "top": 173.875,
+          "width": 493,
+          "height": 28
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "No hay demo pública ni verificación de e",
+        "fontSize": 16,
+        "ratio": 8.17,
+        "worstPixelRatio": 8.17,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "15,42,69",
+        "rect": {
+          "left": 765,
+          "top": 213.875,
+          "width": 493,
+          "height": 140
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Ver código fuente",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 161,
+          "top": 431.875,
+          "width": 133.453125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Sitios y aplicaciones web",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 326.453125,
+          "top": 431.875,
+          "width": 185.734375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Conocer a Samuel",
+        "fontSize": 16,
+        "ratio": 9.24,
+        "worstPixelRatio": 2.46,
+        "required": 4.5,
+        "textColor": "rgb(156, 196, 236)",
+        "worstBackground": "91,122,153",
+        "rect": {
+          "left": 544.1875,
+          "top": 431.875,
+          "width": 136.984375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "El contexto importa.",
+        "fontSize": 32,
+        "ratio": 15.6,
+        "worstPixelRatio": 15.6,
+        "required": 3,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 589.875,
+          "width": 1118,
+          "height": 35.1875
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2210,
+        "text": "Cada dossier mantiene su madurez, relaci",
+        "fontSize": 18,
+        "ratio": 9.42,
+        "worstPixelRatio": 9.42,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "10,30,51",
+        "rect": {
+          "left": 161,
+          "top": 641.0625,
+          "width": 815.171875,
+          "height": 64
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 11.69,
+        "worstPixelRatio": 11.69,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "39,58,76",
+        "rect": {
+          "left": 692.796875,
+          "top": 21,
+          "width": 40.40625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Servicios",
+        "fontSize": 14,
+        "ratio": 9.43,
+        "worstPixelRatio": 9.43,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,30,52",
+        "rect": {
+          "left": 745.203125,
+          "top": 21,
+          "width": 84.0625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Proyectos",
+        "fontSize": 14,
+        "ratio": 16.83,
+        "worstPixelRatio": 16.83,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "8,30,53",
+        "rect": {
+          "left": 833.265625,
+          "top": 21,
+          "width": 90.65625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Cómo trabajamos",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 927.921875,
+          "top": 21,
+          "width": 141.78125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "El estudio",
+        "fontSize": 14,
+        "ratio": 9.32,
+        "worstPixelRatio": 9.32,
+        "required": 4.5,
+        "textColor": "rgb(185, 195, 204)",
+        "worstBackground": "8,31,54",
+        "rect": {
+          "left": 1073.703125,
+          "top": 21,
+          "width": 88.71875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Ver contacto",
+        "fontSize": 16,
+        "ratio": 9.49,
+        "worstPixelRatio": 6.09,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "45,101,155",
+        "rect": {
+          "left": 1166.421875,
+          "top": 19,
+          "width": 144.578125,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Contanos qué necesitás construir, conect",
+        "fontSize": 17,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 457.375,
+          "width": 704,
+          "height": 56.09375
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Escribinos por WhatsApp",
+        "fontSize": 17,
+        "ratio": 8.79,
+        "worstPixelRatio": 1,
+        "required": 4.5,
+        "textColor": "rgb(0, 69, 137)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 545.46875,
+          "width": 247.59375,
+          "height": 48
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "samuelfurlanich@gmail.com",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 364.9375,
+          "width": 228.09375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "+54 9 11 5011-7565",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 412.9375,
+          "width": 141.890625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Información de contacto",
+        "fontSize": 17,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 460.9375,
+          "width": 195.09375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Buenos Aires, Argentina · Estudio lidera",
+        "fontSize": 14,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 520.9375,
+          "width": 416,
+          "height": 21.6875
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Servicios",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 707.265625,
+          "width": 63.125,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Proyectos",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 215.125,
+          "top": 707.265625,
+          "width": 70.4375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Cómo trabajamos",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 317.5625,
+          "top": 707.265625,
+          "width": 124.546875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "El estudio",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 474.109375,
+          "top": 707.265625,
+          "width": 68.421875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Samuel Furlanich",
+        "fontSize": 15,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 904,
+          "top": 707.265625,
+          "width": 120.46875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "LinkedIn",
+        "fontSize": 15,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 1056.46875,
+          "top": 707.265625,
+          "width": 59.625,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "GitHub",
+        "fontSize": 15,
+        "ratio": 7.18,
+        "worstPixelRatio": 7.18,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "21,84,145",
+        "rect": {
+          "left": 1148.09375,
+          "top": 707.265625,
+          "width": 50.109375,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "© 2026 FURLANICH",
+        "fontSize": 13,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 120,
+          "top": 820.515625,
+          "width": 121.390625,
+          "height": 19.5
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "Privacidad",
+        "fontSize": 13,
+        "ratio": 8.79,
+        "worstPixelRatio": 8.79,
+        "required": 4.5,
+        "textColor": "rgb(249, 246, 238)",
+        "worstBackground": "0,69,137",
+        "rect": {
+          "left": 728.765625,
+          "top": 808.265625,
+          "width": 63.46875,
+          "height": 44
+        }
+      },
+      {
+        "mode": "live",
+        "route": "projects",
+        "scrollY": 2946,
+        "text": "EN",
+        "fontSize": 12,
+        "ratio": 6.92,
+        "worstPixelRatio": 6.92,
+        "required": 4.5,
+        "textColor": "rgb(255, 255, 255)",
+        "worstBackground": "32,92,150",
+        "rect": {
+          "left": 1279.59375,
+          "top": 808.265625,
+          "width": 40.40625,
+          "height": 44
+        }
+      }
+    ],
+    "failures": [],
+    "measured": 362,
+    "lowest": {
+      "mode": "static",
+      "route": "projects",
+      "scrollY": 737,
+      "text": "El estudio",
+      "fontSize": 14,
+      "ratio": 5.5,
+      "worstPixelRatio": 5.5,
+      "required": 4.5,
+      "textColor": "rgb(185, 195, 204)",
+      "worstBackground": "53,69,85",
+      "rect": {
+        "left": 1073.703125,
+        "top": 21,
+        "width": 88.71875,
+        "height": 44
+      }
+    }
+  },
+  "accessibilityTree": {
+    "static": {
+      "lines": 173,
+      "h1": 1,
+      "pauseButtons": 0,
+      "exposesCanvasOrLabels": false,
+      "sample": "- banner:\n  - link \"FURLANICH\":\n    - /url: /#site-top\n  - link \"Ver sitio en inglés\":\n    - /url: /en/services/\n    - text: EN\n  - navigation \"Navegación principal\":\n    - link \"Servicios\":\n      - /url: /servicios/#site-top\n    - link \"Proyectos\":\n      - /url: /proyectos/#site-top\n    - link \"Cómo trabajamos\":\n      - /url: /#proceso\n    - link \"El estudio\":\n      - /url: /estudio/\n    - link \"Ver contacto\":\n      - /url: /contacto/\n  - text: Español\n- main:\n  - heading \"Software para que el trabajo avance.\" [level=1]\n  - paragraph: Sitios, aplicaciones e integraciones para resolver necesidades concretas. Empezamos por el problema y acordamos qué construir, conectar o mejorar.\n  - paragraph: Capacidades conectadas · modelo ilustrativo\n  - paragraph: Sitios web · Apps · Chatbots · Agentes · Automatización · Consultoría · Soporte · Modernización\n  - navigation \"Encontrá tu punto de partida\":\n    - paragraph: Encontrá tu punto de partida\n    - list:\n      - listitem:\n        - link \"Sitios y aplicaciones web Una presencia clara. Una operación más simple. Explorar el servicio\":\n          - /url: /servicios/#web\n      - listitem:\n        - link \"Integraciones y automatización Menos traspasos manuales. Explorar el servicio\":\n          - /url: /servicios/#whatsapp\n      - listitem:\n        - link \"Mejora de software existente Mejorá lo que ya tenés. Explorar el servicio\":\n          - /url: /servicios/#consultoria\n  - region \"Una interfaz clara para el negocio.\":\n    - paragraph: Sitios y aplicaciones web\n    - heading \"Una interfaz clara para el negocio.\" [level=2]\n    - paragraph: Un sitio comercial, un portal o una aplicación según el problema.\n    - heading \"Qué recibís\" [level=3]\n    - paragraph: Un sitio o aplicación, recorridos acordados y documentación proporcional al alcance.\n    - heading \"Situaciones habituales\" [level=3]\n    - paragraph: Publicar una oferta; gestionar reservas o pedidos; coordinar información en una aplicación.\n    - heading \"Punto de partida\" [level=3]\n    - paragraph: El objetivo, los recorridos principales y los datos necesarios.\n    - heading \"Alcance acordado\" [level=3]\n    - paragraph: Hosting, licencias e integraciones se definen según lo que el proyecto necesita.\n    - heading \"Límites del servicio\" [level=3]\n    - paragraph: Diseño, contenido, integraciones, administración y pruebas se acuerdan según el proyecto. Marca, producción de contenido, alojamiento, cargos de proveedores, aplicaciones móviles y mantenimiento no están incluidos salvo acuerdo. Los resultados comerciales no se garantizan.\n    - link \"Ver condiciones de trabajo\":\n      - /url: \"#condiciones\"\n    - heading \"Evidencia\" [level=3]\n    - paragraph: \"Evidencia disponible: prototipo de reservas, con código público y ejecución actual no revalidada.\"\n    - link \"Examinar el prototipo de reservas\":\n      - /url: /proyectos/#general-reservation-system\n    - link \"Contanos qué necesitás resolver\":\n      - /url: /contacto/\n  - region \"Las herramientas dejan de trabajar aisladas.\":\n    - paragraph: Integraciones y automatización\n    - heading \"Las herramientas dejan de trabajar aisladas.\" [level=2]"
+    },
+    "live": {
+      "lines": 174,
+      "h1": 1,
+      "pauseButtons": 1,
+      "exposesCanvasOrLabels": false,
+      "sample": "- banner:\n  - link \"FURLANICH\":\n    - /url: /#site-top\n  - link \"Ver sitio en inglés\":\n    - /url: /en/services/\n    - text: EN\n  - navigation \"Navegación principal\":\n    - link \"Servicios\":\n      - /url: /servicios/#site-top\n    - link \"Proyectos\":\n      - /url: /proyectos/#site-top\n    - link \"Cómo trabajamos\":\n      - /url: /#proceso\n    - link \"El estudio\":\n      - /url: /estudio/\n    - link \"Ver contacto\":\n      - /url: /contacto/\n  - text: Español\n- main:\n  - heading \"Software para que el trabajo avance.\" [level=1]\n  - paragraph: Sitios, aplicaciones e integraciones para resolver necesidades concretas. Empezamos por el problema y acordamos qué construir, conectar o mejorar.\n  - button \"Pausar fondo\"\n  - paragraph: Capacidades conectadas · modelo ilustrativo\n  - paragraph: Sitios web · Apps · Chatbots · Agentes · Automatización · Consultoría · Soporte · Modernización\n  - navigation \"Encontrá tu punto de partida\":\n    - paragraph: Encontrá tu punto de partida\n    - list:\n      - listitem:\n        - link \"Sitios y aplicaciones web Una presencia clara. Una operación más simple. Explorar el servicio\":\n          - /url: /servicios/#web\n      - listitem:\n        - link \"Integraciones y automatización Menos traspasos manuales. Explorar el servicio\":\n          - /url: /servicios/#whatsapp\n      - listitem:\n        - link \"Mejora de software existente Mejorá lo que ya tenés. Explorar el servicio\":\n          - /url: /servicios/#consultoria\n  - region \"Una interfaz clara para el negocio.\":\n    - paragraph: Sitios y aplicaciones web\n    - heading \"Una interfaz clara para el negocio.\" [level=2]\n    - paragraph: Un sitio comercial, un portal o una aplicación según el problema.\n    - heading \"Qué recibís\" [level=3]\n    - paragraph: Un sitio o aplicación, recorridos acordados y documentación proporcional al alcance.\n    - heading \"Situaciones habituales\" [level=3]\n    - paragraph: Publicar una oferta; gestionar reservas o pedidos; coordinar información en una aplicación.\n    - heading \"Punto de partida\" [level=3]\n    - paragraph: El objetivo, los recorridos principales y los datos necesarios.\n    - heading \"Alcance acordado\" [level=3]\n    - paragraph: Hosting, licencias e integraciones se definen según lo que el proyecto necesita.\n    - heading \"Límites del servicio\" [level=3]\n    - paragraph: Diseño, contenido, integraciones, administración y pruebas se acuerdan según el proyecto. Marca, producción de contenido, alojamiento, cargos de proveedores, aplicaciones móviles y mantenimiento no están incluidos salvo acuerdo. Los resultados comerciales no se garantizan.\n    - link \"Ver condiciones de trabajo\":\n      - /url: \"#condiciones\"\n    - heading \"Evidencia\" [level=3]\n    - paragraph: \"Evidencia disponible: prototipo de reservas, con código público y ejecución actual no revalidada.\"\n    - link \"Examinar el prototipo de reservas\":\n      - /url: /proyectos/#general-reservation-system\n    - link \"Contanos qué necesitás resolver\":\n      - /url: /contacto/\n  - region \"Las herramientas dejan de trabajar aisladas.\":\n    - paragraph: Integraciones y automatización"
+    }
+  },
+  "failures": []
+}

@@ -1,0 +1,2290 @@
+{
+  "kind": "cold startup baseline of the reading, intake and legal routes (one machine, lab throttling; not field data, not a pass/fail gate)",
+  "basePath": "/",
+  "journeysPerRoute": 5,
+  "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+  "limitations": [
+    "Tracing adds overhead to every figure; the same method must be used for any later comparison against this baseline.",
+    "Lab data on one machine: the p95 of five journeys is the largest of the five (nearest rank).",
+    "Terms does not exist yet: its comparator is Privacy.",
+    "The server charges the navigation document the profile latency; scripts are served gzip with no added latency."
+  ],
+  "machine": {
+    "cpu": "Intel(R) Core(TM) i3-8100 CPU @ 3.60GHz",
+    "logicalCores": 4,
+    "memoryGiB": 23.9,
+    "platform": "win32 10.0.26300",
+    "node": "v24.14.0"
+  },
+  "versions": {
+    "next": "16.3.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "three": "0.186.0",
+    "playwright": "1.63.0",
+    "chromium": "153.0.8010.12"
+  },
+  "head": "7fc2a6c60a79d7b4f916d8b9920b0b206084057b",
+  "traceDir": "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root",
+  "profiles": {
+    "mobile": {
+      "label": "Mobile: 390x844, DPR 3, touch, 4x CPU slowdown, Slow 4G applied (562.5 ms request latency, 1.47 Mbps down)",
+      "routes": {
+        "studio/es": {
+          "route": "studio",
+          "locale": "es",
+          "profile": "mobile",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 145227,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 505.7,
+          "longestTaskMs": 630.5,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-mobile-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-mobile-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-mobile-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-mobile-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-mobile-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 141.8,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 531.5,
+          "scriptCount": 11,
+          "startupCpuMedianMs": 490.6,
+          "evaluationCpuP95Ms": 224,
+          "taskCpuP95Ms": 1545,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 327.4,
+              "evaluationCpuMs": 218.9,
+              "taskCpuMs": 1498.6,
+              "longestTaskMs": 597.1,
+              "tasks": 630,
+              "traceSha256": "ea6b2d9a884c355715e306a15dbebb51193aee1f587ce605f8b0563b112fe7a0"
+            },
+            {
+              "startupCpuMs": 434.5,
+              "evaluationCpuMs": 224,
+              "taskCpuMs": 1545,
+              "longestTaskMs": 630.5,
+              "tasks": 609,
+              "traceSha256": "9c196671fe038457f1ab44832947c037600943fa67959c5b06218efbfce23ce3"
+            },
+            {
+              "startupCpuMs": 494.8,
+              "evaluationCpuMs": 214,
+              "taskCpuMs": 1521.3,
+              "longestTaskMs": 520.8,
+              "tasks": 680,
+              "traceSha256": "9f4287f31bcd05cac4d144e0ffd2ea56cf822113a834e064537bbbcebc9d88ec"
+            },
+            {
+              "startupCpuMs": 490.6,
+              "evaluationCpuMs": 172,
+              "taskCpuMs": 1404.6,
+              "longestTaskMs": 470.8,
+              "tasks": 946,
+              "traceSha256": "b5efe75d51daab467790f236cd4064284970049e708d32a6452fcb65ef0f660b"
+            },
+            {
+              "startupCpuMs": 505.7,
+              "evaluationCpuMs": 126.5,
+              "taskCpuMs": 1211.2,
+              "longestTaskMs": 332.4,
+              "tasks": 911,
+              "traceSha256": "a96eb063235f6c44d468689b30ce411952bc244fabe1b1c72cabca203faaa2e9"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": false,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "studio/en": {
+          "route": "studio",
+          "locale": "en",
+          "profile": "mobile",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 145227,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 542.9,
+          "longestTaskMs": 451.1,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-mobile-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-mobile-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-mobile-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-mobile-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-mobile-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 141.8,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 531.5,
+          "scriptCount": 11,
+          "startupCpuMedianMs": 534.4,
+          "evaluationCpuP95Ms": 242.2,
+          "taskCpuP95Ms": 1487.1,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 539.9,
+              "evaluationCpuMs": 195.5,
+              "taskCpuMs": 1479.6,
+              "longestTaskMs": 451.1,
+              "tasks": 766,
+              "traceSha256": "77642694fc07ea6ad2fef17b2daf830e71affa90379fdf7a835ab634a7a95cff"
+            },
+            {
+              "startupCpuMs": 534.4,
+              "evaluationCpuMs": 184.7,
+              "taskCpuMs": 1487.1,
+              "longestTaskMs": 447.6,
+              "tasks": 875,
+              "traceSha256": "7d4e99ee3753f1d39903d39e68a857f474deb689d9562baafac5a59d8786dbf7"
+            },
+            {
+              "startupCpuMs": 542.9,
+              "evaluationCpuMs": 178.4,
+              "taskCpuMs": 1336.9,
+              "longestTaskMs": 418.2,
+              "tasks": 787,
+              "traceSha256": "7c6eb0fd452adb17d70790c79f491ab89961125b7f6bb6584d4e6dcb326cc8ea"
+            },
+            {
+              "startupCpuMs": 507.4,
+              "evaluationCpuMs": 57.7,
+              "taskCpuMs": 1373.1,
+              "longestTaskMs": 426.6,
+              "tasks": 1344,
+              "traceSha256": "8cf61c05270c12e9ec5d8102b094da00909c6298454d2bbd5008771cff21c4c1"
+            },
+            {
+              "startupCpuMs": 527.3,
+              "evaluationCpuMs": 242.2,
+              "taskCpuMs": 1360.6,
+              "longestTaskMs": 390.8,
+              "tasks": 763,
+              "traceSha256": "5483595569a15ba72760a872972e72411236d954ffe6bc169c8a88a89d4c91d7"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": false,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "founder/es": {
+          "route": "founder",
+          "locale": "es",
+          "profile": "mobile",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 135886,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 529.3,
+          "longestTaskMs": 520.7,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-mobile-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-mobile-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-mobile-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-mobile-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-mobile-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 132.7,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 503,
+          "scriptCount": 10,
+          "startupCpuMedianMs": 501.6,
+          "evaluationCpuP95Ms": 237.4,
+          "taskCpuP95Ms": 1500.8,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 455.7,
+              "evaluationCpuMs": 236.3,
+              "taskCpuMs": 1460.4,
+              "longestTaskMs": 495.5,
+              "tasks": 588,
+              "traceSha256": "20a981a132445f1bed5b874d47034d87fbc4f0e1825ed99c8d6ad7f494b58f4c"
+            },
+            {
+              "startupCpuMs": 501.6,
+              "evaluationCpuMs": 237.4,
+              "taskCpuMs": 1500.8,
+              "longestTaskMs": 520.7,
+              "tasks": 617,
+              "traceSha256": "81e1d07271c0734bcc4d9551934e7677af444bc0f237ca3ce47074d1c2e403e8"
+            },
+            {
+              "startupCpuMs": 529.3,
+              "evaluationCpuMs": 237.2,
+              "taskCpuMs": 1478.8,
+              "longestTaskMs": 475.1,
+              "tasks": 632,
+              "traceSha256": "5ab47a650c3908f0dec5cb5adf0ba86760fa46cdc18b2ba5d4d3227b2bfd289d"
+            },
+            {
+              "startupCpuMs": 503.5,
+              "evaluationCpuMs": 189,
+              "taskCpuMs": 1456.8,
+              "longestTaskMs": 495.9,
+              "tasks": 716,
+              "traceSha256": "dc0577553a06936e8d0de8a8dd0909ad571f22f74b9d96f32162afb3f054b6b3"
+            },
+            {
+              "startupCpuMs": 483.8,
+              "evaluationCpuMs": 194.3,
+              "taskCpuMs": 1271.1,
+              "longestTaskMs": 436.7,
+              "tasks": 695,
+              "traceSha256": "ae31dd3df07abb32be4e5239adb5d2be843f5f1d3f76db0e8f38f8ac70833640"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "founder/en": {
+          "route": "founder",
+          "locale": "en",
+          "profile": "mobile",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 135886,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 504.9,
+          "longestTaskMs": 553.7,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-mobile-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-mobile-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-mobile-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-mobile-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-mobile-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 132.7,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 503,
+          "scriptCount": 10,
+          "startupCpuMedianMs": 480.1,
+          "evaluationCpuP95Ms": 239.6,
+          "taskCpuP95Ms": 1494.6,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 480.1,
+              "evaluationCpuMs": 183.1,
+              "taskCpuMs": 1470.8,
+              "longestTaskMs": 553.7,
+              "tasks": 1198,
+              "traceSha256": "e5a813f60cc65ca09e17f2f81cc6c0094ad5db23b1b019833652641d3fd421e6"
+            },
+            {
+              "startupCpuMs": 473.1,
+              "evaluationCpuMs": 170.7,
+              "taskCpuMs": 1456.8,
+              "longestTaskMs": 472.5,
+              "tasks": 701,
+              "traceSha256": "2a349f5706e0d996412b32b278504afc35716d32da64aed34b2d2fd22d554764"
+            },
+            {
+              "startupCpuMs": 504.9,
+              "evaluationCpuMs": 200.9,
+              "taskCpuMs": 1428.4,
+              "longestTaskMs": 474.3,
+              "tasks": 1373,
+              "traceSha256": "a871e3ff81c918b0f9e085069ecdc8c842e5c4f6e68278e8ad2434da526e4a8a"
+            },
+            {
+              "startupCpuMs": 466.6,
+              "evaluationCpuMs": 239.6,
+              "taskCpuMs": 1494.6,
+              "longestTaskMs": 544.5,
+              "tasks": 585,
+              "traceSha256": "410e48ed9d9b87cf47b69da0ad84338dede16e1c49a7d15be6a8dc1b28ef8a1f"
+            },
+            {
+              "startupCpuMs": 489.2,
+              "evaluationCpuMs": 188.8,
+              "taskCpuMs": 1484.7,
+              "longestTaskMs": 508.7,
+              "tasks": 658,
+              "traceSha256": "9666ac299e4e394d378ff0f05462647870089b1d4a9d404243b1d98d9f9b692b"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "contact/es": {
+          "route": "contact",
+          "locale": "es",
+          "profile": "mobile",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 145227,
+          "criticalJsBrotliBytes": 129803,
+          "startupCpuP95Ms": 542.3,
+          "longestTaskMs": 553.3,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-mobile-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-mobile-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-mobile-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-mobile-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-mobile-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 141.8,
+          "criticalJsBrotliKiB": 126.8,
+          "firstLoadJsRawKiB": 531.5,
+          "scriptCount": 11,
+          "startupCpuMedianMs": 532.4,
+          "evaluationCpuP95Ms": 231.6,
+          "taskCpuP95Ms": 1438.4,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 421.6,
+              "evaluationCpuMs": 74.9,
+              "taskCpuMs": 1434,
+              "longestTaskMs": 553.3,
+              "tasks": 1222,
+              "traceSha256": "76ea33ba58ba03055d57ea7ab6dfc9b5056877b09fe7bdb0424efa42b783b564"
+            },
+            {
+              "startupCpuMs": 535.5,
+              "evaluationCpuMs": 231.6,
+              "taskCpuMs": 1323.7,
+              "longestTaskMs": 363.9,
+              "tasks": 586,
+              "traceSha256": "038d1114f3bb1cc7a25dd2dae48249cd67bf1e309b062961c9afc130520b2445"
+            },
+            {
+              "startupCpuMs": 465.7,
+              "evaluationCpuMs": 164.8,
+              "taskCpuMs": 1395.3,
+              "longestTaskMs": 468.5,
+              "tasks": 1960,
+              "traceSha256": "b8ff34e08812e563324d024de216271b2801230475f14075c9149d657292fbc5"
+            },
+            {
+              "startupCpuMs": 542.3,
+              "evaluationCpuMs": 211.7,
+              "taskCpuMs": 1438.4,
+              "longestTaskMs": 437.7,
+              "tasks": 658,
+              "traceSha256": "5225e36a076470f0aa9fe1d61807af15bf183f7e1038e83312cbffb74ef335ad"
+            },
+            {
+              "startupCpuMs": 532.4,
+              "evaluationCpuMs": 197.4,
+              "taskCpuMs": 1426.3,
+              "longestTaskMs": 453.7,
+              "tasks": 697,
+              "traceSha256": "1933064168bd01856f41ea84aa3c4bbc6a7d0ecefdfd742fd7af85717bfd951b"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": true,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "contact/en": {
+          "route": "contact",
+          "locale": "en",
+          "profile": "mobile",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 145227,
+          "criticalJsBrotliBytes": 129803,
+          "startupCpuP95Ms": 548.9,
+          "longestTaskMs": 560.6,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-mobile-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-mobile-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-mobile-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-mobile-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-mobile-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 141.8,
+          "criticalJsBrotliKiB": 126.8,
+          "firstLoadJsRawKiB": 531.5,
+          "scriptCount": 11,
+          "startupCpuMedianMs": 521,
+          "evaluationCpuP95Ms": 255.8,
+          "taskCpuP95Ms": 1531.7,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 488.4,
+              "evaluationCpuMs": 209.6,
+              "taskCpuMs": 1500.3,
+              "longestTaskMs": 560.6,
+              "tasks": 593,
+              "traceSha256": "e086ccb844559f03f6caf9ef135ee01b935f406a2cbc49db6069b0638f12548a"
+            },
+            {
+              "startupCpuMs": 548.9,
+              "evaluationCpuMs": 244.7,
+              "taskCpuMs": 1314.4,
+              "longestTaskMs": 337.3,
+              "tasks": 608,
+              "traceSha256": "78b88f07a57aad7f2bb9667e4737c74def3549b2e5d405bdcef28f51fc05137d"
+            },
+            {
+              "startupCpuMs": 531.9,
+              "evaluationCpuMs": 246.1,
+              "taskCpuMs": 1531.7,
+              "longestTaskMs": 528.4,
+              "tasks": 580,
+              "traceSha256": "5b90084a73b238f119479c9d984ae24a7e4f819912040ddd98ae88433ab7bb16"
+            },
+            {
+              "startupCpuMs": 485.5,
+              "evaluationCpuMs": 229.3,
+              "taskCpuMs": 1428.5,
+              "longestTaskMs": 510.2,
+              "tasks": 595,
+              "traceSha256": "d1b1febe18a635f8fd69812712d6f580035fa3e93dd0d08f0e37d66941bea498"
+            },
+            {
+              "startupCpuMs": 521,
+              "evaluationCpuMs": 255.8,
+              "taskCpuMs": 1459.8,
+              "longestTaskMs": 507.6,
+              "tasks": 582,
+              "traceSha256": "2102fad158324c670f09ed48d3cb2d2e2febbf9afafd3e3679323d4ebde70446"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": true,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "privacy/es": {
+          "route": "privacy",
+          "locale": "es",
+          "profile": "mobile",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 135886,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 486.3,
+          "longestTaskMs": 434.6,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-mobile-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-mobile-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-mobile-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-mobile-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-mobile-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 132.7,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 503,
+          "scriptCount": 10,
+          "startupCpuMedianMs": 469.8,
+          "evaluationCpuP95Ms": 276.8,
+          "taskCpuP95Ms": 1300.3,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 472.8,
+              "evaluationCpuMs": 238.2,
+              "taskCpuMs": 1292.1,
+              "longestTaskMs": 394.8,
+              "tasks": 546,
+              "traceSha256": "adf23191ebe95d4dddfc7819acb13922b219cc2268d8ccf8d73845463086097f"
+            },
+            {
+              "startupCpuMs": 469.8,
+              "evaluationCpuMs": 266.3,
+              "taskCpuMs": 1300.3,
+              "longestTaskMs": 430.7,
+              "tasks": 526,
+              "traceSha256": "3ad4c1aa3fd132fd3bbe021469c08adb0b58bb2be4c5eb24534b5512634adb08"
+            },
+            {
+              "startupCpuMs": 459.4,
+              "evaluationCpuMs": 262,
+              "taskCpuMs": 1202.6,
+              "longestTaskMs": 379.4,
+              "tasks": 532,
+              "traceSha256": "676f1321590b84e2439bf88735adb881c481ea74f3e1c52d0934c4e54b26eac7"
+            },
+            {
+              "startupCpuMs": 486.3,
+              "evaluationCpuMs": 276.8,
+              "taskCpuMs": 1192.2,
+              "longestTaskMs": 376.8,
+              "tasks": 532,
+              "traceSha256": "62d1a3c1b314b91db960ffd93f11c09978343321d6c95e1fceefb5c60d75a18b"
+            },
+            {
+              "startupCpuMs": 455.7,
+              "evaluationCpuMs": 197.6,
+              "taskCpuMs": 1265.6,
+              "longestTaskMs": 434.6,
+              "tasks": 632,
+              "traceSha256": "41e2b2c119ccd75349c86315b91e6223631379784e9c4cda4ca9c8a9228e2499"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "privacy/en": {
+          "route": "privacy",
+          "locale": "en",
+          "profile": "mobile",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 135886,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 488.6,
+          "longestTaskMs": 447.8,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-mobile-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-mobile-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-mobile-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-mobile-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-mobile-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 132.7,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 503,
+          "scriptCount": 10,
+          "startupCpuMedianMs": 461.5,
+          "evaluationCpuP95Ms": 295.3,
+          "taskCpuP95Ms": 1349.3,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 449.2,
+              "evaluationCpuMs": 241,
+              "taskCpuMs": 1349.3,
+              "longestTaskMs": 447.8,
+              "tasks": 537,
+              "traceSha256": "0291aebfe48ab3dc76ce96b7add833471ed8415773ffd5ff91036474b5664b34"
+            },
+            {
+              "startupCpuMs": 464,
+              "evaluationCpuMs": 233.8,
+              "taskCpuMs": 1199.3,
+              "longestTaskMs": 368.7,
+              "tasks": 572,
+              "traceSha256": "f52e5d46866c3dbd7c91336c9b53e3346510fcb021fc31cd9e9a62db09015bad"
+            },
+            {
+              "startupCpuMs": 461.5,
+              "evaluationCpuMs": 243.3,
+              "taskCpuMs": 1164.3,
+              "longestTaskMs": 380.9,
+              "tasks": 606,
+              "traceSha256": "0f0498d5e2468ac39c4625a3ae8da52c84e112b19dcd4321549d615d069aff73"
+            },
+            {
+              "startupCpuMs": 442.7,
+              "evaluationCpuMs": 255.6,
+              "taskCpuMs": 1165.8,
+              "longestTaskMs": 317.1,
+              "tasks": 522,
+              "traceSha256": "4fb80ef880238bcc05b4230fc83ea320d9f54b6b37482f37dec2e3544a3e5b36"
+            },
+            {
+              "startupCpuMs": 488.6,
+              "evaluationCpuMs": 295.3,
+              "taskCpuMs": 1241,
+              "longestTaskMs": 403.5,
+              "tasks": 552,
+              "traceSha256": "f66e71ef8d51addb53c9c55fdd62d2e9784fa1cc143b2a185db418a691a861ad"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        }
+      }
+    },
+    "desktop": {
+      "label": "Desktop: 1440x900, DPR 1, 1x CPU, desktop applied (150 ms request latency, 9.2 Mbps down)",
+      "routes": {
+        "studio/es": {
+          "route": "studio",
+          "locale": "es",
+          "profile": "desktop",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 156971,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 170.4,
+          "longestTaskMs": 56.3,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-desktop-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-desktop-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-desktop-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-desktop-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-es-desktop-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 153.3,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 565.7,
+          "scriptCount": 13,
+          "startupCpuMedianMs": 111.4,
+          "evaluationCpuP95Ms": 47.4,
+          "taskCpuP95Ms": 332.6,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 112.9,
+              "evaluationCpuMs": 41.7,
+              "taskCpuMs": 281.3,
+              "longestTaskMs": 43.4,
+              "tasks": 827,
+              "traceSha256": "d2ff4d363e3bed4b0a64b47d89ba3cf919ab93ee12a826d9424bdd71ae3512d5"
+            },
+            {
+              "startupCpuMs": 170.4,
+              "evaluationCpuMs": 45.8,
+              "taskCpuMs": 332.6,
+              "longestTaskMs": 42.5,
+              "tasks": 1105,
+              "traceSha256": "42730a0255a4d96b78721e798d416605f3462c3995527630726ece02957f0e13"
+            },
+            {
+              "startupCpuMs": 109.7,
+              "evaluationCpuMs": 41.6,
+              "taskCpuMs": 308,
+              "longestTaskMs": 49.2,
+              "tasks": 818,
+              "traceSha256": "dd4f09c6d204213d5a61258b07a0f8e41d9fda875d8b2e14af87d365b91afb0c"
+            },
+            {
+              "startupCpuMs": 107.1,
+              "evaluationCpuMs": 47.4,
+              "taskCpuMs": 261,
+              "longestTaskMs": 45.3,
+              "tasks": 820,
+              "traceSha256": "201ad8606364618b157980abdf378091258abaec3daa085f88f7edc48fc80a2e"
+            },
+            {
+              "startupCpuMs": 111.4,
+              "evaluationCpuMs": 47.1,
+              "taskCpuMs": 316.3,
+              "longestTaskMs": 56.3,
+              "tasks": 825,
+              "traceSha256": "217979e14035b3a2b843b1e6d41fc791bcdb09a6eb5e72ed08a69d6148186b82"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/05b9q4y_n5bik.js",
+              "critical": false,
+              "rawKiB": 34,
+              "brotliKiB": 11.3
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": false,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/3ib3gbva4wp4t.js",
+              "critical": false,
+              "rawKiB": 0.2,
+              "brotliKiB": 0.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "studio/en": {
+          "route": "studio",
+          "locale": "en",
+          "profile": "desktop",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 156971,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 162,
+          "longestTaskMs": 49.1,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-desktop-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-desktop-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-desktop-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-desktop-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\studio-en-desktop-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 153.3,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 565.7,
+          "scriptCount": 13,
+          "startupCpuMedianMs": 113.1,
+          "evaluationCpuP95Ms": 43.4,
+          "taskCpuP95Ms": 335.4,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 94.5,
+              "evaluationCpuMs": 41.4,
+              "taskCpuMs": 254.5,
+              "longestTaskMs": 44.6,
+              "tasks": 820,
+              "traceSha256": "f2a0aed5c3215162cae20774beecfea4b4632476674bdc8b7a689392beaebed8"
+            },
+            {
+              "startupCpuMs": 156.6,
+              "evaluationCpuMs": 40.8,
+              "taskCpuMs": 335.4,
+              "longestTaskMs": 49.1,
+              "tasks": 1210,
+              "traceSha256": "643c9a8f49e08d781ea91a4b72abf0043988cea1a0671bc7ae0fddfb64161435"
+            },
+            {
+              "startupCpuMs": 113.1,
+              "evaluationCpuMs": 43.4,
+              "taskCpuMs": 299.7,
+              "longestTaskMs": 40.7,
+              "tasks": 821,
+              "traceSha256": "20ab084266a979d8f72d697ff3a435ac64cea8782e361c34ed6d11d7b9022394"
+            },
+            {
+              "startupCpuMs": 91.9,
+              "evaluationCpuMs": 41,
+              "taskCpuMs": 252.4,
+              "longestTaskMs": 45.5,
+              "tasks": 819,
+              "traceSha256": "e913fff49eebea77212badc86e409da609eefe29af14394ad2a68ccdac916387"
+            },
+            {
+              "startupCpuMs": 162,
+              "evaluationCpuMs": 42.4,
+              "taskCpuMs": 309.6,
+              "longestTaskMs": 39.2,
+              "tasks": 1285,
+              "traceSha256": "56f5122c22a3c7b4f39ad03ccb5c6c37ef36193d89c0fe58101d9999463fb784"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/05b9q4y_n5bik.js",
+              "critical": false,
+              "rawKiB": 34,
+              "brotliKiB": 11.3
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": false,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/3ib3gbva4wp4t.js",
+              "critical": false,
+              "rawKiB": 0.2,
+              "brotliKiB": 0.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "founder/es": {
+          "route": "founder",
+          "locale": "es",
+          "profile": "desktop",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 156971,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 171.8,
+          "longestTaskMs": 50.1,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-desktop-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-desktop-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-desktop-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-desktop-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-es-desktop-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 153.3,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 565.7,
+          "scriptCount": 13,
+          "startupCpuMedianMs": 107.7,
+          "evaluationCpuP95Ms": 54.5,
+          "taskCpuP95Ms": 333.2,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 106.4,
+              "evaluationCpuMs": 40.9,
+              "taskCpuMs": 266.2,
+              "longestTaskMs": 38,
+              "tasks": 731,
+              "traceSha256": "8e7889cd0edf5157567f6f35fe0413e26f8f5dc84f69ea9442b5325cc8c3d5ab"
+            },
+            {
+              "startupCpuMs": 161.7,
+              "evaluationCpuMs": 51.7,
+              "taskCpuMs": 333.2,
+              "longestTaskMs": 47.2,
+              "tasks": 1076,
+              "traceSha256": "61489861de81501ff81461361745274b4455a8be0d8d0589ee69a6a3f94b85d9"
+            },
+            {
+              "startupCpuMs": 171.8,
+              "evaluationCpuMs": 41.5,
+              "taskCpuMs": 314.9,
+              "longestTaskMs": 37.7,
+              "tasks": 1165,
+              "traceSha256": "3a22b1448dffd7062fbc1c325825c136bfa22c9b9f09133dfa95a1391d518b9a"
+            },
+            {
+              "startupCpuMs": 96.2,
+              "evaluationCpuMs": 42.8,
+              "taskCpuMs": 272.7,
+              "longestTaskMs": 46.8,
+              "tasks": 731,
+              "traceSha256": "ff781293c53d6bfc85b0207c9b9195379f1c4a40bba79671e9ebac1e994eaec3"
+            },
+            {
+              "startupCpuMs": 107.7,
+              "evaluationCpuMs": 54.5,
+              "taskCpuMs": 257.9,
+              "longestTaskMs": 50.1,
+              "tasks": 732,
+              "traceSha256": "a8a0aea1cb48b965c4d582262c0969456c5d9540048bca49a7972f25e12eb4fd"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/05b9q4y_n5bik.js",
+              "critical": false,
+              "rawKiB": 34,
+              "brotliKiB": 11.3
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": false,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/3ib3gbva4wp4t.js",
+              "critical": false,
+              "rawKiB": 0.2,
+              "brotliKiB": 0.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "founder/en": {
+          "route": "founder",
+          "locale": "en",
+          "profile": "desktop",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 156971,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 170.9,
+          "longestTaskMs": 77,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-desktop-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-desktop-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-desktop-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-desktop-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\founder-en-desktop-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 153.3,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 565.7,
+          "scriptCount": 13,
+          "startupCpuMedianMs": 122.2,
+          "evaluationCpuP95Ms": 55.7,
+          "taskCpuP95Ms": 347.4,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 170.9,
+              "evaluationCpuMs": 51.2,
+              "taskCpuMs": 347.4,
+              "longestTaskMs": 46.4,
+              "tasks": 1057,
+              "traceSha256": "277eda664f213b61e4b1fef1ca42917d1aee6b9652029722cd98f13ccb3520d0"
+            },
+            {
+              "startupCpuMs": 122.2,
+              "evaluationCpuMs": 49.6,
+              "taskCpuMs": 292.1,
+              "longestTaskMs": 77,
+              "tasks": 722,
+              "traceSha256": "f202634d8900300c1e1861bb50b12934aed79d23e2b80f245016b846f5e7a7e5"
+            },
+            {
+              "startupCpuMs": 109,
+              "evaluationCpuMs": 55.7,
+              "taskCpuMs": 266.1,
+              "longestTaskMs": 51.1,
+              "tasks": 734,
+              "traceSha256": "49f946de4abe700e12e6f43aa2821ca99b418b3843f068dcbbbc8cb773402555"
+            },
+            {
+              "startupCpuMs": 157.4,
+              "evaluationCpuMs": 47.7,
+              "taskCpuMs": 323.7,
+              "longestTaskMs": 53.6,
+              "tasks": 1047,
+              "traceSha256": "7a816d29169030aa46f860d1366d17f77bf5e95a2aacf89bed70bb680e19bd13"
+            },
+            {
+              "startupCpuMs": 105.9,
+              "evaluationCpuMs": 41.9,
+              "taskCpuMs": 245.8,
+              "longestTaskMs": 39.9,
+              "tasks": 743,
+              "traceSha256": "0c014f51c2c74b0fc0a32032d9f0c9aaea2359b8dbe6c96670c9b0f4fd4f9b34"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/05b9q4y_n5bik.js",
+              "critical": false,
+              "rawKiB": 34,
+              "brotliKiB": 11.3
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": false,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/3ib3gbva4wp4t.js",
+              "critical": false,
+              "rawKiB": 0.2,
+              "brotliKiB": 0.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "contact/es": {
+          "route": "contact",
+          "locale": "es",
+          "profile": "desktop",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 156971,
+          "criticalJsBrotliBytes": 129803,
+          "startupCpuP95Ms": 183.6,
+          "longestTaskMs": 48.2,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-desktop-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-desktop-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-desktop-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-desktop-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-es-desktop-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 153.3,
+          "criticalJsBrotliKiB": 126.8,
+          "firstLoadJsRawKiB": 565.7,
+          "scriptCount": 13,
+          "startupCpuMedianMs": 174.7,
+          "evaluationCpuP95Ms": 53.5,
+          "taskCpuP95Ms": 355.6,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 174.7,
+              "evaluationCpuMs": 53.5,
+              "taskCpuMs": 341.3,
+              "longestTaskMs": 48.2,
+              "tasks": 1104,
+              "traceSha256": "76ceb5bc1a503abaf9763a1d219f1bdae0b3b6e667fba6c93a2e332601b0a0fe"
+            },
+            {
+              "startupCpuMs": 168.4,
+              "evaluationCpuMs": 41,
+              "taskCpuMs": 319.3,
+              "longestTaskMs": 37.5,
+              "tasks": 1169,
+              "traceSha256": "01f95925e12dec5f1e3e15d4d973e3d31b36774413ebe9387c959d49fb1bd0dc"
+            },
+            {
+              "startupCpuMs": 169.5,
+              "evaluationCpuMs": 42.7,
+              "taskCpuMs": 321,
+              "longestTaskMs": 44.1,
+              "tasks": 1209,
+              "traceSha256": "8b6bf75b0c507fc03f9ec777cd1deb6c78cb1410b3ecc0ccc4bb15af267c7f23"
+            },
+            {
+              "startupCpuMs": 182.4,
+              "evaluationCpuMs": 43,
+              "taskCpuMs": 355.6,
+              "longestTaskMs": 39.5,
+              "tasks": 1170,
+              "traceSha256": "0e8fa583d3dfc32da0b384a730262105945a4331e2fe968732f7e0bc820308a4"
+            },
+            {
+              "startupCpuMs": 183.6,
+              "evaluationCpuMs": 47.7,
+              "taskCpuMs": 349.9,
+              "longestTaskMs": 42.4,
+              "tasks": 1145,
+              "traceSha256": "2e101130ae4d3e6a7d4a1dc410bfbbd2a923488dc86522aaec892225acc0d2f6"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/05b9q4y_n5bik.js",
+              "critical": false,
+              "rawKiB": 34,
+              "brotliKiB": 11.3
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": true,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/3ib3gbva4wp4t.js",
+              "critical": false,
+              "rawKiB": 0.2,
+              "brotliKiB": 0.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "contact/en": {
+          "route": "contact",
+          "locale": "en",
+          "profile": "desktop",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 156971,
+          "criticalJsBrotliBytes": 129803,
+          "startupCpuP95Ms": 188.6,
+          "longestTaskMs": 51.9,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-desktop-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-desktop-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-desktop-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-desktop-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\contact-en-desktop-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 153.3,
+          "criticalJsBrotliKiB": 126.8,
+          "firstLoadJsRawKiB": 565.7,
+          "scriptCount": 13,
+          "startupCpuMedianMs": 173.3,
+          "evaluationCpuP95Ms": 56.8,
+          "taskCpuP95Ms": 336.9,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 167.7,
+              "evaluationCpuMs": 39.8,
+              "taskCpuMs": 304.2,
+              "longestTaskMs": 37,
+              "tasks": 1188,
+              "traceSha256": "439c5e5c8d8e700189861fffa28e909dafad2f9573ef3ad078aedbff3db4b841"
+            },
+            {
+              "startupCpuMs": 188.6,
+              "evaluationCpuMs": 43.7,
+              "taskCpuMs": 331.3,
+              "longestTaskMs": 39.8,
+              "tasks": 1143,
+              "traceSha256": "365fb768222792c84b1ff58374d78523ecdbbd24243942d825975b0fbec6ed74"
+            },
+            {
+              "startupCpuMs": 173.3,
+              "evaluationCpuMs": 50.7,
+              "taskCpuMs": 329.1,
+              "longestTaskMs": 46.2,
+              "tasks": 1102,
+              "traceSha256": "ffc421f784d94961378b2627c81cb8e6a4184b9a6b4ccd202725d3cee774dd94"
+            },
+            {
+              "startupCpuMs": 169.4,
+              "evaluationCpuMs": 41.3,
+              "taskCpuMs": 309.7,
+              "longestTaskMs": 38.1,
+              "tasks": 1151,
+              "traceSha256": "c255f63ad0477be8182cfc2960ece87377884b3036722bad9cac2e65658e0caf"
+            },
+            {
+              "startupCpuMs": 180.2,
+              "evaluationCpuMs": 56.8,
+              "taskCpuMs": 336.9,
+              "longestTaskMs": 51.9,
+              "tasks": 1026,
+              "traceSha256": "2f5bbd7de207fa6d9fe32f15397490306403458b1c457be1169f97f3a12b38a7"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/05b9q4y_n5bik.js",
+              "critical": false,
+              "rawKiB": 34,
+              "brotliKiB": 11.3
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": true,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/3ib3gbva4wp4t.js",
+              "critical": false,
+              "rawKiB": 0.2,
+              "brotliKiB": 0.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "privacy/es": {
+          "route": "privacy",
+          "locale": "es",
+          "profile": "desktop",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 156971,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 127.4,
+          "longestTaskMs": 60.3,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-desktop-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-desktop-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-desktop-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-desktop-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-es-desktop-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 153.3,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 565.7,
+          "scriptCount": 13,
+          "startupCpuMedianMs": 107.3,
+          "evaluationCpuP95Ms": 66.5,
+          "taskCpuP95Ms": 267.2,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 107.3,
+              "evaluationCpuMs": 41.6,
+              "taskCpuMs": 255.9,
+              "longestTaskMs": 38.1,
+              "tasks": 705,
+              "traceSha256": "37680ce0bfd5d568c6e8248d6593823f24d67ddab7bd6c4f6a318d3cdf700a04"
+            },
+            {
+              "startupCpuMs": 98.8,
+              "evaluationCpuMs": 41.3,
+              "taskCpuMs": 235.7,
+              "longestTaskMs": 38,
+              "tasks": 694,
+              "traceSha256": "86d00aa78b9cebaab5790cdfaccf204aacb872bc7348f6d174539d168da96ec3"
+            },
+            {
+              "startupCpuMs": 111.8,
+              "evaluationCpuMs": 41.7,
+              "taskCpuMs": 232.6,
+              "longestTaskMs": 37.6,
+              "tasks": 720,
+              "traceSha256": "09ec8289feeee1919729c6b79bec7a1cb1dce059d7c06fc64d1d340fdd1b11f6"
+            },
+            {
+              "startupCpuMs": 127.4,
+              "evaluationCpuMs": 66.5,
+              "taskCpuMs": 267.2,
+              "longestTaskMs": 60.3,
+              "tasks": 690,
+              "traceSha256": "e077a46ef069e9035ae26ba1713733f4e6f08254ea7e1c22f045b97061fe1b24"
+            },
+            {
+              "startupCpuMs": 101.7,
+              "evaluationCpuMs": 41.7,
+              "taskCpuMs": 232.3,
+              "longestTaskMs": 38.3,
+              "tasks": 701,
+              "traceSha256": "ba3ff8bf9216f52980df2754c30f0ac79c175bc85522c349a08707b531055f29"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/05b9q4y_n5bik.js",
+              "critical": false,
+              "rawKiB": 34,
+              "brotliKiB": 11.3
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": false,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/3ib3gbva4wp4t.js",
+              "critical": false,
+              "rawKiB": 0.2,
+              "brotliKiB": 0.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        },
+        "privacy/en": {
+          "route": "privacy",
+          "locale": "en",
+          "profile": "desktop",
+          "basePath": "/",
+          "journeys": 5,
+          "firstLoadJsBrotliBytes": 156971,
+          "criticalJsBrotliBytes": 120462,
+          "startupCpuP95Ms": 113,
+          "longestTaskMs": 48.7,
+          "method": "one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; a Chromium trace (devtools.timeline, disabled-by-default-devtools.timeline, v8.execute, toplevel, blink.user_timing, loading) from before the navigation until 2000 ms after the load event; startup CPU is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested",
+          "tracePaths": [
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-desktop-1.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-desktop-2.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-desktop-3.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-desktop-4.json",
+            "D:\\Projects\\NextJS\\Portfolio\\.worktrees\\sfc-03\\.superpowers\\reports\\sfc-03\\traces\\root\\privacy-en-desktop-5.json"
+          ],
+          "firstLoadJsBrotliKiB": 153.3,
+          "criticalJsBrotliKiB": 117.6,
+          "firstLoadJsRawKiB": 565.7,
+          "scriptCount": 13,
+          "startupCpuMedianMs": 98.2,
+          "evaluationCpuP95Ms": 52.7,
+          "taskCpuP95Ms": 248.1,
+          "journeysDetail": [
+            {
+              "startupCpuMs": 91.4,
+              "evaluationCpuMs": 40.7,
+              "taskCpuMs": 192.1,
+              "longestTaskMs": 37.6,
+              "tasks": 711,
+              "traceSha256": "c29b573979272750d70b0b0c230cb0a1fce07556e18e7168f7bf4eb890be4da3"
+            },
+            {
+              "startupCpuMs": 113,
+              "evaluationCpuMs": 40.7,
+              "taskCpuMs": 236.1,
+              "longestTaskMs": 46.8,
+              "tasks": 728,
+              "traceSha256": "fd7fc56f4f424f5736b211517dc7df40a76a9648659256ebe5e4de14fd3eb2e1"
+            },
+            {
+              "startupCpuMs": 94.4,
+              "evaluationCpuMs": 39.5,
+              "taskCpuMs": 224.3,
+              "longestTaskMs": 37.4,
+              "tasks": 693,
+              "traceSha256": "76cee8affe65de7de97f005c30be50e1185127b7d213e7da1eee69baf47b0a5a"
+            },
+            {
+              "startupCpuMs": 98.2,
+              "evaluationCpuMs": 52.7,
+              "taskCpuMs": 248.1,
+              "longestTaskMs": 48.7,
+              "tasks": 694,
+              "traceSha256": "5da6b34566faa854c7350d1b939967ab017b0d19d399255b8f13c2e10c0ffdd1"
+            },
+            {
+              "startupCpuMs": 100.1,
+              "evaluationCpuMs": 43,
+              "taskCpuMs": 242.1,
+              "longestTaskMs": 40,
+              "tasks": 687,
+              "traceSha256": "d0cae25c4843f2689d5f9842dfcbbbac4be5538e86d1fdf0fa1cf1dd77213783"
+            }
+          ],
+          "scripts": [
+            {
+              "script": "chunks/02fh7_m5mrih8.js",
+              "critical": true,
+              "rawKiB": 223.8,
+              "brotliKiB": 59.8
+            },
+            {
+              "script": "chunks/034b-sogoe-_k.js",
+              "critical": true,
+              "rawKiB": 2,
+              "brotliKiB": 0.8
+            },
+            {
+              "script": "chunks/05b9q4y_n5bik.js",
+              "critical": false,
+              "rawKiB": 34,
+              "brotliKiB": 11.3
+            },
+            {
+              "script": "chunks/1qbezb71mmvt4.js",
+              "critical": false,
+              "rawKiB": 28.5,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2205ehd8yu_7x.js",
+              "critical": true,
+              "rawKiB": 14.3,
+              "brotliKiB": 5
+            },
+            {
+              "script": "chunks/2bmz0osvslsnm.js",
+              "critical": true,
+              "rawKiB": 155.7,
+              "brotliKiB": 36.3
+            },
+            {
+              "script": "chunks/2cd4tgx4z-a1k.js",
+              "critical": false,
+              "rawKiB": 16.9,
+              "brotliKiB": 5.9
+            },
+            {
+              "script": "chunks/2gcghyac3r8k-.js",
+              "critical": false,
+              "rawKiB": 27.7,
+              "brotliKiB": 9.1
+            },
+            {
+              "script": "chunks/2mmpezlrfmbu5.js",
+              "critical": true,
+              "rawKiB": 33.9,
+              "brotliKiB": 7.5
+            },
+            {
+              "script": "chunks/310vm2bl3xxpt.js",
+              "critical": true,
+              "rawKiB": 5.2,
+              "brotliKiB": 1.6
+            },
+            {
+              "script": "chunks/3fntmmi971322.js",
+              "critical": true,
+              "rawKiB": 14,
+              "brotliKiB": 3.2
+            },
+            {
+              "script": "chunks/3ib3gbva4wp4t.js",
+              "critical": false,
+              "rawKiB": 0.2,
+              "brotliKiB": 0.2
+            },
+            {
+              "script": "chunks/turbopack-38ddan9w2ubp5.js",
+              "critical": true,
+              "rawKiB": 9.5,
+              "brotliKiB": 3.4
+            }
+          ]
+        }
+      }
+    }
+  },
+  "notes": []
+}
