@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 const {
   activeFrameIntervals,
   attributeShifts,
+  classifyLateFrames,
   buildRouteClosure,
   cadenceFps,
   chunkImports,
@@ -342,4 +343,33 @@ test('a trace that cannot be tied to the document, its main thread or any task i
   assert.throws(() => mainThreadStartupCost({ events: events.filter((event) => !(event.name === 'thread_name' && event.pid === 100 && event.tid === 1)), documentUrl: DOCUMENT }), /CrRendererMain/);
   assert.throws(() => mainThreadStartupCost({ events: events.filter((event) => event.name !== 'RunTask'), documentUrl: DOCUMENT }), /no main-thread tasks/);
   assert.throws(() => mainThreadStartupCost({ events: [], documentUrl: DOCUMENT }), /navigationStart/);
+});
+
+// --- PLAN-SFC-V1 Task 3: what a late frame was waiting for --------------------------------------------
+
+test('a late frame is attributed to the render CPU, the GPU, or to neither (scheduler or presentation), and an unmeasured GPU is never read as innocent', () => {
+  const frame = (t, cpuMs = 0.3, gpuMs = 4) => ({ t, cpuMs, gpuMs });
+  const frames = [
+    frame(0), frame(16.7), frame(50.1), // 33.4 ms gap, the frame before it was cheap: neither explains it
+    frame(66.8, 0.3, 20.5), frame(100.2), // the frame before the gap took 20.5 ms on the GPU
+    frame(116.9, 9), frame(150.3), // the frame before the gap spent 9 ms submitting on the CPU
+    frame(167, 0.3, null), frame(200.4), // the GPU time of the frame before the gap was never measured
+    frame(217.1), frame(817.1), frame(833.8), // a 600 ms pause between scroll bursts is not a frame interval
+  ];
+  assert.deepEqual(classifyLateFrames({ frames }), {
+    intervals: 10, // twelve frames, eleven gaps, one of them the 600 ms pause
+    late: 4,
+    renderCpu: 1,
+    gpu: 1,
+    schedulerOrPresentation: 1,
+    unmeasured: 1,
+  });
+  assert.equal(classifyLateFrames({ frames, lateMs: 40 }).late, 0, 'the lateness threshold is a parameter');
+});
+
+test('late-frame attribution rejects frames that cannot be ordered or measured', () => {
+  assert.throws(() => classifyLateFrames({ frames: [{ t: 0, cpuMs: 0.3, gpuMs: 4 }] }), /at least two/);
+  assert.throws(() => classifyLateFrames({ frames: [{ t: 0, cpuMs: 0.3, gpuMs: 4 }, { t: 0, cpuMs: 0.3, gpuMs: 4 }] }), /monotonic/);
+  assert.throws(() => classifyLateFrames({ frames: [{ t: 0, cpuMs: Number.NaN, gpuMs: 4 }, { t: 16, cpuMs: 0.3, gpuMs: 4 }] }), /cpuMs/);
+  assert.throws(() => classifyLateFrames({ frames: [{ t: 0, cpuMs: 0.3, gpuMs: -1 }, { t: 16, cpuMs: 0.3, gpuMs: 4 }] }), /gpuMs/);
 });

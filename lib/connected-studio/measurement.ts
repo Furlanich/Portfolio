@@ -434,3 +434,50 @@ export function mainThreadStartupCost(input: { events: readonly TraceEvent[]; do
     evaluationCpuMs: coveredMicros(EVALUATION_EVENTS) / 1000,
   };
 }
+
+export type RenderedFrame = { t: number; cpuMs: number; gpuMs: number | null };
+
+export type LateFrameAttribution = {
+  intervals: number;
+  late: number;
+  renderCpu: number;
+  gpu: number;
+  schedulerOrPresentation: number;
+  unmeasured: number;
+};
+
+const RENDER_CPU_BLOCKING_MS = 8; // half a 60 Hz refresh spent submitting draw calls
+const GPU_BACKPRESSURE_MS = 20; // the plan's per-render row: a frame the GPU held longer than this
+
+/**
+ * What the frame before a late interval was doing. An interval of `lateMs` or more (and under the 250 ms that
+ * separates scroll bursts) is attributed to that frame's render CPU time, to its GPU time, to neither, or left
+ * unmeasured when the GPU time is missing: a missing GPU time can never clear the GPU. "Neither" means the render
+ * itself was cheap, so the delay came from when the frame was requested or when it was presented: the scheduler,
+ * the main thread or the compositor and display path. It narrows the next trace, it does not prove a cause.
+ */
+export function classifyLateFrames(input: { frames: readonly RenderedFrame[]; lateMs?: number }): LateFrameAttribution {
+  const { frames } = input;
+  const lateMs = input.lateMs ?? 25;
+  if (frames.length < 2) throw new Error(`Late-frame attribution needs at least two frames, got ${frames.length}`);
+  frames.forEach((frame) => {
+    if (!Number.isFinite(frame.t)) throw new Error('Every frame needs a finite timestamp t');
+    if (!Number.isFinite(frame.cpuMs) || frame.cpuMs < 0) throw new Error(`Every frame needs a finite cpuMs of zero or more, got ${String(frame.cpuMs)}`);
+    if (frame.gpuMs !== null && (!Number.isFinite(frame.gpuMs) || frame.gpuMs < 0)) throw new Error(`gpuMs must be null or a finite number of zero or more, got ${String(frame.gpuMs)}`);
+  });
+  const result: LateFrameAttribution = { intervals: 0, late: 0, renderCpu: 0, gpu: 0, schedulerOrPresentation: 0, unmeasured: 0 };
+  for (let index = 1; index < frames.length; index += 1) {
+    const gap = frames[index].t - frames[index - 1].t;
+    if (gap <= 0) throw new Error('Frame timestamps must be strictly increasing (monotonic)');
+    if (gap >= 250) continue;
+    result.intervals += 1;
+    if (gap < lateMs) continue;
+    result.late += 1;
+    const before = frames[index - 1];
+    if (before.cpuMs >= RENDER_CPU_BLOCKING_MS) result.renderCpu += 1;
+    else if (before.gpuMs === null) result.unmeasured += 1;
+    else if (before.gpuMs >= GPU_BACKPRESSURE_MS) result.gpu += 1;
+    else result.schedulerOrPresentation += 1;
+  }
+  return result;
+}

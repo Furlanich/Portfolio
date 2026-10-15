@@ -23,7 +23,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { chromium, firefox } from 'playwright';
-import { activeFrameIntervals, buildRouteClosure, cadenceFps, chunkImports, contrastRatio, FRAME_INTERVAL_SOURCE, judgeHardware } from '../lib/connected-studio/measurement.ts';
+import { activeFrameIntervals, buildRouteClosure, cadenceFps, chunkImports, classifyLateFrames, contrastRatio, FRAME_INTERVAL_SOURCE, judgeHardware } from '../lib/connected-studio/measurement.ts';
 import { createExportServer, normalizeBasePath } from './serve-static-export.mjs';
 
 const root = process.cwd();
@@ -45,6 +45,11 @@ if (!['chromium', 'firefox'].includes(BROWSER)) fail(`--browser must be chromium
 const IDLE_SECONDS = positive('idle-seconds', 120);
 const TRAVERSALS = positive('traversals', 3);
 const HEADED = process.argv.includes('--headed');
+// Opt-in evidence for a late-frame diagnosis (PLAN-SFC-V1 Task 3). Tracing adds overhead, so it is off by default and a
+// traced run is a diagnostic, not a pass/fail measurement.
+const TRACE_PIPELINE = argument('trace-pipeline'); // raw Chromium trace of the traversal window (cc, viz, gpu, input)
+const FRAMES_OUT = argument('frames-out'); // every traversal frame: timestamp, CPU submit time, GPU time, draw calls
+if ((TRACE_PIPELINE || FRAMES_OUT) && BROWSER !== 'chromium') fail('--trace-pipeline and --frames-out need --browser=chromium');
 const GPU_TIMERS = !process.argv.includes('--no-gpu-timers'); // a control: without the timer queries, is the frame interval the same?
 const basePath = normalizeBasePath(argument('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
 if (basePath && !/^\/[A-Za-z0-9._-]+$/.test(basePath)) fail(`The base path "${basePath}" is not a plain /segment. Run from PowerShell.`);
@@ -302,6 +307,7 @@ try {
     const labelSamples = [];
     const heroLabels = await labelGeometry(page);
     const traversalStart = await page.evaluate(() => performance.now());
+    if (TRACE_PIPELINE) await browser.startTracing(page, { path: TRACE_PIPELINE, categories: ['toplevel', 'cc', 'viz', 'gpu', 'benchmark', 'input', 'latencyInfo', 'blink.user_timing', 'disabled-by-default-cc.debug.scheduler'] });
     for (let pass = 0; pass < TRAVERSALS; pass += 1) {
       for (const direction of [1, -1]) {
         const from = await frameCount(page);
@@ -313,6 +319,9 @@ try {
       }
     }
     const traversalEnd = await page.evaluate(() => performance.now());
+    if (TRACE_PIPELINE) await browser.stopTracing();
+    if (FRAMES_OUT) fs.writeFileSync(FRAMES_OUT, `${JSON.stringify({ unit: 'ms, page performance.now()', frames: active.map((f) => ({ t: round(f.t, 3), cpuMs: round(f.cpu, 3), gpuMs: round(f.gpuMs, 3), draws: f.draws })) })}
+`);
     // Frame intervals come from the render timestamps only (never the CPU submit time or the GPU query); a gap of
     // 250 ms or more is a pause between scroll bursts. No usable interval leaves the row OPEN instead of ending the run.
     let intervals = [];
@@ -320,6 +329,12 @@ try {
       intervals = activeFrameIntervals({ source: FRAME_INTERVAL_SOURCE, timestampsMs: active.map((frame) => frame.t) });
     } catch (error) {
       report.activeIntervalError = error.message;
+    }
+    // What the frame before each late interval was doing: render CPU, GPU, or neither (scheduler or presentation).
+    try {
+      report.lateFrames = classifyLateFrames({ frames: active.map((f) => ({ t: f.t, cpuMs: f.cpu, gpuMs: f.gpuMs })) });
+    } catch (error) {
+      report.lateFramesError = error.message;
     }
     const gpuValues = active.map((f) => f.gpuMs).filter((v) => v !== null);
     const longTasks = await page.evaluate(([a, b]) => window.__hw.longTasks.filter((task) => task.start >= a && task.start <= b).map((task) => Math.round(task.duration)), [traversalStart, traversalEnd]);
