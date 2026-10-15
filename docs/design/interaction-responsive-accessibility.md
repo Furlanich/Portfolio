@@ -27,7 +27,7 @@ related:
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
-last_verified: 2026-10-05
+last_verified: 2026-10-15
 ---
 
 # Interaction, responsive behavior, and accessibility
@@ -482,3 +482,13 @@ Heading hierarchy and landmark count are unchanged. Keyboard tab order is App Ba
 ### Scope and supersession boundary
 
 This section and its inline markers above supersede, only within the stated boundary: the `IMMERSIVE-HOME-V1.1` C2 two-zone composition, the four static chapter posters and the phase spine (item 3, Home only; see the header marker above); the Global app-bar Surface/Border fill (item 4, every route; sticky/normal-flow/no-hide retained); the Home column-count and equal-track rules for Problems, Services and Process (item 12, Home only); the optional Connection-video permission (item 17, withdrawn, marked below); and the Pause control's placement plus the `IMMERSIVE-HOME-V1.1` five-width responsive-choreography table (item 16, Home only; the control's keyboard operability, `aria-pressed` state and supplementary role are retained). Item 3 does **not** supersede "Progressive structure and media lifecycle"'s painting-before-Three.js order, one-shot initialization or context-loss handling; nor "Scroll and motion control"'s no-idle-loop rendering and reversible native scroll; nor the "Accessibility and failure contract" or "Production gates" sections outside the video-specific rows marked below. The chapters and their meaning are retained. D-27 is a new addition, not a supersession. Outside these named boundaries, this document's other approved sections remain authoritative unchanged, including for Services, Projects, Studio, Founder, Contact and Privacy.
+
+## SFC-V1 — Studio, Founder, Contact and legal Atlas — APPROVED TARGET
+
+**APPROVED TARGET — 2026-10-15, effective on human merge of Governance PR 1.** Recorded under [`RFC-SFC-COMMERCIAL-ATLAS-V1`](../rfcs/studio-founder-contact-commercial-atlas-v1.md). The complete interaction, responsive, motion and accessibility specification is [`DESIGN-SFC-V1`](studio-founder-contact-v1.md); this section registers the target and its boundary only.
+
+**Target.** Studio, Founder and Contact gain yielding graph nodes and pinned flexible strings on the existing single connected runtime, with fixed Contact nodes, input-driven sleep at rest, native touch scrolling, a Pause control placed per page, and a complete static composition whenever motion, WebGL or JavaScript is unavailable. Contact submits a genuine inquiry through the retained provider-neutral port with the specified focus, busy, result and error behavior. Privacy and Terms are server-rendered reading pages with a contents list. Exact thresholds, caps, breakpoints, focus order and announcements: `DESIGN-SFC-V1`.
+
+**Boundary.** This supersedes, only for these routes, the connected-runtime limit to Services and Projects and the passive-proximity and rigid-path behavior recorded for them, as named in the RFC. Home's separate runtime, reduced-motion and Save-Data handling, semantic HTML order, pointer-transparent canvas and static fallback stay authoritative.
+
+**Not yet in effect.** No behavior has changed. The live graph stays disabled by policy; the inquiry form stays a local demonstration. Both change only at the reviewed checkpoints of [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md), with screen-reader, device and hardware evidence still open.

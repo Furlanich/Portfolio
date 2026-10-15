@@ -29,7 +29,7 @@ related:
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
-last_verified: 2026-10-05
+last_verified: 2026-10-15
 ---
 
 # Visual language
@@ -706,3 +706,13 @@ D-25 (Pause control), D-27 (compact hero label mask) and the accessibility conse
 This section and its inline markers above supersede, only within the stated boundary: `VISUAL-IDENTITY-V1`'s UI-gradient/neon/glass exclusion (item 1, Home and App Bar only; neon stays excluded); the light-only/no-dark-theme deferral (item 2, Home environment only; not a site theme); `IMMERSIVE-HOME-V1.1`'s C2 composition (item 3, chapters and copy retained); the Global app bar Surface/Border treatment (item 4, every route, sticky/normal-flow/no-hide retained); the viewport-height-hero prohibition (item 5, Home only); the Canvas/Surface section alternation (item 6, Home only); the card radius/shadow rule (item 7, Home's card-equivalents only; Projects and the Services index panel unaffected); the telemetry/particle-field exclusion (item 8, to the stated extent only); the no-gradients/no-accent-color section rule (item 10, Home only); the Home section rhythm and type scale (item 11, Home only); the Home grid/column rules (item 12, Home only); the card-vs-editorial-composition rule (item 13, Home only); the derived Azure sculpture as the scene's identity element (item 14, an explicit owner decision); and the Action-tint final CTA on Home (item 15, Home only; every other page keeps it). Item 9 (the new `HOME-IMPACT` section) is an addition, not a supersession, recorded in `PAGE-HOME`. Item 17 (the withdrawn Connection-film permission) is primarily recorded in [`ADR-SKY-CHART-HOMEPAGE-RUNTIME`](../decisions/sky-chart-homepage-runtime.md); it is also marked above at `IMMERSIVE-HOME-V1.1`'s "Instrument media" and "Remaining open visual items" text, which otherwise remains an accurate historical description of what was approved before the withdrawal. Item 18 (the `PAGE-HOME` section order) is recorded in `PAGE-HOME`.
 
 Outside these named boundaries, `VISUAL-IDENTITY-V1`, the commercial homepage section baseline, and every other approved section of this document remain authoritative unchanged, including for Services, Projects, Studio, Founder, Contact and Privacy.
+
+## SFC-V1 — Studio, Founder, Contact and legal Atlas — APPROVED TARGET
+
+**APPROVED TARGET — 2026-10-15, effective on human merge of Governance PR 1.** Recorded under [`RFC-SFC-COMMERCIAL-ATLAS-V1`](../rfcs/studio-founder-contact-commercial-atlas-v1.md). The complete visual specification is [`DESIGN-SFC-V1`](studio-founder-contact-v1.md); this section only registers the target and its boundary, and duplicates none of its values.
+
+**Target.** Dark Atlas Studio and Founder, a quiet dark Contact introduction with an opaque Bone intake surface, and complete quiet legal reading surfaces for Privacy and the new Terms page, built from the shared connected background, the editorial opaque plate, the opaque text scrim and the owner-approved 1180px editorial container (exact values: `DESIGN-SFC-V1`). Palette, fonts, protected mark and the shared App Bar and Footer are unchanged. The default `AtlasPlate` and Home material are unchanged.
+
+**Boundary.** This supersedes, only for Studio, Founder, Contact, Privacy and Terms, the older light composition recorded by this document and keeps every other named surface authoritative: Home, Services, Projects, the App Bar and the Footer.
+
+**Not yet in effect.** No page has been rebuilt. Each page's presentation changes only when its [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) packet (Tasks 2, 6, 7, 9 and 10) and the coordinated release (Task 16) land. Until then the sections above describe the deployed pages. Rendered evidence, not CSS-string tests, judges the result.

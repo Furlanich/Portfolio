@@ -18,7 +18,7 @@ related:
   - RFC-SKY-CHART-VISUAL-SYSTEM-V2
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 ---
 
 # Spanish homepage
@@ -27,7 +27,7 @@ last_verified: 2026-10-14
 
 Approved with written revision 1 in Q14; effective only at the coordinated commercial activation.
 
-Only after the accepted [commercial activation](../../design/studio-founder-contact-v1.md#commercial-contact-and-activation) replaces demonstration mode, replace the final CTA's `demoStatement` with:
+Only at the [commercial activation](../../design/studio-founder-contact-v1.md#commercial-contact-and-activation) authorized by [RFC-SFC-COMMERCIAL-ATLAS-V1](../../rfcs/studio-founder-contact-commercial-atlas-v1.md) (APPROVED 2026-10-15; PLAN-SFC-V1 Task 16 selects it atomically) that replaces demonstration mode, replace the final CTA's `demoStatement` with:
 
 - Spanish: `Samuel revisará personalmente tu consulta para evaluar el próximo paso.`
 - English: `Samuel will personally review your inquiry to assess the next step.`

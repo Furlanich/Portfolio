@@ -17,7 +17,7 @@ related:
   - DESIGN-IX-A11Y
   - PAGE-PROJECTS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 ---
 
 # Studio and founder pages
@@ -31,7 +31,7 @@ The owner retained these reading sequences during the [current design discovery]
 
 This target hierarchy replaces the later editorial outline below that moved experience before biography and professional links below capabilities. The owner subsequently approved the complete written design and linked copy in Q14 on 2026-10-14; implementation still requires governance/plan review. The full approved biography, both source-backed experience entries, education and MPC qualifications, capability groups, professional destinations and evidence limits remain intact. Clever Soft SA stays narrative-only. No portrait or new project claim is approved.
 
-The owner selected A.2's yielding/string motion and page-specific compositions and approved the complete [written specification](../../design/studio-founder-contact-v1.md) revision 1 in Q14 on 2026-10-14. The eventual governance record must name the exact visual and runtime constraints it supersedes. Current production presentation and existing ADR history are unchanged by this target decision.
+The owner selected A.2's yielding/string motion and page-specific compositions and approved the complete [written specification](../../design/studio-founder-contact-v1.md) revision 1 in Q14 on 2026-10-14. [RFC-SFC-COMMERCIAL-ATLAS-V1](../../rfcs/studio-founder-contact-commercial-atlas-v1.md) names the exact visual and runtime constraints this target supersedes and is APPROVED 2026-10-15 (effective on human merge of Governance PR 1). The target takes effect only as [PLAN-SFC-V1](../../plans/active/studio-founder-contact-v1.md) implementation checkpoints land. Current production presentation and existing ADR history are unchanged until then.
 
 ## Atlas redesign copy selection
 

@@ -16,14 +16,14 @@ related:
   - PAGE-PRIVACY
   - CONTENT-LOCALIZATION
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 ---
 
 # Information architecture
 
 ## Atlas legal destinations — APPROVED target, 2026-10-14
 
-[DESIGN-SFC-V1](../design/studio-founder-contact-v1.md), approved in Q14, selects the new `terms` route pair `/terminos/` and `/en/terms/`. Retain `privacy` at `/privacidad/` and `/en/privacy/`. Register Terms in the same static localized route/equivalence and metadata architecture; do not add a client-side routing layer or a duplicate Privacy path.
+[DESIGN-SFC-V1](../design/studio-founder-contact-v1.md), approved in Q14, selects the new `terms` route pair `/terminos/` and `/en/terms/`. Retain `privacy` at `/privacidad/` and `/en/privacy/`. Register Terms in the same static localized route/equivalence and metadata architecture; do not add a client-side routing layer or a duplicate Privacy path. [RFC-SFC-COMMERCIAL-ATLAS-V1](../rfcs/studio-founder-contact-commercial-atlas-v1.md) accepts the pair as a target (APPROVED 2026-10-15, effective on human merge of Governance PR 1); it is registered only when PLAN-SFC-V1 implementation lands, and the current fourteen foundation routes stand until then.
 
 Footer legal utilities become `Privacidad` → localized Privacy and `Términos y condiciones` → localized Terms; English `Privacy` and `Terms and Conditions`. Both remain subordinate ordinary links, outside primary commercial navigation and outside the professional-link group. Legal pages reciprocally link Privacy/Terms; Contact's quiet legal links are owned by PAGE-CONTACT. The existing Footer composition, protected whole-mark watermark and direct-channel prominence are unchanged.
 
