@@ -22,7 +22,7 @@ Status: **recorded, not a verdict.** This is the W1.5 baseline that the later bu
   - **Startup CPU** is the top-level script work (EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration, nested events counted once) of the document's `CrRendererMain` thread from its `navigationStart`. Network and idle time are not tasks and cost nothing. **Evaluation CPU** is the EvaluateScript and compile part alone. The **longest task** is the longest `RunTask`.
   - **Critical JS** is the Brotli size of the emitted files for the scripts the browser requested before the load event; **first-load JS** adds those requested before the two-second settle window ends.
   - The p95 of five journeys is the largest of the five (nearest rank).
-- **Retention.** Raw traces (one per journey, 80 for the root pass, 80 for `/Portfolio`), the JSON reports, the hardware reports and the 400 MB pipeline trace stay in the git-ignored `.superpowers/reports/sfc-03/` of this checkout; each journey records its trace SHA-256. They are too large to commit. The pipeline trace `diag1-pipeline.json` is 408,632,652 bytes, SHA-256 `7531732a4b6fc04420d8d9b5c918407a5446ba0d7523e8ab38998391f97fa9aa`. The owner chooses an archive location before this checkout is retired.
+- **Retention.** The compact reports (startup, production, hardware and diagnostic JSON, 2.2 MB) are committed in [task-03-artifacts](task-03-artifacts/README.md). The raw traces (one per journey, 80 for the root pass, 80 for `/Portfolio`) and the 408,632,652-byte pipeline trace (`diag1-pipeline.json`, SHA-256 `7531732a4b6fc04420d8d9b5c918407a5446ba0d7523e8ab38998391f97fa9aa`) are about 1.2 GB and one file exceeds GitHub's 100 MB limit, so they are archived in the git-ignored `.superpowers/reports/sfc-03/` of the main checkout, outside every worktree; every journey records its trace SHA-256 and all 160 were re-verified after the move. The archive is local to this computer, not backed up by the repository.
 
 ## Optional engine closure (existing)
 
@@ -204,5 +204,5 @@ node scripts/prepare-sfc-candidate.mjs restore --kind=runtime && node scripts/pr
 - **Hidden-tab row, compact tier, constrained Android, iPhone, screen readers and Firefox/WebKit timing: OPEN.** Nothing here measures them.
 - **Device metadata attestation:** the owner confirms the machine, display and software facts above.
 - **Gate and definition decisions for the planning authority:** Risks 1 and 2.
-- **Raw trace archive location:** the owner.
+- **Raw traces are local to this computer.** They survive removal of the worktree, not loss of the machine; a trace needed elsewhere goes to storage the owner chooses, identified by the recorded hashes.
 - **The SPF tail remains an unfixed, intermittently reproducible defect** with the next trace specified above; the wide tier stays disabled and nothing in this record qualifies it.
