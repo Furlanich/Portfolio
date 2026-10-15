@@ -249,3 +249,188 @@ export function cadenceFps(timestampsMs: readonly number[]): number | null {
   const span = timestampsMs[timestampsMs.length - 1] - timestampsMs[0];
   return span > 0 ? ((timestampsMs.length - 1) / span) * 1000 : null;
 }
+
+// --- PLAN-SFC-V1 Task 3: early baselines for the reading, intake and legal routes ---------------------------
+
+export const COLD_BASELINE_JOURNEYS = 5;
+export const FRAME_INTERVAL_SOURCE = 'frame-timestamps';
+
+export type ColdJourneySample = {
+  startupCpuMs: number;
+  longestTaskMs: number;
+};
+
+export type ColdBaselineSummary = {
+  route: string;
+  locale: string;
+  profile: string;
+  basePath: string;
+  journeys: number;
+  firstLoadJsBrotliBytes: number;
+  criticalJsBrotliBytes: number;
+  startupCpuP95Ms: number;
+  longestTaskMs: number;
+  method: string;
+  tracePaths: readonly string[];
+};
+
+/** Nearest-rank percentile. Zero samples is an error: a missing measurement is never a passing zero. */
+export function percentileOf(values: readonly number[], p: number): number {
+  if (!values.length) throw new Error('A percentile was requested over zero samples.');
+  if (values.some((value) => !Number.isFinite(value))) throw new Error('A percentile needs finite samples.');
+  const sorted = [...values].sort((a, b) => a - b);
+  return sorted[Math.max(0, Math.ceil((p / 100) * sorted.length) - 1)];
+}
+
+/**
+ * Frame intervals from the timestamps of consecutive renders. The source label is part of the contract: a render's
+ * CPU submit time, a GPU timer query or a task duration is not an interval between frames and would pass the 20 ms
+ * row on any scene. A gap of `maxGapMs` or more is a pause between scroll bursts, not a frame interval.
+ */
+export function activeFrameIntervals(input: { source: string; timestampsMs: readonly number[]; maxGapMs?: number }): number[] {
+  if (input.source !== FRAME_INTERVAL_SOURCE) {
+    throw new Error(`A frame interval must come from ${FRAME_INTERVAL_SOURCE}, got "${String(input.source)}"`);
+  }
+  const timestamps = input.timestampsMs;
+  if (timestamps.length < 2) throw new Error(`Frame intervals need at least two frame timestamps, got ${timestamps.length}`);
+  if (timestamps.some((value) => !Number.isFinite(value))) throw new Error('Frame timestamps must be finite numbers');
+  for (let index = 1; index < timestamps.length; index += 1) {
+    if (timestamps[index] <= timestamps[index - 1]) throw new Error('Frame timestamps must be strictly increasing (monotonic)');
+  }
+  const maxGapMs = input.maxGapMs ?? 250;
+  const intervals: number[] = [];
+  for (let index = 1; index < timestamps.length; index += 1) {
+    const gap = timestamps[index] - timestamps[index - 1];
+    if (gap < maxGapMs) intervals.push(gap);
+  }
+  if (!intervals.length) throw new Error(`Every gap was ${maxGapMs} ms or longer: there is no frame interval to measure`);
+  return intervals;
+}
+
+const requireText = (name: string, value: unknown): string => {
+  if (typeof value !== 'string' || !value.trim()) throw new Error(`A cold baseline needs a ${name}`);
+  return value;
+};
+const requireSampleNumber = (name: string, value: unknown): number => {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) throw new Error(`Every cold journey needs a finite ${name} of zero or more, got ${String(value)}`);
+  return value;
+};
+
+/**
+ * The cold-route baseline of one route, locale and profile: the first-load JS of the emitted export (everything the
+ * browser requested through the settle window, and the critical part requested before the load event) and the p95 of
+ * the startup CPU over at least five cold journeys, with the method and one retained trace per journey. Absent
+ * samples, profile, method or traces are rejected, never summarized.
+ */
+export function summarizeColdBaseline(input: {
+  route: string;
+  locale: string;
+  profile: string;
+  basePath: string;
+  firstLoadJsBrotliBytes: number;
+  criticalJsBrotliBytes: number;
+  samples: readonly ColdJourneySample[];
+  method: string;
+  tracePaths: readonly string[];
+}): ColdBaselineSummary {
+  const route = requireText('route', input.route);
+  const locale = requireText('locale', input.locale);
+  const profile = requireText('profile', input.profile);
+  const method = requireText('method', input.method);
+  if (typeof input.basePath !== 'string') throw new Error('A cold baseline needs a base path');
+  if (input.samples.length < COLD_BASELINE_JOURNEYS) {
+    throw new Error(`A cold baseline needs ${COLD_BASELINE_JOURNEYS} cold journeys of samples, got ${input.samples.length}`);
+  }
+  if (input.tracePaths.length !== input.samples.length || input.tracePaths.some((trace) => typeof trace !== 'string' || !trace.trim())) {
+    throw new Error(`A cold baseline retains one raw trace per journey: ${input.samples.length} samples, ${input.tracePaths.length} traces`);
+  }
+  if (typeof input.firstLoadJsBrotliBytes !== 'number' || !Number.isFinite(input.firstLoadJsBrotliBytes) || input.firstLoadJsBrotliBytes <= 0) {
+    throw new Error(`A cold baseline needs the first-load JS Brotli bytes, got ${String(input.firstLoadJsBrotliBytes)}`);
+  }
+  if (typeof input.criticalJsBrotliBytes !== 'number' || !Number.isFinite(input.criticalJsBrotliBytes) || input.criticalJsBrotliBytes <= 0) {
+    throw new Error(`A cold baseline needs the critical JS Brotli bytes (requested before the load event), got ${String(input.criticalJsBrotliBytes)}`);
+  }
+  if (input.criticalJsBrotliBytes > input.firstLoadJsBrotliBytes) {
+    throw new Error('The critical JS bytes cannot exceed the first-load JS bytes they are a part of');
+  }
+  const startup = input.samples.map((sample) => requireSampleNumber('startupCpuMs', sample.startupCpuMs));
+  const tasks = input.samples.map((sample) => requireSampleNumber('longestTaskMs', sample.longestTaskMs));
+  return {
+    route,
+    locale,
+    profile,
+    basePath: input.basePath,
+    journeys: input.samples.length,
+    firstLoadJsBrotliBytes: input.firstLoadJsBrotliBytes,
+    criticalJsBrotliBytes: input.criticalJsBrotliBytes,
+    startupCpuP95Ms: percentileOf(startup, 95),
+    longestTaskMs: Math.max(...tasks),
+    method,
+    tracePaths: [...input.tracePaths],
+  };
+}
+
+export type TraceEvent = {
+  pid: number;
+  tid: number;
+  ts: number;
+  ph: string;
+  name: string;
+  dur?: number;
+  args?: Record<string, unknown>;
+};
+
+export type StartupCost = {
+  pid: number;
+  tid: number;
+  tasks: number;
+  taskCpuMs: number;
+  longestTaskMs: number;
+  scriptCpuMs: number;
+  evaluationCpuMs: number;
+};
+
+const SCRIPT_EVENTS = new Set(['EvaluateScript', 'v8.compile', 'FunctionCall', 'RunMicrotasks']);
+const EVALUATION_EVENTS = new Set(['EvaluateScript', 'v8.compile']);
+
+/**
+ * The main-thread cost of loading one document, from a Chromium trace (timestamps and durations in microseconds):
+ * every RunTask of that document's renderer main thread from its navigationStart on, and the script work inside
+ * them (evaluation, compile, calls and microtasks, each counted once where they nest). Network time and idle time
+ * are not tasks and cost nothing here. A trace that cannot be tied to the document, its main thread or at least
+ * one task is rejected: a missing measurement is never zero.
+ */
+export function mainThreadStartupCost(input: { events: readonly TraceEvent[]; documentUrl: string }): StartupCost {
+  const navigation = input.events.find((event) => {
+    const data = event.args?.data as { documentLoaderURL?: string } | undefined;
+    return event.name === 'navigationStart' && data?.documentLoaderURL === input.documentUrl;
+  });
+  if (!navigation) throw new Error(`The trace has no navigationStart event for ${input.documentUrl}`);
+  const thread = input.events.find((event) => event.ph === 'M' && event.name === 'thread_name' && event.pid === navigation.pid && event.args?.name === 'CrRendererMain');
+  if (!thread) throw new Error(`The trace has no CrRendererMain thread for process ${navigation.pid}`);
+  const onThread = input.events.filter((event) => event.pid === thread.pid && event.tid === thread.tid && event.ph === 'X' && typeof event.dur === 'number' && event.ts >= navigation.ts);
+  const tasks = onThread.filter((event) => event.name === 'RunTask');
+  if (!tasks.length) throw new Error('The trace has no main-thread tasks after navigationStart');
+  // Nested events (a call inside an evaluation) are counted once: only the time not already covered is added.
+  const coveredMicros = (names: ReadonlySet<string>): number => {
+    let total = 0;
+    let coveredUntil = -Infinity;
+    for (const event of onThread.filter((item) => names.has(item.name)).sort((a, b) => a.ts - b.ts)) {
+      const end = event.ts + (event.dur as number);
+      if (end <= coveredUntil) continue;
+      total += end - Math.max(event.ts, coveredUntil);
+      coveredUntil = end;
+    }
+    return total;
+  };
+  const taskMillis = tasks.map((task) => (task.dur as number) / 1000);
+  return {
+    pid: thread.pid,
+    tid: thread.tid,
+    tasks: tasks.length,
+    taskCpuMs: taskMillis.reduce((sum, value) => sum + value, 0),
+    longestTaskMs: Math.max(...taskMillis),
+    scriptCpuMs: coveredMicros(SCRIPT_EVENTS) / 1000,
+    evaluationCpuMs: coveredMicros(EVALUATION_EVENTS) / 1000,
+  };
+}

@@ -25,12 +25,22 @@
 // one fails the run: it never contributes a sample. Layout shift from the enhancement is attributed by
 // `attributeShifts` and gated unrounded at zero.
 import { execSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import http from 'node:http';
+import os from 'node:os';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { chromium } from 'playwright';
-import { attributeShifts, missingInteractions, validateVitalsOptions } from '../lib/connected-studio/measurement.ts';
+import {
+  attributeShifts,
+  COLD_BASELINE_JOURNEYS,
+  mainThreadStartupCost,
+  missingInteractions,
+  percentileOf,
+  summarizeColdBaseline,
+  validateVitalsOptions,
+} from '../lib/connected-studio/measurement.ts';
 import { normalizeBasePath } from './serve-static-export.mjs';
 
 const root = process.cwd();
@@ -55,11 +65,15 @@ const PROFILES = {
   },
 };
 
+// `--startup-baseline` (PLAN-SFC-V1 Task 3) does not measure vitals: it records the cold first-load JS and the
+// main-thread startup cost of the reading, intake and legal routes, with one raw Chromium trace per journey.
+const STARTUP = process.argv.includes('--startup-baseline');
+
 // Validate before building, serving or launching anything: a typo must not become a passing gate.
 let options;
 try {
   options = validateVitalsOptions({
-    journeys: argument('journeys') ?? '10',
+    journeys: argument('journeys') ?? (STARTUP ? String(COLD_BASELINE_JOURNEYS) : '10'),
     profile: argument('profile'),
     profiles: Object.keys(PROFILES),
     expectMode: argument('expect-mode'),
@@ -69,6 +83,10 @@ try {
   process.exit(1);
 }
 const { journeys: JOURNEYS_PER_LOCALE, profiles: SELECTED_PROFILES, expectMode: EXPECT_MODE } = options;
+if (STARTUP && JOURNEYS_PER_LOCALE < COLD_BASELINE_JOURNEYS) {
+  console.error(`measure-connected-studio-vitals: --startup-baseline needs --journeys of at least ${COLD_BASELINE_JOURNEYS}, got ${JOURNEYS_PER_LOCALE}`);
+  process.exit(1);
+}
 const HARDWARE = process.argv.includes('--hardware');
 const basePath = normalizeBasePath(argument('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
 if (basePath && !/^\/[A-Za-z0-9._-]+$/.test(basePath)) {
@@ -274,6 +292,170 @@ async function journey(browser, profile, route, locale) {
     await context.close();
   }
 }
+
+// --- Startup baseline (PLAN-SFC-V1 Task 3) -----------------------------------------------------------------
+// The routes the commercial redesign changes. Terms does not exist yet: its legal baseline is Privacy.
+const READING_ROUTES = {
+  studio: { es: '/estudio/', en: '/en/about/' },
+  founder: { es: '/estudio/samuel-furlanich/', en: '/en/about/samuel-furlanich/' },
+  contact: { es: '/contacto/', en: '/en/contact/' },
+  privacy: { es: '/privacidad/', en: '/en/privacy/' },
+};
+const TRACE_CATEGORIES = ['devtools.timeline', 'disabled-by-default-devtools.timeline', 'v8.execute', 'toplevel', 'blink.user_timing', 'loading'];
+const STARTUP_SETTLE_MS = 2_000;
+const STARTUP_METHOD =
+  `one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; ` +
+  `a Chromium trace (${TRACE_CATEGORIES.join(', ')}) from before the navigation until ${STARTUP_SETTLE_MS} ms after the load event; startup CPU is the top-level script work ` +
+  `(EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; ` +
+  `first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested`;
+const brotliSize = (buffer) => zlib.brotliCompressSync(buffer, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 } }).length;
+const packageVersion = (name) => JSON.parse(fs.readFileSync(path.join(root, 'node_modules', name, 'package.json'), 'utf8')).version;
+const sizeCache = new Map();
+const emittedScriptSize = (relative) => {
+  if (!sizeCache.has(relative)) {
+    const buffer = fs.readFileSync(path.join(outDir, '_next/static', relative));
+    sizeCache.set(relative, { rawBytes: buffer.length, brotliBytes: brotliSize(buffer) });
+  }
+  return sizeCache.get(relative);
+};
+
+async function startupJourney(browser, profileName, route, locale, run, traceDir) {
+  const profile = PROFILES[profileName];
+  const documentUrl = `${origin}${basePath}${READING_ROUTES[route][locale]}`;
+  const context = await browser.newContext({
+    ...profile.context,
+    extraHTTPHeaders: { 'x-lab-rtt': String(profile.network.latency), 'x-lab-down': String(profile.network.downloadThroughput) },
+  });
+  let tracing = false;
+  try {
+    const page = await context.newPage();
+    const cdp = await context.newCDPSession(page);
+    await cdp.send('Network.enable');
+    await cdp.send('Network.emulateNetworkConditions', { offline: false, ...profile.network });
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: profile.cpu });
+    const scripts = new Set();
+    const critical = new Set(); // requested before the load event; the rest is fetched after it (route prefetch, deferred work)
+    let loaded = false;
+    page.on('load', () => {
+      loaded = true;
+    });
+    page.on('request', (request) => {
+      if (request.resourceType() !== 'script') return;
+      const match = decodeURIComponent(new URL(request.url()).pathname).match(/_next\/static\/(.+\.js)$/);
+      if (!match) return;
+      scripts.add(match[1]);
+      if (!loaded) critical.add(match[1]);
+    });
+    const tracePath = path.join(traceDir, `${route}-${locale}-${profileName}-${run + 1}.json`);
+    await browser.startTracing(page, { path: tracePath, categories: TRACE_CATEGORIES });
+    tracing = true;
+    await page.goto(documentUrl, { waitUntil: 'load', timeout: 90_000 });
+    await page.waitForTimeout(STARTUP_SETTLE_MS);
+    await browser.stopTracing();
+    tracing = false;
+    const trace = JSON.parse(fs.readFileSync(tracePath, 'utf8'));
+    const cost = mainThreadStartupCost({ events: trace.traceEvents ?? trace, documentUrl });
+    const canvases = await page.locator('canvas').count();
+    if (canvases) throw new Error(`${route}/${locale}: the page drew ${canvases} canvas(es): a baseline of the static route would be wrong`);
+    const sizes = [...scripts].sort().map((script) => ({ script, critical: critical.has(script), ...emittedScriptSize(script) }));
+    return {
+      startupCpuMs: cost.scriptCpuMs,
+      evaluationCpuMs: cost.evaluationCpuMs,
+      longestTaskMs: cost.longestTaskMs,
+      taskCpuMs: cost.taskCpuMs,
+      tasks: cost.tasks,
+      scripts: sizes,
+      firstLoadJsBrotliBytes: sizes.reduce((sum, item) => sum + item.brotliBytes, 0),
+      firstLoadJsRawBytes: sizes.reduce((sum, item) => sum + item.rawBytes, 0),
+      criticalJsBrotliBytes: sizes.filter((item) => item.critical).reduce((sum, item) => sum + item.brotliBytes, 0),
+      tracePath,
+      traceSha256: crypto.createHash('sha256').update(fs.readFileSync(tracePath)).digest('hex'),
+    };
+  } finally {
+    if (tracing) await browser.stopTracing().catch(() => {});
+    await context.close();
+  }
+}
+
+async function runStartupBaseline() {
+  const traceDir = path.resolve(argument('trace-dir') ?? path.join(root, '.superpowers', 'reports', 'sfc-03', 'traces', basePath ? basePath.slice(1) : 'root'));
+  fs.mkdirSync(traceDir, { recursive: true });
+  const browser = await chromium.launch();
+  const report = {
+    kind: 'cold startup baseline of the reading, intake and legal routes (one machine, lab throttling; not field data, not a pass/fail gate)',
+    basePath: basePath || '/',
+    journeysPerRoute: JOURNEYS_PER_LOCALE,
+    method: STARTUP_METHOD,
+    limitations: [
+      'Tracing adds overhead to every figure; the same method must be used for any later comparison against this baseline.',
+      'Lab data on one machine: the p95 of five journeys is the largest of the five (nearest rank).',
+      'Terms does not exist yet: its comparator is Privacy.',
+      'The server charges the navigation document the profile latency; scripts are served gzip with no added latency.',
+    ],
+    machine: { cpu: os.cpus()[0]?.model, logicalCores: os.cpus().length, memoryGiB: +(os.totalmem() / 1024 ** 3).toFixed(1), platform: `${os.platform()} ${os.release()}`, node: process.version },
+    versions: { next: packageVersion('next'), react: packageVersion('react'), 'react-dom': packageVersion('react-dom'), three: packageVersion('three'), playwright: packageVersion('playwright'), chromium: browser.version() },
+    head: execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim(),
+    traceDir,
+    profiles: {},
+    notes: [],
+  };
+  const failures = [];
+  try {
+    for (const profileName of SELECTED_PROFILES) {
+      report.profiles[profileName] = { label: PROFILES[profileName].label, routes: {} };
+      for (const route of Object.keys(READING_ROUTES)) {
+        for (const locale of Object.keys(READING_ROUTES[route])) {
+          const journeys = [];
+          for (let run = 0; run < JOURNEYS_PER_LOCALE; run += 1) journeys.push(await startupJourney(browser, profileName, route, locale, run, traceDir));
+          const scriptSets = new Set(journeys.map((item) => item.scripts.map((entry) => entry.script).join('|')));
+          if (scriptSets.size > 1) report.notes.push(`${profileName}/${route}/${locale}: the requested script set varied between journeys; the largest first-load figure is reported`);
+          const summary = summarizeColdBaseline({
+            route,
+            locale,
+            profile: profileName,
+            basePath: basePath || '/',
+            firstLoadJsBrotliBytes: Math.max(...journeys.map((item) => item.firstLoadJsBrotliBytes)),
+            criticalJsBrotliBytes: Math.max(...journeys.map((item) => item.criticalJsBrotliBytes)),
+            samples: journeys.map((item) => ({ startupCpuMs: item.startupCpuMs, longestTaskMs: item.longestTaskMs })),
+            method: STARTUP_METHOD,
+            tracePaths: journeys.map((item) => item.tracePath),
+          });
+          report.profiles[profileName].routes[`${route}/${locale}`] = {
+            ...summary,
+            firstLoadJsBrotliKiB: +(summary.firstLoadJsBrotliBytes / 1024).toFixed(1),
+            criticalJsBrotliKiB: +(summary.criticalJsBrotliBytes / 1024).toFixed(1),
+            firstLoadJsRawKiB: +(Math.max(...journeys.map((item) => item.firstLoadJsRawBytes)) / 1024).toFixed(1),
+            scriptCount: journeys[0].scripts.length,
+            startupCpuMedianMs: +percentileOf(journeys.map((item) => item.startupCpuMs), 50).toFixed(1),
+            startupCpuP95Ms: +summary.startupCpuP95Ms.toFixed(1),
+            evaluationCpuP95Ms: +percentileOf(journeys.map((item) => item.evaluationCpuMs), 95).toFixed(1),
+            taskCpuP95Ms: +percentileOf(journeys.map((item) => item.taskCpuMs), 95).toFixed(1),
+            longestTaskMs: +summary.longestTaskMs.toFixed(1),
+            journeysDetail: journeys.map((item) => ({ startupCpuMs: +item.startupCpuMs.toFixed(1), evaluationCpuMs: +item.evaluationCpuMs.toFixed(1), taskCpuMs: +item.taskCpuMs.toFixed(1), longestTaskMs: +item.longestTaskMs.toFixed(1), tasks: item.tasks, traceSha256: item.traceSha256 })),
+            scripts: journeys[0].scripts.map((entry) => ({ script: entry.script, critical: entry.critical, rawKiB: +(entry.rawBytes / 1024).toFixed(1), brotliKiB: +(entry.brotliBytes / 1024).toFixed(1) })),
+          };
+        }
+      }
+    }
+  } catch (error) {
+    failures.push(error.stack ?? error.message);
+  } finally {
+    await browser.close();
+    server.close();
+  }
+  const outFile = argument('out');
+  if (outFile) fs.writeFileSync(outFile, `${JSON.stringify(report, null, 2)}\n`);
+  const table = Object.entries(report.profiles).flatMap(([profileName, profile]) =>
+    Object.entries(profile.routes).map(([key, value]) => ({ profile: profileName, route: key, firstLoadJsBrotliKiB: value.firstLoadJsBrotliKiB, criticalJsBrotliKiB: value.criticalJsBrotliKiB, startupCpuMedianMs: value.startupCpuMedianMs, startupCpuP95Ms: value.startupCpuP95Ms, evaluationCpuP95Ms: value.evaluationCpuP95Ms, longestTaskMs: value.longestTaskMs })));
+  console.log(JSON.stringify({ basePath: report.basePath, versions: report.versions, table }, null, 2));
+  if (failures.length) {
+    console.error('\nStartup baseline failed:\n- ' + failures.join('\n- '));
+    process.exit(1);
+  }
+  console.log('\nStartup baseline recorded (no pass/fail gate).');
+  process.exit(0);
+}
+if (STARTUP) await runStartupBaseline();
 
 const browser = await chromium.launch(HARDWARE ? { channel: 'chromium' } : {});
 let rendererName = null;

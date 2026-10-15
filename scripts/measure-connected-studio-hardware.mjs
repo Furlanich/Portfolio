@@ -23,7 +23,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { chromium, firefox } from 'playwright';
-import { buildRouteClosure, cadenceFps, chunkImports, contrastRatio, judgeHardware } from '../lib/connected-studio/measurement.ts';
+import { activeFrameIntervals, buildRouteClosure, cadenceFps, chunkImports, contrastRatio, FRAME_INTERVAL_SOURCE, judgeHardware } from '../lib/connected-studio/measurement.ts';
 import { createExportServer, normalizeBasePath } from './serve-static-export.mjs';
 
 const root = process.cwd();
@@ -313,10 +313,13 @@ try {
       }
     }
     const traversalEnd = await page.evaluate(() => performance.now());
-    const intervals = [];
-    for (let i = 1; i < active.length; i += 1) {
-      const gap = active[i].t - active[i - 1].t;
-      if (gap < 250) intervals.push(gap); // a gap that long is a pause between scroll bursts, not a frame interval
+    // Frame intervals come from the render timestamps only (never the CPU submit time or the GPU query); a gap of
+    // 250 ms or more is a pause between scroll bursts. No usable interval leaves the row OPEN instead of ending the run.
+    let intervals = [];
+    try {
+      intervals = activeFrameIntervals({ source: FRAME_INTERVAL_SOURCE, timestampsMs: active.map((frame) => frame.t) });
+    } catch (error) {
+      report.activeIntervalError = error.message;
     }
     const gpuValues = active.map((f) => f.gpuMs).filter((v) => v !== null);
     const longTasks = await page.evaluate(([a, b]) => window.__hw.longTasks.filter((task) => task.start >= a && task.start <= b).map((task) => Math.round(task.duration)), [traversalStart, traversalEnd]);

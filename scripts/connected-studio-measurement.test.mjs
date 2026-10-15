@@ -8,17 +8,22 @@ import { fileURLToPath } from 'node:url';
 // (path, sizes and the chunks each one pulls in). Browser I/O stays in the scripts.
 
 const {
+  activeFrameIntervals,
   attributeShifts,
   buildRouteClosure,
   cadenceFps,
   chunkImports,
+  COLD_BASELINE_JOURNEYS,
   contrastRatio,
   crossCheckClosure,
   judgeHardware,
   judgeMetric,
   measureOptionalClosure,
   missingInteractions,
+  mainThreadStartupCost,
   OPTIONAL_CLOSURE_LIMIT_BYTES,
+  percentileOf,
+  summarizeColdBaseline,
   validateVitalsOptions,
   worstContrast,
 } = await import('../lib/connected-studio/measurement.ts');
@@ -210,4 +215,131 @@ test('cadence is measured from the frame timestamps, not from a window that may 
   assert.equal(cadenceFps([100]), null, 'one frame has no cadence');
   assert.equal(cadenceFps([]), null);
   assert.equal(cadenceFps([5, 5]), null, 'no elapsed time, no cadence');
+});
+
+// --- PLAN-SFC-V1 Task 3: collector fields for the early baselines -------------------------------------
+
+const baseline = (overrides = {}) => ({
+  route: 'studio',
+  locale: 'es',
+  profile: 'desktop',
+  basePath: '/',
+  firstLoadJsBrotliBytes: 118 * KIB,
+  criticalJsBrotliBytes: 104 * KIB,
+  samples: Array.from({ length: 5 }, (_, i) => ({ startupCpuMs: 40 + i, longestTaskMs: 22 + i })),
+  method: 'CDP trace of the main thread from navigation start to load plus two seconds, one cold context per journey',
+  tracePaths: Array.from({ length: 5 }, (_, i) => `traces/studio-es-desktop-${i + 1}.json`),
+  ...overrides,
+});
+
+test('a percentile over no samples is an error, never a zero', () => {
+  assert.throws(() => percentileOf([], 95), /zero samples/);
+  assert.equal(percentileOf([4, 1, 3, 2, 5], 95), 5, 'nearest rank: the p95 of five samples is the largest');
+  assert.equal(percentileOf([4, 1, 3, 2, 5], 50), 3);
+  assert.throws(() => percentileOf([1, Number.NaN], 95), /finite/);
+});
+
+test('the cold baseline reports the p95 of five cold journeys with the method and traces retained', () => {
+  assert.equal(COLD_BASELINE_JOURNEYS, 5, 'the plan asks for five cold journeys per profile');
+  const summary = summarizeColdBaseline(baseline());
+  assert.equal(summary.journeys, 5);
+  assert.equal(summary.startupCpuP95Ms, 44);
+  assert.equal(summary.longestTaskMs, 26, 'the longest task over all journeys, not an average');
+  assert.equal(summary.firstLoadJsBrotliBytes, 118 * KIB);
+  assert.equal(summary.criticalJsBrotliBytes, 104 * KIB, 'the scripts needed before the load event, apart from what is fetched after it');
+  assert.equal(summary.profile, 'desktop');
+  assert.equal(summary.tracePaths.length, 5);
+});
+
+test('a cold baseline with absent samples, profile, method or traces is rejected instead of passing', () => {
+  assert.throws(() => summarizeColdBaseline(baseline({ samples: [] })), /samples/);
+  assert.throws(() => summarizeColdBaseline(baseline({ samples: baseline().samples.slice(0, 4), tracePaths: baseline().tracePaths.slice(0, 4) })), /5 cold journeys/);
+  for (const profile of ['', '   ', undefined]) {
+    assert.throws(() => summarizeColdBaseline(baseline({ profile })), /profile/, `profile=${JSON.stringify(profile)}`);
+  }
+  assert.throws(() => summarizeColdBaseline(baseline({ method: '' })), /method/);
+  assert.throws(() => summarizeColdBaseline(baseline({ tracePaths: [] })), /trace/);
+  assert.throws(() => summarizeColdBaseline(baseline({ tracePaths: baseline().tracePaths.slice(0, 3) })), /trace/, 'one retained trace per journey');
+  assert.throws(() => summarizeColdBaseline(baseline({ firstLoadJsBrotliBytes: 0 })), /first-load/);
+  assert.throws(() => summarizeColdBaseline(baseline({ firstLoadJsBrotliBytes: undefined })), /first-load/);
+  for (const critical of [0, -1, Number.NaN, undefined]) {
+    assert.throws(() => summarizeColdBaseline(baseline({ criticalJsBrotliBytes: critical })), /critical/, `critical=${critical}`);
+  }
+  assert.throws(() => summarizeColdBaseline(baseline({ criticalJsBrotliBytes: 119 * KIB })), /critical.*exceed/, 'the part cannot be larger than the whole');
+  for (const bad of [Number.NaN, -1, Infinity, undefined, null]) {
+    assert.throws(() => summarizeColdBaseline(baseline({ samples: [{ startupCpuMs: bad, longestTaskMs: 10 }, ...baseline().samples.slice(1)] })), /startupCpuMs/, `startupCpuMs=${bad}`);
+    assert.throws(() => summarizeColdBaseline(baseline({ samples: [{ startupCpuMs: 10, longestTaskMs: bad }, ...baseline().samples.slice(1)] })), /longestTaskMs/, `longestTaskMs=${bad}`);
+  }
+});
+
+test('a frame interval comes only from frame timestamps, never from CPU, GPU or task durations', () => {
+  const at60 = Array.from({ length: 61 }, (_, i) => i * (1000 / 60));
+  const intervals = activeFrameIntervals({ source: 'frame-timestamps', timestampsMs: at60 });
+  assert.equal(intervals.length, 60);
+  assert.ok(intervals.every((gap) => Math.abs(gap - 1000 / 60) < 1e-9));
+  // Render submit time is 0.4 ms: read as an interval it would pass the 20 ms row on any scene.
+  for (const source of ['render-cpu-submit', 'gpu-timer-query', 'task-duration', 'long-task', '', undefined]) {
+    assert.throws(() => activeFrameIntervals({ source, timestampsMs: at60 }), /frame-timestamps/, `source=${JSON.stringify(source)}`);
+  }
+});
+
+test('frame interval evidence with absent, short or impossible timestamps is rejected', () => {
+  const source = 'frame-timestamps';
+  assert.throws(() => activeFrameIntervals({ source, timestampsMs: [] }), /at least two/);
+  assert.throws(() => activeFrameIntervals({ source, timestampsMs: [100] }), /at least two/);
+  assert.throws(() => activeFrameIntervals({ source, timestampsMs: [0, 16, Number.NaN, 48] }), /finite/);
+  assert.throws(() => activeFrameIntervals({ source, timestampsMs: [0, 16, 15, 48] }), /monotonic/);
+  assert.throws(() => activeFrameIntervals({ source, timestampsMs: [0, 400, 800] }), /no frame interval/, 'every gap is a pause between scroll bursts: nothing to measure');
+});
+
+test('a gap of 250 ms or more is a pause between scroll bursts, not a frame interval', () => {
+  const intervals = activeFrameIntervals({ source: 'frame-timestamps', timestampsMs: [0, 16, 32, 600, 616, 632] });
+  assert.deepEqual(intervals, [16, 16, 16, 16], 'the 568 ms pause is dropped, the rest kept');
+  assert.deepEqual(activeFrameIntervals({ source: 'frame-timestamps', timestampsMs: [0, 100, 200, 460], maxGapMs: 120 }), [100, 100]);
+});
+
+// --- PLAN-SFC-V1 Task 3: startup cost from a Chromium trace ------------------------------------------
+
+const MS = 1000; // trace timestamps and durations are microseconds
+const DOCUMENT = 'http://127.0.0.1:3203/estudio/';
+const threadName = (pid, tid, name) => ({ pid, tid, ts: 0, ph: 'M', name: 'thread_name', args: { name } });
+const navigation = (pid, ts, url) => ({ pid, tid: 1, ts, ph: 'R', name: 'navigationStart', args: { data: { documentLoaderURL: url, isLoadingMainFrame: true } } });
+const span = (pid, tid, name, startMs, durMs) => ({ pid, tid, ts: startMs * MS, ph: 'X', name, dur: durMs * MS });
+
+const traceFixture = () => [
+  threadName(100, 1, 'CrRendererMain'),
+  threadName(100, 2, 'Compositor'),
+  threadName(200, 1, 'CrRendererMain'),
+  navigation(200, 500 * MS, 'about:blank'),
+  navigation(100, 1000 * MS, DOCUMENT),
+  span(100, 1, 'RunTask', 900, 40), // before this document's navigation: not counted
+  span(100, 2, 'RunTask', 1010, 30), // compositor thread: not the main thread
+  span(200, 1, 'RunTask', 1010, 30), // another renderer: not this page
+  span(100, 1, 'RunTask', 1000.5, 10),
+  span(100, 1, 'RunTask', 1020, 60),
+  span(100, 1, 'RunTask', 1100, 5),
+  span(100, 1, 'EvaluateScript', 1001, 4),
+  span(100, 1, 'FunctionCall', 1002, 1), // nested inside the evaluation: counted once
+  span(100, 1, 'v8.compile', 1025, 3),
+  span(100, 1, 'FunctionCall', 1030, 20),
+  span(100, 1, 'RunMicrotasks', 1100.5, 2),
+  span(100, 1, 'Layout', 1060, 8), // main-thread work that is not script
+];
+
+test('the startup cost is the main-thread tasks and top-level script work of this document after its navigation', () => {
+  const cost = mainThreadStartupCost({ events: traceFixture(), documentUrl: DOCUMENT });
+  assert.equal(cost.taskCpuMs, 75, 'ten, sixty and five milliseconds on this page main thread only');
+  assert.equal(cost.longestTaskMs, 60);
+  assert.equal(cost.tasks, 3);
+  assert.equal(cost.scriptCpuMs, 29, 'evaluation 4 + compile 3 + call 20 + microtasks 2; the nested call is not counted twice');
+  assert.equal(cost.evaluationCpuMs, 7, 'script evaluation and compile only (4 + 3): the steady part, apart from calls and microtasks (hydration and scheduling)');
+  assert.deepEqual([cost.pid, cost.tid], [100, 1]);
+});
+
+test('a trace that cannot be tied to the document, its main thread or any task is rejected, not read as zero', () => {
+  const events = traceFixture();
+  assert.throws(() => mainThreadStartupCost({ events, documentUrl: 'http://127.0.0.1:3203/other/' }), /navigationStart/);
+  assert.throws(() => mainThreadStartupCost({ events: events.filter((event) => !(event.name === 'thread_name' && event.pid === 100 && event.tid === 1)), documentUrl: DOCUMENT }), /CrRendererMain/);
+  assert.throws(() => mainThreadStartupCost({ events: events.filter((event) => event.name !== 'RunTask'), documentUrl: DOCUMENT }), /no main-thread tasks/);
+  assert.throws(() => mainThreadStartupCost({ events: [], documentUrl: DOCUMENT }), /navigationStart/);
 });
