@@ -211,7 +211,7 @@ try {
 }
 
 const summary = report.destinations.map((item) => ({ destination: `${item.route}/${item.locale}`, brotliKiB: item.closure.brotliKiB, rawKiB: item.closure.rawKiB, chunks: item.closure.chunks.length, limitKiB: item.closure.limitKiB }));
-console.log(JSON.stringify({ basePath: report.basePath, summary, closureHeadroom: report.closureHeadroom, readingRoutes: report.readingRoutes.map(({ chunks, ...rest }) => rest), sharing: report.sharing, posters: report.posters }, null, 2));
+console.log(JSON.stringify({ basePath: report.basePath, summary, closureHeadroom: report.closureHeadroom, readingRoutes: report.readingRoutes.map((item) => ({ route: item.route, locale: item.locale, jsChunks: item.jsChunks, jsBrotliKiB: item.jsBrotliKiB, jsRawKiB: item.jsRawKiB, cssBrotliKiB: item.cssBrotliKiB })), sharing: report.sharing, posters: report.posters }, null, 2));
 const outFile = argument('out');
 if (outFile) fs.writeFileSync(outFile, `${JSON.stringify(report, null, 2)}\n`);
 if (failures.length) {
