@@ -5,7 +5,7 @@
 // device pixel ratio never matters. Equivalent 60 Hz and 120 Hz streams agree because impulses are integrated over
 // elapsed time and the pointer is interpolated along its path between samples.
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { anchorToScene, projectAnchor, unprojectCss } from './projection.ts';
+import { anchorToScene, computeProjectionLayout, projectAnchor, resolvePosterProjection, unprojectCss } from './projection.ts';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { evaluateRestEdge } from './rest-path.ts';
 import type { ConnectedProjectionLayout, EdgeSamplePoints, ScenePose, Vec3 } from './types';
@@ -107,6 +107,17 @@ function finiteVec(value: Vec3 | undefined): value is Vec3 {
 }
 
 type PosedNode = ScenePose['nodes'][number];
+
+/**
+ * Everything a profiled controller needs from the pure projection and physics modules, as one object. The controller
+ * does not import these modules (it is in the always-loaded client script); the gated runtime closure imports this kit
+ * and hands it to the controller, so the physics stays in the measured optional closure (PLAN-SFC-V1 W1, Task 8).
+ */
+export const connectedProfileKit = {
+  createInteraction: createConnectedInteraction,
+  computeProjectionLayout,
+  resolvePosterProjection,
+};
 
 export function createConnectedInteraction(profile: ConnectedSceneProfile): ConnectedInteraction {
   const { graph, input: policy, nodeStyle } = profile;

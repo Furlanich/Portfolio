@@ -1,10 +1,9 @@
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { isConnectedTier, measureConnectedProgress, sampleConnectedPose } from './model.ts';
-// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { computeProjectionLayout, resolvePosterProjection } from './projection.ts';
-// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { createConnectedInteraction } from './interaction.ts';
+// The projection and physics modules are deliberately not imported here: this controller is in the always-loaded client
+// script, and the profile kit below is supplied by the gated runtime closure.
 import type { ConnectedInteraction } from './interaction';
+import type { computeProjectionLayout, resolvePosterProjection } from './projection';
 import type { ConnectedSceneProfile } from './profiles';
 import type {
   ConnectedController,
@@ -33,8 +32,8 @@ const VELOCITY_STALE_MS = 120;
  */
 const START_SETTLE_SECONDS = 0.5;
 const START_SETTLE_END_SECONDS = START_SETTLE_SECONDS * 6;
-/** A pointer sample that moved less than this since the last one has not moved: its age keeps growing. */
-const POINTER_MOVE_EPSILON_PX = 0.25;
+/** Any change of position larger than float noise is movement, so age and waking never depend on the event rate. */
+const POINTER_MOVE_EPSILON_PX = 1e-3;
 
 type StartPose = NonNullable<ControllerOptions['startPose']>;
 
@@ -46,12 +45,21 @@ export type ConnectedPointerInput = {
   readonly vy: number;
 };
 
+/** The pure projection and physics a profiled controller calls. Supplied by the gated runtime closure (`connectedProfileKit`). */
+export type ConnectedProfileKit = {
+  readonly createInteraction: (profile: ConnectedSceneProfile) => ConnectedInteraction;
+  readonly computeProjectionLayout: typeof computeProjectionLayout;
+  readonly resolvePosterProjection: typeof resolvePosterProjection;
+};
+
 export type ConnectedControllerOptions = ControllerOptions & {
   /** The route profile. Without one the controller behaves exactly as it did before profiles. */
   readonly profile?: ConnectedSceneProfile;
-  /** Test seam: builds the interaction for a profile. */
-  readonly createInteraction?: (profile: ConnectedSceneProfile) => ConnectedInteraction;
+  /** Required with a profile (the controller itself carries none of the physics). Tests may wrap `createInteraction`. */
+  readonly profileKit?: ConnectedProfileKit;
 };
+
+const PROFILE_KIT_MESSAGE = 'connected-studio: a profile needs the profile kit (connectedProfileKit from interaction.ts)';
 
 /** `SceneUpdate` plus the optional input of a profiled scene. Every added field may be omitted. */
 export type ConnectedSceneUpdate = SceneUpdate & {
@@ -93,6 +101,7 @@ function finite(value: unknown): value is number {
 }
 
 export function createConnectedController(options: ConnectedControllerOptions): ProfiledConnectedController {
+  if (options.profile && !options.profileKit) throw new Error(PROFILE_KIT_MESSAGE);
   let state: SceneSnapshot['state'] = 'static';
   let userPaused = false;
   let input: SceneUpdate | undefined;
@@ -124,7 +133,7 @@ export function createConnectedController(options: ConnectedControllerOptions): 
 
   function ensureInteraction(): ConnectedInteraction | undefined {
     if (!profile) return undefined;
-    interaction ??= (options.createInteraction ?? createConnectedInteraction)(profile);
+    interaction ??= (options.profileKit as ConnectedProfileKit).createInteraction(profile);
     return interaction;
   }
 
@@ -186,7 +195,7 @@ export function createConnectedController(options: ConnectedControllerOptions): 
       return nativeCache.layout;
     }
     try {
-      const native = computeProjectionLayout(active, { width: viewport.viewportWidth, height: viewport.viewportHeight, tier });
+      const native = (options.profileKit as ConnectedProfileKit).computeProjectionLayout(active, { width: viewport.viewportWidth, height: viewport.viewportHeight, tier });
       nativeCache = { profile: active, width: viewport.viewportWidth, height: viewport.viewportHeight, tier, layout: native };
       return native;
     } catch {
@@ -203,7 +212,7 @@ export function createConnectedController(options: ConnectedControllerOptions): 
     if (!profile || !input || !layout) return model;
     const native = nativeLayoutFor(profile, layout, input.tier);
     if (!native) return model;
-    const framed = resolvePosterProjection(profile, model, native);
+    const framed = (options.profileKit as ConnectedProfileKit).resolvePosterProjection(profile, model, native);
     const stepper = ensureInteraction() as ConnectedInteraction;
     const scroll = pendingScroll;
     pendingScroll = 0;
@@ -319,6 +328,7 @@ export function createConnectedController(options: ConnectedControllerOptions): 
   return {
     update(next) {
       if (state === 'disposed') return;
+      if (next.profile && !options.profileKit) throw new Error(PROFILE_KIT_MESSAGE);
       const measured = options.getLayout();
       const now = options.clock.now();
       const nextProfile = next.profile ?? profile;

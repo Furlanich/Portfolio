@@ -548,7 +548,7 @@ test('the projection starts on the poster crop and settles without replaying on 
 
 const { getConnectedProfile } = await import('../lib/connected-studio/profiles.ts');
 const { computeProjectionLayout, projectAnchor } = await import('../lib/connected-studio/projection.ts');
-const { createConnectedInteraction } = await import('../lib/connected-studio/interaction.ts');
+const { createConnectedInteraction, connectedProfileKit } = await import('../lib/connected-studio/interaction.ts');
 const { CONNECTED_POSTER_POSE } = await import('../lib/connected-studio/media-manifest.ts');
 
 const VIEWPORTS = { wide: { width: 1440, height: 900 }, compact: { width: 390, height: 844 } };
@@ -595,7 +595,7 @@ function createProfiledHarness({ route = 'studio', tier = 'wide', startPose = CO
     scheduler,
     startPose,
     profile,
-    createInteraction,
+    profileKit: { ...connectedProfileKit, createInteraction },
     getLayout: () => layout,
     render: (pose) => {
       renders.push(pose);
@@ -1001,4 +1001,84 @@ test('a tier change swaps the profile: the new interaction knows the compact gra
   assert.equal(pose.nodes.length, 8);
   assert.deepEqual(pose.edgeSamples.map((sample) => sample.id), compact.graph.edges.map((edge) => edge.id), 'strings follow the compact connections');
   assert.ok(Math.max(...displacements(compact, pose)) <= 14 + 1e-6, 'the compact cap of 14px applies');
+});
+
+// --- Reviewer R findings on PR 145 -----------------------------------------------------------------------------------
+
+function nodeCss(harness) {
+  return harness.last().nodes.map((node) => {
+    const css = projectAnchor(node.position, harness.last().projectionLayout);
+    return [css.xPx, css.yPx];
+  });
+}
+
+test('a slow pointer gives the same result at 60 and 120 events per second, through the real controller', () => {
+  const stream = (hz) => {
+    const harness = createProfiledHarness();
+    settleAtRest(harness);
+    const total = 4 * hz;
+    for (let k = 0; k <= total; k += 1) {
+      const t = k / hz;
+      harness.update({ pointer: { x: 700 + 20 * t, y: 350, vx: 20, vy: 0 } });
+      harness.advance(1000 / hz);
+    }
+    return nodeCss(harness);
+  };
+  const slow = stream(60);
+  const fast = stream(120);
+  let worst = 0;
+  slow.forEach(([x, y], index) => {
+    worst = Math.max(worst, Math.hypot(x - fast[index][0], y - fast[index][1]));
+  });
+  assert.ok(worst <= 1.5, `60/120Hz slow-pointer difference ${worst}px`);
+});
+
+test('a pointer creeping in sub-pixel steps still ages, wakes and draws a sleeping scene', () => {
+  const harness = createProfiledHarness();
+  settleAtRest(harness);
+  harness.update({ pointer: { x: 700, y: 350, vx: 0, vy: 0 } });
+  harness.advance(15000);
+  assert.equal(harness.pending(), 0, 'asleep with the pointer held still');
+  const before = harness.renders.length;
+  let woke = false;
+  for (let step = 1; step <= 600; step += 1) {
+    harness.update({ pointer: { x: 700 + step * 0.2, y: 350, vx: 12, vy: 0 } });
+    if (harness.pending() > 0) woke = true;
+    harness.advance(FRAME_MS);
+  }
+  assert.ok(woke, 'creeping movement wakes the scene');
+  assert.ok(harness.renders.length > before + 100, `and keeps it drawing (${harness.renders.length - before} frames)`);
+});
+
+test('the controller reaches none of the physics modules through its static imports', async () => {
+  const { readFileSync, existsSync } = await import('node:fs');
+  const { resolve, dirname } = await import('node:path');
+  const reachable = (entry) => {
+    const seen = new Set();
+    const visit = (file) => {
+      if (seen.has(file)) return;
+      seen.add(file);
+      const source = readFileSync(file, 'utf8');
+      for (const match of source.matchAll(/^\s*import\s+(?!type\b)(?:[^'"]*?\sfrom\s+)?['"](\.[^'"]+)['"]/gm)) {
+        const target = resolve(dirname(file), match[1].endsWith('.ts') ? match[1] : `${match[1]}.ts`);
+        if (existsSync(target)) visit(target);
+      }
+    };
+    visit(entry);
+    return [...seen].map((file) => file.replaceAll('\\', '/').split('/').pop());
+  };
+  const controller = reachable(resolve('lib/connected-studio/controller.ts'));
+  for (const gated of ['projection.ts', 'rest-path.ts', 'profiles.ts', 'interaction.ts']) {
+    assert.ok(!controller.includes(gated), `controller.ts must not statically reach ${gated} (reached: ${controller.join(', ')})`);
+  }
+  const kit = reachable(resolve('lib/connected-studio/interaction.ts'));
+  for (const gated of ['projection.ts', 'rest-path.ts']) assert.ok(kit.includes(gated), `the profile kit carries ${gated}`);
+});
+
+test('a profile without the profile kit fails loudly instead of being silently ignored', () => {
+  const profile = getConnectedProfile('studio', 'wide', VIEWPORTS.wide);
+  const base = { clock: { now: () => 0 }, scheduler: { schedule: () => 1, cancel: () => undefined }, render: () => undefined, getLayout: () => ({ footerDocumentTop: 5000, viewportWidth: 1440, viewportHeight: 900 }) };
+  assert.throws(() => createConnectedController({ ...base, profile }), /profile kit/);
+  const controller = createConnectedController(base);
+  assert.throws(() => controller.update({ graph: profile.graph, tier: 'wide', scrollY: 0, velocityPxPerSecond: 0, visible: true, footerDominant: false, profile }), /profile kit/);
 });

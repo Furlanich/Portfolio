@@ -207,6 +207,7 @@ test('cancelling clears whichever stage is pending, and a stopped scene holds no
 // --- PLAN-SFC-V1 Task 4: a sleeping Atlas scene on the real host scheduler ------------------------------------------
 const { getConnectedProfile } = await import('../lib/connected-studio/profiles.ts');
 const { CONNECTED_POSTER_POSE } = await import('../lib/connected-studio/media-manifest.ts');
+const { connectedProfileKit } = await import('../lib/connected-studio/interaction.ts');
 
 function createAtlasScene({ refreshHz = 60 } = {}) {
   const display = createVirtualDisplay({ refreshHz, spikeRate: 0.05 });
@@ -218,6 +219,7 @@ function createAtlasScene({ refreshHz = 60 } = {}) {
     scheduler: scheduling.scheduler,
     startPose: CONNECTED_POSTER_POSE,
     profile,
+    profileKit: connectedProfileKit,
     render: () => {
       renderTimes.push(display.now());
       display.busy(0.35);
