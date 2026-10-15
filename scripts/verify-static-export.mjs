@@ -1,6 +1,12 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, extname, join, relative, resolve } from 'node:path';
+import { contactRequirements } from './export-requirements/contact.mjs';
+import { founderRequirements } from './export-requirements/founder.mjs';
+import { homepageRequirements } from './export-requirements/home.mjs';
+import { privacyRequirements } from './export-requirements/privacy.mjs';
+import { servicesRequirements } from './export-requirements/services.mjs';
+import { studioRequirements } from './export-requirements/studio.mjs';
 
 // PLAN-SPF-V1 Task 3: the dossier bodies are verified against the same typed content the pages render.
 const { projectPageContent: spanishProjects } = await import('../app/(es)/_content/projects.ts');
@@ -47,189 +53,6 @@ const retiredArtifacts = [
 ];
 const retiredDestination = /(?:\/proyectos\/|\/en\/work\/)(?:general-reservation-system|the-system|mpc-administracion)(?![\w-])/;
 
-const studioRequirements = {
-  'estudio/index.html': {
-    heading: 'Software a medida con responsabilidad técnica directa.',
-    sections: [
-      'Dirección técnica de principio a fin',
-      'Principios para trabajar con claridad',
-      'Base en Buenos Aires, disponibilidad nacional e internacional',
-      'La persona detrás de la dirección técnica',
-      'Conversemos sobre lo que hoy frena a tu negocio',
-    ],
-    references: ['/contacto/', '/estudio/samuel-furlanich/', '/en/about/'],
-  },
-  'en/about/index.html': {
-    heading: 'Custom software with direct technical accountability.',
-    sections: [
-      'Technical direction from start to finish',
-      'Principles for clear delivery',
-      'Based in Buenos Aires, available nationally and internationally',
-      'The person behind the technical direction',
-      "Let's talk about what's holding your business back",
-    ],
-    references: ['/en/contact/', '/en/about/samuel-furlanich/', '/estudio/'],
-  },
-};
-
-const founderRequirements = {
-  'estudio/samuel-furlanich/index.html': {
-    heading: 'Samuel Furlanich',
-    sections: ['Perfil profesional', 'Experiencia profesional', 'Biografía profesional', 'Formación', 'Sistemas que podemos construir', 'Trabajo y evidencia técnica', '¿Querés conversar sobre una necesidad de tu negocio?'],
-    projects: '/proyectos/',
-    contact: '/contacto/',
-    cv: '/Samuel-Furlanich-CV.pdf',
-    mpc: 'MPC Administración',
-    mpcAction: 'Ver código fuente',
-  },
-  'en/about/samuel-furlanich/index.html': {
-    heading: 'Samuel Furlanich',
-    sections: ['Professional profile', 'Professional experience', 'Professional biography', 'Education', 'Systems we can engineer', 'Work and technical evidence', 'Want to discuss a business need?'],
-    projects: '/en/work/',
-    contact: '/en/contact/',
-    cv: '/Samuel-Furlanich-CV.pdf',
-    mpc: 'MPC Administración',
-    mpcAction: 'View source code',
-  },
-};
-const homepageRequirements = {
-  'index.html': {
-    illustrativeTag: 'Escenario ilustrativo',
-    chapters: [
-      ['Reconocer el sistema real', 'Pedidos, reservas, mensajes y tareas ya conviven en un mismo negocio. El primer paso es entender cómo se relacionan.'],
-      ['Ver dónde se fragmenta', 'Cuando la información cambia de canal y se repite, la operación depende de más controles manuales.'],
-      ['Conectar lo que importa', 'Una solución bien definida reúne datos, reglas y acciones sin sumar complejidad innecesaria.'],
-      ['Coordinar el trabajo', 'El sistema acompaña el proceso real y deja una base que puede mantenerse y adaptarse cuando cambia el negocio.'],
-    ],
-    sections: [
-      ['problems', 'problems-heading', 'Cuando el trabajo queda repartido entre herramientas'],
-      ['services', 'services-heading', 'Servicios para necesidades concretas'],
-      ['impact', 'impact-heading', 'Menos lugares que revisar para saber en qué estado está un pedido'],
-      ['proof', 'proof-heading', 'Una responsabilidad técnica clara'],
-      ['proceso', 'proceso-heading', 'Cómo trabajamos'],
-      ['founder', 'founder-heading', 'Responsabilidad técnica directa'],
-      ['cta', 'cta-heading', '¿Tenés una necesidad concreta o un sistema que necesita atención?'],
-    ],
-    requiredReferences: [
-      '/servicios/',
-      '/contacto/',
-      '/proyectos/',
-      '/estudio/samuel-furlanich/',
-      '/#proceso',
-      'https://wa.me/5491150117565',
-    ],
-    forbidden: [
-      /id="audiences"|audiences-heading/i,
-      /Pensado para negocios con operaciones reales|MKT-D05/i,
-      /Busesfy|ChronoApp|MPC Administración|Documancer/i,
-      /project-card|case-study|testimonial|client-logo|metric-card/i,
-    ],
-  },
-  'en/index.html': {
-    illustrativeTag: 'Illustrative scenario',
-    chapters: [
-      ['Recognize the real system', 'Orders, bookings, messages, and tasks already coexist in one business. The first step is understanding how they relate.'],
-      ['See where it fragments', 'When information changes channels and is repeated, operations depend on more manual checks.'],
-      ['Connect what matters', 'A well-defined solution brings data, rules, and actions together without adding unnecessary complexity.'],
-      ['Coordinate the work', 'The system supports the real process and creates a foundation that can be maintained and adapted as the business changes.'],
-    ],
-    sections: [
-      ['problems', 'problems-heading', 'When work is spread across tools'],
-      ['services', 'services-heading', 'Services for concrete business needs'],
-      ['impact', 'impact-heading', 'Fewer places to check before you know where an order stands'],
-      ['proof', 'proof-heading', 'Clear technical accountability'],
-      ['process', 'process-heading', 'How we work'],
-      ['founder', 'founder-heading', 'Direct technical responsibility'],
-      ['cta', 'cta-heading', 'Do you have a concrete need or a system that needs attention?'],
-    ],
-    requiredReferences: [
-      '/en/services/',
-      '/en/contact/',
-      '/en/work/',
-      '/en/about/samuel-furlanich/',
-      '/en/#process',
-      'https://wa.me/5491150117565',
-    ],
-    forbidden: [
-      /id="audiences"|audiences-heading/i,
-      /Built for businesses with real operations|MKT-D05/i,
-      /Busesfy|ChronoApp|MPC Administración|Documancer/i,
-      /project-card|case-study|testimonial|client-logo|metric-card/i,
-    ],
-  },
-};
-
-const servicesRequirements = {
-  'servicios/index.html': {
-    route: '/servicios/',
-    lang: 'es-AR',
-    heading: 'Software para que el trabajo avance.',
-    indexLabel: 'Encontrá tu punto de partida',
-    index: [
-      ['/servicios/#web', 'Sitios y aplicaciones web'],
-      ['/servicios/#whatsapp', 'Integraciones y automatización'],
-      ['/servicios/#consultoria', 'Mejora de software existente'],
-    ],
-    services: [
-      ['web', 'Una interfaz clara para el negocio.'],
-      ['whatsapp', 'Las herramientas dejan de trabajar aisladas.'],
-      ['consultoria', 'Un sistema que puede seguir evolucionando.'],
-    ],
-    groups: [
-      'Qué recibís', 'Situaciones habituales', 'Punto de partida', 'Alcance acordado',
-      'Límites del servicio', 'Evidencia', 'Acuerdo de trabajo', 'Límites comerciales',
-      'IA solo cuando aporta valor',
-    ],
-    principlesHeading: 'Alcance claro. Entregas revisables.',
-    principlesAnchor: 'condiciones',
-    finalHeading: 'Contanos qué necesitás resolver',
-    actions: [
-      'Contanos qué necesitás resolver',
-      'Iniciar una consulta',
-    ],
-    evidence: [
-      'Evidencia disponible: prototipo de reservas, con código público y ejecución actual no revalidada.',
-      'No se publica actualmente un caso verificado de este servicio. El modelo de fondo es ilustrativo.',
-      'Chatbots y agentes se evalúan con alcance, datos, proveedores, costos, límites y supervisión humana acordados.',
-    ],
-    evidenceLink: ['/proyectos/#general-reservation-system', 'Examinar el prototipo de reservas'],
-  },
-  'en/services/index.html': {
-    route: '/en/services/',
-    lang: 'en',
-    heading: 'Software that moves work forward.',
-    indexLabel: 'Find your starting point',
-    index: [
-      ['/en/services/#web', 'Websites and web applications'],
-      ['/en/services/#whatsapp', 'Integrations and automation'],
-      ['/en/services/#consulting', 'Improve existing software'],
-    ],
-    services: [
-      ['web', 'A clear interface for the business.'],
-      ['whatsapp', 'Tools stop working in isolation.'],
-      ['consulting', 'A system that can keep evolving.'],
-    ],
-    groups: [
-      'What you receive', 'Common situations', 'Starting point', 'Agreed scope',
-      'Service boundaries', 'Evidence', 'Working agreement', 'Commercial boundaries',
-      'AI only where it adds value',
-    ],
-    principlesHeading: 'Clear scope. Reviewable delivery.',
-    principlesAnchor: 'working-boundaries',
-    finalHeading: 'Tell us what you need to solve',
-    actions: [
-      'Tell us what you need to solve',
-      'Start an enquiry',
-    ],
-    evidence: [
-      'Available evidence: reservation prototype, with public code and current execution not revalidated.',
-      'No verified case is currently published for this service. The background model is illustrative.',
-      'Chatbots and agents are evaluated with agreed scope, data, providers, costs, limits and human oversight.',
-    ],
-    evidenceLink: ['/en/work/#general-reservation-system', 'Examine the reservation prototype'],
-  },
-};
-
 const projectsRequirements = {
   'proyectos/index.html': { content: spanishProjects, locale: 'es', services: '/servicios/', founder: '/estudio/samuel-furlanich/' },
   'en/work/index.html': { content: englishProjects, locale: 'en', services: '/en/services/', founder: '/en/about/samuel-furlanich/' },
@@ -240,58 +63,6 @@ const approvedSources = {
   'the-system': 'https://github.com/Furlanich/The-System',
 };
 const mpcSource = 'https://github.com/Furlanich/MilkyPantsCheese-Administracion-';
-
-const privacyRequirements = {
-  'privacidad/index.html': {
-    heading: 'Privacidad de esta demostración',
-    introduction:
-      'Este sitio funciona como portfolio y demostración técnica. No acepta consultas comerciales mediante el formulario y no presenta esta página como una política revisada por un profesional legal.',
-    sections: [
-      'Qué ocurre con los datos del formulario',
-      'Alojamiento y datos técnicos',
-      'Alternativas externas',
-      'Información sensible',
-      'Conservación y consultas',
-      'Activación comercial futura',
-    ],
-    githubLabel: 'Ver la declaración de privacidad de GitHub',
-  },
-  'en/privacy/index.html': {
-    heading: 'Privacy in this demonstration',
-    introduction:
-      'This site operates as a portfolio and technical showcase. It does not accept commercial inquiries through the form and does not present this page as a professionally reviewed legal policy.',
-    sections: [
-      'What happens to form data',
-      'Hosting and technical data',
-      'External alternatives',
-      'Sensitive information',
-      'Retention and questions',
-      'Future commercial activation',
-    ],
-    githubLabel: "View GitHub's privacy statement",
-  },
-};
-
-const contactRequirements = {
-  'contacto/index.html': {
-    heading: 'Contanos qué necesitás resolver.',
-    notice: 'Demostración interactiva',
-    noticeBody: 'Este sitio es una muestra técnica. El formulario simula el envío en este navegador: no envía datos, no crea una consulta comercial y no llega a ninguna bandeja de entrada.',
-    fields: ['Nombre', 'Correo electrónico', 'Empresa', '¿Qué necesitás resolver?'],
-    fallback: 'WhatsApp, email y teléfono se muestran como alternativas funcionales.',
-    privacy: '/privacidad/',
-    founder: '/estudio/samuel-furlanich/',
-  },
-  'en/contact/index.html': {
-    heading: 'Tell us what you need to solve.',
-    notice: 'Interactive demonstration',
-    noticeBody: 'This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.',
-    fields: ['Name', 'Email', 'Company', 'What do you need to solve?'],
-    fallback: 'WhatsApp, email, and phone are shown as functional alternatives.',
-    privacy: '/en/privacy/',
-    founder: '/en/about/samuel-furlanich/',
-  },
-};
 
 function getCapabilityLegend(locale) {
   return {

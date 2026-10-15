@@ -303,3 +303,49 @@ test('the candidate CLI exits nonzero with a message for a bad request and perfo
   assert.doesNotMatch(read('scripts/prepare-sfc-candidate.mjs'), /fetch\(|https?:\/\//, 'the script performs no request and embeds no URL');
   assert.ok(existsSync(nodePath.join(root, 'tests/fixtures/sfc/commercial-release.patch')));
 });
+
+// --- export requirement partition (PLAN-SFC-V1 Task 2) ----------------------------------------------------------
+
+const partition = [
+  { name: 'studio', exportName: 'studioRequirements', routes: ['estudio/index.html', 'en/about/index.html'] },
+  { name: 'founder', exportName: 'founderRequirements', routes: ['estudio/samuel-furlanich/index.html', 'en/about/samuel-furlanich/index.html'] },
+  { name: 'contact', exportName: 'contactRequirements', routes: ['contacto/index.html', 'en/contact/index.html'] },
+  { name: 'privacy', exportName: 'privacyRequirements', routes: ['privacidad/index.html', 'en/privacy/index.html'] },
+  { name: 'home', exportName: 'homepageRequirements', routes: ['index.html', 'en/index.html'] },
+  { name: 'services', exportName: 'servicesRequirements', routes: ['servicios/index.html', 'en/services/index.html'] },
+];
+
+test('each page owns one declarative requirement map and the shared verifier only imports them', async () => {
+  const verifier = read('scripts/verify-static-export.mjs');
+  for (const { name, exportName, routes } of partition) {
+    assert.doesNotMatch(verifier, new RegExp(`const ${exportName}\\s*=\\s*\\{`), `${exportName} is no longer declared inline`);
+    assert.match(verifier, new RegExp(`from '\\./export-requirements/${name}\\.mjs'`), `the verifier imports ${name}`);
+    const module = await import(`./export-requirements/${name}.mjs`);
+    assert.deepEqual(Object.keys(module[exportName]), routes, `${name} requires exactly its two localized routes`);
+  }
+});
+
+test('requirement maps are plain data that import neither each other nor the verifier', () => {
+  for (const { name } of partition) {
+    const source = read(`scripts/export-requirements/${name}.mjs`);
+    assert.doesNotMatch(source, /^\s*import\b|await import\(/m, `${name}.mjs declares data only, so no page packet edits another page's requirements`);
+  }
+});
+
+test('export-test-support runs the real verifier against a fixture export', async () => {
+  const { createExportFixture, runVerifier } = await import('./export-test-support.mjs');
+  const empty = runVerifier({ files: {} });
+  assert.notEqual(empty.status, 0, 'an empty export fails verification');
+  assert.match(empty.output, /estudio\/index\.html/, 'the verifier reports the missing Studio route');
+
+  const fixture = createExportFixture({ 'estudio/index.html': '<!doctype html><title>x</title>' });
+  try {
+    assert.ok(existsSync(nodePath.join(fixture.directory, 'estudio/index.html')));
+    const result = runVerifier({ directory: fixture.directory, basePath: '/Portfolio' });
+    assert.notEqual(result.status, 0);
+    assert.match(result.output, /estudio\/index\.html/);
+  } finally {
+    fixture.cleanup();
+  }
+  assert.equal(existsSync(fixture.directory), false, 'cleanup removes the fixture directory');
+});
