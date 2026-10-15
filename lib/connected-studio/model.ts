@@ -55,6 +55,11 @@ export type PoseSampleInput = {
   progress: number;
   velocityPxPerSecond: number;
   deltaSeconds: number;
+  /**
+   * PLAN-SFC-V1: the Studio, Founder and Contact profiles hold a fixed rest pose. Nodes stay on their anchors, scrolling is
+   * not activity and the idle angle does not advance; connection growth still follows the graph's own reveal span.
+   */
+  fixedRest?: boolean;
 };
 
 /**
@@ -93,10 +98,12 @@ export function sampleConnectedPose(previous: ScenePose | undefined, input: Pose
     ? input.progress
     : previous.progress + (input.progress - previous.progress) * (1 - Math.exp(-deltaSeconds / PROGRESS_DAMPING_SECONDS));
   // A jump (anchor, restore, resize) is not scroll activity.
-  const scrollActivity = jumped ? 0 : sampleActivity(previous.scrollActivity, input.velocityPxPerSecond, deltaSeconds);
-  const idleAngleRadians =
-    (previous?.idleAngleRadians ?? 0) +
-    deltaSeconds * IDLE_RADIANS_PER_SECOND * (1 + ACTIVITY_ROTATION_GAIN * scrollActivity);
+  const fixedRest = input.fixedRest === true;
+  const scrollActivity = jumped || fixedRest ? 0 : sampleActivity(previous.scrollActivity, input.velocityPxPerSecond, deltaSeconds);
+  const idleAngleRadians = fixedRest
+    ? (previous?.idleAngleRadians ?? 0)
+    : (previous?.idleAngleRadians ?? 0) +
+      deltaSeconds * IDLE_RADIANS_PER_SECOND * (1 + ACTIVITY_ROTATION_GAIN * scrollActivity);
   // Resolved once, and before any node: an unknown tier fails closed even for an empty graph.
   const travelScale = getTravelScale(input.tier);
   return {
@@ -105,7 +112,7 @@ export function sampleConnectedPose(previous: ScenePose | undefined, input: Pose
     scrollActivity,
     nodes: input.graph.nodes.map((node) => ({
       id: node.id,
-      position: travelPosition(node, progress, scrollActivity, idleAngleRadians, travelScale),
+      position: fixedRest ? node.anchor : travelPosition(node, progress, scrollActivity, idleAngleRadians, travelScale),
       rotation: [0, idleAngleRadians + node.seed * TAU, 0] as const,
       scale: node.depthScale,
     })),
