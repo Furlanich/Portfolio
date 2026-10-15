@@ -5,7 +5,11 @@
 
 export type Vec3 = readonly [number, number, number];
 
-export type ConnectedRoute = 'services' | 'projects';
+/** Routes whose graph labels are the eight localized capability words. */
+export type LegacyConnectedRoute = 'services' | 'projects';
+/** PLAN-SFC-V1 profile routes: Studio, Founder and Contact bind a few decorative words to node ids. */
+export type ProfileConnectedRoute = 'studio' | 'founder' | 'contact';
+export type ConnectedRoute = LegacyConnectedRoute | ProfileConnectedRoute;
 /** Graph topology: 16 nodes/33 edges (wide) or 8 nodes/13 edges (compact). */
 export type ConnectedQuality = 'wide' | 'compact';
 /** Wide >= 1024, tablet 768-1023, compact < 768 CSS px. */
@@ -16,9 +20,16 @@ export type ConnectedLivePolicy = { readonly wide: boolean; readonly compact: bo
 export type CapabilityIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type CapabilityWords = readonly [string, string, string, string, string, string, string, string];
 
+/**
+ * A decorative word bound to one graph node by id (PLAN-SFC-V1 W1). The new routes never fabricate the
+ * eight services: they bind two to four illustrative words by node id instead.
+ */
+export type ConnectedWordBinding = { readonly nodeId: string; readonly word: string };
+
 export type GraphNode = {
   readonly id: string;
-  readonly capabilityIndex: CapabilityIndex;
+  /** Present on the Services/Projects vocabulary graphs; absent on the profile-route graphs. */
+  readonly capabilityIndex?: CapabilityIndex;
   readonly anchor: Vec3;
   readonly seed: number;
   readonly depthScale: number;
@@ -96,7 +107,7 @@ export type SceneViewport = {
 
 export type LabelProjection = {
   readonly id: string;
-  readonly capabilityIndex: CapabilityIndex;
+  readonly capabilityIndex?: CapabilityIndex;
   readonly xPx: number;
   readonly yPx: number;
   readonly depthScale: number;

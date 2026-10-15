@@ -65,9 +65,13 @@ test('the Pause, Resume and static-background labels equal the approved IA rows'
   });
 });
 
-test('the poster manifest types all four route and quality combinations with the approved ceilings', () => {
+test('the poster manifest types every route and quality combination with the approved ceilings', () => {
   const combinations = connectedMediaManifest.map((entry) => `${entry.route}-${entry.quality}`).sort();
-  assert.deepEqual(combinations, ['projects-compact', 'projects-wide', 'services-compact', 'services-wide']);
+  // PLAN-SFC-V1 Task 2 added the unpublished Studio, Founder and Contact pairs to the four published ones.
+  assert.deepEqual(combinations, [
+    'contact-compact', 'contact-wide', 'founder-compact', 'founder-wide', 'projects-compact', 'projects-wide',
+    'services-compact', 'services-wide', 'studio-compact', 'studio-wide',
+  ]);
   for (const entry of connectedMediaManifest) {
     assert.equal(entry.src, `/brand/connected-studio/${entry.route}-${entry.quality}.webp`, 'the path Task 8 publishes to');
     assert.equal(entry.maxBytes, entry.quality === 'wide' ? 150 * 1024 : 80 * 1024, `${entry.route}-${entry.quality} ceiling`);

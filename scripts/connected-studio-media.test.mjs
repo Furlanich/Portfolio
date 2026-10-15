@@ -58,11 +58,20 @@ test('wide static media selects an existing ≤150KiB matched poster at its intr
   }
 });
 
-test('the four posters are one family: distinct files, one folder, the same naming rule', () => {
-  assert.equal(connectedMediaManifest.length, 4);
-  assert.equal(new Set(connectedMediaManifest.map((entry) => entry.src)).size, 4);
+test('the four published posters are one family: distinct files, one folder, the same naming rule', () => {
+  // PLAN-SFC-V1 Task 2 adds six unpublished entries for the new routes (asserted in sfc-contracts.test.mjs).
+  const published = connectedMediaManifest.filter((entry) => entry.published);
+  assert.equal(published.length, 4);
+  assert.deepEqual(new Set(published.map((entry) => entry.route)), new Set(routes));
+  assert.equal(new Set(published.map((entry) => entry.src)).size, 4);
   for (const entry of connectedMediaManifest) {
     assert.equal(entry.src, `/brand/connected-studio/${entry.route}-${entry.quality}.webp`);
+  }
+});
+
+test('an unpublished entry never claims a file: only published entries must exist on disk', () => {
+  for (const entry of connectedMediaManifest) {
+    assert.equal(existsSync(publicFile(entry.src)), entry.published, `${entry.src}: file presence matches published=${entry.published}`);
   }
 });
 
@@ -75,7 +84,7 @@ test('poster URLs resolve at the root and at the /Portfolio base path', async ()
       for (const entry of connectedMediaManifest) {
         const url = withBasePath(entry.src);
         assert.equal(url, `${base}${entry.src}`);
-        assert.ok(existsSync(publicFile(url.slice(base.length))), `${url} resolves to a committed file`);
+        if (entry.published) assert.ok(existsSync(publicFile(url.slice(base.length))), `${url} resolves to a committed file`);
       }
     }
   } finally {
