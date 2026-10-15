@@ -81,3 +81,30 @@ test('the editorial plate and scrim carry their approved material values in the 
   }
   assert.doesNotMatch(css.slice(css.indexOf('editorialOpaque')), /backdrop-filter\s*:\s*blur/, 'the editorial plate has no blur');
 });
+
+// --- compiler discovery excludes ignored task worktrees ---------------------------------------------------
+
+test('tsconfig discovery excludes a checkout under .worktrees but keeps real source', async () => {
+  const { default: ts } = await import('typescript');
+  const { mkdirSync, mkdtempSync, rmSync, writeFileSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const path = await import('node:path');
+
+  const dir = mkdtempSync(path.join(tmpdir(), 'sfc-tsconfig-'));
+  try {
+    const files = ['app/page.ts', '.worktrees/sfc-99/app/page.ts', '.worktrees/sfc-99/node_modules/x/index.ts', 'node_modules/y/index.ts'];
+    for (const file of files) {
+      mkdirSync(path.join(dir, path.dirname(file)), { recursive: true });
+      writeFileSync(path.join(dir, file), 'export {};\n');
+    }
+    const config = JSON.parse(read('tsconfig.json'));
+    // TypeScript's wildcard include already skips dot-directories, so discovery below passes even without the
+    // entry; the exclusion is still declared explicitly so it survives an include change (plan Task 2 ruling).
+    assert.ok(config.exclude.some((entry) => entry === '.worktrees' || entry === '.worktrees/**'), 'tsconfig declares the .worktrees exclusion');
+    const parsed = ts.parseJsonConfigFileContent(config, ts.sys, dir);
+    const found = parsed.fileNames.map((name) => path.relative(dir, name).split(path.sep).join('/'));
+    assert.deepEqual(found, ['app/page.ts'], 'only the real source is discovered');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
