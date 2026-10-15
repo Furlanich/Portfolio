@@ -224,12 +224,13 @@ test('influence reaches 280px and no further', () => {
 
 test('only the five nearest nodes respond directly; equal distances break the tie by id', () => {
   // Seven nodes at exactly 100px from the pointer; no connections, so nothing is shared.
-  const ring = [['a', 600, 350], ['b', 400, 350], ['c', 500, 450], ['d', 500, 250], ['e', 560, 430], ['f', 440, 430], ['g', 560, 270]];
+  // Ids run against index order (g first), so only the id decides which two of the seven tie-losers are left out.
+  const ring = [['g', 600, 350], ['f', 400, 350], ['e', 500, 450], ['d', 500, 250], ['c', 560, 430], ['b', 440, 430], ['a', 560, 270]];
   const s = custom(ring);
   const pose = run(s, 6 * 60, () => ({ pointer: pointerAt(500, 350) }));
-  const moved = offsets(s, pose).map((offset) => magnitude(offset) > 1);
-  assert.deepEqual(moved, [true, true, true, true, true, false, false]);
-  near(magnitude(offsets(s, pose)[0]), 0.85 * 34 * (1 - 100 / 280) ** 2, 0.05);
+  const moved = Object.fromEntries(offsets(s, pose).map((offset) => [offset.id, magnitude(offset) > 1]));
+  assert.deepEqual(moved, { g: false, f: false, e: true, d: true, c: true, b: true, a: true });
+  near(magnitude(offsets(s, pose)[2]), 0.85 * 34 * (1 - 100 / 280) ** 2, 0.05);
 });
 
 test('the neighbor share is one non-recursive 0.10 of the original target', () => {
@@ -343,6 +344,21 @@ test('a pointer held beside a short connection bends it a visible share of every
     const peak = Math.max(...stringResiduals(s, pose).map((entry) => entry.size));
     assert.ok(peak >= cap * 0.4, `cap ${cap}: peak ${peak} reaches a visible share`);
     assert.ok(peak <= cap + 1e-6, `cap ${cap}: peak ${peak} stays within the cap`);
+  }
+});
+
+test('a hard push on a very short connection bends it strongly and never past its cap', () => {
+  for (const cap of [16, 10, 6, 4]) {
+    const s = custom([['a', 490, 350], ['b', 510, 350]], [['a', 'b']], { yieldNodes: false, edgeCapPx: cap });
+    let peak = 0;
+    for (let frame = 0; frame < 120; frame += 1) {
+      // 12px beside a 20px connection every sample is driven to the cap.
+      const pose = step(s, { pointer: pointerAt(500, 338) });
+      for (const entry of stringResiduals(s, pose)) peak = Math.max(peak, entry.size);
+    }
+    assert.ok(peak <= cap + 1e-9, `cap ${cap}: peak ${peak} never exceeds the cap`);
+    // Tension and damping hold the settled peak near 0.8 of the drive; the integration clamp is a defensive bound on the contract.
+    assert.ok(peak >= cap * 0.6, `cap ${cap}: peak ${peak} is a strong bend`);
   }
 });
 
@@ -636,6 +652,36 @@ test('a pointer that stops moving lets the field fall asleep with a small steady
   assert.ok(rest[0] > 0.1, 'a small steady yield remains while the pointer stays near');
   const later = run(s, 60, () => ({ pointer: pointerAt(420, 350, { ageSeconds: 6 }) }));
   offsets(s, later).forEach((offset, index) => near(magnitude(offset), rest[index], 0.02, `no jitter on node ${index}`));
+});
+
+test('a rested field and a cleared field carry no residue into the next gesture', () => {
+  const gesture = (s) => {
+    let pose;
+    for (let frame = 0; frame < 20; frame += 1) {
+      pose = step(s, { pointer: pointerAt(500 + frame * 5, 330, { vx: 300 }), scroll: frame % 5 === 0 ? 20 : 0 });
+    }
+    return { nodes: offsets(s, pose), strings: stringResiduals(s, pose) };
+  };
+  const fresh = gesture(setup('studio', 'wide'));
+  const rested = setup('studio', 'wide');
+  run(rested, 60, (frame) => ({ pointer: pointerAt(600 + frame * 3, 340, { vx: 180 }) }));
+  run(rested, 12 * 60, () => ({ pointer: null }));
+  assert.equal(rested.interaction.isSettled(), true);
+  const afterRest = gesture(rested);
+  const cleared = setup('studio', 'wide');
+  run(cleared, 60, (frame) => ({ pointer: pointerAt(600 + frame * 3, 340, { vx: 180 }), scroll: 30 }));
+  cleared.interaction.clear();
+  const afterClear = gesture(cleared);
+  for (const [name, result] of [['rested', afterRest], ['cleared', afterClear]]) {
+    result.nodes.forEach((offset, index) => {
+      near(offset.dx, fresh.nodes[index].dx, 1e-9, `${name} ${offset.id} dx`);
+      near(offset.dy, fresh.nodes[index].dy, 1e-9, `${name} ${offset.id} dy`);
+    });
+    result.strings.forEach((entry, index) => {
+      near(entry.x, fresh.strings[index].x, 1e-9, `${name} string ${entry.id}/${entry.j} x`);
+      near(entry.y, fresh.strings[index].y, 1e-9, `${name} string ${entry.id}/${entry.j} y`);
+    });
+  }
 });
 
 test('clear() returns every offset, velocity and excitation to rest at once', () => {
