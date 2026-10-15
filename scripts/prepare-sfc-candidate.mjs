@@ -31,22 +31,31 @@ const APPLICATION_PATHS = ['app', 'components', 'lib', 'data', 'public'];
 
 const defaultRoot = fileURLToPath(new URL('..', import.meta.url));
 
-function git(cwd, args) {
-  const result = spawnSync('git', args, { cwd, encoding: 'utf8' });
+function git(cwd, args, input) {
+  const result = spawnSync('git', args, { cwd, encoding: 'utf8', input });
   return { status: result.status ?? 1, stdout: result.stdout ?? '', stderr: (result.stderr ?? '').trim() };
 }
 
 const fail = (message) => ({ ok: false, message });
 const sha256 = (buffer) => createHash('sha256').update(buffer).digest('hex');
 
+/**
+ * A patch is hashed and applied as LF text read into memory. A Windows checkout may convert the committed
+ * file to CRLF, which `git apply` would reject; the normalized text is what was reviewed and recorded.
+ */
+function loadPatch(patchDir, name) {
+  const file = path.join(patchDir, name);
+  const text = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+  return { name, file, text, sha256: sha256(text) };
+}
+
 function readPatches(patchDir, kind) {
   const names = KINDS[kind];
   if (!names) return { error: `Unknown kind "${String(kind)}" (expected commercial, runtime or combined)` };
   const patches = [];
   for (const name of names) {
-    const file = path.join(patchDir, name);
-    if (!existsSync(file)) return { error: `Missing candidate patch ${name} in ${patchDir}` };
-    patches.push({ name, file, sha256: sha256(readFileSync(file)) });
+    if (!existsSync(path.join(patchDir, name))) return { error: `Missing candidate patch ${name} in ${patchDir}` };
+    patches.push(loadPatch(patchDir, name));
   }
   return { patches };
 }
@@ -67,7 +76,7 @@ function readState(statePath) {
 
 /** Reverses already-applied patches, newest first. Used to leave no partial application behind. */
 function reverse(repoRoot, patches) {
-  for (const patch of [...patches].reverse()) git(repoRoot, ['apply', '-R', patch.file]);
+  for (const patch of [...patches].reverse()) git(repoRoot, ['apply', '-R', '-'], patch.text);
 }
 
 function verifyClean(repoRoot, statePath) {
@@ -92,12 +101,12 @@ function apply({ repoRoot, patchDir, kind, expectHead, statePath }) {
   if (dirty.stdout.trim()) return fail('The working tree has tracked changes; use a clean disposable checkout.');
 
   for (const patch of patches) {
-    const check = git(repoRoot, ['apply', '--check', patch.file]);
+    const check = git(repoRoot, ['apply', '--check', '-'], patch.text);
     if (check.status !== 0) return fail(`${patch.name} does not apply to this checkout: ${check.stderr}`);
   }
   const applied = [];
   for (const patch of patches) {
-    const result = git(repoRoot, ['apply', patch.file]);
+    const result = git(repoRoot, ['apply', '-'], patch.text);
     if (result.status !== 0) {
       reverse(repoRoot, applied);
       return fail(`${patch.name} failed to apply and was rolled back: ${result.stderr}`);
@@ -125,14 +134,13 @@ function restore({ repoRoot, patchDir, kind, statePath }) {
 
   const patches = [];
   for (const entry of state.patches) {
-    const file = path.join(patchDir, entry.name);
-    if (!existsSync(file) || sha256(readFileSync(file)) !== entry.sha256) {
-      return fail(`${entry.name} no longer matches the patch that was applied; restore the checkout manually.`);
-    }
-    patches.push({ name: entry.name, file });
+    if (!existsSync(path.join(patchDir, entry.name))) return fail(`${entry.name} is missing; restore the checkout manually.`);
+    const patch = loadPatch(patchDir, entry.name);
+    if (patch.sha256 !== entry.sha256) return fail(`${entry.name} no longer matches the patch that was applied; restore the checkout manually.`);
+    patches.push(patch);
   }
   for (const patch of [...patches].reverse()) {
-    const check = git(repoRoot, ['apply', '-R', '--check', patch.file]);
+    const check = git(repoRoot, ['apply', '-R', '--check', '-'], patch.text);
     if (check.status !== 0) return fail(`${patch.name} cannot be reversed (the target changed): ${check.stderr}`);
   }
   reverse(repoRoot, patches);

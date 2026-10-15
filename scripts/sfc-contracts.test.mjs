@@ -79,7 +79,9 @@ test('the editorial plate and scrim carry their approved material values in the 
   for (const value of ['#0A1E33', '#36536C', '16px', '#06121F', '8px', '1244px', '32px', '20px', '768px']) {
     assert.ok(css.includes(value), `surfaces.module.css carries ${value}`);
   }
-  assert.doesNotMatch(css.slice(css.indexOf('editorialOpaque')), /backdrop-filter\s*:\s*blur/, 'the editorial plate has no blur');
+  const editorialRules = [...css.matchAll(/\.editorialPlate[^{]*\{[^}]*\}/g)].map((match) => match[0]).join('\n');
+  assert.ok(editorialRules.includes('#0A1E33'), 'the editorial plate rules exist and carry the Deep fill');
+  assert.doesNotMatch(editorialRules, /backdrop-filter|box-shadow/, 'the editorial plate has no blur or shadow');
 });
 
 // --- compiler discovery excludes ignored task worktrees ---------------------------------------------------
@@ -120,7 +122,10 @@ import nodePath from 'node:path';
 const candidate = await import('../scripts/prepare-sfc-candidate.mjs');
 
 const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-const sha256 = (file) => createHash('sha256').update(readText(file)).digest('hex');
+/** Patch text as LF, like the script reads it: a Windows checkout may hold the committed file as CRLF. */
+const lf = (file) => readText(file, 'utf8').replace(/\r\n/g, '\n');
+const sha256 = (file) => createHash('sha256').update(lf(file)).digest('hex');
+const applyPatch = (cwd, patchFile, ...flags) => execFileSync('git', ['apply', ...flags, '-'], { cwd, input: lf(patchFile) });
 const text = (dir, file) => readText(nodePath.join(dir, file), 'utf8');
 
 /** The frozen declaration PLAN-SFC-V1 Task 5 must create byte-for-byte; the commercial patch is cut against it. */
@@ -270,21 +275,21 @@ test('verify-clean rejects the QA marker in application source and an unrestored
 test('the committed fixtures apply to the real live-policy target and to the frozen release declaration', () => {
   // Runtime patch: the real repository file (read-only check; nothing is applied).
   const livePolicy = nodePath.join(root, 'tests/fixtures/sfc/live-policy.patch');
-  execFileSync('git', ['apply', '--check', livePolicy], { cwd: root });
+  applyPatch(root, livePolicy, '--check');
   assert.match(readText(livePolicy, 'utf8'), /\+export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object\.freeze\(\{ wide: true, compact: true \}\);/);
 
   // Commercial patch: cut against the frozen declaration, which Task 5 creates identically.
   const dir = makeRepo({ 'lib/inquiry/release.ts': FROZEN_RELEASE });
   try {
     const patch = nodePath.join(root, 'tests/fixtures/sfc/commercial-release.patch');
-    execFileSync('git', ['apply', patch], { cwd: dir });
+    applyPatch(dir, patch);
     const patched = text(dir, 'lib/inquiry/release.ts');
     assert.equal(
       patched,
       FROZEN_RELEASE.replace("  mode: 'demonstration',", "  mode: 'commercial',").replace("  releaseId: 'DEMONSTRATION',", `  releaseId: '${candidate.QA_MARKER}',`),
       'the patch changes exactly the mode and release id lines',
     );
-    execFileSync('git', ['apply', '-R', patch], { cwd: dir });
+    applyPatch(dir, patch, '-R');
     assert.equal(text(dir, 'lib/inquiry/release.ts'), FROZEN_RELEASE);
   } finally {
     rm(dir, { recursive: true, force: true });
