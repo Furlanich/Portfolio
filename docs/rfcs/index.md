@@ -22,14 +22,14 @@ related:
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
   - RFC-ADE-AGENT-USAGE-V1
   - PLAN-ADE-AGENT-USAGE-V1
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 ---
 
 # RFCs
 
-## Proposed commercial Atlas and inquiry activation
+## Commercial Atlas and inquiry activation
 
-- [RFC-SFC-COMMERCIAL-ATLAS-V1](studio-founder-contact-commercial-atlas-v1.md): **owner-approved bounded scope Q14, 2026-10-14; PROPOSED pending Governance PR acceptance.** Linked [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md) is approved; [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) is a draft for independent review. Q15 clarifies predeployment provider probe and immediate real deployed receipts/rollback. Prior demo/runtime ADRs remain immutable and effective until the accepted supersession and implementation checkpoints; no activation or execution has occurred.
+- [RFC-SFC-COMMERCIAL-ATLAS-V1](studio-founder-contact-commercial-atlas-v1.md): **APPROVED — 2026-10-15, effective on human merge of Governance PR 1.** Bounded scope approved in Q14 and Q15–18 (2026-10-14); the owner authorized execution of [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) on 2026-10-15, waiving the independent re-review of revision 2 ([Task 1 receipt](../reviews/studio-founder-contact-acceptance-v1/task-01.md)). Linked [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md) is approved. The ten bounded supersessions take effect only as reviewed implementation and activation checkpoints land; prior demo/runtime ADRs remain immutable and effective until then. Account, legal, deployment and tier gates stay open; no code or activation has occurred.
 
 ## ADE agent usage
 

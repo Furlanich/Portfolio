@@ -1,7 +1,7 @@
 ---
 id: RFC-SFC-COMMERCIAL-ATLAS-V1
 type: request-for-comments
-status: PROPOSED
+status: APPROVED
 related:
   - DESIGN-SFC-V1
   - SPEC-SFC-V1
@@ -17,7 +17,9 @@ related:
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - ADR-STATIC-LOCALIZED-ROUTING
   - GOV-ENGINEERING-LIFECYCLE
-last_verified: 2026-10-14
+  - PLAN-SFC-V1
+  - REVIEW-SFC-ACCEPTANCE-V1
+last_verified: 2026-10-15
 ---
 
 # Commercial inquiry and Atlas Studio, Founder, Contact and legal
@@ -38,7 +40,7 @@ Activate the retained provider-neutral inquiry/Formspree architecture only after
 
 ## Bounded supersessions proposed
 
-These target changes take effect only through acceptance of this RFC and subsequent reviewed implementation/activation checkpoints. Existing ADR files remain immutable. The design branch does not apply them to production.
+Accepted 2026-10-15 (see [Recommendation and status](#recommendation-and-status)). These target changes take effect only through the subsequent reviewed implementation and activation checkpoints of [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md); acceptance alone changes no current behavior. Existing ADR files remain immutable. The design branch does not apply them to production.
 
 | Existing requirement / owner | Proposed bounded replacement | Preserved boundary |
 | --- | --- | --- |
@@ -90,6 +92,6 @@ These facts are release gates, not open design choices delegated to an implement
 
 ## Recommendation and status
 
-The owner has approved the linked written design and narrowly bounded proposal scope. Recommend Governance PR acceptance and independent Claude Opus 5.5 High review-only of [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md). The reviewer does not rewrite the master plan. Implementation follows only after plan/review/governance gates; every task/PR keeps its required provider, ownership, RED/verification and human-review boundaries.
+**APPROVED — 2026-10-15, effective on human merge of Governance PR 1 (PLAN-SFC-V1 Task 1).** The owner approved the bounded scope in Q14 and the controlled release order in Q15. On 2026-10-14 the owner also authorized `claude-sonnet-5-5` High and `gpt-6-luna` High (Q16), the nondeployed `codex/sfc-integration` branch with one coordinated main release (Q17), and the corrected Studio H1 and acceptance-only Contact success text (Q18). On 2026-10-15 the owner authorized execution of [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) revision 2 in the Claude Code session. That authorization explicitly waives the independent re-review gate of revision 2 and the Luna assignment of Task 1, which Claude Sonnet 5.5 performed. The waiver is recorded in the [Task 1 receipt](../reviews/studio-founder-contact-acceptance-v1/task-01.md); it changes neither the other packets nor any later gate.
 
-**Owner-approved bounded scope Q14/Q15/Q16–18 — 2026-10-14; RFC remains PROPOSED pending Governance PR acceptance.** Independent Opus 5.5 High reviewed plan revision 1 and required revision; [dispositions](../reviews/studio-founder-contact-plan-review-2026-10-14.md)/plan revision 2 await re-review. The planning authority authors the master plan; Claude does not rewrite it. Execution, account mutation, activation and tier enablement remain later gates.
+The bounded supersessions above are accepted as target requirements. They take effect only as each reviewed implementation or activation checkpoint lands. Existing ADRs stay immutable and effective until the Task 2 record `ADR-SFC-COMMERCIAL-ATLAS-V1` supersedes the named portions. The independent Opus 5.5 High review of plan revision 1 required revision; its [dispositions](../reviews/studio-founder-contact-plan-review-2026-10-14.md) are preserved, and revision 2 has had no independent re-review. Account mutation, deployment, the live provider probe, legal publication and tier enablement remain separate later gates owned by Tasks 13, 15, 16, 17 and 18.

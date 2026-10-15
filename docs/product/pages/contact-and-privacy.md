@@ -18,7 +18,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - REF-CONTACT-DEMO-KIT
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 ---
 
 # Contact and privacy pages
@@ -557,7 +557,7 @@ The owner confirmed `samuelfurlanich@gmail.com` for inquiry notifications and pr
 
 The owner accepted provider filtering plus a real honeypot as the initial abuse posture, with an interactive challenge introduced only when verified abuse justifies it. Account actions below are still pending; no account settings have been changed during design discovery.
 
-This initiative retains GitHub Pages and the `/Portfolio` base path. The [design discovery](../../reviews/studio-founder-contact-design-2026-10-14/index.md) records the chosen direction for refinement. It does not activate the form: the current demonstration decision remains effective until an accepted superseding decision and the existing commercial release gates are satisfied.
+This initiative retains GitHub Pages and the `/Portfolio` base path. The [design discovery](../../reviews/studio-founder-contact-design-2026-10-14/index.md) records the chosen direction for refinement. It does not activate the form: the current demonstration decision remains effective until an accepted superseding decision and the existing commercial release gates are satisfied. [RFC-SFC-COMMERCIAL-ATLAS-V1](../../rfcs/studio-founder-contact-commercial-atlas-v1.md) supplies the bounded supersession and is APPROVED 2026-10-15 (effective on human merge of Governance PR 1). The superseding ADR (PLAN-SFC-V1 Task 2) and the commercial release gates are still outstanding, so the demonstration decision still governs.
 
 Proposed WhatsApp prefilled message:
 

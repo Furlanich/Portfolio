@@ -7,7 +7,7 @@ related:
   - PAGE-PRIVACY
   - IA-SITE
   - REVIEW-STUDIO-FOUNDER-CONTACT-2026-10-14
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 ---
 
 # Terms and Conditions
@@ -36,7 +36,7 @@ The owner supplied [Aureon's Privacy page](https://aureon.ar/legal/privacidad) a
 
 ## Routes and presentation — APPROVED target, 2026-10-14
 
-The owner approved `/terminos/` and `/en/terms/` through the complete written design in Q14, preserving static export, trailing slashes, locale equivalence and `/Portfolio`. This is a target decision; governance acceptance and implementation remain later gates. The original legal drafts remain nonpublishable pending professional review.
+The owner approved `/terminos/` and `/en/terms/` through the complete written design in Q14, preserving static export, trailing slashes, locale equivalence and `/Portfolio`. This is a target decision. Governance acceptance is recorded by [RFC-SFC-COMMERCIAL-ATLAS-V1](../../rfcs/studio-founder-contact-commercial-atlas-v1.md) (APPROVED 2026-10-15, effective on human merge of Governance PR 1); implementation and professional legal review remain later gates. The original legal drafts remain nonpublishable pending professional review.
 
 Use a quiet, complete reading surface subordinate to the commercial pages, without live WebGL or essential information in a graphic. Footer discoverability, headings, reading measure, anchor navigation, responsive reflow and language equivalence belong to the final design specification.
 

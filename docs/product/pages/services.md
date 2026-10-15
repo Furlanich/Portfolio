@@ -19,7 +19,7 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-SERVICES-EXPERIENCE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-10-14
+last_verified: 2026-10-15
 ---
 
 # Services page
@@ -28,7 +28,7 @@ last_verified: 2026-10-14
 
 Approved with written revision 1 in Q14; effective only at the coordinated commercial activation.
 
-At the accepted [commercial activation](../../design/studio-founder-contact-v1.md#commercial-contact-and-activation), replace only the final CTA description's demonstration instruction with:
+At the [commercial activation](../../design/studio-founder-contact-v1.md#commercial-contact-and-activation) authorized by [RFC-SFC-COMMERCIAL-ATLAS-V1](../../rfcs/studio-founder-contact-commercial-atlas-v1.md) (APPROVED 2026-10-15; PLAN-SFC-V1 Task 16 selects it atomically), replace only the final CTA description's demonstration instruction with:
 
 - Spanish: `Samuel revisará personalmente la consulta.`
 - English: `Samuel will personally review your inquiry.`
