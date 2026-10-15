@@ -318,7 +318,7 @@ export function createConnectedInteraction(profile: ConnectedSceneProfile): Conn
       }
     }
 
-    prepareStrings(layout);
+    if (bends) prepareStrings(layout);
 
     const viewportWidth = layout.crop?.width ?? layout.width;
     const viewportHeight = layout.crop?.height ?? layout.height;

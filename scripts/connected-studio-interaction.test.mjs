@@ -251,31 +251,15 @@ test('node travel never exceeds 34 / 24 / 14 CSS px, and a hard sweep gets close
     const cap = s.profile.input.nodeTravelCapPx;
     const { width, height } = s.viewport;
     let peak = 0;
-    run(s, 8 * 60, (frame, ms) => {
-      const t = ms / 1000;
-      const x = width / 2 + (width * 0.45) * Math.sin(t * 5);
-      const y = height / 2 + (height * 0.35) * Math.sin(t * 3.1);
-      const vx = width * 0.45 * 5 * Math.cos(t * 5);
-      const vy = height * 0.35 * 3.1 * Math.cos(t * 3.1);
-      return { pointer: pointerAt(x, y, { vx, vy }) };
-    });
-    // Re-run while recording every frame.
-    const again = setup('studio', tier);
-    run(again, 8 * 60, (frame, ms) => {
-      const t = ms / 1000;
-      return { pointer: pointerAt(width / 2 + width * 0.45 * Math.sin(t * 5), height / 2 + height * 0.35 * Math.sin(t * 3.1), { vx: width * 0.45 * 5 * Math.cos(t * 5), vy: height * 0.35 * 3.1 * Math.cos(t * 3.1) }) };
-    });
-    let pose;
-    const recorder = setup('studio', tier);
     for (let frame = 0; frame < 8 * 60; frame += 1) {
       const t = (frame * STEP_MS) / 1000;
-      pose = step(recorder, {
+      const pose = step(s, {
         pointer: pointerAt(width / 2 + width * 0.45 * Math.sin(t * 5), height / 2 + height * 0.35 * Math.sin(t * 3.1), {
           vx: width * 0.45 * 5 * Math.cos(t * 5),
           vy: height * 0.35 * 3.1 * Math.cos(t * 3.1),
         }),
       });
-      for (const offset of offsets(recorder, pose)) peak = Math.max(peak, magnitude(offset));
+      for (const offset of offsets(s, pose)) peak = Math.max(peak, magnitude(offset));
     }
     assert.ok(peak <= cap + 1e-6, `${tier}: peak ${peak} within the ${cap}px cap`);
     assert.ok(peak > cap * 0.6, `${tier}: the sweep really exercises the cap (${peak})`);
@@ -284,7 +268,7 @@ test('node travel never exceeds 34 / 24 / 14 CSS px, and a hard sweep gets close
 
 test('displaced nodes stay inside the visible viewport', () => {
   const s = custom([['a', 6, 350], ['b', 994, 20]]);
-  const pose = run(s, 4 * 60, (frame, ms) => ({ pointer: pointerAt(60, 350, { vx: -1400, vy: 0 }) }));
+  const pose = run(s, 4 * 60, () => ({ pointer: pointerAt(60, 350, { vx: -1400, vy: 0 }) }));
   for (const node of pose.nodes) {
     const css = projectAnchor(node.position, s.layout);
     assert.ok(css.xPx >= -1e-6 && css.xPx <= 1000 + 1e-6 && css.yPx >= -1e-6 && css.yPx <= 700 + 1e-6, `${node.id} inside the viewport`);
@@ -412,6 +396,32 @@ test('a moving pointer leaves momentum: the node keeps going after the pointer s
   const withoutMomentum = peakAfterExit(0);
   assert.ok(withMomentum.peak > withMomentum.atExit + 0.05, 'keeps moving after the pointer exits');
   assert.ok(withMomentum.peak > withoutMomentum.peak + 1, `momentum carries further (${withMomentum.peak} vs ${withoutMomentum.peak})`);
+});
+
+test('a pointer that stops moving but stays keeps the momentum it already gave, without adding more', () => {
+  const s = custom([['a', 500, 350]]);
+  let x = 100;
+  let pose;
+  for (let frame = 0; frame < 24; frame += 1) {
+    x += 800 / 60;
+    pose = step(s, { pointer: pointerAt(x, 350, { vx: 800, vy: 0 }) });
+  }
+  const atStop = offsets(s, pose)[0].dx;
+  let peak = atStop;
+  for (let frame = 0; frame < 30; frame += 1) {
+    pose = step(s, { pointer: pointerAt(x, 350, { vx: 0, vy: 0, ageSeconds: (frame * STEP_MS) / 1000 }) });
+    peak = Math.max(peak, offsets(s, pose)[0].dx);
+  }
+  assert.ok(peak > atStop + 0.05, `the node coasts on after the pointer stops (${atStop} -> ${peak})`);
+  const held = custom([['a', 500, 350]]);
+  let hx = 100;
+  for (let frame = 0; frame < 24; frame += 1) {
+    hx += 800 / 60;
+    step(held, { pointer: pointerAt(hx, 350, { vx: 0, vy: 0 }) });
+  }
+  let heldPeak = offsets(held, step(held, { pointer: pointerAt(hx, 350) }))[0].dx;
+  for (let frame = 0; frame < 30; frame += 1) heldPeak = Math.max(heldPeak, offsets(held, step(held, { pointer: pointerAt(hx, 350, { ageSeconds: (frame * STEP_MS) / 1000 }) }))[0].dx);
+  assert.ok(peak > heldPeak + 0.5, 'and it coasts further than the same path with no reported velocity');
 });
 
 test('pointer exit damps motion down instead of snapping it, and the field comes to rest', () => {
