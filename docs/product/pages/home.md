@@ -18,10 +18,21 @@ related:
   - RFC-SKY-CHART-VISUAL-SYSTEM-V2
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
-last_verified: 2026-10-05
+last_verified: 2026-10-14
 ---
 
 # Spanish homepage
+
+## Commercial inquiry consistency — APPROVED target, 2026-10-14
+
+Approved with written revision 1 in Q14; effective only at the coordinated commercial activation.
+
+Only after the accepted [commercial activation](../../design/studio-founder-contact-v1.md#commercial-contact-and-activation) replaces demonstration mode, replace the final CTA's `demoStatement` with:
+
+- Spanish: `Samuel revisará personalmente tu consulta para evaluar el próximo paso.`
+- English: `Samuel will personally review your inquiry to assess the next step.`
+
+This bounded copy change removes a false zero-transmission claim. It changes no Home hierarchy, layout, scene, navigation, response promise or other copy. Until activation, retain the current demonstration statement.
 
 ## Responsibility
 

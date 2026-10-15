@@ -3,6 +3,12 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - REVIEW-SFC-PLAN-2026-10-14
+  - PLAN-SFC-V1
+  - DESIGN-SFC-V1
+  - SPEC-SFC-V1
+  - RFC-SFC-COMMERCIAL-ATLAS-V1
+  - PAGE-TERMS
   - REVIEW-SPF-TASK-8-2026-10-12
   - GOV-AGENT-USAGE
   - PLAN-SPF-V1
@@ -44,7 +50,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-10-12
+last_verified: 2026-10-14
 ---
 
 # FURLANICH project knowledge
@@ -84,6 +90,8 @@ Front matter records the overall governance status of a document. In mixed-statu
 The [Task 8 / PR #132 independent review](reviews/services-projects-footer-task-8-review-2026-10-12/index.md) pinned head 07d1c927 and recommended corrections for two live handoff defects and one approval-status inconsistency. They were corrected in [PR #133](https://github.com/Furlanich/Portfolio/pull/133) and the Task 8 gates closed on 2026-10-13 (dated entry: 2026-10-14; see the [acceptance record](reviews/services-projects-footer-acceptance-v1/index.md#independent-implementation-reviews)).
 
 ## Current documentation stage
+
+The owner **APPROVED written revision 1 (Q14)** and controlled release order (Q15) on 2026-10-14. [PLAN-SFC-V1](plans/active/studio-founder-contact-v1.md) is now **PROPOSED revision 2, nineteen ADE packets**, after [independent Opus 5.5 High revision-required review and critical dispositions](reviews/studio-founder-contact-plan-review-2026-10-14.md). Q16 resolves Sonnet 5.5 High/GPT-6 Luna High; Q17 approves nondeployed integration PRs and one coherent main release; Q18 corrects Studio/success copy in their owners. Revision2 separates static commercial release from hardware qualification, closes projection/export/integration/CI/focus/ownership gaps, and awaits independent re-review/owner acceptance. Execution remains NOT STARTED. [DESIGN-SFC-V1](design/studio-founder-contact-v1.md) distinguishes approved values from proposed construction clarifications; [RFC](rfcs/studio-founder-contact-commercial-atlas-v1.md) governance acceptance and legal/account/actual delivery/deletion/hardware gates remain separate. Current demo/live policies are unchanged.
 
 The [Services/Projects/Footer design](design/services-projects-footer-v1.md) follows the merged Sky Chart Home/App Bar and the [Aureon comparison](reviews/aureon-comparison-2026-09-29.md). Its [review package](reviews/services-projects-footer-design-2026-09-30/index.md) contains three alternatives and the approved Revision 5 field: localized capability words, slow idle rotation and rapid fluid connections from the first scroll. On 2026-09-30 the owner approved the written specification and linked ES/EN copy, then authorized ADE v2 planning and independent review. [RFC-SPF-REDESIGN-V1](rfcs/services-projects-footer-redesign-v1.md) records the accepted narrow runtime/IA supersessions. The design approval itself changed no production files. Subsequent implementation follows the approved plan and human PR merges. Historical implementation descriptions below remain records of delivered baselines; current SPF delivery is summarized next.
 

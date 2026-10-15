@@ -3,6 +3,8 @@ id: PLAN-INDEX
 type: execution-plan-index
 status: APPROVED
 related:
+  - REVIEW-SFC-PLAN-2026-10-14
+  - PLAN-SFC-V1
   - REVIEW-SPF-PLAN-2026-09-30
   - PLAN-SPF-V1
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
@@ -25,7 +27,7 @@ related:
   - RFC-ADE-AGENT-USAGE-V1
   - ADR-ADE-AGENT-USAGE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-12
+last_verified: 2026-10-14
 ---
 
 # Execution plans
@@ -37,7 +39,7 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 ## Active
 
-None.
+- [PLAN-SFC-V1](active/studio-founder-contact-v1.md): **PROPOSED revision 2 — 2026-10-14; execution NOT AUTHORIZED.** Nineteen ADE task/PR packets, after [Opus 5.5 High's revision-required review](../reviews/studio-founder-contact-plan-review-2026-10-14.md). Q16 authorizes exact Sonnet 5.5 High/GPT-6 Luna High targets, Q17 coordinated integration-branch release, Q18 copy corrections. Added early risk/shared projection/export ownership/candidate CI/actual integration/static-cost/hardware lanes and planning-authority closeout; retains strict TDD/isolated disjoint ownership. Commercial release does not depend on hardware qualification. All35 findings have critical dispositions; independent re-review/owner acceptance are next. No task started; current demo/live decisions remain effective.
 
 ## Completed
 

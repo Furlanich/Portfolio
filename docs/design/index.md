@@ -3,6 +3,7 @@ id: DESIGN-INDEX
 type: design-index
 status: APPROVED
 related:
+  - DESIGN-SFC-V1
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
@@ -16,10 +17,14 @@ related:
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - PROJECTS-EXPERIENCE-CLOSURE
-last_verified: 2026-09-30
+last_verified: 2026-10-14
 ---
 
 # Design documentation
+
+## Studio, Founder, Contact and legal — written review
+
+[DESIGN-SFC-V1](studio-founder-contact-v1.md) written revision 1 is **APPROVED Q14**, with controlled release Q15 and Q16–18 model/staging/copy amendments. The spec now identifies **proposed revision 2 construction/focus/projection clarifications** separately from approved A.2/type/composition. [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) revision 2 and [critical review dispositions](../reviews/studio-founder-contact-plan-review-2026-10-14.md) await independent Opus 5.5 High re-review/owner acceptance; its first review required revision. The [RFC](../rfcs/studio-founder-contact-commercial-atlas-v1.md) still needs Governance PR acceptance. No current demo/live-policy/implementation/legal/hardware acceptance is inferred.
 
 ## Services, Projects and Footer — proposed connected studio
 

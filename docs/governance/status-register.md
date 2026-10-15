@@ -3,6 +3,10 @@ id: GOV-STATUS
 type: decision-register
 status: APPROVED
 related:
+  - REVIEW-SFC-PLAN-2026-10-14
+  - PLAN-SFC-V1
+  - DESIGN-SFC-V1
+  - RFC-SFC-COMMERCIAL-ATLAS-V1
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
@@ -49,10 +53,16 @@ related:
   - PLAN-ADE-AGENT-USAGE-V1
   - ADR-ADE-AGENT-USAGE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-12
+last_verified: 2026-10-14
 ---
 
 # Product knowledge status register
+
+## Studio, Founder, Contact and legal — written review, 2026-10-14
+
+**APPROVED Q14:** complete [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md) written revision 1, linked copy selections and bounded [RFC scope](../rfcs/studio-founder-contact-commercial-atlas-v1.md); author ADE v2 plan. **APPROVED Q15:** predeployment legal/account/provider-probe gates, atomic commercial deployment and immediate actual two-locale delivery/deletion checks with rollback on failure. [SPEC-SFC-V1](../superpowers/specs/2026-10-14-studio-founder-contact-design.md) records approval. **PROPOSED:** [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) revision 2, nineteen task/PR packets, pending independent read-only re-review and owner acceptance. RFC Governance PR acceptance remains pending. Execution/activation are not authorized by design approval; legal, account, live delivery/deletion and hardware evidence remain OPEN. Current demo/live-policy decisions and immutable ADR history are unchanged.
+
+**Review update — 2026-10-14:** independent Opus 5.5 High returned REVISION REQUIRED at bedbed06 (35 findings); [dispositions](../reviews/studio-founder-contact-plan-review-2026-10-14.md) record accepted/adapted/rejected recommendations. **APPROVED Q16:** Sonnet 5.5 High (`claude-sonnet-5-5`) and GPT-6 Luna High (`gpt-6-luna`). **APPROVED Q17:** nondeployed integration PRs/one final main release. **APPROVED Q18:** exact Studio software H1 and acceptance-only Contact success. Additional construction/focus/projection clarifications are proposed with revision 2; re-review/owner acceptance/governance remain pending. Static commercial release and hardware tier qualification are independent; interactive completion cannot be claimed for static fallback. No product code/activation has begun.
 
 ## ADE agent usage — 2026-10-07
 

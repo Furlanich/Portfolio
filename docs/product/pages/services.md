@@ -19,10 +19,21 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-SERVICES-EXPERIENCE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-30
+last_verified: 2026-10-14
 ---
 
 # Services page
+
+## Commercial inquiry consistency — APPROVED target, 2026-10-14
+
+Approved with written revision 1 in Q14; effective only at the coordinated commercial activation.
+
+At the accepted [commercial activation](../../design/studio-founder-contact-v1.md#commercial-contact-and-activation), replace only the final CTA description's demonstration instruction with:
+
+- Spanish: `Samuel revisará personalmente la consulta.`
+- English: `Samuel will personally review your inquiry.`
+
+Keep the CTA destination and Spanish label; normalize the English final action to `Start an inquiry` under the accepted US-English convention. Keep the catalogue, boundaries, evidence, layout and other content intact. The existing Services graph composition/scroll contract is retained; the proposed shared proximity/string response is specified by DESIGN-SFC-V1. These changes are not deployed by this record.
 
 ## Responsibility
 

@@ -17,10 +17,45 @@ related:
   - DESIGN-IX-A11Y
   - PAGE-PROJECTS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-30
+last_verified: 2026-10-14
 ---
 
 # Studio and founder pages
+
+## Redesign target hierarchy — APPROVED 2026-10-14, final design OPEN
+
+The owner retained these reading sequences during the [current design discovery](../../reviews/studio-founder-contact-design-2026-10-14/index.md):
+
+- Studio: identity and operating model → direct accountability/collaborators → principles → location/availability → concise Founder bridge → Contact.
+- Founder: name and biography → CV/LinkedIn/GitHub → experience → education → capabilities → evidence/Projects bridge → Contact.
+
+This target hierarchy replaces the later editorial outline below that moved experience before biography and professional links below capabilities. The owner subsequently approved the complete written design and linked copy in Q14 on 2026-10-14; implementation still requires governance/plan review. The full approved biography, both source-backed experience entries, education and MPC qualifications, capability groups, professional destinations and evidence limits remain intact. Clever Soft SA stays narrative-only. No portrait or new project claim is approved.
+
+The owner selected A.2's yielding/string motion and page-specific compositions and approved the complete [written specification](../../design/studio-founder-contact-v1.md) revision 1 in Q14 on 2026-10-14. The eventual governance record must name the exact visual and runtime constraints it supersedes. Current production presentation and existing ADR history are unchanged by this target decision.
+
+## Atlas redesign copy selection
+
+**APPROVED Q14 — 2026-10-14**, as part of complete written revision 1. Effective through the governed implementation checkpoints; not permission to implement before independent plan review.
+
+This field-level selection closes copy ambiguity for [DESIGN-SFC-V1](../../design/studio-founder-contact-v1.md). Unlisted factual content retains its exact approved wording below. The renderable comparison includes the complete biography, both experience entries, both education entries, the entire MPC qualification, all four capability groups and professional/evidence destinations. The earlier abbreviated comparison is not copy authority.
+
+| Field | Spanish | English |
+| --- | --- | --- |
+| Studio H1 | Software a medida con responsabilidad técnica directa. | Custom software with direct technical accountability. |
+| Studio positioning | FURLANICH diseña, desarrolla y mejora software a medida para negocios que necesitan resolver procesos concretos. | FURLANICH designs, builds, and improves custom software for businesses with concrete operational needs. |
+| Studio graph caption | Responsabilidad central, especialidades conectadas. | Central accountability, connected specialties. |
+| Studio closing description | Omit the demonstration-only sentence only at the coordinated commercial release; no replacement paragraph | Omit the demonstration-only sentence only at the coordinated commercial release; no replacement paragraph |
+| Founder capability introduction | Capacidades para construir y mejorar sistemas | Capabilities for building and improving systems |
+| Founder Projects bridge description | Los proyectos públicos permiten explorar código, contexto y límites. | The public projects let you explore code, context and limitations. |
+| Both pages' final Contact action | Iniciar una consulta | Start an inquiry |
+
+Studio retains the existing eyebrow, accountability/collaborator headings and approved positive paragraphs, four complete principles and their introduction, location/availability, short Founder bridge, and final heading. Its positioning is shortened because the accountability and collaboration sections carry the remaining operating-model facts. It does not repeat the full Founder biography. The separate five-line operating-model list is omitted; its facts remain in the introduction, accountability, collaborator and location sections.
+
+**Q18 amendment APPROVED — 2026-10-14:** the software-focused H1 above replaces the repeated technical-direction H1 selected in revision 1. The caption uses natural US English “specialties”. Both intro actions remain. Q17 stages all page changes on a nondeployed integration branch; every demonstration-dependent Studio/Founder ending/action change takes effect in the same commercial release as Contact/Privacy/Terms/Home/Services. It must not imply working intake while the public form still simulates.
+
+Founder retains the approved role context, name and complete three-paragraph biography before professional links. The short `header.opening` is omitted because the biography already supplies it; no fact is removed. Professional links are underlined text actions with equal secondary treatment, not a solid CV button; their new position follows the owner-confirmed hierarchy. Experience, education, MPC, grouped capabilities, Projects bridge heading/action and final Contact heading/description remain complete. Do not add the employer to the experience timeline, a technology-logo wall, a project-card catalogue or a portrait.
+
+New decorative node words, in binding order: Studio `Responsabilidad / Accountability`, `Alcance / Scope`, `Especialistas / Specialists`, `Revisión / Review`; Founder `.NET`, `React`, `Next.js`, `Blazor`. These words duplicate approved page meaning/capabilities and imply no roster, proficiency rating or evidence claim. Normal text supplies every meaningful fact.
 
 ## SPF-V1 Founder alignment — target decision approved, presentation proposed
 

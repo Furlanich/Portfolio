@@ -3,6 +3,8 @@ id: CONTENT-LOCALIZATION
 type: content-strategy
 status: PROPOSED
 related:
+  - DESIGN-SFC-V1
+  - PAGE-TERMS
   - DESIGN-SPF-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
   - BRAND-POSITIONING
@@ -17,10 +19,18 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-09-30
+last_verified: 2026-10-14
 ---
 
 # Content and localization
+
+## Atlas written-review content — APPROVED target, 2026-10-14
+
+[DESIGN-SFC-V1](../design/studio-founder-contact-v1.md), approved in Q14, links the exact Studio/Founder field selection and complete retained professional facts, commercial Contact state copy, original bilingual Privacy/Terms drafts and bounded Home/Services activation consistency text. The page owners remain authoritative. Existing Spanish voseo and natural US English conventions apply; neither owner design approval, polished translation nor a mockup approves legal sufficiency or unknown processor facts. Terms target routes/labels and equivalence are approved in IA-SITE, subject to governed implementation. Document-wide PROPOSED status remains for unrelated open strategy and professional legal review.
+
+The owner confirmed the existing GitHub Pages origin and `/Portfolio` for the future commercial release as well as the current demonstration. Real transmission still requires the accepted supersession and matching verified disclosure. This does not change hosting, publish the legal drafts or remove the current demonstration's accurate copy before activation.
+
+Q18 approves the exact corrected Studio H1 and acceptance-only commercial success copy in the page owners. Q17 moves every demo-dependent Studio/Founder/Home/Services/intake/legal change into the coordinated final main release. Original legal wording remains professionally gated; final canonical public-copy blocks and typed-export equivalence are assigned in plan revision 2. Ordinary Terms metadata is specified; new OpenGraph/share imagery remains knowingly deferred outside this initiative.
 
 ## Connected-page copy and fragments — APPROVED 2026-09-30
 
