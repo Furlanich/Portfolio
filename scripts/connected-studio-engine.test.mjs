@@ -182,6 +182,8 @@ function createFixture({
   mountBehavior = {},
   onContextLost,
   graph: graphOverride,
+  profile,
+  omitWords = false,
   quality,
   rendererFails = false,
   expectFailure = false,
@@ -208,7 +210,8 @@ function createFixture({
     graph,
     quality: quality ?? graph.quality,
     tier: viewport.tier,
-    words: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+    ...(omitWords ? {} : { words: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] }),
+    ...(profile ? { profile } : {}),
     onContextLost:
       onContextLost ??
       (() => {
@@ -1444,3 +1447,377 @@ for (const viewport of [VIEWPORTS.wide, { width: 768, height: 1024, pixelRatio: 
     source.handle.dispose(); fx.handle.dispose(); native.handle.dispose();
   });
 }
+
+// --- PLAN-SFC-V1 Task 8: pooled flexible paths, the pure projection seam and the gated entry --------------------
+
+const { getConnectedProfile } = await import('../lib/connected-studio/profiles.ts');
+const { anchorToScene, computeProjectionLayout, projectAnchor } = await import('../lib/connected-studio/projection.ts');
+const { evaluateRestEdge } = await import('../lib/connected-studio/rest-path.ts');
+const gatedEntry = await import('../components/connected-studio/runtime/create-connected-scene.ts');
+
+const HALF_FOV_TAN = Math.tan((35 * Math.PI) / 360);
+const RING_COUNT = 13; // twelve segments
+const SIDES = 5;
+
+function atlasFixture(route = 'studio', viewport = VIEWPORTS.wide, extra = {}) {
+  const profile = getConnectedProfile(route, viewport.tier, viewport);
+  const fx = createFixture({ viewport, graph: profile.graph, profile, omitWords: true, ...extra });
+  fx.handle.resize(viewport, profile.graph);
+  return { fx, profile, viewport, layout: computeProjectionLayout(profile, viewport) };
+}
+
+/** An Atlas pose at the rest anchors; `positions` displaces nodes, `samples` supplies the strings, growth defaults to full. */
+function atlasPose(profile, layout, { positions = new Map(), growth = 1, samples } = {}) {
+  const nodes = profile.graph.nodes.map((node) => ({ id: node.id, position: positions.get(node.id) ?? node.anchor, rotation: [0, 0, 0], scale: node.depthScale }));
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const edges = profile.graph.edges.map((edge, index) => ({ id: edge.id, growth: typeof growth === 'function' ? growth(edge, index) : growth }));
+  const edgeSamples = [];
+  profile.graph.edges.forEach((edge, index) => {
+    const points = samples?.({ edge, index, from: byId.get(edge.from).position, to: byId.get(edge.to).position });
+    if (points) edgeSamples.push({ id: edge.id, points });
+  });
+  return { progress: 1, idleAngleRadians: 0, scrollActivity: 0, nodes, edges, projectionLayout: layout, ...(edgeSamples.length ? { edgeSamples } : {}) };
+}
+
+const restOf = (profile, layout, index, from, to, s) => evaluateRestEdge({ nodeStyle: profile.nodeStyle, edgeIndex: index, from, to, layout }, s);
+const sevenRest = (profile, layout, index, from, to) => Array.from({ length: 7 }, (_, j) => restOf(profile, layout, index, from, to, j / 6));
+const pxToAnchorY = (layout, z, px) => px / (layout.height / 2 / (HALF_FOV_TAN * (12 - z)));
+
+/** Bends the interior samples by `pxFor(j)` CSS px in the picture plane; the two ends stay pinned. */
+function bentSamples(profile, layout, edgeIndex, pxFor) {
+  return ({ index, from, to }) => (index === edgeIndex
+    ? sevenRest(profile, layout, index, from, to).map((point, j) => (j === 0 || j === 6 ? point : [point[0], point[1] - pxToAnchorY(layout, point[2], pxFor(j)), point[2]]))
+    : undefined);
+}
+
+/** The edge's longest rest chord, so a bend is plainly visible. */
+function longestEdge(profile) {
+  const nodes = new Map(profile.graph.nodes.map((node) => [node.id, node.anchor]));
+  let best = 0;
+  let bestLength = -1;
+  profile.graph.edges.forEach((edge, index) => {
+    const from = nodes.get(edge.from);
+    const to = nodes.get(edge.to);
+    const length = Math.hypot(to[0] - from[0], to[1] - from[1], to[2] - from[2]);
+    if (length > bestLength) [best, bestLength] = [index, length];
+  });
+  return best;
+}
+
+/** The centre of tube ring `ring` of an edge's block: the five side vertices average to the centreline point. */
+function ringCentre(block, ring) {
+  const centre = [0, 0, 0];
+  for (let side = 0; side < SIDES; side += 1) {
+    for (let axis = 0; axis < 3; axis += 1) centre[axis] += block[(ring * SIDES + side) * 3 + axis] / SIDES;
+  }
+  return centre;
+}
+
+function assertNear(actual, expected, tolerance, label) {
+  expected.forEach((value, axis) => assert.ok(Math.abs(actual[axis] - value) <= tolerance, `${label} axis ${axis}: ${actual[axis]} vs ${value} (tolerance ${tolerance})`));
+}
+
+/** The worst CSS distance between an edge's drawn ring centres and its rest path at the same parameter. */
+function worstDeviationPx(block, profile, layout, pose, edgeIndex) {
+  const edge = profile.graph.edges[edgeIndex];
+  const from = pose.nodes.find((entry) => entry.id === edge.from).position;
+  const to = pose.nodes.find((entry) => entry.id === edge.to).position;
+  let worst = 0;
+  for (let ring = 0; ring < RING_COUNT; ring += 1) {
+    const drawn = ringCentre(block, ring);
+    const actual = projectAnchor([drawn[0] / layout.spreadX, drawn[1] / layout.spreadY, drawn[2] / layout.depthScale], layout);
+    const rest = projectAnchor(restOf(profile, layout, edgeIndex, from, to, ring / (RING_COUNT - 1)), layout);
+    worst = Math.max(worst, Math.hypot(actual.xPx - rest.xPx, actual.yPx - rest.yPx));
+  }
+  return worst;
+}
+
+test('the gated entry reexports the pure profile, interaction and controller factories', () => {
+  assert.equal(typeof gatedEntry.createConnectedScene, 'function');
+  assert.equal(typeof gatedEntry.getConnectedProfile, 'function');
+  assert.equal(typeof gatedEntry.createConnectedInteraction, 'function');
+  assert.equal(typeof gatedEntry.createConnectedController, 'function');
+  assert.equal(typeof gatedEntry.connectedProfileKit.createInteraction, 'function');
+  assert.equal(typeof gatedEntry.connectedProfileKit.computeProjectionLayout, 'function');
+  assert.equal(typeof gatedEntry.connectedProfileKit.resolvePosterProjection, 'function');
+});
+
+test('a profile scene, and a legacy scene, need no legacy words', () => {
+  const { fx, profile, layout } = atlasFixture();
+  assert.doesNotThrow(() => fx.handle.render(atlasPose(profile, layout)));
+  const legacy = createFixture({ omitWords: true });
+  assert.doesNotThrow(() => {
+    legacy.handle.resize(legacy.viewport, legacy.graph);
+    legacy.handle.render(restPose(legacy.graph, 'wide', 0.5));
+  });
+});
+
+test('Atlas strings keep both ends on their nodes and pass through the five interior samples', () => {
+  const { fx, profile, layout } = atlasFixture();
+  const edgeIndex = longestEdge(profile);
+  const pose = atlasPose(profile, layout, { samples: bentSamples(profile, layout, edgeIndex, (j) => 5 * (j % 2 ? 1 : -1)) });
+  fx.handle.render(pose);
+  const block = PATH_BLOCK(drawnByRole(fx).paths)(edgeIndex);
+  const edge = profile.graph.edges[edgeIndex];
+  const node = (id) => anchorToScene(pose.nodes.find((entry) => entry.id === id).position, layout);
+  assertNear(ringCentre(block, 0), node(edge.from), 1e-5, 'ring 0 sits on the from node');
+  assertNear(ringCentre(block, RING_COUNT - 1), node(edge.to), 1e-5, 'the last ring sits on the to node');
+  const samples = pose.edgeSamples.find((entry) => entry.id === edge.id).points;
+  for (let j = 1; j <= 5; j += 1) assertNear(ringCentre(block, 2 * j), anchorToScene(samples[j], layout), 1e-5, `interior sample ${j}`);
+  assert.equal(block.length / 3, RING_COUNT * SIDES, 'twelve segments per connection');
+});
+
+test('the rendered string never leaves the CSS cap, even where the cubic would overshoot', () => {
+  for (const [route, viewport] of [['studio', VIEWPORTS.wide], ['founder', VIEWPORTS.tablet], ['contact', VIEWPORTS.compact], ['contact', VIEWPORTS.wide]]) {
+    const { fx, profile, layout } = atlasFixture(route, viewport);
+    const cap = profile.input.edgeCapPx;
+    const edgeIndex = longestEdge(profile);
+    const pose = atlasPose(profile, layout, { samples: bentSamples(profile, layout, edgeIndex, (j) => cap * 3 * (j % 2 ? 1 : -1)) });
+    fx.handle.render(pose);
+    const worst = worstDeviationPx(PATH_BLOCK(drawnByRole(fx).paths)(edgeIndex), profile, layout, pose, edgeIndex);
+    assert.ok(worst <= cap + 0.01, `${route} ${viewport.tier}: ring centres deviate ${worst}px against a ${cap}px cap`);
+    assert.ok(worst >= cap * 0.9, `${route} ${viewport.tier}: a push far past the cap is rendered at the cap, got ${worst}px`);
+    fx.handle.dispose();
+  }
+});
+
+test('growth and the tracer ride the deformed string, not the rest path', () => {
+  const { fx, profile, layout } = atlasFixture();
+  const edgeIndex = longestEdge(profile);
+  const pose = atlasPose(profile, layout, {
+    growth: (_, index) => (index === edgeIndex ? 0.5 : 1),
+    samples: bentSamples(profile, layout, edgeIndex, () => 8),
+  });
+  fx.handle.render(pose);
+  const edge = profile.graph.edges[edgeIndex];
+  const block = PATH_BLOCK(drawnByRole(fx).paths)(edgeIndex);
+  const samples = pose.edgeSamples.find((entry) => entry.id === edge.id).points;
+  const tip = anchorToScene(samples[3], layout);
+  assertNear(ringCentre(block, 6), tip, 1e-5, 'the ring at half the length is the middle string sample');
+  assertNear(ringCentre(block, 12), tip, 1e-5, 'rings beyond the grown length collapse onto the deformed tip');
+  assertNear(ringCentre(block, 4), anchorToScene(samples[2], layout), 1e-5, 'a grown ring is on the deformed string');
+  const tracers = sceneByRole(fx, 'tracers');
+  assert.equal(tracers.count, 1, 'one connection is mid-growth');
+  const matrix = new Matrix4();
+  tracers.getMatrixAt(0, matrix);
+  assertNear(translationOf(matrix).toArray(), tip, 1e-5, 'the tracer rides the deformed tip');
+  const from = pose.nodes.find((entry) => entry.id === edge.from).position;
+  const to = pose.nodes.find((entry) => entry.id === edge.to).position;
+  const rest = anchorToScene(restOf(profile, layout, edgeIndex, from, to, 0.5), layout);
+  assert.ok(Math.hypot(tip[0] - rest[0], tip[1] - rest[1]) > 0.01, 'the fixture really deforms the string');
+});
+
+test('coincident endpoints leave every buffer finite', () => {
+  const { fx, profile, layout } = atlasFixture();
+  const edge = profile.graph.edges[0];
+  const target = profile.graph.nodes.find((node) => node.id === edge.from).anchor;
+  const positions = new Map([[edge.to, target]]);
+  for (const growth of [1, 0.5, 0]) {
+    fx.handle.render(atlasPose(profile, layout, { positions, growth, samples: ({ from }) => Array.from({ length: 7 }, () => from) }));
+    for (const role of ['paths', 'skeleton', 'nodes', 'rings', 'beads', 'tracers']) {
+      const object = sceneByRole(fx, role);
+      const values = object.isInstancedMesh ? object.instanceMatrix.array.slice(0, object.count * 16) : object.geometry.getAttribute('position').array;
+      assert.ok(Array.from(values).every(Number.isFinite), `${role} stays finite at growth ${growth}`);
+    }
+  }
+});
+
+test('hostile string entries never produce non-finite geometry: NaN, unknown ids and missing points', () => {
+  const { fx, profile, layout } = atlasFixture();
+  const edges = profile.graph.edges;
+  const anchorOf = (id) => profile.graph.nodes.find((node) => node.id === id).anchor;
+  const rest = (index) => sevenRest(profile, layout, index, anchorOf(edges[index].from), anchorOf(edges[index].to));
+  const hostile = {
+    ...atlasPose(profile, layout),
+    edgeSamples: [
+      { id: edges[0].id, points: rest(0).map((p, j) => (j === 3 ? [Number.NaN, Number.POSITIVE_INFINITY, 0] : p)) },
+      { id: 'no-such-edge', points: rest(1) },
+      { id: edges[2].id, points: undefined },
+    ],
+  };
+  assert.doesNotThrow(() => fx.handle.render(hostile));
+  assert.equal(fx.lost.count, 0, 'a hostile string is not a lost context');
+  assert.ok(Array.from(drawnByRole(fx).paths.geometry.getAttribute('position').array).every(Number.isFinite));
+});
+
+test('legacy connections without strings are exactly the SPF quadratic rest curve', () => {
+  const fx = drawFixture(VIEWPORTS.wide, 1);
+  fx.handle.render(movedPose(restPose(fx.graph, 'wide', 1), fx.graph.nodes[3].id, [0.5, -0.3, 0.2]));
+  const nodes = drawnByRole(fx).nodes;
+  const matrix = new Matrix4();
+  const scenePosition = fx.graph.nodes.map((_, index) => (nodes.getMatrixAt(index, matrix), translationOf(matrix)));
+  const nodeIndex = new Map(fx.graph.nodes.map((node, index) => [node.id, index]));
+  const block = PATH_BLOCK(drawnByRole(fx).paths);
+  fx.graph.edges.forEach((edge, index) => {
+    const a = scenePosition[nodeIndex.get(edge.from)];
+    const b = scenePosition[nodeIndex.get(edge.to)];
+    const sign = ((((index + 1) * 2654435761) >>> 0) % 2) === 0 ? 1 : -1;
+    const chord = b.clone().sub(a);
+    const length = chord.length();
+    const normal = new Vector3(-chord.y, chord.x, 0);
+    if (normal.lengthSq() < 1e-12) normal.set(0, 1, 0);
+    normal.normalize();
+    const control = a.clone().add(b).multiplyScalar(0.5).addScaledVector(normal, 0.16 * length * sign);
+    control.z += 0.16 * length * 0.35 * sign;
+    for (const ring of [0, 3, 6, 9, 12]) {
+      const u = ring / 12;
+      const expected = a.clone().multiplyScalar((1 - u) ** 2).addScaledVector(control, 2 * (1 - u) * u).addScaledVector(b, u * u);
+      assertNear(ringCentre(block(index), ring), expected.toArray(), 1e-4, `edge ${index} ring ${ring}`);
+    }
+  });
+});
+
+test('Atlas rest connections are straight', () => {
+  const { fx, profile, layout } = atlasFixture();
+  fx.handle.render(atlasPose(profile, layout));
+  const block = PATH_BLOCK(drawnByRole(fx).paths);
+  profile.graph.edges.forEach((edge, index) => {
+    const from = ringCentre(block(index), 0);
+    const to = ringCentre(block(index), RING_COUNT - 1);
+    for (let ring = 1; ring < RING_COUNT - 1; ring += 1) {
+      const u = ring / (RING_COUNT - 1);
+      assertNear(ringCentre(block(index), ring), from.map((value, axis) => value + (to[axis] - value) * u), 1e-5, `edge ${index} ring ${ring}`);
+    }
+  });
+});
+
+test('strings reuse the pooled buffers: no new resources, draw calls or buffer objects across many frames', () => {
+  const { fx, profile, layout } = atlasFixture();
+  const edgeIndex = longestEdge(profile);
+  const second = profile.graph.nodes[2];
+  const framePose = (frame) => atlasPose(profile, layout, {
+    growth: (_, index) => (index % 3 === 0 ? ((frame % 9) + 1) / 10 : 1),
+    positions: new Map([[second.id, [second.anchor[0] + 0.01 * frame, second.anchor[1], second.anchor[2]]]]),
+    samples: bentSamples(profile, layout, edgeIndex, (j) => 3 * Math.sin(frame + j)),
+  });
+  fx.handle.render(framePose(0));
+  const first = fx.handle.diagnostics();
+  const paths = drawnByRole(fx).paths;
+  const array = paths.geometry.getAttribute('position').array;
+  const sceneChildren = fx.state.lastScene.children.length;
+  const gpuSizes = () => Object.fromEntries(Object.entries(fx.state.gpu).map(([kind, set]) => [kind, set.size]));
+  const gpu = gpuSizes();
+  for (let frame = 1; frame <= 60; frame += 1) fx.handle.render(framePose(frame));
+  const last = fx.handle.diagnostics();
+  assert.deepEqual(
+    { geometries: last.geometries, materials: last.materials, textures: last.textures, drawables: last.drawables },
+    { geometries: first.geometries, materials: first.materials, textures: first.textures, drawables: first.drawables },
+  );
+  assert.equal(last.renderCount, first.renderCount + 60);
+  assert.ok(last.drawCalls <= 28, `draw calls stay within 28, got ${last.drawCalls}`);
+  assert.ok(Math.abs(last.drawCalls - first.drawCalls) <= 1, 'only the tracer batch may join or leave the draw');
+  assert.equal(drawnByRole(fx).paths, paths, 'the same path mesh');
+  assert.equal(paths.geometry.getAttribute('position').array, array, 'the same position buffer, rewritten in place');
+  assert.equal(fx.state.lastScene.children.length, sceneChildren);
+  assert.deepEqual(gpuSizes(), gpu, 'the renderer holds no new GPU resource');
+  assert.equal(fx.state.disposeEvents.size, 0, 'nothing was released or rebuilt while drawing');
+});
+
+test('repeated resize, render and dispose of an Atlas scene retain only what the scene needs', () => {
+  const wide = atlasFixture('studio', VIEWPORTS.wide);
+  const { fx } = wide;
+  const compactProfile = getConnectedProfile('studio', 'compact', VIEWPORTS.compact);
+  const compactLayout = computeProjectionLayout(compactProfile, VIEWPORTS.compact);
+  const counts = [];
+  for (let cycle = 0; cycle < 8; cycle += 1) {
+    fx.handle.resize(VIEWPORTS.compact, compactProfile.graph, compactProfile);
+    fx.handle.render(atlasPose(compactProfile, compactLayout));
+    fx.handle.resize(VIEWPORTS.wide, wide.profile.graph, wide.profile);
+    fx.handle.render(atlasPose(wide.profile, wide.layout));
+    const d = fx.handle.diagnostics();
+    counts.push({ geometries: d.geometries, materials: d.materials, textures: d.textures, gpu: Object.values(fx.state.gpu).map((set) => set.size).join() });
+  }
+  assert.deepEqual(counts.at(-1), counts[1], 'the eighth cycle retains exactly what the second did');
+  fx.handle.dispose();
+  for (const kind of ['geometry', 'material', 'texture', 'instanced']) assert.equal(fx.state.gpu[kind].size, 0, `no ${kind} survives disposal`);
+  for (const [resource, events] of fx.state.disposeEvents) assert.equal(events, 1, `${resource.constructor.name} is released once`);
+  assert.doesNotThrow(() => fx.handle.dispose());
+  assert.doesNotThrow(() => fx.handle.render(atlasPose(wide.profile, wide.layout)));
+});
+
+test('a tier change with the new profile follows its CSS cap', () => {
+  const wide = atlasFixture('studio', VIEWPORTS.wide);
+  const compactProfile = getConnectedProfile('studio', 'compact', VIEWPORTS.compact);
+  const compactLayout = computeProjectionLayout(compactProfile, VIEWPORTS.compact);
+  wide.fx.handle.resize(VIEWPORTS.compact, compactProfile.graph, compactProfile);
+  const edgeIndex = longestEdge(compactProfile);
+  const pose = atlasPose(compactProfile, compactLayout, { samples: bentSamples(compactProfile, compactLayout, edgeIndex, (j) => 40 * (j % 2 ? 1 : -1)) });
+  wide.fx.handle.render(pose);
+  assert.equal(compactProfile.input.edgeCapPx, 6);
+  const worst = worstDeviationPx(PATH_BLOCK(drawnByRole(wide.fx).paths)(edgeIndex), compactProfile, compactLayout, pose, edgeIndex);
+  assert.ok(worst <= 6.01, `the compact cap of 6px holds, got ${worst}px`);
+  assert.ok(worst >= 5.4, `and is reached, got ${worst}px`);
+});
+
+test('the renderer draws the frame the controller resolved and never applies a second poster transform', () => {
+  const fx = createFixture();
+  fx.handle.resize(fx.viewport, fx.graph);
+  const native = computeProjectionLayout({ nodeStyle: 'legacy', graph: fx.graph }, fx.viewport);
+  const base = restPose(fx.graph, 'wide', 0.6);
+  fx.handle.render({ ...base, projectionLayout: native });
+  const plain = instancesOf(fx, 'nodes').map((m) => Array.from(m.elements));
+  const plainLabels = fx.handle.projectLabels({ ...base, projectionLayout: native });
+  fx.handle.render({ ...base, projectionLayout: native, posterBlend: 1 });
+  assert.deepEqual(instancesOf(fx, 'nodes').map((m) => Array.from(m.elements)), plain, 'a resolved frame is not blended with the poster again');
+  assert.deepEqual(fx.handle.projectLabels({ ...base, projectionLayout: native, posterBlend: 1 }), plainLabels, 'nor are its labels');
+
+  // A resolved frame the runtime could not have derived itself: scaled with a crop, as the poster settle produces.
+  const frame = { ...native, width: native.width * 1.25, height: native.height * 1.25, crop: { x: 90, y: 40, width: native.width, height: native.height } };
+  fx.handle.render({ ...base, projectionLayout: frame });
+  instancesOf(fx, 'nodes').forEach((matrix, index) => {
+    const wanted = projectAnchor(base.nodes[index].position, frame);
+    const drawn = screenPoint(fx, translationOf(matrix));
+    assert.ok(Math.hypot(drawn.x - wanted.xPx, drawn.y - wanted.yPx) < 0.01, `node ${index} is drawn where the resolved frame puts it`);
+  });
+  fx.handle.projectLabels({ ...base, projectionLayout: frame }).forEach((label, index) => {
+    const wanted = projectAnchor(base.nodes[index].position, frame);
+    assert.ok(Math.abs(label.xPx - wanted.xPx) < 1e-6 && label.yPx > wanted.yPx, `label ${index} follows the resolved frame`);
+    assert.equal(label.inView, wanted.inView);
+  });
+});
+
+test('an Atlas scene draws the specified 18px ring on wide', () => {
+  const { fx, profile, layout } = atlasFixture();
+  fx.handle.render(atlasPose(profile, layout));
+  const rings = instancesOf(fx, 'rings');
+  // The node nearest the view axis, where a ring turned to face the camera is least foreshortened.
+  const nearest = profile.graph.nodes
+    .map((node, index) => {
+      const at = projectAnchor(node.anchor, layout);
+      return [Math.hypot(at.xPx - layout.width / 2, at.yPx - layout.height / 2), index];
+    })
+    .sort((a, b) => a[0] - b[0])[0][1];
+  const centre = screenPoint(fx, translationOf(rings[nearest]));
+  const edge = screenPoint(fx, new Vector3(0.39, 0, 0).applyMatrix4(rings[nearest]));
+  const diameter = 2 * Math.hypot(edge.x - centre.x, edge.y - centre.y);
+  const expected = (18 * 12) / (12 - profile.graph.nodes[nearest].anchor[2]);
+  assert.ok(Math.abs(diameter - expected) < 0.6, `the ring is ${diameter}px across, expected about ${expected}px`);
+});
+
+test('a tighter cap for the same graph is applied in place, without rebuilding any resource', () => {
+  const { fx, profile, layout } = atlasFixture();
+  const edgeIndex = longestEdge(profile);
+  const pose = atlasPose(profile, layout, { samples: bentSamples(profile, layout, edgeIndex, (j) => 40 * (j % 2 ? 1 : -1)) });
+  fx.handle.render(pose);
+  const before = fx.handle.diagnostics();
+  const tighter = { ...profile, input: { ...profile.input, edgeCapPx: 4 } };
+  fx.handle.resize(VIEWPORTS.wide, profile.graph, tighter);
+  fx.handle.render(pose);
+  const after = fx.handle.diagnostics();
+  assert.deepEqual({ geometries: after.geometries, materials: after.materials, textures: after.textures }, { geometries: before.geometries, materials: before.materials, textures: before.textures });
+  assert.equal(fx.state.disposeEvents.size, 0, 'nothing was rebuilt');
+  const worst = worstDeviationPx(PATH_BLOCK(drawnByRole(fx).paths)(edgeIndex), profile, layout, pose, edgeIndex);
+  assert.ok(worst <= 4.01 && worst >= 3.6, `the 4px cap now holds, got ${worst}px`);
+});
+
+test('the faint skeleton follows the deformed string, so no ghost of the rest path is left beside it', () => {
+  const { fx, profile, layout } = atlasFixture();
+  const edgeIndex = longestEdge(profile);
+  const bent = atlasPose(profile, layout, { samples: bentSamples(profile, layout, edgeIndex, () => 12) });
+  fx.handle.render(bent);
+  const skeleton = drawnByRole(fx).skeleton.geometry.getAttribute('position').array;
+  const perEdge = 14 * 2 * 3;
+  const midpoint = [skeleton[edgeIndex * perEdge + 7 * 6], skeleton[edgeIndex * perEdge + 7 * 6 + 1], skeleton[edgeIndex * perEdge + 7 * 6 + 2]];
+  const samples = bent.edgeSamples.find((entry) => entry.id === profile.graph.edges[edgeIndex].id).points;
+  assertNear(midpoint, anchorToScene(samples[3], layout), 1e-5, 'the skeleton passes through the middle string sample');
+});

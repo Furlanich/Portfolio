@@ -1,7 +1,7 @@
 import { Color, DirectionalLight, Fog, HemisphereLight, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { CAMERA_FAR, CAMERA_FOV_DEGREES, CAMERA_NEAR, CAMERA_Z, computeConnectedLayout, createGraphBatch } from './connected-geometry.ts';
-import type { ConnectedGraphBatch, ConnectedLayout } from './connected-geometry';
+import { CAMERA_FAR, CAMERA_FOV_DEGREES, CAMERA_NEAR, CAMERA_Z, DEFAULT_EDGE_CAP_PX, computeConnectedLayout, createGraphBatch } from './connected-geometry.ts';
+import type { ConnectedGraphBatch, ConnectedLayout, ConnectedPathOptions } from './connected-geometry';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { resolveConnectedProjection } from './connected-projection.ts';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
@@ -11,6 +11,7 @@ import { createResourceTracker, disposeConnectedScene } from './dispose-connecte
 import type { ResourceTracker } from './dispose-connected-scene';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
 import { getQualityForTier, isConnectedTier } from '../../../lib/connected-studio/model.ts';
+import type { ConnectedSceneProfile } from '../../../lib/connected-studio/profiles';
 import type {
   CapabilityWords,
   ConnectedQuality,
@@ -30,9 +31,28 @@ export type ConnectedSceneOptions = {
   graph: GraphDefinition;
   quality: ConnectedQuality;
   tier: ConnectedTier;
-  words: CapabilityWords;
+  /** Legacy capability words. The scene never draws them (the host's label layer does); profile routes pass none. */
+  words?: CapabilityWords;
+  /**
+   * A route profile. It selects the rest style of the connections (straight on Atlas routes) and the CSS cap of
+   * their strings. Without one the scene is the legacy Services/Projects scene, unchanged.
+   */
+  profile?: ConnectedSceneProfile;
   onContextLost(): void;
 };
+
+/** A `SceneHandle` whose `resize` can also take the profile of the new tier, whose string cap differs per tier. */
+export type ConnectedSceneHandle = Omit<SceneHandle, 'resize'> & {
+  resize(viewport: SceneViewport, graph: GraphDefinition, profile?: ConnectedSceneProfile): void;
+};
+
+// The gated entry: the pure factories ride in the same optional closure as the renderer (PLAN-SFC-V1 W1).
+// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
+export { getConnectedProfile } from '../../../lib/connected-studio/profiles.ts';
+// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
+export { connectedProfileKit, createConnectedInteraction } from '../../../lib/connected-studio/interaction.ts';
+// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
+export { createConnectedController } from '../../../lib/connected-studio/controller.ts';
 
 export type ConnectedRendererLike = Pick<
   WebGLRenderer,
@@ -78,15 +98,37 @@ const PIXEL_RATIO_CAP: Record<ConnectedTier, number> = { wide: 1.5, tablet: 1.5,
 
 type Scope = { graph: GraphDefinition; batch: ConnectedGraphBatch; tracker: ResourceTracker };
 
+function pathOptionsOf(profile: ConnectedSceneProfile | undefined): ConnectedPathOptions {
+  return profile ? { nodeStyle: profile.nodeStyle, edgeCapPx: profile.input.edgeCapPx } : { nodeStyle: 'legacy', edgeCapPx: DEFAULT_EDGE_CAP_PX };
+}
+
 /** Builds one graph's resources into their own tracker, and releases whatever was built if it fails part-way. */
-function buildScope(graph: GraphDefinition): Scope {
+function buildScope(graph: GraphDefinition, paths: ConnectedPathOptions): Scope {
   const tracker = createResourceTracker();
   try {
-    return { graph, batch: createGraphBatch(graph, tracker), tracker };
+    return { graph, batch: createGraphBatch(graph, tracker, paths), tracker };
   } catch (error) {
     tracker.release();
     throw error;
   }
+}
+
+/** Two resolved frames that need the same camera and the same distant-point fit. */
+function sameFrame(a: ConnectedLayout, b: ConnectedLayout): boolean {
+  if (a === b) return true;
+  return (
+    a.width === b.width &&
+    a.height === b.height &&
+    a.aspect === b.aspect &&
+    a.pointScale === b.pointScale &&
+    a.spreadX === b.spreadX &&
+    a.spreadY === b.spreadY &&
+    a.depthScale === b.depthScale &&
+    a.crop?.x === b.crop?.x &&
+    a.crop?.y === b.crop?.y &&
+    a.crop?.width === b.crop?.width &&
+    a.crop?.height === b.crop?.height
+  );
 }
 
 function usableViewport(viewport: SceneViewport): boolean {
@@ -129,7 +171,7 @@ function initError(reason: string, cause?: unknown): Error {
 export function createConnectedScene(
   options: ConnectedSceneOptions,
   factories: ConnectedSceneFactories = defaultFactories,
-): SceneHandle {
+): ConnectedSceneHandle {
   // Incoherent options fail before any canvas, context or resource exists.
   if (!isConnectedTier(options.tier)) throw initError('unknown tier');
   if (options.graph.quality !== options.quality || options.graph.quality !== getQualityForTier(options.tier)) {
@@ -174,20 +216,23 @@ export function createConnectedScene(
   // mount and the first layout included, runs under one guard that releases whatever exists so far.
   let scope: Scope;
   let layout: ConnectedLayout;
+  // The route's profile as last given: it decides the rest style and the string cap, and the Atlas poster fallback.
+  let profile: ConnectedSceneProfile | undefined = options.profile;
+  const nodeStyleOf = () => profile?.nodeStyle ?? 'legacy';
   let building: ResourceTracker | undefined;
   let reason = 'the scene could not be assembled';
   try {
     camera.position.set(0, 0, CAMERA_Z);
     camera.updateMatrixWorld();
     reason = 'the graph could not be built';
-    scope = buildScope(options.graph);
+    scope = buildScope(options.graph, pathOptionsOf(profile));
     building = scope.tracker;
     reason = 'the scene could not be assembled';
     createEnvironment(scene);
     scene.add(scope.batch.group);
     canvas.addEventListener('webglcontextlost', handleContextLost);
     options.mount.appendChild(canvas);
-    layout = computeConnectedLayout(DEFAULT_VIEWPORT[options.tier], options.graph);
+    layout = computeConnectedLayout(DEFAULT_VIEWPORT[options.tier], options.graph, nodeStyleOf());
     scope.batch.fit(layout);
   } catch (cause) {
     disposed = true;
@@ -196,6 +241,11 @@ export function createConnectedScene(
   }
   let renderCount = 0;
   let projectedLayout = layout;
+  // Only the Atlas poster fallback reads the rest anchors, and only while they belong to the graph being drawn.
+  const projectionProfile = () => ({
+    nodeStyle: nodeStyleOf(),
+    restAnchors: profile && profile.graph === scope.graph ? profile.restAnchors : undefined,
+  });
   const projectCamera = (next: ConnectedLayout) => {
     camera.aspect = next.aspect;
     if (next.crop) camera.setViewOffset(next.width, next.height, next.crop.x, next.crop.y, next.crop.width, next.crop.height);
@@ -207,8 +257,8 @@ export function createConnectedScene(
     render(pose: ScenePose) {
       if (disposed || lost) return;
       try {
-        const projected = resolveConnectedProjection(scope.graph, pose, layout);
-        if (projected.layout !== projectedLayout) {
+        const projected = resolveConnectedProjection(scope.graph, pose, layout, projectionProfile());
+        if (!sameFrame(projected.layout, projectedLayout)) {
           scope.batch.fit(projected.layout);
           projectCamera(projected.layout);
           projectedLayout = projected.layout;
@@ -221,13 +271,16 @@ export function createConnectedScene(
         reportLoss();
       }
     },
-    resize(viewport: SceneViewport, graph: GraphDefinition) {
+    resize(viewport: SceneViewport, graph: GraphDefinition, nextProfile?: ConnectedSceneProfile) {
       if (disposed || lost || !usableViewport(viewport) || graph.quality !== getQualityForTier(viewport.tier)) return;
+      // The profile of the new tier decides the string cap; one that does not describe this graph and tier is ignored.
+      const adopted = nextProfile && nextProfile.graph === graph && nextProfile.tier === viewport.tier ? nextProfile : undefined;
+      const paths = pathOptionsOf(adopted ?? profile);
       // Build the new graph beside the old one: a failed rebuild leaves the running scene untouched.
       let next: Scope | undefined;
       if (graph !== scope.graph) {
         try {
-          next = buildScope(graph);
+          next = buildScope(graph, paths);
         } catch {
           return;
         }
@@ -235,7 +288,7 @@ export function createConnectedScene(
       try {
         // Everything that can fail runs against the new graph and the renderer first, and the swap is the
         // last step, so a failure never leaves a mixture of the old and the new graph.
-        const nextLayout = computeConnectedLayout(viewport, graph);
+        const nextLayout = computeConnectedLayout(viewport, graph, adopted?.nodeStyle ?? nodeStyleOf());
         (next ?? scope).batch.fit(nextLayout);
         const ratio = Number.isFinite(viewport.pixelRatio) && viewport.pixelRatio > 0 ? viewport.pixelRatio : 1;
         renderer.setPixelRatio(Math.min(PIXEL_RATIO_CAP[viewport.tier], ratio));
@@ -248,6 +301,8 @@ export function createConnectedScene(
           scope = next;
           previous.tracker.release();
         }
+        (next ?? scope).batch.configure(paths);
+        if (adopted) profile = adopted;
         layout = nextLayout;
         projectedLayout = nextLayout;
       } catch {
@@ -258,7 +313,7 @@ export function createConnectedScene(
       }
     },
     projectLabels(pose: ScenePose): readonly LabelProjection[] {
-      const projected = resolveConnectedProjection(scope.graph, pose, layout);
+      const projected = resolveConnectedProjection(scope.graph, pose, layout, projectionProfile());
       return projectConnectedLabels(scope.graph, projected.pose, projected.layout);
     },
     diagnostics(): SceneDiagnostics {

@@ -23,19 +23,20 @@ import {
   Vector3,
 } from 'three';
 // @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
-import { MAX_NODE_TRAVEL, getTravelScale } from '../../../lib/connected-studio/model.ts';
+import { CAMERA_FOV_DEGREES, CAMERA_NEAR, CAMERA_Z, HALF_FOV_TAN, RING_RADIUS, anchorToScene, computeProjectionLayout } from '../../../lib/connected-studio/projection.ts';
+// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
+import { PATH_SEGMENTS, createEdgePath } from './connected-paths.ts';
 import type { ResourceTracker } from './dispose-connected-scene';
-import type { ConnectedQuality, ConnectedTier, GraphDefinition, ScenePose } from '../../../lib/connected-studio/types';
+import type { ConnectedNodeStyle } from '../../../lib/connected-studio/profiles';
+import type { ConnectedProjectionLayout, ConnectedQuality, ConnectedTier, GraphDefinition, ScenePose } from '../../../lib/connected-studio/types';
 
 // --- layout: one fixed camera, a field spread to the viewport --------------------------------------
-// Scene units: x right, y up, z toward the camera. The camera never moves, rolls or zooms; the
-// field is spread to the viewport instead, so the graph fills any aspect ratio without a fly-through.
+// Scene units: x right, y up, z toward the camera. The camera never moves, rolls or zooms. The camera constants,
+// the legacy spread-to-viewport fit, the poster blend and every conversion live in the pure projection seam
+// (lib/connected-studio/projection.ts); this module only draws what that seam resolves.
 
-export const CAMERA_Z = 12;
-export const CAMERA_FOV_DEGREES = 35;
-export const CAMERA_NEAR = 1;
+export { CAMERA_FOV_DEGREES, CAMERA_NEAR, CAMERA_Z, HALF_FOV_TAN, RING_RADIUS };
 export const CAMERA_FAR = 40;
-export const HALF_FOV_TAN = Math.tan((CAMERA_FOV_DEGREES * Math.PI) / 360);
 
 /**
  * The node look (owner direction, 2026-10-12, superseding DESIGN-SPF-V1's sphere-and-orbit proportions): a
@@ -43,48 +44,14 @@ export const HALF_FOV_TAN = Math.tan((CAMERA_FOV_DEGREES * Math.PI) / 360);
  * rides the ring and turns with the slow idle rotation, which is how "nodes/rings rotate slowly at rest" stays
  * visible on a flat node. Scene units at node scale 1; the ring is the label anchor (connected-labels.ts).
  */
-export const RING_RADIUS = 0.39;
 export const NODE_RADIUS = 0.14;
 const RING_THICKNESS = 0.03;
 const BEAD_RADIUS = 0.05;
 
-/** Target on-screen ring diameter in CSS px at the reference viewport height (Sonnet tuning, PC-7). */
-const RING_DIAMETER_PX: Record<ConnectedTier, { px: number; referenceHeight: number }> = {
-  wide: { px: 44, referenceHeight: 900 },
-  tablet: { px: 38, referenceHeight: 1024 },
-  compact: { px: 30, referenceHeight: 844 },
-};
-/** Path tube radius in CSS px, so connections read the same at any viewport size. */
-const PATH_RADIUS_PX: Record<ConnectedTier, number> = { wide: 1.7, tablet: 1.5, compact: 1.4 };
-/** Tracer bead radius in CSS px. */
-const TRACER_RADIUS_PX: Record<ConnectedTier, number> = { wide: 2.8, tablet: 2.5, compact: 2.3 };
-/** How far toward the viewport edge the farthest node (plus its travel) may reach, per axis. */
-const FIT_X: Record<ConnectedTier, number> = { wide: 0.96, tablet: 0.94, compact: 0.88 };
-const FIT_Y: Record<ConnectedTier, number> = { wide: 0.9, tablet: 0.9, compact: 0.9 };
-const SPREAD_MIN = 0.5;
-const SPREAD_MAX = 2.2;
-/** Curvature of a connection: the control point leaves the chord by this share of its length. */
-const PATH_BOW = 0.16;
-
 export type ConnectedViewport = { width: number; height: number; tier: ConnectedTier };
 
-export type ConnectedLayout = {
-  width: number;
-  height: number;
-  tier: ConnectedTier;
-  aspect: number;
-  /** Viewport crop inside the full projection; only set during the initial poster settle. */
-  crop?: { x: number; y: number; width: number; height: number };
-  spreadX: number;
-  spreadY: number;
-  /** `getTravelScale(tier)`: restrains depth on tablet and compact. */
-  depthScale: number;
-  nodeScale: number;
-  pathRadius: number;
-  tracerRadius: number;
-  /** CSS-size distant sprites follow the poster cover scale during its initial settle. */
-  pointScale?: number;
-};
+/** The resolved projection frame: structurally the pure model's `ConnectedProjectionLayout`. */
+export type ConnectedLayout = ConnectedProjectionLayout;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -94,45 +61,15 @@ function finiteOr(value: number, fallback: number): number {
   return Number.isFinite(value) ? value : fallback;
 }
 
-/** Perspective factor of a point at scene depth `z`, relative to the plane the camera frames. */
-function perspectiveAt(z: number): number {
-  return CAMERA_Z / Math.max(CAMERA_NEAR, CAMERA_Z - z);
+/** The native frame for a viewport, from the pure seam. Legacy unless the scene draws an Atlas profile. */
+export function computeConnectedLayout(viewport: ConnectedViewport, graph: GraphDefinition, nodeStyle: ConnectedNodeStyle = 'legacy'): ConnectedLayout {
+  return computeProjectionLayout({ nodeStyle, graph }, viewport);
 }
 
-export function computeConnectedLayout(viewport: ConnectedViewport, graph: GraphDefinition): ConnectedLayout {
-  const { width, height, tier } = viewport;
-  const aspect = width / height;
-  const halfHeight = CAMERA_Z * HALF_FOV_TAN;
-  const halfWidth = halfHeight * aspect;
-  const depthScale = getTravelScale(tier);
-  const margin = MAX_NODE_TRAVEL * depthScale;
-  let needX = 0;
-  let needY = 0;
-  for (const node of graph.nodes) {
-    const perspective = perspectiveAt(node.anchor[2] * depthScale);
-    needX = Math.max(needX, ((Math.abs(node.anchor[0]) + margin) * perspective) / halfWidth);
-    needY = Math.max(needY, ((Math.abs(node.anchor[1]) + margin) * perspective) / halfHeight);
-  }
-  const unitsPerPx = (2 * halfHeight) / height;
-  const ring = RING_DIAMETER_PX[tier];
-  const ringPx = ring.px * clamp(height / ring.referenceHeight, 0.85, 1.35);
-  return {
-    width,
-    height,
-    tier,
-    aspect,
-    spreadX: needX > 0 ? clamp(FIT_X[tier] / needX, SPREAD_MIN, SPREAD_MAX) : 1,
-    spreadY: needY > 0 ? clamp(FIT_Y[tier] / needY, SPREAD_MIN, SPREAD_MAX) : 1,
-    depthScale,
-    nodeScale: (ringPx * unitsPerPx) / (2 * RING_RADIUS),
-    pathRadius: PATH_RADIUS_PX[tier] * unitsPerPx,
-    tracerRadius: TRACER_RADIUS_PX[tier] * unitsPerPx,
-  };
-}
-
-/** Maps a pose position (anchor space) to scene space: the field spread to the viewport, depth restrained by tier. */
+/** Maps a pose position (anchor space) to scene space: the legacy spread and tier depth, applied once, by the pure seam. */
 export function toScenePosition(layout: ConnectedLayout, x: number, y: number, z: number, out: Vector3): Vector3 {
-  return out.set(x * layout.spreadX, y * layout.spreadY, z * layout.depthScale);
+  const [sx, sy, sz] = anchorToScene([x, y, z], layout);
+  return out.set(sx, sy, sz);
 }
 
 type PosedNode = ScenePose['nodes'][number];
@@ -140,6 +77,8 @@ type PosedNode = ScenePose['nodes'][number];
 export type PoseLookup = {
   node(index: number, id: string): PosedNode | undefined;
   growth(index: number, id: string): number | undefined;
+  /** The seven string points of a connection, or undefined when the pose carries none for it. */
+  samples(index: number, id: string): NonNullable<ScenePose['edgeSamples']>[number]['points'] | undefined;
 };
 
 /**
@@ -150,6 +89,7 @@ export type PoseLookup = {
 export function createPoseLookup(pose: ScenePose): PoseLookup {
   let nodesById: Map<string, PosedNode> | undefined;
   let growthById: Map<string, number> | undefined;
+  let samplesById: Map<string, NonNullable<ScenePose['edgeSamples']>[number]['points']> | undefined;
   return {
     node(index, id) {
       const positional = pose.nodes[index];
@@ -163,13 +103,22 @@ export function createPoseLookup(pose: ScenePose): PoseLookup {
       growthById ??= new Map(pose.edges.map((edge) => [edge.id, edge.growth]));
       return growthById.get(id);
     },
+    samples(index, id) {
+      const list = pose.edgeSamples;
+      if (!list || list.length === 0) return undefined;
+      const positional = list[index];
+      if (positional?.id === id) return positional.points;
+      samplesById ??= new Map(list.map((entry) => [entry.id, entry.points]));
+      return samplesById.get(id);
+    },
   };
 }
 
 // --- resources --------------------------------------------------------------------------------------
 
-const PATH_SEGMENTS = 16;
 const PATH_SIDES = 5;
+/** Largest CSS-px distance a drawn string may leave its rest path when no profile says otherwise (the widest cap). */
+export const DEFAULT_EDGE_CAP_PX = 16;
 const SKELETON_SEGMENTS = 14;
 const PATH_TAIL_COLOR = new Color(0x6fa8e0).multiplyScalar(0.7);
 const PATH_HEAD_COLOR = new Color(0xd3e6f7);
@@ -191,6 +140,16 @@ export type ConnectedGraphBatch = {
   update(pose: ScenePose, layout: ConnectedLayout): void;
   /** Spreads the distant points over the viewport. Needed only when the layout changes. */
   fit(layout: ConnectedLayout): void;
+  /** Changes how connections are drawn (rest style, string cap) without touching any resource. */
+  configure(options: ConnectedPathOptions): void;
+};
+
+/** How a batch draws its connections; both follow the route's profile and tier. */
+export type ConnectedPathOptions = {
+  /** Atlas rest edges are straight; legacy edges keep the SPF bow. Defaults to legacy. */
+  nodeStyle?: ConnectedNodeStyle;
+  /** The profile's string cap in CSS px; defaults to the widest cap. */
+  edgeCapPx?: number;
 };
 
 function instanced(
@@ -211,7 +170,7 @@ function instanced(
  * the white node dots, their rings and the beads that ride them, one dynamic tube batch for the grown paths and one
  * line batch for the faint skeleton. Connections are never one object each.
  */
-export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracker): ConnectedGraphBatch {
+export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracker, options: ConnectedPathOptions = {}): ConnectedGraphBatch {
   const group = new Group();
   const nodeCount = graph.nodes.length;
   const edgeCount = graph.edges.length;
@@ -303,8 +262,16 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
   if (edgeEnds.some(([from, to]) => from === undefined || to === undefined)) {
     throw new Error('connected-studio: a connection names a node the graph does not contain');
   }
-  const bowSigns = graph.edges.map((_, index) => (((index + 1) * 2654435761) >>> 0) % 2 === 0 ? 1 : -1);
-  const worldPositions = new Float64Array(nodeCount * 3);
+  // How connections are drawn: the rest curve of the route's style, and how far a string may leave it. Both follow
+  // the profile (they change with the tier), so the batch can be reconfigured without rebuilding any resource.
+  let nodeStyle: ConnectedNodeStyle = options.nodeStyle ?? 'legacy';
+  let edgeCapPx = options.edgeCapPx ?? DEFAULT_EDGE_CAP_PX;
+  // Finite anchor-space node positions of the current pose: the one place the pose is sanitised.
+  const anchorPositions = new Float64Array(nodeCount * 3);
+  const edgePath = createEdgePath();
+  // Pooled scratch: the tube's centreline points, and one skeleton polyline. Nothing is allocated per frame here.
+  const centreline = new Float64Array((PATH_SEGMENTS + 1) * 3);
+  const polyline = new Float64Array((SKELETON_SEGMENTS + 1) * 3);
 
   const matrix = new Matrix4();
   const quaternion = new Quaternion();
@@ -313,52 +280,24 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
   const scale = new Vector3();
   const beadOffset = new Vector3();
   const forward = new Vector3(0, 0, 1);
-  const from = new Vector3();
-  const to = new Vector3();
-  const control = new Vector3();
   const point = new Vector3();
   const tangent = new Vector3();
+  const lastTangent = new Vector3();
   const normal = new Vector3();
   const binormal = new Vector3();
   const upAxis = new Vector3(0, 0, 1);
   const sideAxis = new Vector3(0, 1, 0);
   const color = new Color();
 
-  function bezier(u: number, out: Vector3): Vector3 {
-    const k0 = (1 - u) * (1 - u);
-    const k1 = 2 * (1 - u) * u;
-    const k2 = u * u;
-    return out.set(
-      k0 * from.x + k1 * control.x + k2 * to.x,
-      k0 * from.y + k1 * control.y + k2 * to.y,
-      k0 * from.z + k1 * control.z + k2 * to.z,
-    );
-  }
-
-  function bezierTangent(u: number, out: Vector3): Vector3 {
-    const k0 = 2 * (1 - u);
-    const k1 = 2 * u;
-    out.set(
-      k0 * (control.x - from.x) + k1 * (to.x - control.x),
-      k0 * (control.y - from.y) + k1 * (to.y - control.y),
-      k0 * (control.z - from.z) + k1 * (to.z - control.z),
-    );
-    return out.lengthSq() > 1e-12 ? out.normalize() : out.set(1, 0, 0);
-  }
-
   function update(pose: ScenePose, layout: ConnectedLayout): void {
     const lookup = createPoseLookup(pose);
     graph.nodes.forEach((node, index) => {
       const posed = lookup.node(index, node.id);
       const source = posed?.position ?? node.anchor;
-      toScenePosition(
-        layout,
-        finiteOr(source[0], node.anchor[0]),
-        finiteOr(source[1], node.anchor[1]),
-        finiteOr(source[2], node.anchor[2]),
-        position,
-      );
-      worldPositions.set([position.x, position.y, position.z], index * 3);
+      anchorPositions[index * 3] = finiteOr(source[0], node.anchor[0]);
+      anchorPositions[index * 3 + 1] = finiteOr(source[1], node.anchor[1]);
+      anchorPositions[index * 3 + 2] = finiteOr(source[2], node.anchor[2]);
+      toScenePosition(layout, anchorPositions[index * 3], anchorPositions[index * 3 + 1], anchorPositions[index * 3 + 2], position);
       const radius = layout.nodeScale * finiteOr(posed?.scale ?? node.depthScale, node.depthScale);
       // Dot, ring and bead turn to face the camera, so a ring reads as a circle across the whole viewport.
       facing.set(-position.x, -position.y, CAMERA_Z - position.z).normalize();
@@ -382,35 +321,38 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
     let activeTracers = 0;
     graph.edges.forEach((edge, index) => {
       const [fromIndex, toIndex] = edgeEnds[index] as readonly [number, number];
-      from.fromArray(worldPositions, fromIndex * 3);
-      to.fromArray(worldPositions, toIndex * 3);
-      // A curved path: the control point leaves the chord sideways by a share of its length.
-      const chord = point.copy(to).sub(from);
-      const length = chord.length();
-      normal.set(-chord.y, chord.x, 0);
-      if (normal.lengthSq() < 1e-12) normal.set(0, 1, 0);
-      normal.normalize();
-      control
-        .copy(from)
-        .add(to)
-        .multiplyScalar(0.5)
-        .addScaledVector(normal, PATH_BOW * length * bowSigns[index]);
-      control.z += PATH_BOW * length * 0.35 * bowSigns[index];
+      // One flexible path per connection: the shared rest path of the displaced endpoints plus the bounded string
+      // residual. Growth, the tube, the skeleton and the tracer are all read from it, so none can disagree.
+      edgePath.prepare({
+        nodeStyle,
+        edgeIndex: index,
+        from: [anchorPositions[fromIndex * 3], anchorPositions[fromIndex * 3 + 1], anchorPositions[fromIndex * 3 + 2]],
+        to: [anchorPositions[toIndex * 3], anchorPositions[toIndex * 3 + 1], anchorPositions[toIndex * 3 + 2]],
+        layout,
+        samples: lookup.samples(index, edge.id),
+        capPx: edgeCapPx,
+      });
 
+      for (let step = 0; step <= SKELETON_SEGMENTS; step += 1) edgePath.pointAt(step / SKELETON_SEGMENTS, polyline, step * 3);
       for (let step = 0; step < SKELETON_SEGMENTS; step += 1) {
         const offset = (index * SKELETON_SEGMENTS + step) * 2 * 3;
-        bezier(step / SKELETON_SEGMENTS, point).toArray(skeletonPositions.array as Float32Array, offset);
-        bezier((step + 1) / SKELETON_SEGMENTS, point).toArray(skeletonPositions.array as Float32Array, offset + 3);
+        for (let axis = 0; axis < 6; axis += 1) skeletonPositions.array[offset + axis] = polyline[step * 3 + axis];
       }
 
       const growth = clamp(finiteOr(lookup.growth(index, edge.id) ?? 0, 0), 0, 1);
+      for (let ring = 0; ring <= PATH_SEGMENTS; ring += 1) edgePath.pointAt(Math.min(ring / PATH_SEGMENTS, growth), centreline, ring * 3);
+      lastTangent.set(1, 0, 0);
       for (let ring = 0; ring <= PATH_SEGMENTS; ring += 1) {
         const t = ring / PATH_SEGMENTS;
         const u = Math.min(t, growth);
         // Rings beyond the grown length collapse onto its tip with no radius, so the path ends in a point.
         const radius = t <= growth ? layout.pathRadius : 0;
-        bezier(u, point);
-        bezierTangent(u, tangent);
+        const before = Math.max(ring - 1, 0) * 3;
+        const after = Math.min(ring + 1, PATH_SEGMENTS) * 3;
+        tangent.set(centreline[after] - centreline[before], centreline[after + 1] - centreline[before + 1], centreline[after + 2] - centreline[before + 2]);
+        // A coincident or collapsed neighbourhood has no direction of its own: keep the last one rather than invent one.
+        if (tangent.lengthSq() > 1e-18) lastTangent.copy(tangent).normalize();
+        tangent.copy(lastTangent);
         normal.copy(tangent).cross(upAxis);
         if (normal.lengthSq() < 1e-8) normal.copy(tangent).cross(sideAxis);
         normal.normalize();
@@ -422,16 +364,17 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
           const vertex = (index * (PATH_SEGMENTS + 1) + ring) * PATH_SIDES + side;
           pathPositions.setXYZ(
             vertex,
-            point.x + radius * (Math.cos(angle) * normal.x + Math.sin(angle) * binormal.x),
-            point.y + radius * (Math.cos(angle) * normal.y + Math.sin(angle) * binormal.y),
-            point.z + radius * (Math.cos(angle) * normal.z + Math.sin(angle) * binormal.z),
+            centreline[ring * 3] + radius * (Math.cos(angle) * normal.x + Math.sin(angle) * binormal.x),
+            centreline[ring * 3 + 1] + radius * (Math.cos(angle) * normal.y + Math.sin(angle) * binormal.y),
+            centreline[ring * 3 + 2] + radius * (Math.cos(angle) * normal.z + Math.sin(angle) * binormal.z),
           );
           pathColors.setXYZ(vertex, color.r, color.g, color.b);
         }
       }
 
       if (growth > 0 && growth < 1) {
-        bezier(growth, point);
+        edgePath.pointAt(growth, polyline, 0);
+        point.set(polyline[0], polyline[1], polyline[2]);
         scale.setScalar(layout.tracerRadius);
         tracers.setMatrixAt(activeTracers, matrix.compose(point, quaternion.identity(), scale));
         activeTracers += 1;
@@ -444,7 +387,12 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
     skeletonPositions.needsUpdate = true;
   }
 
-  return { group, drawables, update, fit: distant.fit };
+  function configure(next: ConnectedPathOptions): void {
+    nodeStyle = next.nodeStyle ?? nodeStyle;
+    edgeCapPx = next.edgeCapPx ?? edgeCapPx;
+  }
+
+  return { group, drawables, update, fit: distant.fit, configure };
 }
 
 /** Distant points: fewer on compact (DESIGN-SPF-V1, Responsive scene). Counts are Sonnet tuning (PC-7). */
