@@ -61,6 +61,11 @@
 }
 
 @media (max-width: 1023px) {
+  .introPlate,
+  .historyPlate {
+    width: 100%;
+  }
+
   .historyPlate {
     align-self: flex-start;
   }
