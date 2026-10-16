@@ -284,3 +284,106 @@ test('Studio stays inside the viewport at every approved width', async ({ page }
     }
   }
 });
+
+// DESIGN-SFC-V1: at 320px and 200% text zoom, complete words and natural flow outrank forced layout, and the
+// page-level horizontal clip must never hide meaningful text. Document scroll width cannot see that (the clip
+// suppresses it), so this measures every rendered text rectangle against the viewport and its own plate.
+// The expansion is a deterministic text-only simulation (every element's font size and line height doubled at
+// an unchanged 320px layout), not a native browser text-zoom run.
+type TextBounds = { text: string; left: number; right: number; limitLeft: number; limitRight: number };
+
+async function overflowingText(page: import('@playwright/test').Page): Promise<string[]> {
+  return page.locator('main').evaluate((root) => {
+    const problems: TextBounds[] = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = node.textContent?.trim();
+      const element = node.parentElement;
+      if (!text || !element || element.closest('[aria-hidden="true"]')) continue;
+      const container = element.closest('[data-connected-opaque-plate]');
+      const limits = container ? container.getBoundingClientRect() : { left: 0, right: window.innerWidth };
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      for (const rect of range.getClientRects()) {
+        if (rect.width === 0) continue;
+        if (rect.left < limits.left - 0.5 || rect.right > limits.right + 0.5 || rect.left < -0.5 || rect.right > window.innerWidth + 0.5) {
+          problems.push({ text: text.slice(0, 40), left: Math.round(rect.left), right: Math.round(rect.right), limitLeft: Math.round(limits.left), limitRight: Math.round(limits.right) });
+        }
+      }
+    }
+    return problems.map((problem) => `${problem.text} [${problem.left}..${problem.right}] outside [${problem.limitLeft}..${problem.limitRight}]`);
+  });
+}
+
+for (const route of [stableRoutes.studio.es, stableRoutes.studio.en]) {
+  test(`Studio keeps every word inside its box at 320px with 200% text expansion (${route})`, async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto(appUrl(route));
+    expect(await overflowingText(page), 'default size').toEqual([]);
+
+    await page.locator('main').evaluate((root) => {
+      const elements = [...root.querySelectorAll<HTMLElement>('*')];
+      const sizes = elements.map((element) => {
+        const style = getComputedStyle(element);
+        return { fontSize: parseFloat(style.fontSize), lineHeight: parseFloat(style.lineHeight) };
+      });
+      elements.forEach((element, index) => {
+        element.style.fontSize = `${sizes[index].fontSize * 2}px`;
+        if (Number.isFinite(sizes[index].lineHeight)) element.style.lineHeight = `${sizes[index].lineHeight * 2}px`;
+      });
+    });
+    expect(await overflowingText(page), '200% text expansion').toEqual([]);
+  });
+
+  test(`Studio keeps every word inside its box at 320px with the WCAG text-spacing override (${route})`, async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto(appUrl(route));
+    await page.addStyleTag({
+      content: 'main * { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } main p { margin-bottom: 2em !important; }',
+    });
+    expect(await overflowingText(page)).toEqual([]);
+  });
+}
+
+// The approved written rendering (docs/reviews/studio-founder-contact-design-2026-10-14/assets/written-studio-es-*)
+// sets the category line and the chart caption in IBM Plex Mono at a small size, and the second introduction
+// action as an underlined text link beside the solid primary action. DESIGN-SFC-V1 reserves mono for restrained
+// chart metadata and keeps underlined text links identifiable.
+for (const anatomy of studioAnatomy) {
+  test(`${anatomy.locale} Studio sets its category line and caption as restrained mono and its Founder links as underlined text`, async ({ page }) => {
+    await page.goto(appUrl(anatomy.route));
+    const main = page.locator('main');
+    const style = (locator: ReturnType<typeof main.locator>) =>
+      locator.evaluate((element) => {
+        const computed = getComputedStyle(element);
+        return {
+          mono: /plexMono/i.test(computed.fontFamily),
+          size: parseFloat(computed.fontSize),
+          transform: computed.textTransform,
+          underline: computed.textDecorationLine,
+          border: computed.borderTopColor,
+          background: computed.backgroundColor,
+        };
+      });
+
+    const eyebrow = await style(main.locator('[data-connected-opaque-plate] h1').locator('xpath=preceding-sibling::p[1]'));
+    expect(eyebrow).toMatchObject({ mono: true, transform: 'none' });
+    expect(eyebrow.size).toBeGreaterThanOrEqual(14);
+    expect(eyebrow.size).toBeLessThanOrEqual(15);
+
+    const caption = await style(main.getByText(anatomy.caption, { exact: true }));
+    expect(caption).toMatchObject({ mono: true, transform: 'none' });
+    expect(caption.size).toBeGreaterThanOrEqual(14);
+    expect(caption.size).toBeLessThanOrEqual(15);
+
+    const founderLinks = main.locator('a[href*="samuel-furlanich"]');
+    await expect(founderLinks).toHaveCount(2);
+    for (const link of await founderLinks.all()) {
+      const linkStyle = await style(link);
+      expect(linkStyle.underline).toBe('underline');
+      expect(linkStyle.border, 'no visible border').toBe('rgba(0, 0, 0, 0)');
+      expect(linkStyle.background).toBe('rgba(0, 0, 0, 0)');
+      expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+    }
+  });
+}

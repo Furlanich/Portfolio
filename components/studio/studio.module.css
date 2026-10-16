@@ -10,6 +10,11 @@
   position: relative;
   /* The reading scrim extends 24px beyond its text, which can pass the 20px compact gutter; clip it, never scroll. */
   overflow-x: clip;
+  /*
+   * Last resort for enlarged text: a word that cannot fit its box wraps inside it instead of running under the
+   * clip. Ordinary widths never trigger it, because every size above keeps whole words in their boxes.
+   */
+  overflow-wrap: anywhere;
   padding-block: 32px 56px;
   color: #F9F6EE;
 }
@@ -68,13 +73,13 @@
   }
 }
 
+/* Restrained chart metadata: IBM Plex Mono 400, small, sentence case, as in the approved written rendering. */
 .eyebrow {
   margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.6;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--sky-glow);
 }
 
@@ -90,7 +95,6 @@
   font-weight: 600;
   line-height: 1.04;
   letter-spacing: -0.035em;
-  overflow-wrap: break-word;
   text-wrap: balance;
 }
 
@@ -125,8 +129,13 @@
     flex-direction: column;
   }
 
-  .actions > * {
+  /* The primary action spans the column; the text link stays inline, as in the approved compact rendering. */
+  .actions > .actionPrimary {
     width: 100%;
+  }
+
+  .actions > .actionSecondary {
+    align-self: flex-start;
   }
 }
 
@@ -165,7 +174,11 @@
 .captionText {
   margin: 0;
   max-width: 34ch;
-  font-size: 18px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(156, 196, 236, 0.45);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1.6;
   color: var(--sky-glow);
 }
@@ -324,14 +337,19 @@
   color: #09243D;
 }
 
+/* An ordinary underlined text link beside the solid primary action (approved written rendering). */
 .actionSecondary {
-  border-color: var(--sky-glow);
+  padding-inline: 4px;
+  border-radius: 4px;
   background-color: transparent;
   color: #F9F6EE;
+  text-decoration: underline;
+  text-decoration-color: rgba(156, 196, 236, 0.7);
+  text-underline-offset: 4px;
 }
 
 .actionSecondary:hover {
-  background-color: rgba(156, 196, 236, 0.14);
+  color: var(--sky-glow);
 }
 
 .sectionAction {
@@ -340,10 +358,13 @@
 
 /* Forced colors: system colors, visible borders and focus; the decorative ground is removed by the Ground. */
 @media (forced-colors: active) {
-  .actionPrimary,
-  .actionSecondary {
+  .actionPrimary {
     border-color: LinkText;
     background-color: Canvas;
+    color: LinkText;
+  }
+
+  .actionSecondary {
     color: LinkText;
   }
 
