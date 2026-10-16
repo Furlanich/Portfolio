@@ -28,6 +28,7 @@ const CONTENT_TYPES = {
   '.woff2': 'font/woff2',
   '.webm': 'video/webm',
   '.mp4': 'video/mp4',
+  '.pdf': 'application/pdf',
   '.map': 'application/json; charset=utf-8',
 };
 

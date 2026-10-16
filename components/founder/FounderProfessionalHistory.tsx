@@ -1,78 +1,51 @@
 import type { FounderPageContent } from './content-types';
+import styles from './founder.module.css';
 
 interface FounderProfessionalHistoryProps {
   experience: FounderPageContent['experience'];
-  biography: FounderPageContent['biography'];
   education: FounderPageContent['education'];
 }
 
-export function FounderProfessionalHistory({ experience, biography, education }: FounderProfessionalHistoryProps) {
+export function FounderProfessionalHistory({ experience, education }: FounderProfessionalHistoryProps) {
   return (
     <>
-      <section aria-labelledby="founder-experience-heading" className="bg-foundation-surface py-16 md:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-          <div className="border-t-2 border-foundation-ink pt-8 md:pt-10">
-            <h2 id="founder-experience-heading" className="max-w-[24ch] text-[32px] font-bold leading-[38px] tracking-[-0.015em] text-foundation-ink md:text-[40px] md:leading-[48px]">
-              {experience.heading}
-            </h2>
-          </div>
-          <ol className="mt-10 grid gap-10">
-            {experience.entries.map((entry) => (
-              <li data-founder-experience-entry key={entry.period + '-' + entry.role} className="grid gap-3 border-t border-foundation-border pt-5 md:grid-cols-[9rem_minmax(0,1fr)] md:gap-8">
-                <div data-founder-period className="font-mono">
-                  <p className="font-mono text-[13px] font-semibold leading-5 text-foundation-action md:leading-6">{entry.period}</p>
-                </div>
-                <div className="max-w-[68ch]">
-                  <h3 className="text-xl font-bold leading-7 text-foundation-ink">{entry.role}</h3>
-                  <p className="mt-1 text-sm font-semibold leading-6 text-foundation-muted">{entry.context}</p>
-                  <p className="mt-3 text-base leading-7 text-foundation-muted">{entry.summary}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <section data-founder-biography aria-labelledby="founder-biography-heading" className="mt-16 border-t border-foundation-border pt-12 md:pt-16">
-            <h2 id="founder-biography-heading" className="max-w-[24ch] text-[32px] font-bold leading-[38px] tracking-[-0.015em] text-foundation-ink md:text-[40px] md:leading-[48px]">
-              {biography.heading}
-            </h2>
-            <div className="mt-6 grid max-w-[68ch] gap-5 text-lg leading-8 text-foundation-muted md:text-xl">
-              {biography.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            </div>
-          </section>
-        </div>
+      <section aria-labelledby="founder-experience-heading" className={styles.section}>
+        <h2 id="founder-experience-heading" className={styles.sectionHeading}>{experience.heading}</h2>
+        <ol className={styles.experienceList}>
+          {experience.entries.map((entry) => (
+            <li data-founder-experience-entry key={entry.period + '-' + entry.role} className={styles.experienceEntry}>
+              <p data-founder-period className={styles.period}>{entry.period}</p>
+              <div className={styles.experienceDetails}>
+                <h3 className={styles.subsectionHeading}>{entry.role}</h3>
+                <p className={styles.context}>{entry.context}</p>
+                <p className={styles.body}>{entry.summary}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </section>
 
-      <section aria-labelledby="founder-education-heading" className="bg-foundation-canvas py-16 md:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-          <div className="border-t-2 border-foundation-ink pt-8 md:pt-10">
-            <h2 id="founder-education-heading" className="max-w-[24ch] text-[32px] font-bold leading-[38px] tracking-[-0.015em] text-foundation-ink md:text-[40px] md:leading-[48px]">
-              {education.heading}
-            </h2>
-          </div>
-          <ul className="mt-10 grid gap-8 md:grid-cols-2">
-            {education.entries.map((entry) => (
-              <li key={entry.institution} className="border-t border-foundation-border pt-5">
-                <h3 className="text-lg font-bold leading-7 text-foundation-ink">{entry.title}</h3>
-                <p className="mt-2 text-base leading-7 text-foundation-muted">{entry.institution}</p>
-                <p className="mt-3 font-mono text-[13px] font-semibold leading-5 text-foundation-action">{entry.status}</p>
-              </li>
-            ))}
-            <li data-founder-education-project className="border-t border-foundation-border pt-5 md:col-span-2">
-              <h3 className="text-lg font-bold leading-7 text-foundation-ink">{education.project.title}</h3>
-              <p className="mt-2 font-mono text-[13px] font-semibold leading-5 text-foundation-action">{education.project.context}</p>
-              <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{education.project.summary}</p>
-              <p className="mt-3 max-w-[68ch] text-base leading-7 text-foundation-muted">{education.project.relationship}</p>
-              <p className="mt-3 max-w-[68ch] text-sm leading-6 text-foundation-muted">{education.project.limitation}</p>
-              <a
-                href={education.project.sourceHref}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-flex min-h-11 items-center font-semibold text-foundation-action underline decoration-foundation-action/40 underline-offset-4 transition-colors duration-[160ms] ease-out hover:text-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
-              >
-                {education.project.actionLabel}
-              </a>
+      <section aria-labelledby="founder-education-heading" className={styles.section}>
+        <h2 id="founder-education-heading" className={styles.sectionHeading}>{education.heading}</h2>
+        <ul className={styles.educationList}>
+          {education.entries.map((entry) => (
+            <li key={entry.institution} className={styles.educationEntry}>
+              <h3 className={styles.subsectionHeading}>{entry.title}</h3>
+              <p className={styles.body}>{entry.institution}</p>
+              <p className={styles.metadata}>{entry.status}</p>
             </li>
-          </ul>
-        </div>
+          ))}
+          <li data-founder-education-project className={`${styles.educationEntry} ${styles.educationProject}`}>
+            <h3 className={styles.subsectionHeading}>{education.project.title}</h3>
+            <p className={styles.metadata}>{education.project.context}</p>
+            <p className={styles.body}>{education.project.summary}</p>
+            <p className={styles.body}>{education.project.relationship}</p>
+            <p className={styles.limit}>{education.project.limitation}</p>
+            <a href={education.project.sourceHref} target="_blank" rel="noreferrer" className={styles.textAction}>
+              {education.project.actionLabel}
+            </a>
+          </li>
+        </ul>
       </section>
     </>
   );

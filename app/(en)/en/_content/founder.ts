@@ -6,8 +6,13 @@ export const founderContent = {
   header: {
     context: 'Founder of FURLANICH · Software Engineer',
     name: 'Samuel Furlanich',
-    opening: 'Software Engineer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance.',
   },
+  wordBindings: [
+    { nodeId: 'n0', word: '.NET' },
+    { nodeId: 'n4', word: 'React' },
+    { nodeId: 'n8', word: 'Next.js' },
+    { nodeId: 'n12', word: 'Blazor' },
+  ],
   biography: {
     heading: 'Professional biography',
     paragraphs: [
@@ -58,7 +63,7 @@ export const founderContent = {
     },
   },
   capabilities: {
-    heading: 'Systems we can engineer',
+    heading: 'Capabilities for building and improving systems',
     introduction:
       'The focus is what the system enables the business to organize, automate, and evolve—not a catalogue of tools.',
     groups: [
@@ -86,8 +91,7 @@ export const founderContent = {
   },
   projectsBridge: {
     heading: 'Work and technical evidence',
-    description:
-      'The public Work selection brings together implementation evidence and work classified by maturity, with its limitations stated explicitly. Keeping that context in one index avoids duplicating stories or confusing technical evidence with professional experience.',
+    description: 'The public projects let you explore code, context and limitations.',
     action: { label: 'View selected work', routeId: 'projects' },
   },
   finalCta: {
