@@ -1,0 +1,11 @@
+diff --git a/components/connected-studio/ConnectedStudioEnhancement.tsx b/components/connected-studio/ConnectedStudioEnhancement.tsx
+index 010e06eb..87d4a027 100644
+--- a/components/connected-studio/ConnectedStudioEnhancement.tsx
++++ b/components/connected-studio/ConnectedStudioEnhancement.tsx
+@@ -628,3 +628,5 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
+       engine
+-        .then(({ createConnectedScene }) => {
++        .then(({ createConnectedScene, ...closure }) => {
++          // QA-CANDIDATE-NOT-FOR-DEPLOYMENT (PLAN-SFC-V1 Task 8 early closure): referencing every gated factory keeps it in the measured closure.
++          (window as unknown as { __sfcClosure?: unknown }).__sfcClosure = closure;
+           importing = false;
