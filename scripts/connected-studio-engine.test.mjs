@@ -1810,14 +1810,141 @@ test('a tighter cap for the same graph is applied in place, without rebuilding a
   assert.ok(worst <= 4.01 && worst >= 3.6, `the 4px cap now holds, got ${worst}px`);
 });
 
-test('the faint skeleton follows the deformed string, so no ghost of the rest path is left beside it', () => {
+// --- Reviewer R, PR #149: the approved Atlas appearance and the pose's ID-keyed excitation -------------------------
+
+const { Color } = await import('three');
+const CHART_LIT = new Color(0x6fa8e0);
+
+const colourAt = (attribute, index) => [attribute.array[index * 3], attribute.array[index * 3 + 1], attribute.array[index * 3 + 2]];
+const luminance = (rgb) => rgb[0] + rgb[1] + rgb[2];
+
+/** A snapshot of every colour the batch writes: dot, ring and bead instances and the tube's vertex colours. */
+function appearance(fx) {
+  const roles = drawnByRole(fx);
+  const copy = (attribute) => (attribute ? Array.from(attribute.array) : []);
+  return {
+    nodes: copy(roles.nodes.instanceColor),
+    rings: copy(roles.rings.instanceColor),
+    beads: copy(roles.beads.instanceColor),
+    paths: copy(roles.paths.geometry.getAttribute('color')),
+  };
+}
+
+const withExcitation = (pose, entries) => ({ ...pose, excitation: entries });
+
+test('Atlas profiles draw lines and nodes with the approved material caps; legacy keeps its own', () => {
   const { fx, profile, layout } = atlasFixture();
-  const edgeIndex = longestEdge(profile);
-  const bent = atlasPose(profile, layout, { samples: bentSamples(profile, layout, edgeIndex, () => 12) });
-  fx.handle.render(bent);
-  const skeleton = drawnByRole(fx).skeleton.geometry.getAttribute('position').array;
-  const perEdge = 14 * 2 * 3;
-  const midpoint = [skeleton[edgeIndex * perEdge + 7 * 6], skeleton[edgeIndex * perEdge + 7 * 6 + 1], skeleton[edgeIndex * perEdge + 7 * 6 + 2]];
-  const samples = bent.edgeSamples.find((entry) => entry.id === profile.graph.edges[edgeIndex].id).points;
-  assertNear(midpoint, anchorToScene(samples[3], layout), 1e-5, 'the skeleton passes through the middle string sample');
+  fx.handle.render(atlasPose(profile, layout));
+  const roles = drawnByRole(fx);
+  assert.equal(roles.paths.material.transparent, true);
+  assert.equal(roles.paths.material.opacity, 0.55, 'new-profile lines are chart lit at opacity up to 0.55');
+  assert.equal(roles.paths.material.depthWrite, false, 'overlapping translucent tubes do not occlude one another');
+  for (const role of ['nodes', 'rings', 'beads']) {
+    assert.equal(roles[role].material.transparent, true, `${role} are translucent`);
+    assert.equal(roles[role].material.opacity, 0.88, `${role} opacity is up to 0.88`);
+  }
+  const colours = roles.paths.geometry.getAttribute('color');
+  for (let vertex = 0; vertex < colours.count; vertex += 1) {
+    const [r, g, b] = colourAt(colours, vertex);
+    assert.ok(Math.abs(r - CHART_LIT.r) < 1e-5 && Math.abs(g - CHART_LIT.g) < 1e-5 && Math.abs(b - CHART_LIT.b) < 1e-5, `vertex ${vertex} is chart lit at rest`);
+  }
+  assert.ok(!fx.state.drawn.some((object) => object.userData.connectedRole === 'skeleton'), 'the faint skeleton would add light past the 0.55 cap, so Atlas draws none');
+  const order = ['points', 'paths', 'rings', 'nodes', 'beads'].map((role) => sceneByRole(fx, role).renderOrder);
+  assert.deepEqual([...order].sort((a, b) => a - b), order, 'translucent drawables keep the legacy draw order');
+  assert.equal(new Set(order).size, order.length, 'with distinct render orders');
+
+  const legacy = drawFixture(VIEWPORTS.wide, 0.5);
+  const legacyRoles = drawnByRole(legacy);
+  assert.equal(legacyRoles.paths.material.transparent, false);
+  assert.equal(legacyRoles.paths.material.opacity, 1);
+  assert.equal(legacyRoles.nodes.material.opacity, 1);
+  assert.ok(legacy.state.drawn.some((object) => object.userData.connectedRole === 'skeleton'), 'legacy keeps its faint skeleton');
 });
+
+test('a legacy node without excitation keeps its seeded depth tint', () => {
+  const fx = drawFixture(VIEWPORTS.wide, 0.5);
+  const dots = drawnByRole(fx).nodes.instanceColor;
+  fx.graph.nodes.forEach((node, index) => {
+    const expected = Math.min(1, 0.84 + ((node.depthScale - 0.7) / 0.3) * 0.16 + (node.seed - 0.5) * 0.06);
+    const [r, g, b] = colourAt(dots, index);
+    assert.ok(Math.abs(r - new Color().setScalar(expected).r) < 1e-5 && r === g && g === b, `node ${index} keeps its tint`);
+  });
+});
+
+for (const style of ['atlas', 'legacy']) {
+  const build = () => {
+    if (style === 'atlas') {
+      const { fx, profile, layout } = atlasFixture();
+      return { fx, pose: atlasPose(profile, layout), nodeId: profile.graph.nodes[3].id, edgeId: profile.graph.edges[4].id, edgeIndex: 4, nodeIndex: 3 };
+    }
+    const fx = drawFixture(VIEWPORTS.wide, 1);
+    return { fx, pose: restPose(fx.graph, 'wide', 1), nodeId: fx.graph.nodes[3].id, edgeId: fx.graph.edges[4].id, edgeIndex: 4, nodeIndex: 3 };
+  };
+
+  test(`${style}: one node's excitation lifts only that node and returns to rest`, () => {
+    const { fx, pose } = build();
+    fx.handle.render(pose);
+    const rest = appearance(fx);
+    // The dimmest dot, so a lift is visible whatever the style's rest level is.
+    const nodeIndex = fx.graph.nodes.map((_, index) => [luminance(colourAt({ array: rest.nodes }, index)), index]).sort((a, b) => a[0] - b[0])[0][1];
+    const nodeId = fx.graph.nodes[nodeIndex].id;
+    const diagnostics = fx.handle.diagnostics();
+    fx.handle.render(withExcitation(pose, [{ id: nodeId, value: 1 }]));
+    const lit = appearance(fx);
+    const nodes = drawnByRole(fx).nodes.instanceColor;
+    const restNodes = Array.from(rest.nodes);
+    assert.ok(luminance(colourAt({ array: lit.nodes }, nodeIndex)) > luminance(colourAt({ array: restNodes }, nodeIndex)), 'the excited dot brightens');
+    const changed = (a, b) => a.map((value, at) => (value === b[at] ? -1 : Math.floor(at / 3))).filter((at) => at >= 0);
+    assert.deepEqual([...new Set(changed(rest.nodes, lit.nodes))].filter((at) => at !== nodeIndex), [], 'no other dot changes');
+    assert.deepEqual(rest.paths, lit.paths, 'a node does not recolour any connection');
+    assert.ok(nodes.count === fx.graph.nodes.length);
+    if (style === 'atlas') {
+      assert.ok(luminance(colourAt({ array: lit.rings }, nodeIndex)) > luminance(colourAt({ array: rest.rings }, nodeIndex)), 'the Atlas ring brightens');
+      assert.ok(luminance(colourAt({ array: lit.beads }, nodeIndex)) > luminance(colourAt({ array: rest.beads }, nodeIndex)), 'the Atlas bead brightens');
+    }
+    assert.deepEqual(changed(rest.rings, lit.rings).map((value) => value).filter((at) => at !== nodeIndex), [], 'no other ring changes');
+    assert.deepEqual(changed(rest.beads, lit.beads).filter((at) => at !== nodeIndex), [], 'no other bead changes');
+    fx.handle.render(withExcitation(pose, [{ id: nodeId, value: 0 }]));
+    assert.deepEqual(appearance(fx), rest, 'back to 0 restores the rest appearance exactly');
+    fx.handle.render(pose);
+    assert.deepEqual(appearance(fx), rest, 'and so does a pose with no excitation');
+    const after = fx.handle.diagnostics();
+    assert.deepEqual({ geometries: after.geometries, materials: after.materials, textures: after.textures, drawables: after.drawables, drawCalls: after.drawCalls }, { geometries: diagnostics.geometries, materials: diagnostics.materials, textures: diagnostics.textures, drawables: diagnostics.drawables, drawCalls: diagnostics.drawCalls });
+    assert.equal(fx.state.disposeEvents.size, 0, 'excitation builds and releases nothing');
+  });
+
+  test(`${style}: one connection's emphasis recolours only that connection and returns to rest`, () => {
+    const { fx, pose, edgeId, edgeIndex } = build();
+    fx.handle.render(pose);
+    const rest = appearance(fx);
+    fx.handle.render(withExcitation(pose, [{ id: edgeId, value: 1 }]));
+    const lit = appearance(fx);
+    const perEdge = rest.paths.length / fx.graph.edges.length;
+    const block = (values, index) => values.slice(index * perEdge, (index + 1) * perEdge);
+    fx.graph.edges.forEach((_, index) => {
+      if (index === edgeIndex) assert.notDeepEqual(block(lit.paths, index), block(rest.paths, index), 'the emphasised connection changes');
+      else assert.deepEqual(block(lit.paths, index), block(rest.paths, index), `connection ${index} is untouched`);
+    });
+    assert.ok(luminance(block(lit.paths, edgeIndex).slice(0, 3)) >= luminance(block(rest.paths, edgeIndex).slice(0, 3)) - 1e-9, 'emphasis never dims the line');
+    const total = (values) => values.reduce((sum, value) => sum + value, 0);
+    assert.ok(total(block(lit.paths, edgeIndex)) > total(block(rest.paths, edgeIndex)), 'the line is lifted');
+    assert.deepEqual(lit.nodes, rest.nodes, 'a connection does not recolour a node');
+    assert.equal(drawnByRole(fx).paths.material.opacity, style === 'atlas' ? 0.55 : 1, 'emphasis never raises the material past its cap');
+    fx.handle.render(withExcitation(pose, [{ id: edgeId, value: 0 }]));
+    assert.deepEqual(appearance(fx), rest, 'back to 0 restores the rest appearance exactly');
+    assert.equal(fx.state.disposeEvents.size, 0);
+  });
+
+  test(`${style}: excitation is clamped to 0..1 and hostile entries change nothing`, () => {
+    const { fx, pose, nodeId, edgeId } = build();
+    fx.handle.render(pose);
+    const rest = appearance(fx);
+    fx.handle.render(withExcitation(pose, [{ id: nodeId, value: 1 }, { id: edgeId, value: 1 }]));
+    const full = appearance(fx);
+    fx.handle.render(withExcitation(pose, [{ id: nodeId, value: 9 }, { id: edgeId, value: 40 }]));
+    assert.deepEqual(appearance(fx), full, 'values past 1 render as 1');
+    fx.handle.render(withExcitation(pose, [{ id: nodeId, value: Number.NaN }, { id: edgeId, value: -3 }, { id: 'no-such-id', value: 1 }, { id: 'n0-n0', value: Number.POSITIVE_INFINITY }]));
+    assert.deepEqual(appearance(fx), rest, 'negative, NaN and unknown entries leave the rest appearance');
+    for (const values of Object.values(full)) assert.ok(values.every((value) => Number.isFinite(value) && value >= 0 && value <= 1 + 1e-6), 'every colour stays inside 0..1');
+  });
+}

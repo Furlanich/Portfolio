@@ -79,6 +79,8 @@ export type PoseLookup = {
   growth(index: number, id: string): number | undefined;
   /** The seven string points of a connection, or undefined when the pose carries none for it. */
   samples(index: number, id: string): NonNullable<ScenePose['edgeSamples']>[number]['points'] | undefined;
+  /** The pose's excitation of a node or connection, clamped to 0..1; 0 when the pose has none for the id. */
+  excitation(id: string): number;
 };
 
 /**
@@ -90,6 +92,7 @@ export function createPoseLookup(pose: ScenePose): PoseLookup {
   let nodesById: Map<string, PosedNode> | undefined;
   let growthById: Map<string, number> | undefined;
   let samplesById: Map<string, NonNullable<ScenePose['edgeSamples']>[number]['points']> | undefined;
+  let excitationById: Map<string, number> | undefined;
   return {
     node(index, id) {
       const positional = pose.nodes[index];
@@ -111,6 +114,12 @@ export function createPoseLookup(pose: ScenePose): PoseLookup {
       samplesById ??= new Map(list.map((entry) => [entry.id, entry.points]));
       return samplesById.get(id);
     },
+    excitation(id) {
+      const list = pose.excitation;
+      if (!list || list.length === 0) return 0;
+      excitationById ??= new Map(list.map((entry) => [entry.id, Number.isFinite(entry.value) ? Math.min(1, Math.max(0, entry.value)) : 0]));
+      return excitationById.get(id) ?? 0;
+    },
   };
 }
 
@@ -122,6 +131,15 @@ export const DEFAULT_EDGE_CAP_PX = 16;
 const SKELETON_SEGMENTS = 14;
 const PATH_TAIL_COLOR = new Color(0x6fa8e0).multiplyScalar(0.7);
 const PATH_HEAD_COLOR = new Color(0xd3e6f7);
+
+// New-profile appearance (DESIGN-SFC-V1, Composition data): lines are chart lit (sky.lit) with opacity up to 0.55 and
+// nodes have opacity up to 0.88. Both are material caps; the pose's excitation never raises either. Emphasis is drawn as
+// colour: a connection lifts from chart lit toward the pale head colour, and a dot, ring and bead lift from their rest
+// level to full brightness. The rest level is a tuned constant awaiting owner review of the rendered scene.
+const ATLAS_LINE_COLOR = new Color(0x6fa8e0);
+const ATLAS_LINE_OPACITY = 0.55;
+const ATLAS_NODE_OPACITY = 0.88;
+const ATLAS_NODE_REST = 0.8;
 
 /** What each drawable is, for diagnostics and tests. Never shown to a visitor. */
 export type ConnectedRole = 'nodes' | 'rings' | 'beads' | 'paths' | 'skeleton' | 'tracers' | 'points';
@@ -176,36 +194,29 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
   const edgeCount = graph.edges.length;
 
   // The dot is the node: flat, white, drawn over the paths that end at it (the polygon offset beats the tube at the same depth).
-  const nodes = instanced(
-    tracker,
-    new CircleGeometry(NODE_RADIUS, 32),
-    new MeshBasicMaterial({ color: 0xf9f6ee, fog: false, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }),
-    nodeCount,
-    'nodes',
-  );
+  const nodeMaterial = new MeshBasicMaterial({ color: 0xf9f6ee, fog: false, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 });
+  const nodes = instanced(tracker, new CircleGeometry(NODE_RADIUS, 32), nodeMaterial, nodeCount, 'nodes');
   // Nearer nodes read a little brighter (their depthScale is larger), with a seeded wobble so they are not clones.
+  // Atlas dots are uniform instead; the rest level of each dot is what an excitation lifts from.
+  const legacyTint = graph.nodes.map((node) => Math.min(1, 0.84 + ((node.depthScale - 0.7) / 0.3) * 0.16 + (node.seed - 0.5) * 0.06));
   const tint = new Color();
-  graph.nodes.forEach((node, index) => {
-    const brightness = 0.84 + ((node.depthScale - 0.7) / 0.3) * 0.16 + (node.seed - 0.5) * 0.06;
-    nodes.setColorAt(index, tint.setScalar(Math.min(1, brightness)));
-  });
-  if (nodes.instanceColor) nodes.instanceColor.needsUpdate = true;
+  graph.nodes.forEach((_, index) => nodes.setColorAt(index, tint.setScalar(legacyTint[index])));
   // One thin outer ring per node on every tier: flat, light, with no second orbit.
+  const ringMaterial = new MeshBasicMaterial({ color: 0xcfe2f5 });
   const rings = instanced(
     tracker,
     new RingGeometry(RING_RADIUS - RING_THICKNESS / 2, RING_RADIUS + RING_THICKNESS / 2, 64),
-    new MeshBasicMaterial({ color: 0xcfe2f5 }),
+    ringMaterial,
     nodeCount,
     'rings',
   );
   // The bead rides the ring at the node's rotation angle, so the idle rotation stays visible on a flat node.
-  const beads = instanced(
-    tracker,
-    new CircleGeometry(BEAD_RADIUS, 16),
-    new MeshBasicMaterial({ color: 0xffffff, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
-    nodeCount,
-    'beads',
-  );
+  const beadMaterial = new MeshBasicMaterial({ color: 0xffffff, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+  const beads = instanced(tracker, new CircleGeometry(BEAD_RADIUS, 16), beadMaterial, nodeCount, 'beads');
+  graph.nodes.forEach((_, index) => {
+    rings.setColorAt(index, tint.setScalar(1));
+    beads.setColorAt(index, tint.setScalar(1));
+  });
 
   const verticesPerEdge = (PATH_SEGMENTS + 1) * PATH_SIDES;
   const tubeVertices = edgeCount * verticesPerEdge;
@@ -226,8 +237,9 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
     }
   }
   pathGeometry.setIndex(indices);
+  const pathMaterial = new MeshBasicMaterial({ vertexColors: true, side: DoubleSide });
   const paths = tag(
-    new Mesh(pathGeometry, tracker.material(new MeshBasicMaterial({ vertexColors: true, side: DoubleSide }))),
+    new Mesh(pathGeometry, tracker.material(pathMaterial)),
     'paths',
     { connections: edgeCount },
   );
@@ -266,6 +278,35 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
   // the profile (they change with the tier), so the batch can be reconfigured without rebuilding any resource.
   let nodeStyle: ConnectedNodeStyle = options.nodeStyle ?? 'legacy';
   let edgeCapPx = options.edgeCapPx ?? DEFAULT_EDGE_CAP_PX;
+  // The excitation last written for each dot (NaN forces a write), so colours upload only when something changed.
+  const writtenLevel = new Float64Array(nodeCount).fill(Number.NaN);
+
+  /**
+   * Materials and draw order for the route's look. Atlas lines and nodes are translucent with the approved caps and
+   * keep the legacy draw order explicitly (translucent objects are otherwise sorted by distance); the faint skeleton
+   * would add light past the 0.55 line cap, so Atlas does not draw it. Legacy is the unchanged opaque look.
+   */
+  function applyStyle(style: ConnectedNodeStyle): void {
+    const atlas = style === 'atlas';
+    const looks = [
+      [pathMaterial, ATLAS_LINE_OPACITY],
+      [nodeMaterial, ATLAS_NODE_OPACITY],
+      [ringMaterial, ATLAS_NODE_OPACITY],
+      [beadMaterial, ATLAS_NODE_OPACITY],
+    ] as const;
+    for (const [material, opacity] of looks) {
+      if (material.transparent !== atlas) material.needsUpdate = true;
+      material.transparent = atlas;
+      material.opacity = atlas ? opacity : 1;
+    }
+    pathMaterial.depthWrite = !atlas;
+    skeleton.visible = !atlas;
+    [points, skeleton, paths, rings, nodes, beads, tracers].forEach((drawable, order) => {
+      drawable.renderOrder = atlas ? order : 0;
+    });
+    writtenLevel.fill(Number.NaN);
+  }
+  applyStyle(nodeStyle);
   // Finite anchor-space node positions of the current pose: the one place the pose is sanitised.
   const anchorPositions = new Float64Array(nodeCount * 3);
   const edgePath = createEdgePath();
@@ -291,6 +332,7 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
 
   function update(pose: ScenePose, layout: ConnectedLayout): void {
     const lookup = createPoseLookup(pose);
+    let colourDirty = false;
     graph.nodes.forEach((node, index) => {
       const posed = lookup.node(index, node.id);
       const source = posed?.position ?? node.anchor;
@@ -313,7 +355,22 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
         .applyQuaternion(quaternion)
         .add(position);
       beads.setMatrixAt(index, matrix.compose(beadOffset, quaternion, scale));
+
+      // Excitation lifts the dot, its ring and its bead from the style's rest level to full brightness.
+      const excitation = lookup.excitation(node.id);
+      if (writtenLevel[index] !== excitation) {
+        writtenLevel[index] = excitation;
+        const rest = nodeStyle === 'atlas' ? ATLAS_NODE_REST : 1;
+        const dotRest = nodeStyle === 'atlas' ? ATLAS_NODE_REST : legacyTint[index];
+        nodes.setColorAt(index, tint.setScalar(dotRest + (1 - dotRest) * excitation));
+        rings.setColorAt(index, tint.setScalar(rest + (1 - rest) * excitation));
+        beads.setColorAt(index, tint.setScalar(rest + (1 - rest) * excitation));
+        colourDirty = true;
+      }
     });
+    if (colourDirty) {
+      for (const mesh of [nodes, rings, beads]) if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    }
     nodes.instanceMatrix.needsUpdate = true;
     rings.instanceMatrix.needsUpdate = true;
     beads.instanceMatrix.needsUpdate = true;
@@ -333,13 +390,17 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
         capPx: edgeCapPx,
       });
 
-      for (let step = 0; step <= SKELETON_SEGMENTS; step += 1) edgePath.pointAt(step / SKELETON_SEGMENTS, polyline, step * 3);
-      for (let step = 0; step < SKELETON_SEGMENTS; step += 1) {
-        const offset = (index * SKELETON_SEGMENTS + step) * 2 * 3;
-        for (let axis = 0; axis < 6; axis += 1) skeletonPositions.array[offset + axis] = polyline[step * 3 + axis];
+      // The faint skeleton is a legacy look; Atlas hides it, so its buffer is not rewritten.
+      if (skeleton.visible) {
+        for (let step = 0; step <= SKELETON_SEGMENTS; step += 1) edgePath.pointAt(step / SKELETON_SEGMENTS, polyline, step * 3);
+        for (let step = 0; step < SKELETON_SEGMENTS; step += 1) {
+          const offset = (index * SKELETON_SEGMENTS + step) * 2 * 3;
+          for (let axis = 0; axis < 6; axis += 1) skeletonPositions.array[offset + axis] = polyline[step * 3 + axis];
+        }
       }
 
       const growth = clamp(finiteOr(lookup.growth(index, edge.id) ?? 0, 0), 0, 1);
+      const emphasis = lookup.excitation(edge.id);
       for (let ring = 0; ring <= PATH_SEGMENTS; ring += 1) edgePath.pointAt(Math.min(ring / PATH_SEGMENTS, growth), centreline, ring * 3);
       lastTangent.set(1, 0, 0);
       for (let ring = 0; ring <= PATH_SEGMENTS; ring += 1) {
@@ -358,7 +419,10 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
         normal.normalize();
         binormal.copy(tangent).cross(normal);
         const brightness = growth > 0 ? Math.min(1, u / growth) ** 2 : 0;
-        color.copy(PATH_TAIL_COLOR).lerp(PATH_HEAD_COLOR, brightness);
+        // Atlas lines are one chart-lit colour; legacy lines brighten along their grown length. Emphasis lifts either.
+        if (nodeStyle === 'atlas') color.copy(ATLAS_LINE_COLOR);
+        else color.copy(PATH_TAIL_COLOR).lerp(PATH_HEAD_COLOR, brightness);
+        if (emphasis > 0) color.lerp(PATH_HEAD_COLOR, emphasis);
         for (let side = 0; side < PATH_SIDES; side += 1) {
           const angle = (side / PATH_SIDES) * Math.PI * 2;
           const vertex = (index * (PATH_SEGMENTS + 1) + ring) * PATH_SIDES + side;
@@ -388,7 +452,11 @@ export function createGraphBatch(graph: GraphDefinition, tracker: ResourceTracke
   }
 
   function configure(next: ConnectedPathOptions): void {
-    nodeStyle = next.nodeStyle ?? nodeStyle;
+    const style = next.nodeStyle ?? nodeStyle;
+    if (style !== nodeStyle) {
+      nodeStyle = style;
+      applyStyle(style);
+    }
     edgeCapPx = next.edgeCapPx ?? edgeCapPx;
   }
 
