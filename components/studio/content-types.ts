@@ -1,4 +1,5 @@
 import type { ActionLink } from '../foundation/content-types';
+import type { ConnectedWordBinding } from '../../lib/connected-studio/types';
 import type { Locale } from '../../lib/locales';
 
 export type StudioTextItem = {
@@ -13,14 +14,13 @@ export type StudioPageContent = {
     eyebrow: string;
     heading: string;
     positioning: string;
-    supportingStatement: string;
     primaryAction: ActionLink;
     secondaryAction: ActionLink;
   };
-  operatingModel: {
-    label: string;
-    items: string[];
-  };
+  /** The open chart caption beside the introduction plate (PAGE-STUDIO, "Studio graph caption"). */
+  sceneCaption: string;
+  /** Four decorative graph words bound to n0, n4, n8 and n12 in this order. They carry no meaning of their own. */
+  wordBindings: readonly ConnectedWordBinding[];
   accountability: {
     heading: string;
     paragraphs: string[];

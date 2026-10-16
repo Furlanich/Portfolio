@@ -346,10 +346,12 @@ for (const route of [stableRoutes.home.es, stableRoutes.home.en]) {
 }
 
 // PLAN-SPF-V1 Task 6 (owner-approved transfer, this test only): Services is now a connected route, and a
-// connected route pins its Abyss ground on `html` (as Projects already does), so this uses Studio, a route
-// with no connected ground, as the example of "every other route keeps the Bone canvas".
-test('html keeps the Bone canvas on non-Home routes', async ({ page }) => {
-  await page.goto(appUrl(stableRoutes.studio.en));
+// connected route pins its Abyss ground on `html` (as Projects already does). PLAN-SFC-V1 Task 6 (owner
+// instruction to apply Reviewer R's finding, this test only): Studio is connected too, so the example of
+// "every route without a connected ground keeps the Bone canvas" is now the demonstration Privacy page, which
+// stays Bone until its own redesign. Connected routes (Services, Projects, Studio) pin Abyss instead.
+test('html keeps the Bone canvas on routes without a connected ground', async ({ page }) => {
+  await page.goto(appUrl(stableRoutes.privacy.en));
   const htmlBackground = await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
   expect(htmlBackground).toBe('rgb(249, 246, 238)');
 });
