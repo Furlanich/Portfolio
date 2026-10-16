@@ -28,8 +28,20 @@ export type InquirySubmissionResult =
       reason: 'rate-limited' | 'misconfigured' | 'unavailable' | 'unknown';
     };
 
+/**
+ * Provider-neutral context for one submission, kept apart from the public payload. The honeypot is the
+ * real value of the hidden text trap (never a fifth business field); only the Formspree transport maps it
+ * to `_gotcha`. The signal cancels client work on unmount; an abort is not proof the server did not
+ * receive the request.
+ */
+export type InquirySubmissionContext = {
+  honeypot?: string;
+  signal?: AbortSignal;
+};
+
 export type SubmitInquiry = (
   payload: InquiryPayload,
+  context?: InquirySubmissionContext,
 ) => Promise<InquirySubmissionResult>;
 
 export type InquiryValidationResult =
