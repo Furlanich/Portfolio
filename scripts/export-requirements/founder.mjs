@@ -3,7 +3,7 @@
 export const founderRequirements = {
   'estudio/samuel-furlanich/index.html': {
     heading: 'Samuel Furlanich',
-    sections: ['Perfil profesional', 'Experiencia profesional', 'Biografía profesional', 'Formación', 'Sistemas que podemos construir', 'Trabajo y evidencia técnica', '¿Querés conversar sobre una necesidad de tu negocio?'],
+    sections: ['Biografía profesional', 'Perfil profesional', 'Experiencia profesional', 'Formación', 'Capacidades para construir y mejorar sistemas', 'Trabajo y evidencia técnica', '¿Querés conversar sobre una necesidad de tu negocio?'],
     projects: '/proyectos/',
     contact: '/contacto/',
     cv: '/Samuel-Furlanich-CV.pdf',
@@ -12,7 +12,7 @@ export const founderRequirements = {
   },
   'en/about/samuel-furlanich/index.html': {
     heading: 'Samuel Furlanich',
-    sections: ['Professional profile', 'Professional experience', 'Professional biography', 'Education', 'Systems we can engineer', 'Work and technical evidence', 'Want to discuss a business need?'],
+    sections: ['Professional biography', 'Professional profile', 'Professional experience', 'Education', 'Capabilities for building and improving systems', 'Work and technical evidence', 'Want to discuss a business need?'],
     projects: '/en/work/',
     contact: '/en/contact/',
     cv: '/Samuel-Furlanich-CV.pdf',

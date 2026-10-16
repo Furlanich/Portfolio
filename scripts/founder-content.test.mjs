@@ -16,6 +16,29 @@ const expectedProfessionalLinks = {
   github: 'https://github.com/Furlanich',
 };
 
+const approvedBiographies = {
+  es: [
+    'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
+    'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.',
+    'También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
+  ],
+  en: [
+    'Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations.',
+    'He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor.',
+    'He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
+  ],
+};
+
+const capabilityHeadings = {
+  es: 'Capacidades para construir y mejorar sistemas',
+  en: 'Capabilities for building and improving systems',
+};
+
+const projectsDescriptions = {
+  es: 'Los proyectos públicos permiten explorar código, contexto y límites.',
+  en: 'The public projects let you explore code, context and limitations.',
+};
+
 test('exports the complete approved Founder profile in both locales', async () => {
   for (const locale of ['es', 'en']) {
     const definition = modules.find((item) => item.locale === locale && item.routeId === 'founder');
@@ -23,28 +46,9 @@ test('exports the complete approved Founder profile in both locales', async () =
 
     assert.equal(content.header.name, 'Samuel Furlanich');
     assert.match(content.header.context, /founder|fundador/i);
-    assert.equal(
-      content.header.opening,
-      locale === 'es'
-        ? 'Ingeniero de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.'
-        : 'Software Engineer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance.',
-    );
-    assert.equal('biography' in content.header, false);
+    assert.equal('opening' in content.header, false);
     assert.ok(content.biography.heading);
-    assert.ok(content.biography.paragraphs.length >= 2);
-    assert.match(content.biography.paragraphs.join(' '), /2024/);
-    assert.equal(
-      content.biography.paragraphs[1],
-      locale === 'es'
-        ? 'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.'
-        : 'He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor.',
-    );
-    assert.equal(
-      content.biography.paragraphs[2],
-      locale === 'es'
-        ? 'También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.'
-        : 'He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
-    );
+    assert.deepEqual(content.biography.paragraphs, approvedBiographies[locale]);
     assert.match(content.header.context, locale === 'es' ? /Ingeniero de software/ : /Software Engineer/);
     assert.match(content.biography.paragraphs[0], locale === 'es' ? /es ingeniero de software/ : /is a Software Engineer/);
     assert.equal(content.professionalLinks.cv.path, '/Samuel-Furlanich-CV.pdf');
@@ -70,7 +74,7 @@ test('exports the complete approved Founder profile in both locales', async () =
     assert.match(content.education.project.relationship, /grup|group/i);
     assert.match(content.education.project.limitation, /verific|claimed|afirma/i);
     assert.equal(content.capabilities.groups.length, 4);
-    assert.match(content.capabilities.heading, /systems|sistemas/i);
+    assert.equal(content.capabilities.heading, capabilityHeadings[locale]);
     assert.match(content.capabilities.introduction, /problem|problema|system|sistema/i);
     assert.deepEqual(
       content.capabilities.groups.map(({ id }) => id),
@@ -82,9 +86,15 @@ test('exports the complete approved Founder profile in both locales', async () =
         ),
         false,
     );
-    assert.ok(content.projectsBridge.description);
+    assert.equal(content.projectsBridge.description, projectsDescriptions[locale]);
     assert.equal(content.projectsBridge.action.routeId, 'projects');
     assert.equal(content.finalCta.action.routeId, 'contact');
+    assert.deepEqual(content.wordBindings, [
+      { nodeId: 'n0', word: '.NET' },
+      { nodeId: 'n4', word: 'React' },
+      { nodeId: 'n8', word: 'Next.js' },
+      { nodeId: 'n12', word: 'Blazor' },
+    ]);
     assert.equal('portrait' in content, false);
   }
 });

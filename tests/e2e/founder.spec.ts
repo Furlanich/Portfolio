@@ -11,10 +11,16 @@ const founderCases = [
     professionalHeading: 'Perfil profesional',
     experienceHeading: 'Experiencia profesional',
     educationHeading: 'Formación',
-    capabilitiesHeading: 'Sistemas que podemos construir',
+    biographyHeading: 'Biografía profesional',
+    capabilitiesHeading: 'Capacidades para construir y mejorar sistemas',
     projectsHeading: 'Trabajo y evidencia técnica',
     finalHeading: '¿Querés conversar sobre una necesidad de tu negocio?',
-    opening: 'Ingeniero de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.',
+    biography: [
+      'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
+      'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.',
+      'También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
+    ],
+    projectsDescription: 'Los proyectos públicos permiten explorar código, contexto y límites.',
     cvLabel: 'Descargar CV',
     projectsLabel: 'Ver proyectos seleccionados',
     contactLabel: 'Iniciar una consulta',
@@ -29,10 +35,16 @@ const founderCases = [
     professionalHeading: 'Professional profile',
     experienceHeading: 'Professional experience',
     educationHeading: 'Education',
-    capabilitiesHeading: 'Systems we can engineer',
+    biographyHeading: 'Professional biography',
+    capabilitiesHeading: 'Capabilities for building and improving systems',
     projectsHeading: 'Work and technical evidence',
     finalHeading: 'Want to discuss a business need?',
-    opening: 'Software Engineer and founder of FURLANICH. His work spans web applications, management systems, integrations and maintenance.',
+    biography: [
+      'Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations.',
+      'He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor.',
+      'He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
+    ],
+    projectsDescription: 'The public projects let you explore code, context and limitations.',
     cvLabel: 'Download CV',
     projectsLabel: 'View selected work',
     contactLabel: 'Start an enquiry',
@@ -50,6 +62,7 @@ for (const founderCase of founderCases) {
     for (const heading of [
       founderCase.professionalHeading,
       founderCase.experienceHeading,
+      founderCase.biographyHeading,
       founderCase.educationHeading,
       founderCase.capabilitiesHeading,
       founderCase.projectsHeading,
@@ -58,15 +71,32 @@ for (const founderCase of founderCases) {
       await expect(page.getByRole('heading', { name: heading })).toBeVisible();
     }
 
-    await expect(page.getByText(founderCase.opening, { exact: true })).toBeVisible();
-    const experience = page.getByRole('region', { name: founderCase.experienceHeading });
     const biography = page.locator('[data-founder-biography]');
-    await expect(biography).toBeVisible();
+    await expect(biography.getByRole('heading', { name: founderCase.biographyHeading })).toBeVisible();
+    await expect(biography.locator('[data-founder-biography-paragraph]')).toHaveText([...founderCase.biography]);
+    await expect(page.getByText(founderCase.projectsDescription, { exact: true })).toBeVisible();
+    const experience = page.getByRole('region', { name: founderCase.experienceHeading });
+    const introPlate = page.locator('[data-founder-intro-plate]');
+    const historyPlate = page.locator('[data-founder-history-plate]');
+    await expect(introPlate).toContainText(founderCase.biography[0]);
+    await expect(introPlate.getByRole('region', { name: founderCase.professionalHeading })).toBeVisible();
+    await expect(page.locator('#connected-pause-founder')).toContainText(
+      founderCase.locale === 'Spanish' ? 'Fondo estático' : 'Static background',
+    );
     const experienceBox = await experience.boundingBox();
     const biographyBox = await biography.boundingBox();
+    const linksBox = await page.getByRole('region', { name: founderCase.professionalHeading }).boundingBox();
+    const introBox = await introPlate.boundingBox();
+    const historyBox = await historyPlate.boundingBox();
     expect(experienceBox).not.toBeNull();
     expect(biographyBox).not.toBeNull();
-    expect(biographyBox!.y).toBeGreaterThan(experienceBox!.y);
+    expect(linksBox).not.toBeNull();
+    expect(introBox).not.toBeNull();
+    expect(historyBox).not.toBeNull();
+    expect(biographyBox!.y).toBeGreaterThan(introBox!.y);
+    expect(linksBox!.y).toBeGreaterThan(biographyBox!.y);
+    expect(experienceBox!.y).toBeGreaterThan(linksBox!.y);
+    expect(historyBox!.y).toBeGreaterThan(introBox!.y);
 
     const capabilityGroups = page.locator('[data-founder-capability-group]');
     const references = await capabilityGroups.evaluateAll((groups) => groups.map((group) => ({
@@ -101,6 +131,15 @@ for (const founderCase of founderCases) {
       'href',
       'https://github.com/Furlanich',
     );
+    await expect(page.getByRole('main').locator('[data-connected-mount]')).toHaveAttribute(
+      'data-word-bindings',
+      JSON.stringify([
+        { nodeId: 'n0', word: '.NET' },
+        { nodeId: 'n4', word: 'React' },
+        { nodeId: 'n8', word: 'Next.js' },
+        { nodeId: 'n12', word: 'Blazor' },
+      ]),
+    );
   });
 
   test(founderCase.locale + ' Founder preserves language switching and professional keyboard order', async ({ page }) => {
@@ -118,6 +157,20 @@ for (const founderCase of founderCases) {
 
     await page.getByRole('banner').locator('a[hreflang="' + founderCase.alternateLocale + '"]').click();
     await expect(page).toHaveURL((url) => url.pathname === appPathname(founderCase.alternateRoute));
+  });
+
+  test(`${founderCase.locale} Founder downloads the unchanged CV as a valid PDF`, async ({ page }) => {
+    await page.goto(appUrl(founderCase.route));
+
+    const cv = page.getByRole('main').getByRole('link', { name: founderCase.cvLabel, exact: true });
+    await expect(cv).toHaveAttribute('download', 'Samuel-Furlanich-CV.pdf');
+    const response = await page.request.get(new URL(appPathname('/Samuel-Furlanich-CV.pdf'), page.url()).toString());
+    expect(response.ok()).toBe(true);
+    expect(response.headers()['content-type']).toContain('application/pdf');
+    expect((await response.body()).subarray(0, 5).toString()).toBe('%PDF-');
+
+    const [download] = await Promise.all([page.waitForEvent('download'), cv.click()]);
+    expect(download.suggestedFilename()).toBe('Samuel-Furlanich-CV.pdf');
   });
 
   test(founderCase.locale + ' Founder keeps periods attached to their experience entries on compact layout', async ({ page }) => {
@@ -193,11 +246,11 @@ const founderEditorialCases = [
     locale: 'Spanish',
     route: stableRoutes.founder.es,
     headings: [
+      'Biografía profesional',
       'Perfil profesional',
       'Experiencia profesional',
-      'Biografía profesional',
       'Formación',
-      'Sistemas que podemos construir',
+      'Capacidades para construir y mejorar sistemas',
       'Trabajo y evidencia técnica',
       '¿Querés conversar sobre una necesidad de tu negocio?',
     ],
@@ -206,11 +259,11 @@ const founderEditorialCases = [
     locale: 'English',
     route: stableRoutes.founder.en,
     headings: [
+      'Professional biography',
       'Professional profile',
       'Professional experience',
-      'Professional biography',
       'Education',
-      'Systems we can engineer',
+      'Capabilities for building and improving systems',
       'Work and technical evidence',
       'Want to discuss a business need?',
     ],
@@ -223,7 +276,8 @@ for (const founderCase of founderEditorialCases) {
     const main = page.getByRole('main');
 
     await expect(main.locator('h2')).toHaveText([...founderCase.headings]);
-    for (const heading of founderCase.headings.slice(1)) {
+    for (const [index, heading] of founderCase.headings.entries()) {
+      if (index === 1) continue;
       const size = await main.getByRole('heading', { level: 2, name: heading, exact: true })
         .evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
       expect(size, `${heading} uses the approved section H2 scale`).toBeGreaterThanOrEqual(32);

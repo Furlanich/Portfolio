@@ -1,21 +1,24 @@
-import type { FounderHeaderContent } from './content-types';
+import type { FounderPageContent } from './content-types';
+import styles from './founder.module.css';
 
 interface FounderHeaderProps {
-  content: FounderHeaderContent;
+  header: FounderPageContent['header'];
+  biography: FounderPageContent['biography'];
 }
 
-export function FounderHeader({ content }: FounderHeaderProps) {
+export function FounderHeader({ header, biography }: FounderHeaderProps) {
   return (
-    <section id="founder-header" aria-labelledby="founder-heading" className="bg-foundation-canvas pb-10 pt-16 md:pb-12 md:pt-24 lg:pt-32">
-      <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-        <div className="max-w-[68ch]">
-          <p className="text-sm font-semibold leading-5 text-foundation-action">{content.context}</p>
-          <h1 id="founder-heading" className="mt-4 text-[36px] font-bold leading-10 tracking-[-0.02em] text-foundation-ink md:text-[48px] md:leading-[52px]">
-            {content.name}
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-foundation-muted md:text-xl">{content.opening}</p>
+    <header className={styles.header} aria-labelledby="founder-heading">
+      <p className={styles.eyebrow}>{header.context}</p>
+      <h1 id="founder-heading" className={styles.name}>{header.name}</h1>
+      <section data-founder-biography aria-labelledby="founder-biography-heading" className={styles.biographySection}>
+        <h2 id="founder-biography-heading" className={styles.sectionHeading}>{biography.heading}</h2>
+        <div className={styles.biographyCopy}>
+          {biography.paragraphs.map((paragraph) => (
+            <p data-founder-biography-paragraph key={paragraph}>{paragraph}</p>
+          ))}
         </div>
-      </div>
-    </section>
+      </section>
+    </header>
   );
 }

@@ -3,12 +3,12 @@ import type {
   DocumentLink,
   ExternalLink,
 } from '@/components/foundation/content-types';
+import type { ConnectedWordBinding } from '@/lib/connected-studio/types';
 import type { Locale } from '@/lib/locales';
 
 export type FounderHeaderContent = {
   context: string;
   name: string;
-  opening: string;
 };
 
 export type FounderBiographyContent = {
@@ -49,6 +49,7 @@ export type FounderCapabilityGroup = {
 export type FounderPageContent = {
   locale: Locale;
   routeId: 'founder';
+  wordBindings: readonly ConnectedWordBinding[];
   header: FounderHeaderContent;
   biography: FounderBiographyContent;
   professionalLinks: {
