@@ -19,12 +19,13 @@ export const initialInquiryFormState: InquiryFormState = {
   requestId: 0,
 };
 
-type InquiryAction =
+export type InquiryAction =
   | { type: 'VALIDATE' }
   | { type: 'VALIDATION_FAILED'; fieldErrors: InquiryFieldErrors }
   | { type: 'SUBMIT_STARTED'; requestId: number }
   | { type: 'SUBMIT_SUCCEEDED'; requestId: number }
   | { type: 'SUBMIT_FAILED'; requestId: number; reason: unknown }
+  | { type: 'SUBMIT_REJECTED'; requestId: number; fieldErrors: InquiryFieldErrors }
   | { type: 'CLEAR_FIELD_ERROR'; field: InquiryField }
   | { type: 'RETRY' }
   | { type: 'RESET' };
@@ -53,12 +54,15 @@ export function inquiryReducer(
 ): InquiryFormState {
   switch (action.type) {
     case 'VALIDATE':
+      if (state.phase === 'submitting') return state;
       {
         const withoutFailure = { ...state };
         delete withoutFailure.failureReason;
         return { ...withoutFailure, phase: 'validating', fieldErrors: {}, focusField: null };
       }
     case 'VALIDATION_FAILED':
+      // Local validation has no request id, so it can never touch a request in flight.
+      if (state.phase === 'submitting') return state;
       return {
         ...state,
         phase: 'idle',
@@ -66,7 +70,7 @@ export function inquiryReducer(
         focusField: firstInvalidField(action.fieldErrors),
       };
     case 'SUBMIT_STARTED':
-      if (state.phase === 'submitting') return state;
+      if (state.phase === 'submitting' || action.requestId <= state.requestId) return state;
       return { phase: 'submitting', fieldErrors: {}, focusField: null, requestId: action.requestId };
     case 'SUBMIT_SUCCEEDED':
       if (state.phase !== 'submitting' || state.requestId !== action.requestId) return state;
@@ -83,6 +87,15 @@ export function inquiryReducer(
         fieldErrors: {},
         focusField: null,
         failureReason: safeFailureReason(action.reason),
+      };
+    case 'SUBMIT_REJECTED':
+      // A provider field rejection belongs to one request; an older or finished one is ignored.
+      if (state.phase !== 'submitting' || state.requestId !== action.requestId) return state;
+      return {
+        phase: 'idle',
+        fieldErrors: action.fieldErrors,
+        focusField: firstInvalidField(action.fieldErrors),
+        requestId: state.requestId,
       };
     case 'CLEAR_FIELD_ERROR': {
       if (!state.fieldErrors[action.field]) return state;

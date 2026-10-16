@@ -1,6 +1,7 @@
 import type {
   InquiryField,
   InquiryPayload,
+  InquirySubmissionContext,
   InquirySubmissionResult,
   InquiryValidationCode,
   SubmitInquiry,
@@ -48,6 +49,7 @@ function isValidEndpoint(endpoint: unknown): endpoint is string {
     return (
       url.protocol === 'https:' &&
       url.hostname === 'formspree.io' &&
+      url.port === '' &&
       url.username === '' &&
       url.password === '' &&
       url.search === '' &&
@@ -98,14 +100,15 @@ function isConfigurationBody(body: unknown): boolean {
   });
 }
 
-function transportPayload(payload: InquiryPayload): Record<string, string> {
+function transportPayload(payload: InquiryPayload, honeypot: unknown): Record<string, string> {
   const transport: Record<string, string> = {
     name: payload.name.trim(),
     email: payload.email.trim(),
     message: payload.message.trim(),
     locale: payload.locale,
     source: payload.source,
-    _gotcha: '',
+    // The trap's real value, supplied by the form; a visitor never types here, so a value marks a bot.
+    _gotcha: typeof honeypot === 'string' ? honeypot : '',
   };
   const company = typeof payload.company === 'string' ? payload.company.trim() : '';
   if (company) transport.company = company;
@@ -120,10 +123,10 @@ export function createFormspreeSubmitInquiry({
   const configuredEndpoint = isValidEndpoint(endpoint) ? endpoint : null;
   const effectiveTimeout = Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : 10_000;
 
-  return async (payload) => {
+  return async (payload, context?: InquirySubmissionContext) => {
     if (configuredEndpoint === null) return failed('misconfigured');
 
-    const body = JSON.stringify(transportPayload(payload));
+    const body = JSON.stringify(transportPayload(payload, context?.honeypot));
     if (new TextEncoder().encode(body).byteLength > REQUEST_BYTE_LIMIT) {
       return {
         status: 'invalid',
@@ -131,50 +134,69 @@ export function createFormspreeSubmitInquiry({
       };
     }
 
+    const callerSignal = context?.signal;
+    if (callerSignal?.aborted) return failed('unavailable');
+
+    // One deadline covers the request, the response headers and reading the body. Racing it keeps the
+    // submission finite even when a fetch or a body reader ignores the abort signal.
     const controller = new AbortController();
+    const deadline = new Promise<never>((_resolve, reject) => {
+      controller.signal.addEventListener('abort', () => reject(new Error('deadline')), { once: true });
+    });
+    deadline.catch(() => {});
+    const abortFromCaller = () => controller.abort();
+    callerSignal?.addEventListener('abort', abortFromCaller, { once: true });
     const timer = setTimeout(() => controller.abort(), effectiveTimeout);
-    let response: FormspreeResponse;
+
     try {
-      response = await fetchImpl(configuredEndpoint, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body,
-        signal: controller.signal,
-      });
-    } catch {
-      return failed('unavailable');
+      let response: FormspreeResponse;
+      try {
+        response = await Promise.race([
+          fetchImpl(configuredEndpoint, {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body,
+            signal: controller.signal,
+          }),
+          deadline,
+        ]);
+      } catch {
+        return failed('unavailable');
+      }
+
+      if (response.status === 429) return failed('rate-limited');
+      if (response.status >= 500 && response.status <= 599) return failed('unavailable');
+
+      let responseBody: unknown;
+      try {
+        responseBody = await Promise.race([response.json(), deadline]);
+      } catch {
+        // A deadline that fires while reading the body leaves acceptance uncertain; unreadable JSON is unknown.
+        return failed(controller.signal.aborted ? 'unavailable' : 'unknown');
+      }
+
+      if (response.status >= 200 && response.status <= 299) {
+        if (
+          responseBody !== null &&
+          typeof responseBody === 'object' &&
+          !Array.isArray(responseBody) &&
+          (responseBody as { ok?: unknown }).ok === true
+        ) {
+          return { status: 'accepted' };
+        }
+        return failed('unknown');
+      }
+
+      const fieldResult = mapFieldErrors(responseBody);
+      if (fieldResult) return fieldResult;
+      if (isConfigurationBody(responseBody)) return failed('misconfigured');
+      return failed('unknown');
     } finally {
       clearTimeout(timer);
+      callerSignal?.removeEventListener('abort', abortFromCaller);
     }
-
-    if (response.status === 429) return failed('rate-limited');
-    if (response.status >= 500 && response.status <= 599) return failed('unavailable');
-
-    let responseBody: unknown;
-    try {
-      responseBody = await response.json();
-    } catch {
-      return failed('unknown');
-    }
-
-    if (response.status >= 200 && response.status <= 299) {
-      if (
-        responseBody !== null &&
-        typeof responseBody === 'object' &&
-        !Array.isArray(responseBody) &&
-        (responseBody as { ok?: unknown }).ok === true
-      ) {
-        return { status: 'accepted' };
-      }
-      return failed('unknown');
-    }
-
-    const fieldResult = mapFieldErrors(responseBody);
-    if (fieldResult) return fieldResult;
-    if (isConfigurationBody(responseBody)) return failed('misconfigured');
-    return failed('unknown');
   };
 }
