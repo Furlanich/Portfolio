@@ -194,9 +194,13 @@ function variationAxes(fvar) {
 function localeContentCharacters() {
   const directories = ['app/(es)/_content', 'app/(en)/en/_content'];
   const characters = new Set();
+  const contentFiles = (directory) => fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = path.join(directory, entry.name);
+    return entry.isDirectory() ? contentFiles(entryPath) : (entry.isFile() && entry.name.endsWith('.ts') ? [path.relative(root, entryPath)] : []);
+  });
   for (const directory of directories) {
-    for (const file of fs.readdirSync(path.join(root, directory))) {
-      for (const character of read(path.join(directory, file))) {
+    for (const file of contentFiles(path.join(root, directory))) {
+      for (const character of read(file)) {
         if (character.codePointAt(0) >= 0x20) characters.add(character);
       }
     }

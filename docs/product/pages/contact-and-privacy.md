@@ -858,3 +858,184 @@ These construction strings are proposed with plan revision 2; they do not supply
 | Reciprocal Terms action | Ver los términos y condiciones | Read the Terms and Conditions |
 
 Final publishable Privacy strings, their exact order and links are canonical in this owning Markdown record's bounded `SFC-PUBLIC-COPY-ES/EN` JSON fences, created from the original draft in the legal-template task and finalized only after professional review. They are compared in full to typed code exports. The readiness manifest binds both canonical blocks and typed modules with hashes and an equivalence check; hashing TypeScript alone is insufficient. Earlier prose drafts remain identifiable history, not a second final-copy authority. Review approval references/dates come from the actual owner/counsel; no generated date is legal evidence.
+
+
+## Canonical commercial draft copy — exact typed contract, not publishable
+
+These bounded JSON fences bind the original bilingual draft structure and legal-page chrome to the typed exports. Editorial gates remain in the source; this contract does not authorize publication.
+
+<!-- SFC-PUBLIC-COPY-ES:START -->
+
+```json
+{
+  "locale": "es",
+  "routeId": "privacy",
+  "title": "Política de privacidad",
+  "publication": {
+    "status": "nonpublishable",
+    "releaseGate": "professional-review-and-factual-gates-open"
+  },
+  "chrome": {
+    "contentsLabel": "Contenido",
+    "updateLabel": "Última actualización",
+    "reciprocalLabel": "Ver los términos y condiciones",
+    "reciprocalHref": "/terminos/"
+  },
+  "sections": [
+    {
+      "id": "responsable-y-contacto",
+      "heading": "Responsable y contacto",
+      "paragraphs": [
+        "Samuel Furlanich, quien actúa bajo la marca FURLANICH, es el responsable del tratamiento de las consultas recibidas a través de este sitio. El domicilio informado es Chivilcoy 6620, Buenos Aires, Argentina. Para consultas sobre privacidad o para ejercer tus derechos, escribí a samuelfurlanich@gmail.com."
+      ]
+    },
+    {
+      "id": "que-informacion-solicita-el-formulario",
+      "heading": "Qué información solicita el formulario",
+      "paragraphs": [
+        "Solicitamos tu nombre, correo electrónico y una descripción de lo que necesitás resolver. El nombre de la empresa es opcional. El envío también identifica el idioma y la página desde la que se realiza. No solicitamos archivos adjuntos, contraseñas, credenciales ni datos sensibles."
+      ]
+    },
+    {
+      "id": "para-que-la-usamos",
+      "heading": "Para qué la usamos",
+      "paragraphs": [
+        "Usamos esta información para entender la consulta, evaluar si podemos ayudarte y responderte. También se aplican controles para prevenir spam y abuso. El formulario no te suscribe a comunicaciones comerciales ni autoriza un uso publicitario de tu mensaje."
+      ]
+    },
+    {
+      "id": "como-se-procesa-la-consulta",
+      "heading": "Cómo se procesa la consulta",
+      "paragraphs": [
+        "GitHub Pages aloja las páginas del sitio. Al enviar el formulario, tu navegador transmite la consulta a Formspree, que interviene en su procesamiento y en el envío de la notificación al correo de Samuel, gestionado mediante Gmail. Los proveedores pueden tratar información técnica necesaria para operar y proteger sus servicios."
+      ]
+    },
+    {
+      "id": "preferencias-del-fondo-grafico",
+      "heading": "Preferencias del fondo gráfico",
+      "paragraphs": [
+        "El sitio puede guardar durante la sesión tu preferencia de pausa y una marca técnica de fallo gráfico para evitar nuevos intentos de animación. Estos valores no contienen los datos del formulario. Si el navegador no permite ese almacenamiento, la página mantiene una alternativa estática o una preferencia temporal en memoria."
+      ]
+    },
+    {
+      "id": "proveedores-y-transferencias-internacionales",
+      "heading": "Proveedores y transferencias internacionales",
+      "paragraphs": [
+        "[BLOQUE EDITORIAL — NO PUBLICAR: completar los proveedores materiales, países y mecanismo de transferencia verificados; revisión profesional argentina obligatoria. No afirmar que un contrato europeo resuelve por sí solo las exigencias argentinas.]"
+      ]
+    },
+    {
+      "id": "conservacion",
+      "heading": "Conservación",
+      "paragraphs": [
+        "[BLOQUE EDITORIAL — NO PUBLICAR: convertir los objetivos de 30 días / 12 meses de la tabla anterior en una cláusula pública únicamente después de verificar su operación, sus excepciones y la aprobación profesional. No prometer borrado automático ni desaparición inmediata de copias de respaldo.]"
+      ]
+    },
+    {
+      "id": "tus-solicitudes",
+      "heading": "Tus solicitudes",
+      "paragraphs": [
+        "Podés solicitar acceso, rectificación, actualización o supresión de tus datos escribiendo al correo indicado. Para tramitar la solicitud, podremos pedir información proporcionada para comprobar tu identidad. Cualquier excepción de conservación que corresponda deberá explicarse al responder.",
+        "[REVISIÓN PROFESIONAL: completar el texto y los plazos exigibles, la información sobre la autoridad de control y cualquier otra mención obligatoria.]"
+      ]
+    },
+    {
+      "id": "otros-canales-y-cambios",
+      "heading": "Otros canales y cambios",
+      "paragraphs": [
+        "Si elegís WhatsApp, correo o teléfono, usás un canal independiente del formulario y sujeto a los servicios que intervengan en esa comunicación. Los valores del formulario no se copian automáticamente a esos enlaces. La versión publicada de esta política indicará su fecha de actualización."
+      ]
+    }
+  ]
+}
+```
+
+<!-- SFC-PUBLIC-COPY-ES:END -->
+
+<!-- SFC-PUBLIC-COPY-EN:START -->
+
+```json
+{
+  "locale": "en",
+  "routeId": "privacy",
+  "title": "Privacy Policy",
+  "publication": {
+    "status": "nonpublishable",
+    "releaseGate": "professional-review-and-factual-gates-open"
+  },
+  "chrome": {
+    "contentsLabel": "Contents",
+    "updateLabel": "Last updated",
+    "reciprocalLabel": "Read the Terms and Conditions",
+    "reciprocalHref": "/en/terms/"
+  },
+  "sections": [
+    {
+      "id": "responsible-party-and-contact",
+      "heading": "Responsible party and contact",
+      "paragraphs": [
+        "Samuel Furlanich, operating under the FURLANICH brand, is responsible for handling inquiries received through this website. The supplied address is Chivilcoy 6620, Buenos Aires, Argentina. For privacy questions or to exercise your rights, contact samuelfurlanich@gmail.com."
+      ]
+    },
+    {
+      "id": "information-requested-by-the-form",
+      "heading": "Information requested by the form",
+      "paragraphs": [
+        "We request your name, email address and a description of what you need to solve. Your company name is optional. The submission also identifies its language and source page. We do not request attachments, passwords, credentials or sensitive information."
+      ]
+    },
+    {
+      "id": "how-we-use-it",
+      "heading": "How we use it",
+      "paragraphs": [
+        "We use this information to understand your inquiry, assess whether we can help and respond to you. Controls also help prevent spam and abuse. The form does not subscribe you to marketing communications or authorize advertising use of your message."
+      ]
+    },
+    {
+      "id": "how-an-inquiry-is-processed",
+      "heading": "How an inquiry is processed",
+      "paragraphs": [
+        "GitHub Pages hosts the website pages. When you submit the form, your browser sends the inquiry to Formspree, which processes it and sends a notification to Samuel's email, managed through Gmail. Providers may process technical information needed to operate and protect their services."
+      ]
+    },
+    {
+      "id": "graphic-background-preferences",
+      "heading": "Graphic background preferences",
+      "paragraphs": [
+        "The site may store your pause preference and a technical graphics-failure flag for the browsing session to avoid repeated animation attempts. These values contain no form information. If browser storage is unavailable, the page uses a static alternative or a temporary preference held in memory."
+      ]
+    },
+    {
+      "id": "providers-and-international-transfers",
+      "heading": "Providers and international transfers",
+      "paragraphs": [
+        "[EDITORIAL BLOCK — DO NOT PUBLISH: complete the verified material providers, countries and transfer mechanism; professional Argentine legal review required. Do not assume European contractual terms alone establish the applicable Argentine safeguards.]"
+      ]
+    },
+    {
+      "id": "retention",
+      "heading": "Retention",
+      "paragraphs": [
+        "[EDITORIAL BLOCK — DO NOT PUBLISH: turn the table's 30-day / 12-month operational targets into public wording only after verifying their operation, exceptions and professional approval. Do not promise automatic erasure or immediate disappearance of backup copies.]"
+      ]
+    },
+    {
+      "id": "your-requests",
+      "heading": "Your requests",
+      "paragraphs": [
+        "You can request access, correction, updating or deletion of your information by contacting the email address above. We may request proportionate information to verify your identity when handling a request. Any applicable retention exception must be explained in the response.",
+        "[PROFESSIONAL REVIEW: complete applicable wording and time limits, supervisory-authority information and any other required statement.]"
+      ]
+    },
+    {
+      "id": "other-channels-and-changes",
+      "heading": "Other channels and changes",
+      "paragraphs": [
+        "If you choose WhatsApp, email or phone, you use a channel independent of the form and subject to the services involved in that communication. Form values are not automatically copied into those links. The published policy will show its update date."
+      ]
+    }
+  ]
+}
+```
+
+<!-- SFC-PUBLIC-COPY-EN:END -->

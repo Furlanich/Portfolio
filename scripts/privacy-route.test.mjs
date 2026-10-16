@@ -66,7 +66,16 @@ test('Privacy routes and shared page remain Server Components', async () => {
   } catch (error) {
     assert.fail('Shared PrivacyPage component is missing (' + error.code + ')');
   }
-  assert.ok(component.includes('<main'));
-  assert.ok(component.includes('<h1'));
+  assert.ok(component.includes('LegalPage'));
   assert.equal(/['"]use client['"]/.test(component), false);
+  const legalPage = await readFile(new URL('../components/legal/LegalPage.tsx', import.meta.url), 'utf8');
+  assert.equal(/['"]use client['"]/.test(legalPage), false);
+});
+
+test('Terms remains outside the published route registry until the later legal release gate', async () => {
+  const { foundationRoutes } = await import('../lib/site-routes.ts');
+  assert.equal('terms' in foundationRoutes, false);
+  for (const path of ['../app/(es)/terminos/page.tsx', '../app/(en)/en/terms/page.tsx']) {
+    await assert.rejects(readFile(new URL(path, import.meta.url)));
+  }
 });

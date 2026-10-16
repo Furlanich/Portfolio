@@ -1,0 +1,171 @@
+.page {
+  background: #f9f6ee;
+  color: #09243d;
+}
+
+.container {
+  box-sizing: border-box;
+  width: min(100%, 1200px);
+  margin-inline: auto;
+  padding: 64px 20px 96px;
+}
+
+.header,
+.contents,
+.article {
+  max-width: 920px;
+  margin-inline: auto;
+}
+
+.title {
+  max-width: 18ch;
+  margin: 0;
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.introduction {
+  max-width: 68ch;
+  margin: 24px 0 0;
+  color: #526473;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin: 24px 0 0;
+  color: #526473;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.metadata div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.metadata dt {
+  font-weight: 600;
+}
+
+.metadata dd {
+  margin: 0;
+}
+
+.contents {
+  margin-top: 40px;
+  padding: 24px 0 28px;
+  border-block: 1px solid #d8d2c6;
+}
+
+.contentsHeading {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.contentsList {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px 32px;
+  margin: 16px 0 0;
+  padding-left: 1.5rem;
+  color: #004589;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.contentsList a,
+.links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #004589;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.contentsList a:hover,
+.links a:hover {
+  color: #09243d;
+}
+
+.contentsList a:focus-visible,
+.links a:focus-visible {
+  border-radius: 2px;
+  outline: 3px solid #004589;
+  outline-offset: 3px;
+}
+
+.article {
+  margin-top: 8px;
+  border-top: 2px solid #09243d;
+}
+
+.section {
+  scroll-margin-top: calc(var(--app-bar-height, 84px) + 16px);
+  padding: 32px 0;
+  border-bottom: 1px solid #d8d2c6;
+}
+
+.sectionHeading {
+  max-width: 68ch;
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.paragraphs {
+  display: grid;
+  gap: 16px;
+  max-width: 68ch;
+  margin-top: 16px;
+  color: #526473;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.paragraphs p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.links {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 24px 0 0;
+  list-style: none;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 80px 32px 112px;
+  }
+
+  .contentsList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .section {
+    padding-block: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: 48px;
+  }
+}
