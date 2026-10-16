@@ -30,6 +30,31 @@ const founderCases = [
   },
 ] as const;
 
+type TextBounds = { text: string; left: number; right: number; limitLeft: number; limitRight: number };
+
+async function overflowingText(page: import('@playwright/test').Page): Promise<string[]> {
+  return page.locator('main').evaluate((root) => {
+    const problems: TextBounds[] = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = node.textContent?.trim();
+      const element = node.parentElement;
+      if (!text || !element || element.closest('[aria-hidden="true"]')) continue;
+      const plate = element.closest('[data-connected-opaque-plate]');
+      const limits = plate ? plate.getBoundingClientRect() : { left: 0, right: window.innerWidth };
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      for (const rect of range.getClientRects()) {
+        if (rect.width === 0) continue;
+        if (rect.left < limits.left - 0.5 || rect.right > limits.right + 0.5 || rect.left < -0.5 || rect.right > window.innerWidth + 0.5) {
+          problems.push({ text: text.slice(0, 40), left: Math.round(rect.left), right: Math.round(rect.right), limitLeft: Math.round(limits.left), limitRight: Math.round(limits.right) });
+        }
+      }
+    }
+    return problems.map((problem) => `${problem.text} [${problem.left}..${problem.right}] outside [${problem.limitLeft}..${problem.limitRight}]`);
+  });
+}
+
 for (const founderCase of founderCases) {
   test(`${founderCase.locale} Founder keeps complete text and the two plates aligned at all approved widths`, async ({ page }) => {
     await page.goto(appUrl(founderCase.route));
@@ -90,10 +115,38 @@ for (const founderCase of founderCases) {
     }
   });
 
+  test(`${founderCase.locale} Founder reflows at a 200% zoom-equivalent viewport`, async ({ page }) => {
+    // 1440×900 at 200% browser zoom is a 720×450 CSS viewport.
+    await page.setViewportSize({ width: 720, height: 450 });
+    await page.goto(appUrl(founderCase.route));
+
+    const main = page.getByRole('main');
+    await expect(main.getByRole('heading', { level: 1, name: 'Samuel Furlanich' })).toBeVisible();
+    await expect(main.locator('h2')).toHaveText([...founderCase.headings]);
+    const dimensions = await page.evaluate(() => ({
+      width: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(dimensions.scrollWidth, '200% zoom-equivalent viewport').toBeLessThanOrEqual(dimensions.width);
+    expect(await overflowingText(page), 'text stays inside its plate at 200% zoom').toEqual([]);
+
+    const layout = await main.locator('[data-founder-layout]').boundingBox();
+    const intro = await main.locator('[data-founder-intro-plate]').boundingBox();
+    const history = await main.locator('[data-founder-history-plate]').boundingBox();
+    expect(layout).not.toBeNull();
+    expect(intro).not.toBeNull();
+    expect(history).not.toBeNull();
+    expect(intro!.x).toBeCloseTo(layout!.x, 0);
+    expect(history!.x).toBeCloseTo(layout!.x, 0);
+  });
+
   test(`${founderCase.locale} Founder retains the complete profile without JavaScript`, async ({ browser, page }) => {
     await page.goto(appUrl(founderCase.route));
     const url = page.url();
-    const context = await browser.newContext({ javaScriptEnabled: false });
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 320, height: 800 },
+    });
     try {
       const noScriptPage = await context.newPage();
       await noScriptPage.goto(url);
@@ -105,28 +158,39 @@ for (const founderCase of founderCases) {
       await expect(noScriptPage.locator('#connected-pause-founder')).toContainText(
         founderCase.locale === 'Spanish' ? 'Fondo estático' : 'Static background',
       );
+      const dimensions = await noScriptPage.evaluate(() => ({
+        width: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+      }));
+      expect(dimensions.scrollWidth, 'compact no-JavaScript layout').toBeLessThanOrEqual(dimensions.width);
     } finally {
       await context.close();
     }
   });
 
-  test(`${founderCase.locale} Founder content reflows under 200% text growth and WCAG text spacing`, async ({ page }) => {
+  test(`${founderCase.locale} Founder text stays readable under 200% text growth and WCAG spacing`, async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 800 });
     await page.goto(appUrl(founderCase.route));
     await page.waitForLoadState('networkidle');
 
-    await page.evaluate(() => {
-      const selectors = 'main h1, main h2, main h3, main p, main a, main li, [data-connected-static-label]';
-      for (const element of document.querySelectorAll<HTMLElement>(selectors)) {
-        const size = Number.parseFloat(getComputedStyle(element).fontSize);
-        element.style.setProperty('font-size', `${size * 2}px`, 'important');
-      }
+    await expect.poll(() => overflowingText(page), { message: 'default text stays inside its plate' }).toEqual([]);
+    await page.locator('main').evaluate((root) => {
+      const elements = [...root.querySelectorAll<HTMLElement>('*')];
+      const sizes = elements.map((element) => {
+        const style = getComputedStyle(element);
+        return { fontSize: Number.parseFloat(style.fontSize), lineHeight: Number.parseFloat(style.lineHeight) };
+      });
+      elements.forEach((element, index) => {
+        element.style.fontSize = `${sizes[index].fontSize * 2}px`;
+        if (Number.isFinite(sizes[index].lineHeight)) element.style.lineHeight = `${sizes[index].lineHeight * 2}px`;
+      });
     });
     let dimensions = await page.evaluate(() => ({
       width: document.documentElement.clientWidth,
       scrollWidth: document.documentElement.scrollWidth,
     }));
     expect(dimensions.scrollWidth, '200% text growth').toBeLessThanOrEqual(dimensions.width);
+    expect(await overflowingText(page), '200% text growth stays inside every plate').toEqual([]);
     await expect(page.getByRole('heading', { level: 1, name: 'Samuel Furlanich' })).toBeVisible();
 
     await page.reload();
@@ -142,6 +206,7 @@ for (const founderCase of founderCases) {
       scrollWidth: document.documentElement.scrollWidth,
     }));
     expect(dimensions.scrollWidth, 'WCAG text spacing').toBeLessThanOrEqual(dimensions.width);
+    expect(await overflowingText(page), 'WCAG text spacing stays inside every plate').toEqual([]);
     await expect(page.locator('main h2')).toHaveText([...founderCase.headings]);
   });
 }
