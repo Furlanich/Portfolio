@@ -7,16 +7,17 @@ export const studioPageContent = {
     eyebrow: 'Estudio de software liderado por su fundador',
     heading: 'Software a medida con responsabilidad técnica directa.',
     positioning:
-      'FURLANICH diseña, desarrolla y mejora software a medida para negocios que necesitan resolver procesos concretos. Samuel Furlanich conduce el relevamiento, la dirección técnica y la entrega, con decisiones explícitas y sistemas pensados para mantenerse.',
-    supportingStatement:
-      'Cuando el alcance requiere especialidades adicionales, se incorporan colaboradores de forma explícita.',
+      'FURLANICH diseña, desarrolla y mejora software a medida para negocios que necesitan resolver procesos concretos.',
     primaryAction: { label: 'Contanos qué necesitás resolver', routeId: 'contact' },
     secondaryAction: { label: 'Conocer a Samuel', routeId: 'founder' },
   },
-  operatingModel: {
-    label: 'Modelo de trabajo',
-    items: ['Liderado por su fundador', 'Responsabilidad técnica directa', 'Buenos Aires, Argentina', 'Español e inglés', 'Colaboradores especializados según el alcance'],
-  },
+  sceneCaption: 'Responsabilidad central, especialidades conectadas.',
+  wordBindings: [
+    { nodeId: 'n0', word: 'Responsabilidad' },
+    { nodeId: 'n4', word: 'Alcance' },
+    { nodeId: 'n8', word: 'Especialistas' },
+    { nodeId: 'n12', word: 'Revisión' },
+  ],
   accountability: {
     heading: 'Dirección técnica de principio a fin',
     paragraphs: [
@@ -48,6 +49,7 @@ export const studioPageContent = {
   },
   finalCta: {
     heading: 'Conversemos sobre lo que hoy frena a tu negocio',
+    // Demonstration-dependent: the coordinated commercial release (PLAN-SFC-V1 Task 16) owns the final wording.
     description: 'Explorá las opciones de contacto y la demostración del formulario.',
     action: { label: 'Iniciar una consulta', routeId: 'contact' },
   },

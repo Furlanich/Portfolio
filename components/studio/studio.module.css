@@ -1,0 +1,358 @@
+/*
+ * PLAN-SFC-V1 Task 6: the Atlas Studio composition (DESIGN-SFC-V1, "Visual system and dimensions" and
+ * "Studio"). Reading surfaces and the editorial measure come from the shared W1 primitives (AtlasEditorialContainer,
+ * AtlasPlate "editorial-opaque", AtlasScrim); nothing here re-creates their fill, border, radius or padding.
+ * This module owns only Studio's layout, its type scale and its actions. The type scale follows the approved
+ * 68/48/42 H1, 40/34/30 section, 24/22 subsection and 18/1.6 body values as defaults for these surfaces.
+ */
+
+.page {
+  position: relative;
+  /* The reading scrim extends 24px beyond its text, which can pass the 20px compact gutter; clip it, never scroll. */
+  overflow-x: clip;
+  padding-block: 32px 56px;
+  color: #F9F6EE;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding-block: 48px 72px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    padding-block: 56px 96px;
+  }
+}
+
+/* Section rhythm: 96px wide, 72px tablet, 56px compact. */
+.stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 56px;
+}
+
+.stack > * {
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .stack {
+    gap: 72px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stack {
+    gap: 96px;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Identity: a 7/5 grid with a 64px gap. The open chart caption follows the plate in one column and
+ * sits near the plate's lower edge beside it. Its 24px scrim clearance is kept inside the grid cell.
+ * ------------------------------------------------------------------------------------------- */
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 48px;
+}
+
+@media (min-width: 1024px) {
+  .intro {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 64px;
+    align-items: end;
+  }
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sky-glow);
+}
+
+/*
+ * H1: 42px compact, 48px tablet, 68px wide. Complete words outrank the pixel value (DESIGN-SFC-V1, "Review
+ * clarification"), so the size eases down only where the plate's content box cannot hold the longest
+ * Spanish word ("responsabilidad", about 7.05em): below about 390px, and from 1024 to about 1104px where
+ * the 7/12 plate is narrowest. 390px, 768px and 1104px and wider keep the approved sizes exactly.
+ */
+.heroHeading {
+  margin: 16px 0 0;
+  font-size: clamp(30px, calc(100vw / 7.05 - 13.3px), 42px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .heroHeading {
+    font-size: 48px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroHeading {
+    font-size: clamp(56px, calc(8.2vw - 22.5px), 68px);
+  }
+}
+
+.lead {
+  margin: 24px 0 0;
+  max-width: 56ch;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+@media (max-width: 479px) {
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions > * {
+    width: 100%;
+  }
+}
+
+/* The hero Pause slot is reserved at 44px, 12px after the action row, so adding the live control never moves the plate. */
+.pauseSlot {
+  display: flex;
+  min-height: 44px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+/* Static policy and no-JavaScript state: quiet text in the slot. The live control replaces it with no layout shift. */
+.staticLabel {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sky-text-2);
+}
+
+.pauseSlot:has([data-connected-pause]) .staticLabel {
+  display: none;
+}
+
+.caption {
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 0;
+}
+
+@media (min-width: 1024px) {
+  /* Text bottom 24px above the plate's lower edge, so the scrim ends level with the plate. */
+  .caption {
+    margin-bottom: 24px;
+  }
+}
+
+.captionText {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--sky-glow);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Sections and shared type.
+ * ------------------------------------------------------------------------------------------- */
+
+.sectionHeading {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .sectionHeading {
+    font-size: 34px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sectionHeading {
+    font-size: 40px;
+  }
+}
+
+.subHeading {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+@media (min-width: 1024px) {
+  .subHeading {
+    font-size: 24px;
+  }
+}
+
+.body {
+  margin: 0;
+  max-width: 64ch;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.body + .body {
+  margin-top: 16px;
+}
+
+.body.introduction {
+  margin-top: 16px;
+}
+
+/* Unplated text sits on a scrim, which stays no wider than its reading measure. */
+.textBlock {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.textBlock .body {
+  margin-top: 16px;
+}
+
+/* Accountability: the heading in about five columns, one seven-column plate. */
+.accountability {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 48px;
+  scroll-margin-top: calc(var(--app-bar-height) + 24px);
+}
+
+@media (min-width: 1024px) {
+  .accountability {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 64px;
+    align-items: start;
+  }
+}
+
+.subsection {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid #36536C;
+}
+
+.subsection .body {
+  margin-top: 12px;
+}
+
+/* Principles: one continuous plate, a semantic list in two columns from 768px with internal rules. */
+.principleList {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px 32px;
+  margin: 40px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .principleList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.principle {
+  min-width: 0;
+  padding-top: 24px;
+  border-top: 1px solid #36536C;
+}
+
+.principle .body {
+  margin-top: 12px;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Actions: at least 44px (48px preferred), the existing 10px button radius and a 3px focus outline.
+ * ------------------------------------------------------------------------------------------- */
+
+.action {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 24px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  scroll-margin-top: calc(var(--app-bar-height) + 24px);
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out);
+}
+
+.action:focus-visible {
+  outline: 3px solid var(--sky-glow);
+  outline-offset: 3px;
+}
+
+/* Azure #004589 with Bone text. */
+.actionPrimary {
+  background-color: #004589;
+  color: #F9F6EE;
+}
+
+.actionPrimary:hover {
+  background-color: var(--sky-lit);
+  color: #09243D;
+}
+
+.actionSecondary {
+  border-color: var(--sky-glow);
+  background-color: transparent;
+  color: #F9F6EE;
+}
+
+.actionSecondary:hover {
+  background-color: rgba(156, 196, 236, 0.14);
+}
+
+.sectionAction {
+  margin-top: 24px;
+}
+
+/* Forced colors: system colors, visible borders and focus; the decorative ground is removed by the Ground. */
+@media (forced-colors: active) {
+  .actionPrimary,
+  .actionSecondary {
+    border-color: LinkText;
+    background-color: Canvas;
+    color: LinkText;
+  }
+
+  .action:focus-visible {
+    outline-color: Highlight;
+  }
+
+  .subsection,
+  .principle {
+    border-color: CanvasText;
+  }
+}
