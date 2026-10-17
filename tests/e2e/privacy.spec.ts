@@ -51,6 +51,8 @@ for (const pageCase of routeCases) {
     await expect(page.locator('main')).toHaveCount(1);
     await expect(page.locator('main h1:visible')).toHaveText(pageCase.heading);
     await expect(page.locator('main p').first()).toHaveText(pageCase.introduction);
+    const contents = page.getByRole('navigation', { name: pageCase.language === 'es-AR' ? 'Contenido' : 'Contents' });
+    await expect(contents.getByRole('listitem')).toHaveCount(pageCase.sections.length);
 
     for (const section of pageCase.sections) {
       await expect(page.getByRole('heading', { level: 2, name: section })).toBeVisible();
@@ -60,10 +62,23 @@ for (const pageCase of routeCases) {
       'href',
       'https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement',
     );
+    await expect(page.getByRole('main').getByRole('link', { name: pageCase.githubLabel })).not.toHaveAttribute('target', '_blank');
     await expect(page.locator('form')).toHaveCount(0);
     assertNoBrowserErrors();
   });
 }
+
+test('Privacy contents links stay below the sticky App Bar', async ({ page }) => {
+  await page.goto(appUrl(stableRoutes.privacy.es));
+  const link = page.getByRole('navigation', { name: 'Contenido' }).getByRole('link').first();
+  const targetId = await link.getAttribute('href');
+  await link.click();
+  await expect(page).toHaveURL(new RegExp('#' + targetId?.slice(1) + '$'));
+  const target = page.locator(targetId ?? '');
+  const targetTop = await target.evaluate((element) => element.getBoundingClientRect().top);
+  const appBarBottom = await page.getByRole('banner').evaluate((element) => element.getBoundingClientRect().bottom);
+  expect(targetTop).toBeGreaterThanOrEqual(appBarBottom - 1);
+});
 
 async function switchLanguage(page: Page, language: string, route: string) {
   await Promise.all([

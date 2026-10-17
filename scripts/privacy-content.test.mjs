@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { privacyRequirements } from './export-requirements/privacy.mjs';
 
 async function loadContent(modulePath) {
   try {
@@ -61,4 +62,18 @@ test('keeps Privacy content declarative and free of live-processing claims', () 
       assert.doesNotMatch(text, /DPA|subprocessor|subprocesador/i);
     }
   });
+});
+
+test('static-export navigation requirements match the current bilingual Privacy content', async () => {
+  for (const [locale, path, file, label] of [
+    ['es', '../app/(es)/_content/privacy.ts', 'privacidad/index.html', 'Contenido'],
+    ['en', '../app/(en)/en/_content/privacy.ts', 'en/privacy/index.html', 'Contents'],
+  ]) {
+    const content = await loadContent(path);
+    const requirement = privacyRequirements[file];
+    assert.equal(requirement.contentsLabel, label);
+    assert.deepEqual(requirement.sectionIds, content.sections.map(({ id }) => id));
+    assert.deepEqual(requirement.sections, content.sections.map(({ heading }) => heading));
+    assert.equal(locale, content.locale);
+  }
 });

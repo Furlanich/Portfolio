@@ -1,5 +1,6 @@
-// Declarative static-export requirements for Privacy (PLAN-SFC-V1 Task 2: one owner per page, data only).
-// The shared verifier (scripts/verify-static-export.mjs) imports this map and owns the assertion logic.
+// Declarative static-export requirements for Privacy (PLAN-SFC-V1 Tasks 2 and 9: one owner per page, data only).
+// Privacy now uses the shared legal reading template. The verifier continues to own route/content assertions;
+// these navigation fields are also consumed by the focused browser contract in tests/e2e/legal.spec.ts.
 export const privacyRequirements = {
   'privacidad/index.html': {
     heading: 'Privacidad de esta demostración',
@@ -13,6 +14,8 @@ export const privacyRequirements = {
       'Conservación y consultas',
       'Activación comercial futura',
     ],
+    contentsLabel: 'Contenido',
+    sectionIds: ['form-data', 'hosting', 'external-alternatives', 'sensitive-information', 'retention-questions', 'future-commercial-activation'],
     githubLabel: 'Ver la declaración de privacidad de GitHub',
   },
   'en/privacy/index.html': {
@@ -27,6 +30,8 @@ export const privacyRequirements = {
       'Retention and questions',
       'Future commercial activation',
     ],
+    contentsLabel: 'Contents',
+    sectionIds: ['form-data', 'hosting', 'external-alternatives', 'sensitive-information', 'retention-questions', 'future-commercial-activation'],
     githubLabel: "View GitHub's privacy statement",
   },
 };
