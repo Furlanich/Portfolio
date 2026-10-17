@@ -1,42 +1,59 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useRef, useReducer } from 'react';
+import { useEffect, useMemo, useReducer, useRef, useSyncExternalStore } from 'react';
 import { useForm } from 'react-hook-form';
-import { createDemoSubmitInquiry } from '@/lib/inquiry/demo';
+import { createConfiguredSubmitInquiry } from '@/lib/inquiry/configuration';
+import { createInquirySubmissionController, type InquirySubmissionController } from '@/lib/inquiry/submission-controller';
 import { validateInquiry } from '@/lib/inquiry/validation';
-import type { InquiryField, InquiryValues } from '@/lib/inquiry/contracts';
-import { initialInquiryFormState, inquiryReducer } from './state';
+import type { InquiryField, InquiryValues, SubmitInquiry } from '@/lib/inquiry/contracts';
+import { firstInvalidField, initialInquiryFormState, inquiryReducer } from './state';
 import type { ContactPageContent } from './content-types';
+import styles from './contact.module.css';
 
 type ContactFormProps = {
   content: ContactPageContent;
   locale: 'es' | 'en';
-  mode: 'demonstration';
 };
 
 const emptyValues: InquiryValues = { name: '', email: '', company: '', message: '' };
+const subscribeToHydration = () => () => undefined;
+const getHydratedSnapshot = () => true;
+const getServerHydratedSnapshot = () => false;
 
-function createSubmitter(mode: 'demonstration') {
-  if (mode === 'demonstration') return createDemoSubmitInquiry();
-  throw new Error('Unsupported Contact mode');
+function createSafeSubmitter(): SubmitInquiry {
+  try {
+    return createConfiguredSubmitInquiry();
+  } catch {
+    // Configuration errors are safe page state, never a fallback to demo success or raw error prose.
+    return async () => ({ status: 'failed', reason: 'misconfigured' });
+  }
 }
 
-export function ContactForm({ content, locale, mode }: ContactFormProps) {
+export function ContactForm({ content, locale }: ContactFormProps) {
   const [state, dispatch] = useReducer(inquiryReducer, initialInquiryFormState);
+  const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
+  const controller = useRef<InquirySubmissionController | null>(null);
   const formElement = useRef<HTMLFormElement>(null);
- const successStatus = useRef<HTMLDivElement>(null);
-  const failureStatus = useRef<HTMLDivElement>(null);
+  const submitButton = useRef<HTMLButtonElement>(null);
+  const honeypot = useRef<HTMLInputElement>(null);
+  const resultRegion = useRef<HTMLDivElement>(null);
   const focusedField = useRef<InquiryField | null>(null);
-  const { clearErrors, handleSubmit, register, reset } = useForm<InquiryValues>({
-    defaultValues: emptyValues,
-  });
-  const submitInquiry = useMemo(() => createSubmitter(mode), [mode]);
+  const focusedOutcome = useRef<string | null>(null);
+  const { clearErrors, getValues, register, reset } = useForm<InquiryValues>({ defaultValues: emptyValues });
+  const submitInquiry = useMemo(() => createSafeSubmitter(), []);
   const sourceLocale = locale === 'es' ? 'es-AR' : 'en';
+  const isSubmitting = state.phase === 'submitting';
+  const hasGlobalOutcome = state.phase === 'success' || state.phase === 'error';
 
- useEffect(() => {
-    formElement.current?.setAttribute('data-contact-hydrated', 'true');
- }, []);
+  useEffect(() => {
+    const currentController = createInquirySubmissionController({ submit: submitInquiry, dispatch });
+    controller.current = currentController;
+    return () => {
+      currentController.dispose();
+      if (controller.current === currentController) controller.current = null;
+    };
+  }, [dispatch, submitInquiry]);
 
   useEffect(() => {
     if (state.focusField && state.focusField !== focusedField.current) {
@@ -47,71 +64,95 @@ export function ContactForm({ content, locale, mode }: ContactFormProps) {
   }, [state.focusField]);
 
   useEffect(() => {
+    if (state.phase === 'success') reset(emptyValues);
+    if (!hasGlobalOutcome) return;
+
+    const outcomeKey = `${state.phase}:${state.requestId}`;
+    if (focusedOutcome.current === outcomeKey) return;
+    focusedOutcome.current = outcomeKey;
+    resultRegion.current?.focus();
+  }, [hasGlobalOutcome, reset, state.phase, state.requestId]);
+
+  function onFieldChange(field: InquiryField) {
+    clearErrors(field);
     if (state.phase === 'success') {
-      reset(emptyValues);
-      successStatus.current?.focus();
+      dispatch({ type: 'RESET' });
+      return;
     }
-  }, [reset, state.phase]);
+    // A global failure remains available while the visitor corrects values before an explicit retry.
+    if (state.phase === 'error') return;
+    dispatch({ type: 'CLEAR_FIELD_ERROR', field });
+  }
 
-  useEffect(() => {
-    if (state.phase === 'error') failureStatus.current?.focus();
-  }, [state.phase]);
-
-  async function submit(values: InquiryValues) {
-    if (state.phase === 'submitting') return;
-    dispatch({ type: 'VALIDATE' });
+  function submit(values: InquiryValues) {
+    // The coordinator owns the synchronous lock and performs the authoritative validation. This first
+    // validation only places focus on the still-enabled submit before a valid attempt disables its fields.
     const validation = validateInquiry(values, sourceLocale);
-    if (!validation.valid) {
-      dispatch({ type: 'VALIDATION_FAILED', fieldErrors: validation.fieldErrors });
-      return;
+    if (validation.valid) {
+      submitButton.current?.focus();
+    } else {
+      const invalidField = firstInvalidField(validation.fieldErrors);
+      if (invalidField) {
+        focusedField.current = invalidField;
+        document.getElementById('contact-' + invalidField)?.focus();
+      }
     }
+    void controller.current?.submit(values, sourceLocale, honeypot.current?.value ?? '');
+  }
 
-    const nextRequestId = state.requestId + 1;
-    dispatch({ type: 'SUBMIT_STARTED', requestId: nextRequestId });
-    const result = await submitInquiry(validation.payload);
-    if (result.status === 'accepted') {
-      dispatch({ type: 'SUBMIT_SUCCEEDED', requestId: nextRequestId });
-      return;
-    }
-    if (result.status === 'invalid') {
-      dispatch({ type: 'VALIDATION_FAILED', fieldErrors: result.fieldErrors });
-      return;
-    }
-    dispatch({ type: 'SUBMIT_FAILED', requestId: nextRequestId, reason: result.reason });
+  function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submit(getValues());
   }
 
   const fieldError = (field: InquiryField) => state.fieldErrors[field];
-  const statusId = 'contact-' + locale + '-status';
-  const isSubmitting = state.phase === 'submitting';
-  const isFailure = state.phase === 'error';
+  const formHeadingId = 'contact-' + locale + '-form-heading';
+  const resultHeadingId = 'contact-' + locale + '-result-heading';
+  const resultBodyId = 'contact-' + locale + '-result-body';
+
+  let resultCopy: { heading: string; body: string } | null = null;
+  if (state.phase === 'success') {
+    resultCopy = content.form.success;
+  } else if (state.phase === 'error') {
+    if (content.mode === 'demonstration') {
+      resultCopy = content.form.failure;
+    } else if (state.failureReason === 'misconfigured') {
+      resultCopy = content.form.outcomes.unavailable;
+    } else if (state.failureReason === 'rate-limited') {
+      resultCopy = content.form.outcomes.rateLimited;
+    } else {
+      resultCopy = content.form.outcomes.uncertain;
+    }
+  }
 
   return (
-    <section
-      aria-labelledby={'contact-' + locale + '-form-heading'}
-      className="rounded-2xl border border-foundation-border bg-foundation-surface p-6 md:p-8"
-    >
-      <div className="rounded-[12px] border border-foundation-border bg-foundation-tint p-5 md:p-6">
-        <h2 className="text-xl font-bold leading-7 text-foundation-ink">{content.notice.heading}</h2>
-        <p className="mt-3 text-base leading-7 text-foundation-ink">{content.notice.body}</p>
-        <p className="mt-3 text-sm leading-6 text-foundation-muted">{content.notice.failureHelper}</p>
-      </div>
+    <div className={styles.formColumn}>
+      <h2 id={formHeadingId} className={styles.formHeading}>{content.form.heading}</h2>
+      <p className={styles.formIntroduction}>{content.form.introduction}</p>
+      <p className={styles.requiredNote}>{content.form.requiredNote}</p>
 
-     <form
-       aria-busy={isSubmitting}
-       aria-labelledby={'contact-' + locale + '-form-heading'}
+      <form
         ref={formElement}
-       className="mt-8"
+        aria-busy={isSubmitting}
+        aria-labelledby={formHeadingId}
+        data-inquiry-phase={state.phase}
+        data-contact-hydrated={hydrated ? 'true' : undefined}
+        className={styles.form}
         noValidate
-        onSubmit={handleSubmit(submit)}
+        onSubmit={handleFormSubmit}
       >
-        <h2 id={'contact-' + locale + '-form-heading'} className="text-2xl font-bold leading-8 text-foundation-ink">
-          {content.form.heading}
-        </h2>
-        <p className="mt-3 text-base leading-7 text-foundation-muted">{content.form.introduction}</p>
-        <p className="mt-4 text-sm leading-6 text-foundation-muted">{content.form.requiredNote}</p>
+        <input
+          ref={honeypot}
+          name="_gotcha"
+          type="text"
+          tabIndex={-1}
+          aria-hidden="true"
+          autoComplete="off"
+          className={styles.honeypot}
+        />
 
-        <fieldset disabled={isSubmitting} className="mt-8 grid gap-6 border-0 p-0">
-          <legend className="sr-only">{content.form.heading}</legend>
+        <fieldset disabled={isSubmitting} className={styles.fields}>
+          <legend className={styles.visuallyHidden}>{content.form.heading}</legend>
           {content.form.fields.map((field) => {
             const id = 'contact-' + field.name;
             const helperId = id + '-helper';
@@ -120,85 +161,93 @@ export function ContactForm({ content, locale, mode }: ContactFormProps) {
             const registration = register(field.name);
             const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
               registration.onChange(event);
-              clearErrors(field.name);
-              dispatch({ type: 'CLEAR_FIELD_ERROR', field: field.name });
+              onFieldChange(field.name);
             };
-            const describedBy = helperId + (errorCode ? ' ' + errorId : '');
+            const descriptionIds = [field.helper ? helperId : null, errorCode ? errorId : null]
+              .filter(Boolean)
+              .join(' ');
             const commonProps = {
               ...registration,
               id,
-              'aria-describedby': describedBy,
-              'aria-invalid': Boolean(errorCode),
+              'aria-describedby': descriptionIds || undefined,
+              'aria-invalid': errorCode ? true : undefined,
               autoComplete: field.autocomplete,
               maxLength: field.maxLength,
               required: field.required,
               onChange: handleChange,
             };
+            const errorText = errorCode ? field.errors[errorCode] ?? 'Please review this field.' : null;
+
             return (
-              <div key={field.name}>
-                <label htmlFor={id} className="flex items-baseline justify-between gap-4 text-base font-semibold leading-6 text-foundation-ink">
+              <div key={field.name} className={styles.field}>
+                <label htmlFor={id} className={styles.label}>
                   <span>{field.label}</span>
-                  <span className="text-sm font-normal text-foundation-muted">{field.requiredLabel}</span>
+                  <span className={styles.requiredState}>{field.requiredLabel}</span>
                 </label>
                 {field.inputType === 'textarea' ? (
-                  <textarea
-                    {...commonProps}
-                    className="mt-2 min-h-[180px] w-full resize-y rounded-[10px] border border-foundation-muted bg-foundation-surface px-4 py-3 text-base leading-7 text-foundation-ink outline-none transition-colors duration-[160ms] ease-out focus:border-foundation-action focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-2"
-                  />
+                  <textarea {...commonProps} className={styles.textarea} />
                 ) : (
-                  <input
-                    {...commonProps}
-                    className="mt-2 min-h-12 w-full rounded-[10px] border border-foundation-muted bg-foundation-surface px-4 text-base leading-7 text-foundation-ink outline-none transition-colors duration-[160ms] ease-out focus:border-foundation-action focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-2"
-                    type={field.inputType}
-                  />
+                  <input {...commonProps} className={styles.input} type={field.inputType} />
                 )}
-                <span id={helperId} className="mt-2 block text-sm leading-6 text-foundation-muted">{field.helper}</span>
-                {errorCode ? (
-                  <p id={errorId} className="mt-1 text-sm leading-6 text-[#B42318]">
-                    {field.errors[errorCode] ?? 'Please review this field.'}
-                  </p>
-                ) : null}
+                {field.helper ? <span id={helperId} className={styles.helper}>{field.helper}</span> : null}
+                {errorText ? <p id={errorId} className={styles.fieldError}>{errorText}</p> : null}
               </div>
             );
           })}
         </fieldset>
 
-        <p className="mt-6 text-sm leading-6 text-foundation-muted">
+        <p className={styles.privacyContext}>
           {content.form.privacyContext}{' '}
-          <Link
-            href={locale === 'es' ? '/privacidad/' : '/en/privacy/'}
-            className="font-semibold underline decoration-foundation-border underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4"
-          >
+          <Link href={locale === 'es' ? '/privacidad/' : '/en/privacy/'} className={styles.inlineLink}>
             {content.form.privacyLabel}
           </Link>
+          {content.mode === 'commercial' ? (
+            <>
+              {' '}{locale === 'es' ? 'También podés consultar los' : 'You can also read the'}{' '}
+              <Link href={locale === 'es' ? '/terminos/' : '/en/terms/'} className={styles.inlineLink}>
+                {content.termsLabel}
+              </Link>.
+            </>
+          ) : null}
         </p>
 
-        {isSubmitting ? (
-          <p id={statusId} role="status" aria-live="polite" className="mt-6 rounded-[12px] border border-foundation-border bg-foundation-tint p-4 text-base leading-7 text-foundation-ink">
-            {content.form.submitting}
+        {content.mode === 'commercial' ? (
+          <p data-contact-hydration-fallback hidden={hydrated} className={styles.hydrationFallback}>
+            {content.preHydrationFallback}
           </p>
         ) : null}
-        {state.phase === 'success' ? (
-          <div ref={successStatus} id={statusId} role="status" aria-live="polite" tabIndex={-1} className="mt-6 rounded-[12px] border border-[#067647] bg-foundation-surface p-4 text-foundation-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action">
-            <h3 className="font-bold">{content.form.success.heading}</h3>
-            <p className="mt-2 text-base leading-7">{content.form.success.body}</p>
-          </div>
-        ) : null}
-        {isFailure ? (
-          <div ref={failureStatus} id={statusId} role="alert" tabIndex={-1} className="mt-6 rounded-[12px] border border-[#B42318] bg-foundation-surface p-4 text-foundation-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action">
-            <h3 className="font-bold">{content.form.failure.heading}</h3>
-            <p className="mt-2 text-base leading-7">{content.form.failure.body}</p>
-          </div>
+
+        {hydrated ? (
+          <p data-contact-busy role="status" aria-live="polite" aria-atomic="true" className={styles.busyStatus}>
+            {isSubmitting ? content.form.submitting : ''}
+          </p>
         ) : null}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="mt-8 inline-flex min-h-12 items-center justify-center rounded-[10px] bg-foundation-action px-6 text-base font-semibold text-white transition-colors duration-[160ms] ease-out hover:bg-foundation-action-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-foundation-action focus-visible:ring-offset-4 disabled:cursor-wait disabled:opacity-70 max-[479px]:w-full"
+        <div
+          ref={resultRegion}
+          data-contact-result
+          hidden={!hasGlobalOutcome}
+          role="region"
+          tabIndex={-1}
+          aria-labelledby={resultHeadingId}
+          aria-describedby={resultBodyId}
+          className={styles.resultRegion}
+          data-result-kind={state.phase === 'success' ? 'success' : state.phase === 'error' ? 'error' : undefined}
         >
-          {isFailure ? content.form.retry : isSubmitting ? content.form.submitting : content.form.submit}
+          <h3 id={resultHeadingId} className={styles.resultHeading}>{resultCopy?.heading ?? ''}</h3>
+          <p id={resultBodyId} className={styles.resultBody}>{resultCopy?.body ?? ''}</p>
+        </div>
+
+        <button
+          ref={submitButton}
+          type="submit"
+          disabled={!hydrated}
+          aria-disabled={isSubmitting}
+          className={styles.submitButton}
+        >
+          {state.phase === 'error' ? content.form.retry : isSubmitting ? content.form.submitting : content.form.submit}
         </button>
       </form>
-    </section>
+    </div>
   );
 }

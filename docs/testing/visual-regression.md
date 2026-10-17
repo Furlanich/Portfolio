@@ -11,7 +11,7 @@ related:
   - DESIGN-SPF-V1
   - PLAN-SPF-V1
   - REVIEW-SPF-ACCEPTANCE-V1
-last_verified: 2026-10-16
+last_verified: 2026-10-17
 ---
 
 # Visual regression policy
@@ -76,3 +76,9 @@ Applies to Tasks 6, 7, 9, 10, 14 and 16, each updating only its own named visual
 5. Record hashes, the run, the head and the owner decision in the task receipt. Never rename a Windows image to a Linux name, and never take an image from another head.
 
 Live motion is verified by recordings and behavior, not by animated pixel goldens.
+
+## Contact (`contact.visual.spec.ts`)
+
+PLAN-SFC-V1 Task 10 owns four viewport captures per platform: Spanish and English at 1440×1000 and 390×844, named `contact-{es,en}-{wide,compact}-visual-chromium-{win32,linux}.png`. They capture the static connected ground, shared header, Contact introduction and Bone intake surface. The owner accepted the presentation and directed removal of the form-panel demonstration notice on 2026-10-17; the Windows files represent that approved integration preview.
+
+The four Linux baselines are copied unchanged from the corresponding `*-actual.png` files in [PR #151 Quality run `39043290991`](https://github.com/Furlanich/Portfolio/actions/runs/39043290991), head `2ad2657952f4ab1ffdac0809a9dd6cf675f4b473`, artifact `playwright-report-shard-4-39043290991-1` (ID `12104324883`). The CI image is `mcr.microsoft.com/playwright:v1.63.0-noble`. Each Linux image was inspected against the approved rendering; platform-specific font rendering and wrapping retain separate baselines. The [Task 10 receipt](../reviews/studio-founder-contact-acceptance-v1/task-10.md) records hashes and the required subsequent normal-comparison CI evidence.

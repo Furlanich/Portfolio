@@ -32,7 +32,7 @@ related:
   - DESIGN-SFC-V1
   - RFC-SFC-COMMERCIAL-ATLAS-V1
   - PAGE-TERMS
-last_verified: 2026-10-16
+last_verified: 2026-10-17
 ---
 
 # Visual language
@@ -354,7 +354,9 @@ At 1024px and above, use the 12-column container. The form occupies approximatel
 
 The form uses Surface, a 1px Border, 16px radius, 24px compact padding and up to 32px wide padding. It may use restrained internal spacing, not nested cards. Alternatives and location are quieter content blocks. Founder context is a subdued text link after the contact choices.
 
-In demonstration mode, the approved notice sits at the start of the form surface before the fields. It uses a visible heading, body text, and the established Action-tint/Border treatment without looking like an error alert. The notice is at least as prominent as the submit action so simulated behavior cannot be mistaken for live delivery. The external-alternatives note remains adjacent to those links.
+In the current public demonstration mode, the approved notice sits at the start of the form surface before the fields. It uses a visible heading, body text, and the established Action-tint/Border treatment without looking like an error alert. The notice is at least as prominent as the submit action so simulated behavior cannot be mistaken for live delivery. The external-alternatives note remains adjacent to those links.
+
+For the non-public Task 10 integration preview, the owner approved removing the bilingual form-panel notice and its failure helper. The release remains a local demonstration and its submit/progress/outcome copy continues to state that behavior. This exception does not change the current public composition and must be reconciled by the following operational-form tasks before a public release; see [PAGE-CONTACT](../product/pages/contact-and-privacy.md#task-10-integration-preview-exception-approved-2026-10-17).
 
 ### Fields and states
 

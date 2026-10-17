@@ -1,11 +1,12 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 test.describe.configure({ timeout: 60_000 });
 
 const cases = [
-  { route: stableRoutes.contact.es, heading: 'Contanos qué necesitás resolver.', notice: 'Demostración interactiva', submit: 'Simular envío', submitting: 'Simulando…', success: 'Demostración completada.', failure: 'La simulación no pudo completarse.', retry: 'Intentar nuevamente', language: 'es-AR' },
-  { route: stableRoutes.contact.en, heading: 'Tell us what you need to solve.', notice: 'Interactive demonstration', submit: 'Simulate submission', submitting: 'Simulating…', success: 'Demonstration complete.', failure: 'The simulation could not be completed.', retry: 'Try again', language: 'en' },
+  { route: stableRoutes.contact.es, heading: 'Contanos qué necesitás resolver.', removedNoticeHeading: 'Demostración interactiva', removedNoticeBody: 'Este sitio es una muestra técnica. El formulario simula el envío en este navegador: no envía datos, no crea una consulta comercial y no llega a ninguna bandeja de entrada.', removedFailureHelper: 'Para probar el estado de error, usá failure@example.invalid como correo electrónico.', formHeading: 'Iniciar una consulta', submit: 'Simular envío', submitting: 'Simulando…', success: 'Demostración completada.', failure: 'La simulación no pudo completarse.', retry: 'Intentar nuevamente', language: 'es-AR' },
+  { route: stableRoutes.contact.en, heading: 'Tell us what you need to solve.', removedNoticeHeading: 'Interactive demonstration', removedNoticeBody: 'This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.', removedFailureHelper: 'To try the failure state, use failure@example.invalid as the email address.', formHeading: 'Start an inquiry', submit: 'Simulate submission', submitting: 'Simulating…', success: 'Demonstration complete.', failure: 'The simulation could not be completed.', retry: 'Try again', language: 'en' },
 ] as const;
 
 const inquiry = { name: 'Ada Lovelace', email: 'success@example.invalid', company: 'Analytical Engines', message: 'Please help us scope a product idea.' };
@@ -64,12 +65,19 @@ for (const pageCase of cases) {
   test(pageCase.language + ' Contact renders the local-only demonstration and ordered fallbacks', async ({ page }) => {
     await gotoContact(page, pageCase.route, pageCase.language);
     await expect(page.locator('main h1')).toHaveText(pageCase.heading);
-    await expect(page.getByRole('heading', { name: pageCase.notice })).toBeVisible();
+    const opaqueIntake = page.getByRole('main').locator('[data-connected-opaque-plate]');
+    await expect(opaqueIntake).toHaveCount(1);
+    await expect(opaqueIntake.locator('form')).toHaveCount(1);
+    await expect(opaqueIntake.locator('aside')).toHaveCount(1);
+    await expect(page.getByRole('heading', { name: pageCase.removedNoticeHeading })).toHaveCount(0);
+    await expect(page.getByText(pageCase.removedNoticeBody, { exact: true })).toHaveCount(0);
+    await expect(page.getByText(pageCase.removedFailureHelper, { exact: true })).toHaveCount(0);
     await expect(page.getByRole('main').locator('a[href^="https://wa.me"], a[href^="mailto:"], a[href^="tel:"]')).toHaveCount(3);
     await expect(page.getByRole('main').getByRole('link', { name: /Privacy Policy|Política de privacidad/ })).toHaveAttribute(
       'href',
       appPathname(pageCase.language === 'en' ? '/en/privacy/' : '/privacidad/'),
     );
+    await expect(page.getByRole('main').getByRole('link', { name: /Terms and Conditions|Términos y condiciones/ })).toHaveCount(0);
     await expect(page.getByRole('link', { name: /Samuel/ }).last()).toBeVisible();
   });
 
@@ -83,6 +91,18 @@ for (const pageCase of cases) {
     await expect(page.getByLabel(/^(Nombre|Name)/)).toHaveAttribute('aria-invalid', 'true');
   });
 
+  test(pageCase.language + ' Contact refocuses the first invalid control on repeated submissions', async ({ page }) => {
+    await gotoContact(page, pageCase.route, pageCase.language);
+    const name = page.getByLabel(/^(Nombre|Name)/);
+    const submit = page.getByRole('button', { name: pageCase.submit });
+
+    await submit.click();
+    await expect(name).toBeFocused();
+    await submit.focus();
+    await submit.click();
+    await expect(name).toBeFocused();
+  });
+
   test(pageCase.language + ' Contact simulates success, blocks duplicates, resets values, and transmits no inquiry', async ({ page }) => {
     await gotoContact(page, pageCase.route, pageCase.language);
     const requests = recordRequests(page);
@@ -92,7 +112,9 @@ for (const pageCase of cases) {
       (element as HTMLButtonElement).click();
       (element as HTMLButtonElement).click();
     });
-    await expect(page.getByRole('status')).toContainText(pageCase.success);
+    const result = page.locator('[data-contact-result]');
+    await expect(result).toContainText(pageCase.success);
+    await expect(result).toBeFocused();
     await expect(page.getByLabel(/^(Nombre|Name)/)).toHaveValue('');
     await expect(page.getByLabel(/^(Correo electrónico|Email)/)).toHaveValue('');
     await expect(page.getByLabel(/^(Empresa|Company)/)).toHaveValue('');
@@ -104,14 +126,15 @@ for (const pageCase of cases) {
     await gotoContact(page, pageCase.route, pageCase.language);
     await fillInquiry(page, 'failure@example.invalid');
     await page.getByRole('button', { name: pageCase.submit }).click();
-    await expect(page.getByRole('main').getByRole('alert')).toContainText(pageCase.failure);
+    const result = page.locator('[data-contact-result]');
+    await expect(result).toContainText(pageCase.failure);
     await expect(page.getByLabel(/^(Nombre|Name)/)).toHaveValue('Ada Lovelace');
     await expect(page.getByLabel(/^(Correo electrónico|Email)/)).toHaveValue('failure@example.invalid');
-    await expect(page.getByRole('main').getByRole('alert')).toBeFocused();
+    await expect(result).toBeFocused();
     await expect(page.getByRole('button', { name: pageCase.retry })).toBeVisible();
     await page.getByLabel(/^(Correo electrónico|Email)/).fill('success@example.invalid');
     await page.getByRole('button', { name: pageCase.retry }).click();
-    await expect(page.getByRole('status')).toContainText(pageCase.success);
+    await expect(page.locator('[data-contact-result]')).toContainText(pageCase.success);
   });
 }
 
@@ -136,7 +159,7 @@ test('Contact transmission check flags inquiry submissions but not same-origin r
     });
   }, sink);
   await page.getByRole('button', { name: 'Simulate submission' }).click();
-  await expect(page.getByRole('status')).toContainText('Demonstration complete.');
+  await expect(page.locator('[data-contact-result]')).toContainText('Demonstration complete.');
   await expect.poll(() => requests.filter(({ url }) => /\/inquiry-probe\/(prefetch\.txt)?$/.test(url)).length).toBe(2);
   await expect
     .poll(() => inquiryTransmissions(requests, new URL(page.url()).origin).map(({ method, url }) => `${method} ${new URL(url).pathname.split('/').pop()}`).sort())
@@ -148,12 +171,49 @@ test('Contact remains readable with JavaScript disabled and does not show a fals
   const page = await context.newPage();
   await page.goto(appUrl(stableRoutes.contact.en));
   await expect(page.locator('main h1')).toHaveText('Tell us what you need to solve.');
-  await expect(page.getByRole('heading', { name: 'Interactive demonstration' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Interactive demonstration' })).toHaveCount(0);
+  await expect(page.getByText('This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.', { exact: true })).toHaveCount(0);
   await expect(page.getByRole('main').getByRole('link', { name: 'Write on WhatsApp' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('link', { name: 'Send an email' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('link', { name: 'Call' })).toBeVisible();
-  await expect(page.getByRole('status')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Simulate submission' })).toBeDisabled();
+  await expect(page.locator('[data-contact-busy]')).toHaveCount(0);
   await context.close();
+});
+
+test('Contact native bounds allow the complete approved Unicode code-point limits', async ({ page }) => {
+  await gotoContact(page, stableRoutes.contact.en, 'en');
+  await expect(page.locator('form[data-contact-hydrated="true"]')).toBeVisible();
+  const limits = [
+    ['#contact-name', 200, '😀'.repeat(100)],
+    ['#contact-email', 508, 'a'.repeat(508)],
+    ['#contact-company', 240, '😀'.repeat(120)],
+    ['#contact-message', 8000, '😀'.repeat(4000)],
+  ] as const;
+
+  for (const [selector, maxLength, value] of limits) {
+    const field = page.locator(selector);
+    await expect(field).toHaveAttribute('maxlength', String(maxLength));
+    await field.fill(value);
+    await expect(field).toHaveValue(value);
+  }
+});
+
+test('Contact gives native field errors one associated focus target and global results one nonlive region', async ({ page }) => {
+  await gotoContact(page, stableRoutes.contact.en, 'en');
+  await page.getByRole('button', { name: 'Simulate submission' }).click();
+  const first = page.locator('#contact-name');
+  await expect(first).toBeFocused();
+  await expect(first).toHaveAttribute('aria-describedby', /contact-name-error/);
+
+  await fillInquiry(page);
+  await page.getByRole('button', { name: 'Simulate submission' }).click();
+  const result = page.locator('[data-contact-result]');
+  await expect(result).toBeFocused();
+  await expect(result).toHaveAttribute('role', 'region');
+  await expect(result).not.toHaveAttribute('aria-live', /.+/);
+  await expect(result).not.toHaveAttribute('role', 'status');
+  await expect(page.locator('[data-contact-busy]')).toHaveAttribute('aria-atomic', 'true');
 });
 
 function contrastRatio(foreground: string, background: string) {
@@ -170,6 +230,12 @@ function contrastRatio(foreground: string, background: string) {
 }
 
 for (const pageCase of cases) {
+  test(pageCase.language + ' Contact has no serious or critical axe violations', async ({ page }) => {
+    await gotoContact(page, pageCase.route, pageCase.language);
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+    expect(results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious')).toEqual([]);
+  });
+
   test(pageCase.language + ' Contact field boundaries meet non-text contrast and fallbacks keep their order', async ({ page }) => {
     await gotoContact(page, pageCase.route, pageCase.language);
     const main = page.getByRole('main');
@@ -187,9 +253,9 @@ for (const pageCase of cases) {
     );
     expect(hrefs).toEqual(['https', 'mailto', 'tel']);
 
-    const notice = main.getByRole('heading', { name: pageCase.notice });
+    const formHeading = main.getByRole('heading', { name: pageCase.formHeading });
     const firstField = main.locator('#contact-name');
-    expect(await notice.evaluate((heading, field) => Boolean(heading.compareDocumentPosition(field as Node) & Node.DOCUMENT_POSITION_FOLLOWING), await firstField.elementHandle())).toBe(true);
+    expect(await formHeading.evaluate((heading, field) => Boolean(heading.compareDocumentPosition(field as Node) & Node.DOCUMENT_POSITION_FOLLOWING), await firstField.elementHandle())).toBe(true);
   });
 
   test(pageCase.language + ' Contact can be completed with the keyboard alone', async ({ page }) => {
@@ -216,6 +282,36 @@ for (const pageCase of cases) {
     await expect(page.getByRole('button', { name: pageCase.submit })).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { name: pageCase.success })).toBeVisible();
-    await expect(page.locator('[role="status"][tabindex="-1"]')).toBeFocused();
+    await expect(page.locator('[data-contact-result]')).toBeFocused();
+  });
+
+  test(pageCase.language + ' Contact stacks below 820px, splits at 820px, and stays inside the viewport', async ({ page }) => {
+    await gotoContact(page, pageCase.route, pageCase.language);
+    const formPanel = page.locator('main section[aria-labelledby$="-form-heading"]');
+    const alternativesPanel = page.getByRole('complementary').filter({ has: page.locator('a[href^="https://wa.me"]') });
+
+    for (const width of [320, 390, 768, 819, 820, 1023, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+      const [formBox, alternativesBox] = await Promise.all([
+        formPanel.boundingBox(),
+        alternativesPanel.boundingBox(),
+      ]);
+      expect(formBox, `${width}px form panel`).not.toBeNull();
+      expect(alternativesBox, `${width}px alternatives panel`).not.toBeNull();
+      if (!formBox || !alternativesBox) continue;
+
+      if (width < 820) {
+        expect(alternativesBox.y).toBeGreaterThanOrEqual(formBox.y + formBox.height);
+      } else {
+        expect(Math.abs(alternativesBox.y - formBox.y)).toBeLessThanOrEqual(2);
+        expect(alternativesBox.x).toBeGreaterThanOrEqual(formBox.x + formBox.width);
+      }
+
+      for (const action of await page.locator('main aside a[href^="https://wa.me"], main aside a[href^="mailto:"], main aside a[href^="tel:"]').all()) {
+        const box = await action.boundingBox();
+        expect(box?.height ?? 0, `${width}px direct-channel target`).toBeGreaterThanOrEqual(44);
+      }
+    }
   });
 }

@@ -3,8 +3,11 @@
 export const contactRequirements = {
   'contacto/index.html': {
     heading: 'Contanos qué necesitás resolver.',
-    notice: 'Demostración interactiva',
-    noticeBody: 'Este sitio es una muestra técnica. El formulario simula el envío en este navegador: no envía datos, no crea una consulta comercial y no llega a ninguna bandeja de entrada.',
+    forbiddenText: [
+      'Demostración interactiva',
+      'Este sitio es una muestra técnica. El formulario simula el envío en este navegador: no envía datos, no crea una consulta comercial y no llega a ninguna bandeja de entrada.',
+      'Para probar el estado de error, usá failure@example.invalid como correo electrónico.',
+    ],
     fields: ['Nombre', 'Correo electrónico', 'Empresa', '¿Qué necesitás resolver?'],
     fallback: 'WhatsApp, email y teléfono se muestran como alternativas funcionales.',
     privacy: '/privacidad/',
@@ -12,8 +15,11 @@ export const contactRequirements = {
   },
   'en/contact/index.html': {
     heading: 'Tell us what you need to solve.',
-    notice: 'Interactive demonstration',
-    noticeBody: 'This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.',
+    forbiddenText: [
+      'Interactive demonstration',
+      'This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.',
+      'To try the failure state, use failure@example.invalid as the email address.',
+    ],
     fields: ['Name', 'Email', 'Company', 'What do you need to solve?'],
     fallback: 'WhatsApp, email, and phone are shown as functional alternatives.',
     privacy: '/en/privacy/',
