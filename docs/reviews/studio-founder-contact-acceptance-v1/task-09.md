@@ -6,7 +6,7 @@
 
 **Branch/worktree:** `codex/sfc-09-legal`, `D:/Projects/NextJS/Portfolio/.worktrees/sfc-09-legal`. **Base:** `2cc22b06f782619b40cd29472d72b6df5f1969f5`, the Task 8 merge containing PR #149 on `codex/sfc-integration`.
 
-**Owned paths touched:** shared `components/legal` template/types/styles; static `components/connected-studio/ConnectedStudioBackdrop.tsx`; `components/privacy/PrivacyPage.tsx`; four private bilingual commercial legal draft modules; exact canonical-copy fences in the two page-owner documents; legal/copy/privacy tests and export requirements; legal/privacy browser and visual specs with four Windows snapshots; this receipt. `scripts/brand-assets.test.mjs` also changed because its existing font-character inventory assumed the locale content folders had no nested directories; it now walks nested TypeScript content files so the new `commercial/` folders remain covered.
+**Owned paths touched:** shared `components/legal` template/types/styles; static `components/connected-studio/ConnectedStudioBackdrop.tsx`; `components/privacy/PrivacyPage.tsx`; four private bilingual commercial legal draft modules; exact canonical-copy fences in the two page-owner documents; legal/copy/privacy tests and export requirements; legal/privacy browser and visual specs with four Windows and four Linux snapshots; the connected-canvas assertion in `tests/e2e/immersive-home-static.spec.ts`; this receipt. `scripts/brand-assets.test.mjs` also changed because its existing font-character inventory assumed the locale content folders had no nested directories; it now walks nested TypeScript content files so the new `commercial/` folders remain covered.
 
 **Not changed:** public Terms routes, the route registry, Footer, mode, current demo Privacy copy, architecture, dependency manifest, or deployment configuration. The draft modules are not imported by public routes and carry `nonpublishable` plus `professional-review-and-factual-gates-open` metadata.
 
@@ -68,7 +68,13 @@
   - English wide — SHA-256 `56FA689C981D82A97072B967F35421AD9F472F9B4C50F5BA4DF00570DADE231E`.
   - English compact — SHA-256 `E8BC75B3436FFEE48C64C9819ABBA7157E17161623200F2E4C14DBE4DAA7A952`.
 
+### Connected-canvas regression correction — 2026-10-16
+
+- Same-head Quality run `38996816033` at `b98a6a6d460cf1e9b6644b556ea0582a2f701faf` passed `validate` but its first browser shard caught an outdated assertion in `tests/e2e/immersive-home-static.spec.ts`: it still expected Privacy's document canvas to remain Bone, although the owner-approved Azure ground correctly pins Abyss on `html`.
+- Updated the shared canvas assertion to cover both Spanish and English Privacy routes, require exactly one connected ground, and assert the Abyss canvas color. The focused Chromium check passed 2/2 against the static export. The Task 9 plan's write paths now include this shared connected-canvas assertion.
+- Run `38996816033` was already executing before this correction and is not final acceptance. A fresh same-head CI run after committing this assertion and the corrected Linux visual baselines remains required.
+
 ## Open items
 
-- Clean no-update visual rerun and CI pass at the commit containing both platform baseline sets.
+- Clean no-update visual rerun and full CI pass at a commit containing both platform baseline sets and the corrected connected-canvas assertion.
 - Professional review and account-specific factual gates for commercial Privacy/Terms remain open for the later Task 13 release gate. The staged drafts are not legal advice or publishable copy.
