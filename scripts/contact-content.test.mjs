@@ -10,10 +10,10 @@ async function loadContent(modulePath) {
 }
 
 const expectedFields = [
-  ['name', 100, true],
-  ['email', 254, true],
-  ['company', 120, false],
-  ['message', 4000, true],
+  ['name', 200, true],
+  ['email', 508, true],
+  ['company', 240, false],
+  ['message', 8000, true],
 ];
 
 test('owns the exact approved Spanish demonstration Contact content', async () => {

@@ -70,6 +70,7 @@ for (const pageCase of cases) {
       'href',
       appPathname(pageCase.language === 'en' ? '/en/privacy/' : '/privacidad/'),
     );
+    await expect(page.getByRole('main').getByRole('link', { name: /Terms and Conditions|Términos y condiciones/ })).toHaveCount(0);
     await expect(page.getByRole('link', { name: /Samuel/ }).last()).toBeVisible();
   });
 
@@ -152,8 +153,59 @@ test('Contact remains readable with JavaScript disabled and does not show a fals
   await expect(page.getByRole('main').getByRole('link', { name: 'Write on WhatsApp' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('link', { name: 'Send an email' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('link', { name: 'Call' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Simulate submission' })).toBeDisabled();
   await expect(page.getByRole('status')).toHaveCount(0);
   await context.close();
+});
+
+test('Contact native bounds allow the complete approved Unicode code-point limits', async ({ page }) => {
+  await gotoContact(page, stableRoutes.contact.en, 'en');
+  const limits = [
+    ['#contact-name', 200, '😀'.repeat(100)],
+    ['#contact-email', 508, 'a'.repeat(508)],
+    ['#contact-company', 240, '😀'.repeat(120)],
+    ['#contact-message', 8000, '😀'.repeat(4000)],
+  ] as const;
+
+  for (const [selector, maxLength, value] of limits) {
+    const field = page.locator(selector);
+    await expect(field).toHaveAttribute('maxlength', String(maxLength));
+    await field.fill(value);
+    await expect(field).toHaveValue(value);
+  }
+});
+
+test('Contact gives native field errors one associated focus target and global results one nonlive region', async ({ page }) => {
+  await gotoContact(page, stableRoutes.contact.en, 'en');
+  await page.getByRole('button', { name: 'Simulate submission' }).click();
+  const first = page.locator('#contact-name');
+  await expect(first).toBeFocused();
+  await expect(first).toHaveAttribute('aria-describedby', /contact-name-error/);
+
+  await fillInquiry(page);
+  await page.getByRole('button', { name: 'Simulate submission' }).click();
+  const result = page.locator('[data-contact-result]');
+  await expect(result).toBeFocused();
+  await expect(result).toHaveAttribute('role', 'region');
+  await expect(result).not.toHaveAttribute('aria-live', /.+/);
+  await expect(result).not.toHaveAttribute('role', 'status');
+  await expect(page.locator('[data-contact-busy]')).toHaveAttribute('aria-atomic', 'true');
+});
+
+test('Contact locks repeated same-tick submission and retains keyboard focus on the busy submit', async ({ page }) => {
+  await gotoContact(page, stableRoutes.contact.en, 'en');
+  await fillInquiry(page);
+  const button = page.getByRole('button', { name: 'Simulate submission' });
+  await button.focus();
+  await button.evaluate((element) => {
+    (element as HTMLButtonElement).click();
+    (element as HTMLButtonElement).click();
+  });
+  await expect(page.locator('form')).toHaveAttribute('aria-busy', 'true');
+  await expect(button).toHaveAttribute('aria-disabled', 'true');
+  await expect(button).toBeFocused();
+  await expect(page.locator('fieldset')).toBeDisabled();
+  await expect(page.locator('[data-contact-busy]')).toHaveAttribute('role', 'status');
 });
 
 function contrastRatio(foreground: string, background: string) {
