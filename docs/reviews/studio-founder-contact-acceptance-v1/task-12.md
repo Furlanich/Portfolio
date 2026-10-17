@@ -67,10 +67,11 @@ Open items:
 - The remediation packet for the two Contact findings must be authored by the planning authority; until it merges, this checkpoint stays held and Tasks 14 and 16 should not treat the Contact page as integrated.
 - Mutation spot-checks of `deliberateResume` and the measuring helpers were not run; the Node and browser cases were written against the missing behavior first (RED recorded above) and a mutant pass is recommended to the reviewer.
 - Manual screen-reader checks and the owner motion acceptance remain release gates.
+- Not verified on macOS or iOS: where a mouse click does not move focus onto a button (Safari), a Resume click while focus is still inside a field does not lift the form's hold, by the specification's focus rule, and the control then reads "Pause background" over a held scene until focus leaves the form.
 Documentation impact: none beyond this receipt.
 
 Validation results (commands run from .worktrees/sfc-12 unless stated; warnings are listed separately from errors)
-- `npm run validate` at head `585a7a99` → exit 0: docs:check 343 Markdown files, 120 document IDs, 38 Skills; npm test 840/840; lint 0 errors and 282 warnings (the baseline of Tasks 1 to 11); typecheck pass; build pass. Re-run on the final head after the receipt: see the pull request.
+- `npm run validate` on the committed head `12f7f043` (every code and test commit is in it; only this receipt's wording changes after) → exit 0: docs:check 344 Markdown files, 120 document IDs, 38 Skills; npm test 840/840 (837 at the base plus 3); lint 0 errors and 282 warnings (the baseline of Tasks 1 to 11); typecheck pass; build pass.
 - `npm run verify:static-export` → 14 routes verified at the root. Playwright against the emitted export (`PLAYWRIGHT_SERVE_EXPORT=1`, `connected-production-chromium`): 50/50. The `/Portfolio` base path was not re-verified (this packet changes no route, asset or policy).
 - Combined candidate, `contact-commercial` family at `585a7a99` (the spec is unchanged since): Chromium, Firefox and WebKit, 30 passed, 2 skipped (endpoint-unset configuration cases). The new tagged case recorded Chromium static, Firefox live and WebKit live in both locales.
 - Legacy regression at `585a7a99`, dev server, one worker: `connected-studio-runtime.spec.ts` on `immersive-chromium`, 62/62. The navigation, responsive and accessibility legacy specs were not re-run; the host change since Task 11 is a diagnostics field and the explicit-Resume line.
