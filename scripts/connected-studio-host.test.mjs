@@ -500,3 +500,13 @@ test('a controller that drew nothing still refreshes the labels once, from the c
   assert.match(push, /draws === drawsBefore/);
   assert.doesNotMatch(push, /state === 'paused' && lastPose/);
 });
+
+// PLAN-SFC-V1 Task 12: the five rendered profiles are measured from the live pose, not read off the canvas.
+test('the diagnostics reading carries the bent strings, empty at rest, and only in non-production builds', () => {
+  assert.match(enhancement, /edgeSamples: readonly \{ id: string; points: readonly/);
+  const staticReading = blockAfter(enhancement, 'const STATIC_READING');
+  assert.match(staticReading, /edgeSamples: \[\]/);
+  assert.match(enhancement, /edgeSamples: \(snapshot\.pose\.edgeSamples \?\? \[\]\)\.map\(/);
+  // The reading is built only when the non-production hook is read; a production build installs no hook at all.
+  assert.match(blockAfter(enhancement, 'function installDiagnostics'), /NODE_ENV === 'production'\) return \(\) => undefined/);
+});
