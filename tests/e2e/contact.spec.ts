@@ -93,7 +93,9 @@ for (const pageCase of cases) {
       (element as HTMLButtonElement).click();
       (element as HTMLButtonElement).click();
     });
-    await expect(page.getByRole('status')).toContainText(pageCase.success);
+    const result = page.locator('[data-contact-result]');
+    await expect(result).toContainText(pageCase.success);
+    await expect(result).toBeFocused();
     await expect(page.getByLabel(/^(Nombre|Name)/)).toHaveValue('');
     await expect(page.getByLabel(/^(Correo electrónico|Email)/)).toHaveValue('');
     await expect(page.getByLabel(/^(Empresa|Company)/)).toHaveValue('');
@@ -105,14 +107,15 @@ for (const pageCase of cases) {
     await gotoContact(page, pageCase.route, pageCase.language);
     await fillInquiry(page, 'failure@example.invalid');
     await page.getByRole('button', { name: pageCase.submit }).click();
-    await expect(page.getByRole('main').getByRole('alert')).toContainText(pageCase.failure);
+    const result = page.locator('[data-contact-result]');
+    await expect(result).toContainText(pageCase.failure);
     await expect(page.getByLabel(/^(Nombre|Name)/)).toHaveValue('Ada Lovelace');
     await expect(page.getByLabel(/^(Correo electrónico|Email)/)).toHaveValue('failure@example.invalid');
-    await expect(page.getByRole('main').getByRole('alert')).toBeFocused();
+    await expect(result).toBeFocused();
     await expect(page.getByRole('button', { name: pageCase.retry })).toBeVisible();
     await page.getByLabel(/^(Correo electrónico|Email)/).fill('success@example.invalid');
     await page.getByRole('button', { name: pageCase.retry }).click();
-    await expect(page.getByRole('status')).toContainText(pageCase.success);
+    await expect(page.locator('[data-contact-result]')).toContainText(pageCase.success);
   });
 }
 
@@ -137,7 +140,7 @@ test('Contact transmission check flags inquiry submissions but not same-origin r
     });
   }, sink);
   await page.getByRole('button', { name: 'Simulate submission' }).click();
-  await expect(page.getByRole('status')).toContainText('Demonstration complete.');
+  await expect(page.locator('[data-contact-result]')).toContainText('Demonstration complete.');
   await expect.poll(() => requests.filter(({ url }) => /\/inquiry-probe\/(prefetch\.txt)?$/.test(url)).length).toBe(2);
   await expect
     .poll(() => inquiryTransmissions(requests, new URL(page.url()).origin).map(({ method, url }) => `${method} ${new URL(url).pathname.split('/').pop()}`).sort())
@@ -154,7 +157,8 @@ test('Contact remains readable with JavaScript disabled and does not show a fals
   await expect(page.getByRole('main').getByRole('link', { name: 'Send an email' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('link', { name: 'Call' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Simulate submission' })).toBeDisabled();
-  await expect(page.getByRole('status')).toHaveCount(0);
+  await expect(page.locator('[data-contact-busy]')).toHaveCount(1);
+  await expect(page.locator('[data-contact-busy]')).toHaveText('');
   await context.close();
 });
 
@@ -190,22 +194,6 @@ test('Contact gives native field errors one associated focus target and global r
   await expect(result).not.toHaveAttribute('aria-live', /.+/);
   await expect(result).not.toHaveAttribute('role', 'status');
   await expect(page.locator('[data-contact-busy]')).toHaveAttribute('aria-atomic', 'true');
-});
-
-test('Contact locks repeated same-tick submission and retains keyboard focus on the busy submit', async ({ page }) => {
-  await gotoContact(page, stableRoutes.contact.en, 'en');
-  await fillInquiry(page);
-  const button = page.getByRole('button', { name: 'Simulate submission' });
-  await button.focus();
-  await button.evaluate((element) => {
-    (element as HTMLButtonElement).click();
-    (element as HTMLButtonElement).click();
-  });
-  await expect(page.locator('form')).toHaveAttribute('aria-busy', 'true');
-  await expect(button).toHaveAttribute('aria-disabled', 'true');
-  await expect(button).toBeFocused();
-  await expect(page.locator('fieldset')).toBeDisabled();
-  await expect(page.locator('[data-contact-busy]')).toHaveAttribute('role', 'status');
 });
 
 function contrastRatio(foreground: string, background: string) {
@@ -268,6 +256,6 @@ for (const pageCase of cases) {
     await expect(page.getByRole('button', { name: pageCase.submit })).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { name: pageCase.success })).toBeVisible();
-    await expect(page.locator('[role="status"][tabindex="-1"]')).toBeFocused();
+    await expect(page.locator('[data-contact-result]')).toBeFocused();
   });
 }

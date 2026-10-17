@@ -1,11 +1,16 @@
 import { ContactPage } from '@/components/contact/ContactPage';
+import { selectContactPageContent } from '@/components/contact/content-types';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
-import { contactContent } from '../_content/contact';
+import { INQUIRY_RELEASE } from '@/lib/inquiry/release';
+import { contactContent as demonstrationContactContent } from '../_content/contact';
+import { commercialContactContent } from '../_content/commercial/contact';
 import { founderContent } from '../_content/founder';
 
 const route = { locale: 'es' as const, routeId: 'contact' as const };
+const mode = INQUIRY_RELEASE.mode;
+const content = selectContactPageContent(mode, demonstrationContactContent, commercialContactContent);
 const paths = getFoundationNavigationPaths(route.locale, route.routeId);
 
 export default function Page() {
@@ -25,10 +30,10 @@ export default function Page() {
           languageSwitch: 'Ver sitio en inglés',
         }}
       />
-      <ContactPage content={contactContent} locale={route.locale} mode="demonstration" />
+      <ContactPage content={content} locale={route.locale} />
       <SiteFooter
         paths={paths}
-        contactActions={contactContent.actions}
+        contactActions={content.actions}
         founderLinks={[founderContent.professionalLinks.linkedin, founderContent.professionalLinks.github]}
         labels={{
           navigation: 'Navegación',
@@ -41,7 +46,7 @@ export default function Page() {
           directContact: 'Contacto directo',
           privacy: 'Privacidad',
           professional: 'Enlaces profesionales',
-          location: contactContent.location,
+          location: content.location,
           languageSwitch: 'Ver sitio en inglés',
         }}
       />

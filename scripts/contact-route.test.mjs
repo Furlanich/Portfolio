@@ -22,7 +22,10 @@ for (const definition of routeDefinitions) {
     assert.ok(source.includes('getFoundationNavigationPaths(route.locale, route.routeId)'));
     assert.doesNotMatch(source, /['"]use client['"]/);
     assert.doesNotMatch(source, /MinimumDestination/);
-    assert.ok(source.includes("mode=\"demonstration\""));
+    assert.ok(source.includes('INQUIRY_RELEASE.mode'));
+    assert.ok(source.includes('selectContactPageContent'));
+    assert.ok(source.includes('commercialContactContent'));
+    assert.doesNotMatch(source, /mode="demonstration"/);
     assert.doesNotMatch(source, /formspree/i);
   });
 }
@@ -35,9 +38,20 @@ test('Contact route and shared page keep the client boundary narrow', async () =
   const page = await readFile(new URL('../components/contact/ContactPage.tsx', import.meta.url), 'utf8');
   const form = await readFile(new URL('../components/contact/ContactForm.tsx', import.meta.url), 'utf8');
   assert.doesNotMatch(page, /['"]use client['"]/);
-  assert.ok(form.includes('createDemoSubmitInquiry'));
+  assert.ok(form.includes('createInquirySubmissionController'));
+  assert.ok(form.includes('createConfiguredSubmitInquiry'));
+  assert.ok(form.includes('name="_gotcha"'));
   assert.match(form, /^['"]use client['"]/);
   assert.doesNotMatch(form, /formspree|NEXT_PUBLIC_FORMSPREE_ENDPOINT|localStorage|sessionStorage|console\./i);
+});
+
+test('Contact page selection follows the frozen application mode and rejects mismatched content', async () => {
+  const { selectContactPageContent } = await import('../components/contact/content-types.ts');
+  const demonstration = { mode: 'demonstration' };
+  const commercial = { mode: 'commercial' };
+  assert.equal(selectContactPageContent('demonstration', demonstration, commercial), demonstration);
+  assert.equal(selectContactPageContent('commercial', demonstration, commercial), commercial);
+  assert.throws(() => selectContactPageContent('commercial', demonstration, demonstration), /mode-matched/);
 });
 
 test('deployment does not expose a Formspree endpoint', async () => {

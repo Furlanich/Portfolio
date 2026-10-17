@@ -1,8 +1,14 @@
 import type { ContactPageContent } from '../../../../components/contact/content-types';
 
 export const contactContent = {
+  mode: 'demonstration',
   locale: 'en',
   routeId: 'contact',
+  wordBindings: [
+    { nodeId: 'n0', word: 'Context' },
+    { nodeId: 'n5', word: 'Inquiry' },
+    { nodeId: 'n10', word: 'Conversation' },
+  ],
   heading: 'Tell us what you need to solve.',
   introduction:
     'Samuel personally reviews every inquiry to determine whether it makes sense to continue with a conversation.',
@@ -25,10 +31,10 @@ export const contactContent = {
     introduction: 'Share your details and briefly explain the problem, how it works today, and what you would like to improve.',
     requiredNote: 'Fields marked as required must be completed.',
     fields: [
-      { name: 'name', label: 'Name', requiredLabel: 'Required', required: true, maxLength: 100, autocomplete: 'name', inputType: 'text', helper: '', errors: { required: 'Enter your name.', 'max-length': 'Name must be 100 characters or fewer.' } },
-      { name: 'email', label: 'Email', requiredLabel: 'Required', required: true, maxLength: 254, autocomplete: 'email', inputType: 'email', helper: 'We will use it only to respond to this inquiry.', errors: { required: 'Enter your email address.', 'invalid-email': 'Enter a valid email address.', 'max-length': 'Email must be 254 characters or fewer.' } },
-      { name: 'company', label: 'Company', requiredLabel: 'Optional', required: false, maxLength: 120, autocomplete: 'organization', inputType: 'text', helper: '', errors: { 'max-length': 'Company must be 120 characters or fewer.' } },
-      { name: 'message', label: 'What do you need to solve?', requiredLabel: 'Required', required: true, maxLength: 4000, autocomplete: 'off', inputType: 'textarea', helper: 'Do not include passwords, credentials, or sensitive information.', errors: { required: 'Tell us what you need to solve.', 'max-length': 'Your message must be 4,000 characters or fewer.' } },
+      { name: 'name', label: 'Name', requiredLabel: 'Required', required: true, maxLength: 200, autocomplete: 'name', inputType: 'text', helper: '', errors: { required: 'Enter your name.', 'max-length': 'Name must be 100 characters or fewer.' } },
+      { name: 'email', label: 'Email', requiredLabel: 'Required', required: true, maxLength: 508, autocomplete: 'email', inputType: 'email', helper: 'We will use it only to respond to this inquiry.', errors: { required: 'Enter your email address.', 'invalid-email': 'Enter a valid email address.', 'max-length': 'Email must be 254 characters or fewer.' } },
+      { name: 'company', label: 'Company', requiredLabel: 'Optional', required: false, maxLength: 240, autocomplete: 'organization', inputType: 'text', helper: '', errors: { 'max-length': 'Company must be 120 characters or fewer.' } },
+      { name: 'message', label: 'What do you need to solve?', requiredLabel: 'Required', required: true, maxLength: 8000, autocomplete: 'off', inputType: 'textarea', helper: 'Do not include passwords, credentials, or sensitive information.', errors: { required: 'Tell us what you need to solve.', 'max-length': 'Your message must be 4,000 characters or fewer.' } },
     ],
     privacyContext: 'We will use your information to review and respond to your inquiry. Before sending, read how we handle it in our Privacy Policy.',
     privacyLabel: 'Privacy Policy',
