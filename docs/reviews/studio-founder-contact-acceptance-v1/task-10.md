@@ -1,6 +1,6 @@
 # Task 10 / PR 10 — Integrate native, accessible real-flow Contact behavior
 
-**Status:** The owner accepted the Task 10 presentation and directed removal of the form-panel demonstration notice in both locales on 2026-10-17. The revised implementation is complete, and PR #151 is open for Reviewer R. Task acceptance remains **OPEN** for the same-head candidate matrix, Linux visual baseline, manual screen-reader checks, independent reviews, the stale shared-footer assertion below, and the candidate-CI ownership conflict. The public `main` release and its approved demonstration disclosure remain unchanged.
+**Status:** The owner accepted the Task 10 presentation and directed removal of the form-panel demonstration notice in both locales on 2026-10-17. Reviewer R's independent review identified three valid P2 findings; all three are corrected and covered by follow-up regressions. PR #151 remains open for review of the corrections. Task acceptance remains **OPEN** for the remaining candidate matrix, Linux visual baseline, manual screen-reader checks, the supplemental inquiry review, the stale shared-footer assertion below, and the candidate-CI ownership conflict. The public `main` release and its approved demonstration disclosure remain unchanged.
 
 **Implementer:** Codex desktop, one primary agent and zero subagents under `GOV-AGENT-USAGE`.
 
@@ -35,6 +35,9 @@
 - Commercial candidate Playwright matrix: **18 passed, 2 configuration-only cases skipped** while the approved endpoint was locally intercepted. The separate no-endpoint run passed **2/2** and made zero provider requests. Tagged cross-browser candidate cases passed **6/6** across Chromium, Firefox and WebKit.
 - Contact visual spec: updated Windows captures after the notice removal passed update mode (**4/4**) and a separate normal comparison (**4/4**). All four images were inspected; the new images are included below. A same-head Linux capture remains pending.
 - The candidate browser matrix above ran before the final `useSyncExternalStore` hydration refactor in `ContactForm`; the public Contact matrix and normal visual comparison were rerun after that refactor. The candidate browser matrix still needs a same-head rerun.
+- `npm run validate` after the three Reviewer R corrections passed: docs check, **796/796** Node tests, lint (**0 errors, 282 existing warnings**), typecheck and production build. The first sandboxed attempt could not create temporary Git fixtures; the run with local filesystem permission completed successfully.
+- Focused Chromium Contact regressions after the corrections passed **4/4** across Spanish and English: the repeated-invalid-submit focus case and the opaque intake marker contract assertion.
+- The post-correction commercial candidate tagged smoke passed **12/12** across Chromium, Firefox and WebKit. It covers Spanish and English no-JavaScript fallbacks and operational submission/retry flows with the approved endpoint configured at build time and provider requests intercepted locally. Firefox passed **4/4**, including **2/2 Spanish** cases; WebKit passed **4/4**, including **2/2 Spanish** cases. An initial run without the candidate endpoint configured returned the intended unavailable state; the configured, intercepted rerun passed all 12 cases.
 - Root static export: `npm run verify:static-export` passed for **14 routes at `/`**. An additional `/Portfolio` build attempt remained at Next's compile stage without further output after two bounded waits; I stopped it, so the `/Portfolio` build/verifier remains pending.
 - Full Playwright suite: **2,846 passed, 20 failed, 130 skipped** across 2,996 discovered cases. All four Contact visual checks passed. Five failures are the shared `connected-studio-footer.spec.ts` global-disclosure assertion expecting the Spanish Contact-panel heading intentionally removed by this request; the file is outside Task 10's owned paths. Two failures are live-scene axe timeouts, nine are existing immersive runtime timing/geometry failures, and four are existing Founder visual baseline mismatches. Those unrelated specs are recorded for planning-authority routing rather than silently edited here.
 - `node scripts/prepare-sfc-candidate.mjs verify-clean`: confirmed no candidate patch or marker remains. `git diff --check` passed.
@@ -56,10 +59,10 @@ The missing-baseline bootstrap run failed only because the four expected files w
 
 ## Open acceptance gates
 
-- Same-head candidate browser matrix, plus Linux baseline capture and a clean no-update rerun. The general candidate section of PLAN-SFC-V1 calls for a dedicated candidate CI job beginning in Task 10, but Task 10's explicit owned paths omit `.github/workflows/ci.yml` and forbid workflow changes. Local candidate verification is complete; the CI-job ownership conflict remains open for the planning authority.
+- Remaining same-head candidate browser matrix, plus Linux baseline capture and a clean no-update rerun. The tagged commercial smoke now passes across all three engines. The general candidate section of PLAN-SFC-V1 calls for a dedicated candidate CI job beginning in Task 10, but Task 10's explicit owned paths omit `.github/workflows/ci.yml` and forbid workflow changes. The CI-job ownership conflict remains open for the planning authority.
 - A cross-platform assertion in `tests/e2e/connected-studio-footer.spec.ts` still expects the removed Spanish and English Contact form-panel headings. The file is outside Task 10's owned write paths; a planning-authority-owned follow-up or explicit ownership transfer is needed before the full suite is green.
 - Manual NVDA with Firefox/Chromium and VoiceOver with Safari checks by a named operator. Axe is not a substitute.
-- Independent Reviewer R review and the separately routed Sonnet 5.5 High supplemental inquiry review.
+- Reviewer R follow-up review of the three corrections and the separately routed Sonnet 5.5 High supplemental inquiry review.
 - Human review/merge of the requested PR to `codex/sfc-integration`.
 
 ## Rulings made during execution
@@ -72,5 +75,15 @@ The missing-baseline bootstrap run failed only because the four expected files w
 | Create the plan-scoped SDD ledger/marker manually after the Windows helper was blocked; remove its generated ignored `node_modules-partial` tree after lint scanned it. | The helper could not start in the sandbox; the partial tree was generated setup data, not product source. | Recreate scratch from the lockfile if any helper data was needed. |
 | Remove the root `node_modules` junction after Next 16 Turbopack rejected its outside-project target, then install the pinned dependencies inside this worktree. | The local Next guide requires dependencies to resolve within the project root. | This worktree retains a separate ignored dependency install. |
 | Leave the dedicated candidate CI workflow change to planning authority. | The plan's general candidate requirement conflicts with Task 10's forbidden workflow path. | Candidate CI acceptance remains open until the correct owner resolves the boundary. |
+
+## Reviewer R findings and disposition
+
+All three findings from Reviewer R's 2026-10-17 review were valid against Task 10's focus, integration-seam and cross-browser requirements.
+
+1. **Repeated invalid submissions did not refocus the first invalid field.** `ContactForm` now focuses the first invalid field on every failed validation attempt while preserving the existing valid-submit focus and outcome-region behavior. A bilingual browser regression confirms that focus returns to Name after a second unchanged invalid submission.
+2. **The opaque intake surface lacked the Task 11 exclusion marker.** The outer intake wrapper now carries `data-connected-opaque-plate`; the rendered bilingual contract test verifies that the marked wrapper contains both the form and direct-channel aside.
+3. **Tagged commercial smoke tests covered English only.** Both tagged cases now run for Spanish and English with localized assertions. The candidate smoke passed the Spanish commercial paths in Firefox and WebKit, with provider traffic intercepted locally.
+
+The owner-approved removal of the “Interactive Demonstration” form-panel title and paragraph remains unchanged. Reviewer R's review did not request its reversal.
 
 The local lockfile install reported 16 npm audit findings (1 low, 2 moderate, 12 high and 1 critical); no dependency update or audit fix was applied. Generated `next-env.d.ts` changes from Next dev were restored. No live provider probe, account change, deployment, or external message was performed.
