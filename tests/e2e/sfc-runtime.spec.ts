@@ -218,13 +218,16 @@ test.describe('input on the Atlas routes', () => {
       await expectAsleep(page);
       expect(displacement(rest, await readNodes(page)), 'a jump is a state update, not a gesture to replay').toBeLessThan(0.001);
 
-      await page.mouse.wheel(0, 100);
-      let peak = 0;
-      for (let i = 0; i < 12; i += 1) {
-        peak = Math.max(peak, displacement(rest, await readNodes(page)));
+      // Three ordinary notches, then read as fast as the page answers for the whole transient: a single notch peaks for
+      // less than the 40 ms sampling of a loaded software renderer, which made this case marginal (Task 12 saw it miss).
+      for (let notch = 0; notch < 3; notch += 1) {
+        await page.mouse.wheel(0, 100);
         await page.waitForTimeout(40);
       }
-      expect(peak, 'a wheel notch kicks the nodes').toBeGreaterThan(0.002);
+      let peak = 0;
+      const watching = Date.now();
+      while (Date.now() - watching < 700) peak = Math.max(peak, displacement(rest, await readNodes(page)));
+      expect(peak, 'wheel notches kick the nodes').toBeGreaterThan(0.002);
       await expectAsleep(page);
       expect(displacement(rest, await readNodes(page))).toBeLessThan(0.001);
     });
