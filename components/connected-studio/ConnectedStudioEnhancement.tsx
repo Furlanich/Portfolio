@@ -4,16 +4,15 @@ import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
 import { CONNECTED_LIVE_POLICY, chooseConnectedMode } from '@/lib/connected-studio/capability';
-import { createConnectedController } from '@/lib/connected-studio/controller';
+import { createConnectedController, type ConnectedPointerInput, type ProfiledConnectedController } from '@/lib/connected-studio/controller';
 import { createFrameScheduler, type FrameEnvironment } from '@/lib/connected-studio/frame-scheduler';
-import { resolveLabelVisibility } from '@/lib/connected-studio/labels';
+import { resolveLabelVisibility, resolveNodeWord, type LabelWordSource } from '@/lib/connected-studio/labels';
 import { CONNECTED_POSTER_POSE } from '@/lib/connected-studio/media-manifest';
-import { getConnectedGraph, getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
+import { getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
 import { markConnectedContextLost, readConnectedSession, setConnectedPaused } from '@/lib/connected-studio/session';
 import { isSoftwareRenderer } from '@/lib/immersive-home/capability';
 import type {
   CapabilityWords,
-  ConnectedController,
   ConnectedLivePolicy,
   ConnectedRoute,
   ConnectedTier,
@@ -24,13 +23,23 @@ import type {
   LegacyConnectedRoute,
   OccluderRect,
   ProfileConnectedRoute,
-  SceneHandle,
   SceneLayout,
   ScenePose,
   SceneSnapshot,
 } from '@/lib/connected-studio/types';
 import type { Locale } from '@/lib/locales';
 import { ConnectedPauseControl } from './ConnectedPauseControl';
+import {
+  createFormSuspension,
+  createPointerSampler,
+  createScrollClassifier,
+  exclusionRects,
+  isEditableTarget,
+  isExcluded,
+  isInteractiveTarget,
+  labelOccluders,
+  type ConnectedBox,
+} from './connected-input';
 import styles from './connected-studio.module.css';
 
 type ConnectedStudioEnhancementProps = { locale: Locale } & (
@@ -77,11 +86,19 @@ export type ConnectedDiagnostics = {
   imports: number;
   /** Times the bounded wait for Home's renderer ran out, after which the page stays static. */
   deferralsExhausted: number;
+  /** Batched layout passes (boxes, label sizes, viewport) since the page loaded. Pointer movement and scrolling never add one. */
+  layoutReads: number;
+  /** The inquiry form holds focus or is submitting, or no eligible background input has arrived since. */
+  formSuspended: boolean;
+  /** A mouse position is currently driving the interaction. */
+  pointerActive: boolean;
+  /** The profile in use: its route, tier and node style. */
+  profile: { route: ConnectedRoute; tier: ConnectedTier; nodeStyle: string; wordNodeIds: readonly string[] } | null;
 };
 
-type LiveReading = Omit<ConnectedDiagnostics, 'route' | 'imports' | 'deferralsExhausted'>;
+type LiveReading = Omit<ConnectedDiagnostics, 'route' | 'imports' | 'deferralsExhausted' | 'layoutReads'>;
 
-const counters = { imports: 0, deferralsExhausted: 0 };
+const counters = { imports: 0, deferralsExhausted: 0, layoutReads: 0 };
 
 const STATIC_READING: LiveReading = {
   mode: 'static',
@@ -99,6 +116,9 @@ const STATIC_READING: LiveReading = {
   pixelRatio: 0,
   tier: null,
   layout: null,
+  formSuspended: false,
+  pointerActive: false,
+  profile: null,
 };
 
 /** Installs the diagnostics hook; production builds never do. Returns the setter for the live reading. */
@@ -106,7 +126,7 @@ function installDiagnostics(route: ConnectedRoute): (reading: (() => LiveReading
   if (process.env.NODE_ENV === 'production') return () => undefined;
   let reading: (() => LiveReading) | null = null;
   (window as typeof window & { __FURLANICH_CONNECTED__?: { read(): ConnectedDiagnostics } }).__FURLANICH_CONNECTED__ = {
-    read: () => ({ route, imports: counters.imports, deferralsExhausted: counters.deferralsExhausted, ...(reading ? reading() : STATIC_READING) }),
+    read: () => ({ route, imports: counters.imports, deferralsExhausted: counters.deferralsExhausted, layoutReads: counters.layoutReads, ...(reading ? reading() : STATIC_READING) }),
   };
   return (next) => {
     reading = next;
@@ -212,63 +232,71 @@ type LabelEntry = {
   y: number;
 };
 
-/** Document-space rectangle of a foreground block the labels must stay clear of. */
-type MaskRect = { left: number; docTop: number; width: number; height: number };
-
 /**
  * The projected DOM labels (DESIGN-SPF-V1, "Motion and interaction contract"): one upright, decorative,
- * pointer-inert word per node, placed from the engine's projections and then clamped, occlusion-checked
- * and de-overlapped by `resolveLabelVisibility` (PC-2). Sizes and the reading masks are measured in one
- * batch (`measure`), so a frame reads no layout: it only reads the scroll offset and the App Bar.
+ * pointer-inert word per node that carries one, placed from the engine's projections and then clamped,
+ * occlusion-checked and de-overlapped by `resolveLabelVisibility` (PC-2). Sizes and the cached foreground
+ * boxes (opaque plates, reading scrims, legacy masks) are measured in one batch (`measure`), so a frame reads
+ * no layout: it only reads the scroll offset and the App Bar. The same boxes feed the pointer exclusion.
  */
-function createLabelLayer(mount: HTMLElement, words: CapabilityWords) {
+function createLabelLayer(mount: HTMLElement) {
   const host = document.createElement('div');
   host.setAttribute('data-connected-labels', '');
   host.className = styles.labels;
   mount.appendChild(host);
   let entries: LabelEntry[] = [];
   let byId = new Map<string, LabelEntry>();
-  let masks: MaskRect[] = [];
+  let boxes: ConnectedBox[] = [];
   let appBar: HTMLElement | null = null;
   let viewport = { width: 0, height: 0 };
 
   return {
-    /** One element per node of the graph in use; call again when the graph changes. */
-    rebuild(graph: GraphDefinition) {
+    /** One element per node that carries a word; call again when the graph or the profile changes. */
+    rebuild(graph: GraphDefinition, source: LabelWordSource) {
       host.replaceChildren();
-      entries = graph.nodes.map((node) => {
+      entries = [];
+      for (const node of graph.nodes) {
+        const word = resolveNodeWord(node, source);
+        if (word === undefined) continue;
         const element = document.createElement('span');
         element.className = styles.label;
         element.setAttribute('data-connected-label', '');
         element.dataset.nodeId = node.id;
         element.dataset.visible = 'false';
-        element.textContent = node.capabilityIndex === undefined ? '' : words[node.capabilityIndex];
+        element.textContent = word;
         host.appendChild(element);
-        return { id: node.id, element, width: 0, height: 0, depthScale: node.depthScale, visible: false, x: 0, y: 0 };
-      });
+        entries.push({ id: node.id, element, width: 0, height: 0, depthScale: node.depthScale, visible: false, x: 0, y: 0 });
+      }
       byId = new Map(entries.map((entry) => [entry.id, entry]));
     },
-    /** Batched layout reads: label sizes, the viewport the labels live in, and the foreground masks. */
+    /** Batched layout reads: label sizes, the viewport the labels live in, and the foreground boxes. */
     measure() {
+      counters.layoutReads += 1;
       for (const entry of entries) {
         entry.width = entry.element.offsetWidth;
         entry.height = entry.element.offsetHeight;
       }
       viewport = { width: mount.clientWidth, height: mount.clientHeight };
       const scrollY = window.scrollY;
-      masks = Array.from(document.querySelectorAll<HTMLElement>('[data-connected-reading-mask]')).map((element) => {
+      boxes = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-connected-opaque-plate],[data-connected-reading-mask]'),
+      ).map((element) => {
         const rect = element.getBoundingClientRect();
-        return { left: rect.left, docTop: rect.top + scrollY, width: rect.width, height: rect.height };
+        const isMask = element.hasAttribute('data-connected-reading-mask');
+        const clearance = Number(element.getAttribute('data-connected-clearance'));
+        const kind: ConnectedBox['kind'] = isMask ? (Number.isFinite(clearance) && clearance > 0 ? 'scrim' : 'legacy') : 'plate';
+        return { kind, left: rect.left, docTop: rect.top + scrollY, width: rect.width, height: rect.height, clearance: kind === 'scrim' ? clearance : 0 };
       });
       appBar = document.querySelector<HTMLElement>('[data-app-bar]');
     },
-    update(projections: readonly LabelProjection[]) {
-      const scrollY = window.scrollY;
-      const boxes: LabelBox[] = [];
+    /** The cached boxes, for the pointer exclusion. */
+    boxes: (): readonly ConnectedBox[] => boxes,
+    update(projections: readonly LabelProjection[], scrollY: number) {
+      const labelBoxes: LabelBox[] = [];
       for (const projection of projections) {
         const entry = byId.get(projection.id);
         if (!entry || !projection.inView) continue;
-        boxes.push({
+        labelBoxes.push({
           id: entry.id,
           left: projection.xPx - entry.width / 2,
           top: projection.yPx,
@@ -277,12 +305,12 @@ function createLabelLayer(mount: HTMLElement, words: CapabilityWords) {
           depthScale: projection.depthScale,
         });
       }
-      const occluders: OccluderRect[] = masks.map((mask) => ({ left: mask.left, top: mask.docTop - scrollY, width: mask.width, height: mask.height }));
+      const occluders: OccluderRect[] = labelOccluders(boxes, scrollY);
       if (appBar) {
         const rect = appBar.getBoundingClientRect();
         occluders.push({ left: rect.left, top: rect.top, width: rect.width, height: rect.height });
       }
-      const shown = new Map(resolveLabelVisibility(boxes, occluders, viewport).filter((result) => result.visible).map((result) => [result.id, result]));
+      const shown = new Map(resolveLabelVisibility(labelBoxes, occluders, viewport).filter((result) => result.visible).map((result) => [result.id, result]));
       for (const entry of entries) {
         const result = shown.get(entry.id);
         const visible = result !== undefined;
@@ -304,11 +332,16 @@ function createLabelLayer(mount: HTMLElement, words: CapabilityWords) {
   };
 }
 
+type ConnectedEntry = typeof import('./runtime/create-connected-scene');
+type SceneProfile = ReturnType<ConnectedEntry['getConnectedProfile']>;
+
 type LiveOptions = {
-  createConnectedScene: typeof import('./runtime/create-connected-scene').createConnectedScene;
+  /** The dynamically imported gated entry: the renderer and the pure profile, interaction and controller kit. */
+  entry: ConnectedEntry;
   mount: HTMLElement;
   route: ConnectedRoute;
-  words: CapabilityWords;
+  /** The localized vocabulary (Services, Projects) or the few words bound to node ids (Studio, Founder, Contact). */
+  words: { capabilityWords: CapabilityWords } | { wordBindings: readonly ConnectedWordBinding[] };
   startPaused: boolean;
   livePolicy: ConnectedLivePolicy;
   publish: (reading: (() => LiveReading) | null) => void;
@@ -316,7 +349,11 @@ type LiveOptions = {
   onIneligible(): void;
 };
 
-type LiveScene = { controller: ConnectedController; dispose(): void };
+type LiveScene = { controller: ProfiledConnectedController; setVisitorPaused(paused: boolean): void; dispose(): void };
+
+/** Keys that scroll the document. A key typed anywhere else is not a scroll gesture. */
+const SCROLL_KEYS = new Set([' ', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End']);
+const FORM_SELECTOR = 'form[data-inquiry-phase]';
 
 /**
  * Builds the live scene: the engine, the controller and the browser bindings. Every acquisition
@@ -324,6 +361,7 @@ type LiveScene = { controller: ConnectedController; dispose(): void };
  * exactly what was built, in reverse order. A throw leaves nothing behind.
  */
 function attachLiveScene(options: LiveOptions): LiveScene {
+  const { entry } = options;
   const releases: Array<() => void> = [];
   const ground = options.mount.closest<HTMLElement>('[data-connected-ground]');
   let released = false;
@@ -342,13 +380,23 @@ function attachLiveScene(options: LiveOptions): LiveScene {
   try {
     let layout = readLayout();
     let tier = getTierForWidth(layout.viewportWidth);
-    let graph = getConnectedGraph(getQualityForTier(tier));
-    const scene: SceneHandle = options.createConnectedScene({
+    // All five routes run through their immutable profile: the Atlas anchors depend on the viewport, so a size
+    // change builds a new one; Services and Projects reuse one per tier.
+    const buildProfile = (): SceneProfile => entry.getConnectedProfile(options.route, tier, { width: layout.viewportWidth, height: layout.viewportHeight });
+    let profile = buildProfile();
+    let profileViewport = { width: layout.viewportWidth, height: layout.viewportHeight };
+    let graph = profile.graph;
+    const wordSource = (): LabelWordSource =>
+      'capabilityWords' in options.words
+        ? { capabilityWords: options.words.capabilityWords }
+        : { wordBindings: options.words.wordBindings, wordNodeIds: profile.wordNodeIds };
+    const scene = entry.createConnectedScene({
       mount: options.mount,
       graph,
       quality: graph.quality,
       tier,
-      words: options.words,
+      profile,
+      words: 'capabilityWords' in options.words ? options.words.capabilityWords : undefined,
       onContextLost: options.onContextLost,
     });
     releases.push(() => scene.dispose());
@@ -361,14 +409,15 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       scene.resize(
         { width: sceneWidth, height: sceneHeight, pixelRatio: window.devicePixelRatio || 1, tier },
         graph,
+        profile,
       );
     };
     sizeScene();
 
-    const labelLayer = createLabelLayer(options.mount, options.words);
+    const labelLayer = createLabelLayer(options.mount);
     releases.push(labelLayer.dispose);
     let labelledGraph = graph;
-    labelLayer.rebuild(graph);
+    labelLayer.rebuild(graph, wordSource());
     labelLayer.measure();
     let lastPose: ScenePose | null = null;
     let peakScrollActivity = 0;
@@ -377,7 +426,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       // A paused resize stretches the held canvas paint; labels follow it until Resume fits the field.
       const scaleX = resizePending && sceneWidth > 0 ? options.mount.clientWidth / sceneWidth : 1;
       const scaleY = resizePending && sceneHeight > 0 ? options.mount.clientHeight / sceneHeight : 1;
-      labelLayer.update(resizePending ? projections.map(label => ({ ...label, xPx: label.xPx * scaleX, yPx: label.yPx * scaleY })) : projections);
+      labelLayer.update(resizePending ? projections.map(label => ({ ...label, xPx: label.xPx * scaleX, yPx: label.yPx * scaleY })) : projections, window.scrollY);
     };
 
     const timing = createFrameScheduler(browserFrameEnvironment);
@@ -391,7 +440,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
           resizePending = false;
           if (graph !== labelledGraph) {
             labelledGraph = graph;
-            labelLayer.rebuild(graph);
+            labelLayer.rebuild(graph, wordSource());
           }
           labelLayer.measure();
         }
@@ -405,22 +454,54 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         drawLabels(pose);
       },
       getLayout: () => layout,
-      // The first live frame is the poster's pose, so the fade from poster to canvas has no jump.
+      // The first live frame is the poster pose, so the fade from poster to canvas has no jump.
       startPose: CONNECTED_POSTER_POSE,
+      profile,
+      profileKit: entry.connectedProfileKit,
     });
     releases.push(() => controller.dispose());
 
-    let lastY = window.scrollY;
+    // Input state. The pointer, the scroll classifier and the form suspension are small pure helpers
+    // (connected-input.ts); every rectangle they use was cached by `labelLayer.measure`.
+    const pointerSampler = createPointerSampler();
+    const scrollClassifier = createScrollClassifier();
+    const formSuspension = createFormSuspension();
+    let pointer: ConnectedPointerInput | null = null;
+    let visitorPaused = options.startPaused;
+    let heldPaused = false;
+    let cachedScrollY = window.scrollY;
+    let lastY = cachedScrollY;
     let lastAt = performance.now();
-    const push = (velocity: number) => {
+    let lastVelocity = 0;
+    let inputFrame = 0;
+
+    // The visitor Pause, or the inquiry form holding focus or submitting, pauses the scene. A pause clears every
+    // stimulation at once and holds zero callbacks; the held frame stays visible, and nothing replays on release.
+    const syncPause = () => {
+      const next = visitorPaused || formSuspension.suspended();
+      if (next === heldPaused) return;
+      heldPaused = next;
+      if (next) controller.pause();
+      else controller.resume();
+    };
+    const push = (velocity: number, scrollDeltaPx = 0) => {
       const scrollY = window.scrollY;
+      cachedScrollY = scrollY;
+      if (pointer && isExcluded(pointer.x, pointer.y, exclusionRects(labelLayer.boxes(), scrollY))) {
+        // Content scrolled under a still pointer: it now rests over a plate or reading text.
+        pointer = null;
+        pointerSampler.reset();
+      }
       controller.update({
         graph,
         tier,
+        profile,
         scrollY,
         velocityPxPerSecond: velocity,
         visible: !document.hidden,
         footerDominant: isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight),
+        pointer,
+        scrollDeltaPx,
       });
       // A suspended scene (hidden tab, Footer handoff) is hidden; a paused one keeps its pose, but its
       // labels still follow the content that scrolls past them.
@@ -433,27 +514,107 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       labelFrame = 0;
       if (lastPose) drawLabels(lastPose);
     };
+    // Pointer samples coalesce into one controller update per frame; nothing reads layout in between.
+    const currentVelocity = () => (performance.now() - lastAt > 120 ? 0 : lastVelocity);
+    const scheduleInput = () => {
+      if (inputFrame) return;
+      inputFrame = window.requestAnimationFrame(() => {
+        inputFrame = 0;
+        push(currentVelocity());
+      });
+    };
+    const dropPointer = () => {
+      pointerSampler.reset();
+      if (!pointer) return;
+      pointer = null;
+      scheduleInput();
+    };
     const onScroll = () => {
       const now = performance.now();
       const scrollY = window.scrollY;
+      const delta = scrollClassifier.classify(now, scrollY - lastY);
       const velocity = ((scrollY - lastY) / Math.max(now - lastAt, 8)) * 1000;
       lastY = scrollY;
       lastAt = now;
-      push(velocity);
+      lastVelocity = velocity;
+      if (delta !== 0 && formSuspension.backgroundInput()) syncPause();
+      push(velocity, delta);
     };
+    // Desktop mouse only: touch and pen keep ordinary native scrolling and nothing else. The handler reads the
+    // event and the cached boxes, never layout.
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') return;
+      const x = event.clientX;
+      const y = event.clientY;
+      if (isInteractiveTarget(event.target) || isExcluded(x, y, exclusionRects(labelLayer.boxes(), cachedScrollY))) {
+        dropPointer();
+        return;
+      }
+      if (formSuspension.backgroundInput()) syncPause();
+      if (formSuspension.suspended()) {
+        dropPointer();
+        return;
+      }
+      const sample = pointerSampler.sample({ x, y, timeStampMs: event.timeStamp });
+      if (!sample) return;
+      pointer = sample;
+      scheduleInput();
+    };
+    const onPointerLeave = () => dropPointer();
+    // Wheel, touch and scroll keys mark the scroll that follows as the visitor own. Typing and scrolling inside
+    // a field are not gestures.
+    const onGesture = (event: Event) => {
+      if (isEditableTarget(event.target)) return;
+      if (event.type === 'keydown' && !SCROLL_KEYS.has((event as KeyboardEvent).key)) return;
+      scrollClassifier.noteGesture(performance.now());
+    };
+    const onJump = () => scrollClassifier.noteJump(performance.now());
+    // The inquiry form (Contact): focus inside it, or a submission, suspends the drawing; it resumes with the next
+    // eligible background input after focus has left, not by itself.
+    const forms = Array.from(document.querySelectorAll<HTMLElement>(FORM_SELECTOR));
+    const readPhase = () => (forms.some((form) => form.dataset.inquiryPhase === 'submitting') ? 'submitting' : (forms[0]?.dataset.inquiryPhase ?? null));
+    const onFocusIn = (event: FocusEvent) => {
+      formSuspension.focusChanged(Boolean((event.target as Element | null)?.closest?.(FORM_SELECTOR)));
+      dropPointer();
+      syncPause();
+    };
+    const onFocusOut = (event: FocusEvent) => {
+      // Moving between the fields of the form is not leaving it.
+      if ((event.relatedTarget as Element | null)?.closest?.(FORM_SELECTOR)) return;
+      formSuspension.focusChanged(false);
+      syncPause();
+    };
+    const phaseObserver = forms.length
+      ? new MutationObserver(() => {
+          formSuspension.phaseChanged(readPhase());
+          dropPointer();
+          syncPause();
+        })
+      : null;
+    for (const form of forms) phaseObserver?.observe(form, { attributes: true, attributeFilter: ['data-inquiry-phase'] });
+    formSuspension.phaseChanged(readPhase());
+    formSuspension.focusChanged(Boolean((document.activeElement as Element | null)?.closest?.(FORM_SELECTOR)));
+
     // Layout is read in one batch, outside the scroll path, whenever anything that moves the Footer or
     // the viewport changes: a resize or orientation change, the visual viewport (mobile browser chrome),
     // late fonts and content that grows or wraps differently. Several triggers in a frame share one read.
     let remeasureFrame = 0;
     const remeasure = () => {
       remeasureFrame = 0;
+      // A resize moves the document without a gesture: not an impulse to replay.
+      scrollClassifier.noteJump(performance.now());
       layout = readLayout();
       tier = getTierForWidth(layout.viewportWidth);
       if (options.livePolicy[getQualityForTier(tier)] !== true) {
         options.onIneligible();
         return;
       }
-      graph = getConnectedGraph(getQualityForTier(tier));
+      const resized = layout.viewportWidth !== profileViewport.width || layout.viewportHeight !== profileViewport.height;
+      if (profile.tier !== tier || (resized && profile.nodeStyle === 'atlas')) {
+        profile = buildProfile();
+        profileViewport = { width: layout.viewportWidth, height: layout.viewportHeight };
+        graph = profile.graph;
+      }
       // Resizing a WebGL backing store clears its paint. Pause promises zero draws, so retain that
       // store and apply the latest viewport/graph at the next live draw instead.
       resizePending = true;
@@ -462,7 +623,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         resizePending = false;
         if (graph !== labelledGraph) {
           labelledGraph = graph;
-          labelLayer.rebuild(graph);
+          labelLayer.rebuild(graph, wordSource());
         }
       }
       labelLayer.measure();
@@ -479,22 +640,40 @@ function attachLiveScene(options: LiveOptions): LiveScene {
     window.visualViewport?.addEventListener('resize', scheduleRemeasure);
     document.addEventListener('visibilitychange', onVisibility);
     document.fonts?.addEventListener('loadingdone', scheduleRemeasure);
+    document.addEventListener('pointermove', onPointerMove, { passive: true });
+    document.documentElement.addEventListener('pointerleave', onPointerLeave);
+    document.addEventListener('wheel', onGesture, { passive: true });
+    document.addEventListener('touchmove', onGesture, { passive: true });
+    document.addEventListener('keydown', onGesture, { passive: true });
+    document.addEventListener('focusin', onFocusIn);
+    document.addEventListener('focusout', onFocusOut);
+    for (const type of ['hashchange', 'popstate', 'pageshow'] as const) window.addEventListener(type, onJump);
     const contentObserver = new ResizeObserver(scheduleRemeasure);
     contentObserver.observe(document.documentElement);
     releases.push(() => {
       window.cancelAnimationFrame(remeasureFrame);
       window.cancelAnimationFrame(labelFrame);
+      window.cancelAnimationFrame(inputFrame);
       delete options.mount.dataset.connectedState;
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', scheduleRemeasure);
       window.visualViewport?.removeEventListener('resize', scheduleRemeasure);
       document.removeEventListener('visibilitychange', onVisibility);
       document.fonts?.removeEventListener('loadingdone', scheduleRemeasure);
+      document.removeEventListener('pointermove', onPointerMove);
+      document.documentElement.removeEventListener('pointerleave', onPointerLeave);
+      document.removeEventListener('wheel', onGesture);
+      document.removeEventListener('touchmove', onGesture);
+      document.removeEventListener('keydown', onGesture);
+      document.removeEventListener('focusin', onFocusIn);
+      document.removeEventListener('focusout', onFocusOut);
+      for (const type of ['hashchange', 'popstate', 'pageshow'] as const) window.removeEventListener(type, onJump);
+      phaseObserver?.disconnect();
       contentObserver.disconnect();
     });
     push(0);
-    // A stored Pause starts from one drawn frame on the current pose, then holds.
-    if (options.startPaused) controller.pause();
+    // A stored Pause starts from one drawn frame on the current pose, then holds; so does a form that already has focus.
+    syncPause();
 
     options.publish(() => {
       const snapshot = controller.snapshot();
@@ -515,10 +694,20 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         pixelRatio: info.pixelRatio,
         tier,
         layout,
+        formSuspended: formSuspension.suspended(),
+        pointerActive: pointer !== null,
+        profile: { route: profile.route, tier: profile.tier, nodeStyle: profile.nodeStyle, wordNodeIds: profile.wordNodeIds },
       };
     });
     releases.push(() => options.publish(null));
-    return { controller, dispose };
+    return {
+      controller,
+      setVisitorPaused(paused) {
+        visitorPaused = paused;
+        syncPause();
+      },
+      dispose,
+    };
   } catch (error) {
     dispose();
     throw error;
@@ -532,10 +721,11 @@ function attachLiveScene(options: LiveOptions): LiveScene {
  */
 export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProps) {
   const { route, locale } = props;
-  // Compatibility only (PLAN-SFC-V1 Task 2): the profile routes have no live host until Task 11 lands, so
-  // they keep the complete static background and attach nothing.
+  // Services and Projects label their nodes with the localized vocabulary; Studio, Founder and Contact bind a few
+  // decorative words to node ids. Either way every route attaches the same host.
   const capabilityWords = 'capabilityWords' in props ? props.capabilityWords : null;
-  const controllerRef = useRef<ConnectedController | null>(null);
+  const wordBindings = 'wordBindings' in props ? props.wordBindings : null;
+  const sceneRef = useRef<LiveScene | null>(null);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const [live, setLive] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -543,7 +733,8 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
   const [fallbackHeld, setFallbackHeld] = useState(false);
 
   useEffect(() => {
-    if (!capabilityWords) return;
+    const words: LiveOptions['words'] | null = capabilityWords ? { capabilityWords } : wordBindings ? { wordBindings } : null;
+    if (!words) return;
     const mount = document.querySelector<HTMLElement>(
       `[data-connected-ground][data-connected-route="${route}"][data-connected-locale="${locale}"] [data-connected-mount]`,
     );
@@ -567,7 +758,7 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
       window.clearTimeout(deferTimer);
       liveScene?.dispose();
       liveScene = null;
-      controllerRef.current = null;
+      sceneRef.current = null;
       publish(() => ({ ...STATIC_READING, mode }));
       const pauseSlot = document.getElementById(`connected-pause-${route}`);
       setFallbackHeld(Boolean(pauseSlot && document.activeElement && pauseSlot.contains(document.activeElement)));
@@ -626,7 +817,7 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
         engine = import('./runtime/create-connected-scene');
       }
       engine
-        .then(({ createConnectedScene }) => {
+        .then((entry) => {
           importing = false;
           if (cancelled || stopped || document.hidden) return;
           if (document.querySelector(HOME_RENDERER_SELECTOR)) {
@@ -640,10 +831,10 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
           }
           let lostEarly = false;
           liveScene = attachLiveScene({
-            createConnectedScene,
+            entry,
             mount,
             route,
-            words: capabilityWords,
+            words,
             startPaused: current.session.paused,
             livePolicy: current.gate.livePolicy,
             publish,
@@ -655,7 +846,7 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
               else lostEarly = true;
             },
           });
-          controllerRef.current = liveScene.controller;
+          sceneRef.current = liveScene;
           setSlot(document.getElementById(`connected-pause-${route}`));
           setPaused(current.session.paused);
           setLive(true);
@@ -697,18 +888,17 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
       forcedColors.removeEventListener('change', onPreference);
       liveScene?.dispose();
       liveScene = null;
-      controllerRef.current = null;
+      sceneRef.current = null;
       setLive(false);
       setFallbackHeld(false);
     };
-  }, [capabilityWords, locale, route]);
+  }, [capabilityWords, wordBindings, locale, route]);
 
   const toggle = () => {
     const next = !paused;
     setPaused(next);
     setConnectedPaused(next);
-    if (next) controllerRef.current?.pause();
-    else controllerRef.current?.resume();
+    sceneRef.current?.setVisitorPaused(next);
   };
 
   return (

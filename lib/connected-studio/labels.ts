@@ -1,4 +1,4 @@
-import type { LabelBox, LabelVisibility, OccluderRect } from './types';
+import type { CapabilityWords, ConnectedWordBinding, GraphNode, LabelBox, LabelVisibility, OccluderRect } from './types';
 
 type Rect = { left: number; top: number; width: number; height: number };
 
@@ -66,4 +66,17 @@ export function resolveLabelVisibility(
     results[candidate.index] = { id: candidate.id, visible: true, left: candidate.rect.left, top: candidate.rect.top };
   }
   return results;
+}
+
+/** Where a node's decorative word comes from: the localized eight-word vocabulary, or ids bound to a few words. */
+export type LabelWordSource =
+  | { readonly capabilityWords: CapabilityWords }
+  | { readonly wordBindings: readonly ConnectedWordBinding[]; readonly wordNodeIds: readonly string[] };
+
+/** The word a node carries, or undefined when it carries none and so gets no label element. */
+export function resolveNodeWord(node: Pick<GraphNode, 'id' | 'capabilityIndex'>, source: LabelWordSource): string | undefined {
+  if ('capabilityWords' in source) return node.capabilityIndex === undefined ? undefined : source.capabilityWords[node.capabilityIndex];
+  if (!source.wordNodeIds.includes(node.id)) return undefined;
+  const word = source.wordBindings.find((binding) => binding.nodeId === node.id)?.word;
+  return word ? word : undefined;
 }
