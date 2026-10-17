@@ -249,6 +249,97 @@ test.describe('input on the Atlas routes', () => {
   });
 });
 
+// Reviewer R findings on PR 152 (head bf5a5bfa): the label, Pause and geometry-cache contracts of a sleeping scene.
+test.describe('sleeping scene contracts (Reviewer R)', () => {
+  const labelState = (page: Page) =>
+    page.evaluate(() => {
+      const rects = (selector: string) => Array.from(document.querySelectorAll<HTMLElement>(selector));
+      const occluders = [
+        ...rects('[data-connected-opaque-plate]').map((el) => el.getBoundingClientRect()),
+        ...rects('[data-connected-reading-mask]').map((el) => {
+          const r = el.getBoundingClientRect();
+          const c = Number(el.getAttribute('data-connected-clearance')) || 0;
+          return { left: r.left - c, top: r.top - c, right: r.right + c, bottom: r.bottom + c };
+        }),
+      ].map((r) => ({ left: r.left, top: r.top, right: r.right, bottom: r.bottom }));
+      return rects('[data-connected-label]').map((el) => {
+        const r = el.getBoundingClientRect();
+        const covered = occluders.some((o) => r.left < o.right && o.left < r.right && r.top < o.bottom && o.top < r.bottom);
+        return { id: el.dataset.nodeId, visible: el.dataset.visible === 'true', covered };
+      });
+    });
+
+  test('a script or restored scroll over a sleeping scene refreshes label occlusion without waking it', async ({ page }) => {
+    await liveRest(page, 'studio', 'es');
+    const shownAtTop = (await labelState(page)).filter((label) => label.visible).map((label) => label.id);
+    const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+    let sawCovered = false;
+    let sawShown = false;
+    for (let top = 0; top <= max; top += 60) {
+      await scrollInstant(page, top);
+      await page.waitForTimeout(120);
+      for (const label of await labelState(page)) {
+        if (label.covered) {
+          sawCovered = true;
+          expect(label.visible, `label ${label.id} at scroll ${top} is under a plate or scrim`).toBe(false);
+        } else if (label.visible) sawShown = true;
+      }
+    }
+    expect(sawCovered, 'the sweep put a plate or scrim over a label').toBe(true);
+    expect(sawShown, 'and a label was shown again once it moved away').toBe(true);
+    await scrollInstant(page, 0);
+    await page.waitForTimeout(200);
+    expect((await labelState(page)).filter((label) => label.visible).map((label) => label.id), 'the labels the masks left are shown again').toEqual(shownAtTop);
+    await expectAsleep(page);
+  });
+
+  test('the host reads no App Bar, plate or scrim geometry while the pointer is active or the scene is paused', async ({ page }) => {
+    await page.addInitScript(() => {
+      const counter = { calls: 0 };
+      (window as unknown as { __geometryReads: typeof counter }).__geometryReads = counter;
+      const original = Element.prototype.getBoundingClientRect;
+      Element.prototype.getBoundingClientRect = function (this: Element) {
+        if (this.matches('[data-app-bar],[data-connected-opaque-plate],[data-connected-reading-mask]')) counter.calls += 1;
+        return original.call(this);
+      };
+    });
+    await liveRest(page, 'studio', 'es');
+    const reads = () => page.evaluate(() => (window as unknown as { __geometryReads: { calls: number } }).__geometryReads.calls);
+    const baseline = await reads();
+    await sweepBesideN4(page);
+    await page.mouse.move(FREE_X, 420, { steps: 10 });
+    expect(await reads(), 'active pointer frames read cached boxes only').toBe(baseline);
+
+    await pauseSlot(page, 'studio').getByRole('button', { name: pauseLabels.es.pause }).click();
+    await expect.poll(async () => (await readConnected(page))?.controller).toBe('paused');
+    const paused = await reads();
+    await scrollInstant(page, 500);
+    await page.waitForTimeout(300);
+    expect(await reads(), 'paused label refreshes read cached boxes only').toBe(paused);
+  });
+
+  test('the visitor Pause rejects pointer input, and a keyboard Resume replays nothing', async ({ page }) => {
+    const rest = await liveRest(page, 'studio', 'es');
+    const pause = pauseSlot(page, 'studio').getByRole('button');
+    await pause.focus();
+    await page.keyboard.press('Space');
+    await expect.poll(async () => (await readConnected(page))?.controller).toBe('paused');
+
+    await sweepBesideN4(page);
+    await page.waitForTimeout(300);
+    expect((await readConnected(page))?.pointerActive, 'a paused scene takes no pointer sample').toBe(false);
+
+    // The mouse stays put; the visitor resumes from the keyboard, then an ordinary (non-gesture) scroll updates the scene.
+    await pause.focus();
+    await page.keyboard.press('Space');
+    await expect.poll(async () => (await readConnected(page))?.controller).toBe('live');
+    await scrollInstant(page, 300);
+    await page.waitForTimeout(800);
+    await expectAsleep(page);
+    expect(displacement(rest, await readNodes(page)), 'nothing collected during Pause is replayed').toBeLessThan(0.001);
+  });
+});
+
 test.describe('contact form signal', () => {
   test('focus in the form pauses the graph, and only the next eligible background input resumes it', async ({ page }) => {
     await liveRest(page, 'contact', 'es');
