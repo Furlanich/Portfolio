@@ -298,9 +298,12 @@ test.describe('lifecycle on the Atlas routes', () => {
   test('hidden and Footer-dominated states hold zero callbacks and draw nothing', async ({ page }) => {
     const visibility = await controlVisibility(page);
     await liveRest(page, 'studio', 'es');
+    await sweepBesideN4(page);
+    expect((await readConnected(page))?.pointerActive).toBe(true);
 
     await visibility.setHidden(true);
     await expectStopped(page);
+    expect((await readConnected(page))?.pointerActive, 'a hidden tab forgets the pointer, so it supplies no momentum later').toBe(false);
     await visibility.setHidden(false);
     await expectAsleep(page);
 
