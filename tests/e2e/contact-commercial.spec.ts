@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { readConnected } from './support/connected-studio';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 const endpoint = 'https://formspree.io/f/meaqwnbr';
@@ -294,6 +295,44 @@ for (const copy of submissions) {
     release?.();
     await expectResult(page, copy.acceptedHeading, copy.acceptedBody);
     await expect(name).toHaveValue('');
+    await boundary.installed;
+  });
+}
+
+// PLAN-SFC-V1 Task 12: with the live-graph policy fixture applied (the combined candidate) the real form must stay
+// healthy in every engine, whether or not that engine qualifies for the optional background. Firefox and WebKit mask
+// their renderer, so they may attach the live scene; the case records which outcome each engine reached. Either way:
+// no page error, no failed scene, the same focus and result, and while a scene is live the form holds it.
+for (const copy of submissions) {
+  test(`${copy.locale} Contact stays a healthy form in this engine, with or without the live background`, { tag: '@cross-browser' }, async ({ page, browserName }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    const boundary = providerBoundary(page);
+    await openContact(page, copy);
+
+    // The hook exists only where the host mounted. Give the gates and the optional import time to settle.
+    let mode = 'none';
+    for (let attempt = 0; attempt < 40; attempt += 1) {
+      const reading = await readConnected(page);
+      mode = reading?.mode ?? 'none';
+      if (mode === 'live' || mode === 'failed') break;
+      if (attempt >= 12 && (reading === null || reading.imports === 0)) break;
+      await page.waitForTimeout(250);
+    }
+    test.info().annotations.push({ type: 'live-background', description: `${browserName}: ${mode}` });
+
+    await fillValidInquiry(page);
+    if (mode === 'live') await expect.poll(async () => (await readConnected(page))?.formSuspended).toBe(true);
+    await page.getByRole('button', { name: copy.submit }).click();
+    await expectResult(page, copy.acceptedHeading, copy.acceptedBody);
+    if (mode === 'live') {
+      expect((await readConnected(page))?.formSuspended, 'a live scene stays held by the form').toBe(true);
+      expect((await readConnected(page))?.controller).toBe('paused');
+    }
+    await page.waitForTimeout(500);
+    expect(errors).toEqual([]);
+    expect(mode, 'the optional scene never ends in failure').not.toBe('failed');
+    expect(boundary.requests).toHaveLength(1);
     await boundary.installed;
   });
 }

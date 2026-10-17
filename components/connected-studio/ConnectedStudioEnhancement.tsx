@@ -94,6 +94,11 @@ export type ConnectedDiagnostics = {
   pointerActive: boolean;
   /** The profile in use: its route, tier and node style. */
   profile: { route: ConnectedRoute; tier: ConnectedTier; nodeStyle: string; wordNodeIds: readonly string[] } | null;
+  /**
+   * The seven final points (anchor space) of every string the pose bends, by graph edge id. Empty for a scene at rest,
+   * so rendered evidence can measure pins, caps and settling without reading the canvas.
+   */
+  edgeSamples: readonly { id: string; points: readonly (readonly [number, number, number])[] }[];
 };
 
 type LiveReading = Omit<ConnectedDiagnostics, 'route' | 'imports' | 'deferralsExhausted' | 'layoutReads'>;
@@ -119,6 +124,7 @@ const STATIC_READING: LiveReading = {
   formSuspended: false,
   pointerActive: false,
   profile: null,
+  edgeSamples: [],
 };
 
 /** Installs the diagnostics hook; production builds never do. Returns the setter for the live reading. */
@@ -711,6 +717,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         formSuspended: formSuspension.suspended(),
         pointerActive: pointer !== null,
         profile: { route: profile.route, tier: profile.tier, nodeStyle: profile.nodeStyle, wordNodeIds: profile.wordNodeIds },
+        edgeSamples: (snapshot.pose.edgeSamples ?? []).map((edge) => ({ id: edge.id, points: edge.points.map((point) => [point[0], point[1], point[2]] as const) })),
       };
     });
     releases.push(() => options.publish(null));
@@ -718,6 +725,8 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       controller,
       setVisitorPaused(paused) {
         visitorPaused = paused;
+        // A deliberate Resume is an eligible input for the form's waiting state too.
+        if (!paused) formSuspension.deliberateResume();
         syncPause();
       },
       dispose,
