@@ -725,6 +725,8 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       controller,
       setVisitorPaused(paused) {
         visitorPaused = paused;
+        // A deliberate Resume is an eligible input for the form's waiting state too.
+        if (!paused) formSuspension.deliberateResume();
         syncPause();
       },
       dispose,

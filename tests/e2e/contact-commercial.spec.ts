@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { readConnected } from './support/connected-studio';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 const endpoint = 'https://formspree.io/f/meaqwnbr';
@@ -294,6 +295,28 @@ for (const copy of submissions) {
     release?.();
     await expectResult(page, copy.acceptedHeading, copy.acceptedBody);
     await expect(name).toHaveValue('');
+    await boundary.installed;
+  });
+}
+
+// PLAN-SFC-V1 Task 12: with the live-graph policy fixture applied (the combined candidate) a browser that does not
+// qualify for the optional renderer (Firefox and WebKit here have no approved software path) serves the same plain,
+// healthy form: no page error, no optional-engine import (the dev-only counter, since next dev lists the engine chunk on
+// every page), no request but the mocked endpoint, and the same focus.
+for (const copy of submissions) {
+  test(`${copy.locale} Contact stays a plain healthy form where no renderer qualifies, with the live policy on or off`, { tag: '@cross-browser' }, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    const boundary = providerBoundary(page);
+    await openContact(page, copy);
+    await fillValidInquiry(page);
+    await page.getByRole('button', { name: copy.submit }).click();
+    await expectResult(page, copy.acceptedHeading, copy.acceptedBody);
+    await page.waitForTimeout(500);
+    expect(errors).toEqual([]);
+    // The hook exists only where the host mounted (the live policy fixture); either way nothing was imported.
+    expect((await readConnected(page))?.imports ?? 0, 'no optional engine import without an eligible renderer').toBe(0);
+    expect(boundary.requests).toHaveLength(1);
     await boundary.installed;
   });
 }

@@ -649,6 +649,10 @@ function rebounds(series: readonly number[], slack: number) {
 }
 
 test.describe('the five rendered profiles (Task 12)', () => {
+  test.afterEach(async ({ page }) => {
+    await page.goto('about:blank').catch(() => undefined);
+  });
+
   for (const route of FIVE_ROUTES) {
     for (const screen of ['wide', 'compact'] as const) {
       test(`${route} ${screen}: rest composition, then active and inertial states stay inside the specified caps, pins and rest`, async ({ page }, testInfo) => {
@@ -848,6 +852,10 @@ async function expectNoBlockingAxe(page: Page) {
 }
 
 test.describe('the actual Contact form with the live graph (Task 12)', () => {
+  test.afterEach(async ({ page }) => {
+    await page.goto('about:blank').catch(() => undefined);
+  });
+
   test('every field holds the graph; typing and textarea scrolling excite nothing; leaving the form waits for background input', async ({ page }) => {
     const boundary = await openActualContact(page);
     const first = await readConnected(page);
@@ -921,7 +929,13 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
       await expectHeldByForm(page);
       await expectNoBlockingAxe(page);
 
+      // The result region holds focus inside the form, so background input alone does not resume the graph ...
       await page.mouse.move(FREE_X, 420, { steps: 4 });
+      await page.waitForTimeout(300);
+      expect(await formSuspended(page), 'focus inside the form still holds').toBe(true);
+      // ... leaving the form does, with the next eligible background input.
+      await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+      await page.mouse.move(FREE_X, 460, { steps: 4 });
       await expect.poll(() => formSuspended(page)).toBe(false);
       await expectAsleep(page);
       expect(boundary.requests).toHaveLength(1);
@@ -995,25 +1009,31 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
     await expect(scrim).toHaveAttribute('data-connected-clearance', '32');
     await expect(scrim.getByRole('heading', { level: 1 })).toHaveCount(1);
 
-    const plateBox = (await plate.boundingBox())!;
-    const scrimBox = (await scrim.boundingBox())!;
-    const plateY = Math.min(plateBox.y + plateBox.height / 2, 500);
-    const scrimY = scrimBox.y + scrimBox.height / 2;
     const active = async () => (await readConnected(page))?.pointerActive;
 
-    await page.mouse.move(plateBox.x + 40, plateY, { steps: 6 });
-    expect(await active(), 'inside the plate').toBe(false);
-    await page.mouse.move(plateBox.x - 4, plateY, { steps: 6 });
-    expect(await active(), 'within the 8px margin of the plate').toBe(false);
-    await page.mouse.move(plateBox.x - 14, plateY, { steps: 6 });
-    expect(await active(), 'beyond the plate margin').toBe(true);
-
+    // The introduction scrim, at the top of the page.
+    const scrimBox = (await scrim.boundingBox())!;
+    const scrimY = scrimBox.y + Math.min(scrimBox.height / 2, 120);
     await page.mouse.move(scrimBox.x + 20, scrimY, { steps: 6 });
     expect(await active(), 'inside the introduction scrim').toBe(false);
     await page.mouse.move(scrimBox.x - 36, scrimY, { steps: 6 });
     expect(await active(), 'within the scrim 32px clearance plus 8px margin').toBe(false);
     await page.mouse.move(scrimBox.x - 46, scrimY, { steps: 6 });
     expect(await active(), 'beyond the scrim clearance and margin').toBe(true);
+
+    // The intake plate, scrolled into the viewport by a script (a jump, not a gesture).
+    await scrollInstant(page, await plate.evaluate((element) => element.getBoundingClientRect().top + window.scrollY - 160));
+    await page.waitForTimeout(300);
+    const plateBox = (await plate.boundingBox())!;
+    expect(plateBox.y, 'the plate is in the viewport').toBeLessThan(400);
+    const plateY = plateBox.y + 120;
+    await page.mouse.move(plateBox.x + 40, plateY, { steps: 6 });
+    expect(await active(), 'inside the plate').toBe(false);
+    await page.mouse.move(plateBox.x - 4, plateY, { steps: 6 });
+    expect(await active(), 'within the 8px margin of the plate').toBe(false);
+    await page.mouse.move(plateBox.x - 14, plateY, { steps: 6 });
+    expect(await active(), 'beyond the plate margin').toBe(true);
+    await scrollInstant(page, 0);
     await expectAsleep(page);
   });
 
@@ -1069,8 +1089,17 @@ const readForeground = (page: Page): Promise<{ labels: (Rect & { id: string; tex
       '[data-app-bar] :is(a[href],button)',
     ].join(',');
     const foreground: { left: number; top: number; right: number; bottom: number; what: string }[] = [];
+    const alphaOf = (color: string) => {
+      const match = color.match(/rgba?(([^)]+))/);
+      if (!match) return 0;
+      const parts = match[1].split(/[ ,/]+/).filter(Boolean);
+      return parts.length > 3 ? Number(parts[3]) : 1;
+    };
     for (const element of Array.from(document.querySelectorAll<HTMLElement>(selector))) {
       if (element.closest('[data-connected-ground]')) continue;
+      // The shared Footer and App Bar paint an opaque surface above the decorative layer; text on one is not a clash.
+      const surface = element.closest<HTMLElement>('footer, [data-app-bar]');
+      if (surface && alphaOf(getComputedStyle(surface).backgroundColor) >= 0.95) continue;
       const style = getComputedStyle(element);
       if (style.display === 'none' || style.visibility === 'hidden' || parseFloat(style.opacity) === 0) continue;
       const what = `${element.tagName.toLowerCase()} "${(element.textContent ?? element.getAttribute('aria-label') ?? '').trim().slice(0, 40)}"`;
@@ -1083,6 +1112,10 @@ const readForeground = (page: Page): Promise<{ labels: (Rect & { id: string; tex
   });
 
 test.describe('labels stay clear of text and controls on the five pages (Task 12)', () => {
+  test.afterEach(async ({ page }) => {
+    await page.goto('about:blank').catch(() => undefined);
+  });
+
   for (const route of FIVE_ROUTES) {
     for (const screen of ['wide', 'compact'] as const) {
       test(`${route} ${screen}: no visible label overlaps reading text, a control or the App Bar at any scroll position`, async ({ page }) => {
