@@ -18,7 +18,7 @@ related:
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
   - TEST-VISUAL-REGRESSION
-last_verified: 2026-10-16
+last_verified: 2026-10-17
 ---
 
 # Studio, Founder, Contact and legal implementation plan
@@ -296,7 +296,7 @@ Baseline procedure for 6/7/9/10/14/16: keep deterministic visual-Chromium/reduce
 - **Forbidden/shared paths:** state/ports/config factories from5, shared primitives/legal data/host/workflow/mode activation. **Exclusive locks:** SFC-CONTACT-UI, isolated candidate and browser/capture.
 - **RED:** same-tick Enter/click one port call, actual trap, code-point input surviving native200/508/240/8000 bounds, first-invalid focus, accepted-only reset, failure value retention, cancellation/stale field errors. Valid keyboard submission must retain focus on busy submit, not body; global outcomes focus nonlive region once; invalid fields receive associated error focus.
 - [ ] Observe REDs then consume coordinator/configured factory with actual hidden trap. Initial no-JS submit disabled/direct alternatives; after hydration fields-only disabled during busy, focusable aria-disabled submit/lock. Use the exact busy/result/field-error pattern specified above; no role=alert/live duplicate outcome or progress focus decoration.
-- [ ] Implement exact state strings including Q18 success, request-too-large and classified uncertainty/retry; expose phase marker, preserve failure snapshots, abort unmount. Route selects mode-matched data; stage/default demo retains truthful notice/no absent Terms link; no public mode switch or extra field.
+- [ ] Implement exact state strings including Q18 success, request-too-large and classified uncertainty/retry; expose phase marker, preserve failure snapshots, abort unmount. Route selects mode-matched data; stage/default demo remains local-only with explicit simulation labels/outcomes and no absent Terms link. **Owner-approved Task 10 integration-preview exception (2026-10-17):** omit the demonstration notice panel in both locales while retaining the demo release mode and no-transmission behavior. This non-public branch must not be released while the form remains simulated; subsequent tasks must complete the operational-form transition before public release or restore the approved notice. No public mode switch or extra field.
 - [ ] Use W1 surfaces/820px tablet split/source order/Pause/static label. Run repeatable combined candidate (all Formspree requests blocked unless fulfilled) for each result class/locales; Node handles transport permutations, Chromium full DOM states, Firefox/WebKit essential validation/success/duplicate/failure/retry/focus/no-JS. Keep direct-channel URLs unprefilled.
 - [ ] Validate actual Contact export requirements now, all responsive/keyboard/axe/visual audits and baselines; run clean root/base verifier, candidate CI and npm run validate, restore candidate.
 - **Acceptance criteria:** accessible, truthful, race-safe tested commercial flow not publicly activated; no loss of input/focus, no real CI transmission. **Verification:** owned Node/browser/candidate suites, explicit screen-reader check, full deterministic/export checks. **Reviewer:** R + independent Sonnet 5.5 High supplemental inquiry review + owner visual/copy.

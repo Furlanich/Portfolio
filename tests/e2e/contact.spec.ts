@@ -1,11 +1,12 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 test.describe.configure({ timeout: 60_000 });
 
 const cases = [
-  { route: stableRoutes.contact.es, heading: 'Contanos qué necesitás resolver.', notice: 'Demostración interactiva', submit: 'Simular envío', submitting: 'Simulando…', success: 'Demostración completada.', failure: 'La simulación no pudo completarse.', retry: 'Intentar nuevamente', language: 'es-AR' },
-  { route: stableRoutes.contact.en, heading: 'Tell us what you need to solve.', notice: 'Interactive demonstration', submit: 'Simulate submission', submitting: 'Simulating…', success: 'Demonstration complete.', failure: 'The simulation could not be completed.', retry: 'Try again', language: 'en' },
+  { route: stableRoutes.contact.es, heading: 'Contanos qué necesitás resolver.', removedNoticeHeading: 'Demostración interactiva', removedNoticeBody: 'Este sitio es una muestra técnica. El formulario simula el envío en este navegador: no envía datos, no crea una consulta comercial y no llega a ninguna bandeja de entrada.', removedFailureHelper: 'Para probar el estado de error, usá failure@example.invalid como correo electrónico.', formHeading: 'Iniciar una consulta', submit: 'Simular envío', submitting: 'Simulando…', success: 'Demostración completada.', failure: 'La simulación no pudo completarse.', retry: 'Intentar nuevamente', language: 'es-AR' },
+  { route: stableRoutes.contact.en, heading: 'Tell us what you need to solve.', removedNoticeHeading: 'Interactive demonstration', removedNoticeBody: 'This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.', removedFailureHelper: 'To try the failure state, use failure@example.invalid as the email address.', formHeading: 'Start an inquiry', submit: 'Simulate submission', submitting: 'Simulating…', success: 'Demonstration complete.', failure: 'The simulation could not be completed.', retry: 'Try again', language: 'en' },
 ] as const;
 
 const inquiry = { name: 'Ada Lovelace', email: 'success@example.invalid', company: 'Analytical Engines', message: 'Please help us scope a product idea.' };
@@ -64,7 +65,9 @@ for (const pageCase of cases) {
   test(pageCase.language + ' Contact renders the local-only demonstration and ordered fallbacks', async ({ page }) => {
     await gotoContact(page, pageCase.route, pageCase.language);
     await expect(page.locator('main h1')).toHaveText(pageCase.heading);
-    await expect(page.getByRole('heading', { name: pageCase.notice })).toBeVisible();
+    await expect(page.getByRole('heading', { name: pageCase.removedNoticeHeading })).toHaveCount(0);
+    await expect(page.getByText(pageCase.removedNoticeBody, { exact: true })).toHaveCount(0);
+    await expect(page.getByText(pageCase.removedFailureHelper, { exact: true })).toHaveCount(0);
     await expect(page.getByRole('main').locator('a[href^="https://wa.me"], a[href^="mailto:"], a[href^="tel:"]')).toHaveCount(3);
     await expect(page.getByRole('main').getByRole('link', { name: /Privacy Policy|Política de privacidad/ })).toHaveAttribute(
       'href',
@@ -152,18 +155,19 @@ test('Contact remains readable with JavaScript disabled and does not show a fals
   const page = await context.newPage();
   await page.goto(appUrl(stableRoutes.contact.en));
   await expect(page.locator('main h1')).toHaveText('Tell us what you need to solve.');
-  await expect(page.getByRole('heading', { name: 'Interactive demonstration' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Interactive demonstration' })).toHaveCount(0);
+  await expect(page.getByText('This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.', { exact: true })).toHaveCount(0);
   await expect(page.getByRole('main').getByRole('link', { name: 'Write on WhatsApp' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('link', { name: 'Send an email' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('link', { name: 'Call' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Simulate submission' })).toBeDisabled();
-  await expect(page.locator('[data-contact-busy]')).toHaveCount(1);
-  await expect(page.locator('[data-contact-busy]')).toHaveText('');
+  await expect(page.locator('[data-contact-busy]')).toHaveCount(0);
   await context.close();
 });
 
 test('Contact native bounds allow the complete approved Unicode code-point limits', async ({ page }) => {
   await gotoContact(page, stableRoutes.contact.en, 'en');
+  await expect(page.locator('form[data-contact-hydrated="true"]')).toBeVisible();
   const limits = [
     ['#contact-name', 200, '😀'.repeat(100)],
     ['#contact-email', 508, 'a'.repeat(508)],
@@ -210,6 +214,12 @@ function contrastRatio(foreground: string, background: string) {
 }
 
 for (const pageCase of cases) {
+  test(pageCase.language + ' Contact has no serious or critical axe violations', async ({ page }) => {
+    await gotoContact(page, pageCase.route, pageCase.language);
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+    expect(results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious')).toEqual([]);
+  });
+
   test(pageCase.language + ' Contact field boundaries meet non-text contrast and fallbacks keep their order', async ({ page }) => {
     await gotoContact(page, pageCase.route, pageCase.language);
     const main = page.getByRole('main');
@@ -227,9 +237,9 @@ for (const pageCase of cases) {
     );
     expect(hrefs).toEqual(['https', 'mailto', 'tel']);
 
-    const notice = main.getByRole('heading', { name: pageCase.notice });
+    const formHeading = main.getByRole('heading', { name: pageCase.formHeading });
     const firstField = main.locator('#contact-name');
-    expect(await notice.evaluate((heading, field) => Boolean(heading.compareDocumentPosition(field as Node) & Node.DOCUMENT_POSITION_FOLLOWING), await firstField.elementHandle())).toBe(true);
+    expect(await formHeading.evaluate((heading, field) => Boolean(heading.compareDocumentPosition(field as Node) & Node.DOCUMENT_POSITION_FOLLOWING), await firstField.elementHandle())).toBe(true);
   });
 
   test(pageCase.language + ' Contact can be completed with the keyboard alone', async ({ page }) => {
@@ -257,5 +267,35 @@ for (const pageCase of cases) {
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { name: pageCase.success })).toBeVisible();
     await expect(page.locator('[data-contact-result]')).toBeFocused();
+  });
+
+  test(pageCase.language + ' Contact stacks below 820px, splits at 820px, and stays inside the viewport', async ({ page }) => {
+    await gotoContact(page, pageCase.route, pageCase.language);
+    const formPanel = page.locator('main section[aria-labelledby$="-form-heading"]');
+    const alternativesPanel = page.getByRole('complementary').filter({ has: page.locator('a[href^="https://wa.me"]') });
+
+    for (const width of [320, 390, 768, 819, 820, 1023, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+      const [formBox, alternativesBox] = await Promise.all([
+        formPanel.boundingBox(),
+        alternativesPanel.boundingBox(),
+      ]);
+      expect(formBox, `${width}px form panel`).not.toBeNull();
+      expect(alternativesBox, `${width}px alternatives panel`).not.toBeNull();
+      if (!formBox || !alternativesBox) continue;
+
+      if (width < 820) {
+        expect(alternativesBox.y).toBeGreaterThanOrEqual(formBox.y + formBox.height);
+      } else {
+        expect(Math.abs(alternativesBox.y - formBox.y)).toBeLessThanOrEqual(2);
+        expect(alternativesBox.x).toBeGreaterThanOrEqual(formBox.x + formBox.width);
+      }
+
+      for (const action of await page.locator('main aside a[href^="https://wa.me"], main aside a[href^="mailto:"], main aside a[href^="tel:"]').all()) {
+        const box = await action.boundingBox();
+        expect(box?.height ?? 0, `${width}px direct-channel target`).toBeGreaterThanOrEqual(44);
+      }
+    }
   });
 }

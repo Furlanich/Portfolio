@@ -21,11 +21,6 @@ export const contactContent = {
     { label: 'Call', kind: 'phone', href: 'tel:+5491150117565' },
   ],
   founderContextAction: { label: "View Samuel's background", routeId: 'founder' },
-  notice: {
-    heading: 'Interactive demonstration',
-    body: 'This site is a technical showcase. The form simulates submission in this browser: it sends no data, creates no commercial inquiry, and reaches no inbox.',
-    failureHelper: 'To try the failure state, use failure@example.invalid as the email address.',
-  },
   form: {
     heading: 'Start an inquiry',
     introduction: 'Share your details and briefly explain the problem, how it works today, and what you would like to improve.',

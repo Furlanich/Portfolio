@@ -429,8 +429,11 @@ function assertContactArtifact(artifact, html) {
   if (countMatches(html, /<h1\b/g) !== 1 || !html.includes(requirement.heading)) {
     failures.push(artifact.file + ': expected one approved Contact H1');
   }
-  for (const text of [requirement.notice, requirement.noticeBody, requirement.fallback, ...requirement.fields]) {
+  for (const text of [requirement.fallback, ...requirement.fields]) {
     if (!html.includes(text)) failures.push(artifact.file + ': missing approved Contact text "' + text + '"');
+  }
+  for (const text of requirement.forbiddenText ?? []) {
+    if (html.includes(text)) failures.push(artifact.file + ': contains retired Contact copy "' + text + '"');
   }
   for (const route of [requirement.privacy, requirement.founder]) {
     const expected = expectedPageLinkHref(route);

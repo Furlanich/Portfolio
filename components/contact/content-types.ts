@@ -40,11 +40,6 @@ type ContactPageBaseContent = ContactContent & {
 
 export type DemonstrationContactPageContent = ContactPageBaseContent & {
   mode: 'demonstration';
-  notice: {
-    heading: string;
-    body: string;
-    failureHelper: string;
-  };
   form: ContactFormBaseContent & {
     failure: { heading: string; body: string };
   };

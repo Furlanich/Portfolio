@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useEffect, useMemo, useReducer, useRef, useSyncExternalStore } from 'react';
 import { useForm } from 'react-hook-form';
 import { createConfiguredSubmitInquiry } from '@/lib/inquiry/configuration';
 import { createInquirySubmissionController, type InquirySubmissionController } from '@/lib/inquiry/submission-controller';
@@ -17,6 +17,9 @@ type ContactFormProps = {
 };
 
 const emptyValues: InquiryValues = { name: '', email: '', company: '', message: '' };
+const subscribeToHydration = () => () => undefined;
+const getHydratedSnapshot = () => true;
+const getServerHydratedSnapshot = () => false;
 
 function createSafeSubmitter(): SubmitInquiry {
   try {
@@ -29,7 +32,7 @@ function createSafeSubmitter(): SubmitInquiry {
 
 export function ContactForm({ content, locale }: ContactFormProps) {
   const [state, dispatch] = useReducer(inquiryReducer, initialInquiryFormState);
-  const [hydrated, setHydrated] = useState(false);
+  const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
   const controller = useRef<InquirySubmissionController | null>(null);
   const formElement = useRef<HTMLFormElement>(null);
   const submitButton = useRef<HTMLButtonElement>(null);
@@ -38,7 +41,7 @@ export function ContactForm({ content, locale }: ContactFormProps) {
   const focusedField = useRef<InquiryField | null>(null);
   const focusedOutcome = useRef<string | null>(null);
   const { clearErrors, getValues, register, reset } = useForm<InquiryValues>({ defaultValues: emptyValues });
-  const submitInquiry = useMemo(createSafeSubmitter, []);
+  const submitInquiry = useMemo(() => createSafeSubmitter(), []);
   const sourceLocale = locale === 'es' ? 'es-AR' : 'en';
   const isSubmitting = state.phase === 'submitting';
   const hasGlobalOutcome = state.phase === 'success' || state.phase === 'error';
@@ -46,7 +49,6 @@ export function ContactForm({ content, locale }: ContactFormProps) {
   useEffect(() => {
     const currentController = createInquirySubmissionController({ submit: submitInquiry, dispatch });
     controller.current = currentController;
-    setHydrated(true);
     return () => {
       currentController.dispose();
       if (controller.current === currentController) controller.current = null;
@@ -116,14 +118,6 @@ export function ContactForm({ content, locale }: ContactFormProps) {
 
   return (
     <div className={styles.formColumn}>
-      {content.mode === 'demonstration' ? (
-        <aside className={styles.demoNotice}>
-          <h3 className={styles.demoHeading}>{content.notice.heading}</h3>
-          <p className={styles.supporting}>{content.notice.body}</p>
-          <p className={styles.demoHelper}>{content.notice.failureHelper}</p>
-        </aside>
-      ) : null}
-
       <h2 id={formHeadingId} className={styles.formHeading}>{content.form.heading}</h2>
       <p className={styles.formIntroduction}>{content.form.introduction}</p>
       <p className={styles.requiredNote}>{content.form.requiredNote}</p>
@@ -214,9 +208,11 @@ export function ContactForm({ content, locale }: ContactFormProps) {
           </p>
         ) : null}
 
-        <p data-contact-busy role="status" aria-live="polite" aria-atomic="true" className={styles.busyStatus}>
-          {isSubmitting ? content.form.submitting : ''}
-        </p>
+        {hydrated ? (
+          <p data-contact-busy role="status" aria-live="polite" aria-atomic="true" className={styles.busyStatus}>
+            {isSubmitting ? content.form.submitting : ''}
+          </p>
+        ) : null}
 
         <div
           ref={resultRegion}

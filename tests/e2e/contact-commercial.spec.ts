@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
@@ -96,7 +97,7 @@ async function expectResult(page: Page, heading: string, body: string) {
 }
 
 for (const copy of submissions) {
-  test(`${copy.locale} Contact selects approved commercial content, fields, and direct routes`, async ({ page }) => {
+  test(`${copy.locale} Contact selects approved commercial content, fields, direct routes, and passes axe`, async ({ page }) => {
     const boundary = providerBoundary(page);
     await openContact(page, copy);
     const main = page.getByRole('main');
@@ -117,6 +118,29 @@ for (const copy of submissions) {
     for (const [selector, units] of [['#contact-name', '200'], ['#contact-email', '508'], ['#contact-company', '240'], ['#contact-message', '8000']]) {
       await expect(page.locator(selector)).toHaveAttribute('maxlength', units);
     }
+    expect(boundary.requests).toEqual([]);
+    const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+    expect(axe.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious')).toEqual([]);
+    await boundary.installed;
+  });
+
+  test(`${copy.locale} Contact accepts the complete code-point limits inside native UTF-16 bounds`, async ({ page }) => {
+    const boundary = providerBoundary(page);
+    await openContact(page, copy);
+    const limits = [
+      [/^(Nombre|Name)/, 200, '😀'.repeat(100)],
+      [/^(Correo electrónico|Email)/, 508, 'a'.repeat(508)],
+      [/^(Empresa|Company)/, 240, '😀'.repeat(120)],
+      [/^(¿Qué necesitás resolver\?|What do you need to solve\?)/, 8000, '😀'.repeat(4000)],
+    ] as const;
+
+    for (const [label, maxLength, value] of limits) {
+      const field = page.getByLabel(label);
+      await expect(field).toHaveAttribute('maxlength', String(maxLength));
+      await field.fill(value);
+      await expect(field).toHaveValue(value);
+    }
+
     expect(boundary.requests).toEqual([]);
     await boundary.installed;
   });
@@ -143,7 +167,7 @@ for (const copy of submissions) {
     await boundary.installed;
   });
 
-  test(`${copy.locale} Contact preserves values and allows an explicit retry after uncertain, limited and unavailable results`, async ({ page }) => {
+  test(`${copy.locale} Contact preserves values and retries after uncertain, limited and server outcomes`, async ({ page }) => {
     const boundary = providerBoundary(page);
     await openContact(page, copy);
     await fillValidInquiry(page);
@@ -161,8 +185,20 @@ for (const copy of submissions) {
 
     boundary.respond({ status: 503, body: {} });
     await page.getByRole('button', { name: copy.retry }).click();
-    await expectResult(page, copy.unavailableHeading, copy.unavailableBody);
+    await expectResult(page, copy.uncertaintyHeading, copy.uncertaintyBody);
     expect(boundary.requests).toHaveLength(3);
+    await boundary.installed;
+  });
+
+  test(`${copy.locale} Contact shows unavailable configuration when the candidate endpoint is missing`, async ({ page }) => {
+    test.skip(Boolean(process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT), 'run with the commercial candidate endpoint unset');
+    const boundary = providerBoundary(page);
+    await openContact(page, copy);
+    await fillValidInquiry(page);
+    await page.getByRole('button', { name: copy.submit }).click();
+    await expectResult(page, copy.unavailableHeading, copy.unavailableBody);
+    await expect(page.getByLabel(/^(Nombre|Name)/)).toHaveValue('Ada Lovelace');
+    expect(boundary.requests).toEqual([]);
     await boundary.installed;
   });
 
@@ -198,7 +234,7 @@ for (const copy of submissions) {
   });
 }
 
-test('Contact no-JavaScript fallback disables submission and keeps independent direct channels', async ({ browser }) => {
+test('Contact no-JavaScript fallback disables submission and keeps independent direct channels', { tag: '@cross-browser' }, async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto(appUrl(stableRoutes.contact.en));
@@ -211,22 +247,39 @@ test('Contact no-JavaScript fallback disables submission and keeps independent d
   await context.close();
 });
 
-test('Contact keyboard submission keeps focus on the busy submit and announces only the persistent result after settlement', { tag: '@cross-browser' }, async ({ page }) => {
+test('Contact validates focus, preserves an uncertain result, blocks a busy retry duplicate, and restores focus after settlement', { tag: '@cross-browser' }, async ({ page }) => {
   const boundary = providerBoundary(page);
+  const copy = submissions[1];
+  await openContact(page, copy);
+  const submit = page.locator('form button[type="submit"]');
+  await submit.click();
+  await expect(page.getByLabel(/^(Name)/)).toBeFocused();
+  expect(boundary.requests).toEqual([]);
+
+  await fillValidInquiry(page);
+  boundary.respond({ status: 503, body: {} });
+  await page.getByRole('button', { name: copy.submit }).click();
+  await expectResult(page, copy.uncertaintyHeading, copy.uncertaintyBody);
+  await expect(page.getByLabel(/^(Name)/)).toHaveValue('Ada Lovelace');
+
   let release: (() => void) | undefined;
   boundary.respond({ status: 200, body: { ok: true }, hold: new Promise<void>((resolve) => { release = resolve; }) });
-  await openContact(page, submissions[1]);
-  await fillValidInquiry(page);
-  const submit = page.getByRole('button', { name: submissions[1].submit });
-  await submit.focus();
-  await page.keyboard.press('Enter');
+  await page.getByRole('button', { name: copy.retry }).click();
   await expect(page.locator('form')).toHaveAttribute('aria-busy', 'true');
   await expect(submit).toHaveAttribute('aria-disabled', 'true');
   await expect(submit).toBeFocused();
-  await expect(page.locator('fieldset')).toBeDisabled();
+  for (const field of [page.locator('#contact-name'), page.locator('#contact-email'), page.locator('#contact-company'), page.locator('#contact-message')]) {
+    await expect(field).toBeDisabled();
+  }
+  await expect(submit).not.toHaveAttribute('disabled');
   await expect(page.locator('[data-contact-busy]')).toHaveAttribute('role', 'status');
   await expect(page.locator('[data-contact-busy]')).toHaveAttribute('aria-live', 'polite');
+  await page.keyboard.press('Enter');
+  await expect.poll(() => boundary.requests.length).toBe(2);
+  await page.keyboard.press('Enter');
+  expect(boundary.requests).toHaveLength(2);
   release?.();
-  await expectResult(page, submissions[1].acceptedHeading, submissions[1].acceptedBody);
+  await expectResult(page, copy.acceptedHeading, copy.acceptedBody);
+  await expect(page.getByLabel(/^(Name)/)).toHaveValue('');
   await boundary.installed;
 });

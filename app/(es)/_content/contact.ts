@@ -21,11 +21,6 @@ export const contactContent = {
     { label: 'Llamar', kind: 'phone', href: 'tel:+5491150117565' },
   ],
   founderContextAction: { label: 'Conocer la trayectoria de Samuel', routeId: 'founder' },
-  notice: {
-    heading: 'Demostración interactiva',
-    body: 'Este sitio es una muestra técnica. El formulario simula el envío en este navegador: no envía datos, no crea una consulta comercial y no llega a ninguna bandeja de entrada.',
-    failureHelper: 'Para probar el estado de error, usá failure@example.invalid como correo electrónico.',
-  },
   form: {
     heading: 'Iniciar una consulta',
     introduction: 'Completá los datos y contanos brevemente el problema, cómo funciona hoy y qué te gustaría mejorar.',

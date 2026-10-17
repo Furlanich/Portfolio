@@ -18,7 +18,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - REF-CONTACT-DEMO-KIT
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-10-15
+last_verified: 2026-10-17
 ---
 
 # Contact and privacy pages
@@ -42,6 +42,10 @@ The demonstration form may be publicly enabled because it uses [`REF-CONTACT-DEM
 - `failure@example.invalid` is the reserved public QA value that demonstrates failure. Other valid addresses demonstrate success locally.
 - WhatsApp, email, and phone remain working external examples in the approved order. Selecting them leaves the local simulation and invokes a visitor-selected third-party service.
 - The dormant commercial copy and adapter remain source material for a separately reviewed activation. Demonstration evidence cannot close a commercial legal, processor, delivery, retention, transfer, or deletion gate.
+
+### Task 10 integration-preview exception — APPROVED 2026-10-17
+
+At the owner's direction for the Task 10 implementation PR to `codex/sfc-integration`, omit the demonstration notice panel from the Spanish and English Contact form panels. The selected release remains `demonstration`; the submit, progress, and outcome labels continue to describe local simulation, and submission still sends nothing. This is a non-public integration-preview exception only. The current public deployment and its approved disclosure remain unchanged. Do not publish this composition while the form remains simulated; subsequent tasks must complete the reviewed operational intake transition before a public release, or restore the approved demonstration panel if that transition is not ready.
 
 ### Spanish demonstration Contact copy — APPROVED
 

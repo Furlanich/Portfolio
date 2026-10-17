@@ -103,32 +103,6 @@
   line-height: 1.6;
 }
 
-.demoNotice {
-  margin: 0 0 32px;
-  padding-left: 16px;
-  border-left: 3px solid #004589;
-  color: #526473;
-}
-
-.demoHeading {
-  margin: 0;
-  color: #09243D;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.supporting,
-.demoHelper {
-  margin: 8px 0 0;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.demoHelper {
-  color: #526473;
-}
-
 .form {
   min-width: 0;
   margin-top: 28px;
@@ -485,7 +459,6 @@
     color: CanvasText;
   }
 
-  .demoNotice,
   .alternativesPanel {
     border-color: CanvasText;
   }
