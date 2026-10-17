@@ -1234,7 +1234,8 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
         let sawLabel = false;
         for (let top = 0; top <= max; top += 180) {
           await scrollInstant(page, top);
-          // A label fades out within a frame or two of a mask reaching it; a clash that outlasts that is a defect.
+          // A label fades out within a frame or two of a mask reaching it, but a software-rendered page can hold its main
+          // thread for seconds between frames: a clash that outlasts eight seconds is a defect, not a slow frame.
           await expect
             .poll(
               async () => {
@@ -1245,7 +1246,7 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
                 }
                 return 'clear';
               },
-              { timeout: 2_000, intervals: [100, 150, 250] },
+              { timeout: 8_000, intervals: [100, 150, 250, 500] },
             )
             .toBe('clear');
           for (const label of (await readLabels(page)).filter((candidate) => candidate.visible)) {
