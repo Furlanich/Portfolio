@@ -1169,7 +1169,7 @@ const readForeground = (page: Page): Promise<{ labels: (Rect & { id: string; tex
     ].join(',');
     const foreground: { left: number; top: number; right: number; bottom: number; what: string }[] = [];
     const alphaOf = (color: string) => {
-      const match = color.match(/rgba?(([^)]+))/);
+      const match = color.match(/rgba?\(([^)]+)\)/);
       if (!match) return 0;
       const parts = match[1].split(/[ ,/]+/).filter(Boolean);
       return parts.length > 3 ? Number(parts[3]) : 1;
@@ -1190,6 +1190,27 @@ const readForeground = (page: Page): Promise<{ labels: (Rect & { id: string; tex
     return { labels, foreground };
   });
 
+/** The labels only, in viewport coordinates: a light read, so polling does not starve the page's own frames. */
+const readLabels = (page: Page) =>
+  page.evaluate(() =>
+    Array.from(document.querySelectorAll<HTMLElement>('[data-connected-label]')).map((element) => {
+      const style = getComputedStyle(element);
+      const transform = style.transform === 'none' ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(style.transform);
+      const { left, top, right, bottom } = element.getBoundingClientRect();
+      return {
+        id: element.dataset.nodeId ?? '',
+        text: element.textContent ?? '',
+        visible: parseFloat(style.opacity) > 0.01 && style.visibility !== 'hidden' && style.display !== 'none',
+        fontSize: parseFloat(style.fontSize),
+        upright: Math.abs(transform.b) < 1e-6 && Math.abs(transform.c) < 1e-6,
+        left,
+        top,
+        right,
+        bottom,
+      };
+    }),
+  );
+
 test.describe('labels stay clear of text and controls on the five pages (Task 12)', () => {
   test.afterEach(async ({ page }) => {
     await page.goto('about:blank').catch(() => undefined);
@@ -1206,6 +1227,9 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
         await expectLive(page);
         await expectSettled(page);
 
+        // The text and controls are read once, in document coordinates (the page is at the top, so viewport equals
+        // document); only the labels are read as the page scrolls, so the heavy read cannot starve the page's frames.
+        const { foreground } = await readForeground(page);
         const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
         let sawLabel = false;
         for (let top = 0; top <= max; top += 180) {
@@ -1214,9 +1238,9 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
           await expect
             .poll(
               async () => {
-                const { labels, foreground } = await readForeground(page);
-                for (const label of labels.filter((candidate) => candidate.visible)) {
-                  const hit = foreground.find((box) => overlaps(label, box));
+                const scrolled = await page.evaluate(() => window.scrollY);
+                for (const label of (await readLabels(page)).filter((candidate) => candidate.visible)) {
+                  const hit = foreground.find((box) => overlaps(label, { left: box.left, right: box.right, top: box.top - scrolled, bottom: box.bottom - scrolled }));
                   if (hit) return `label "${label.text}" (${label.id}) at scroll ${top} overlaps ${hit.what}`;
                 }
                 return 'clear';
@@ -1224,7 +1248,7 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
               { timeout: 2_000, intervals: [100, 150, 250] },
             )
             .toBe('clear');
-          for (const label of (await readForeground(page)).labels.filter((candidate) => candidate.visible)) {
+          for (const label of (await readLabels(page)).filter((candidate) => candidate.visible)) {
             sawLabel = true;
             expect(label.fontSize, `label ${label.text} stays legible`).toBeGreaterThanOrEqual(12);
             expect(label.upright, `label ${label.text} stays upright`).toBe(true);
