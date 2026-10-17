@@ -1,6 +1,6 @@
 # Task 10 / PR 10 — Integrate native, accessible real-flow Contact behavior
 
-**Status:** The owner accepted the Task 10 presentation and directed removal of the form-panel demonstration notice in both locales on 2026-10-17. The revised implementation is complete and the PR is being opened for Reviewer R. Task acceptance remains **OPEN** for the same-head candidate matrix, Linux visual baseline, manual screen-reader checks, independent reviews, the stale shared-footer assertion below, and the candidate-CI ownership conflict. The public `main` release and its approved demonstration disclosure remain unchanged.
+**Status:** The owner accepted the Task 10 presentation and directed removal of the form-panel demonstration notice in both locales on 2026-10-17. The revised implementation is complete, and PR #151 is open for Reviewer R. Task acceptance remains **OPEN** for the same-head candidate matrix, Linux visual baseline, manual screen-reader checks, independent reviews, the stale shared-footer assertion below, and the candidate-CI ownership conflict. The public `main` release and its approved demonstration disclosure remain unchanged.
 
 **Implementer:** Codex desktop, one primary agent and zero subagents under `GOV-AGENT-USAGE`.
 
