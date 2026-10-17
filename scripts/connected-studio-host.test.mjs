@@ -200,7 +200,7 @@ function delayedHost(props = LEGACY_PROPS) {
     attachScene() { attachments++; return { controller: {}, dispose() {} }; },
     require(path) {
       if (path === 'react') return {
-        useEffect(callback) { effect = callback; }, useRef: () => ({ current: null }),
+        useEffect(callback) { effect ??= callback; }, useRef: () => ({ current: null }),
         useState: () => [false, () => {}],
       };
       if (path === 'react/jsx-runtime') return { jsx: () => null, jsxs: () => null };
