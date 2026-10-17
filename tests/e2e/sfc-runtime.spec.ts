@@ -1267,7 +1267,8 @@ test.describe('a scrim backing never covers a control (Task 12)', () => {
               const box = control.getBoundingClientRect();
               if (intersects(box, backing)) {
                 const label = (control.getAttribute('aria-label') ?? control.textContent ?? control.tagName).trim().slice(0, 30);
-`                found.push(\`\${control.tagName.toLowerCase()} "\${label}" overlaps the \${clearance}px backing by \${Math.round(Math.min(box.bottom, backing.bottom) - Math.max(box.top, backing.top))}px\`);
+                const depth = Math.round(Math.min(box.bottom, backing.bottom) - Math.max(box.top, backing.top));
+                found.push(`${control.tagName.toLowerCase()} "${label}" overlaps the ${clearance}px backing by ${depth}px`);
               }
             }
           }
