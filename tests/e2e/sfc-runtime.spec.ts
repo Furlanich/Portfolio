@@ -1004,7 +1004,7 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
     }
     const order = stops.map((stop) => stop.id || stop.name);
     const at = (needle: string | RegExp) => stops.findIndex((stop) => (typeof needle === 'string' ? stop.id === needle : needle.test(stop.name)));
-    const pause = at(pauseLabels.es.pause);
+    const pause = at(new RegExp(pauseLabels.es.pause));
     expect(pause, `the Pause control is a keyboard stop: ${order.join(' > ')}`).toBeGreaterThanOrEqual(0);
     const fields = ['contact-name', 'contact-email', 'contact-company', 'contact-message'].map(at);
     expect(fields.every((index) => index > pause), 'the Pause control precedes every field').toBe(true);
