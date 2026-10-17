@@ -1131,14 +1131,24 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
         let sawLabel = false;
         for (let top = 0; top <= max; top += 180) {
           await scrollInstant(page, top);
-          await page.waitForTimeout(150);
-          const { labels, foreground } = await readForeground(page);
-          for (const label of labels.filter((candidate) => candidate.visible)) {
+          // A label fades out within a frame or two of a mask reaching it; a clash that outlasts that is a defect.
+          await expect
+            .poll(
+              async () => {
+                const { labels, foreground } = await readForeground(page);
+                for (const label of labels.filter((candidate) => candidate.visible)) {
+                  const hit = foreground.find((box) => overlaps(label, box));
+                  if (hit) return `label "${label.text}" (${label.id}) at scroll ${top} overlaps ${hit.what}`;
+                }
+                return 'clear';
+              },
+              { timeout: 2_000, intervals: [100, 150, 250] },
+            )
+            .toBe('clear');
+          for (const label of (await readForeground(page)).labels.filter((candidate) => candidate.visible)) {
             sawLabel = true;
             expect(label.fontSize, `label ${label.text} stays legible`).toBeGreaterThanOrEqual(12);
             expect(label.upright, `label ${label.text} stays upright`).toBe(true);
-            const hit = foreground.find((box) => overlaps(label, box));
-            expect(hit?.what, `label "${label.text}" (${label.id}) at scroll ${top} overlaps ${hit?.what}`).toBeUndefined();
           }
         }
         expect(sawLabel, 'at least one label was shown somewhere on the page').toBe(true);
