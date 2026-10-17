@@ -7,7 +7,7 @@ import { createConfiguredSubmitInquiry } from '@/lib/inquiry/configuration';
 import { createInquirySubmissionController, type InquirySubmissionController } from '@/lib/inquiry/submission-controller';
 import { validateInquiry } from '@/lib/inquiry/validation';
 import type { InquiryField, InquiryValues, SubmitInquiry } from '@/lib/inquiry/contracts';
-import { initialInquiryFormState, inquiryReducer } from './state';
+import { firstInvalidField, initialInquiryFormState, inquiryReducer } from './state';
 import type { ContactPageContent } from './content-types';
 import styles from './contact.module.css';
 
@@ -87,7 +87,16 @@ export function ContactForm({ content, locale }: ContactFormProps) {
   function submit(values: InquiryValues) {
     // The coordinator owns the synchronous lock and performs the authoritative validation. This first
     // validation only places focus on the still-enabled submit before a valid attempt disables its fields.
-    if (validateInquiry(values, sourceLocale).valid) submitButton.current?.focus();
+    const validation = validateInquiry(values, sourceLocale);
+    if (validation.valid) {
+      submitButton.current?.focus();
+    } else {
+      const invalidField = firstInvalidField(validation.fieldErrors);
+      if (invalidField) {
+        focusedField.current = invalidField;
+        document.getElementById('contact-' + invalidField)?.focus();
+      }
+    }
     void controller.current?.submit(values, sourceLocale, honeypot.current?.value ?? '');
   }
 

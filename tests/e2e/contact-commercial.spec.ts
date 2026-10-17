@@ -9,7 +9,10 @@ const submissions = [
     route: stableRoutes.contact.es,
     language: 'es-AR',
     heading: 'Contanos qué necesitás resolver.',
+    nameLabel: 'Nombre',
     formHeading: 'Iniciar una consulta',
+    preHydrationFallback: 'Para enviar el formulario, activá JavaScript. También podés escribirnos por WhatsApp, correo o teléfono.',
+    termsLabel: 'Términos y condiciones',
     submit: 'Enviar consulta',
     submitting: 'Enviando...',
     acceptedHeading: 'Mensaje aceptado.',
@@ -31,7 +34,10 @@ const submissions = [
     route: stableRoutes.contact.en,
     language: 'en',
     heading: 'Tell us what you need to solve.',
+    nameLabel: 'Name',
     formHeading: 'Start an inquiry',
+    preHydrationFallback: 'Enable JavaScript to submit the form. You can also contact us on WhatsApp, by email or by phone.',
+    termsLabel: 'Terms and Conditions',
     submit: 'Send inquiry',
     submitting: 'Sending...',
     acceptedHeading: 'Message accepted.',
@@ -234,52 +240,60 @@ for (const copy of submissions) {
   });
 }
 
-test('Contact no-JavaScript fallback disables submission and keeps independent direct channels', { tag: '@cross-browser' }, async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
-  const page = await context.newPage();
-  await page.goto(appUrl(stableRoutes.contact.en));
-  await expect(page.locator('main h1')).toHaveText('Tell us what you need to solve.');
-  await expect(page.getByText('Enable JavaScript to submit the form. You can also contact us on WhatsApp, by email or by phone.')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Send inquiry' })).toBeDisabled();
-  await expect(page.getByRole('main').locator('a[href^="https://wa.me"], a[href^="mailto:"], a[href^="tel:"]')).toHaveCount(3);
-  await expect(page.getByRole('main').getByRole('link', { name: 'Terms and Conditions' })).toHaveAttribute('href', appPathname('/en/terms/'));
-  await expect(page.locator('[role="status"]')).toHaveCount(0);
-  await context.close();
-});
+for (const copy of submissions) {
+  test(`${copy.locale} Contact no-JavaScript fallback preserves direct channels`, { tag: '@cross-browser' }, async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto(appUrl(copy.route));
+    await expect(page.locator('html')).toHaveAttribute('lang', copy.language);
+    await expect(page.locator('main h1')).toHaveText(copy.heading);
+    await expect(page.getByText(copy.preHydrationFallback, { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: copy.submit })).toBeDisabled();
+    await expect(page.getByRole('main').locator('a[href^="https://wa.me"], a[href^="mailto:"], a[href^="tel:"]')).toHaveCount(3);
+    await expect(page.getByRole('main').getByRole('link', { name: copy.termsLabel })).toHaveAttribute('href', appPathname(copy.terms));
+    await expect(page.locator('[role="status"]')).toHaveCount(0);
+    await context.close();
+  });
 
-test('Contact validates focus, preserves an uncertain result, blocks a busy retry duplicate, and restores focus after settlement', { tag: '@cross-browser' }, async ({ page }) => {
-  const boundary = providerBoundary(page);
-  const copy = submissions[1];
-  await openContact(page, copy);
-  const submit = page.locator('form button[type="submit"]');
-  await submit.click();
-  await expect(page.getByLabel(/^(Name)/)).toBeFocused();
-  expect(boundary.requests).toEqual([]);
+  test(`${copy.locale} Contact validates focus, preserves failure, locks duplicates, and accepts retry`, { tag: '@cross-browser' }, async ({ page }) => {
+    const boundary = providerBoundary(page);
+    const name = page.getByLabel(copy.nameLabel);
+    await openContact(page, copy);
+    const submit = page.locator('form button[type="submit"]');
+    await submit.click();
+    await expect(name).toBeFocused();
+    expect(boundary.requests).toEqual([]);
 
-  await fillValidInquiry(page);
-  boundary.respond({ status: 503, body: {} });
-  await page.getByRole('button', { name: copy.submit }).click();
-  await expectResult(page, copy.uncertaintyHeading, copy.uncertaintyBody);
-  await expect(page.getByLabel(/^(Name)/)).toHaveValue('Ada Lovelace');
+    await submit.focus();
+    await submit.click();
+    await expect(name).toBeFocused();
+    expect(boundary.requests).toEqual([]);
 
-  let release: (() => void) | undefined;
-  boundary.respond({ status: 200, body: { ok: true }, hold: new Promise<void>((resolve) => { release = resolve; }) });
-  await page.getByRole('button', { name: copy.retry }).click();
-  await expect(page.locator('form')).toHaveAttribute('aria-busy', 'true');
-  await expect(submit).toHaveAttribute('aria-disabled', 'true');
-  await expect(submit).toBeFocused();
-  for (const field of [page.locator('#contact-name'), page.locator('#contact-email'), page.locator('#contact-company'), page.locator('#contact-message')]) {
-    await expect(field).toBeDisabled();
-  }
-  await expect(submit).not.toHaveAttribute('disabled');
-  await expect(page.locator('[data-contact-busy]')).toHaveAttribute('role', 'status');
-  await expect(page.locator('[data-contact-busy]')).toHaveAttribute('aria-live', 'polite');
-  await page.keyboard.press('Enter');
-  await expect.poll(() => boundary.requests.length).toBe(2);
-  await page.keyboard.press('Enter');
-  expect(boundary.requests).toHaveLength(2);
-  release?.();
-  await expectResult(page, copy.acceptedHeading, copy.acceptedBody);
-  await expect(page.getByLabel(/^(Name)/)).toHaveValue('');
-  await boundary.installed;
-});
+    await fillValidInquiry(page);
+    boundary.respond({ status: 503, body: {} });
+    await page.getByRole('button', { name: copy.submit }).click();
+    await expectResult(page, copy.uncertaintyHeading, copy.uncertaintyBody);
+    await expect(name).toHaveValue('Ada Lovelace');
+
+    let release: (() => void) | undefined;
+    boundary.respond({ status: 200, body: { ok: true }, hold: new Promise<void>((resolve) => { release = resolve; }) });
+    await page.getByRole('button', { name: copy.retry }).click();
+    await expect(page.locator('form')).toHaveAttribute('aria-busy', 'true');
+    await expect(submit).toHaveAttribute('aria-disabled', 'true');
+    await expect(submit).toBeFocused();
+    for (const field of [page.locator('#contact-name'), page.locator('#contact-email'), page.locator('#contact-company'), page.locator('#contact-message')]) {
+      await expect(field).toBeDisabled();
+    }
+    await expect(submit).not.toHaveAttribute('disabled');
+    await expect(page.locator('[data-contact-busy]')).toHaveAttribute('role', 'status');
+    await expect(page.locator('[data-contact-busy]')).toHaveAttribute('aria-live', 'polite');
+    await page.keyboard.press('Enter');
+    await expect.poll(() => boundary.requests.length).toBe(2);
+    await page.keyboard.press('Enter');
+    expect(boundary.requests).toHaveLength(2);
+    release?.();
+    await expectResult(page, copy.acceptedHeading, copy.acceptedBody);
+    await expect(name).toHaveValue('');
+    await boundary.installed;
+  });
+}

@@ -65,6 +65,10 @@ for (const pageCase of cases) {
   test(pageCase.language + ' Contact renders the local-only demonstration and ordered fallbacks', async ({ page }) => {
     await gotoContact(page, pageCase.route, pageCase.language);
     await expect(page.locator('main h1')).toHaveText(pageCase.heading);
+    const opaqueIntake = page.getByRole('main').locator('[data-connected-opaque-plate]');
+    await expect(opaqueIntake).toHaveCount(1);
+    await expect(opaqueIntake.locator('form')).toHaveCount(1);
+    await expect(opaqueIntake.locator('aside')).toHaveCount(1);
     await expect(page.getByRole('heading', { name: pageCase.removedNoticeHeading })).toHaveCount(0);
     await expect(page.getByText(pageCase.removedNoticeBody, { exact: true })).toHaveCount(0);
     await expect(page.getByText(pageCase.removedFailureHelper, { exact: true })).toHaveCount(0);
@@ -85,6 +89,18 @@ for (const pageCase of cases) {
     await expect(page.locator('#contact-message-error')).toHaveText(pageCase.language === 'en' ? 'Tell us what you need to solve.' : 'Contanos qué necesitás resolver.');
     await expect(page.getByLabel(/^(Nombre|Name)/)).toBeFocused();
     await expect(page.getByLabel(/^(Nombre|Name)/)).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  test(pageCase.language + ' Contact refocuses the first invalid control on repeated submissions', async ({ page }) => {
+    await gotoContact(page, pageCase.route, pageCase.language);
+    const name = page.getByLabel(/^(Nombre|Name)/);
+    const submit = page.getByRole('button', { name: pageCase.submit });
+
+    await submit.click();
+    await expect(name).toBeFocused();
+    await submit.focus();
+    await submit.click();
+    await expect(name).toBeFocused();
   });
 
   test(pageCase.language + ' Contact simulates success, blocks duplicates, resets values, and transmits no inquiry', async ({ page }) => {

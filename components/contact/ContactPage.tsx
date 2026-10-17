@@ -42,7 +42,7 @@ export function ContactPage({ content, locale }: ContactPageProps) {
             </div>
           </header>
 
-          <div className={styles.intakeSurface}>
+          <div className={styles.intakeSurface} data-connected-opaque-plate="">
             <section aria-labelledby={formHeadingId} className={styles.formPanel}>
               <ContactForm content={content} locale={locale} />
             </section>
