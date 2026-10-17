@@ -422,8 +422,8 @@ test('the host serves profile routes: it resolves decorative words by node id an
 });
 
 test('the physics stays in the gated entry: the host imports no projection, interaction, rest-path or profile module', () => {
-  for (const module of ['projection', 'interaction', 'rest-path', 'profiles']) {
-    assert.doesNotMatch(enhancement, new RegExp(`from '@/lib/connected-studio/${module}'`), module);
+  for (const name of ['projection', 'interaction', 'rest-path', 'profiles']) {
+    assert.doesNotMatch(enhancement, new RegExp(`from '@/lib/connected-studio/${name}'`), name);
   }
   assert.doesNotMatch(enhancement, /from '\.\/runtime\//);
 });
