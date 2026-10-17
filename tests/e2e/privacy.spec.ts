@@ -62,6 +62,7 @@ for (const pageCase of routeCases) {
       'href',
       'https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement',
     );
+    await expect(page.getByRole('main').getByRole('link', { name: pageCase.githubLabel })).not.toHaveAttribute('target', '_blank');
     await expect(page.locator('form')).toHaveCount(0);
     assertNoBrowserErrors();
   });

@@ -21,7 +21,7 @@ related:
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - GOV-AGENT-USAGE
   - TEST-STRATEGY
-last_verified: 2026-10-14
+last_verified: 2026-10-16
 ---
 
 # Studio, Founder, Contact and legal — Atlas v1
@@ -55,14 +55,15 @@ The future clean export contains sixteen localized foundation routes. Retired pr
 
 ## Visual system and dimensions
 
-Continue A's dark field and deliberately placed editorial plates. Contact combines a quiet dark introduction with one opaque Bone intake surface. Legal pages use one calm Bone reading surface. Avoid repeating a card around every paragraph, invented metrics, stock portraits, large gradients in text or obligatory entrance animations.
+Continue A's dark field and deliberately placed editorial plates. Contact combines a quiet dark introduction with one opaque Bone intake surface. Legal pages use the shared static connected Azure background with one opaque Deep reading plate. Avoid repeating a card around every paragraph, invented metrics, stock portraits, large gradients in text or obligatory entrance animations.
 
 | Property | Exact target |
 | --- | --- |
 | Environment | Abyss `#06121F`, Deep `#0A1E33`, Field `#0F2A45`; existing chart vocabulary |
 | Main reading plates | Opaque `#0A1E33`, 1px `#36536C` border, 16px radius; no backdrop blur |
 | Headings / dark body | Bone `#F9F6EE` / secondary `#B9C3CC`; chart metadata `#9CC4EC` |
-| Bone reading/intake | Bone fill, Ink `#09243D`, secondary `#526473`, Azure `#004589` links/actions |
+| Legal reading | One opaque Deep `#0A1E33` plate over the shared connected Azure background; Bone `#F9F6EE` headings, secondary `#B9C3CC` body, chart-glow `#9CC4EC` underlined links, chart-border `#36536C` rules |
+| Bone intake | Bone fill, Ink `#09243D`, secondary `#526473`, Azure `#004589` links/actions; Contact only |
 | Container | Inner content at most 1180 CSS px; 32px gutters from 768px, 20px below 768px; centered |
 | Breakpoints | Wide ≥1024px; tablet 768–1023px; compact <768px |
 | Plate padding | Wide 40px, tablet 32px, compact 24px; Contact intake wide 40px, compact 24px |
@@ -77,6 +78,8 @@ Continue A's dark field and deliberately placed editorial plates. Contact combin
 | Reading measure | Body at most 64ch; Founder plate at most 800px; legal article at most 920px with text at most 68ch |
 | Actions | At least 44×44px; 48px preferred; retain existing button radius/brand treatment; underlined text links remain identifiable |
 | Focus | Visible 3px outline, offset at least 3px; Azure on Bone, chart glow on dark; never obscured by sticky App Bar |
+
+**Owner palette amendment — APPROVED 2026-10-16:** Privacy and Terms use the same shared static connected Azure background as Studio, with one opaque Deep legal reading plate, Bone headings, secondary body text, chart-glow links and chart-border rules. This supersedes the prior full-Bone legal reading surface; Contact's Bone intake surface is unchanged. All other DESIGN-SFC-V1 values and legal-content release gates remain unchanged.
 
 Use existing approved tokens/material variants where equivalent. If a new route needs an opaque plate, add a scoped variant; do not change Home's translucent AtlasPlate default or shared App Bar measurements. Meaningful approved Founder role context and the Studio category line remain despite Impeccable's generic eyebrow ban. The protected mark is never split, cropped, morphed, recolored or made into 3D art.
 

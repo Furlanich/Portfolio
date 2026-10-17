@@ -14,7 +14,7 @@ export function PrivacyPage({ content }: PrivacyPageProps) {
         introduction: content.introduction,
         contentsLabel: content.locale === 'es' ? 'Contenido' : 'Contents',
         sections: content.sections,
-        links: [{ label: content.githubLink.label, href: content.githubLink.href, external: true }],
+        links: [{ label: content.githubLink.label, href: content.githubLink.href }],
       }}
     />
   );

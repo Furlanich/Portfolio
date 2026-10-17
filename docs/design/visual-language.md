@@ -29,7 +29,10 @@ related:
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
-last_verified: 2026-10-15
+  - DESIGN-SFC-V1
+  - RFC-SFC-COMMERCIAL-ATLAS-V1
+  - PAGE-TERMS
+last_verified: 2026-10-16
 ---
 
 # Visual language
@@ -56,7 +59,7 @@ This is the minimum visual system required to implement `HOME-HERO` and its imme
 
 The launch foundation is restrained, editorial, and business-oriented: clear typography, generous whitespace, a light neutral canvas, dark navy text, and one accessible blue action color. The hero is not placed inside a decorative card and does not imitate a large-enterprise or high-gloss startup site.
 
-The first implementation is light-only. A dark theme is not required for implementation or release of the homepage foundation. *Superseded for the Home environment only (the fixed celestial-sphere ground and scrim) by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 2). It is not a site theme: no theme switcher is introduced, and Services, Projects, Studio, Founder, Contact and Privacy content stays light-only. Whether a dark theme is ever introduced site-wide remains OPEN.*
+The first implementation is light-only. A dark theme is not required for implementation or release of the homepage foundation. *The Home environment is superseded by [`SKY-CHART-V2`](#sky-chart-v2-sky-chart-home-and-app-bar-approved) (RFC-SKY-CHART-VISUAL-SYSTEM-V2 supersession item 2). For Studio, Founder, Contact, Privacy and Terms only, [`SFC-V1`](#sfc-v1-studio-founder-contact-and-legal-atlas-approved-target) supersedes the light composition with its page-specific connected dark surfaces; Services and Projects retain their approved light composition. Neither supersession creates a site-wide theme or theme switcher. Whether a dark theme is ever introduced site-wide remains OPEN.*
 
 ### Wordmark
 
@@ -711,7 +714,7 @@ Outside these named boundaries, `VISUAL-IDENTITY-V1`, the commercial homepage se
 
 **APPROVED TARGET — 2026-10-15, effective on human merge of Governance PR 1.** Recorded under [`RFC-SFC-COMMERCIAL-ATLAS-V1`](../rfcs/studio-founder-contact-commercial-atlas-v1.md). The complete visual specification is [`DESIGN-SFC-V1`](studio-founder-contact-v1.md); this section only registers the target and its boundary, and duplicates none of its values.
 
-**Target.** Dark Atlas Studio and Founder, a quiet dark Contact introduction with an opaque Bone intake surface, and complete quiet legal reading surfaces for Privacy and the new Terms page, built from the shared connected background, the editorial opaque plate, the opaque text scrim and the owner-approved 1180px editorial container (exact values: `DESIGN-SFC-V1`). Palette, fonts, protected mark and the shared App Bar and Footer are unchanged. The default `AtlasPlate` and Home material are unchanged.
+**Target.** Dark Atlas Studio and Founder, a quiet dark Contact introduction with an opaque Bone intake surface, and complete quiet legal reading surfaces for Privacy and the new Terms page, built from the shared connected background, the editorial opaque plate, the opaque text scrim and the owner-approved 1180px editorial container (exact values: `DESIGN-SFC-V1`). Core palette tokens, fonts, protected mark and the shared App Bar and Footer are unchanged; legal pages use the page-specific palette application recorded by the owner in DESIGN-SFC-V1. The default `AtlasPlate` and Home material are unchanged.
 
 **Boundary.** This supersedes, only for Studio, Founder, Contact, Privacy and Terms, the older light composition recorded by this document and keeps every other named surface authoritative: Home, Services, Projects, the App Bar and the Footer.
 

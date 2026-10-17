@@ -39,12 +39,57 @@ for (const pageCase of cases) {
   });
 }
 
+test('legal reading pages use the shared connected background and one opaque plate', async ({ page }) => {
+  for (const pageCase of cases) {
+    await page.goto(appUrl(pageCase.route));
+    await expect(page.locator('[data-connected-ground]')).toHaveCount(1);
+    await expect(page.locator('main [data-connected-opaque-plate]')).toHaveCount(1);
+  }
+});
+
 test('legal reading surface reflows without horizontal overflow', async ({ page }) => {
   await page.goto(appUrl(stableRoutes.privacy.es));
   for (const width of [320, 390, 768, 820, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     const dimensions = await page.evaluate(() => ({ width: window.innerWidth, scrollWidth: document.documentElement.scrollWidth }));
     expect(dimensions.scrollWidth, 'horizontal overflow at ' + width + 'px').toBeLessThanOrEqual(dimensions.width);
+  }
+});
+
+test('legal titles stay inside the reading surface at 200% text size and 320px', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 320, height: 800 } });
+
+  try {
+    for (const pageCase of cases) {
+      const page = await context.newPage();
+      await page.goto(appUrl(pageCase.route));
+      await page.addStyleTag({ content: 'html { font-size: 32px !important; }' });
+
+      const title = page.locator('main h1');
+      const bounds = await title.evaluate((heading) => {
+        const range = document.createRange();
+        range.selectNodeContents(heading);
+        const headingBounds = heading.getBoundingClientRect();
+
+        return {
+          clientWidth: heading.clientWidth,
+          scrollWidth: heading.scrollWidth,
+          lines: Array.from(range.getClientRects()).map((rect) => ({
+            left: rect.left - headingBounds.left,
+            right: rect.right - headingBounds.left,
+          })),
+        };
+      });
+
+      expect(bounds.scrollWidth, pageCase.route + ' title scroll width').toBeLessThanOrEqual(bounds.clientWidth);
+      expect(bounds.lines.length, pageCase.route + ' title line boxes').toBeGreaterThan(0);
+      for (const [index, line] of bounds.lines.entries()) {
+        expect(line.left, pageCase.route + ' title line ' + index + ' left edge').toBeGreaterThanOrEqual(-0.5);
+        expect(line.right, pageCase.route + ' title line ' + index + ' right edge').toBeLessThanOrEqual(bounds.clientWidth + 0.5);
+      }
+    }
+  } finally {
+    await context.close();
   }
 });
 
