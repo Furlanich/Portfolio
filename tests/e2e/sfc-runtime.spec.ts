@@ -696,6 +696,7 @@ test.describe('the five rendered profiles (Task 12)', () => {
             expect((await readConnected(page))?.pointerActive, `(${Math.round(x)}, ${Math.round(y)}) is masked`).toBe(false);
           }
           expect((await measure(page, frame, rest)).travelPx).toBeLessThan(0.01);
+          console.log('[sfc12-profile] ' + JSON.stringify({ route, screen, lane: null }));
           return;
         }
 
@@ -746,6 +747,9 @@ test.describe('the five rendered profiles (Task 12)', () => {
           expect(back.count, `${name} settle with at most one overshoot`).toBeLessThanOrEqual(1);
           expect(back.largest, `${name} overshoot stays below ${0.05 * cap + 0.3}px`).toBeLessThanOrEqual(0.05 * cap + 0.3);
         }
+        // The figures behind the pass, for the receipt (CSS px; software-rendered).
+        const px = (value: number) => Math.round(value * 100) / 100;
+        console.log('[sfc12-profile] ' + JSON.stringify({ route, screen, nodeCapPx: nodeCap, peakNodeTravelPx: px(peakTravel), edgeCapPx: edgeCap, peakStringResidualPx: px(peakString), settleSamples: series.length, laneDistanceToNodePx: Math.round(lane.distanceToNode) }));
         if (atlas) {
           await expectAsleep(page, 20_000);
           expect((await readConnected(page))?.edgeSamples, 'asleep means no bent string').toEqual([]);
