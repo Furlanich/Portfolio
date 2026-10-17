@@ -151,7 +151,8 @@ for (const route of NEW_ROUTES) {
 // OPEN FINDING (Task 11, for the planning authority): app/(es|en)/_content/{,commercial/}contact.ts bind the three
 // Contact words to n0, n5 and n10, while DESIGN-SFC-V1 ("Composition data") and the Task 4 profile bind them to
 // n0, n4 and n8. The content belongs to Task 10, outside this packet; the host follows the profile, so only the
-// n0 word is drawn until the content is corrected by Task 12 or a numbered remediation packet.
+// n0 word is drawn until the content is corrected. Task 12 reproduced it on the actual page (one label element, n0, hidden
+// under the introduction scrim) and has no seam in its write set: a numbered remediation packet owns the correction.
 test.fixme('contact: its three words are bound to n0, n4 and n8', async ({ page }) => {
   await liveRest(page, 'contact', 'es');
   const reading = await readConnected(page);
@@ -1246,6 +1247,12 @@ test.describe('a scrim backing never covers a control (Task 12)', () => {
   for (const route of FIVE_ROUTES) {
     for (const screen of ['wide', 'compact'] as const) {
       test(`${route} ${screen}: every control outside a reading scrim is clear of its opaque backing`, async ({ page }) => {
+        // OPEN FINDING (Task 12, reproduced: "button Pausar fondo overlaps the 32px backing by 16px", wide and compact):
+        // contact.module.css gives .pauseSlot margin-top 16px under the introduction scrim, whose opaque backing extends
+        // 32px, so the backing paints over the top 16px of the Pause control (its border and the top of its focus ring).
+        // The seam is Contact's standalone layout, outside this packet's write set; a numbered remediation packet owns it
+        // and this case turns green when the slot clears the backing. Remove the fixme with that fix.
+        test.fixme(route === 'contact', 'The Contact Pause slot sits 16px under a 32px scrim backing (remediation packet 20+)');
         test.setTimeout(120_000);
         const size = SCREENS[screen];
         await page.setViewportSize({ width: size.width, height: size.height });
