@@ -579,15 +579,18 @@ test('every internal footer link resolves at the served base path', async ({ pag
   }
 });
 
-test('the global demonstration disclosure stays where it is, and the footer adds no new claim', async ({ page }) => {
+test('Home retains its demonstration disclosure, Contact keeps simulation labels, and the footer adds no new claim', async ({ page }) => {
   await page.goto(appUrl(stableRoutes.home.es));
   await expect(page.getByText('Explorá las opciones de contacto y probá el formulario de demostración.', { exact: false })).toHaveCount(1);
   await page.goto(appUrl(stableRoutes.home.en));
   await expect(page.getByText('Explore the contact options and try the demonstration form.', { exact: false })).toHaveCount(1);
+  // PAGE-CONTACT's owner-approved Task 10 integration preview omits the form-panel notice.
   await page.goto(appUrl(stableRoutes.contact.es));
-  await expect(page.getByRole('heading', { name: 'Demostración interactiva' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Demostración interactiva' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Simular envío', exact: true })).toBeVisible();
   await page.goto(appUrl(stableRoutes.contact.en));
-  await expect(page.getByRole('heading', { name: 'Interactive demonstration' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Interactive demonstration' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Simulate submission', exact: true })).toBeVisible();
 
   const footerText = (await footerOf(page).innerText()).toLowerCase();
   expect(footerText).not.toMatch(/respuesta|response time|sla|agend|schedule/);
