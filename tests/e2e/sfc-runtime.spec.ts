@@ -1232,3 +1232,49 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
     }
   }
 });
+
+// ---------------------------------------------------------------------------------------------------------------------
+// PLAN-SFC-V1 Task 12: a scrim's opaque backing extends its clearance beyond the text. No control outside the scrim may
+// sit inside that backing, or the backing paints over its border and focus indicator.
+// ---------------------------------------------------------------------------------------------------------------------
+
+test.describe('a scrim backing never covers a control (Task 12)', () => {
+  test.afterEach(async ({ page }) => {
+    await page.goto('about:blank').catch(() => undefined);
+  });
+
+  for (const route of FIVE_ROUTES) {
+    for (const screen of ['wide', 'compact'] as const) {
+      test(`${route} ${screen}: every control outside a reading scrim is clear of its opaque backing`, async ({ page }) => {
+        test.setTimeout(120_000);
+        const size = SCREENS[screen];
+        await page.setViewportSize({ width: size.width, height: size.height });
+        await enableLiveForTest(page);
+        await page.goto(appUrl(stableRoutes[route].es));
+        await expectLive(page);
+        await expectSettled(page);
+        const covered = await page.evaluate(() => {
+          const intersects = (a: DOMRect, b: { left: number; top: number; right: number; bottom: number }) =>
+            a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom && a.width > 0 && a.height > 0;
+          const controls = Array.from(document.querySelectorAll<HTMLElement>('main a[href], main button, main input, main textarea, main select, main summary'));
+          const found: string[] = [];
+          for (const mask of Array.from(document.querySelectorAll<HTMLElement>('[data-connected-reading-mask]'))) {
+            const clearance = Number(mask.getAttribute('data-connected-clearance')) || 0;
+            const r = mask.getBoundingClientRect();
+            const backing = { left: r.left - clearance, top: r.top - clearance, right: r.right + clearance, bottom: r.bottom + clearance };
+            for (const control of controls) {
+              if (mask.contains(control)) continue;
+              const box = control.getBoundingClientRect();
+              if (intersects(box, backing)) {
+                const label = (control.getAttribute('aria-label') ?? control.textContent ?? control.tagName).trim().slice(0, 30);
+`                found.push(\`\${control.tagName.toLowerCase()} "\${label}" overlaps the \${clearance}px backing by \${Math.round(Math.min(box.bottom, backing.bottom) - Math.max(box.top, backing.top))}px\`);
+              }
+            }
+          }
+          return found;
+        });
+        expect(covered).toEqual([]);
+      });
+    }
+  }
+});
