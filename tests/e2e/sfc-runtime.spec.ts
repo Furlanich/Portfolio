@@ -984,13 +984,7 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
     await page.locator('body').click({ position: { x: 5, y: 5 } });
     for (let press = 0; press < 60; press += 1) {
       await page.keyboard.press('Tab');
-      const stop = await page.evaluate(async () => {
-        // The browser scrolls a focused element into view, possibly smoothly: read once the scroll position is stable.
-        let last = -1;
-        for (let frame = 0; frame < 60 && window.scrollY !== last; frame += 1) {
-          last = window.scrollY;
-          await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
-        }
+      const readStop = () => page.evaluate(() => {
         const element = document.activeElement as HTMLElement | null;
         if (!element || element === document.body) return null;
         const rect = element.getBoundingClientRect();
@@ -1004,6 +998,12 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
           top: rect.top + window.scrollY,
         };
       });
+      // The browser scrolls a focused element into view, smoothly on this page: allow the scroll its two seconds.
+      let stop = await readStop();
+      for (let attempt = 0; stop && !(stop.inView && stop.unobstructed) && attempt < 20; attempt += 1) {
+        await page.waitForTimeout(100);
+        stop = await readStop();
+      }
       if (!stop) continue;
       stops.push(stop);
       if (stop.tag === 'button' && stop.id === '' && /Enviar consulta/.test(stop.name)) break;
