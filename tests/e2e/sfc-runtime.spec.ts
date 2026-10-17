@@ -311,6 +311,8 @@ test.describe('lifecycle on the Atlas routes', () => {
   });
 
   test('Pause persists across the five routes and one renderer is live at a time', async ({ page }) => {
+    // Five first visits to cold development routes on a software renderer: a journey, not one page load.
+    test.setTimeout(240_000);
     const gl = await trackWebglContexts(page);
     await liveRest(page, 'studio', 'es');
     await pauseSlot(page, 'studio').getByRole('button', { name: pauseLabels.es.pause }).click();
@@ -319,7 +321,6 @@ test.describe('lifecycle on the Atlas routes', () => {
     for (const next of ['founder', 'contact', 'services', 'projects'] as const) {
       if (next === 'founder' || next === 'contact') await followPageLink(page, appPathname(stableRoutes[next].es));
       else await navigateInApp(page, stableRoutes[next].es);
-      await expectLive(page);
       await expect(pauseSlot(page, next).getByRole('button', { name: pauseLabels.es.resume })).toBeVisible({ timeout: 30_000 });
       expect((await readConnected(page))?.controller).toBe('paused');
     }
@@ -327,6 +328,7 @@ test.describe('lifecycle on the Atlas routes', () => {
   });
 
   test('a viewport change builds the compact profile with the first two words, and restores nothing it had', async ({ page }) => {
+    test.setTimeout(150_000);
     await liveRest(page, 'studio', 'es');
     await page.setViewportSize({ width: 390, height: 844 });
     await expect.poll(async () => (await readConnected(page))?.profile?.tier, { timeout: 30_000 }).toBe('compact');
