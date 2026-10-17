@@ -20,12 +20,16 @@ import {
   type ConnectedLocale,
 } from './support/connected-studio';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
-import type { ConnectedRoute } from '../../lib/connected-studio/types';
+import { getConnectedProfile } from '../../lib/connected-studio/profiles';
+import { computeProjectionLayout, projectAnchor } from '../../lib/connected-studio/projection';
+import { evaluateRestEdge } from '../../lib/connected-studio/rest-path';
+import type { ConnectedRoute, ConnectedTier, Vec3 } from '../../lib/connected-studio/types';
 
 // PLAN-SFC-V1 Task 11: the shared host on the three new routes, behind the runtime candidate
 // (SFC_TEST_MODE=candidate with the live-policy fixture applied; see playwright.config.ts). WebGL here runs on
 // SwiftShader, so these specs prove functional lifecycle and input behavior only, never frame pacing or feel.
-// Actual Contact submission and the five rendered profiles are verified by Task 12.
+// Task 12 adds the actual Contact form and the five rendered profiles below (the combined candidate:
+// `prepare-sfc-candidate.mjs apply --kind=combined`, NEXT_PUBLIC_FORMSPREE_ENDPOINT set, provider traffic mocked).
 
 test.describe.configure({ timeout: 90_000 });
 
@@ -473,4 +477,278 @@ test.describe('lifecycle on the Atlas routes', () => {
       await denied.close();
     }
   });
+});
+
+// ---------------------------------------------------------------------------------------------------------------------
+// PLAN-SFC-V1 Task 12: the five rendered profiles on the actual pages. Software-rendered (SwiftShader), so this is
+// functional evidence for caps, pins, masks and rest, never frame pacing, hardware cost or the feel of the motion.
+// Every figure below is measured from the live pose through the pure projection the renderer itself uses.
+// ---------------------------------------------------------------------------------------------------------------------
+
+const FIVE_ROUTES = ['studio', 'founder', 'contact', 'services', 'projects'] as const satisfies readonly ConnectedRoute[];
+const SCREENS = {
+  wide: { width: 1440, height: 900, tier: 'wide' },
+  compact: { width: 390, height: 844, tier: 'compact' },
+} as const satisfies Record<string, { width: number; height: number; tier: ConnectedTier }>;
+type ScreenName = keyof typeof SCREENS;
+
+/** DESIGN-SFC-V1 "Pointer and node behavior" and "Flexible edges", written out independently of the profile under test. */
+const NODE_CAP_PX = { wide: 34, compact: 14 } as const;
+const EDGE_CAP_PX = { wide: 16, compact: 6 } as const;
+const CONTACT_EDGE_CAP_PX = 4;
+const CAP_TOLERANCE_PX = 0.75;
+const NODE_COUNT = { wide: 16, compact: 8 } as const;
+/** Undirected edge counts: DESIGN-SFC-V1 "Composition data" for the Atlas pages, the existing 33/13 graph for the others. */
+const EDGE_COUNT = {
+  wide: { studio: 20, founder: 18, contact: 15, services: 33, projects: 33 },
+  compact: { studio: 10, founder: 10, contact: 10, services: 13, projects: 13 },
+} as const;
+
+function frameFor(route: ConnectedRoute, screen: ScreenName) {
+  const size = SCREENS[screen];
+  const profile = getConnectedProfile(route, size.tier, { width: size.width, height: size.height });
+  const layout = computeProjectionLayout(profile, size);
+  const toCss = (position: Vec3) => {
+    const { xPx, yPx } = projectAnchor(position, layout);
+    return { x: xPx, y: yPx };
+  };
+  return { profile, layout, toCss };
+}
+type Frame = ReturnType<typeof frameFor>;
+
+const gap3 = (a: Vec3, b: Vec3) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+
+function travelPx(frame: Frame, rest: NodeMap, now: NodeMap): number {
+  let largest = 0;
+  for (const [id, from] of rest) {
+    const to = now.get(id);
+    if (!to) return Number.POSITIVE_INFINITY;
+    const a = frame.toCss(from);
+    const b = frame.toCss(to);
+    largest = Math.max(largest, Math.hypot(a.x - b.x, a.y - b.y));
+  }
+  return largest;
+}
+
+/** Per bent string: how far its end samples are from the actual nodes (must be zero) and its largest interior residual in CSS px. */
+function measureStrings(frame: Frame, nodes: NodeMap, samples: readonly { id: string; points: readonly Vec3[] }[]) {
+  const edges = frame.profile.graph.edges;
+  return samples.map(({ id, points }) => {
+    const index = edges.findIndex((candidate) => candidate.id === id);
+    const edge = edges[index];
+    const from = nodes.get(edge.from);
+    const to = nodes.get(edge.to);
+    if (!from || !to) return { id, pinError: Number.POSITIVE_INFINITY, residualPx: Number.POSITIVE_INFINITY };
+    const pinError = Math.max(gap3(points[0], from), gap3(points[points.length - 1], to));
+    let residualPx = 0;
+    for (let j = 1; j < points.length - 1; j += 1) {
+      const rest = evaluateRestEdge({ nodeStyle: frame.profile.nodeStyle, edgeIndex: index, from, to, layout: frame.layout }, j / (points.length - 1));
+      const a = frame.toCss(points[j]);
+      const b = frame.toCss(rest);
+      residualPx = Math.max(residualPx, Math.hypot(a.x - b.x, a.y - b.y));
+    }
+    return { id, pinError, residualPx };
+  });
+}
+
+async function measure(page: Page, frame: Frame, rest: NodeMap) {
+  const reading = await readConnected(page);
+  const nodes: NodeMap = new Map((reading?.nodes ?? []).map((node) => [node.id, node.position] as const));
+  const strings = measureStrings(frame, nodes, reading?.edgeSamples ?? []);
+  return {
+    reading,
+    travelPx: travelPx(frame, rest, nodes),
+    stringPx: Math.max(0, ...strings.map((string) => string.residualPx)),
+    pinError: Math.max(0, ...strings.map((string) => string.pinError)),
+    bentStrings: strings.length,
+  };
+}
+
+type Rect = { left: number; top: number; right: number; bottom: number };
+type PointerMap = { exclusions: Rect[]; interactive: Rect[]; width: number; height: number };
+
+/** The foreground the host must keep out of, read from the DOM independently of the host's own cache. */
+const readPointerMap = (page: Page): Promise<PointerMap> =>
+  page.evaluate(() => {
+    const rect = (element: Element): Rect => {
+      const { left, top, right, bottom } = element.getBoundingClientRect();
+      return { left, top, right, bottom };
+    };
+    const grow = (r: Rect, by: number): Rect => ({ left: r.left - by, top: r.top - by, right: r.right + by, bottom: r.bottom + by });
+    // 8px pointer margin plus clearance, and 2px of test safety so an edge-of-rule point never decides a result.
+    const exclusions = [
+      ...Array.from(document.querySelectorAll('[data-connected-opaque-plate]')).map((element) => grow(rect(element), 10)),
+      ...Array.from(document.querySelectorAll('[data-connected-reading-mask]')).map((element) =>
+        grow(rect(element), (Number(element.getAttribute('data-connected-clearance')) || 0) + 10),
+      ),
+    ];
+    const interactive = Array.from(document.querySelectorAll('a[href],button,summary,input,select,textarea,label,form,[role="button"],[role="link"]')).map((element) => grow(rect(element), 2));
+    return { exclusions, interactive, width: window.innerWidth, height: window.innerHeight };
+  });
+
+const within = (r: Rect, x: number, y: number) => x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+const isEligible = (map: PointerMap, x: number, y: number) =>
+  x >= 4 && y >= 4 && x <= map.width - 4 && y <= map.height - 4 && !map.exclusions.some((r) => within(r, x, y)) && !map.interactive.some((r) => within(r, x, y));
+
+type Lane = { a: { x: number; y: number }; b: { x: number; y: number }; distanceToNode: number };
+
+/** The eligible straight pass (at least 70px long) that runs closest to any node, or null when no node has one within 160px. */
+function findLane(map: PointerMap, nodes: readonly { x: number; y: number }[]): Lane | null {
+  const directions = [[0, 1], [1, 0], [1, 1], [1, -1]] as const;
+  let best: Lane | null = null;
+  for (let y = 8; y < map.height; y += 8) {
+    for (let x = 8; x < map.width; x += 8) {
+      if (!isEligible(map, x, y)) continue;
+      const distanceToNode = Math.min(...nodes.map((node) => Math.hypot(node.x - x, node.y - y)));
+      if (distanceToNode > 160 || (best && distanceToNode >= best.distanceToNode)) continue;
+      for (const [dx, dy] of directions) {
+        let forward = 0;
+        while (forward < 90 && isEligible(map, x + dx * (forward + 6), y + dy * (forward + 6))) forward += 6;
+        let backward = 0;
+        while (backward < 90 && isEligible(map, x - dx * (backward + 6), y - dy * (backward + 6))) backward += 6;
+        if (forward + backward >= 70) {
+          best = { a: { x: x - dx * backward, y: y - dy * backward }, b: { x: x + dx * forward, y: y + dy * forward }, distanceToNode };
+          break;
+        }
+      }
+    }
+  }
+  return best;
+}
+
+async function sweep(page: Page, a: { x: number; y: number }, b: { x: number; y: number }, steps: number, pauseMs: number, onStep?: () => Promise<void>) {
+  await page.mouse.move(a.x, a.y);
+  for (let step = 1; step <= steps; step += 1) {
+    await page.mouse.move(a.x + ((b.x - a.x) * step) / steps, a.y + ((b.y - a.y) * step) / steps);
+    if (pauseMs) await page.waitForTimeout(pauseMs);
+    await onStep?.();
+  }
+}
+
+/** How many times a decaying series rose again (by more than `slack`) after it had fallen, and the largest such rise. */
+function rebounds(series: readonly number[], slack: number) {
+  let count = 0;
+  let largest = 0;
+  let low = Number.POSITIVE_INFINITY;
+  let rising = false;
+  for (let i = 1; i < series.length; i += 1) {
+    if (series[i] < series[i - 1]) {
+      rising = false;
+      low = Math.min(low, series[i]);
+    } else if (series[i] > series[i - 1] + 1e-9 && Number.isFinite(low)) {
+      const rise = series[i] - low;
+      if (rise > slack) {
+        if (!rising) count += 1;
+        rising = true;
+        largest = Math.max(largest, rise);
+      }
+    }
+  }
+  return { count, largest };
+}
+
+test.describe('the five rendered profiles (Task 12)', () => {
+  for (const route of FIVE_ROUTES) {
+    for (const screen of ['wide', 'compact'] as const) {
+      test(`${route} ${screen}: rest composition, then active and inertial states stay inside the specified caps, pins and rest`, async ({ page }, testInfo) => {
+        test.setTimeout(180_000);
+        const size = SCREENS[screen];
+        const frame = frameFor(route, screen);
+        const atlas = frame.profile.nodeStyle === 'atlas';
+        await page.setViewportSize({ width: size.width, height: size.height });
+        await enableLiveForTest(page);
+        await page.goto(appUrl(stableRoutes[route].es));
+        await expectLive(page);
+        await expectSettled(page);
+        if (atlas) await expectAsleep(page, 45_000);
+
+        // Stationary: the rendered rest composition is the specified one, with no bent string.
+        const stationary = await readConnected(page);
+        expect(stationary?.profile).toMatchObject({ route, tier: size.tier, nodeStyle: frame.profile.nodeStyle });
+        expect(stationary?.nodes, 'node count').toHaveLength(NODE_COUNT[screen]);
+        expect(stationary?.edgeGrowth, 'edge count').toHaveLength(EDGE_COUNT[screen][route]);
+        const rest = await readNodes(page);
+        if (atlas) {
+          expect(stationary?.edgeSamples, 'a page at rest bends no string').toEqual([]);
+          for (const anchor of frame.profile.restAnchors ?? []) {
+            const at = frame.toCss(rest.get(anchor.id)!);
+            expect(Math.hypot(at.x - anchor.u * size.width, at.y - anchor.v * size.height), `${anchor.id} renders at its specified rest position`).toBeLessThan(CAP_TOLERANCE_PX);
+          }
+        }
+        await testInfo.attach(`${route}-${screen}-stationary`, { body: await page.screenshot(), contentType: 'image/png' });
+
+        const map = await readPointerMap(page);
+        const nodeCss = Array.from(rest.values()).map((position) => frame.toCss(position));
+        const lane = findLane(map, nodeCss);
+        const nodeCap = NODE_CAP_PX[screen];
+        const edgeCap = route === 'contact' ? CONTACT_EDGE_CAP_PX : EDGE_CAP_PX[screen];
+
+        if (!lane) {
+          // Nothing eligible within reach of a node on this page at this size: every pointer position is masked. Prove it.
+          testInfo.annotations.push({ type: 'no-eligible-lane', description: `${route} ${screen}: plates, scrims and controls mask every position within 160px of a node` });
+          for (const [x, y] of [[size.width / 2, size.height / 2], [size.width * 0.8, size.height * 0.4], [size.width * 0.2, size.height * 0.6]]) {
+            await page.mouse.move(x, y, { steps: 6 });
+            expect((await readConnected(page))?.pointerActive, `(${Math.round(x)}, ${Math.round(y)}) is masked`).toBe(false);
+          }
+          expect((await measure(page, frame, rest)).travelPx).toBeLessThan(0.01);
+          return;
+        }
+
+        // Active: a slow pass beside the nearest node.
+        let peakTravel = 0;
+        let peakString = 0;
+        let worstPin = 0;
+        const observe = async () => {
+          const state = await measure(page, frame, rest);
+          peakTravel = Math.max(peakTravel, state.travelPx);
+          peakString = Math.max(peakString, state.stringPx);
+          worstPin = Math.max(worstPin, state.pinError);
+        };
+        await sweep(page, lane.a, lane.b, 14, 35, observe);
+        await sweep(page, lane.b, lane.a, 14, 35, observe);
+        await observe();
+        await testInfo.attach(`${route}-${screen}-active`, { body: await page.screenshot(), contentType: 'image/png' });
+        expect(worstPin, 'string ends stay on their nodes').toBeLessThan(1e-6);
+        expect(peakTravel, `node travel stays inside the ${nodeCap}px cap`).toBeLessThanOrEqual(nodeCap + CAP_TOLERANCE_PX);
+        expect(peakString, `string residual stays inside the ${edgeCap}px cap`).toBeLessThanOrEqual(edgeCap + CAP_TOLERANCE_PX);
+        if (route === 'contact') expect(peakTravel, 'Contact nodes never move').toBe(0);
+        else expect(peakTravel, 'nodes near the pointer yield').toBeGreaterThan(0.25);
+        expect(peakString, 'a string near the pointer bends').toBeGreaterThan(0.05);
+
+        // Inertial: a fast pass, then the pointer is taken out of the field; the motion carries on and settles without jitter.
+        await sweep(page, lane.a, lane.b, 4, 0, observe);
+        await pauseSlot(page, route).getByRole('button').hover();
+        const series: number[] = [];
+        const strings: number[] = [];
+        const started = Date.now();
+        while (Date.now() - started < 12_000) {
+          const state = await measure(page, frame, rest);
+          series.push(state.travelPx);
+          strings.push(state.stringPx);
+          peakTravel = Math.max(peakTravel, state.travelPx);
+          peakString = Math.max(peakString, state.stringPx);
+          worstPin = Math.max(worstPin, state.pinError);
+          if (state.travelPx < 0.005 && state.stringPx < 0.005 && series.length > 5) break;
+          await page.waitForTimeout(40);
+        }
+        expect(worstPin).toBeLessThan(1e-6);
+        expect(peakTravel).toBeLessThanOrEqual(nodeCap + CAP_TOLERANCE_PX);
+        expect(peakString).toBeLessThanOrEqual(edgeCap + CAP_TOLERANCE_PX);
+        expect(series.at(-1), 'every node returns to its rest position').toBeLessThan(0.01);
+        expect(strings.at(-1), 'every string returns to its rest path').toBeLessThan(0.01);
+        for (const [name, values, cap] of [['nodes', series, nodeCap], ['strings', strings, edgeCap]] as const) {
+          const back = rebounds(values, 0.1);
+          expect(back.count, `${name} settle with at most one overshoot`).toBeLessThanOrEqual(1);
+          expect(back.largest, `${name} overshoot stays below ${0.05 * cap + 0.3}px`).toBeLessThanOrEqual(0.05 * cap + 0.3);
+        }
+        if (atlas) {
+          await expectAsleep(page, 20_000);
+          expect((await readConnected(page))?.edgeSamples, 'asleep means no bent string').toEqual([]);
+          const first = await readConnected(page);
+          await page.waitForTimeout(800);
+          expect((await readConnected(page))?.renderCount, 'no draw after the stop').toBe(first?.renderCount);
+        }
+      });
+    }
+  }
 });
