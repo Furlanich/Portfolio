@@ -481,14 +481,20 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       const next = visitorPaused || formSuspension.suspended();
       if (next === heldPaused) return;
       heldPaused = next;
-      if (next) controller.pause();
-      else controller.resume();
+      if (next) {
+        // A paused scene forgets the pointer, so a later resume starts from the next real movement.
+        pointer = null;
+        pointerSampler.reset();
+        controller.pause();
+      } else controller.resume();
     };
     const push = (velocity: number, scrollDeltaPx = 0) => {
       const scrollY = window.scrollY;
       cachedScrollY = scrollY;
-      if (pointer && isExcluded(pointer.x, pointer.y, exclusionRects(labelLayer.boxes(), scrollY))) {
-        // Content scrolled under a still pointer: it now rests over a plate or reading text.
+      const footerDominant = isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight);
+      if (pointer && (document.hidden || footerDominant || isExcluded(pointer.x, pointer.y, exclusionRects(labelLayer.boxes(), scrollY)))) {
+        // A hidden tab or the Footer supplies no input, and content scrolled under a still pointer may now rest over
+        // a plate or reading text: either way the pointer is forgotten, so it carries no velocity back.
         pointer = null;
         pointerSampler.reset();
       }
@@ -499,7 +505,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         scrollY,
         velocityPxPerSecond: velocity,
         visible: !document.hidden,
-        footerDominant: isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight),
+        footerDominant,
         pointer,
         scrollDeltaPx,
       });
