@@ -477,3 +477,26 @@ test('a resize or tier change hands the renderer and the controller the profile 
   assert.match(enhancement, /scene\.resize\(\s*\{[^}]*\},\s*graph,\s*profile,?\s*\)/);
   assert.match(enhancement, /profile,\s*\n?\s*scrollY/);
 });
+
+// Reviewer R findings on PR 152: the per-frame label path and the Pause path read and accept nothing they should not.
+test('the label update path reads no geometry: the App Bar box is cached in the batched pass', () => {
+  const update = blockAfter(enhancement, 'update(projections');
+  for (const read of ['getBoundingClientRect', 'offsetWidth', 'offsetHeight', 'clientWidth', 'clientHeight', 'querySelector']) {
+    assert.ok(!update.includes(read), `update does not call ${read}`);
+  }
+  const measure = blockAfter(enhancement, 'measure() {');
+  assert.match(measure, /data-app-bar/);
+});
+
+test('the visitor Pause takes no pointer sample and cancels queued pointer work', () => {
+  const onPointerMove = blockAfter(enhancement, 'const onPointerMove = ');
+  assert.match(onPointerMove, /heldPaused/);
+  const syncPause = blockAfter(enhancement, 'const syncPause = ');
+  assert.match(syncPause, /cancelAnimationFrame\(inputFrame\)/);
+});
+
+test('a controller that drew nothing still refreshes the labels once, from the cached boxes', () => {
+  const push = blockAfter(enhancement, 'const push = ');
+  assert.match(push, /draws === drawsBefore/);
+  assert.doesNotMatch(push, /state === 'paused' && lastPose/);
+});

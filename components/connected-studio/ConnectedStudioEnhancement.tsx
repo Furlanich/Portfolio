@@ -247,7 +247,7 @@ function createLabelLayer(mount: HTMLElement) {
   let entries: LabelEntry[] = [];
   let byId = new Map<string, LabelEntry>();
   let boxes: ConnectedBox[] = [];
-  let appBar: HTMLElement | null = null;
+  let appBarRect: OccluderRect | null = null;
   let viewport = { width: 0, height: 0 };
 
   return {
@@ -287,7 +287,9 @@ function createLabelLayer(mount: HTMLElement) {
         const kind: ConnectedBox['kind'] = isMask ? (Number.isFinite(clearance) && clearance > 0 ? 'scrim' : 'legacy') : 'plate';
         return { kind, left: rect.left, docTop: rect.top + scrollY, width: rect.width, height: rect.height, clearance: kind === 'scrim' ? clearance : 0 };
       });
-      appBar = document.querySelector<HTMLElement>('[data-app-bar]');
+      // The App Bar is sticky with a fixed height, so its viewport box only changes with the viewport: cached here.
+      const bar = document.querySelector<HTMLElement>('[data-app-bar]')?.getBoundingClientRect();
+      appBarRect = bar ? { left: bar.left, top: bar.top, width: bar.width, height: bar.height } : null;
     },
     /** The cached boxes, for the pointer exclusion. */
     boxes: (): readonly ConnectedBox[] => boxes,
@@ -306,10 +308,7 @@ function createLabelLayer(mount: HTMLElement) {
         });
       }
       const occluders: OccluderRect[] = labelOccluders(boxes, scrollY);
-      if (appBar) {
-        const rect = appBar.getBoundingClientRect();
-        occluders.push({ left: rect.left, top: rect.top, width: rect.width, height: rect.height });
-      }
+      if (appBarRect) occluders.push(appBarRect);
       const shown = new Map(resolveLabelVisibility(labelBoxes, occluders, viewport).filter((result) => result.visible).map((result) => [result.id, result]));
       for (const entry of entries) {
         const result = shown.get(entry.id);
@@ -420,6 +419,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
     labelLayer.rebuild(graph, wordSource());
     labelLayer.measure();
     let lastPose: ScenePose | null = null;
+    let draws = 0;
     let peakScrollActivity = 0;
     const drawLabels = (pose: ScenePose) => {
       const projections = scene.projectLabels(pose);
@@ -450,6 +450,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
           firstDraw = false;
         }
         lastPose = pose;
+        draws += 1;
         if (process.env.NODE_ENV !== 'production') peakScrollActivity = Math.max(peakScrollActivity, pose.scrollActivity);
         drawLabels(pose);
       },
@@ -482,9 +483,12 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       if (next === heldPaused) return;
       heldPaused = next;
       if (next) {
-        // A paused scene forgets the pointer, so a later resume starts from the next real movement.
+        // A paused scene forgets the pointer and cancels any queued pointer work, so a later resume starts from the
+        // next real movement.
         pointer = null;
         pointerSampler.reset();
+        window.cancelAnimationFrame(inputFrame);
+        inputFrame = 0;
         controller.pause();
       } else controller.resume();
     };
@@ -498,6 +502,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         pointer = null;
         pointerSampler.reset();
       }
+      const drawsBefore = draws;
       controller.update({
         graph,
         tier,
@@ -509,11 +514,12 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         pointer,
         scrollDeltaPx,
       });
-      // A suspended scene (hidden tab, Footer handoff) is hidden; a paused one keeps its pose, but its
-      // labels still follow the content that scrolls past them.
+      // A suspended scene (hidden tab, Footer handoff) is hidden. Any other scene whose controller drew nothing for
+      // this update (a paused one, or an Atlas page asleep at rest) keeps its pose, but its labels still follow the
+      // content that scrolls past them: one coalesced refresh from the cached boxes, without waking the physics.
       const state = controller.snapshot().state;
       options.mount.dataset.connectedState = state;
-      if (state === 'paused' && lastPose && !labelFrame) labelFrame = window.requestAnimationFrame(refreshLabels);
+      if (state !== 'suspended' && draws === drawsBefore && lastPose && !labelFrame) labelFrame = window.requestAnimationFrame(refreshLabels);
     };
     let labelFrame = 0;
     const refreshLabels = () => {
@@ -557,7 +563,9 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         return;
       }
       if (formSuspension.backgroundInput()) syncPause();
-      if (formSuspension.suspended()) {
+      // Eligible input may lift the form's waiting state above; the visitor's Pause (or a form still holding) takes
+      // no sample at all.
+      if (heldPaused || formSuspension.suspended()) {
         dropPointer();
         return;
       }
