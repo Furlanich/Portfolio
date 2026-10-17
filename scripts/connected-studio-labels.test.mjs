@@ -131,3 +131,39 @@ test('unusable boxes, occluders and viewports hide labels instead of throwing', 
   const broken = resolveLabelVisibility([box('a', 200, 100)], [], { width: Number.NaN, height: 600 });
   assert.equal(broken[0].visible, false, 'an unusable viewport shows no labels');
 });
+
+// PLAN-SFC-V1 Task 11: a profile route binds a few decorative words to node ids; Services and Projects keep the vocabulary.
+const { resolveNodeWord } = await import('../lib/connected-studio/labels.ts');
+
+const WORDS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const BINDINGS = [
+  { nodeId: 'n0', word: 'Software' },
+  { nodeId: 'n4', word: 'Systems' },
+  { nodeId: 'n8', word: 'Interfaces' },
+  { nodeId: 'n12', word: 'Delivery' },
+];
+
+test('a vocabulary node carries the word at its capability index', () => {
+  assert.equal(resolveNodeWord({ id: 'x', capabilityIndex: 3 }, { capabilityWords: WORDS }), 'D');
+});
+
+test('a vocabulary node without an index carries no word', () => {
+  assert.equal(resolveNodeWord({ id: 'x' }, { capabilityWords: WORDS }), undefined);
+});
+
+test('a profile node carries the word bound to its id when the profile allows that id', () => {
+  const source = { wordBindings: BINDINGS, wordNodeIds: ['n0', 'n4', 'n8', 'n12'] };
+  assert.equal(resolveNodeWord({ id: 'n8' }, source), 'Interfaces');
+  assert.equal(resolveNodeWord({ id: 'n1' }, source), undefined);
+});
+
+test('the compact profile binds only its first two ids, so the other bound words stay unused', () => {
+  const source = { wordBindings: BINDINGS, wordNodeIds: ['n0', 'n4'] };
+  assert.equal(resolveNodeWord({ id: 'n4' }, source), 'Systems');
+  assert.equal(resolveNodeWord({ id: 'n8' }, source), undefined);
+  assert.equal(resolveNodeWord({ id: 'n12' }, source), undefined);
+});
+
+test('an empty bound word is not a label', () => {
+  assert.equal(resolveNodeWord({ id: 'n0' }, { wordBindings: [{ nodeId: 'n0', word: '' }], wordNodeIds: ['n0'] }), undefined);
+});
