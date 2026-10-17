@@ -1039,6 +1039,11 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
     await page.keyboard.type('Analytical Engines');
     await page.keyboard.press('Tab');
     await page.keyboard.type('Please help us scope a product idea.');
+    // The privacy and terms links sit between the message and the submit button.
+    await page.keyboard.press('Tab');
+    await expect(page.locator('form a[href]').first()).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('form a[href]').nth(1)).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(submitButton(page)).toBeFocused();
     await page.keyboard.press('Enter');
