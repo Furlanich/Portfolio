@@ -1162,7 +1162,8 @@ const readForeground = (page: Page): Promise<{ labels: (Rect & { id: string; tex
       };
     });
     const selector = [
-      'main :is(h1,h2,h3,h4,p,li,a[href],button,summary,label,input,textarea,select,img,figure,dt,dd)',
+      // Text and controls. Opaque artwork (img, figure) paints over the decorative layer the way the Footer does.
+      'main :is(h1,h2,h3,h4,p,li,a[href],button,summary,label,input,textarea,select,dt,dd)',
       'footer :is(h2,h3,p,li,a[href],small)',
       '[data-app-bar] :is(a[href],button)',
     ].join(',');
