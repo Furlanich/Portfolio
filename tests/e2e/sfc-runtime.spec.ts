@@ -11,6 +11,7 @@ import {
   expectStopped,
   navigateInApp,
   observePageErrors,
+  overlaps,
   pauseLabels,
   pauseSlot,
   readConnected,
@@ -748,6 +749,366 @@ test.describe('the five rendered profiles (Task 12)', () => {
           await page.waitForTimeout(800);
           expect((await readConnected(page))?.renderCount, 'no draw after the stop').toBe(first?.renderCount);
         }
+      });
+    }
+  }
+});
+
+// ---------------------------------------------------------------------------------------------------------------------
+// PLAN-SFC-V1 Task 12: the actual Contact form against the host. No fixture writes the phase marker: every state below
+// is reached by the visitor's own focus, typing, click and keys on the committed form, with the provider mocked.
+// ---------------------------------------------------------------------------------------------------------------------
+
+const CONTACT_ENDPOINT = 'https://formspree.io/f/meaqwnbr';
+
+const CONTACT_COPY = {
+  es: {
+    submitting: 'Enviando...',
+    retry: 'Intentar nuevamente',
+    acceptedHeading: 'Mensaje aceptado.',
+    uncertainHeading: 'No pudimos confirmar el envío.',
+  },
+  en: {
+    submitting: 'Sending...',
+    retry: 'Try again',
+    acceptedHeading: 'Message accepted.',
+    uncertainHeading: "We couldn't confirm your submission.",
+  },
+} as const satisfies Record<ConnectedLocale, Record<string, string>>;
+
+/** The only network the page may reach is the exact approved endpoint, and every response is the test's own. */
+function providerBoundary(page: Page) {
+  const plan: { status: number; body: unknown; hold: Promise<void> | null } = { status: 200, body: { ok: true }, hold: null };
+  const requests: string[] = [];
+  const unexpected: string[] = [];
+  let release: () => void = () => undefined;
+  const installed = page.route('https://formspree.io/**', async (route) => {
+    if (route.request().url() !== CONTACT_ENDPOINT) {
+      unexpected.push(route.request().url());
+      await route.abort();
+      return;
+    }
+    requests.push(route.request().postData() ?? '');
+    await plan.hold;
+    await route.fulfill({ status: plan.status, contentType: 'application/json', body: JSON.stringify(plan.body) });
+  });
+  return {
+    installed,
+    requests,
+    unexpected,
+    respond(status: number, body: unknown) {
+      plan.status = status;
+      plan.body = body;
+    },
+    hold() {
+      plan.hold = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+    },
+    release() {
+      release();
+      plan.hold = null;
+    },
+  };
+}
+
+async function openActualContact(page: Page, locale: ConnectedLocale = 'es') {
+  const boundary = providerBoundary(page);
+  await boundary.installed;
+  await enableLiveForTest(page);
+  await goto(page, 'contact', locale);
+  await expect(page.locator('form[data-contact-hydrated="true"]')).toBeVisible();
+  await expectLive(page);
+  await expectSettled(page);
+  await expectAsleep(page);
+  return boundary;
+}
+
+async function fillValidInquiry(page: Page) {
+  await page.locator('#contact-name').fill('Ada Lovelace');
+  await page.locator('#contact-email').fill('ada@example.com');
+  await page.locator('#contact-company').fill('Analytical Engines');
+  await page.locator('#contact-message').fill('Please help us scope a product idea.');
+}
+
+const submitButton = (page: Page) => page.locator('form[data-inquiry-phase] button[type="submit"]');
+const formSuspended = async (page: Page) => (await readConnected(page))?.formSuspended;
+
+/** The scene is held by the form: suspended, paused, no scheduled work and no further draw. */
+async function expectHeldByForm(page: Page) {
+  await expect.poll(() => formSuspended(page)).toBe(true);
+  expect((await readConnected(page))?.controller).toBe('paused');
+  await expectStopped(page, 300);
+}
+
+async function expectNoBlockingAxe(page: Page) {
+  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+  const blocking = results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious');
+  expect(blocking.map(({ id, nodes }) => ({ id, targets: nodes.map((node) => node.target) }))).toEqual([]);
+}
+
+test.describe('the actual Contact form with the live graph (Task 12)', () => {
+  test('every field holds the graph; typing and textarea scrolling excite nothing; leaving the form waits for background input', async ({ page }) => {
+    const boundary = await openActualContact(page);
+    const first = await readConnected(page);
+
+    for (const field of ['name', 'email', 'company', 'message']) {
+      await page.locator(`#contact-${field}`).focus();
+      await expectHeldByForm(page);
+      expect((await readConnected(page))?.pointerActive).toBe(false);
+    }
+    // Moving between the fields of the form is not leaving it.
+    await page.keyboard.press('Shift+Tab');
+    await expectHeldByForm(page);
+    await page.locator('#contact-message').focus();
+
+    const message = page.locator('#contact-message');
+    await message.fill(Array.from({ length: 60 }, (_, i) => `line ${i + 1}`).join('\n'));
+    const before = await message.evaluate((element) => element.scrollTop);
+    await message.hover();
+    await page.mouse.wheel(0, 120);
+    await expect.poll(() => message.evaluate((element) => element.scrollTop)).toBeGreaterThan(before);
+    await page.waitForTimeout(300);
+    const held = await readConnected(page);
+    expect(held?.edgeSamples, 'textarea scrolling bends no string').toEqual([]);
+    expect(held?.renderCount, 'typing and textarea scrolling draw nothing').toBe(first?.renderCount);
+    expect(await formSuspended(page)).toBe(true);
+
+    // Leaving the form does not resume the graph by itself; the next eligible background input does.
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await page.waitForTimeout(400);
+    expect(await formSuspended(page)).toBe(true);
+    await page.mouse.move(FREE_X, 400, { steps: 4 });
+    await expect.poll(() => formSuspended(page)).toBe(false);
+    await expectAsleep(page);
+    expect(boundary.requests, 'focus, typing and scrolling transmit nothing').toEqual([]);
+    expect(boundary.unexpected).toEqual([]);
+  });
+
+  for (const locale of ['es', 'en'] as const) {
+    test(`${locale}: a valid submission moves focus to submit first, holds the graph while busy and after the result, and resumes on background input`, async ({ page }) => {
+      const copy = CONTACT_COPY[locale];
+      const boundary = await openActualContact(page, locale);
+      await fillValidInquiry(page);
+      await expectHeldByForm(page);
+
+      boundary.hold();
+      await submitButton(page).click();
+      const form = page.locator('form[data-inquiry-phase]');
+      await expect(form).toHaveAttribute('data-inquiry-phase', 'submitting');
+      expect(await page.evaluate(() => document.activeElement?.getAttribute('type') + ':' + document.activeElement?.tagName), 'focus moved to submit before the fields were disabled').toBe('submit:BUTTON');
+      await expect(page.locator('#contact-name')).toBeDisabled();
+      await expect(submitButton(page)).toHaveAttribute('aria-disabled', 'true');
+      await expect(page.locator('[data-contact-busy]')).toHaveText(copy.submitting);
+      await expect.poll(() => boundary.requests.length).toBe(1);
+
+      // Repeated activation, by pointer and by key, is one request.
+      await submitButton(page).click({ force: true });
+      await page.keyboard.press('Enter');
+      await page.waitForTimeout(300);
+      expect(boundary.requests).toHaveLength(1);
+
+      await expectHeldByForm(page);
+      await page.mouse.move(FREE_X, 350, { steps: 4 });
+      expect(await formSuspended(page), 'background input cannot lift a submission').toBe(true);
+
+      boundary.release();
+      const result = page.locator('[data-contact-result]');
+      await expect(result).toBeFocused();
+      await expect(result).toContainText(copy.acceptedHeading);
+      expect(await result.getAttribute('aria-live')).toBeNull();
+      await expect(page.locator('#contact-name')).toHaveValue('');
+      await expectHeldByForm(page);
+      await expectNoBlockingAxe(page);
+
+      await page.mouse.move(FREE_X, 420, { steps: 4 });
+      await expect.poll(() => formSuspended(page)).toBe(false);
+      await expectAsleep(page);
+      expect(boundary.requests).toHaveLength(1);
+      expect(boundary.unexpected).toEqual([]);
+    });
+  }
+
+  test('an invalid submission sends nothing, focuses the first invalid field and keeps the graph held', async ({ page }) => {
+    const boundary = await openActualContact(page);
+    await submitButton(page).click();
+    await expect(page.locator('#contact-name')).toBeFocused();
+    await expect(page.locator('#contact-name')).toHaveAttribute('aria-invalid', 'true');
+    await expectHeldByForm(page);
+    await page.waitForTimeout(300);
+    expect(boundary.requests).toEqual([]);
+  });
+
+  test('a provider failure keeps every value and the held graph, sends nothing by itself, and retries only when asked', async ({ page }) => {
+    const copy = CONTACT_COPY.es;
+    const boundary = await openActualContact(page);
+    boundary.respond(500, { error: 'unavailable' });
+    await fillValidInquiry(page);
+    await submitButton(page).click();
+
+    const result = page.locator('[data-contact-result]');
+    await expect(result).toBeFocused();
+    await expect(result).toContainText(copy.uncertainHeading);
+    await expect(page.locator('#contact-name')).toHaveValue('Ada Lovelace');
+    await expect(page.locator('#contact-message')).toHaveValue('Please help us scope a product idea.');
+    await expectHeldByForm(page);
+    await expectNoBlockingAxe(page);
+    await page.waitForTimeout(1_500);
+    expect(boundary.requests, 'no automatic resend').toHaveLength(1);
+
+    boundary.respond(200, { ok: true });
+    await expect(submitButton(page)).toHaveText(copy.retry);
+    await submitButton(page).click();
+    await expect.poll(() => boundary.requests.length).toBe(2);
+    await expect(result).toContainText(copy.acceptedHeading);
+    await expectHeldByForm(page);
+  });
+
+  test('an explicit Resume after the form held the graph resumes it, and the control tells the truth', async ({ page }) => {
+    await openActualContact(page);
+    await page.locator('#contact-name').focus();
+    await expectHeldByForm(page);
+
+    // Shift+Tab from the first field reaches the Pause control, which precedes the form in the reading order.
+    await page.keyboard.press('Shift+Tab');
+    const pause = pauseSlot(page, 'contact').getByRole('button');
+    await expect(pause).toBeFocused();
+    await page.keyboard.press('Space');
+    await expect(pause).toHaveAttribute('aria-pressed', 'true');
+    await page.keyboard.press('Space');
+    await expect(pause).toHaveAttribute('aria-pressed', 'false');
+    await expect(pause).toBeFocused();
+    // The visitor asked for the background back, and nothing else holds it: it is live, not silently frozen.
+    await expect.poll(async () => (await readConnected(page))?.controller).toBe('live');
+    expect(await formSuspended(page)).toBe(false);
+    await expectAsleep(page);
+  });
+
+  test('the actual intake plate and introduction scrim are the masks the host caches, with the 8px pointer margin', async ({ page }) => {
+    await openActualContact(page);
+    const plate = page.locator('[data-connected-opaque-plate]');
+    await expect(plate).toHaveCount(1);
+    await expect(plate.locator('form[data-inquiry-phase]')).toHaveCount(1);
+    await expect(plate.locator('aside')).toHaveCount(1);
+    const scrim = page.locator('[data-connected-reading-mask]');
+    await expect(scrim).toHaveCount(1);
+    await expect(scrim).toHaveAttribute('data-connected-clearance', '32');
+    await expect(scrim.getByRole('heading', { level: 1 })).toHaveCount(1);
+
+    const plateBox = (await plate.boundingBox())!;
+    const scrimBox = (await scrim.boundingBox())!;
+    const plateY = Math.min(plateBox.y + plateBox.height / 2, 500);
+    const scrimY = scrimBox.y + scrimBox.height / 2;
+    const active = async () => (await readConnected(page))?.pointerActive;
+
+    await page.mouse.move(plateBox.x + 40, plateY, { steps: 6 });
+    expect(await active(), 'inside the plate').toBe(false);
+    await page.mouse.move(plateBox.x - 4, plateY, { steps: 6 });
+    expect(await active(), 'within the 8px margin of the plate').toBe(false);
+    await page.mouse.move(plateBox.x - 14, plateY, { steps: 6 });
+    expect(await active(), 'beyond the plate margin').toBe(true);
+
+    await page.mouse.move(scrimBox.x + 20, scrimY, { steps: 6 });
+    expect(await active(), 'inside the introduction scrim').toBe(false);
+    await page.mouse.move(scrimBox.x - 36, scrimY, { steps: 6 });
+    expect(await active(), 'within the scrim 32px clearance plus 8px margin').toBe(false);
+    await page.mouse.move(scrimBox.x - 46, scrimY, { steps: 6 });
+    expect(await active(), 'beyond the scrim clearance and margin').toBe(true);
+    await expectAsleep(page);
+  });
+
+  test('one renderer stays live across the Founder bridge, the locale switch and back', async ({ page }) => {
+    test.setTimeout(240_000);
+    const gl = await trackWebglContexts(page);
+    await openActualContact(page, 'es');
+    await followPageLink(page, appPathname(stableRoutes.founder.es));
+    await expectLive(page);
+    expect((await readConnected(page))?.route).toBe('founder');
+
+    await page.locator('a[hreflang]:visible').first().click();
+    await page.waitForURL((url) => url.pathname === appPathname(stableRoutes.founder.en));
+    await expectLive(page);
+    expect((await readConnected(page))?.route).toBe('founder');
+
+    await followPageLink(page, appPathname(stableRoutes.contact.en));
+    await expectLive(page);
+    expect((await readConnected(page))?.route).toBe('contact');
+    await expect(page.locator('form[data-contact-hydrated="true"]')).toBeVisible();
+    expect(await gl.maxAlive(), 'never more than one live context').toBeLessThanOrEqual(1);
+  });
+});
+
+// ---------------------------------------------------------------------------------------------------------------------
+// PLAN-SFC-V1 Task 12: on the five actual pages a decorative label never lands on reading text or a control. The host
+// hides a label that a plate or scrim would cover; this proves nothing else on the page is left uncovered.
+// ---------------------------------------------------------------------------------------------------------------------
+
+type ForegroundBox = Rect & { what: string };
+
+const readForeground = (page: Page): Promise<{ labels: (Rect & { id: string; text: string; visible: boolean; fontSize: number; upright: boolean })[]; foreground: ForegroundBox[] }> =>
+  page.evaluate(() => {
+    const labels = Array.from(document.querySelectorAll<HTMLElement>('[data-connected-label]')).map((element) => {
+      const style = getComputedStyle(element);
+      const transform = style.transform === 'none' ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(style.transform);
+      const { left, top, right, bottom } = element.getBoundingClientRect();
+      return {
+        id: element.dataset.nodeId ?? '',
+        text: element.textContent ?? '',
+        visible: parseFloat(style.opacity) > 0.01 && style.visibility !== 'hidden' && style.display !== 'none',
+        fontSize: parseFloat(style.fontSize),
+        upright: Math.abs(transform.b) < 1e-6 && Math.abs(transform.c) < 1e-6,
+        left,
+        top,
+        right,
+        bottom,
+      };
+    });
+    const selector = [
+      'main :is(h1,h2,h3,h4,p,li,a[href],button,summary,label,input,textarea,select,img,figure,dt,dd)',
+      'footer :is(h2,h3,p,li,a[href],small)',
+      '[data-app-bar] :is(a[href],button)',
+    ].join(',');
+    const foreground: { left: number; top: number; right: number; bottom: number; what: string }[] = [];
+    for (const element of Array.from(document.querySelectorAll<HTMLElement>(selector))) {
+      if (element.closest('[data-connected-ground]')) continue;
+      const style = getComputedStyle(element);
+      if (style.display === 'none' || style.visibility === 'hidden' || parseFloat(style.opacity) === 0) continue;
+      const what = `${element.tagName.toLowerCase()} "${(element.textContent ?? element.getAttribute('aria-label') ?? '').trim().slice(0, 40)}"`;
+      for (const r of Array.from(element.getClientRects())) {
+        if (r.width < 1 || r.height < 1) continue;
+        foreground.push({ left: r.left, top: r.top, right: r.right, bottom: r.bottom, what });
+      }
+    }
+    return { labels, foreground };
+  });
+
+test.describe('labels stay clear of text and controls on the five pages (Task 12)', () => {
+  for (const route of FIVE_ROUTES) {
+    for (const screen of ['wide', 'compact'] as const) {
+      test(`${route} ${screen}: no visible label overlaps reading text, a control or the App Bar at any scroll position`, async ({ page }) => {
+        test.setTimeout(150_000);
+        const size = SCREENS[screen];
+        await page.setViewportSize({ width: size.width, height: size.height });
+        await enableLiveForTest(page);
+        await page.goto(appUrl(stableRoutes[route].es));
+        await expectLive(page);
+        await expectSettled(page);
+
+        const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+        let sawLabel = false;
+        for (let top = 0; top <= max; top += 180) {
+          await scrollInstant(page, top);
+          await page.waitForTimeout(150);
+          const { labels, foreground } = await readForeground(page);
+          for (const label of labels.filter((candidate) => candidate.visible)) {
+            sawLabel = true;
+            expect(label.fontSize, `label ${label.text} stays legible`).toBeGreaterThanOrEqual(12);
+            expect(label.upright, `label ${label.text} stays upright`).toBe(true);
+            const hit = foreground.find((box) => overlaps(label, box));
+            expect(hit?.what, `label "${label.text}" (${label.id}) at scroll ${top} overlaps ${hit?.what}`).toBeUndefined();
+          }
+        }
+        expect(sawLabel, 'at least one label was shown somewhere on the page').toBe(true);
       });
     }
   }
