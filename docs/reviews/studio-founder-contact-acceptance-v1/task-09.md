@@ -1,6 +1,6 @@
 # Task 9 / PR 9 – Build the quiet legal template and canonical draft contracts
 
-**Status:** Reviewer R completed independent review on 2026-10-16. All three findings were valid and are corrected. The owner amended the legal palette to the Studio connected Azure ground and opaque Deep reading plate, approved the corrected four Windows captures, and the four matching Linux actuals were adopted from same-head CI. Final no-update CI acceptance remains; Task 9 is open. No legal terms route or commercial publication is enabled.
+**Status:** Task 9 implementation acceptance complete on 2026-10-17. Reviewer R's three findings were valid and corrected. The owner approved the Studio Azure ground and opaque Deep reading plate and the corrected four Windows captures. Matching Linux snapshots passed no-update comparison in same-head Quality run `38997264137` at `fe57eb7acdf23f744a5bb2f58f2a4012258bbbb7`. No legal Terms route or commercial publication is enabled; professional review and account-specific factual gates remain open for Task 13.
 
 **Implementer:** Codex desktop, one primary agent and zero subagents under `GOV-AGENT-USAGE`. The task packet assigns GPT-6 Luna High; the runtime did not expose a model/effort identity, so that assignment is not attested. **Reviewer R:** completed independent review in a separate top-level session; findings and dispositions are recorded below.
 
@@ -72,9 +72,8 @@
 
 - Same-head Quality run `38996816033` at `b98a6a6d460cf1e9b6644b556ea0582a2f701faf` passed `validate` but its first browser shard caught an outdated assertion in `tests/e2e/immersive-home-static.spec.ts`: it still expected Privacy's document canvas to remain Bone, although the owner-approved Azure ground correctly pins Abyss on `html`.
 - Updated the shared canvas assertion to cover both Spanish and English Privacy routes, require exactly one connected ground, and assert the Abyss canvas color. The focused Chromium check passed 2/2 against the static export. The Task 9 plan's write paths now include this shared connected-canvas assertion.
-- Run `38996816033` was already executing before this correction and is not final acceptance. A fresh same-head CI run after committing this assertion and the corrected Linux visual baselines remains required.
+- Quality run `38997264137` passed at head `fe57eb7acdf23f744a5bb2f58f2a4012258bbbb7`: `validate` and browser shards 1–4 succeeded. This is the clean same-head no-update comparison for both platform baseline sets and includes the corrected bilingual connected-canvas assertion.
 
 ## Open items
 
-- Clean no-update visual rerun and full CI pass at a commit containing both platform baseline sets and the corrected connected-canvas assertion.
 - Professional review and account-specific factual gates for commercial Privacy/Terms remain open for the later Task 13 release gate. The staged drafts are not legal advice or publishable copy.
