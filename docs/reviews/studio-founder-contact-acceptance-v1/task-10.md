@@ -8,7 +8,7 @@
 
 **Base:** `5f57ad7063221c5288bc24a5a79bde8c15e6c523`, the PR #150 merge on `codex/sfc-integration`.
 
-**Current PR:** [#151](https://github.com/Furlanich/Portfolio/pull/151), open against `codex/sfc-integration` at head `fbee939dcaa1cbf1a85df2f00c59ce2123007702`. Reviewer R is requested in the PR description. The demo release mode remains selected locally; no Formspree endpoint is activated in the public release, and no workflow file was changed.
+**Current PR:** [#151](https://github.com/Furlanich/Portfolio/pull/151), open against `codex/sfc-integration`; its head is the latest commit on `codex/sfc-10-contact-ui`. Reviewer R is requested in the PR description. The demo release mode remains selected locally; no Formspree endpoint is activated in the public release, and no workflow file was changed.
 
 ## Scope delivered
 
