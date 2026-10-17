@@ -978,6 +978,63 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
     await expectHeldByForm(page);
   });
 
+  test('the keyboard order reaches the Pause control before the form, every stop is visible and unobstructed, and the form completes by keys alone', async ({ page }) => {
+    const boundary = await openActualContact(page);
+    const stops: { id: string; tag: string; name: string; inView: boolean; unobstructed: boolean; top: number }[] = [];
+    await page.locator('body').click({ position: { x: 5, y: 5 } });
+    for (let press = 0; press < 60; press += 1) {
+      await page.keyboard.press('Tab');
+      const stop = await page.evaluate(() => {
+        const element = document.activeElement as HTMLElement | null;
+        if (!element || element === document.body) return null;
+        const rect = element.getBoundingClientRect();
+        const centre = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        return {
+          id: element.id,
+          tag: element.tagName.toLowerCase(),
+          name: element.getAttribute('aria-label') ?? (element.textContent ?? '').trim().slice(0, 30),
+          inView: rect.width > 0 && rect.height > 0 && rect.left >= 0 && rect.right <= window.innerWidth && rect.bottom > 0 && rect.top < window.innerHeight,
+          unobstructed: centre === element || element.contains(centre),
+          top: rect.top + window.scrollY,
+        };
+      });
+      if (!stop) continue;
+      stops.push(stop);
+      if (stop.tag === 'button' && stop.id === '' && /Enviar consulta/.test(stop.name)) break;
+    }
+    const order = stops.map((stop) => stop.id || stop.name);
+    const at = (needle: string | RegExp) => stops.findIndex((stop) => (typeof needle === 'string' ? stop.id === needle : needle.test(stop.name)));
+    const pause = at(pauseLabels.es.pause);
+    expect(pause, `the Pause control is a keyboard stop: ${order.join(' > ')}`).toBeGreaterThanOrEqual(0);
+    const fields = ['contact-name', 'contact-email', 'contact-company', 'contact-message'].map(at);
+    expect(fields.every((index) => index > pause), 'the Pause control precedes every field').toBe(true);
+    expect([...fields].sort((a, b) => a - b), 'fields are reached in reading order').toEqual(fields);
+    expect(at(/Enviar consulta/), 'the submit button follows the last field').toBeGreaterThan(fields[3]);
+    // The tab order never runs against the page: the sequence from the Pause control to the submit button reads downward.
+    const reading = stops.slice(pause, at(/Enviar consulta/) + 1).map((stop) => stop.top);
+    expect(reading, 'the stops from Pause to submit read from top to bottom').toEqual([...reading].sort((a, b) => a - b));
+    for (const stop of stops) {
+      expect(stop.inView, `${stop.id || stop.name} is in view when focused`).toBe(true);
+      expect(stop.unobstructed, `nothing covers ${stop.id || stop.name} when focused`).toBe(true);
+    }
+
+    // Complete the inquiry by keys alone: the scene is held by the form throughout and the result takes focus.
+    await page.locator('#contact-name').focus();
+    await page.keyboard.type('Ada Lovelace');
+    await page.keyboard.press('Tab');
+    await page.keyboard.type('ada@example.com');
+    await page.keyboard.press('Tab');
+    await page.keyboard.type('Analytical Engines');
+    await page.keyboard.press('Tab');
+    await page.keyboard.type('Please help us scope a product idea.');
+    await page.keyboard.press('Tab');
+    await expect(submitButton(page)).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-contact-result]')).toBeFocused();
+    await expectHeldByForm(page);
+    expect(boundary.requests).toHaveLength(1);
+  });
+
   test('an explicit Resume after the form held the graph resumes it, and the control tells the truth', async ({ page }) => {
     await openActualContact(page);
     await page.locator('#contact-name').focus();
