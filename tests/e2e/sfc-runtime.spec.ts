@@ -984,7 +984,13 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
     await page.locator('body').click({ position: { x: 5, y: 5 } });
     for (let press = 0; press < 60; press += 1) {
       await page.keyboard.press('Tab');
-      const stop = await page.evaluate(() => {
+      const stop = await page.evaluate(async () => {
+        // The browser scrolls a focused element into view, possibly smoothly: read once the scroll position is stable.
+        let last = -1;
+        for (let frame = 0; frame < 60 && window.scrollY !== last; frame += 1) {
+          last = window.scrollY;
+          await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+        }
         const element = document.activeElement as HTMLElement | null;
         if (!element || element === document.body) return null;
         const rect = element.getBoundingClientRect();
