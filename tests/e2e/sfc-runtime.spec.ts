@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 import {
@@ -118,6 +119,16 @@ for (const route of NEW_ROUTES) {
         expect(await page.locator('[data-connected-label]').count(), 'one label element per allowed binding').toBe(allowed.length);
         if (route !== 'contact') expect(allowed).toHaveLength(WORD_COUNT[route]);
         expect(errors.errors).toEqual([]);
+      });
+
+      test('has no critical or serious axe violation with the live scene, its Pause control and labels', async ({ page }) => {
+        await liveRest(page, route, locale);
+        const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+        const blocking = results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious');
+        expect(blocking.map(({ id, nodes }) => ({ id, targets: nodes.map((node) => node.target) }))).toEqual([]);
+        // The decorative layer is hidden from assistive technology and takes no pointer or focus.
+        await expect(page.locator('[data-connected-ground]')).toHaveAttribute('aria-hidden', 'true');
+        expect(await connectedCanvas(page).evaluate((element) => getComputedStyle(element).pointerEvents)).toBe('none');
       });
 
       test('sleeps at rest: no pending callback, no scheduled timer and no further draw', async ({ page }) => {
