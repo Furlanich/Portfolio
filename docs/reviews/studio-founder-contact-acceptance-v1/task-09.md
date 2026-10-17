@@ -1,6 +1,6 @@
 # Task 9 / PR 9 – Build the quiet legal template and canonical draft contracts
 
-**Status:** Reviewer R completed independent review on 2026-10-16. All three findings were valid and are corrected locally. The owner amended the legal palette to the Studio connected Azure ground and opaque Deep reading plate, approved the corrected four Windows captures, and those snapshots now pass comparison. Same-head Linux baseline adoption and CI acceptance remain; Task 9 is open. No legal terms route or commercial publication is enabled.
+**Status:** Reviewer R completed independent review on 2026-10-16. All three findings were valid and are corrected. The owner amended the legal palette to the Studio connected Azure ground and opaque Deep reading plate, approved the corrected four Windows captures, and the four matching Linux actuals were adopted from same-head CI. Final no-update CI acceptance remains; Task 9 is open. No legal terms route or commercial publication is enabled.
 
 **Implementer:** Codex desktop, one primary agent and zero subagents under `GOV-AGENT-USAGE`. The task packet assigns GPT-6 Luna High; the runtime did not expose a model/effort identity, so that assignment is not attested. **Reviewer R:** completed independent review in a separate top-level session; findings and dispositions are recorded below.
 
@@ -22,7 +22,7 @@
 - **[P3] GitHub privacy link opened an unannounced new tab — valid, corrected.** `PrivacyPage` no longer marks the existing GitHub link external, retaining same-tab navigation. The privacy browser cases assert the link is not `_blank` in both locales.
 - **[P2] Legal H1 clipped at 320px with 200% text size — valid, corrected.** Compact legal titles now cap responsively at the viewport-derived width when root text size is enlarged. A browser case applies a 32px root font size, then checks the title's scroll and text-line bounds for Spanish and English.
 - **[P2] Legal type scale diverged from DESIGN-SFC-V1 — valid, corrected.** All legal headings use weight 600; the introduction uses 20px / 1.5; legal H2 uses 24/26/28px at compact/tablet/wide breakpoints. The prior baseline approval did not amend the numeric design requirements.
-- The four corrected Windows visual captures (Spanish/English, wide/compact) show the owner-approved Studio Azure ground and Deep reading plate, with all text inside the reading surface. The owner approved these captures after directing the palette correction; the four Windows snapshots were replaced and pass in normal comparison mode. Linux captures must come from the same-head CI `actual` artifacts.
+- The four corrected Windows visual captures (Spanish/English, wide/compact) show the owner-approved Studio Azure ground and Deep reading plate, with all text inside the reading surface. The owner approved these captures after directing the palette correction; the four Windows snapshots were replaced and pass in normal comparison mode. Matching Linux actuals have since been inspected and adopted from same-head CI run `38995832148`, shard-4 artifact `playwright-report-shard-4-38995832148-1` (artifact ID `12086494371`), source head `15ff74b4527b70a0a940cdbf64a3c0d6493de614`.
 
 ## Validation
 
@@ -43,12 +43,12 @@
 - `npm run validate`: passed with 785/785 Node tests, 0 lint errors (282 existing warnings in the vendored Impeccable bundle), typecheck, and production build. `docs:check` reported 341 Markdown files, 120 document IDs, and 38 Skills.
 - Legal/privacy Playwright matrix: 108/108 passed across Chromium, Firefox, WebKit, mobile, tablet, wide, compact-320, and tablet-portrait projects. The matrix covers same-tab external link behavior in both locales and 200% text-size H1 bounds in both locales.
 - `npm run verify:static-export`: passed for root and `/Portfolio` exports, 14 routes each; both root and base-path production builds passed.
-- The corrected Windows `visual-chromium` run detected the expected differences in all four cases. After the owner's Azure palette direction and approval, only the four Windows legal snapshots were updated. The no-update `visual-chromium` rerun passed 4/4.
+- The corrected Windows `visual-chromium` run detected the expected differences in all four cases. After the owner's Azure palette direction and approval, only the four Windows legal snapshots were updated. The no-update `visual-chromium` rerun passed 4/4. The initial same-head CI bootstrap run's shard-4 rerun produced the same four viewport captures byte-for-byte; its only failures were the four expected pre-correction Linux snapshot comparisons. The four Linux snapshots were adopted from that exact shard artifact; a no-update run at the new head is pending.
 
 ### Owner palette correction — 2026-10-16
 
 - The owner identified the white/Bone page background as incorrect and directed Privacy/Terms to use the Azure background used by Studio. DESIGN-SFC-V1 records this approved amendment: the shared static connected ground, one opaque Deep reading plate, Bone headings, secondary body text, chart-glow underlined links, and chart-border rules. Contact's Bone intake and all legal publication gates are unchanged.
-- The owner approved the corrected capture set with the palette direction “the background shouldn't be white; it should be the Azure background used in the other pages such as Studio.” The four captures were visually inspected, then only the Windows legal snapshots were replaced. Existing Linux goldens still show the pre-correction layout and remain untouched until matching same-head Linux actuals are reviewed.
+- The owner approved the corrected capture set with the palette direction “the background shouldn't be white; it should be the Azure background used in the other pages such as Studio.” The four captures were visually inspected, then only the Windows legal snapshots were replaced. The previous Linux goldens showed the pre-correction layout; they were replaced only with matching actuals from the same-head Linux CI run listed below.
 - The visual spec now captures the viewport rather than the complete main element. The connected ground is fixed to the viewport, so full-element screenshots tiled it and produced a false seam below the viewport. The new captures are 1440×1000 (wide) and 390×844 (compact), in both locales.
 - The shared-ground/opaque-plate assertion's initial RED run was blocked by an existing Next dev-server listener on port 3100. To complete browser verification without disturbing that unresponsive process, the final static export was served on a separate test port. The legal/Privacy suite passed **117/117** across Chromium, Firefox, WebKit, mobile, 320px, tablet, and wide profiles, including both locales, the new structural assertion, the 200% text-size case and axe checks.
 - Final `npm run validate` passed. Root export verification passed for 14 routes at `/`; a separate base-path build and `npm run verify:static-export` passed for 14 routes at `/Portfolio`.
@@ -62,8 +62,13 @@
   - Spanish compact `test-results/visual-legal.visual-Spanish-Privacy-compact-reading-surface-visual-chromium/privacy-es-compact-actual.png` — SHA-256 `2FC9D459BA1F9C93149CF2E840C6AED10BD9A5532929E874CED4F7F45B73872B`.
   - English wide `test-results/visual-legal.visual-English-Privacy-wide-reading-surface-visual-chromium/privacy-en-wide-actual.png` — SHA-256 `33CB1547DE1AB6F0B672EDCAA8434792FDFB8423E47A0D199D26CEB36B3030F0`.
   - English compact `test-results/visual-legal.visual-English-Privacy-compact-reading-surface-visual-chromium/privacy-en-compact-actual.png` — SHA-256 `0515DC1226C4156040FB20E5EA13C59E3DA58A902F807109BB812E95DD639C11`.
+- Linux snapshots were adopted from `playwright-report-shard-4-38995832148-1` (artifact ID `12086494371`, Quality run `38995832148`, source head `15ff74b4527b70a0a940cdbf64a3c0d6493de614`). All four initial captures were visually inspected and matched their retry captures byte-for-byte:
+  - Spanish wide — SHA-256 `0101138EA2EDF2A5C198B4CDF0F21706069D3F200E78F79AAC677D5AB6D675C6`.
+  - Spanish compact — SHA-256 `9EC0716D121208FD9F3DEED32154D4E3BF1C99CF6E21E0130A3B52868BD93596`.
+  - English wide — SHA-256 `56FA689C981D82A97072B967F35421AD9F472F9B4C50F5BA4DF00570DADE231E`.
+  - English compact — SHA-256 `E8BC75B3436FFEE48C64C9819ABBA7157E17161623200F2E4C14DBE4DAA7A952`.
 
 ## Open items
 
-- Same-head Linux `actual` inspection/adoption and a clean visual rerun/CI pass.
+- Clean no-update visual rerun and CI pass at the commit containing both platform baseline sets.
 - Professional review and account-specific factual gates for commercial Privacy/Terms remain open for the later Task 13 release gate. The staged drafts are not legal advice or publishable copy.
