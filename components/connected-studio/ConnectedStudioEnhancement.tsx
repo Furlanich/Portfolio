@@ -894,6 +894,19 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
     };
   }, [capabilityWords, wordBindings, locale, route]);
 
+  // The server renders the static-background label in the reserved slot. Studio and Founder hide it with a CSS
+  // :has() rule; the host does the same for every route (Contact has no such rule), and gives it back when the
+  // control goes away, so the slot never shows both or neither.
+  useEffect(() => {
+    if (!slot || !(live || fallbackHeld)) return;
+    const label = slot.querySelector<HTMLElement>('[data-connected-static-label]');
+    if (!label) return;
+    label.style.display = 'none';
+    return () => {
+      label.style.removeProperty('display');
+    };
+  }, [slot, live, fallbackHeld]);
+
   const toggle = () => {
     const next = !paused;
     setPaused(next);

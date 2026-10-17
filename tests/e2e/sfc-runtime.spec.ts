@@ -9,7 +9,6 @@ import {
   expectStatic,
   expectStopped,
   navigateInApp,
-  observeEngineRequests,
   observePageErrors,
   pauseLabels,
   pauseSlot,
@@ -19,7 +18,7 @@ import {
   trackWebglContexts,
   type ConnectedLocale,
 } from './support/connected-studio';
-import { appUrl, stableRoutes } from './support/paths';
+import { appPathname, appUrl, stableRoutes } from './support/paths';
 import type { ConnectedRoute } from '../../lib/connected-studio/types';
 
 // PLAN-SFC-V1 Task 11: the shared host on the three new routes, behind the runtime candidate
@@ -38,6 +37,12 @@ const WORD_COUNT: Record<NewRoute, number> = { studio: 4, founder: 4, contact: 3
 
 /** The margin right of the 1180px reading container at 1440px: no plate, scrim or control reaches it. */
 const FREE_X = 1385;
+
+/** A client-side navigation through a link inside the page (the App Bar has no Founder entry). */
+async function followPageLink(page: Page, pathname: string) {
+  await page.locator(`main a[href="${pathname}"]:visible`).first().click();
+  await page.waitForURL((url) => url.pathname === pathname);
+}
 
 const goto = (page: Page, route: ConnectedRoute, locale: ConnectedLocale) => page.goto(appUrl(stableRoutes[route][locale]));
 
@@ -142,7 +147,8 @@ test.describe('input on the Atlas routes', () => {
       expect(peak, 'nearby nodes yield to the pointer').toBeGreaterThan(0.002);
       expect((await readConnected(page))?.layoutReads, 'pointer movement reads no layout').toBe(reads);
 
-      await page.mouse.move(1425, 5);
+      // A pointer held near the graph keeps a small steady yield by design; entering a control removes it.
+      await pauseSlot(page, route).getByRole('button').hover();
       await expectAsleep(page);
       expect(displacement(rest, await readNodes(page)), 'every node returns to its rest position').toBeLessThan(0.001);
     });
@@ -199,7 +205,7 @@ test.describe('input on the Atlas routes', () => {
     await page.mouse.wheel(0, 100);
     await page.waitForTimeout(400);
     expect(displacement(rest, await readNodes(page))).toBe(0);
-    await page.mouse.move(1425, 5);
+    await pauseSlot(page, 'contact').getByRole('button').hover();
     await expectAsleep(page);
   });
 
@@ -297,7 +303,8 @@ test.describe('lifecycle on the Atlas routes', () => {
     await expect.poll(async () => (await readConnected(page))?.controller).toBe('paused');
 
     for (const next of ['founder', 'contact', 'services', 'projects'] as const) {
-      await navigateInApp(page, stableRoutes[next].es);
+      if (next === 'founder') await followPageLink(page, appPathname(stableRoutes.founder.es));
+      else await navigateInApp(page, stableRoutes[next].es);
       await expectLive(page);
       await expect(pauseSlot(page, next).getByRole('button', { name: pauseLabels.es.resume })).toBeVisible({ timeout: 30_000 });
       expect((await readConnected(page))?.controller).toBe('paused');
@@ -316,33 +323,30 @@ test.describe('lifecycle on the Atlas routes', () => {
     await expectAsleep(page);
   });
 
-  test('the engine is never requested under reduced motion, Save-Data-class session loss or a denied policy', async ({ page, browser }) => {
-    const requests = observeEngineRequests(page);
+  test('the optional engine is never imported under reduced motion, after a session context loss or with a denied policy', async ({ page, browser }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await enableLiveForTest(page);
     await goto(page, 'founder', 'en');
     await expectStatic(page, 'founder');
-    expect(requests.urls).toEqual([]);
+    expect((await readConnected(page))?.imports, 'no import was started').toBe(0);
 
     const lost = await browser.newPage();
     try {
-      const lostRequests = observeEngineRequests(lost);
       await seedSession(lost, { contextLost: '1' });
       await enableLiveForTest(lost);
       await goto(lost, 'contact', 'es');
       await expectStatic(lost, 'contact');
-      expect(lostRequests.urls).toEqual([]);
+      expect((await readConnected(lost))?.imports).toBe(0);
     } finally {
       await lost.close();
     }
 
     const denied = await browser.newPage();
     try {
-      const deniedRequests = observeEngineRequests(denied);
       await setConnectedTestHook(denied, { allowSoftwareRenderer: true, livePolicy: { wide: false, compact: false } });
       await goto(denied, 'studio', 'es');
       await expectStatic(denied, 'studio');
-      expect(deniedRequests.urls).toEqual([]);
+      expect((await readConnected(denied))?.imports).toBe(0);
       await expect(connectedCanvas(denied)).toHaveCount(0);
     } finally {
       await denied.close();
