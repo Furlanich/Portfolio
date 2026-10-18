@@ -25,7 +25,7 @@ import { getConnectedProfile } from '../../lib/connected-studio/profiles';
 import { anchorToScene, computeProjectionLayout, projectAnchor, sceneToAnchor, unprojectCss } from '../../lib/connected-studio/projection';
 import { createEdgePath, PATH_SEGMENTS } from '../../components/connected-studio/runtime/connected-paths';
 import { evaluateRestEdge } from '../../lib/connected-studio/rest-path';
-import type { ConnectedRoute, ConnectedTier, Vec3 } from '../../lib/connected-studio/types';
+import type { ConnectedRoute, ConnectedTier, EdgeSamplePoints, Vec3 } from '../../lib/connected-studio/types';
 
 // PLAN-SFC-V1 Task 11: the shared host on the three new routes, behind the runtime candidate
 // (SFC_TEST_MODE=candidate with the live-policy fixture applied; see playwright.config.ts). WebGL here runs on
@@ -536,24 +536,43 @@ function travelPx(frame: Frame, rest: NodeMap, now: NodeMap): number {
   return largest;
 }
 
-/** Per bent string: how far its end samples are from the actual nodes (must be zero) and its largest interior residual in CSS px. */
+/**
+ * Per bent string: how far its end samples are from the actual nodes (must be zero), its largest interior physics-sample
+ * residual in CSS px, and the same distance measured on the curve the renderer draws (PATH_SEGMENTS segments through
+ * the cubic interpolation of the samples, clamped to the profile cap) and on that interpolation without the clamp.
+ */
 function measureStrings(frame: Frame, nodes: NodeMap, samples: readonly { id: string; points: readonly Vec3[] }[]) {
   const edges = frame.profile.graph.edges;
+  const path = createEdgePath();
   return samples.map(({ id, points }) => {
     const index = edges.findIndex((candidate) => candidate.id === id);
     const edge = edges[index];
     const from = nodes.get(edge.from);
     const to = nodes.get(edge.to);
-    if (!from || !to) return { id, pinError: Number.POSITIVE_INFINITY, residualPx: Number.POSITIVE_INFINITY };
+    if (!from || !to) return { id, pinError: Number.POSITIVE_INFINITY, residualPx: Number.POSITIVE_INFINITY, renderedPx: Number.POSITIVE_INFINITY, unclampedPx: Number.POSITIVE_INFINITY };
     const pinError = Math.max(gap3(points[0], from), gap3(points[points.length - 1], to));
+    const restAt = (u: number) => evaluateRestEdge({ nodeStyle: frame.profile.nodeStyle, edgeIndex: index, from, to, layout: frame.layout }, u);
     let residualPx = 0;
     for (let j = 1; j < points.length - 1; j += 1) {
-      const rest = evaluateRestEdge({ nodeStyle: frame.profile.nodeStyle, edgeIndex: index, from, to, layout: frame.layout }, j / (points.length - 1));
       const a = frame.toCss(points[j]);
-      const b = frame.toCss(rest);
+      const b = frame.toCss(restAt(j / (points.length - 1)));
       residualPx = Math.max(residualPx, Math.hypot(a.x - b.x, a.y - b.y));
     }
-    return { id, pinError, residualPx };
+    // The drawn curve, sampled at every ring and halfway between rings, against the same rest path.
+    const drawn = (capPx: number) => {
+      path.prepare({ nodeStyle: frame.profile.nodeStyle, edgeIndex: index, from, to, layout: frame.layout, samples: points as unknown as EdgeSamplePoints, capPx });
+      const out = [0, 0, 0];
+      let largest = 0;
+      for (let k = 1; k < PATH_SEGMENTS * 2; k += 1) {
+        const u = k / (PATH_SEGMENTS * 2);
+        path.pointAt(u, out);
+        const a = frame.toCss(sceneToAnchor([out[0], out[1], out[2]], frame.layout));
+        const b = frame.toCss(restAt(u));
+        largest = Math.max(largest, Math.hypot(a.x - b.x, a.y - b.y));
+      }
+      return largest;
+    };
+    return { id, pinError, residualPx, renderedPx: drawn(frame.profile.input.edgeCapPx), unclampedPx: drawn(Number.POSITIVE_INFINITY) };
   });
 }
 
@@ -565,6 +584,8 @@ async function measure(page: Page, frame: Frame, rest: NodeMap) {
     reading,
     travelPx: travelPx(frame, rest, nodes),
     stringPx: Math.max(0, ...strings.map((string) => string.residualPx)),
+    renderedStringPx: Math.max(0, ...strings.map((string) => string.renderedPx)),
+    unclampedStringPx: Math.max(0, ...strings.map((string) => string.unclampedPx)),
     pinError: Math.max(0, ...strings.map((string) => string.pinError)),
     bentStrings: strings.length,
   };
@@ -708,11 +729,15 @@ test.describe('the five rendered profiles (Task 12)', () => {
         // Active: a slow pass beside the nearest node.
         let peakTravel = 0;
         let peakString = 0;
+        let peakRendered = 0;
+        let peakUnclamped = 0;
         let worstPin = 0;
         const observe = async () => {
           const state = await measure(page, frame, rest);
           peakTravel = Math.max(peakTravel, state.travelPx);
           peakString = Math.max(peakString, state.stringPx);
+          peakRendered = Math.max(peakRendered, state.renderedStringPx);
+          peakUnclamped = Math.max(peakUnclamped, state.unclampedStringPx);
           worstPin = Math.max(worstPin, state.pinError);
         };
         await sweep(page, lane.a, lane.b, 14, 35, observe);
@@ -721,7 +746,8 @@ test.describe('the five rendered profiles (Task 12)', () => {
         await testInfo.attach(`${route}-${screen}-active`, { body: await page.screenshot(), contentType: 'image/png' });
         expect(worstPin, 'string ends stay on their nodes').toBeLessThan(1e-6);
         expect(peakTravel, `node travel stays inside the ${nodeCap}px cap`).toBeLessThanOrEqual(nodeCap + CAP_TOLERANCE_PX);
-        expect(peakString, `string residual stays inside the ${edgeCap}px cap`).toBeLessThanOrEqual(edgeCap + CAP_TOLERANCE_PX);
+        expect(peakString, `string physics samples stay inside the ${edgeCap}px cap`).toBeLessThanOrEqual(edgeCap + CAP_TOLERANCE_PX);
+        expect(peakRendered, `the drawn string stays inside the ${edgeCap}px cap`).toBeLessThanOrEqual(edgeCap + CAP_TOLERANCE_PX);
         if (route === 'contact') expect(peakTravel, 'Contact nodes never move').toBe(0);
         else expect(peakTravel, 'nodes near the pointer yield').toBeGreaterThan(0.25);
         expect(peakString, 'a string near the pointer bends').toBeGreaterThan(0.05);
@@ -738,6 +764,8 @@ test.describe('the five rendered profiles (Task 12)', () => {
           strings.push(state.stringPx);
           peakTravel = Math.max(peakTravel, state.travelPx);
           peakString = Math.max(peakString, state.stringPx);
+          peakRendered = Math.max(peakRendered, state.renderedStringPx);
+          peakUnclamped = Math.max(peakUnclamped, state.unclampedStringPx);
           worstPin = Math.max(worstPin, state.pinError);
           if (state.travelPx < 0.005 && state.stringPx < 0.005 && series.length > 5) break;
           await page.waitForTimeout(40);
@@ -745,6 +773,7 @@ test.describe('the five rendered profiles (Task 12)', () => {
         expect(worstPin).toBeLessThan(1e-6);
         expect(peakTravel).toBeLessThanOrEqual(nodeCap + CAP_TOLERANCE_PX);
         expect(peakString).toBeLessThanOrEqual(edgeCap + CAP_TOLERANCE_PX);
+        expect(peakRendered, 'the drawn string, through the inertial tail').toBeLessThanOrEqual(edgeCap + CAP_TOLERANCE_PX);
         expect(series.at(-1), 'every node returns to its rest position').toBeLessThan(0.01);
         expect(strings.at(-1), 'every string returns to its rest path').toBeLessThan(0.01);
         for (const [name, values, cap] of [['nodes', series, nodeCap], ['strings', strings, edgeCap]] as const) {
@@ -754,7 +783,7 @@ test.describe('the five rendered profiles (Task 12)', () => {
         }
         // The figures behind the pass, for the receipt (CSS px; software-rendered).
         const px = (value: number) => Math.round(value * 100) / 100;
-        console.log('[sfc12-profile] ' + JSON.stringify({ route, screen, nodeCapPx: nodeCap, peakNodeTravelPx: px(peakTravel), edgeCapPx: edgeCap, peakStringResidualPx: px(peakString), settleSamples: series.length, laneDistanceToNodePx: Math.round(lane.distanceToNode) }));
+        console.log('[sfc12-profile] ' + JSON.stringify({ route, screen, nodeCapPx: nodeCap, peakNodeTravelPx: px(peakTravel), edgeCapPx: edgeCap, peakSampleResidualPx: px(peakString), peakDrawnCurvePx: px(peakRendered), peakInterpolationUnclampedPx: px(peakUnclamped), settleSamples: series.length, laneDistanceToNodePx: Math.round(lane.distanceToNode) }));
         if (atlas) {
           await expectAsleep(page, 20_000);
           expect((await readConnected(page))?.edgeSamples, 'asleep means no bent string').toEqual([]);
@@ -1361,7 +1390,7 @@ test.describe('the label clash helper follows the sticky App Bar (Reviewer R)', 
   });
 });
 
-// Reviewer R finding 2 on PR 153: the physics keeps five interior samples, the renderer draws ${PATH_SEGMENTS} segments through a cubic
+// Reviewer R finding 2 on PR 153: the physics keeps five interior samples, the renderer draws twelve segments through a cubic
 // interpolation of them and clamps that curve separately. The measurement must see the drawn curve, not only the knots.
 test.describe('string measurement covers the rendered curve, not only the physics samples (Reviewer R)', () => {
   test('a residual pattern whose interpolation overshoots its samples is measured on the drawn curve, and clamped to the cap', () => {
