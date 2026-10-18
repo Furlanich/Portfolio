@@ -2,8 +2,22 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
+import { expectContactAlignment } from './support/contact-alignment';
 const channels = ["https://wa.me/5491150117565","mailto:samuelfurlanich@gmail.com","tel:+5491150117565"];
 for (const locale of ['es', 'en'] as const) {
+  test(locale + ': contact icons and labels stay aligned', { tag: '@cross-browser' }, async ({ page }) => {
+    await page.goto(appUrl(stableRoutes.contact[locale]));
+    await page.evaluate(() => document.fonts.ready);
+    for (const width of [320, 390, 768, 820, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expectContactAlignment(page);
+    }
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.addStyleTag({ content: 'main a { font-size: 200% !important; line-height: 1.5 !important; letter-spacing: .12em !important; word-spacing: .16em !important; }' });
+    await expectContactAlignment(page);
+    await page.emulateMedia({ forcedColors: 'active' });
+    await expectContactAlignment(page);
+  });
   test(locale + ': native direct channels replace form intake', { tag: '@cross-browser' }, async ({ page, browserName }) => {
     const noErrors = observeUnexpectedBrowserErrors(page);
     const providerRequests: string[] = [];

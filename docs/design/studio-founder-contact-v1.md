@@ -139,6 +139,8 @@ Preserve `/Samuel-Furlanich-CV.pdf`, its download filename and the existing prof
 
 Source order: introduction, usual response expectation, Pause/static slot, direct-channel surface, Privacy reference and Founder bridge. Preserve the H1 and response copy. The opaque Bone surface contains a channel description/location and the three existing native WhatsApp/email/phone links. At 820px and above use a 7/4 description/action grid, gap 32px (64px at desktop); below 820px stack. Padding stays 24/32/40px, target height at least 48px. No form, fields, validation, submit/busy/results, no-JS warning or delivery claim.
 
+Use the [PAGE-CONTACT icon and alignment contract](../product/pages/contact-and-privacy.md#page-contact-responsibility-and-hierarchy): corresponding icons at a shared left inset, centered labels and equal link dimensions across locales and responsive sizes.
+
 Links have no prefilled message and open the visitor's chosen service. The Privacy link explains direct communication and hosting. Keep focus/source order native, visible and unclipped with text expansion or 320px reflow.
 
 

@@ -7,6 +7,7 @@ import { getFoundationPageLinkHref } from '@/lib/foundation-navigation';
 import { AtlasEditorialContainer } from '@/components/surfaces/AtlasEditorialContainer';
 import { AtlasScrim } from '@/components/surfaces/AtlasScrim';
 import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
+import { ContactChannelIcon } from './ContactChannelIcon';
 import styles from './contact.module.css';
 
 type ContactPageProps = {
@@ -52,7 +53,10 @@ export function ContactPage({ content, locale }: ContactPageProps) {
               <ul className={styles.channelsList}>
                 {content.actions.map((action) => (
                   <li key={action.kind}>
-                    <a href={action.href} className={styles.channelAction}>{action.label}</a>
+                    <a href={action.href} className={styles.channelAction}>
+                      <ContactChannelIcon kind={action.kind} className={styles.channelIcon} />
+                      <span className={styles.channelLabel}>{action.label}</span>
+                    </a>
                   </li>
                 ))}
               </ul>

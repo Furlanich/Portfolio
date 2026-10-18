@@ -36,6 +36,8 @@ Routes remain Spanish `/contacto/` and English `/en/contact/`. The page is compl
 
 Source and visual order: H1/introduction → usual response expectation → contact channel description/location → WhatsApp/email/phone links → Privacy reference → Founder bridge. At 820px and above, description and links may share two columns; below 820px they stack. Preserve approved 24/32/40px surface padding, 1180px container, 20/32px outer gutters, and 48px channel targets. There are no form inputs, submit controls, hydration fallback, busy states, validation, success, failure or retry messages.
 
+Each channel link has its corresponding decorative WhatsApp, mail or phone icon at the left, vertically centered with a shared 16px inset inside the border. All three icons occupy 20px square slots. Equal side columns keep the visible labels centered; all links share the same width and height, including when localized or enlarged text wraps. The text remains the accessible name and the SVGs do not enter keyboard navigation.
+
 ## Contact facts and copy — APPROVED
 
 Samuel Furlanich is the founder and recipient. Location: Buenos Aires, Argentina. Channels remain:
