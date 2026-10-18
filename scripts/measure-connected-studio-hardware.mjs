@@ -120,6 +120,11 @@ const EXTRA_ROWS = {
   sustainedActiveIntervalP95Ms: [20, 'max', null],
   sustainedTaskMaxMs: [50, 'below', null],
   sustainedContexts: [1, 'max', null],
+  // Counts of observed defects (a label tilted, too small, interactive or over reading text; Resume that drew nothing; a scene
+  // that did not come back after a route change). Zero is a measurement here because the protocol step ran or the run is invalid.
+  labelViolations: [0, 'max', null],
+  resumeFailures: [0, 'max', null],
+  routeCycleFailures: [0, 'max', null],
 };
 
 /** Every row of one run. A value without its observer is OPEN (a zero from a missing observer is not a zero). */

@@ -70,6 +70,9 @@ function goodRun({ tier = 'wide', route = 'studio', locale = 'es', n = 1 } = {})
       sustainedActiveIntervalP95Ms: 17.5,
       sustainedTaskMaxMs: 0,
       sustainedContexts: 1,
+      labelViolations: 0,
+      resumeFailures: 0,
+      routeCycleFailures: 0,
     },
     failures: [],
   };
@@ -179,6 +182,9 @@ for (const [metric, value, verdict] of [
   ['hiddenDraws', 1, 'FAIL'],
   ['footerDraws', 1, 'FAIL'],
   ['listenerGrowth', 3, 'FAIL'],
+  ['labelViolations', 1, 'FAIL'],
+  ['resumeFailures', 1, 'FAIL'],
+  ['routeCycleFailures', 1, 'FAIL'],
 ]) {
   test(`${metric} = ${value} is ${verdict}`, () => {
     const run = goodRun();
