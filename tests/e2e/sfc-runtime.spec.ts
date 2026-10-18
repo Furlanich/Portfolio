@@ -22,7 +22,8 @@ import {
 } from './support/connected-studio';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 import { getConnectedProfile } from '../../lib/connected-studio/profiles';
-import { computeProjectionLayout, projectAnchor } from '../../lib/connected-studio/projection';
+import { anchorToScene, computeProjectionLayout, projectAnchor, sceneToAnchor, unprojectCss } from '../../lib/connected-studio/projection';
+import { createEdgePath, PATH_SEGMENTS } from '../../components/connected-studio/runtime/connected-paths';
 import { evaluateRestEdge } from '../../lib/connected-studio/rest-path';
 import type { ConnectedRoute, ConnectedTier, Vec3 } from '../../lib/connected-studio/types';
 
@@ -1357,5 +1358,35 @@ test.describe('the label clash helper follows the sticky App Bar (Reviewer R)', 
     // n1 sits under the sticky App Bar link (viewport 20..40) at any scroll: that is the clash. n2 sat under the
     // paragraph at scroll 0 only; at scroll 400 the paragraph has scrolled away, so it is not.
     expect(clash, 'the label under the sticky App Bar control').toBe('label "Label" (n1) overlaps a "Home"');
+  });
+});
+
+// Reviewer R finding 2 on PR 153: the physics keeps five interior samples, the renderer draws ${PATH_SEGMENTS} segments through a cubic
+// interpolation of them and clamps that curve separately. The measurement must see the drawn curve, not only the knots.
+test.describe('string measurement covers the rendered curve, not only the physics samples (Reviewer R)', () => {
+  test('a residual pattern whose interpolation overshoots its samples is measured on the drawn curve, and clamped to the cap', () => {
+    const frame = frameFor('studio', 'wide');
+    const index = 0;
+    const edge = frame.profile.graph.edges[index];
+    const anchorOf = (id: string) => frame.profile.graph.nodes.find((node) => node.id === id)!.anchor;
+    const from = anchorOf(edge.from);
+    const to = anchorOf(edge.to);
+    const nodes: NodeMap = new Map([[edge.from, from], [edge.to, to]]);
+    const a = frame.toCss(from);
+    const b = frame.toCss(to);
+    const chord = Math.hypot(b.x - a.x, b.y - a.y);
+    const normal = { x: -(b.y - a.y) / chord, y: (b.x - a.x) / chord };
+    // The reviewer's pattern, in CSS px at the seven samples: the cubic through it peaks above the largest knot.
+    const knots = [0, 15.2, 15.2, -15.2, 0, 0, 0];
+    const points = knots.map((d, j) => {
+      const rest = evaluateRestEdge({ nodeStyle: frame.profile.nodeStyle, edgeIndex: index, from, to, layout: frame.layout }, j / 6);
+      const css = frame.toCss(rest);
+      return unprojectCss({ xPx: css.x + normal.x * d, yPx: css.y + normal.y * d, zScene: anchorToScene(rest, frame.layout)[2] }, frame.layout);
+    });
+    const [measured] = measureStrings(frame, nodes, [{ id: edge.id, points }]);
+    expect(measured.residualPx, 'the physics samples').toBeCloseTo(15.2, 1);
+    expect(measured.renderedPx, 'the drawn curve, clamped to the 16px profile cap').toBeLessThanOrEqual(16 + 1e-6);
+    expect(measured.unclampedPx, 'the interpolation alone would exceed the cap and the samples').toBeGreaterThan(17);
+    expect(measured.renderedPx, 'and the clamp is what holds it').toBeGreaterThan(15.9);
   });
 });
