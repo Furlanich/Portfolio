@@ -77,7 +77,7 @@ No valid run exists, so there is no failure to attribute and nothing was repaire
 
 Fresh, 2026-10-18, `.worktrees/sfc-15` after `npm ci`:
 
-- `npm run validate`: exit 0. docs:check 351 Markdown files, 121 document IDs, 38 Skills; `npm test` 914 tests, 913 pass, 1 `todo` (the Task 14 Contact-opacity placeholder), 0 fail (857 at the base, plus this packet's 57); lint 0 errors, 282 warnings (the baseline); typecheck pass; build pass. A last two-line change to the collector (long-task zeros only where the API exists, and the tidy of one helper) was followed by the 57 cases (57/57) and ESLint on the file; the full validate is re-run below as the final check.
+- `npm run validate`: exit 0. docs:check 351 Markdown files, 121 document IDs, 38 Skills; `npm test` 914 tests, 913 pass, 1 `todo` (the Task 14 Contact-opacity placeholder), 0 fail (857 at the base, plus this packet's 57); lint 0 errors, 282 warnings (the baseline); typecheck pass; build pass. A last two-line change to the collector (long-task zeros only where the API exists, and the tidy of one helper) was followed by the 57 cases (57/57) and ESLint on the file; the full validate was then re-run on the final head and gave the same result (exit 0, 914 tests, 913 pass, 1 todo, 0 fail; lint 0 errors, 282 warnings).
 - `node --test scripts/measure-connected-studio-hardware.test.mjs`: 57/57.
 - Browser protocol: smoke only (section above). The `/Portfolio` subpath export, Firefox, the Android path and the full-length windows were not run.
 - No browser spec, visual baseline, export or product file changed, so the served-export, Playwright and visual families were not re-run; the diff touches the collector, its test and two documents only.
