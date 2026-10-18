@@ -1,6 +1,6 @@
 # Task 13 / PR 13 — Replace inquiry intake with direct contact
 
-**Status: IMPLEMENTED; all affected visual baseline transfers APPROVED. Local CI repair checks PASS; full Linux CI verification and independent/human PR review OPEN.** Base: reviewed Task 12 merge 60b76daa07ed15b8b4a5432dc96043ee80ad689b (PR #153), Branch: codex/sfc-13-direct-contact, targeting codex/sfc-integration. On 2026-10-18 the owner explicitly replaced the form with email/WhatsApp and existing contact channels, requested the corresponding plan/documentation change, and removed Formspree/counsel decisions as prerequisites. [ADR-CONTACT-DIRECT-CHANNELS](../../decisions/contact-direct-channels.md) records the scoped supersession; prior ADRs and completed receipts are unchanged.
+**Status: IMPLEMENTED; all affected visual baseline transfers APPROVED. Local CI repair checks PASS; independent/human PR review OPEN. Latest full Linux CI: [PR #154 checks](https://github.com/Furlanich/Portfolio/pull/154/checks).** Base: reviewed Task 12 merge 60b76daa07ed15b8b4a5432dc96043ee80ad689b (PR #153), Branch: codex/sfc-13-direct-contact, targeting codex/sfc-integration. On 2026-10-18 the owner explicitly replaced the form with email/WhatsApp and existing contact channels, requested the corresponding plan/documentation change, and removed Formspree/counsel decisions as prerequisites. [ADR-CONTACT-DIRECT-CHANNELS](../../decisions/contact-direct-channels.md) records the scoped supersession; prior ADRs and completed receipts are unchanged.
 
 Agent usage: primary GPT-6 (resolved version/effort unavailable; previously authorized current-runtime exception); subagents 0/0 (none). Independent review remains a separate session. The execution/development Skills ran inline; no reviewer or implementer subagent was spawned.
 
@@ -80,7 +80,7 @@ Automatic approval review initially rejected the 32 non-Contact baseline replace
 - The corrected shared case passed 5/5 using the unchanged repository Playwright config and its five failing projects. The local RED and CI assertions identify the same obsolete demonstration invitation.
 - The five affected visual specs ran through the unchanged `visual-chromium` project at `/Portfolio`, filtered to the 20 named cases, with `--repeat-each=2 --workers=2`. Normal comparison PASS 40/40, with no snapshot update mode. All 36 replacement PNGs match their reviewed source hashes; the four previously approved Windows Contact PNGs remain the same.
 - The repair diff contains the shared assertion, the 36 approved PNG replacements and approval/provenance records. Review confirms positive bilingual native-link coverage, no added skips, no weakened pixel thresholds and no application/workflow/dependency changes. Generated Next dev type references are restored before commit. Agent usage: primary GPT-6; subagents 0/0 (none).
-- Full Linux CI at the repair head remains required before declaring the CI issue resolved. Independent review and human merge remain OPEN.
+- Full Linux CI at the repair head is required before declaring the CI issue resolved. The latest result is owned by [PR #154's checks](https://github.com/Furlanich/Portfolio/pull/154/checks); its description records the immutable verification run/head and per-shard result. Independent review and human merge remain OPEN.
 
 ### CI repair baseline hashes
 
