@@ -519,13 +519,13 @@ async function main() {
     const blank = await page.context().newPage();
     try {
       return await blank.evaluate(() => {
-      const gl = document.createElement('canvas').getContext('webgl2');
-      if (!gl) return { renderer: null, timerQueries: false };
-      const info = gl.getExtension('WEBGL_debug_renderer_info');
-      const renderer = String(info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER));
-      const timerQueries = Boolean(gl.getExtension('EXT_disjoint_timer_query_webgl2'));
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
-      return { renderer, timerQueries };
+        const gl = document.createElement('canvas').getContext('webgl2');
+        if (!gl) return { renderer: null, timerQueries: false };
+        const info = gl.getExtension('WEBGL_debug_renderer_info');
+        const renderer = String(info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER));
+        const timerQueries = Boolean(gl.getExtension('EXT_disjoint_timer_query_webgl2'));
+        gl.getExtension('WEBGL_lose_context')?.loseContext();
+        return { renderer, timerQueries };
       });
     } finally {
       await blank.close();
@@ -717,7 +717,9 @@ async function main() {
       metrics.renderCpuP95Ms = active.length ? round(percentile(active.map((f) => f.cpu), 95), 3) : null;
       metrics.renderGpuP95Ms = report.gpuTimerQueries && gpuValues.length ? round(percentile(gpuValues, 95), 3) : null;
       metrics.drawCallsMax = active.length ? Math.max(...active.map((f) => f.draws)) : null;
-      metrics.interactionTaskMaxMs = longTasks.length ? Math.max(...longTasks) : 0; // the Long Tasks API only reports tasks of 50 ms or more
+      // The Long Tasks API only reports tasks of 50 ms or more, so none seen is a measured zero only where the API exists.
+      const longTasksSupported = (await page.evaluate(() => window.__hw.vitals.supported)).includes('longtask');
+      metrics.interactionTaskMaxMs = !longTasksSupported ? null : longTasks.length ? Math.max(...longTasks) : 0;
       metrics.pixelRatio = round(await page.evaluate(() => (document.querySelector('canvas') ? document.querySelector('canvas').width / window.innerWidth : null)), 3);
       metrics.labelViolations = labelSamples.reduce((sum, sample) => sum + sample.violations, 0);
       report.samples.activeRenders = active.length;
@@ -873,7 +875,7 @@ async function main() {
       const sustainedTasks = await page.evaluate(([a, b]) => window.__hw.longTasks.filter((task) => task.start >= a && task.start <= b).map((task) => Math.round(task.duration)), [sustainedFrom, sustainedTo]);
       const heapSustainedEnd = await cdpMetric('JSHeapUsedSize');
       metrics.sustainedActiveIntervalP95Ms = sustainedIntervals.length ? round(percentile(sustainedIntervals, 95), 2) : null;
-      metrics.sustainedTaskMaxMs = sustainedTasks.length ? Math.max(...sustainedTasks) : 0;
+      metrics.sustainedTaskMaxMs = !longTasksSupported ? null : sustainedTasks.length ? Math.max(...sustainedTasks) : 0;
       metrics.sustainedContexts = await page.evaluate(() => window.__hw.contexts.alive);
       report.sustained = { seconds: Math.round((Date.now() - sustainedStartedAt) / 1000), bursts, renders: sustainedFrames.length, intervalsMeasured: sustainedIntervals.length, longTasksMs: sustainedTasks, heapMiB: [round(heapSustainedStart / 1048576, 1), round(heapSustainedEnd / 1048576, 1)], heapTrend: heapSustainedEnd > heapSustainedStart * 1.25 ? 'growing' : 'flat', note: 'heat and the device temperature are recorded by the operator on the protocol sheet' };
 
