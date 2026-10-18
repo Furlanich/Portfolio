@@ -105,8 +105,8 @@ test('the requested optional scripts and the emitted closure must match exactly'
 test('the vitals options reject any argument that would produce no samples', () => {
   const profiles = ['mobile', 'desktop'];
   const base = { journeys: '10', profile: undefined, profiles };
-  assert.deepEqual(validateVitalsOptions(base), { journeys: 10, profiles: ['mobile', 'desktop'], expectMode: 'static' });
-  assert.deepEqual(validateVitalsOptions({ ...base, profile: 'mobile', journeys: '3', expectMode: 'live' }), { journeys: 3, profiles: ['mobile'], expectMode: 'live' });
+  assert.deepEqual(validateVitalsOptions(base), { journeys: 10, profiles: ['mobile', 'desktop'], expectMode: 'static', routes: [] });
+  assert.deepEqual(validateVitalsOptions({ ...base, profile: 'mobile', journeys: '3', expectMode: 'live' }), { journeys: 3, profiles: ['mobile'], expectMode: 'live', routes: [] });
   for (const journeys of ['0', '-2', 'NaN', 'abc', '1.5', '', undefined]) {
     assert.throws(() => validateVitalsOptions({ ...base, journeys }), /journeys/, `journeys=${journeys}`);
   }
@@ -155,12 +155,22 @@ test('the route closure is found from the loader names in the route chunks, minu
 
 test('the vitals script exits non-zero before building or launching anything when its arguments would yield no samples', () => {
   const script = fileURLToPath(new URL('./measure-connected-studio-vitals.mjs', import.meta.url));
-  for (const args of [['--journeys=0'], ['--journeys=-1'], ['--journeys=abc'], ['--profile=tablet'], ['--expect-mode=hybrid']]) {
+  for (const args of [['--journeys=0'], ['--journeys=-1'], ['--journeys=abc'], ['--profile=tablet'], ['--expect-mode=hybrid'], ['--routes=blog'], ['--routes=']]) {
     const run = spawnSync(process.execPath, [script, '--skip-build', ...args], { encoding: 'utf8', timeout: 30_000 });
     assert.notEqual(run.status, 0, `${args.join(' ')} must not pass: ${run.stdout.slice(-200)}`);
     assert.doesNotMatch(run.stdout, /gates passed/, args.join(' '));
-    assert.match(run.stderr, /--journeys|--profile|--expect-mode/, `${args.join(' ')} names the bad argument`);
+    assert.match(run.stderr, /--journeys|--profile|--expect-mode|--routes/, `${args.join(' ')} names the bad argument`);
   }
+});
+
+test('the vitals routes option keeps only known routes and never turns a typo into zero journeys', () => {
+  const known = ['services', 'projects', 'studio', 'founder', 'contact'];
+  const base = { journeys: '5', profiles: ['mobile', 'desktop'], knownRoutes: known };
+  assert.deepEqual(validateVitalsOptions({ ...base }).routes, known, 'no option measures every route');
+  assert.deepEqual(validateVitalsOptions({ ...base, routes: 'studio,contact' }).routes, ['studio', 'contact']);
+  assert.throws(() => validateVitalsOptions({ ...base, routes: 'studio,blog' }), /--routes.*blog/);
+  assert.throws(() => validateVitalsOptions({ ...base, routes: '' }), /--routes/);
+  assert.throws(() => validateVitalsOptions({ ...base, routes: 'studio,studio' }), /--routes.*more than once/);
 });
 
 test('the imports of a chunk are the other chunk files its async loaders name, each once and never itself', () => {
@@ -372,4 +382,165 @@ test('late-frame attribution rejects frames that cannot be ordered or measured',
   assert.throws(() => classifyLateFrames({ frames: [{ t: 0, cpuMs: 0.3, gpuMs: 4 }, { t: 0, cpuMs: 0.3, gpuMs: 4 }] }), /monotonic/);
   assert.throws(() => classifyLateFrames({ frames: [{ t: 0, cpuMs: Number.NaN, gpuMs: 4 }, { t: 16, cpuMs: 0.3, gpuMs: 4 }] }), /cpuMs/);
   assert.throws(() => classifyLateFrames({ frames: [{ t: 0, cpuMs: 0.3, gpuMs: -1 }, { t: 16, cpuMs: 0.3, gpuMs: 4 }] }), /gpuMs/);
+});
+
+// --- PLAN-SFC-V1 Task 14: the static release costs of the new routes against the Task 3 baseline -----------------
+
+const staticRelease = await import('../lib/connected-studio/measurement.ts');
+const { judgeStaticRouteCost, findOptionalCodeInCriticalChunks, readBaselineEntry, STATIC_ROUTE_BUDGETS } = staticRelease;
+
+const figures = (overrides = {}) => ({
+  route: 'studio',
+  locale: 'es',
+  profile: 'desktop',
+  basePath: '/',
+  journeys: 5,
+  criticalJsBrotliBytes: 120 * KIB,
+  firstLoadJsBrotliBytes: 150 * KIB,
+  staticHtmlJsBrotliBytes: 152 * KIB,
+  startupCpuP95Ms: 170,
+  startupCpuSpreadMs: 60,
+  longestTaskMs: 40,
+  ...overrides,
+});
+
+test('the added first-load JS budgets are the plan numbers: 12 KiB Studio and Founder, 16 KiB Contact, 2 KiB legal', () => {
+  assert.deepEqual({ ...STATIC_ROUTE_BUDGETS.addedJsKiB }, { studio: 12, founder: 12, contact: 16, legal: 2 });
+  assert.equal(STATIC_ROUTE_BUDGETS.addedStartupCpuP95Ms, 25);
+  assert.equal(STATIC_ROUTE_BUDGETS.longTaskMs, 50);
+});
+
+test('added critical and static-HTML JS inside the route budget pass and beyond it fail, each on its own row', () => {
+  const baseline = figures();
+  const pass = judgeStaticRouteCost({
+    kind: 'studio',
+    baseline,
+    current: figures({ criticalJsBrotliBytes: baseline.criticalJsBrotliBytes + 12 * KIB, staticHtmlJsBrotliBytes: baseline.staticHtmlJsBrotliBytes + 12 * KIB }),
+  });
+  assert.equal(pass.rows.find((row) => row.metric === 'critical-js').verdict, 'PASS');
+  assert.equal(pass.rows.find((row) => row.metric === 'static-html-js').verdict, 'PASS');
+  const fail = judgeStaticRouteCost({
+    kind: 'studio',
+    baseline,
+    current: figures({ criticalJsBrotliBytes: baseline.criticalJsBrotliBytes + 12 * KIB + 1, staticHtmlJsBrotliBytes: baseline.staticHtmlJsBrotliBytes + 1 }),
+  });
+  assert.equal(fail.rows.find((row) => row.metric === 'critical-js').verdict, 'FAIL');
+  assert.equal(fail.rows.find((row) => row.metric === 'static-html-js').verdict, 'PASS');
+  assert.equal(fail.verdict, 'FAIL');
+  const contact = judgeStaticRouteCost({
+    kind: 'contact',
+    baseline: figures({ route: 'contact' }),
+    current: figures({ route: 'contact', criticalJsBrotliBytes: 120 * KIB + 16 * KIB }),
+  });
+  assert.equal(contact.rows.find((row) => row.metric === 'critical-js').verdict, 'PASS');
+  const legal = judgeStaticRouteCost({
+    kind: 'legal',
+    baseline: figures({ route: 'privacy' }),
+    current: figures({ route: 'terms', criticalJsBrotliBytes: 120 * KIB + 2 * KIB + 1 }),
+  });
+  assert.equal(legal.rows.find((row) => row.metric === 'critical-js').verdict, 'FAIL');
+});
+
+test('a route that got smaller passes with a negative added figure, never a clipped zero', () => {
+  const result = judgeStaticRouteCost({
+    kind: 'contact',
+    baseline: figures({ route: 'contact', criticalJsBrotliBytes: 126.8 * KIB }),
+    current: figures({ route: 'contact', criticalJsBrotliBytes: 117 * KIB }),
+  });
+  const row = result.rows.find((item) => item.metric === 'critical-js');
+  assert.equal(row.verdict, 'PASS');
+  assert.ok(row.added < 0, `added ${row.added}`);
+});
+
+test('the startup CPU gate is PASS within 25 ms, OPEN inside the baseline own journey spread, FAIL beyond both', () => {
+  const baseline = figures({ startupCpuP95Ms: 170, startupCpuSpreadMs: 60 });
+  const verdict = (cpu) => judgeStaticRouteCost({ kind: 'studio', baseline, current: figures({ startupCpuP95Ms: cpu }) }).rows.find((row) => row.metric === 'startup-cpu-p95');
+  assert.equal(verdict(195).verdict, 'PASS', 'exactly the 25 ms allowance passes');
+  assert.equal(verdict(120).verdict, 'PASS', 'a faster route passes');
+  const open = verdict(230);
+  assert.equal(open.verdict, 'OPEN', 'added 60 ms is within the 60 ms spread the unchanged baseline route showed: noise cannot be told from cost');
+  assert.match(open.note, /spread/);
+  assert.equal(verdict(260).verdict, 'FAIL', 'added 90 ms is beyond the allowance and the spread');
+});
+
+test('a long task is new only when the baseline had none of 50 ms or more', () => {
+  const task = (baselineMs, currentMs) =>
+    judgeStaticRouteCost({ kind: 'studio', baseline: figures({ longestTaskMs: baselineMs }), current: figures({ longestTaskMs: currentMs }) }).rows.find((row) => row.metric === 'long-task');
+  assert.equal(task(40, 49.9).verdict, 'PASS');
+  assert.equal(task(40, 50).verdict, 'FAIL', 'a new 50 ms task is added');
+  assert.equal(task(56, 50).verdict, 'PASS', 'the baseline already had a longer task and this one is no longer');
+  assert.equal(task(56, 70).verdict, 'OPEN', 'a longer long task than a baseline that already had one cannot be attributed');
+  assert.equal(task(50, 55).verdict, 'OPEN', 'a baseline task of exactly 50 ms is already a long task');
+  assert.equal(task(56, 56).verdict, 'PASS', 'the same long task is not an added one');
+});
+
+test('the verdict is FAIL if any row fails, OPEN if none fails and one is open, else PASS', () => {
+  const baseline = figures();
+  assert.equal(judgeStaticRouteCost({ kind: 'studio', baseline, current: figures() }).verdict, 'PASS');
+  assert.equal(judgeStaticRouteCost({ kind: 'studio', baseline, current: figures({ startupCpuP95Ms: 235 }) }).verdict, 'OPEN');
+  assert.equal(judgeStaticRouteCost({ kind: 'studio', baseline, current: figures({ startupCpuP95Ms: 235, criticalJsBrotliBytes: 200 * KIB }) }).verdict, 'FAIL');
+});
+
+test('a missing baseline, a mismatched baseline or an unmeasured value is rejected instead of judged', () => {
+  const baseline = figures();
+  assert.throws(() => judgeStaticRouteCost({ kind: 'studio', baseline: undefined, current: figures() }), /baseline/);
+  assert.throws(() => judgeStaticRouteCost({ kind: 'studio', baseline, current: figures({ locale: 'en' }) }), /same locale/);
+  assert.throws(() => judgeStaticRouteCost({ kind: 'studio', baseline, current: figures({ profile: 'mobile' }) }), /same profile/);
+  assert.throws(() => judgeStaticRouteCost({ kind: 'studio', baseline, current: figures({ basePath: '/Portfolio' }) }), /same base path/);
+  assert.throws(() => judgeStaticRouteCost({ kind: 'studio', baseline, current: figures({ criticalJsBrotliBytes: Number.NaN }) }), /criticalJsBrotliBytes/);
+  assert.throws(() => judgeStaticRouteCost({ kind: 'studio', baseline, current: figures({ startupCpuP95Ms: undefined }) }), /startupCpuP95Ms/);
+  assert.throws(() => judgeStaticRouteCost({ kind: 'studio', baseline, current: figures({ journeys: 4 }) }), /five cold journeys/);
+  assert.throws(() => judgeStaticRouteCost({ kind: 'blog', baseline, current: figures() }), /kind/);
+});
+
+test('a Task 3 report entry becomes baseline figures with its own journey spread, and a missing entry is an error', () => {
+  const report = {
+    basePath: '/',
+    profiles: {
+      desktop: {
+        routes: {
+          'studio/es': {
+            route: 'studio',
+            locale: 'es',
+            profile: 'desktop',
+            basePath: '/',
+            journeys: 5,
+            criticalJsBrotliBytes: 120462,
+            firstLoadJsBrotliBytes: 156971,
+            startupCpuP95Ms: 170.4,
+            longestTaskMs: 56.3,
+            journeysDetail: [{ startupCpuMs: 112.9 }, { startupCpuMs: 170.4 }, { startupCpuMs: 100.2 }, { startupCpuMs: 120 }, { startupCpuMs: 111 }],
+          },
+        },
+      },
+    },
+  };
+  const entry = readBaselineEntry({ report, route: 'studio', locale: 'es', profile: 'desktop' });
+  assert.equal(entry.criticalJsBrotliBytes, 120462);
+  assert.ok(Math.abs(entry.startupCpuSpreadMs - 70.2) < 1e-9);
+  assert.equal(entry.staticHtmlJsBrotliBytes, undefined);
+  assert.throws(() => readBaselineEntry({ report, route: 'founder', locale: 'es', profile: 'desktop' }), /no baseline entry/);
+  assert.throws(() => readBaselineEntry({ report: {}, route: 'studio', locale: 'es', profile: 'desktop' }), /no baseline entry/);
+});
+
+test('optional engine code found inside a critical chunk is reported by path, whatever its size', () => {
+  const found = findOptionalCodeInCriticalChunks({
+    chunks: [
+      { path: 'chunks/app.js', text: 'function a(){return 1}' },
+      { path: 'chunks/hidden.js', text: 'x;addEventListener("webglcontextlost",y);' },
+      { path: 'chunks/renderer.js', text: 'new WebGLRenderer({})' },
+    ],
+  });
+  assert.deepEqual(found, [
+    { path: 'chunks/hidden.js', marker: 'webglcontextlost' },
+    { path: 'chunks/renderer.js', marker: 'WebGLRenderer' },
+  ]);
+  assert.deepEqual(findOptionalCodeInCriticalChunks({ chunks: [{ path: 'chunks/app.js', text: 'ok' }] }), []);
+  assert.throws(() => findOptionalCodeInCriticalChunks({ chunks: [] }), /no critical chunks/);
+});
+
+test('a page without in-page fragment links owes no fragment-link interaction, a page with them still does', () => {
+  assert.deepEqual(missingInteractions({ mode: 'static', completed: ['keyboard-focus', 'scroll', 'route-link'], fragmentLink: false }), []);
+  assert.deepEqual(missingInteractions({ mode: 'static', completed: ['keyboard-focus', 'scroll', 'route-link'] }), ['fragment-link']);
+  assert.deepEqual(missingInteractions({ mode: 'live', completed: ['keyboard-focus', 'scroll', 'route-link'], fragmentLink: false }), ['pause', 'resume']);
 });

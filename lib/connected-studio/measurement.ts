@@ -105,7 +105,10 @@ export function validateVitalsOptions(input: {
   profile?: string;
   profiles: readonly string[];
   expectMode?: string;
-}): { journeys: number; profiles: string[]; expectMode: VitalsExpectMode } {
+  /** The comma-separated --routes value; omitted means every known route. */
+  routes?: string;
+  knownRoutes?: readonly string[];
+}): { journeys: number; profiles: string[]; expectMode: VitalsExpectMode; routes: string[] } {
   const raw = typeof input.journeys === 'string' ? input.journeys.trim() : '';
   const journeys = Number(raw);
   if (!/^[0-9]+$/.test(raw) || !Number.isSafeInteger(journeys) || journeys < 1) {
@@ -118,15 +121,27 @@ export function validateVitalsOptions(input: {
   if (!(VITALS_EXPECT_MODES as readonly string[]).includes(expectMode)) {
     throw new Error(`--expect-mode must be one of: ${VITALS_EXPECT_MODES.join(', ')}, got "${expectMode}"`);
   }
-  return { journeys, profiles: input.profile ? [input.profile] : [...input.profiles], expectMode: expectMode as VitalsExpectMode };
+  const known = input.knownRoutes ?? [];
+  let routes = [...known];
+  if (input.routes !== undefined) {
+    routes = input.routes.split(',').map((route) => route.trim());
+    const unknown = routes.filter((route) => !known.includes(route));
+    if (!routes.length || unknown.length) {
+      throw new Error(`--routes must name known routes (${known.join(', ')}), got "${input.routes}"${unknown.length ? `; unknown: ${unknown.join(', ')}` : ''}`);
+    }
+    if (new Set(routes).size !== routes.length) throw new Error(`--routes names a route more than once: "${input.routes}"`);
+  }
+  return { journeys, profiles: input.profile ? [input.profile] : [...input.profiles], expectMode: expectMode as VitalsExpectMode, routes };
 }
 
 const REQUIRED_INTERACTIONS = ['fragment-link', 'keyboard-focus', 'scroll', 'route-link'] as const;
 const LIVE_INTERACTIONS = ['pause', 'resume'] as const;
 
 /** The interactions a journey still owes. A page that is live also owes Pause and Resume. */
-export function missingInteractions(input: { mode: 'static' | 'live'; completed: readonly string[] }): string[] {
-  const required: readonly string[] = input.mode === 'live' ? [...REQUIRED_INTERACTIONS, ...LIVE_INTERACTIONS] : REQUIRED_INTERACTIONS;
+export function missingInteractions(input: { mode: 'static' | 'live'; completed: readonly string[]; fragmentLink?: boolean }): string[] {
+  // A page with no in-page fragment links (the Atlas pages) declares so explicitly; the default still owes one.
+  const base: readonly string[] = input.fragmentLink === false ? REQUIRED_INTERACTIONS.filter((name) => name !== 'fragment-link') : REQUIRED_INTERACTIONS;
+  const required: readonly string[] = input.mode === 'live' ? [...base, ...LIVE_INTERACTIONS] : base;
   return required.filter((name) => !input.completed.includes(name));
 }
 
@@ -480,4 +495,166 @@ export function classifyLateFrames(input: { frames: readonly RenderedFrame[]; la
     else result.schedulerOrPresentation += 1;
   }
   return result;
+}
+
+// --- PLAN-SFC-V1 Task 14: the static release cost of the new routes against the Task 3 baseline -----------------
+
+/**
+ * The budgets are relative to Task 3's same-version, same-base-path cold baseline (PLAN-SFC-V1, "Critical route
+ * budgets"): added first-load JS (Brotli) 12 KiB Studio and Founder, 16 KiB Contact, 2 KiB legal (Terms against
+ * Privacy); added startup evaluation and hydration CPU p95 of 25 ms; and no added task of 50 ms or more.
+ */
+export const STATIC_ROUTE_BUDGETS = Object.freeze({
+  addedJsKiB: Object.freeze({ studio: 12, founder: 12, contact: 16, legal: 2 }),
+  addedStartupCpuP95Ms: 25,
+  longTaskMs: 50,
+});
+
+export type StaticRouteKind = keyof typeof STATIC_ROUTE_BUDGETS.addedJsKiB;
+
+/** One route, locale, profile and base path as measured by the cold-startup collector. */
+export type RouteCostFigures = {
+  route: string;
+  locale: string;
+  profile: string;
+  basePath: string;
+  journeys: number;
+  /** Brotli bytes of the scripts requested before the load event: the first-load definition the budgets gate. */
+  criticalJsBrotliBytes: number;
+  /** Brotli bytes of every script requested through the settle window; reported beside the critical figure, never gated. */
+  firstLoadJsBrotliBytes: number;
+  /** Brotli bytes of the scripts the route's own emitted HTML references: the deterministic second measure. */
+  staticHtmlJsBrotliBytes?: number;
+  startupCpuP95Ms: number;
+  /** Largest minus smallest startup CPU of the baseline's own journeys: what an unchanged route already varies by. */
+  startupCpuSpreadMs: number;
+  longestTaskMs: number;
+};
+
+export type CostRow = { metric: 'critical-js' | 'static-html-js' | 'startup-cpu-p95' | 'long-task'; baseline: number; current: number; added: number; limit: number; verdict: Verdict; note: string };
+
+const COST_NUMBER_FIELDS = ['criticalJsBrotliBytes', 'firstLoadJsBrotliBytes', 'startupCpuP95Ms', 'startupCpuSpreadMs', 'longestTaskMs'] as const;
+
+function checkFigures(name: 'baseline' | 'current', figures: RouteCostFigures | undefined): RouteCostFigures {
+  if (!figures || typeof figures !== 'object') throw new Error(`A static route cost needs its ${name}: an absent ${name} is never a pass`);
+  for (const field of COST_NUMBER_FIELDS) {
+    const value = figures[field];
+    if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) throw new Error(`The ${name} needs a finite ${field} of zero or more, got ${String(value)}`);
+  }
+  if (figures.staticHtmlJsBrotliBytes !== undefined && (!Number.isFinite(figures.staticHtmlJsBrotliBytes) || figures.staticHtmlJsBrotliBytes < 0)) {
+    throw new Error(`The ${name} staticHtmlJsBrotliBytes must be finite when present, got ${String(figures.staticHtmlJsBrotliBytes)}`);
+  }
+  if (!Number.isInteger(figures.journeys) || figures.journeys < COLD_BASELINE_JOURNEYS) {
+    throw new Error(`The ${name} needs at least five cold journeys, got ${String(figures.journeys)}`);
+  }
+  return figures;
+}
+
+/**
+ * Judges one route/locale/profile/base-path against its Task 3 baseline. First-load JS is gated on the critical figure
+ * (requested before the load event, stable across profiles and base paths) and, when both sides carry it, on the
+ * static-HTML figure. The CPU gate cannot be adjudicated by five cold journeys when an unchanged route already varied
+ * by more than the 25 ms allowance (Task 3, Risk 1): beyond the allowance but inside that spread the row is OPEN, not a
+ * pass and not a failure; only an increase beyond both fails. A 50 ms task counts as added only when the baseline had
+ * none; against a baseline that already had one, a longer task is OPEN. A missing, mismatched or non-finite figure
+ * throws.
+ */
+export function judgeStaticRouteCost(input: { kind: string; baseline: RouteCostFigures | undefined; current: RouteCostFigures | undefined }): { rows: CostRow[]; verdict: Verdict } {
+  const { kind } = input;
+  if (!Object.hasOwn(STATIC_ROUTE_BUDGETS.addedJsKiB, kind)) throw new Error(`Unknown static route kind "${String(kind)}" (expected ${Object.keys(STATIC_ROUTE_BUDGETS.addedJsKiB).join(', ')})`);
+  const baseline = checkFigures('baseline', input.baseline);
+  const current = checkFigures('current', input.current);
+  if (baseline.locale !== current.locale) throw new Error(`The baseline must be the same locale: ${baseline.locale} against ${current.locale}`);
+  if (baseline.profile !== current.profile) throw new Error(`The baseline must be the same profile: ${baseline.profile} against ${current.profile}`);
+  if (baseline.basePath !== current.basePath) throw new Error(`The baseline must be the same base path: ${baseline.basePath} against ${current.basePath}`);
+
+  const limitBytes = STATIC_ROUTE_BUDGETS.addedJsKiB[kind as StaticRouteKind] * 1024;
+  const rows: CostRow[] = [];
+  const jsRow = (metric: 'critical-js' | 'static-html-js', before: number, now: number): CostRow => {
+    const added = now - before;
+    return { metric, baseline: before, current: now, added, limit: limitBytes, verdict: added <= limitBytes ? 'PASS' : 'FAIL', note: `added ${(added / 1024).toFixed(1)} KiB of ${limitBytes / 1024} KiB` };
+  };
+  rows.push(jsRow('critical-js', baseline.criticalJsBrotliBytes, current.criticalJsBrotliBytes));
+  if (baseline.staticHtmlJsBrotliBytes !== undefined && current.staticHtmlJsBrotliBytes !== undefined) {
+    rows.push(jsRow('static-html-js', baseline.staticHtmlJsBrotliBytes, current.staticHtmlJsBrotliBytes));
+  }
+
+  const allowance = STATIC_ROUTE_BUDGETS.addedStartupCpuP95Ms;
+  const addedCpu = current.startupCpuP95Ms - baseline.startupCpuP95Ms;
+  let cpuVerdict: Verdict = 'PASS';
+  let cpuNote = `added ${addedCpu.toFixed(1)} ms of ${allowance} ms`;
+  if (addedCpu > allowance) {
+    if (addedCpu <= allowance + baseline.startupCpuSpreadMs) {
+      cpuVerdict = 'OPEN';
+      cpuNote = `added ${addedCpu.toFixed(1)} ms is beyond ${allowance} ms but within the ${baseline.startupCpuSpreadMs.toFixed(1)} ms spread of the baseline's own journeys: cost cannot be told from noise`;
+    } else {
+      cpuVerdict = 'FAIL';
+      cpuNote = `added ${addedCpu.toFixed(1)} ms is beyond ${allowance} ms and beyond the ${baseline.startupCpuSpreadMs.toFixed(1)} ms spread of the baseline's own journeys`;
+    }
+  }
+  rows.push({ metric: 'startup-cpu-p95', baseline: baseline.startupCpuP95Ms, current: current.startupCpuP95Ms, added: addedCpu, limit: allowance, verdict: cpuVerdict, note: cpuNote });
+
+  const task = STATIC_ROUTE_BUDGETS.longTaskMs;
+  let taskVerdict: Verdict = 'PASS';
+  let taskNote = `longest task ${current.longestTaskMs.toFixed(1)} ms, under ${task} ms`;
+  if (current.longestTaskMs >= task) {
+    if (baseline.longestTaskMs < task) {
+      taskVerdict = 'FAIL';
+      taskNote = `a task of ${current.longestTaskMs.toFixed(1)} ms is new: the baseline's longest was ${baseline.longestTaskMs.toFixed(1)} ms`;
+    } else if (current.longestTaskMs <= baseline.longestTaskMs) {
+      taskNote = `the longest task (${current.longestTaskMs.toFixed(1)} ms) is no longer than the baseline's own (${baseline.longestTaskMs.toFixed(1)} ms)`;
+    } else {
+      taskVerdict = 'OPEN';
+      taskNote = `the longest task grew from ${baseline.longestTaskMs.toFixed(1)} to ${current.longestTaskMs.toFixed(1)} ms over a baseline that already had one: it cannot be attributed to this change`;
+    }
+  }
+  rows.push({ metric: 'long-task', baseline: baseline.longestTaskMs, current: current.longestTaskMs, added: current.longestTaskMs - baseline.longestTaskMs, limit: task, verdict: taskVerdict, note: taskNote });
+
+  const verdict: Verdict = rows.some((row) => row.verdict === 'FAIL') ? 'FAIL' : rows.some((row) => row.verdict === 'OPEN') ? 'OPEN' : 'PASS';
+  return { rows, verdict };
+}
+
+type BaselineReport = { basePath?: string; profiles?: Record<string, { routes?: Record<string, Record<string, unknown>> } | undefined> };
+
+/**
+ * One entry of a committed Task 3 report (`--startup-baseline`) as baseline figures, with the spread of its own
+ * journeys. A report that has no such entry is an error: a missing baseline is never read as zero.
+ */
+export function readBaselineEntry(input: { report: BaselineReport; route: string; locale: string; profile: string }): RouteCostFigures {
+  const entry = input.report?.profiles?.[input.profile]?.routes?.[`${input.route}/${input.locale}`];
+  if (!entry) throw new Error(`The report has no baseline entry for ${input.route}/${input.locale} on the ${input.profile} profile`);
+  const detail = entry.journeysDetail;
+  if (!Array.isArray(detail) || detail.length < COLD_BASELINE_JOURNEYS) throw new Error(`The baseline entry for ${input.route}/${input.locale} retains no journey detail to take a spread from`);
+  const cpu = detail.map((journey: { startupCpuMs?: number }) => journey.startupCpuMs as number);
+  if (cpu.some((value) => typeof value !== 'number' || !Number.isFinite(value))) throw new Error(`The baseline entry for ${input.route}/${input.locale} has a journey without a startup CPU`);
+  return {
+    route: entry.route as string,
+    locale: entry.locale as string,
+    profile: entry.profile as string,
+    basePath: entry.basePath as string,
+    journeys: entry.journeys as number,
+    criticalJsBrotliBytes: entry.criticalJsBrotliBytes as number,
+    firstLoadJsBrotliBytes: entry.firstLoadJsBrotliBytes as number,
+    startupCpuP95Ms: entry.startupCpuP95Ms as number,
+    startupCpuSpreadMs: Math.max(...cpu) - Math.min(...cpu),
+    longestTaskMs: entry.longestTaskMs as number,
+  };
+}
+
+/** Text that only the optional engine carries. Present in a critical chunk, the optional bytes are hidden in critical code. */
+export const OPTIONAL_ENGINE_MARKERS = Object.freeze(['webglcontextlost', 'WebGLRenderer']);
+
+/**
+ * Optional engine code inside the chunks a route needs before it can read, whatever its size: a byte budget alone
+ * would pass a small slice moved out of the optional closure into the critical path.
+ */
+export function findOptionalCodeInCriticalChunks(input: { chunks: readonly { path: string; text: string }[]; markers?: readonly string[] }): { path: string; marker: string }[] {
+  if (!input.chunks.length) throw new Error('There are no critical chunks to inspect: an empty set would pass anything');
+  const markers = input.markers ?? OPTIONAL_ENGINE_MARKERS;
+  const found: { path: string; marker: string }[] = [];
+  for (const chunk of input.chunks) {
+    const marker = markers.find((candidate) => chunk.text.includes(candidate));
+    if (marker) found.push({ path: chunk.path, marker });
+  }
+  return found;
 }
