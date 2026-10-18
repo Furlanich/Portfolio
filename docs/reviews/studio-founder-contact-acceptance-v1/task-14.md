@@ -46,13 +46,13 @@ Visual QA by the author (not approval): the Studio and Contact wide posters and 
 | `contact-wide-ground-visual-chromium-win32.png` | `656A22DE66F0AED02EC204993E3C2D4833A315B07822AF296B2A49F6C69AF445` |
 | `studio-compact`, `founder-compact`, `contact-compact` `-ground-visual-chromium-win32.png` | `916220C2D18D517F732758F10F93CD646DC93606536B16270057FC3D364FAF34` (identical) |
 
-Linux images: NOT collected. They must come from the matching CI run's `*-actual.png` at this head after owner approval, as the baseline workflow requires; a missing Linux golden is a baseline-bootstrap failure, not a pass.
+Linux images: see the next section.
 
 ## Owner approval and the ten refreshed page baselines (2026-10-18)
 
 The author prepared expected, actual and pixel-diff images of the ten existing page baselines that the posters change, and a contact sheet of the six posters (kept outside Git in the git-ignored `.superpowers/reports/sfc-14/review/`). The owner reviewed them and wrote: "I approve the six posters, the six new Windows ground baselines, and refreshing the ten affected page baselines on Windows. Linux images will come from CI." That approval covers the six poster files, the six Windows ground baselines above and the ten Windows page baselines below, at the implementation head that carries them; it does not cover Linux images, the host finding or the startup-CPU gate.
 
-The ten Windows baselines were regenerated with `node node_modules/@playwright/test/cli.js test studio.visual.spec.ts founder.visual.spec.ts contact.visual.spec.ts --project=visual-chromium --update-snapshots`; the same specs plus `sfc-static.visual.spec.ts` then passed 32/32 with `--repeat-each=2` and no update flag. In every comparison the only difference is the connected-graph poster behind the page; text, plates and layout are unchanged.
+The ten Windows baselines were regenerated with `node node_modules/@playwright/test/cli.js test studio.visual.spec.ts founder.visual.spec.ts contact.visual.spec.ts --project=visual-chromium --update-snapshots`; the same specs plus `sfc-static.visual.spec.ts` then passed 32/32 with `--repeat-each=2` and no update flag. **Correction (found while adopting the Linux images, 2026-10-18).** This receipt and the message to the owner first said that in every comparison the only difference is the poster. That is true of Studio and Contact (identical image sizes before and after) but **false for the four Founder images**: the committed Windows Founder baselines were stale. They were 1440×4301 and 1440×4273, 390×6108 and 390×5964 pixels, a light-themed pre-Atlas page (Task 7 refreshed only the Linux images, which CI uses), and the refreshed ones are 3866, 3795, 5488 and 5372 pixels tall: the whole Atlas Founder page, not just the poster. The author had viewed only the Studio and Contact comparisons before making the statement. The Founder Windows images are therefore a redesign refresh the owner approved on an incomplete description; the owner is asked to confirm them again. The Linux Founder images were already the Atlas page and change only by the poster (same dimensions as before this packet).
 
 | Windows page baseline (owner spec directory) | SHA-256 |
 | --- | --- |
@@ -68,6 +68,22 @@ The ten Windows baselines were regenerated with `node node_modules/@playwright/t
 | `studio-compact` | `A0BA393D06124800CF293E1FA3C7673959AB0A337B8E0EE36A35051049B6E5B9` |
 
 These ten files sit in Task 6, 7 and 10 snapshot directories, outside this packet's list; the Ruling above and the owner's approval authorize exactly these replacements. The matching Linux replacements (ten page images and the six ground images) must come from the CI run at this head: download only the corresponding `*-actual.png`, inspect, commit under the exact Linux name, rerun without update mode.
+
+## Linux baselines from CI (2026-10-18)
+
+[Quality run 39144828833](https://github.com/Furlanich/Portfolio/actions/runs/39144828833) at head `7a2f4c26`: validate and browser shards 1 to 3 passed; shard 4 reported **16 failed, 711 passed**, exactly the sixteen visual cases that this packet changes (ten page baselines whose Linux images showed no poster, six ground baselines with no Linux golden). Nothing else failed. The Linux sources are the `*-actual.png` files of artifact `playwright-report-shard-4-39144828833-1` (ID 12143052425, `mcr.microsoft.com/playwright:v1.63.0-noble`); all sixteen are byte-identical between the first attempt and the retry. Each was inspected against its approved Windows counterpart in side-by-side sheets: composition, poster, plates and text agree; the six ground images are byte-for-byte the Windows ground images (same hashes); the page sizes equal the Windows sizes except the two Founder compact pages, which are 28 to 29 pixels taller on Linux (5516 and 5401 against 5488 and 5372), exactly the Linux sizes those baselines already had before this packet, so it is the existing platform text-wrap difference and not a regression. They are adopted under their exact Linux names without update mode:
+
+| Linux baseline | SHA-256 |
+| --- | --- |
+| `studio-wide` / `studio-compact` | `21875E59…1E03` / `97559398…0C16` |
+| `founder-spanish-wide` / `-compact` | `1A1F1D0C…F45C` / `D9F49A6C…A3C2` |
+| `founder-english-wide` / `-compact` | `C2773B8F…0DC9` / `8E81811B…AF38` |
+| `contact-es-wide` / `-compact` | `711B6743…255F` / `72BEBA83…5348` |
+| `contact-en-wide` / `-compact` | `C9629B1E…EECB` / `07928340…A9EA` |
+| `studio`, `founder`, `contact` `-wide-ground` | the Windows hashes `D814DAB7…`, `1A1083E0…`, `656A22DE…` |
+| the three `-compact-ground` | the Windows hash `916220C2…` |
+
+Their confirmation is the next CI run at the head that carries them; this receipt does not claim it before that run.
 
 ## Static release cost
 
@@ -147,7 +163,7 @@ Reproduce: `node scripts/measure-connected-studio-production.mjs --skip-build`; 
 
 ## Open items
 
-- Owner approval of the posters and the Windows baselines: GIVEN (above). The Linux images of all sixteen baselines from CI at the same head: PENDING.
+- Owner approval of the posters and the Windows baselines: GIVEN (above), except that the four Founder Windows images were approved on an incomplete description and are awaiting re-confirmation (see the correction). The Linux images are adopted from CI run 39144828833; their confirmation is the next CI run.
 - Reviewer R's re-review of the corrected head, CI and the human merge: PENDING. Reviewer R should re-run `node scripts/capture-connected-studio-posters.mjs --verify-handoff` in a disposable runtime candidate.
 - Packet 20 or later for the host import split and for Contact's opacity; Task 16 is blocked on the first.
 - Terms comparator, hardware, screen readers, Safari and Firefox startup timing: OPEN (not measured here).
