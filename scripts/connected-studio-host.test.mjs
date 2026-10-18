@@ -500,3 +500,44 @@ test('a controller that drew nothing still refreshes the labels once, from the c
   assert.match(push, /draws === drawsBefore/);
   assert.doesNotMatch(push, /state === 'paused' && lastPose/);
 });
+
+// PLAN-SFC-V1 Task 12: the five rendered profiles are measured from the live pose, not read off the canvas.
+test('the diagnostics reading carries the bent strings, empty at rest, and only in non-production builds', () => {
+  assert.match(enhancement, /edgeSamples: readonly \{ id: string; points: readonly/);
+  const staticReading = blockAfter(enhancement, 'const STATIC_READING');
+  assert.match(staticReading, /edgeSamples: \[\]/);
+  assert.match(enhancement, /edgeSamples: \(snapshot\.pose\.edgeSamples \?\? \[\]\)\.map\(/);
+  // The reading is built only when the non-production hook is read; a production build installs no hook at all.
+  assert.match(blockAfter(enhancement, 'function installDiagnostics'), /NODE_ENV === 'production'\) return \(\) => undefined/);
+});
+
+// PLAN-SFC-V1 Task 12: the Pause control must tell the truth. After the form held the graph and focus moved to the
+// control, the visitor's explicit Resume is a deliberate input: it lifts the waiting state (never a focus inside the
+// form, never a submission in flight), so "Pause background" is not shown over a frozen scene.
+test('an explicit Resume lifts the form waiting state, but never a focus inside the form or a submission', () => {
+  const suspension = input.createFormSuspension();
+  suspension.focusChanged(true);
+  suspension.focusChanged(false);
+  assert.equal(suspension.suspended(), true, 'leaving the form waits for background input');
+  assert.equal(suspension.deliberateResume(), true);
+  assert.equal(suspension.suspended(), false);
+
+  suspension.focusChanged(true);
+  assert.equal(suspension.deliberateResume(), false, 'a focus inside the form holds');
+  assert.equal(suspension.suspended(), true);
+
+  suspension.focusChanged(false);
+  suspension.phaseChanged('submitting');
+  assert.equal(suspension.deliberateResume(), false, 'a submission in flight holds');
+  assert.equal(suspension.suspended(), true);
+
+  suspension.phaseChanged('success');
+  assert.equal(suspension.deliberateResume(), true, 'the outcome alone no longer holds once the visitor resumes');
+  assert.equal(suspension.suspended(), false);
+});
+
+test('the visitor Resume passes through the form suspension, and the visitor Pause is still kept', () => {
+  const setVisitorPaused = blockAfter(enhancement, 'setVisitorPaused(paused) {');
+  assert.match(setVisitorPaused, /formSuspension\.deliberateResume\(\)/);
+  assert.match(setVisitorPaused, /syncPause\(\)/);
+});

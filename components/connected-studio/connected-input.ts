@@ -123,6 +123,12 @@ export type FormSuspension = {
   phaseChanged(phase: string | null): void;
   /** An eligible background input arrived (a mouse move outside every exclusion, or an ordinary scroll). Returns whether it lifted the suspension. */
   backgroundInput(): boolean;
+  /**
+   * The visitor pressed Resume on the Pause control. A deliberate request for the background is at least as eligible as a
+   * mouse move: it lifts the waiting state, so the control never reads "Pause background" over a scene it left frozen.
+   * A focus inside the form and a submission in flight still hold. Returns whether it lifted the suspension.
+   */
+  deliberateResume(): boolean;
   suspended(): boolean;
 };
 
@@ -135,6 +141,11 @@ export function createFormSuspension(): FormSuspension {
   let focusInside = false;
   let submitting = false;
   let waiting = false;
+  const lift = () => {
+    if (focusInside || submitting || !waiting) return false;
+    waiting = false;
+    return true;
+  };
   return {
     focusChanged(insideForm) {
       focusInside = insideForm;
@@ -144,11 +155,8 @@ export function createFormSuspension(): FormSuspension {
       submitting = phase === 'submitting';
       if (submitting) waiting = true;
     },
-    backgroundInput() {
-      if (focusInside || submitting || !waiting) return false;
-      waiting = false;
-      return true;
-    },
+    backgroundInput: lift,
+    deliberateResume: lift,
     suspended: () => focusInside || submitting || waiting,
   };
 }
