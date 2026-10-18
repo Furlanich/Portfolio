@@ -41,6 +41,7 @@ Receipts for Tasks 2 to 19 are added by their owners.
 | Task | Pull request | Merge commit | Notes |
 | --- | --- | --- | --- |
 | 1 Governance | [#142](https://github.com/Furlanich/Portfolio/pull/142) (open, review corrections pushed; CI and human merge pending) | PENDING | Targets `main`; W0 passes on human merge |
+| 13 Direct contact | [#154](https://github.com/Furlanich/Portfolio/pull/154) — draft | PENDING | Implements the owner amendment; validation and direct-link behavior verified; visual baseline approval and independent review OPEN. |
 
 ## External gates and owners
 

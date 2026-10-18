@@ -4,6 +4,8 @@
 
 Agent usage: primary GPT-6 (resolved version/effort unavailable; previously authorized current-runtime exception); subagents 0/0 (none). Independent review remains a separate session. The execution/development Skills ran inline; no reviewer or implementer subagent was spawned.
 
+Draft implementation PR: [#154](https://github.com/Furlanich/Portfolio/pull/154), open against codex/sfc-integration. Implementation commit: 4ee9322f. No merge or deployment has occurred.
+
 ## Delivered scope
 
 - Both Contact routes import one locale-owned direct-contact source and the shared Server Component. The form component, form-specific types/styles, simulation/commercial outcomes and inquiry mode selection are removed. WhatsApp, email and phone use their existing native destinations without message prefill; Privacy and Founder links remain localized.
