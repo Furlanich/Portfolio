@@ -29,9 +29,19 @@ Playwright visual fixtures include the project and platform in their filename (f
 
 Visual snapshots are automated change detection, not design judgment. `visual-qa` still compares the rendered result with `DESIGN-VISUAL` and the owning product specification.
 
-## Direct-contact amendment — Contact approval, 2026-10-18
+## Direct-contact amendment — approved baseline transfer, 2026-10-18
 
-[Task 13](../reviews/studio-founder-contact-acceptance-v1/task-13.md) removes the form and replaces simulation Privacy/referral text under the approved direct-contact scope. On 2026-10-18 the owner explicitly approved the Contact visual baseline after the direct-channel icon/alignment follow-up at `532a612b7b1629ba1acc1b6350d5cd7e757d4396`. The four Windows Contact files were refreshed and pass 4/4 in normal comparison mode. The receipt records hashes and inspection. Contact Linux replacements are pending the matching CI captures. Privacy and affected Home/Services/Studio baseline review remain OPEN.
+[Task 13](../reviews/studio-founder-contact-acceptance-v1/task-13.md) removes the form and replaces simulation Privacy/referral text under the approved direct-contact scope. The owner approved Contact visuals after the icon/alignment follow-up at `532a612b7b1629ba1acc1b6350d5cd7e757d4396`, then explicitly approved all 16 affected Home CTA, Privacy, Services and Studio cases on both platforms while directing repair of PR #154's failed browser checks. These approvals authorize the bounded transfer below. Earlier page-owner approvals remain history; the current copy is the direct-contact amendment.
+
+| Subject | Cases per platform | Transfer |
+| --- | --- | --- |
+| Contact | 4: ES/EN wide and compact | Windows previously approved; Linux form images replaced |
+| Home CTA | 6: ES/EN at 1440/768/390 | Replace demonstration referral; shorter text changes section height/gradient sampling |
+| Privacy | 4: ES/EN wide and compact | Replace demonstration-only processing claims with the approved direct-contact disclosure |
+| Services | 4: ES/EN wide and compact | Replace the closing form referral |
+| Studio | 2: ES wide and compact | Replace the closing form referral |
+
+All affected expected/actual/diff images were inspected. Windows sources are local controlled Chromium captures; all 20 Linux actuals come from [Quality run `39096779995`](https://github.com/Furlanich/Portfolio/actions/runs/39096779995), exact head `2d7dc3945c4a51eb87fdbdb4fa967b4fb68f4999`, shard-4 artifact `playwright-report-shard-4-39096779995-1` (ID `12124249987`), controlled image `mcr.microsoft.com/playwright:v1.63.0-noble`. Every Linux actual is byte-identical across initial attempt and retry. The Task 13 receipt records hashes and normal-comparison verification. This transfer owns only these named cases; comparison thresholds, capture subjects, project selection and CI limits retain their existing contracts.
 
 ## Home sections (`home-sections.visual.spec.ts`)
 
@@ -85,4 +95,4 @@ Live motion is verified by recordings and behavior, not by animated pixel golden
 
 PLAN-SFC-V1 Task 10 established four viewport captures per platform: Spanish and English at 1440×1000 and 390×844, named `contact-{es,en}-{wide,compact}-visual-chromium-{win32,linux}.png`. They capture the static connected ground, shared header, Contact introduction and Bone contact surface. Task 13 replaces the form with native links and aligned decorative icons; the owner explicitly approved that presentation and baseline on 2026-10-18. The four Windows files now represent that approved direct-contact rendering and pass 4/4 without update mode. Expected/actual/diff images were inspected; the [Task 13 receipt](../reviews/studio-founder-contact-acceptance-v1/task-13.md) records source head and hashes. Full compact panel review and browser geometry checks cover the buttons below the compact viewport capture.
 
-The current Linux files still represent the pre-amendment form. Their historical source is [PR #151 Quality run `39043290991`](https://github.com/Furlanich/Portfolio/actions/runs/39043290991), head `2ad2657952f4ab1ffdac0809a9dd6cf675f4b473`, artifact `playwright-report-shard-4-39043290991-1` (ID `12104324883`); the [Task 10 receipt](../reviews/studio-founder-contact-acceptance-v1/task-10.md) retains that approval and hashes. Task 13 Linux replacements require the four corresponding `*-actual.png` files from the approved implementation head's controlled `mcr.microsoft.com/playwright:v1.63.0-noble` CI run, inspection, adoption and a subsequent normal comparison. [Quality run `39096372107`](https://github.com/Furlanich/Portfolio/actions/runs/39096372107) is the matching implementation-head run and was still producing browser evidence when the owner approval was recorded. Linux refresh and verification remain PENDING.
+The four current Linux files are adopted byte-for-byte from the matching Contact actuals in the Task 13 run/artifact above. The [Task 13 receipt](../reviews/studio-founder-contact-acceptance-v1/task-13.md) owns the transfer hashes and subsequent normal-comparison result. The [Task 10 receipt](../reviews/studio-founder-contact-acceptance-v1/task-10.md) preserves the prior form rendering, approval and original Linux provenance as history.
