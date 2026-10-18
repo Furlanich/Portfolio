@@ -1,0 +1,35 @@
+# Task 13 / PR 13 — Replace inquiry intake with direct contact
+
+**Status: IMPLEMENTED; visual baseline approval and independent/human PR review OPEN.** Base: reviewed Task 12 merge 60b76daa07ed15b8b4a5432dc96043ee80ad689b (PR #153), Branch: codex/sfc-13-direct-contact, targeting codex/sfc-integration. On 2026-10-18 the owner explicitly replaced the form with email/WhatsApp and existing contact channels, requested the corresponding plan/documentation change, and removed Formspree/counsel decisions as prerequisites. [ADR-CONTACT-DIRECT-CHANNELS](../../decisions/contact-direct-channels.md) records the scoped supersession; prior ADRs and completed receipts are unchanged.
+
+Agent usage: primary GPT-6 (resolved version/effort unavailable; previously authorized current-runtime exception); subagents 0/0 (none). Independent review remains a separate session. The execution/development Skills ran inline; no reviewer or implementer subagent was spawned.
+
+## Delivered scope
+
+- Both Contact routes import one locale-owned direct-contact source and the shared Server Component. The form component, form-specific types/styles, simulation/commercial outcomes and inquiry mode selection are removed. WhatsApp, email and phone use their existing native destinations without message prefill; Privacy and Founder links remain localized.
+- Privacy describes actual direct communications, GitHub Pages and graphics session preferences. Canonical Privacy/Terms text equals typed modules and has no special processor/counsel publication gate. Terms publication remains Task 16. No unverified retention/deletion guarantee or legal certification is added.
+- Incoming Home/Services/Studio copy no longer invites visitors to try a form. Product/design/architecture/glossary/index documents and future Tasks 16/17 are synchronized. Historical deep links remain under explicitly retired headings.
+- Formspree account checks, counsel disposition, live probes, dashboard/Gmail/deletion receipts and readiness.json are NOT APPLICABLE. None was supplied or inferred; no real message/call/account mutation occurred. Dormant pure inquiry libraries and their tests remain outside the public Contact import path and cannot reactivate it through an environment value.
+
+## Verification
+
+- RED: both Contact objects retained form values and the routes selected inquiry mode; three intended assertion failures. GREEN: direct Contact content/routes, 4/4; export/route/content group 8/8.
+- RED: old Privacy sections and counsel-gated legal metadata; three intended failures. Canonical/legal/privacy group then passed 6/6. A further RED/GREEN removed the special publication gate entirely; canonical/legal 4/4 passed.
+- Full Node suite: 828 passed. Lint: 0 errors, 282 existing warnings. Typecheck passed after correcting the Privacy helper call and retaining the axe import used by the unchanged runtime checks.
+- Production root build passed; static export verified all 14 current foundation routes. Terms remain unpublished until Task 16. Emitted HTML/JS contained no Formspree endpoint or simulated-submit wording.
+- Served-export browser matrix at root: 105 distinct cases in Contact, Privacy, legal, homepage smoke and Services referrals across Chromium/Firefox/WebKit. Initial 103 PASS and two WebKit keyboard expectation failures; both corrected cases then PASS. The host does not Tab to links by default, as already documented in Playwright QA. Exact Tab order is verified in Chromium/Firefox; WebKit verifies native focus, activation, source destinations and accessibility without overriding host settings.
+- Both Contact locales cover genuine hrefs, no form controls/provider requests, visible focus, no-JavaScript behavior, locale/Privacy navigation, 320/390/768/820/1024/1440px reflow, enlarged text/spacing, forced colors and no serious/critical axe violations. No message or call was sent.
+
+## Rendered review and baseline boundary
+
+Contact and Privacy captures were produced in reduced-motion Windows Chromium at 1440×1000 and 390×844, both languages. The eight existing visual comparisons FAIL on the intentional removed form and changed Privacy copy. Approved baselines were not replaced. Owner design approval is required before baseline replacement under [visual regression policy](../../testing/visual-regression.md); Linux images must come from the matching CI environment. Related Home/Services/Studio referral subjects also need review when their affected goldens are refreshed. This is an open visual acceptance item, not a passing screenshot suite.
+
+Current local review images are in the task's authorized visualization directory under task13-artifacts; test logs/reports remain ignored. Visual judgment checks typography, hierarchy, Bone contact surface, native action prominence, readable locale copy and unclipped reflow separately from automated assertions. All eight locale/viewport captures were inspected: approved Atlas typography/ground and opaque legal/Bone surfaces remain readable; no clipped text or horizontal overflow was observed. Contact links follow the explanatory block on compact and remain visible when scrolled; full compact captures confirm all three actions and Privacy/Founder links. Existing old goldens and produced differences establish the intentional form/Privacy change. No new golden is approved by this author.
+
+## Environment and remaining review
+
+Clean npm installation could not complete with the environment's registry access. Dependencies are an independent file copy of an existing installation with the byte-identical lockfile; npm ls confirms declared versions. No node_modules junction or temporary Next configuration is used. An accidental dependency install in the primary checkout was stopped and its ignored dependencies restored from the matching installation; npm ls passed and primary tracked files stayed clean.
+
+Final npm run validate passed (828 Node tests, lint 0 errors/282 existing warnings, typecheck and Turbopack production build). Both root and /Portfolio builds and static-export verifiers passed for all 14 current foundation routes. The /Portfolio served-export browser matrix passed 105/105 in Chromium/Firefox/WebKit after the documented WebKit harness correction; combined with root, all 210 route/profile cases are verified. Complete compact screenshots were also captured, 2/2.
+
+Complete-diff self-review passed for scope, native links, narrow client boundary removal, canonical/public disclosure consistency, removed-state test coverage, preserved graph/historical ADR boundaries and absence of credentials/generated source. The independent Reviewer R and human merge are still OPEN; the PR is a draft while intentional visual baseline approval is pending. Existing Task 12 graph/Contact Pause findings are not claimed resolved by removing the form. No hardware qualification or deployment is claimed.

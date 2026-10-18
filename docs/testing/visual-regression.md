@@ -11,7 +11,7 @@ related:
   - DESIGN-SPF-V1
   - PLAN-SPF-V1
   - REVIEW-SPF-ACCEPTANCE-V1
-last_verified: 2026-10-17
+last_verified: 2026-10-18
 ---
 
 # Visual regression policy
@@ -28,6 +28,10 @@ Do not snapshot every page. Use pixel-sensitive snapshots only for stable, impor
 Playwright visual fixtures include the project and platform in their filename (for example, studio-wide-visual-chromium-linux.png). This keeps Linux CI comparisons deterministic without treating Windows font rasterization as the Linux contract; every committed platform baseline must be captured from the same controlled browser environment that executes it.
 
 Visual snapshots are automated change detection, not design judgment. `visual-qa` still compares the rendered result with `DESIGN-VISUAL` and the owning product specification.
+
+## Direct-contact amendment — pending baseline approval, 2026-10-18
+
+[Task 13](../reviews/studio-founder-contact-acceptance-v1/task-13.md) removes the form and replaces simulation Privacy/referral text under the approved direct-contact scope. Existing Contact/Privacy and affected Home/Services/Studio images describe older content. New Windows captures are review evidence only until owner design approval; Linux replacements must come from the matching CI head. No baseline approval is inferred from passing semantic tests or the removal of Formspree/counsel requirements.
 
 ## Home sections (`home-sections.visual.spec.ts`)
 

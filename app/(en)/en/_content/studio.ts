@@ -49,7 +49,7 @@ export const studioPageContent = {
   finalCta: {
     heading: "Let's talk about what's holding your business back",
     // Demonstration-dependent: the coordinated commercial release (PLAN-SFC-V1 Task 16) owns the final wording.
-    description: 'Explore contact options and the form demonstration.',
+    description: 'Contact us on WhatsApp, by email or by phone.',
     action: { label: 'Start an enquiry', routeId: 'contact' },
   },
 } satisfies StudioPageContent;

@@ -3,6 +3,7 @@ id: PAGE-STUDIO
 type: page-spec
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
@@ -17,7 +18,7 @@ related:
   - DESIGN-IX-A11Y
   - PAGE-PROJECTS
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Studio and founder pages
@@ -686,7 +687,7 @@ Outline: global demo notice → introduction with accountability/collaborator ex
 | Location: con proyectos en todo el país / with projects across the country | Desde Buenos Aires, Argentina, con disponibilidad para proyectos en el país y el exterior. Comunicación en español e inglés. | Based in Buenos Aires, Argentina, with availability for work in Argentina and internationally. Communication in Spanish and English. | Availability, not delivery footprint |
 | Founder bridge: list of biography/CV/page contents | Conocé la experiencia y formación de quien dirige el trabajo. | Explore the experience and background of the person leading the work. | One reason to inspect Founder |
 | Founder link | Conocer a Samuel | Meet Samuel | Existing Founder route |
-| Closing inquiry/response promise | Ver las opciones de contacto y la demostración del formulario. | Explore contact options and the form demonstration. | D03 demo contract; CTA label owned by IA |
+| Closing inquiry/response promise | Ver las opciones de contacto y la demostración del formulario. | Contact us on WhatsApp, by email or by phone. | D03 demo contract; CTA label owned by IA |
 
 ### Accepted Founder outline and changed copy
 
@@ -698,7 +699,7 @@ Source order: global demo notice → short header → complete existing experien
 | Capability lead: no en acumular nombres de herramientas / not a catalogue of tools | Capacidades para construir y mejorar sistemas | Capabilities for building and improving systems | Positive group introduction; approved group details remain unchanged |
 | Projects bridge: internal anti-duplication rationale | Los proyectos públicos permiten explorar código, contexto y límites. | The public projects let you explore code, context and limitations. | Evidence role, not professional-client equivalence |
 | Projects action | Ver proyectos | Explore projects | Existing localized index |
-| Final commercial invitation | Explorá las opciones de contacto y la demostración del formulario. | Explore the contact options and the form demonstration. | Removes review/response promise during demo |
+| Final commercial invitation | Contactanos por WhatsApp, correo o teléfono. | Explore the contact options and the form demonstration. | Removes review/response promise during demo |
 
 Keep independent practice since 2024, every approved employment/internship date, completed studies wording, exact institutions and current employment narrative. Splitting biography paragraphs must not change its facts or imply an unverified qualification. Group IDs must be valid and stable independently of localized titles; that is a correctness repair, not new public copy.
 

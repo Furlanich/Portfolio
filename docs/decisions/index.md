@@ -3,6 +3,7 @@ id: ADR-INDEX
 type: adr-index
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - GOV-ENGINEERING-LIFECYCLE
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
@@ -14,12 +15,16 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-ADE-AGENT-USAGE
   - ADR-SFC-COMMERCIAL-ATLAS-V1
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Architecture decision records
 
 An ADR records a consequential architectural decision after it is accepted. Use [the template](template.md). Accepted ADRs use `APPROVED` status and remain immutable historical records. A changed decision gets a new ADR whose `supersedes` metadata identifies the earlier record; do not rewrite the earlier decision.
+
+## Direct-contact update — 2026-10-18
+
+[ADR-CONTACT-DIRECT-CHANNELS](contact-direct-channels.md): **APPROVED — 2026-10-18.** Replaces the public form with native WhatsApp/email/phone links. Supersedes inquiry provider activation, demonstration form and mandatory processor/counsel/probe/deletion gates for the current scope; prior ADRs remain history.
 
 ## Approved
 

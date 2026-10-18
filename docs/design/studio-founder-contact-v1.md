@@ -3,6 +3,7 @@ id: DESIGN-SFC-V1
 type: design-spec
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - REVIEW-STUDIO-FOUNDER-CONTACT-2026-10-14
   - SPEC-SFC-V1
   - RFC-SFC-COMMERCIAL-ATLAS-V1
@@ -21,10 +22,14 @@ related:
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - GOV-AGENT-USAGE
   - TEST-STRATEGY
-last_verified: 2026-10-16
+last_verified: 2026-10-18
 ---
 
 # Studio, Founder, Contact and legal — Atlas v1
+
+## Direct-contact amendment — APPROVED 2026-10-18
+
+The owner replaced the form with existing WhatsApp/email/phone links and removed mandatory Formspree/counsel gates. [ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) supersedes form-specific requirements below and in historical references. Retain the Atlas visual/runtime scope and static export. There is no form client, provider activation or simulated/commercial result UI.
 
 ## Status and intent
 
@@ -132,19 +137,18 @@ Preserve `/Samuel-Furlanich-CV.pdf`, its download filename and the existing prof
 
 ### Contact
 
-The source order is introduction, response expectation, form/privacy context, direct alternatives/location, then Founder bridge. Place the expectation before the form in both DOM and visual order; never duplicate it in the side column. It remains a usual response expectation, not an incident-support SLA.
+Source order: introduction, usual response expectation, Pause/static slot, direct-channel surface, Privacy reference and Founder bridge. Preserve the H1 and response copy. The opaque Bone surface contains a channel description/location and the three existing native WhatsApp/email/phone links. At 820px and above use a 7/4 description/action grid, gap 32px (64px at desktop); below 820px stack. Padding stays 24/32/40px, target height at least 48px. No form, fields, validation, submit/busy/results, no-JS warning or delivery claim.
 
-At ≥1024px, the opaque Bone intake surface has a 7/4 form/sidebar grid with a 64px gap. At tablet sizes use a 32px gap only while the form retains at least 420px readable width; otherwise stack. Below 768px always stack. The form is single-column at every size; the primary submit button spans its form column. Direct alternatives stay WhatsApp, email, phone, followed by location/languages and the subdued Founder link. They do not compete with the main submit button above the form.
+Links have no prefilled message and open the visitor's chosen service. The Privacy link explains direct communication and hosting. Keep focus/source order native, visible and unclipped with text expansion or 320px reflow.
 
-Keep four public fields: name, email, optional company, message. Input text is at least 16px, controls at least 48px high, textarea at least 160px high and vertically resizable. Display required/optional labels, the email/message helpers and the privacy disclosure before submit. The Privacy link is adjacent to the disclosure; Terms is a quiet text link beside/below it, never an implied acceptance checkbox. All fields and state text reflow with zoom and the mobile keyboard. Do not move focus merely to decorate progress.
 
 ### Privacy and Terms
 
 Both languages share a quiet static reading template: shared App Bar → title → scope/update metadata → compact table of contents → all sections → responsible-party/contact and relevant reciprocal legal link → existing Footer. Legal contents use two columns from 768px if all labels fit, one below. They are ordinary anchor links, not sticky tabs or accordions. All sections are visible without JavaScript. Use meaningful headings, a labeled contents navigation and App-Bar-aware scroll margins.
 
-The Privacy draft covers identity/contact, four form fields and source/locale, purposes, browser-to-Formspree-to-Gmail flow, technical metadata, graphic preference storage, material providers/transfers, verified retention, rights/requests, external channels and updates. Terms covers website use and initial inquiries only; individually agreed engagements own pricing, payment, IP transfer, warranties, support and project obligations.
+Privacy covers Samuel’s identity/contact, direct communications via Gmail/WhatsApp/phone, GitHub Pages technical data, graphic preference storage, data minimization and requests about messages. Terms covers website use and initial inquiries only; individually agreed engagements own pricing, payment, IP transfer, warranties, support and project obligations.
 
-Do not publish editorial blocks, invented effective dates or professional-review placeholders. The current drafts are visibly marked in the design artifact only. Final public wording and any required Argentine statements need professional review. Legal review may require a specific consent/transfer treatment; that reopens the relevant design before implementation, rather than allowing an implementer to invent a checkbox or legal assertion.
+Do not publish editorial blocks, invented effective dates or professional-review placeholders. The current drafts are visibly marked in the design artifact only. Public wording is owner-approved factual direct-contact copy. A counsel disposition is no longer a release prerequisite; this does not certify legal sufficiency. Do not invent a checkbox, transfer assessment or legal assertion.
 
 ## Page-specific graph specification
 
@@ -194,7 +198,7 @@ Normalize pointer impulse to elapsed movement: equivalent 60Hz/120Hz event strea
 
 On pointer exit or entry into a link, button, disclosure, field or form, remove new excitation and let existing motion damp. A full Pause/fallback clears stimulation immediately. Offsets are constrained inside the visible safe region as well as by the travel cap. Current Services/Projects scroll pose remains its base pose; proximity is a bounded additional layer, not a replacement for chapter progress or connection growth.
 
-**Review clarification:** opaque plate bounds expanded 8px and reading-text bounds expanded by their 24/32px scrim clearance plus 8px also exclude new excitation. Use the same cached rectangles as masking/labels; no layout queries per sample. Preserve previous visible motion tails, then sleep; movement hidden over a plate does not supply velocity on re-entry. The form's stronger focus/submission suspension still clears stimulation. This prevents invisible 60fps work while reading.
+**Review clarification:** opaque plate bounds expanded 8px and reading-text bounds expanded by their 24/32px scrim clearance plus 8px also exclude new excitation. Use the same cached rectangles as masking/labels; no layout queries per sample. Preserve previous visible motion tails, then sleep; movement hidden over a plate does not supply velocity on re-entry. The form's stronger control focus suspension still clears stimulation. This prevents invisible 60fps work while reading.
 
 ### Flexible edges
 
@@ -220,67 +224,34 @@ Reduced motion at entry, Save-Data, rejected WebGL2/software renderer, denied ca
 
 Generate one matched label-free wide and compact poster per new page from its actual production rest pose, with zero input offsets/string displacement. Use the existing 1920×1080 wide / 450×800 compact capture dimensions and cover alignment, registered as `studio`, `founder`, `contact` variants in the current poster family. Do not reuse one identical image for all three meanings. Reuse the existing poster-projection handoff: matching capture/crop on the first live paint, the current approximately three-second projection settling, and the existing 160ms opacity crossfade only after a successful draw. That finite loading transition does not add an ambient loop to new pages. A failed image still leaves a CSS ground. No JavaScript leaves complete HTML, static art, navigation and direct contact links. Respect the existing Home-renderer handoff: at most one active renderer, without changing Home's runtime.
 
-## Commercial Contact and activation
+## Direct Contact and activation
 
-Retain the provider-neutral inquiry contracts, validator, state machine and narrow Formspree adapter. Extend them test-first; the throwaway preview's local state simulation is not reusable production code. The public endpoint is owner-supplied configuration, not a secret. No server/API key or account credential belongs in a static export.
+Contact uses server-rendered native links without an inquiry processor. There is no browser POST, automatic send, editing state, validation, request lock, simulated outcome, retry or provider failure. No public Contact route imports the dormant inquiry port/configuration. A new embedded intake system would need a new explicit architecture/product decision.
 
-Target flow: visitor explicitly submits → client normalizes the four values and computed source/locale → HTTPS JSON POST to the configured Formspree form → accepted response or safe classified failure → provider dashboard/notification → Samuel's Gmail. Do not send on keystrokes, field blur, page load, validation failure, unhydrated markup or a background retry. No form values in browser storage, URLs, analytics, logs or external alternative links.
+Formspree account/counsel evidence, provider probes, inbox and deletion receipts, and readiness manifests are removed from release requirements. Existing direct messages can still contain personal information; Privacy describes that accurately without claiming a legal exemption, fixed unverified retention or provider deletion guarantee. Ordinary human PR/release review remains.
 
-| State / trigger | Behavior and acceptance |
-| --- | --- |
-| Initial / editing | Four fields, visible labels/helpers/privacy, editable values held in page memory; entering a new inquiry removes stale success state |
-| Validation failure | Trim values; name ≤100, email ≤254, optional company ≤120, message ≤4000 Unicode characters; preserve values, show associated errors, focus first invalid field; no request |
-| Submitting | Snapshot validated payload, synchronous lock and aria-busy. Review clarification: move focus to submit before disabling fields; submit is outside disabled fieldset and remains focusable with aria-disabled, lock rejects repeat activation. Visible sending status/stable layout; one request for rapid clicks/Enter |
-| Provider field rejection | Allowlist known field/code mappings, preserve values, show localized inline errors and focus first invalid field; unknown provider content never becomes HTML or public prose |
-| Accepted | Only a 2xx JSON response with ok:true qualifies; clear fields only then, focus the persistent nonlive result region once using Q18 acceptance-only copy; acceptance is not proof of Gmail delivery or reading |
-| Network/timeout/malformed result | Preserve every value; focus the persistent nonlive result region with owned uncertainty/retry text, including possible duplicate copies; no automatic resend |
-| Rate limited | Preserve values; focus result region with later/direct-channel recovery; do not infer account quota from all 2xx responses |
-| Misconfigured/inactive form | Clearly unavailable result/direct alternatives; focus the result after an attempted submission, never on initial page load; no demo success substitution |
-| Retry | Explicit visitor action repeats validation and takes a fresh snapshot; older results cannot overwrite a newer attempt |
-| Navigation/unmount | Abort in-flight client work and ignore late results; abort is not proof the server did not receive it; no browser persistence or background delivery |
-| No JavaScript / no hydration | Server-rendered form does not POST elsewhere or enable an inert submit; an explanatory fallback and working direct channels remain visible |
-
-Retain 24KiB serialized payload ceiling and 10s timeout. Limits count Unicode code points, as the existing validator does. Do not silently truncate or let a native UTF-16 `maxlength` clip otherwise-valid characters: if a native bound is used, set it to twice the code-point limit and keep the exact code-point validator authoritative. The owner receipt must verify provider length/multiline behavior. If the provider cannot enforce the intended boundary, fail that gate and return the specific limit-policy issue for owner review rather than silently changing the contract. Source is the localized Contact route, locale is `es-AR` or `en`. Provider rejection tests include documented required/type/length codes and unknown fields/bodies. Use a request identity for late field failures as well as success/failure. A synchronous guard is required; React state alone must not allow two same-tick submissions.
-
-### Review clarification: native bounds and announcement pattern
-
-Keep native maxlength at 200/508/240/8000 UTF-16 units; exact code-point validation remains 100/254/120/4000. Initial unhydrated submit uses native disabled. During a valid hydrated submission, focus moves to the submit button before fields are disabled; the button itself uses aria-disabled, not native disabled. The synchronous coordinator blocks all repeated clicks/Enter.
-
-Persistent busy region: role=status, aria-live=polite, aria-atomic=true, never focused; show sending text only, clear it at completion. Separate persistent result region: role=region, tabindex−1, aria-labelledby heading and aria-describedby body, **no aria-live/alert/status role**; focus once after accepted/global failure is committed. Field errors have aria-invalid/describedby and focus only first invalid field, without a competing alert. Actual NVDA/VoiceOver checks verify outcome announcement/focus, not an assertion that one ARIA recipe works universally.
 
 ### Review clarification: pure projection authority
 
 `lib/connected-studio/projection.ts` owns the 35°/z12 perspective, legacy spread/depth/fit and poster crop math, independent of DOM/Three. New Atlas anchors are inverse-projected with tier depth applied once; their layout spreadX/spreadY/depthScale are 1. DPR changes backing pixels, never CSS projection/input. Controller resolves the native/poster frame once before interaction; final pose carries that frame, and renderer/labels consume it. Legacy poses without a frame use the same pure fallback. `lib/connected-studio/rest-path.ts` evaluates the current SPF quadratic rest bow (0.16, existing deterministic edge signs) and straight Atlas rest edges for both physics and rendering. Seven final points include that rest path; rendering adds only their bounded cubic residuals to the analytic rest curve, without applying a second bow. This closes the model/runtime unit ambiguity without changing the camera or the existing SPF rest shape.
 
-A real hidden text trap is outside the tab order, accessibility tree and autofill. Carry its actual value in a separate provider-neutral submission context, mapped to `_gotcha` only in Formspree transport. Do not add it as a fifth public business field, force an empty constant, log it or locally pretend a visitor inquiry succeeded. Test flagged transport with mocks and, if a live probe is needed, labeled synthetic data under the activation receipt. This supplements provider filtering/domain restriction; it is not authentication or a distributed rate limiter.
-
-The initial design includes no CAPTCHA script, provider redirect or custom challenge. The [owner checklist](../product/pages/contact-and-privacy.md#formspree-free-readiness-checklist-proposed-operational-requirements) specifies actual account actions for Free, recipient, domain, Workflow validation, challenge setting, storage/deletion, quota and live receipts. Account settings remain unverified. Any required challenge changes the accessible flow and processor disclosure and needs review before implementation. Free-plan quotas cannot be solved by a secret in the browser or falsely claiming inbox delivery.
-
-Configuration is explicit and fail-closed: a production commercial mode is selected by the accepted activation, with a validated build-time endpoint and release record. This release uses exactly the owner-approved HTTPS Formspree endpoint; reject another host/form, credentials, query/fragment or nonstandard port unless an accepted configuration revision authorizes it. A missing endpoint fails the commercial build/release check; runtime configuration failure still has the safe unavailable state. Development/CI uses injected mock submitters, never the public endpoint. The demo adapter and historical tests remain as a separately testable contract; production has no public mode toggle and does not silently activate from an environment value alone.
-
-**Release-order clarification approved by the owner on 2026-10-14 (Q15):** the superseding decision, final professionally reviewed legal wording, verified account/transfer/retention facts, mocked browser/error tests and an owner-run labeled live provider probe precede deployment. A provider probe is not evidence of the newly deployed form. Deploy reviewed Contact, Privacy, Terms, Home/Services consistency copy and mode together; immediately verify actual ES/EN form acceptance, dashboard presence, Gmail delivery/Reply-To and deletion. Failed checks trigger the documented rollback. This resolves the impossible ordering of requiring a new deployed-form receipt before publishing that form on static GitHub Pages. It does not waive legal or account gates. Candidate builds remain isolated and cannot be deployed as release artifacts.
-
-Q17 additionally keeps implementation page PRs on `codex/sfc-integration`, which does not deploy. One main release carries complete pages/posters and every demo-dependent Studio/Founder/Home/Services/legal/intake change. There is no owner authorization for visibly incomplete intermediate public layouts. Actual hardware qualification is a separate lane: failures prevent tier enablement, not an otherwise safe static/readable commercial release. The interactive redesign objective remains OPEN until qualified or explicitly amended.
-
 ## Legal and content boundaries
 
-The owner supplied Samuel Furlanich operating as FURLANICH, the address and email recorded by Contact/Privacy. Do not infer a corporation, tax identifier, street number, registration, guaranteed deletion, judicial venue or professional qualification. The new Privacy draft accounts for inquiry processing and existing motion-preference session storage; it does not assert the whole provider chain is verified.
+The current requirements and exact bilingual text live in [Contact and Privacy](../product/pages/contact-and-privacy.md) and [Terms](../product/pages/terms-and-conditions.md). Use supplied identity/contact facts and describe direct messages, hosting and session preferences. Formspree provisioning, processor/country verification, managed 30-day/12-month intake schedules and mandatory counsel approval are retired for this scope. Do not infer a corporation, registration, professional qualification, fixed deletion guarantee or legal exemption. No marketing/CRM/enrichment/pixels or content-bearing telemetry is added.
 
-Argentine professional review remains a release blocker for complete identification/address disclosure, applicable notice/consent and transfer mechanism, material providers/countries, actual retention and exceptions, rights wording/timeframes/authority statements, and Terms consistency. The reference Aureon structure supplied topics only; no text, liability waiver or project-contract promise is copied. Preserve review markers in source documentation until counsel supplies the missing facts; they must never ship as final copy.
-
-The existing operational retention targets remain subject to verification and legal review: unnecessary provider copies disabled or otherwise deleted within 30 days of receipt/triage, and mailbox-only non-converted inquiries within 12 months of last substantive contact. A plan history window does not prove deletion from logs, backups or Gmail. Record actual operations and exceptions, including Spam/Over Limit; do not invent automatic erasure. Marketing, CRM, enrichment, pixels and content-bearing telemetry remain outside scope.
+Keep implementation on the nondeployed integration branch and the coordinated human-reviewed release. Hardware qualification remains a separate lane. No form activation is included.
 
 ## Architecture decision for this proposal
 
-Extend the existing connected-scene model/controller/host/engine rather than create three runtimes or merge Home into a universal scene. Preserve semantic server components and locale-owned typed content. Small render-nothing leaves or client form/runtime boundaries own only their necessary behavior.
+Extend the existing connected-scene model/controller/host/engine rather than create three runtimes or merge Home into a universal scene. Preserve semantic server components and locale-owned typed content. Small render-nothing leaves or client runtime boundaries own only their necessary behavior.
 
 | Boundary | Responsibility |
 | --- | --- |
 | `lib/connected-studio/` | Pure route profiles, topology/rest projection, pointer/scroll state, damped node/string integration, gates/session/controller; injectable clock and scheduler, no DOM/Three dependency in the physics model |
-| `components/connected-studio/` | One host for visibility/preferences, cached layout/masks, passive input and form-focus suspension, localized label bindings and Pause; no per-frame React state |
+| `components/connected-studio/` | One host for visibility/preferences, cached layout/masks, passive input and control hit masking, localized label bindings and Pause; no per-frame React state |
 | Connected runtime | Fixed camera, pooled batched geometry/materials, projected labels, bounded dynamic path buffers, matched-poster handoff and full disposal |
 | Studio / Founder / Contact components | Page-owned semantic hierarchy and scoped styling; no duplicate Footer or global material retuning |
-| Inquiry port/adapter/form | Business payload/validation, classified transport, request/state/focus handling; Formspree details remain behind the adapter |
+| Direct contact | Native links and locale-owned server content; dormant inquiry libraries are not in the public import path. |
 | Routes/legal/content | Two locale-owned entry trees, existing route helpers and metadata; Terms registered once in route equivalence/navigation/Footer/export validation |
 | Testing/measurement | Observable behavior, rendered references, clean-export route/bundle inspection and actual hardware receipts; diagnostics never include inquiry data |
 
@@ -315,10 +286,10 @@ For each behavior change: **RED → run and verify the intended failure → mini
 | Layer | Required coverage |
 | --- | --- |
 | Unit/contract | Route/locale equivalence and sixteen exports; page content/evidence preservation; node/string stability and timing invariance; travel/bend caps, pins, decay/rest, non-finite inputs, interrupt/leave/resize/jumps; Contact fixed nodes; session/gates/scheduler/disposal |
-| Inquiry boundary | No requests from invalid/editing/demo/missing config; exact allowlisted transport and real trap; byte/timeout bounds; accepted/malformed/field/rate/config/network results; single synchronous in-flight request, stale-result rejection, preserved failure values and accepted-only reset |
-| Browser behavior | Chromium, Firefox, WebKit; ES/EN navigation, Terms/Privacy/Footer/locale, CV/source links, field focus/errors/status/retry, disabled/no-JS/failure states, reduced motion and runtime preference changes, touch scroll-only/no-tap, one-renderer navigation and form-focus suspension |
+| Direct-contact boundary | No form elements or provider traffic; exact native destinations without prefill; links and disclosures work without JavaScript. |
+| Browser behavior | Chromium, Firefox, WebKit; ES/EN navigation, Terms/Privacy/Footer/locale, CV/source links, direct-link focus and no-JavaScript behavior, reduced motion and runtime preference changes, touch scroll-only/no-tap, one-renderer navigation and form-focus suspension |
 | Responsive | 320, 390, 768, 1024, 1440px; portrait/landscape, 200% zoom, keyboard opening, no overflow/clipping, all biography/evidence/links visible; stable source order |
-| Accessibility | Axe plus manual keyboard, headings/landmarks, native disclosure, screen-reader form/state/Pause behavior, meaningful external/download labels, contrast through all scene states, forced colors and reduced motion; no conformance claim from axe alone |
+| Accessibility | Axe plus manual keyboard, headings/landmarks, native disclosure, screen-reader link/Pause behavior, meaningful external/download labels, contrast through all scene states, forced colors and reduced motion; no conformance claim from axe alone |
 | Visual | Taste preflight/postflight, Impeccable bounded audit/adapt/harden/optimize as relevant, Emil motion review, comparison with the approved references at wide/compact; human review of intentional static visual baselines only |
 | Export/performance | Clean root and `/Portfolio` builds, actual route/artifact/404 verification, optional-chunk request/closure cross-check, responsive posters, hardware and vitals protocols, no live submission in ordinary CI |
 | Completion | `npm run validate`, relevant Playwright/axe/export/measurement suites, complete diff/self-review, verification-before-completion and pr-readiness; fresh independent review and human PR merge |
@@ -331,4 +302,8 @@ Independent plan review uses Claude Opus 5.5 High in a separate top-level review
 
 The discovery/gallery contains A/B/C structural comparisons, A.1 inertia and A.2 strings. A full-copy written-design rendering additionally checked all five page types in ES/EN at the five specified widths: 50 views, no overflow/page-script errors, complete three-paragraph biography/internship/MPC checks and no canvas on legal pages. This is a standalone software-rendered HTML reference, not production code, browser-matrix acceptance, hardware performance or a legal/commercial release receipt.
 
-The owner approved written revision 1, linked copy and bounded RFC scope in Q14, the controlled release sequence in Q15, and provider/staging/copy corrections in Q16–18. ADE planning is authorized; additional revision 2 construction/projection/focus clarifications remain proposed pending revised-plan acceptance. Still-open external release facts are explicitly gated: legal sufficiency/transfer/retention, authenticated Formspree configuration/operations, actual delivery/deletion, and physical runtime feasibility. They do not license an implementer to invent content or bypass a gate. Independent Opus re-review, owner authorization and governance acceptance precede implementation.
+The owner approved written revision 1, linked copy and bounded RFC scope in Q14, the controlled release sequence in Q15, and provider/staging/copy corrections in Q16–18. ADE planning is authorized; additional revision 2 construction/projection/focus clarifications remain proposed pending revised-plan acceptance. The direct-contact amendment retires processor/counsel/probe/deletion gates. Physical runtime qualification and ordinary review/deployment acceptance remain independently owned. They do not license an implementer to invent content or bypass a gate. Independent Opus re-review, owner authorization and governance acceptance precede implementation.
+
+## Commercial Contact and activation
+
+Retired historical anchor. The direct-contact amendment and current Contact section above replace the former processor/counsel activation flow.

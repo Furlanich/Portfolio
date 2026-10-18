@@ -128,7 +128,7 @@ export const servicesPageContent = {
   },
   finalCta: {
     heading: 'Contanos qué necesitás resolver',
-    description: 'Explorá el contacto y probá la demostración del formulario.',
+    description: 'Contactanos por WhatsApp, correo o teléfono.',
     action: {
       label: 'Iniciar una consulta',
       routeId: 'contact',

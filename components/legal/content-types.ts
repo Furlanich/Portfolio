@@ -24,14 +24,10 @@ export type LegalPageContent = {
   links?: LegalPageLink[];
 };
 
-export type CommercialLegalDraft = {
+export type StudioLegalContent = {
   locale: Locale;
   routeId: 'privacy' | 'terms';
   title: string;
-  publication: {
-    status: 'nonpublishable';
-    releaseGate: 'professional-review-and-factual-gates-open';
-  };
   chrome: {
     contentsLabel: string;
     updateLabel: string;

@@ -3,6 +3,7 @@ id: RFC-CONTACT-INQUIRY-PIPELINE
 type: request-for-comments
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - ARCHITECTURE-MAP
@@ -13,10 +14,14 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
-last_verified: 2026-09-14
+last_verified: 2026-10-18
 ---
 
 # Contact inquiry submission pipeline
+
+## Current scope supersession — 2026-10-18
+
+[ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) records the owner-approved replacement of the form with direct WhatsApp/email/phone links. Formspree/counsel/probe/deletion activation prerequisites below are historical and do not apply to this release. The original alternatives and acceptance history are retained.
 
 ## Context
 

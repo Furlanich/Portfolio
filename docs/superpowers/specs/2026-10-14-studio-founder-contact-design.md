@@ -3,6 +3,7 @@ id: SPEC-SFC-V1
 type: design-specification
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SFC-V1
   - RFC-SFC-COMMERCIAL-ATLAS-V1
   - REVIEW-STUDIO-FOUNDER-CONTACT-2026-10-14
@@ -11,12 +12,16 @@ related:
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - PAGE-TERMS
-last_verified: 2026-10-14
+last_verified: 2026-10-18
 ---
 
 # Written design review — Studio, Founder, Contact and legal
 
 Revision 1 was approved by the owner on 2026-10-14 (Q14), including the linked copy selections and bounded supersession scope. This records completion of the Brainstorming architectural written-spec stage and authorization to author the ADE v2 plan. The owner subsequently approved the controlled GitHub Pages release sequence in Q15, now recorded in the canonical design.
+
+## Direct-contact supersession — 2026-10-18
+
+This is the historical 2026-10-14 design reference. [ADR-CONTACT-DIRECT-CHANNELS](../../decisions/contact-direct-channels.md) retires its embedded-form, Formspree and mandatory counsel requirements. The current [DESIGN-SFC-V1](../../design/studio-founder-contact-v1.md) and amended plan govern implementation.
 
 ## Review package and authority
 

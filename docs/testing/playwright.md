@@ -3,6 +3,7 @@ id: TEST-PLAYWRIGHT
 type: testing-guidance
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - TEST-STRATEGY
   - TEST-VISUAL-REGRESSION
   - DESIGN-IX-A11Y
@@ -10,12 +11,16 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Playwright QA
 
 `playwright.config.ts` owns a fixed local origin, Next.js development-server startup, normalized optional base path, conservative parallelism, CI-only retry, and failure evidence. Install matching browser binaries after `npm ci` with `npx playwright install chromium firefox webkit`. CI instead runs its browser job in the official `mcr.microsoft.com/playwright:v1.63.0-noble` container, so it installs no browsers or system libraries per run; the image tag must equal the locked `@playwright/test` version and be changed with it, `npm ci` still runs, and the full `npm run test:e2e` is unchanged ([Playwright CI containers](https://playwright.dev/docs/ci#via-containers), [Docker](https://playwright.dev/docs/docker)).
+
+## Direct-contact amendment — APPROVED 2026-10-18
+
+[ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) removes the embedded form from both Contact routes. Its old field, validation, submit/state, simulation and processor/counsel activation requirements are superseded for the current release. Native WhatsApp/email/phone links, no-JavaScript behavior and ordinary keyboard/focus/reflow checks govern Contact. The historical candidate project name contact-commercial now exercises direct channels; only the runtime candidate needs live-policy patches.
 
 ## Commands
 

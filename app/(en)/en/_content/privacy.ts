@@ -1,59 +1,59 @@
-import type { PrivacyContent } from '../../../../components/privacy/content-types';
+import type { PrivacyContent } from '@/components/privacy/content-types';
 
 export const privacyContent = {
-  locale: 'en',
-  routeId: 'privacy',
-  heading: 'Privacy in this demonstration',
-  introduction:
-    'This site operates as a portfolio and technical showcase. It does not accept commercial inquiries through the form and does not present this page as a professionally reviewed legal policy.',
-  sections: [
+  "locale": "en",
+  "routeId": "privacy",
+  "heading": "Privacy and contact",
+  "introduction": "This page explains what happens when you browse the website and contact Samuel Furlanich through the published channels.",
+  "sections": [
     {
-      id: 'form-data',
-      heading: 'What happens to form data',
-      paragraphs: [
-        "Values entered in the name, email, company, and message fields remain temporarily in this page's memory. The simulation validates them and shows loading, success, or failure states, but does not send them to FURLANICH, Formspree, Gmail, or any inbox.",
-        'After simulated success, the fields are cleared. After a validation error or simulated failure, the values remain visible so you can correct them or try again. Reloading or leaving the page causes the Contact implementation to discard them.',
-      ],
+      "id": "responsible-party",
+      "heading": "Responsible party and contact",
+      "paragraphs": [
+        "Samuel Furlanich presents his work under the FURLANICH brand from Buenos Aires, Argentina. For questions about your information, email samuelfurlanich@gmail.com."
+      ]
     },
     {
-      id: 'hosting',
-      heading: 'Hosting and technical data',
-      paragraphs: [
-        "GitHub Pages publishes the site's static files at https://furlanich.github.io/Portfolio/. GitHub states that it logs the IP addresses of visitors to GitHub Pages sites for security purposes. That technical processing is governed by GitHub's documentation and privacy statement.",
-        'FURLANICH adds no analytics, advertising, profiling, CRM, form storage, or conversion events to this demonstration.',
-      ],
+      "id": "direct-contact",
+      "heading": "Direct contact",
+      "paragraphs": [
+        "You can contact Samuel on WhatsApp, by email or by phone. The links open your chosen service or application; you decide what information to send. Samuel uses the information you share to assess and respond to your inquiry and coordinate a possible conversation or engagement.",
+        "The published email address receives messages in Gmail, provided by Google. WhatsApp messages and phone calls use their respective services. Those services have their own privacy policies and may process technical communication data."
+      ]
     },
     {
-      id: 'external-alternatives',
-      heading: 'External alternatives',
-      paragraphs: [
-        'The WhatsApp, email, and phone links are functional examples separate from the form. Selecting one opens an external service on your device, and any information you choose to communicate is governed by that service. Values entered in the form are not copied automatically.',
-      ],
+      "id": "hosting",
+      "heading": "Hosting and technical data",
+      "paragraphs": [
+        "GitHub Pages publishes the static website files at https://furlanich.github.io/Portfolio/. GitHub states that it records visitors’ IP addresses for security purposes. That processing is governed by its privacy statement.",
+        "The website adds no analytics, advertising, profiling, CRM or conversion tracking."
+      ]
     },
     {
-      id: 'sensitive-information',
-      heading: 'Sensitive information',
-      paragraphs: [
-        'Do not enter passwords, credentials, client production data, sensitive information, or files. The form neither requests nor needs that information to demonstrate its behavior.',
-      ],
+      "id": "preferences",
+      "heading": "Browsing preferences",
+      "paragraphs": [
+        "The website may keep your animation pause preference and a technical graphics-failure flag for the browsing session. Those values contain no messages or contact information. If storage is unavailable, the website uses a static alternative or a temporary preference in memory."
+      ]
     },
     {
-      id: 'retention-questions',
-      heading: 'Retention and questions',
-      paragraphs: [
-        'The simulation creates no provider, database, or inbox copy. It keeps values only on the page for the interaction described above. For questions about this demonstration, you may email samuelfurlanich@gmail.com without including sensitive information.',
-      ],
+      "id": "sensitive-information",
+      "heading": "Information you share",
+      "paragraphs": [
+        "A brief description of the problem and how you would like to proceed is enough for an initial inquiry. Do not share passwords, credentials, client production data or sensitive information."
+      ]
     },
     {
-      id: 'future-commercial-activation',
-      heading: 'Future commercial activation',
-      paragraphs: [
-        'Before enabling real submission, FURLANICH must replace this explanation with verified information about responsible parties, providers, purposes, retention, transfers, and rights; complete professional review; and prove delivery and deletion of a test inquiry. This demonstration does not approve any of those items.',
-      ],
-    },
+      "id": "retention-questions",
+      "heading": "Messages and requests about your information",
+      "paragraphs": [
+        "Messages you send remain in the email or service used for the conversation. The website does not create another copy in an inquiry intake system. To ask how your information is used or request access, correction or deletion, email samuelfurlanich@gmail.com.",
+        "Handling those requests depends on the information involved and applicable obligations. Providers manage their own technical records and backups under their policies."
+      ]
+    }
   ],
-  githubLink: {
-    label: "View GitHub's privacy statement",
-    href: 'https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement',
-  },
+  "githubLink": {
+    "label": "View GitHub's privacy statement",
+    "href": "https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
+  }
 } satisfies PrivacyContent;

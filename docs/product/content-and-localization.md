@@ -3,6 +3,7 @@ id: CONTENT-LOCALIZATION
 type: content-strategy
 status: PROPOSED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SFC-V1
   - PAGE-TERMS
   - DESIGN-SPF-V1
@@ -19,7 +20,7 @@ related:
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Content and localization
@@ -172,19 +173,9 @@ Studio's four principles are criteria for decision-making, not a translation or 
 
 English outside the complete homepage, Services, Projects system/content already approved for current public records, Studio, Founder, and minimum Contact destinations remains subject to separate item/page approval.
 
-## Contact inquiry bilingual scope — APPROVED dual-mode copy
+## Direct-contact bilingual scope — APPROVED
 
-[`PAGE-CONTACT`](pages/contact-and-privacy.md) owns the complete Spanish and English demonstration and dormant commercial Contact copy. Spanish keeps natural professional voseo; English is a direct adaptation, not a literal translation. Both locales preserve the same hierarchy: intro, response expectation, primary form, alternatives in WhatsApp/email/phone order, and subdued Founder context.
-
-Labels remain visible and persistent. Required/optional wording, helper text, field errors, submitting, success, failure, retry, privacy context, and alternative-channel labels are localized; raw adapter/provider messages never appear.
-
-For the current public demonstration, exact copy states that submission is simulated locally, no values are sent, no commercial inquiry is created, and no inbox is reached. Spanish and English also explain the reserved `.invalid` failure control and the external fallback boundary. The exact public demonstration Privacy copy is approved in `PAGE-PRIVACY`.
-
-For a later commercial activation, copy confirms provider acceptance rather than claiming the inbox was read, states clearly when delivery was not confirmed, and warns visitors not to include passwords, credentials, or sensitive information.
-
-The accepted processor name and boundary come from `ADR-CONTACT-INQUIRY-PIPELINE`. Exact storage behavior, material subprocessors, international-transfer disclosure, responsible legal/business identity, retention wording, and request/legal notice must come from verified provisioning and professional legal review. No translation may guess or generalize those deployed facts.
-
-On 2026-09-12, the owner approved the zero-transmission demonstration copy and mock resource kit for deployment on `main`. This authorization unblocks demonstration implementation only. Exact storage behavior, material subprocessors, international-transfer disclosure, responsible legal/business identity, retention wording, request notice, and professional review remain OPEN before any real commercial submission.
+[PAGE-CONTACT](pages/contact-and-privacy.md) owns the Spanish and English direct-contact copy. Spanish uses natural professional voseo; English is a direct adaptation. Both use introduction, usual response expectation, native WhatsApp/email/phone links, Privacy and Founder bridge. No form simulation, provider result or activation wording is public.
 
 ## MKT-D06-LANGUAGE — Editorial conventions — APPROVED revision 1
 

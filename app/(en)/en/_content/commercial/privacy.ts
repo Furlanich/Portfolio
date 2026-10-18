@@ -1,13 +1,9 @@
-import type { CommercialLegalDraft } from '@/components/legal/content-types';
+import type { StudioLegalContent } from '@/components/legal/content-types';
 
 export const legalContent = {
   "locale": "en",
   "routeId": "privacy",
-  "title": "Privacy Policy",
-  "publication": {
-    "status": "nonpublishable",
-    "releaseGate": "professional-review-and-factual-gates-open"
-  },
+  "title": "Privacy and contact",
   "chrome": {
     "contentsLabel": "Contents",
     "updateLabel": "Last updated",
@@ -16,68 +12,49 @@ export const legalContent = {
   },
   "sections": [
     {
-      "id": "responsible-party-and-contact",
+      "id": "responsible-party",
       "heading": "Responsible party and contact",
       "paragraphs": [
-        "Samuel Furlanich, operating under the FURLANICH brand, is responsible for handling inquiries received through this website. The supplied address is Chivilcoy 6620, Buenos Aires, Argentina. For privacy questions or to exercise your rights, contact samuelfurlanich@gmail.com."
+        "Samuel Furlanich presents his work under the FURLANICH brand from Buenos Aires, Argentina. For questions about your information, email samuelfurlanich@gmail.com."
       ]
     },
     {
-      "id": "information-requested-by-the-form",
-      "heading": "Information requested by the form",
+      "id": "direct-contact",
+      "heading": "Direct contact",
       "paragraphs": [
-        "We request your name, email address and a description of what you need to solve. Your company name is optional. The submission also identifies its language and source page. We do not request attachments, passwords, credentials or sensitive information."
+        "You can contact Samuel on WhatsApp, by email or by phone. The links open your chosen service or application; you decide what information to send. Samuel uses the information you share to assess and respond to your inquiry and coordinate a possible conversation or engagement.",
+        "The published email address receives messages in Gmail, provided by Google. WhatsApp messages and phone calls use their respective services. Those services have their own privacy policies and may process technical communication data."
       ]
     },
     {
-      "id": "how-we-use-it",
-      "heading": "How we use it",
+      "id": "hosting",
+      "heading": "Hosting and technical data",
       "paragraphs": [
-        "We use this information to understand your inquiry, assess whether we can help and respond to you. Controls also help prevent spam and abuse. The form does not subscribe you to marketing communications or authorize advertising use of your message."
+        "GitHub Pages publishes the static website files at https://furlanich.github.io/Portfolio/. GitHub states that it records visitors’ IP addresses for security purposes. That processing is governed by its privacy statement.",
+        "The website adds no analytics, advertising, profiling, CRM or conversion tracking."
       ]
     },
     {
-      "id": "how-an-inquiry-is-processed",
-      "heading": "How an inquiry is processed",
+      "id": "preferences",
+      "heading": "Browsing preferences",
       "paragraphs": [
-        "GitHub Pages hosts the website pages. When you submit the form, your browser sends the inquiry to Formspree, which processes it and sends a notification to Samuel's email, managed through Gmail. Providers may process technical information needed to operate and protect their services."
+        "The website may keep your animation pause preference and a technical graphics-failure flag for the browsing session. Those values contain no messages or contact information. If storage is unavailable, the website uses a static alternative or a temporary preference in memory."
       ]
     },
     {
-      "id": "graphic-background-preferences",
-      "heading": "Graphic background preferences",
+      "id": "sensitive-information",
+      "heading": "Information you share",
       "paragraphs": [
-        "The site may store your pause preference and a technical graphics-failure flag for the browsing session to avoid repeated animation attempts. These values contain no form information. If browser storage is unavailable, the page uses a static alternative or a temporary preference held in memory."
+        "A brief description of the problem and how you would like to proceed is enough for an initial inquiry. Do not share passwords, credentials, client production data or sensitive information."
       ]
     },
     {
-      "id": "providers-and-international-transfers",
-      "heading": "Providers and international transfers",
+      "id": "retention-questions",
+      "heading": "Messages and requests about your information",
       "paragraphs": [
-        "[EDITORIAL BLOCK — DO NOT PUBLISH: complete the verified material providers, countries and transfer mechanism; professional Argentine legal review required. Do not assume European contractual terms alone establish the applicable Argentine safeguards.]"
-      ]
-    },
-    {
-      "id": "retention",
-      "heading": "Retention",
-      "paragraphs": [
-        "[EDITORIAL BLOCK — DO NOT PUBLISH: turn the table's 30-day / 12-month operational targets into public wording only after verifying their operation, exceptions and professional approval. Do not promise automatic erasure or immediate disappearance of backup copies.]"
-      ]
-    },
-    {
-      "id": "your-requests",
-      "heading": "Your requests",
-      "paragraphs": [
-        "You can request access, correction, updating or deletion of your information by contacting the email address above. We may request proportionate information to verify your identity when handling a request. Any applicable retention exception must be explained in the response.",
-        "[PROFESSIONAL REVIEW: complete applicable wording and time limits, supervisory-authority information and any other required statement.]"
-      ]
-    },
-    {
-      "id": "other-channels-and-changes",
-      "heading": "Other channels and changes",
-      "paragraphs": [
-        "If you choose WhatsApp, email or phone, you use a channel independent of the form and subject to the services involved in that communication. Form values are not automatically copied into those links. The published policy will show its update date."
+        "Messages you send remain in the email or service used for the conversation. The website does not create another copy in an inquiry intake system. To ask how your information is used or request access, correction or deletion, email samuelfurlanich@gmail.com.",
+        "Handling those requests depends on the information involved and applicable obligations. Providers manage their own technical records and backups under their policies."
       ]
     }
   ]
-} satisfies CommercialLegalDraft;
+} satisfies StudioLegalContent;

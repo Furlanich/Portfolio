@@ -3,8 +3,8 @@ import { expect, test } from '@playwright/test';
 import { appUrl, stableRoutes } from './support/paths';
 
 const cases = [
-  { route: stableRoutes.privacy.es, contents: 'Contenido', headings: ['Qué ocurre con los datos del formulario', 'Alojamiento y datos técnicos', 'Alternativas externas', 'Información sensible', 'Conservación y consultas', 'Activación comercial futura'] },
-  { route: stableRoutes.privacy.en, contents: 'Contents', headings: ['What happens to form data', 'Hosting and technical data', 'External alternatives', 'Sensitive information', 'Retention and questions', 'Future commercial activation'] },
+  { route: stableRoutes.privacy.es, contents: 'Contenido', headings: ["Responsable y contacto","Contacto directo","Alojamiento y datos técnicos","Preferencias de navegación","Información que compartís","Mensajes y solicitudes sobre tus datos"] },
+  { route: stableRoutes.privacy.en, contents: 'Contents', headings: ["Responsible party and contact","Direct contact","Hosting and technical data","Browsing preferences","Information you share","Messages and requests about your information"] },
 ];
 
 test('Privacy is complete and navigable without JavaScript', async ({ browser }) => {

@@ -1,13 +1,9 @@
-import type { CommercialLegalDraft } from '@/components/legal/content-types';
+import type { StudioLegalContent } from '@/components/legal/content-types';
 
 export const legalContent = {
   "locale": "es",
   "routeId": "privacy",
-  "title": "Política de privacidad",
-  "publication": {
-    "status": "nonpublishable",
-    "releaseGate": "professional-review-and-factual-gates-open"
-  },
+  "title": "Privacidad y contacto",
   "chrome": {
     "contentsLabel": "Contenido",
     "updateLabel": "Última actualización",
@@ -16,68 +12,49 @@ export const legalContent = {
   },
   "sections": [
     {
-      "id": "responsable-y-contacto",
+      "id": "responsible-party",
       "heading": "Responsable y contacto",
       "paragraphs": [
-        "Samuel Furlanich, quien actúa bajo la marca FURLANICH, es el responsable del tratamiento de las consultas recibidas a través de este sitio. El domicilio informado es Chivilcoy 6620, Buenos Aires, Argentina. Para consultas sobre privacidad o para ejercer tus derechos, escribí a samuelfurlanich@gmail.com."
+        "Samuel Furlanich presenta su trabajo bajo la marca FURLANICH, desde Buenos Aires, Argentina. Para consultas sobre tus datos, escribí a samuelfurlanich@gmail.com."
       ]
     },
     {
-      "id": "que-informacion-solicita-el-formulario",
-      "heading": "Qué información solicita el formulario",
+      "id": "direct-contact",
+      "heading": "Contacto directo",
       "paragraphs": [
-        "Solicitamos tu nombre, correo electrónico y una descripción de lo que necesitás resolver. El nombre de la empresa es opcional. El envío también identifica el idioma y la página desde la que se realiza. No solicitamos archivos adjuntos, contraseñas, credenciales ni datos sensibles."
+        "Podés contactar a Samuel por WhatsApp, correo electrónico o teléfono. Los enlaces abren el servicio o la aplicación que elijas; vos decidís qué información enviar. Samuel usa los datos que compartís para evaluar y responder tu consulta y coordinar una posible conversación o trabajo.",
+        "El correo publicado se recibe en Gmail, de Google. Los mensajes de WhatsApp y las llamadas se gestionan a través de los servicios correspondientes. Esos servicios tienen sus propias políticas de privacidad y pueden procesar datos técnicos de la comunicación."
       ]
     },
     {
-      "id": "para-que-la-usamos",
-      "heading": "Para qué la usamos",
+      "id": "hosting",
+      "heading": "Alojamiento y datos técnicos",
       "paragraphs": [
-        "Usamos esta información para entender la consulta, evaluar si podemos ayudarte y responderte. También se aplican controles para prevenir spam y abuso. El formulario no te suscribe a comunicaciones comerciales ni autoriza un uso publicitario de tu mensaje."
+        "GitHub Pages publica los archivos estáticos del sitio en https://furlanich.github.io/Portfolio/. GitHub informa que registra la dirección IP de quienes visitan sitios de GitHub Pages por motivos de seguridad. Ese tratamiento se rige por su declaración de privacidad.",
+        "El sitio no agrega analítica, publicidad, perfiles, CRM ni seguimiento de conversiones."
       ]
     },
     {
-      "id": "como-se-procesa-la-consulta",
-      "heading": "Cómo se procesa la consulta",
+      "id": "preferences",
+      "heading": "Preferencias de navegación",
       "paragraphs": [
-        "GitHub Pages aloja las páginas del sitio. Al enviar el formulario, tu navegador transmite la consulta a Formspree, que interviene en su procesamiento y en el envío de la notificación al correo de Samuel, gestionado mediante Gmail. Los proveedores pueden tratar información técnica necesaria para operar y proteger sus servicios."
+        "El sitio puede guardar durante la sesión tu preferencia de pausa de las animaciones y un indicador técnico de fallo gráfico. Esos valores no contienen mensajes ni datos de contacto. Si ese almacenamiento no está disponible, se usa una alternativa estática o una preferencia temporal en memoria."
       ]
     },
     {
-      "id": "preferencias-del-fondo-grafico",
-      "heading": "Preferencias del fondo gráfico",
+      "id": "sensitive-information",
+      "heading": "Información que compartís",
       "paragraphs": [
-        "El sitio puede guardar durante la sesión tu preferencia de pausa y una marca técnica de fallo gráfico para evitar nuevos intentos de animación. Estos valores no contienen los datos del formulario. Si el navegador no permite ese almacenamiento, la página mantiene una alternativa estática o una preferencia temporal en memoria."
+        "Para una consulta inicial alcanza con describir brevemente el problema y cómo te gustaría avanzar. No compartas contraseñas, credenciales, datos de producción de clientes ni información sensible."
       ]
     },
     {
-      "id": "proveedores-y-transferencias-internacionales",
-      "heading": "Proveedores y transferencias internacionales",
+      "id": "retention-questions",
+      "heading": "Mensajes y solicitudes sobre tus datos",
       "paragraphs": [
-        "[BLOQUE EDITORIAL — NO PUBLICAR: completar los proveedores materiales, países y mecanismo de transferencia verificados; revisión profesional argentina obligatoria. No afirmar que un contrato europeo resuelve por sí solo las exigencias argentinas.]"
-      ]
-    },
-    {
-      "id": "conservacion",
-      "heading": "Conservación",
-      "paragraphs": [
-        "[BLOQUE EDITORIAL — NO PUBLICAR: convertir los objetivos de 30 días / 12 meses de la tabla anterior en una cláusula pública únicamente después de verificar su operación, sus excepciones y la aprobación profesional. No prometer borrado automático ni desaparición inmediata de copias de respaldo.]"
-      ]
-    },
-    {
-      "id": "tus-solicitudes",
-      "heading": "Tus solicitudes",
-      "paragraphs": [
-        "Podés solicitar acceso, rectificación, actualización o supresión de tus datos escribiendo al correo indicado. Para tramitar la solicitud, podremos pedir información proporcionada para comprobar tu identidad. Cualquier excepción de conservación que corresponda deberá explicarse al responder.",
-        "[REVISIÓN PROFESIONAL: completar el texto y los plazos exigibles, la información sobre la autoridad de control y cualquier otra mención obligatoria.]"
-      ]
-    },
-    {
-      "id": "otros-canales-y-cambios",
-      "heading": "Otros canales y cambios",
-      "paragraphs": [
-        "Si elegís WhatsApp, correo o teléfono, usás un canal independiente del formulario y sujeto a los servicios que intervengan en esa comunicación. Los valores del formulario no se copian automáticamente a esos enlaces. La versión publicada de esta política indicará su fecha de actualización."
+        "Los mensajes que enviás quedan en el correo o servicio usado para la conversación. El sitio no crea otra copia en un sistema de recepción de consultas. Para consultar por el uso de tus datos o solicitar acceso, corrección o eliminación, escribí a samuelfurlanich@gmail.com.",
+        "La atención de esas solicitudes depende de los datos involucrados y de las obligaciones aplicables. Los proveedores gestionan sus propios registros técnicos y copias de seguridad conforme a sus políticas."
       ]
     }
   ]
-} satisfies CommercialLegalDraft;
+} satisfies StudioLegalContent;

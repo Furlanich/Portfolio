@@ -1,13 +1,9 @@
-import type { CommercialLegalDraft } from '@/components/legal/content-types';
+import type { StudioLegalContent } from '@/components/legal/content-types';
 
 export const legalContent = {
   "locale": "en",
   "routeId": "terms",
   "title": "Terms and Conditions",
-  "publication": {
-    "status": "nonpublishable",
-    "releaseGate": "professional-review-and-factual-gates-open"
-  },
   "chrome": {
     "contentsLabel": "Contents",
     "updateLabel": "Last updated",
@@ -34,7 +30,7 @@ export const legalContent = {
       "id": "inquiries-and-engagements",
       "heading": "Inquiries and engagements",
       "paragraphs": [
-        "You can use the form and published contact channels to describe what you need to solve. Sending an inquiry, receiving a technical confirmation or speaking with Samuel does not by itself create a service contract or an obligation to engage the studio.",
+        "You can use WhatsApp, email or phone to describe what you need to solve. Sending an inquiry, exchanging messages or speaking with Samuel does not by itself create a service contract or an obligation to engage the studio.",
         "Pricing, payments, responsibilities, intellectual property in deliverables, warranties, support and maintenance are defined in the relevant proposal or agreement."
       ]
     },
@@ -56,7 +52,7 @@ export const legalContent = {
       "id": "links-and-availability",
       "heading": "Links and availability",
       "paragraphs": [
-        "Some links lead to external services, such as GitHub, LinkedIn or WhatsApp, which have their own terms. Availability of the website, form and external services may vary. If you cannot complete an inquiry through the form, you can use the published alternative channels."
+        "Some links lead to external services, such as GitHub, LinkedIn or WhatsApp, which have their own terms. Availability of the website and external services may vary. You can choose between the published contact channels."
       ]
     },
     {
@@ -71,4 +67,4 @@ export const legalContent = {
     "title": "Terms and Conditions | FURLANICH",
     "description": "Terms for using the FURLANICH website and making initial inquiries, under the responsibility of Samuel Furlanich."
   }
-} satisfies CommercialLegalDraft;
+} satisfies StudioLegalContent;

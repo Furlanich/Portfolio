@@ -48,7 +48,7 @@ const homepageNarrativeCases = [
     processHeading: 'Cómo trabajamos',
     founderHeading: 'Responsabilidad técnica directa',
     ctaHeading: '¿Tenés una necesidad concreta o un sistema que necesita atención?',
-    demoStatement: 'Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario.',
+    demoStatement: 'Contactanos por WhatsApp, correo o teléfono.',
     projectsPath: '/proyectos/',
   },
   {
@@ -64,7 +64,7 @@ const homepageNarrativeCases = [
     processHeading: 'How we work',
     founderHeading: 'Direct technical responsibility',
     ctaHeading: 'Do you have a concrete need or a system that needs attention?',
-    demoStatement: 'Explore the contact options and try the demonstration form. The form does not send inquiries.',
+    demoStatement: 'Contact us on WhatsApp, by email or by phone.',
     projectsPath: '/en/work/',
   },
 ] as const;

@@ -217,7 +217,7 @@ export const homeContent = {
   },
   cta: {
     heading: '¿Tenés una necesidad concreta o un sistema que necesita atención?',
-    demoStatement: 'Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario.',
+    demoStatement: 'Contactanos por WhatsApp, correo o teléfono.',
     primaryAction: {
       label: 'Ver contacto',
       routeId: 'contact',

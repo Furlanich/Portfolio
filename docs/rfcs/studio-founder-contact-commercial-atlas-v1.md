@@ -3,6 +3,7 @@ id: RFC-SFC-COMMERCIAL-ATLAS-V1
 type: request-for-comments
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SFC-V1
   - SPEC-SFC-V1
   - REVIEW-STUDIO-FOUNDER-CONTACT-2026-10-14
@@ -19,10 +20,14 @@ related:
   - GOV-ENGINEERING-LIFECYCLE
   - PLAN-SFC-V1
   - REVIEW-SFC-ACCEPTANCE-V1
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Commercial inquiry and Atlas Studio, Founder, Contact and legal
+
+## Current scope supersession — 2026-10-18
+
+[ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) records the owner-approved replacement of the form with direct WhatsApp/email/phone links. Formspree/counsel/probe/deletion activation prerequisites below are historical and do not apply to this release. The original alternatives and acceptance history are retained.
 
 ## Context and problem
 

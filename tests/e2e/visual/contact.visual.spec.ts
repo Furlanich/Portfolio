@@ -7,7 +7,7 @@ const routes = [
 ] as const;
 
 async function prepare(page: Page) {
-  await expect(page.locator('form[data-contact-hydrated="true"]')).toBeVisible();
+  await expect(page.locator('[data-contact-channels]')).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
   await page.addStyleTag({ content: 'nextjs-portal { display: none !important; }' });
 }
