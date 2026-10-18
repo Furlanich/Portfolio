@@ -645,16 +645,71 @@ export function readBaselineEntry(input: { report: BaselineReport; route: string
 export const OPTIONAL_ENGINE_MARKERS = Object.freeze(['webglcontextlost', 'WebGLRenderer']);
 
 /**
- * Optional engine code inside the chunks a route needs before it can read, whatever its size: a byte budget alone
+ * Text that only the connected host (the client component that gates and mounts the live scene) carries: its session
+ * keys and its non-production diagnostics hook. A page whose live tier is policy-disabled must not load it either:
+ * "No host hydration in policy-disabled builds; verify emitted requests rather than assume tree shaking" (PLAN-SFC-V1).
+ */
+export const CONNECTED_HOST_MARKERS = Object.freeze(['furlanich:connected-studio', '__FURLANICH_CONNECTED']);
+
+/**
+ * Optional engine or connected-host code inside the chunks a route loads before it can read, whatever its size: a byte budget alone
  * would pass a small slice moved out of the optional closure into the critical path.
  */
 export function findOptionalCodeInCriticalChunks(input: { chunks: readonly { path: string; text: string }[]; markers?: readonly string[] }): { path: string; marker: string }[] {
   if (!input.chunks.length) throw new Error('There are no critical chunks to inspect: an empty set would pass anything');
-  const markers = input.markers ?? OPTIONAL_ENGINE_MARKERS;
+  const markers = input.markers ?? [...OPTIONAL_ENGINE_MARKERS, ...CONNECTED_HOST_MARKERS];
   const found: { path: string; marker: string }[] = [];
   for (const chunk of input.chunks) {
     const marker = markers.find((candidate) => chunk.text.includes(candidate));
     if (marker) found.push({ path: chunk.path, marker });
   }
   return found;
+}
+
+/** Journeys per side of a paired comparison: two interleaved rounds (baseline, current, current, baseline) of five. */
+export const PAIRED_JOURNEYS_PER_SIDE = 2 * COLD_BASELINE_JOURNEYS;
+
+export type PairedStartupJudgement = {
+  baselineMedianMs: number;
+  currentMedianMs: number;
+  baselineP95Ms: number;
+  currentP95Ms: number;
+  addedMedianMs: number;
+  addedP95Ms: number;
+  verdict: Verdict;
+  note: string;
+};
+
+/**
+ * Adjudicates the 25 ms added-startup-CPU allowance where the committed Task 3 baseline cannot (its own journeys varied by
+ * more than the allowance): both heads are measured in one session, interleaved, ten journeys each. The cost is real only
+ * when the median and the p95 both moved by more than the allowance; one alone is a spike or a bimodal baseline and stays
+ * OPEN; both inside is a pass.
+ */
+export function judgePairedStartup(input: { baseline: readonly number[] | undefined; current: readonly number[] | undefined; allowanceMs?: number }): PairedStartupJudgement {
+  const check = (name: string, values: readonly number[] | undefined): readonly number[] => {
+    if (!values) throw new Error(`A paired startup comparison needs its ${name} journeys: an absent side is never a pass`);
+    if (values.length < PAIRED_JOURNEYS_PER_SIDE) throw new Error(`A paired startup comparison needs ten journeys per side (two interleaved rounds of five), the ${name} has ${values.length}`);
+    if (values.some((value) => typeof value !== 'number' || !Number.isFinite(value) || value < 0)) throw new Error(`The ${name} journeys must be finite startup CPU values of zero or more`);
+    return values;
+  };
+  const baseline = check('baseline', input.baseline);
+  const current = check('current', input.current);
+  const allowance = input.allowanceMs ?? STATIC_ROUTE_BUDGETS.addedStartupCpuP95Ms;
+  const baselineMedianMs = percentileOf(baseline, 50);
+  const currentMedianMs = percentileOf(current, 50);
+  const baselineP95Ms = percentileOf(baseline, 95);
+  const currentP95Ms = percentileOf(current, 95);
+  const addedMedianMs = currentMedianMs - baselineMedianMs;
+  const addedP95Ms = currentP95Ms - baselineP95Ms;
+  let verdict: Verdict = 'OPEN';
+  let note = `median ${addedMedianMs >= 0 ? '+' : ''}${addedMedianMs.toFixed(1)} ms and p95 ${addedP95Ms >= 0 ? '+' : ''}${addedP95Ms.toFixed(1)} ms against the ${allowance} ms allowance: only one of the two exceeds it`;
+  if (addedMedianMs <= allowance && addedP95Ms <= allowance) {
+    verdict = 'PASS';
+    note = `median ${addedMedianMs.toFixed(1)} ms and p95 ${addedP95Ms.toFixed(1)} ms, both inside ${allowance} ms`;
+  } else if (addedMedianMs > allowance && addedP95Ms > allowance) {
+    verdict = 'FAIL';
+    note = `median +${addedMedianMs.toFixed(1)} ms and p95 +${addedP95Ms.toFixed(1)} ms both exceed ${allowance} ms`;
+  }
+  return { baselineMedianMs, currentMedianMs, baselineP95Ms, currentP95Ms, addedMedianMs, addedP95Ms, verdict, note };
 }

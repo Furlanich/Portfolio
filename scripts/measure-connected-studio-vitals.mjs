@@ -36,6 +36,7 @@ import {
   attributeShifts,
   COLD_BASELINE_JOURNEYS,
   findOptionalCodeInCriticalChunks,
+  judgePairedStartup,
   judgeStaticRouteCost,
   mainThreadStartupCost,
   missingInteractions,
@@ -74,18 +75,19 @@ const STARTUP = process.argv.includes('--startup-baseline');
 
 // The pages the vitals journeys can measure (PLAN-SFC-V1 Task 14 adds the three Atlas pages).
 const KNOWN_ROUTES = ['services', 'projects', 'studio', 'founder', 'contact'];
+// The routes --startup-baseline can measure; --routes narrows either list.
+const READING_ROUTE_NAMES = ['studio', 'founder', 'contact', 'privacy'];
 
 // Validate before building, serving or launching anything: a typo must not become a passing gate.
 let options;
 try {
-  if (STARTUP && argument('routes') !== undefined) throw new Error('--routes does not apply to --startup-baseline, which measures the reading, intake and legal routes');
   options = validateVitalsOptions({
     journeys: argument('journeys') ?? (STARTUP ? String(COLD_BASELINE_JOURNEYS) : '10'),
     profile: argument('profile'),
     profiles: Object.keys(PROFILES),
     expectMode: argument('expect-mode'),
     routes: argument('routes'),
-    knownRoutes: KNOWN_ROUTES,
+    knownRoutes: STARTUP ? READING_ROUTE_NAMES : KNOWN_ROUTES,
   });
 } catch (error) {
   console.error(`measure-connected-studio-vitals: ${error.message}`);
@@ -95,6 +97,37 @@ const { journeys: JOURNEYS_PER_LOCALE, profiles: SELECTED_PROFILES, expectMode: 
 if (STARTUP && JOURNEYS_PER_LOCALE < COLD_BASELINE_JOURNEYS) {
   console.error(`measure-connected-studio-vitals: --startup-baseline needs --journeys of at least ${COLD_BASELINE_JOURNEYS}, got ${JOURNEYS_PER_LOCALE}`);
   process.exit(1);
+}
+// --judge-paired=<dir> (PLAN-SFC-V1 Task 14) measures nothing. It judges paired, interleaved --startup-baseline reports that were
+// written as <dir>/{base,cur}-<profile>-<round>.json (rounds 1 and 2, run baseline, current, current, baseline from each head's own
+// checkout with --routes and --profile): ten journeys per side, the median and p95 added against the 25 ms allowance.
+if (argument('judge-paired') !== undefined) {
+  const dir = argument('judge-paired');
+  const verdicts = [];
+  for (const profileName of Object.keys(PROFILES)) {
+    const sides = { base: {}, cur: {} };
+    for (const side of Object.keys(sides)) {
+      for (const round of [1, 2]) {
+        const file = path.join(dir, `${side}-${profileName}-${round}.json`);
+        if (!fs.existsSync(file)) continue;
+        const report = JSON.parse(fs.readFileSync(file, 'utf8'));
+        for (const [key, entry] of Object.entries(report.profiles[profileName]?.routes ?? {})) (sides[side][key] ??= []).push(...entry.journeysDetail.map((journey) => journey.startupCpuMs));
+      }
+    }
+    for (const key of Object.keys(sides.cur)) {
+      const judged = judgePairedStartup({ baseline: sides.base[key], current: sides.cur[key] });
+      verdicts.push(judged.verdict);
+      console.log(`${judged.verdict} ${profileName} ${key}: baseline median ${judged.baselineMedianMs.toFixed(1)} p95 ${judged.baselineP95Ms.toFixed(1)}; current median ${judged.currentMedianMs.toFixed(1)} p95 ${judged.currentP95Ms.toFixed(1)}; ${judged.note}`);
+    }
+  }
+  if (!verdicts.length) {
+    console.error(`measure-connected-studio-vitals: no paired reports were found in "${dir}"`);
+    process.exit(1);
+  }
+  const counts = verdicts.reduce((tally, verdict) => ({ ...tally, [verdict]: (tally[verdict] ?? 0) + 1 }), {});
+  console.log(`
+Paired startup CPU verdicts: ${JSON.stringify(counts)}`);
+  process.exit(verdicts.includes('FAIL') ? 1 : 0);
 }
 const HARDWARE = process.argv.includes('--hardware');
 const basePath = normalizeBasePath(argument('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
@@ -330,6 +363,7 @@ const READING_ROUTES = {
   contact: { es: '/contacto/', en: '/en/contact/' },
   privacy: { es: '/privacidad/', en: '/en/privacy/' },
 };
+if (JSON.stringify(Object.keys(READING_ROUTES)) !== JSON.stringify(READING_ROUTE_NAMES)) throw new Error('READING_ROUTES and READING_ROUTE_NAMES must list the same routes in the same order');
 const TRACE_CATEGORIES = ['devtools.timeline', 'disabled-by-default-devtools.timeline', 'v8.execute', 'toplevel', 'blink.user_timing', 'loading'];
 const STARTUP_SETTLE_MS = 2_000;
 const STARTUP_METHOD =
@@ -392,9 +426,8 @@ async function startupJourney(browser, profileName, route, locale, run, traceDir
     const optionalCode = findOptionalCodeInCriticalChunks({
       chunks: sizes.map((entry) => ({ path: entry.script, text: fs.readFileSync(path.join(outDir, '_next/static', entry.script), 'utf8') })),
     });
-    if (optionalCode.length) {
-      throw new Error(`${route}/${locale}: optional engine code in requested scripts: ${optionalCode.map((item) => `${item.path} (${item.marker}${critical.has(item.path) ? ', critical' : ''})`).join(', ')}`);
-    }
+    // Reported, not thrown: the run still measures what the page costs, and the finding fails the run at the end.
+    const optionalCodeFound = optionalCode.map((item) => `${item.path} (${item.marker}${critical.has(item.path) ? ', critical' : ''})`);
     return {
       startupCpuMs: cost.scriptCpuMs,
       evaluationCpuMs: cost.evaluationCpuMs,
@@ -402,6 +435,7 @@ async function startupJourney(browser, profileName, route, locale, run, traceDir
       taskCpuMs: cost.taskCpuMs,
       tasks: cost.tasks,
       scripts: sizes,
+      optionalCodeFound,
       firstLoadJsBrotliBytes: sizes.reduce((sum, item) => sum + item.brotliBytes, 0),
       firstLoadJsRawBytes: sizes.reduce((sum, item) => sum + item.rawBytes, 0),
       criticalJsBrotliBytes: sizes.filter((item) => item.critical).reduce((sum, item) => sum + item.brotliBytes, 0),
@@ -500,10 +534,12 @@ async function runStartupBaseline() {
   try {
     for (const profileName of SELECTED_PROFILES) {
       report.profiles[profileName] = { label: PROFILES[profileName].label, routes: {} };
-      for (const route of Object.keys(READING_ROUTES)) {
+      for (const route of SELECTED_ROUTES) {
         for (const locale of Object.keys(READING_ROUTES[route])) {
           const journeys = [];
           for (let run = 0; run < JOURNEYS_PER_LOCALE; run += 1) journeys.push(await startupJourney(browser, profileName, route, locale, run, traceDir));
+          const optionalCodeRuns = [...new Set(journeys.flatMap((item) => item.optionalCodeFound))];
+          if (optionalCodeRuns.length) failures.push(`${profileName}/${route}/${locale}: optional engine or connected host code in the scripts a policy-disabled page loads: ${optionalCodeRuns.join(', ')}`);
           const scriptSets = new Set(journeys.map((item) => item.scripts.map((entry) => entry.script).join('|')));
           if (scriptSets.size > 1) report.notes.push(`${profileName}/${route}/${locale}: the requested script set varied between journeys; the largest first-load figure is reported`);
           const summary = summarizeColdBaseline({

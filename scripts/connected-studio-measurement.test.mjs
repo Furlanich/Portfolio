@@ -544,3 +544,48 @@ test('a page without in-page fragment links owes no fragment-link interaction, a
   assert.deepEqual(missingInteractions({ mode: 'static', completed: ['keyboard-focus', 'scroll', 'route-link'] }), ['fragment-link']);
   assert.deepEqual(missingInteractions({ mode: 'live', completed: ['keyboard-focus', 'scroll', 'route-link'], fragmentLink: false }), ['pause', 'resume']);
 });
+
+// --- PLAN-SFC-V1 Task 14: paired, interleaved startup runs adjudicate what the committed baseline cannot ---------
+
+const { judgePairedStartup } = await import('../lib/connected-studio/measurement.ts');
+const run = (center, spread = 4) => Array.from({ length: 10 }, (_, index) => center + ((index % 5) - 2) * spread);
+
+test('a paired startup comparison passes only when both the median and the p95 added stay inside 25 ms', () => {
+  const pass = judgePairedStartup({ baseline: run(110), current: run(130) });
+  assert.equal(pass.verdict, 'PASS');
+  assert.ok(Math.abs(pass.addedMedianMs - 20) < 1e-9);
+  assert.ok(Math.abs(pass.addedP95Ms - 20) < 1e-9);
+  assert.equal(judgePairedStartup({ baseline: run(110), current: run(135) }).verdict, 'PASS', 'exactly 25 ms passes');
+});
+
+test('a paired startup comparison fails when the median and the p95 both exceed 25 ms, and is OPEN when only one does', () => {
+  assert.equal(judgePairedStartup({ baseline: run(110), current: run(150) }).verdict, 'FAIL');
+  // One slow current journey lifts the p95 delta but not the median delta.
+  const spike = [...run(110).slice(0, 9), 200];
+  const open = judgePairedStartup({ baseline: run(110), current: spike });
+  assert.equal(open.verdict, 'OPEN');
+  assert.match(open.note, /median|p95/);
+  assert.equal(judgePairedStartup({ baseline: run(150), current: run(110) }).verdict, 'PASS', 'a faster current passes');
+});
+
+test('a paired startup comparison needs ten finite journeys per side, two interleaved rounds of five', () => {
+  assert.throws(() => judgePairedStartup({ baseline: run(110).slice(0, 9), current: run(110) }), /ten/);
+  assert.throws(() => judgePairedStartup({ baseline: run(110), current: [...run(110).slice(0, 9), Number.NaN] }), /finite/);
+  assert.throws(() => judgePairedStartup({ baseline: undefined, current: run(110) }), /baseline/);
+});
+
+test('connected host code found in a script a policy-disabled page loads is reported, not only the engine', () => {
+  const { CONNECTED_HOST_MARKERS } = staticRelease;
+  assert.ok(CONNECTED_HOST_MARKERS.includes('furlanich:connected-studio'));
+  const found = findOptionalCodeInCriticalChunks({
+    chunks: [
+      { path: 'chunks/host.js', text: 'sessionStorage.getItem("furlanich:connected-studio-paused")' },
+      { path: 'chunks/diagnostics.js', text: 'window.__FURLANICH_CONNECTED__={read(){}}' },
+      { path: 'chunks/app.js', text: 'plain application code' },
+    ],
+  });
+  assert.deepEqual(found, [
+    { path: 'chunks/host.js', marker: 'furlanich:connected-studio' },
+    { path: 'chunks/diagnostics.js', marker: '__FURLANICH_CONNECTED' },
+  ]);
+});
