@@ -128,6 +128,8 @@ test('the capture script defaults to the Atlas routes and refuses the legacy pos
   assert.match(capture, /ATLAS_ROUTES/, 'the capture script names the Atlas routes');
   assert.match(capture, /--routes=/, 'a route list can be chosen');
   assert.match(capture, /--allow-legacy/, 'a legacy recapture needs an explicit flag');
+  assert.match(capture, /--verify-handoff/, 'the first live frame can be compared with the published poster');
+  assert.match(capture, /HANDOFF_CONTROL_SHIFT_PX/, 'the comparison proves it would see an offset');
   for (const [route, pathname] of [
     ['studio', '/estudio/'],
     ['founder', '/estudio/samuel-furlanich/'],

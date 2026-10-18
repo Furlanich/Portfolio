@@ -1,6 +1,12 @@
 // Dev-only: captures the connected-studio static posters (PLAN-SPF-V1 Task 8; PLAN-SFC-V1 Task 14).
 //
 //   node scripts/capture-connected-studio-posters.mjs [--routes=studio,founder,contact] [--out=<dir>] [--allow-legacy]
+//   node scripts/capture-connected-studio-posters.mjs --verify-handoff [--routes=...] [--posters=<dir>]
+//
+// --verify-handoff captures nothing. At each real viewport it holds time on the live scene's first frame and compares
+// that drawn frame with the published poster painted by the Ground's own CSS cover crop: the lit pixels (strings, rings,
+// dots) of one must lie within two CSS pixels of the lit pixels of the other, in both directions. It is the measured
+// form of "the poster matches the first live paint" (PLAN-SFC-V1 Task 14).
 //
 // Default: the three Atlas routes (Studio, Founder, Contact), six posters. The published Services and Projects
 // posters are the approved legacy family and are never recaptured by accident: naming either needs `--allow-legacy`
@@ -273,14 +279,170 @@ async function encodeWebp(page, png, budget) {
   return { ...result, bytes: Buffer.from(result.base64, 'base64') };
 }
 
+const VERIFY = process.argv.includes('--verify-handoff');
+/** Real viewports a visitor's first live frame is compared at: the capture sizes themselves and common page sizes. */
+const HANDOFF_VIEWPORTS = [
+  { width: 1920, height: 1080 },
+  { width: 1440, height: 900 },
+  { width: 1024, height: 768 },
+  { width: 450, height: 800 },
+  { width: 390, height: 844 },
+  { width: 320, height: 568 },
+];
+/** Both directions must agree on at least this share of lit pixels within the tolerance. */
+const HANDOFF_MIN_AGREEMENT = 0.9;
+/** A poster shifted by this many CSS px must fail the same test: proof that the measure can see a real offset. */
+const HANDOFF_CONTROL_SHIFT_PX = 4;
+const HANDOFF_TOLERANCE_PX = 2;
+
+/**
+ * Lit pixels are the bluish strings, rings and dots: blue clearly above red and bright enough to stand off the Abyss
+ * ground. The sparse chart points are about 1% of them and appear in both images.
+ */
+async function measureAgreement(page, drawnPng, posterPng, shiftPx = 0) {
+  return page.evaluate(
+    async ({ drawn, poster, tolerance, shift }) => {
+      const read = async (base64, offset = 0) => {
+        const bitmap = await createImageBitmap(await (await fetch(`data:image/png;base64,${base64}`)).blob());
+        const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+        const context = canvas.getContext('2d');
+        context.drawImage(bitmap, offset, offset);
+        const { data, width, height } = context.getImageData(0, 0, bitmap.width, bitmap.height);
+        const lit = new Uint8Array(width * height);
+        let count = 0;
+        for (let index = 0; index < lit.length; index += 1) {
+          const red = data[index * 4];
+          const blue = data[index * 4 + 2];
+          if (blue - red >= 40 && blue >= 85) {
+            lit[index] = 1;
+            count += 1;
+          }
+        }
+        return { lit, width, height, count };
+      };
+      const near = (mask, width, height) => {
+        // Separable box dilation by the tolerance.
+        const horizontal = new Uint8Array(mask.length);
+        for (let y = 0; y < height; y += 1) {
+          for (let x = 0; x < width; x += 1) {
+            let hit = 0;
+            for (let dx = -tolerance; dx <= tolerance && !hit; dx += 1) {
+              const xx = x + dx;
+              if (xx >= 0 && xx < width && mask[y * width + xx]) hit = 1;
+            }
+            horizontal[y * width + x] = hit;
+          }
+        }
+        const out = new Uint8Array(mask.length);
+        for (let y = 0; y < height; y += 1) {
+          for (let x = 0; x < width; x += 1) {
+            let hit = 0;
+            for (let dy = -tolerance; dy <= tolerance && !hit; dy += 1) {
+              const yy = y + dy;
+              if (yy >= 0 && yy < height && horizontal[yy * width + x]) hit = 1;
+            }
+            out[y * width + x] = hit;
+          }
+        }
+        return out;
+      };
+      const a = await read(drawn);
+      const b = await read(poster, shift);
+      if (a.width !== b.width || a.height !== b.height) return { error: `image sizes differ: ${a.width}x${a.height} against ${b.width}x${b.height}` };
+      const aNear = near(a.lit, a.width, a.height);
+      const bNear = near(b.lit, b.width, b.height);
+      let drawnCovered = 0;
+      let posterCovered = 0;
+      for (let index = 0; index < a.lit.length; index += 1) {
+        if (a.lit[index] && bNear[index]) drawnCovered += 1;
+        if (b.lit[index] && aNear[index]) posterCovered += 1;
+      }
+      return { drawnLit: a.count, posterLit: b.count, drawnInPoster: a.count ? drawnCovered / a.count : 0, posterInDrawn: b.count ? posterCovered / b.count : 0 };
+    },
+    { drawn: drawnPng.toString('base64'), poster: posterPng.toString('base64'), tolerance: HANDOFF_TOLERANCE_PX, shift: shiftPx },
+  );
+}
+
+async function verifyHandoff(browser) {
+  const postersDir = path.resolve(argument('posters') ?? path.join(root, 'public/brand/connected-studio'));
+  const rows = [];
+  for (const route of requestedRoutes) {
+    for (const viewport of HANDOFF_VIEWPORTS) {
+      const quality = viewport.width < 768 ? 'compact' : 'wide';
+      const label = `${route} ${viewport.width}x${viewport.height}`;
+      const posterBase64 = fs.readFileSync(path.join(postersDir, `${route}-${quality}.webp`)).toString('base64');
+      const context = await browser.newContext({ viewport, deviceScaleFactor: 1, reducedMotion: 'no-preference', locale: 'es-AR' });
+      try {
+        const page = await context.newPage();
+        const clockStart = new Date('2026-01-01T00:00:00Z');
+        await page.clock.install({ time: clockStart });
+        await page.clock.pauseAt(new Date(clockStart.getTime() + 1_000));
+        await page.addInitScript(() => {
+          window.__FURLANICH_CONNECTED_TEST__ = { allowSoftwareRenderer: true, livePolicy: { wide: true, compact: true } };
+        });
+        await page.goto(`${origin}${ROUTE_PATHS[route]}`, { waitUntil: 'load' });
+        await page.waitForFunction(() => window.__FURLANICH_CONNECTED__ !== undefined, null, { timeout: 60_000 });
+        const pose = await drawFirstFrame(page);
+        if (pose.mode !== 'live') throw new Error(`${label}: the page did not draw (mode ${pose.mode})`);
+        const hide =
+          'body *:not([data-connected-ground]):not([data-connected-ground] *) { visibility: hidden !important; }' +
+          '[data-connected-ground], [data-connected-ground] canvas, [data-connected-poster] { visibility: visible !important; }' +
+          '[data-connected-labels], nextjs-portal, #__next-build-watcher { display: none !important; }';
+        await page.addStyleTag({ content: hide });
+        await page.locator('nextjs-portal').evaluateAll((nodes) => nodes.forEach((node) => node.remove()));
+        // A: the drawn first frame alone (poster layer hidden, handoff transition removed).
+        const drawnStyle = await page.addStyleTag({
+          content: '[data-connected-poster] { display: none !important; } [data-connected-ground] canvas { opacity: 1 !important; transition: none !important; }',
+        });
+        const drawn = await page.screenshot({ type: 'png' });
+        await drawnStyle.evaluate((node) => node.remove());
+        // B: the published poster painted by the Ground's own CSS (cover, the shared alignment), canvas hidden.
+        const posterUrl = `data:image/webp;base64,${posterBase64}`;
+        await page.addStyleTag({
+          content:
+            `[data-connected-ground] { --connected-poster-wide: url("${posterUrl}"); --connected-poster-compact: url("${posterUrl}"); }` +
+            '[data-connected-ground] canvas { display: none !important; } [data-connected-poster] { opacity: 1 !important; transition: none !important; }',
+        });
+        await page.waitForFunction(async (source) => {
+          const image = new Image();
+          image.src = source;
+          await image.decode().catch(() => undefined);
+          return image.naturalWidth > 0;
+        }, posterUrl);
+        const painted = await page.screenshot({ type: 'png' });
+        const agreement = await measureAgreement(page, drawn, painted);
+        if (agreement.error) throw new Error(`${label}: ${agreement.error}`);
+        const control = await measureAgreement(page, drawn, painted, HANDOFF_CONTROL_SHIFT_PX);
+        rows.push({ label, ...agreement, control: Math.min(control.drawnInPoster, control.posterInDrawn) });
+      } finally {
+        await context.close();
+      }
+    }
+  }
+  let bad = 0;
+  for (const row of rows) {
+    const pass = row.drawnLit > 200 && row.posterLit > 200 && row.drawnInPoster >= HANDOFF_MIN_AGREEMENT && row.posterInDrawn >= HANDOFF_MIN_AGREEMENT;
+    // The control: the same poster moved four pixels must NOT pass, or the measure could not tell a real offset.
+    const sensitive = row.control < HANDOFF_MIN_AGREEMENT;
+    if (!pass || !sensitive) bad += 1;
+    console.log(
+      `${pass ? 'MATCH' : 'MISMATCH'} ${row.label}: drawn lit ${row.drawnLit}, poster lit ${row.posterLit}, ` +
+        `drawn within ${HANDOFF_TOLERANCE_PX}px of poster ${(row.drawnInPoster * 100).toFixed(1)}%, poster within drawn ${(row.posterInDrawn * 100).toFixed(1)}%; ` +
+        `control (poster moved ${HANDOFF_CONTROL_SHIFT_PX}px) ${(row.control * 100).toFixed(1)}%${sensitive ? '' : ' (TOO HIGH: the measure is blind to an offset)'}`,
+    );
+  }
+  if (bad) throw new Error(`${bad} of ${rows.length} first frames do not match their poster (need at least ${HANDOFF_MIN_AGREEMENT * 100}% both ways)`);
+}
+
 let browser;
 let failed = false;
 try {
   await waitForServer(`${origin}${ROUTE_PATHS[requestedRoutes[0]]}`, 120_000);
-  fs.mkdirSync(outDir, { recursive: true });
+  if (!VERIFY) fs.mkdirSync(outDir, { recursive: true });
   browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 
-  for (const entry of connectedMediaManifest.filter((candidate) => requestedRoutes.includes(candidate.route))) {
+  if (VERIFY) await verifyHandoff(browser);
+  else for (const entry of connectedMediaManifest.filter((candidate) => requestedRoutes.includes(candidate.route))) {
     const { viewport, deviceScaleFactor } = VIEWPORTS[entry.quality];
     const file = path.basename(entry.src);
     const context = await browser.newContext({ viewport, deviceScaleFactor, reducedMotion: 'no-preference', locale: 'es-AR' });
