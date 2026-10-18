@@ -1143,6 +1143,19 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
 
 type ForegroundBox = Rect & { what: string };
 
+/** The first visible label that overlaps a stored foreground box when the page is scrolled by `scrolled`. */
+function findLabelClash(
+  foreground: readonly ForegroundBox[],
+  labels: readonly (Rect & { id: string; text: string; visible: boolean })[],
+  scrolled: number,
+): string | undefined {
+  for (const label of labels.filter((candidate) => candidate.visible)) {
+    const hit = foreground.find((box) => overlaps(label, { left: box.left, right: box.right, top: box.top - scrolled, bottom: box.bottom - scrolled }));
+    if (hit) return `label "${label.text}" (${label.id}) overlaps ${hit.what}`;
+  }
+  return undefined;
+}
+
 const readForeground = (page: Page): Promise<{ labels: (Rect & { id: string; text: string; visible: boolean; fontSize: number; upright: boolean })[]; foreground: ForegroundBox[] }> =>
   page.evaluate(() => {
     const labels = Array.from(document.querySelectorAll<HTMLElement>('[data-connected-label]')).map((element) => {
@@ -1240,11 +1253,8 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
             .poll(
               async () => {
                 const scrolled = await page.evaluate(() => window.scrollY);
-                for (const label of (await readLabels(page)).filter((candidate) => candidate.visible)) {
-                  const hit = foreground.find((box) => overlaps(label, { left: box.left, right: box.right, top: box.top - scrolled, bottom: box.bottom - scrolled }));
-                  if (hit) return `label "${label.text}" (${label.id}) at scroll ${top} overlaps ${hit.what}`;
-                }
-                return 'clear';
+                const clash = findLabelClash(foreground, await readLabels(page), scrolled);
+                return clash ? `${clash} at scroll ${top}` : 'clear';
               },
               { timeout: 8_000, intervals: [100, 150, 250, 500] },
             )
@@ -1315,4 +1325,26 @@ test.describe('a scrim backing never covers a control (Task 12)', () => {
       });
     }
   }
+});
+
+// Reviewer R finding 1 on PR 153: the sticky App Bar keeps its place in the viewport while the page scrolls, so its
+// controls must be compared in viewport space, not translated with the document. The helpers run against a controlled DOM.
+test.describe('the label clash helper follows the sticky App Bar (Reviewer R)', () => {
+  test('a label under the App Bar control is a clash at a nonzero scroll, and a label under scrolled-away text is not', async ({ page }) => {
+    await page.setContent(`
+      <header data-app-bar style="position: sticky; top: 0; height: 60px; z-index: 50">
+        <div data-app-bar-surface style="background: rgba(10,30,51,.82); height: 60px"><a href="#x" style="position: absolute; left: 100px; top: 20px; width: 80px; height: 20px">Home</a></div>
+      </header>
+      <main style="height: 3000px"><p style="position: absolute; left: 400px; top: 100px; width: 200px; height: 20px">Intro text</p></main>
+      <div data-connected-label data-node-id="n1" style="position: fixed; left: 100px; top: 20px; width: 80px; height: 20px; opacity: 1">Label</div>
+      <div data-connected-label data-node-id="n2" style="position: fixed; left: 400px; top: 100px; width: 80px; height: 20px; opacity: 1">Other</div>
+    `);
+    const { foreground } = await readForeground(page);
+    await page.evaluate(() => window.scrollTo(0, 400));
+    const labels = await readLabels(page);
+    const clash = findLabelClash(foreground, labels, await page.evaluate(() => window.scrollY));
+    // n1 sits under the sticky App Bar link (viewport 20..40) at any scroll: that is the clash. n2 sat under the
+    // paragraph at scroll 0 only; at scroll 400 the paragraph has scrolled away, so it is not.
+    expect(clash, 'the label under the sticky App Bar control').toBe('label "Label" (n1) overlaps a "Home"');
+  });
 });
