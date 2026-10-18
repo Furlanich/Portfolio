@@ -36,6 +36,8 @@ import {
   attributeShifts,
   COLD_BASELINE_JOURNEYS,
   findOptionalCodeInCriticalChunks,
+  collectPairedStartup,
+  gateExit,
   judgePairedStartup,
   judgeStaticRouteCost,
   mainThreadStartupCost,
@@ -103,31 +105,38 @@ if (STARTUP && JOURNEYS_PER_LOCALE < COLD_BASELINE_JOURNEYS) {
 // checkout with --routes and --profile): ten journeys per side, the median and p95 added against the 25 ms allowance.
 if (argument('judge-paired') !== undefined) {
   const dir = argument('judge-paired');
+  // The declared selection: the chosen profile or both, and the chosen reading routes (default Studio, Founder and Contact) in
+  // both locales. Every one must be present in all four reports, or nothing is judged.
+  const pairedRoutes = argument('routes') !== undefined ? SELECTED_ROUTES : ['studio', 'founder', 'contact'];
+  const pairedKeys = pairedRoutes.flatMap((route) => ['es', 'en'].map((locale) => `${route}/${locale}`));
   const verdicts = [];
-  for (const profileName of Object.keys(PROFILES)) {
-    const sides = { base: {}, cur: {} };
-    for (const side of Object.keys(sides)) {
-      for (const round of [1, 2]) {
+  try {
+    const unmeasurable = pairedRoutes.filter((route) => !READING_ROUTE_NAMES.includes(route));
+    if (unmeasurable.length) throw new Error(`--routes names routes the startup measurement does not cover: ${unmeasurable.join(', ')}`);
+    for (const profileName of SELECTED_PROFILES) {
+      const read = (side, round) => {
         const file = path.join(dir, `${side}-${profileName}-${round}.json`);
-        if (!fs.existsSync(file)) continue;
-        const report = JSON.parse(fs.readFileSync(file, 'utf8'));
-        for (const [key, entry] of Object.entries(report.profiles[profileName]?.routes ?? {})) (sides[side][key] ??= []).push(...entry.journeysDetail.map((journey) => journey.startupCpuMs));
+        return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : undefined;
+      };
+      const collected = collectPairedStartup({
+        profile: profileName,
+        keys: pairedKeys,
+        reports: { base: [read('base', 1), read('base', 2)], cur: [read('cur', 1), read('cur', 2)] },
+      });
+      for (const key of pairedKeys) {
+        const judged = judgePairedStartup({ baseline: collected[key].baseline, current: collected[key].current });
+        verdicts.push(judged.verdict);
+        console.log(`${judged.verdict} ${profileName} ${key}: baseline median ${judged.baselineMedianMs.toFixed(1)} p95 ${judged.baselineP95Ms.toFixed(1)}; current median ${judged.currentMedianMs.toFixed(1)} p95 ${judged.currentP95Ms.toFixed(1)}; ${judged.note}`);
       }
     }
-    for (const key of Object.keys(sides.cur)) {
-      const judged = judgePairedStartup({ baseline: sides.base[key], current: sides.cur[key] });
-      verdicts.push(judged.verdict);
-      console.log(`${judged.verdict} ${profileName} ${key}: baseline median ${judged.baselineMedianMs.toFixed(1)} p95 ${judged.baselineP95Ms.toFixed(1)}; current median ${judged.currentMedianMs.toFixed(1)} p95 ${judged.currentP95Ms.toFixed(1)}; ${judged.note}`);
-    }
-  }
-  if (!verdicts.length) {
-    console.error(`measure-connected-studio-vitals: no paired reports were found in "${dir}"`);
+  } catch (error) {
+    console.error(`measure-connected-studio-vitals: ${error.message}`);
     process.exit(1);
   }
-  const counts = verdicts.reduce((tally, verdict) => ({ ...tally, [verdict]: (tally[verdict] ?? 0) + 1 }), {});
-  console.log(`
-Paired startup CPU verdicts: ${JSON.stringify(counts)}`);
-  process.exit(verdicts.includes('FAIL') ? 1 : 0);
+  const gate = gateExit(verdicts);
+  console.log(`\nPaired startup CPU verdicts: ${JSON.stringify(gate.counts)}`);
+  console.log(gate.message);
+  process.exit(gate.ok ? 0 : 1);
 }
 const HARDWARE = process.argv.includes('--hardware');
 const basePath = normalizeBasePath(argument('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
@@ -599,7 +608,11 @@ async function runStartupBaseline() {
     }
     const counts = comparison.reduce((tally, item) => ({ ...tally, [item.verdict]: (tally[item.verdict] ?? 0) + 1 }), {});
     console.log(`\nStatic release cost against the Task 3 baseline: ${JSON.stringify(counts)}`);
-    if (comparison.some((item) => item.verdict === 'FAIL')) failures.push('one or more routes exceed their added-cost budget');
+    // An OPEN row stays OPEN in the report, but unresolved evidence cannot satisfy the gate: run the paired adjudication
+    // (--judge-paired) for those rows. Only an all-PASS comparison exits successfully.
+    const gate = gateExit(comparison.map((item) => item.verdict));
+    console.log(gate.message);
+    if (!gate.ok) failures.push(`the static release cost against the Task 3 baseline is not satisfied: ${gate.message}`);
   }
   const table = Object.entries(report.profiles).flatMap(([profileName, profile]) =>
     Object.entries(profile.routes).map(([key, value]) => ({ profile: profileName, route: key, firstLoadJsBrotliKiB: value.firstLoadJsBrotliKiB, criticalJsBrotliKiB: value.criticalJsBrotliKiB, startupCpuMedianMs: value.startupCpuMedianMs, startupCpuP95Ms: value.startupCpuP95Ms, evaluationCpuP95Ms: value.evaluationCpuP95Ms, longestTaskMs: value.longestTaskMs })));

@@ -1,6 +1,6 @@
 # Task 14 / PR 14 — Publish matched static posters and verify release costs
 
-**Status: the six matched posters are captured, measured against their first live frame and published; the static release gate is FAIL, not PASS.** Bytes, vitals and the closure pass. Startup CPU fails on a demonstrated cause outside this packet's write set: `ConnectedStudioGround` imports the connected host statically, so every Atlas page loads it in a policy-disabled build. Two findings go to the planning authority for packets 20 and later (below). The owner approved the posters and the Windows baselines on 2026-10-18 (below); the Linux images, Reviewer R, CI and the human merge are PENDING. Nothing was deployed and no hardware was used.
+**Status: the six matched posters are captured, measured against their first live frame and published; the static release gate is FAIL, not PASS.** Bytes, vitals and the closure pass. Startup CPU fails on a demonstrated cause outside this packet's write set: `ConnectedStudioGround` imports the connected host statically, so every Atlas page loads it in a policy-disabled build. Two findings go to the planning authority for packets 20 and later (below). The owner approved the posters and the Windows baselines on 2026-10-18 (below); the Linux images, Reviewer R's re-review of the corrected head, CI and the human merge are PENDING. Reviewer R reviewed `8652920a` on [PR #155](https://github.com/Furlanich/Portfolio/pull/155) and left two P2 findings in the release-cost command, both reproduced and corrected (below). Nothing was deployed and no hardware was used.
 
 Implementer: Claude Sonnet 5.5 (`claude-sonnet-5-5`), Claude Code desktop session; the reasoning-effort level is not exposed to the session, so "High" is not attested. Single primary agent, 0 subagents (SINGLE_AGENT). The skill's whole-branch reviewer subagent was not used (AGENTS.md and GOV-AGENT-USAGE outrank it); the self-review below is the author's own.
 
@@ -98,6 +98,12 @@ Startup CPU against the committed Task 3 baseline (root, `--compare`): 2 PASS, 1
 
 Assignment: the fix is in `ConnectedStudioGround.tsx` (and a client entry split), outside this packet (host and policy changes are forbidden here); it belongs to a **new packet 20 or later**. RED already exists: `tests/e2e/sfc-production.spec.ts`, case `a policy-disabled Atlas page references no connected host code`, held with `test.fixme`, and the production script fails on it today; the paired judge is its verification. Until it merges, Task 16 must not release these pages, and the static-release gate of this packet stays FAIL.
 
+## Reviewer R findings on PR #155 (reviewed `8652920a`; both reproduced before any change, each with failing cases first)
+
+- Finding 1 [P2], unresolved gates exit 0 (confirmed). `--judge-paired` exited 0 for a complete matrix of twelve OPEN rows, and the `--startup-baseline --compare` branch treated only FAIL as unsuccessful, so unresolved CPU or long-task evidence satisfied a command the plan calls a release gate. RED: the all-OPEN fixture (baseline five times 100 ms, current 110, 110, 110, 110, 200 in each round) exited 0 through the real CLI. Fix: a pure `gateExit` returns success only for an all-PASS, non-empty set; both commands use it. An OPEN row stays labelled OPEN in the report and the output says how many rows are unresolved; it just no longer exits 0. GREEN: all-PASS exits 0, all-OPEN, FAIL and empty exit 1.
+- Finding 2 [P2], incomplete paired evidence passes (confirmed). The judge skipped missing files and iterated only the keys found on the current side, so one round, a missing profile or a route missing only from the current side could pass (the reviewer's two reproductions exited 0 with `PASS` rows). RED: a missing round-2 pair and `contact/en` removed from only the current side both exited 0 at the CLI. Fix: `collectPairedStartup` takes the declared selection (the chosen profile or both, and Studio, Founder and Contact in both locales unless `--routes` narrows it) and rejects the whole set unless both rounds of both sides exist and every key is present with five finite journeys in all four reports; nothing is judged from a partial set. GREEN: complete sets pass, each incomplete shape is rejected with the missing round, side, profile or key named. Mutation spot-check: four mutants (all-PASS rule, round existence, entry existence, journey count) are all caught.
+- Re-run on the real evidence after the fix: the root paired set still yields 11 FAIL and 1 OPEN and exits 1; the host-free experiment set (`--profile=desktop`) yields 6 of 6 PASS and exits 0. The paired figures above are unchanged.
+
 ## Rulings
 
 - Ruling: the compact posters are identical and the plan's "six distinct images" is met only for wide. The binding spec fixes one compact composition for all three pages, so a distinct compact image would be fabricated and would not match the live first frame. The media contract asserts that images are identical exactly when their compositions are. Cost if wrong: the owner wants a visible difference and amends the spec.
@@ -123,6 +129,7 @@ Assignment: the fix is in `ConnectedStudioGround.tsx` (and a client entry split)
 ## Validation (fresh, 2026-10-18, `.worktrees/sfc-14`)
 
 - `npm run validate` on `7175c075` (the later commits change a collector's reporting and one assertion): exit 0; docs:check 348 Markdown files, 121 document IDs, 38 Skills; `npm test` 849 tests, 848 pass, 1 `todo`, 0 fail (828 at the base); lint 0 errors, 282 warnings (the baseline); typecheck pass; build pass.
+- After the Reviewer R corrections: `npm run validate` exit 0 again (docs:check 349 files; `npm test` 857 tests, 856 pass, 1 `todo`, 0 fail; lint 0 errors, 282 warnings; typecheck; build). The corrections touch only the collector and its tests, so the browser and measurement results below stand.
 - Root: `verify:static-export` 14 routes; served export `connected-production-chromium` and `sfc-production-{chromium,firefox,webkit}`: 71 passed, 3 skipped (the held case in three engines). `/Portfolio`: `verify:static-export` 14 routes, the same two families 71 passed, 3 skipped.
 - Production script: bytes, closure and posters pass; it FAILS on shipped host code in all six pages at root and `/Portfolio` (the finding).
 - Dev server regression after publication: `chromium-desktop` studio, founder, legal, privacy and the static spec 122/122; `compact-320-chromium` and `mobile-chromium` static, studio-responsive and founder-responsive 188 passed, 14 skipped; the only red is the carried Contact case above.
@@ -141,7 +148,7 @@ Reproduce: `node scripts/measure-connected-studio-production.mjs --skip-build`; 
 ## Open items
 
 - Owner approval of the posters and the Windows baselines: GIVEN (above). The Linux images of all sixteen baselines from CI at the same head: PENDING.
-- Reviewer R (separate session), CI and the human merge: PENDING. Reviewer R should re-run `node scripts/capture-connected-studio-posters.mjs --verify-handoff` in a disposable runtime candidate.
+- Reviewer R's re-review of the corrected head, CI and the human merge: PENDING. Reviewer R should re-run `node scripts/capture-connected-studio-posters.mjs --verify-handoff` in a disposable runtime candidate.
 - Packet 20 or later for the host import split and for Contact's opacity; Task 16 is blocked on the first.
 - Terms comparator, hardware, screen readers, Safari and Firefox startup timing: OPEN (not measured here).
-- Mutation spot-checks were run for the cost judge only, not for the capture script.
+- Mutation spot-checks were run for the cost judge, the paired judge, the gate exit and the completeness checks, not for the capture script.

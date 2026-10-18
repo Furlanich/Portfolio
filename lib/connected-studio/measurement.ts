@@ -713,3 +713,59 @@ export function judgePairedStartup(input: { baseline: readonly number[] | undefi
   }
   return { baselineMedianMs, currentMedianMs, baselineP95Ms, currentP95Ms, addedMedianMs, addedP95Ms, verdict, note };
 }
+
+/**
+ * The exit decision of a release-cost command. Only an all-PASS set satisfies a gate: an OPEN row stays OPEN in the report
+ * (it is not a failure of the code) but it is unresolved evidence, so it cannot let the command succeed. No verdict at all
+ * is not a pass either.
+ */
+export function gateExit(verdicts: readonly Verdict[]): { ok: boolean; counts: Record<string, number>; message: string } {
+  const counts: Record<string, number> = {};
+  for (const verdict of verdicts) counts[verdict] = (counts[verdict] ?? 0) + 1;
+  if (!verdicts.length) return { ok: false, counts, message: 'No verdict was produced: an empty comparison is not a pass' };
+  const ok = verdicts.every((verdict) => verdict === 'PASS');
+  const open = counts.OPEN ?? 0;
+  const fail = counts.FAIL ?? 0;
+  const message = ok
+    ? `${verdicts.length} of ${verdicts.length} rows PASS`
+    : `${counts.PASS ?? 0} PASS, ${open} OPEN, ${fail} FAIL: ${fail ? 'a row fails' : `${open} OPEN row${open === 1 ? '' : 's'} left unresolved`}, so the gate is not satisfied`;
+  return { ok, counts, message };
+}
+
+type PairedStartupRoute = { journeysDetail?: readonly { startupCpuMs?: unknown }[] };
+export type PairedStartupReport = { profiles?: Record<string, { routes?: Record<string, PairedStartupRoute | undefined> } | undefined> };
+
+/**
+ * The journeys of a paired set for one profile, rejected unless it is complete: both interleaved rounds of both sides must
+ * exist and every expected route/locale key must be present, with five finite journeys, in each of the four reports. A missing
+ * round, or a route absent from only one side, would otherwise leave pooled values standing in for the whole matrix.
+ */
+export function collectPairedStartup(input: {
+  profile: string;
+  keys: readonly string[];
+  reports: { base: readonly (PairedStartupReport | undefined)[]; cur: readonly (PairedStartupReport | undefined)[] };
+}): Record<string, { baseline: number[]; current: number[] }> {
+  const sides = [
+    { name: 'baseline', reports: input.reports.base, into: 'baseline' as const },
+    { name: 'current', reports: input.reports.cur, into: 'current' as const },
+  ];
+  const result: Record<string, { baseline: number[]; current: number[] }> = Object.fromEntries(input.keys.map((key) => [key, { baseline: [], current: [] }]));
+  for (const side of sides) {
+    for (const round of [1, 2]) {
+      const report = side.reports[round - 1];
+      if (!report) throw new Error(`The ${input.profile} paired set has no ${side.name} round ${round} report`);
+      const routes = report.profiles?.[input.profile]?.routes;
+      if (!routes) throw new Error(`The ${side.name} round ${round} report has no ${input.profile} profile`);
+      for (const key of input.keys) {
+        const detail = routes[key]?.journeysDetail;
+        if (!detail) throw new Error(`The ${side.name} round ${round} report has no ${key} entry for the ${input.profile} profile`);
+        if (detail.length !== COLD_BASELINE_JOURNEYS) throw new Error(`The ${side.name} round ${round} ${key} entry has ${detail.length} journeys, not five`);
+        for (const journey of detail) {
+          if (typeof journey.startupCpuMs !== 'number' || !Number.isFinite(journey.startupCpuMs)) throw new Error(`The ${side.name} round ${round} ${key} entry has a journey without a finite startup CPU`);
+          result[key][side.into].push(journey.startupCpuMs);
+        }
+      }
+    }
+  }
+  return result;
+}

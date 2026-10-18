@@ -589,3 +589,110 @@ test('connected host code found in a script a policy-disabled page loads is repo
     { path: 'chunks/diagnostics.js', marker: '__FURLANICH_CONNECTED' },
   ]);
 });
+
+// --- Reviewer R findings on PR #155: an unresolved or incomplete comparison must never satisfy a release gate -------
+
+const { gateExit, collectPairedStartup } = await import('../lib/connected-studio/measurement.ts');
+const { mkdtempSync, writeFileSync, rmSync } = await import('node:fs');
+const { tmpdir } = await import('node:os');
+const pathModule = await import('node:path');
+
+const reportOf = (profile, samplesByKey) => ({
+  profiles: {
+    [profile]: {
+      routes: Object.fromEntries(Object.entries(samplesByKey).map(([key, samples]) => [key, { journeysDetail: samples.map((startupCpuMs) => ({ startupCpuMs })) }])),
+    },
+  },
+});
+const ATLAS_KEYS = ['studio/es', 'studio/en', 'founder/es', 'founder/en', 'contact/es', 'contact/en'];
+const allKeys = (samples) => Object.fromEntries(ATLAS_KEYS.map((key) => [key, samples]));
+
+test('a gate exits successfully only when every verdict is PASS, and an empty set is no pass', () => {
+  assert.equal(gateExit(['PASS', 'PASS']).ok, true);
+  assert.equal(gateExit(['PASS', 'OPEN']).ok, false, 'an unresolved row cannot satisfy a release gate');
+  assert.equal(gateExit(['OPEN', 'OPEN']).ok, false);
+  assert.equal(gateExit(['PASS', 'FAIL']).ok, false);
+  assert.equal(gateExit([]).ok, false, 'no verdict is not a pass');
+  assert.match(gateExit(['PASS', 'OPEN', 'OPEN']).message, /OPEN.*2|2.*OPEN/);
+});
+
+test('a paired set needs both rounds of both sides and every expected route and locale on both sides', () => {
+  const round = (samples) => reportOf('desktop', allKeys(samples));
+  const complete = { base: [round([100, 101, 102, 103, 104]), round([100, 101, 102, 103, 104])], cur: [round([110, 111, 112, 113, 114]), round([110, 111, 112, 113, 114])] };
+  const collected = collectPairedStartup({ profile: 'desktop', keys: ATLAS_KEYS, reports: complete });
+  assert.equal(collected['studio/es'].baseline.length, 10);
+  assert.equal(collected['contact/en'].current.length, 10);
+  assert.throws(() => collectPairedStartup({ profile: 'desktop', keys: ATLAS_KEYS, reports: { ...complete, cur: [complete.cur[0], undefined] } }), /current.*round 2/);
+  assert.throws(() => collectPairedStartup({ profile: 'desktop', keys: ATLAS_KEYS, reports: { ...complete, base: [undefined, complete.base[1]] } }), /baseline.*round 1/);
+  const withoutContactEn = reportOf('desktop', Object.fromEntries(ATLAS_KEYS.filter((key) => key !== 'contact/en').map((key) => [key, [110, 111, 112, 113, 114]])));
+  assert.throws(() => collectPairedStartup({ profile: 'desktop', keys: ATLAS_KEYS, reports: { ...complete, cur: [complete.cur[0], withoutContactEn] } }), /current round 2 report has no contact\/en/);
+  const short = reportOf('desktop', { ...allKeys([110, 111, 112, 113, 114]), 'studio/es': [110, 111, 112] });
+  assert.throws(() => collectPairedStartup({ profile: 'desktop', keys: ATLAS_KEYS, reports: { ...complete, cur: [short, complete.cur[1]] } }), /studio\/es.*five|studio\/es.*3/);
+  assert.throws(() => collectPairedStartup({ profile: 'mobile', keys: ATLAS_KEYS, reports: complete }), /mobile/);
+});
+
+const runJudgePaired = (files, extra = []) => {
+  const dir = mkdtempSync(pathModule.join(tmpdir(), 'sfc-paired-'));
+  try {
+    for (const [name, report] of Object.entries(files)) writeFileSync(pathModule.join(dir, name), JSON.stringify(report));
+    const script = fileURLToPath(new URL('./measure-connected-studio-vitals.mjs', import.meta.url));
+    return spawnSync(process.execPath, [script, `--judge-paired=${dir}`, '--profile=desktop', ...extra], { encoding: 'utf8', timeout: 60_000 });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+};
+const pairedFiles = (baseSamples, currentSamples) => ({
+  'base-desktop-1.json': reportOf('desktop', allKeys(baseSamples)),
+  'cur-desktop-1.json': reportOf('desktop', allKeys(currentSamples)),
+  'cur-desktop-2.json': reportOf('desktop', allKeys(currentSamples)),
+  'base-desktop-2.json': reportOf('desktop', allKeys(baseSamples)),
+});
+
+test('the paired judge command exits zero only for a complete, all-PASS matrix', () => {
+  const pass = runJudgePaired(pairedFiles([100, 100, 100, 100, 100], [105, 105, 105, 105, 105]));
+  assert.equal(pass.status, 0, pass.stdout + pass.stderr);
+  assert.match(pass.stdout, /"PASS":6/);
+});
+
+test('the paired judge command fails for an all-OPEN matrix instead of passing it', () => {
+  // The reviewer fixture: current median +10 ms but one 200 ms journey lifts the p95 delta past the allowance.
+  const open = runJudgePaired(pairedFiles([100, 100, 100, 100, 100], [110, 110, 110, 110, 200]));
+  assert.match(open.stdout, /"OPEN":6/);
+  assert.notEqual(open.status, 0, 'an unresolved comparison cannot satisfy a release gate');
+});
+
+test('the paired judge command fails for a FAIL matrix', () => {
+  const fail = runJudgePaired(pairedFiles([100, 100, 100, 100, 100], [200, 200, 200, 200, 200]));
+  assert.notEqual(fail.status, 0);
+});
+
+test('the paired judge command rejects a set with a missing round, never judging pooled values', () => {
+  const files = pairedFiles([100, 100, 100, 100, 100], [105, 105, 105, 105, 105]);
+  delete files['cur-desktop-2.json'];
+  delete files['base-desktop-2.json'];
+  const incomplete = runJudgePaired(files);
+  assert.notEqual(incomplete.status, 0, incomplete.stdout);
+  assert.match(incomplete.stderr, /round 2/);
+  assert.doesNotMatch(incomplete.stdout, /PASS/);
+});
+
+test('the paired judge command rejects a route missing only from the current side', () => {
+  const files = pairedFiles([100, 100, 100, 100, 100], [105, 105, 105, 105, 105]);
+  files['cur-desktop-2.json'] = reportOf('desktop', Object.fromEntries(ATLAS_KEYS.filter((key) => key !== 'contact/en').map((key) => [key, [105, 105, 105, 105, 105]])));
+  const missing = runJudgePaired(files);
+  assert.notEqual(missing.status, 0, missing.stdout);
+  assert.match(missing.stderr, /contact\/en/);
+});
+
+test('the paired judge command requires every declared profile unless one is chosen', () => {
+  const dir = mkdtempSync(pathModule.join(tmpdir(), 'sfc-paired-'));
+  try {
+    for (const [name, report] of Object.entries(pairedFiles([100, 100, 100, 100, 100], [105, 105, 105, 105, 105]))) writeFileSync(pathModule.join(dir, name), JSON.stringify(report));
+    const script = fileURLToPath(new URL('./measure-connected-studio-vitals.mjs', import.meta.url));
+    const both = spawnSync(process.execPath, [script, `--judge-paired=${dir}`], { encoding: 'utf8', timeout: 60_000 });
+    assert.notEqual(both.status, 0, 'the mobile profile has no files');
+    assert.match(both.stderr, /mobile/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
