@@ -13,6 +13,7 @@ import { foundationRoutes } from '../lib/site-routes.ts';
 import {
   HARDWARE_ROUTES,
   PROTOCOL_MINIMA,
+  QUIESCENCE_LIMITS,
   REQUIRED_VALID_RUNS,
   buildDossier,
   classifyRun,
@@ -42,6 +43,7 @@ function goodRun({ tier = 'wide', route = 'studio', locale = 'es', n = 1 } = {})
     device: wide ? desktop() : android(),
     build: { head: '5d0b3a70a86c8cc71a3a60f9330f3b5a58b562c6', candidate: 'runtime', patchSha256: 'a'.repeat(64), basePath: '/', method: 'node scripts/measure-connected-studio-hardware.mjs' },
     protocol: { ...PROTOCOL_MINIMA, headed: true, hiddenMethod: 'window-minimized' },
+    machine: { cpuBusyBefore: 0.06, cpuBusyAfter: 0.08, gpuUtilizationBefore: wide ? 0.02 : null },
     renderer: wide ? 'ANGLE (NVIDIA, NVIDIA GeForce RTX 2060 Direct3D11 vs_5_0 ps_5_0)' : 'Adreno (TM) 610',
     liveWithoutOverride: true,
     setsTestHook: false,
@@ -125,6 +127,10 @@ for (const [label, change, pattern] of [
   ['an incomplete device record', (run) => { run.device.os = ''; }, /device/i],
   ['no head', (run) => { run.build.head = 'main'; }, /head/i],
   ['no patch hash', (run) => { run.build.patchSha256 = ''; }, /patch/i],
+  ['a machine that was busy before the run', (run) => { run.machine.cpuBusyBefore = QUIESCENCE_LIMITS.cpuBusy + 0.01; }, /busy|quiescen/i],
+  ['a machine that was busy after the run', (run) => { run.machine.cpuBusyAfter = QUIESCENCE_LIMITS.cpuBusy + 0.01; }, /busy|quiescen/i],
+  ['a GPU that was in use by something else', (run) => { run.machine.gpuUtilizationBefore = QUIESCENCE_LIMITS.gpuUtilization + 0.01; }, /gpu/i],
+  ['no machine load record', (run) => { delete run.machine; }, /quiescen|machine/i],
   ['a failure recorded by the run itself', (run) => { run.failures = ['the run stopped: timeout']; }, /failure|stopped/i],
 ]) {
   test(`${label} makes the run invalid, not a pass and not a fail`, () => {
@@ -135,6 +141,12 @@ for (const [label, change, pattern] of [
     assert.ok(verdict.reasons.some((reason) => pattern.test(reason)), verdict.reasons.join('|'));
   });
 }
+
+test('a GPU that cannot be queried is recorded as such and does not by itself invalidate a run', () => {
+  const run = goodRun();
+  run.machine.gpuUtilizationBefore = null;
+  assert.deepEqual(classifyRun(run), { valid: true, reasons: [] });
+});
 
 test('a phone run recorded on a desktop device is invalid for the compact tier', () => {
   const run = goodRun({ tier: 'compact' });
