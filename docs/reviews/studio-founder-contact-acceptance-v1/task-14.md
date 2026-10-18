@@ -83,7 +83,7 @@ These ten files sit in Task 6, 7 and 10 snapshot directories, outside this packe
 | `studio`, `founder`, `contact` `-wide-ground` | the Windows hashes `D814DAB7…`, `1A1083E0…`, `656A22DE…` |
 | the three `-compact-ground` | the Windows hash `916220C2…` |
 
-Their confirmation is the next CI run at the head that carries them; this receipt does not claim it before that run.
+Confirmed: [Quality run 39147471451](https://github.com/Furlanich/Portfolio/actions/runs/39147471451) at head `e850eeaa`, which carries them, passed validate and all four browser shards (including the visual shard that failed before), with no update mode.
 
 ## Static release cost
 
@@ -163,7 +163,7 @@ Reproduce: `node scripts/measure-connected-studio-production.mjs --skip-build`; 
 
 ## Open items
 
-- Owner approval of the posters and the Windows baselines: GIVEN (above), including the four Founder Windows images, which the owner re-confirmed after the correction (see above). The Linux images are adopted from CI run 39144828833; their confirmation is the next CI run.
+- Owner approval of the posters and the Windows baselines: GIVEN (above), including the four Founder Windows images, which the owner re-confirmed after the correction (see above). The Linux images are adopted from CI run 39144828833 and confirmed by run 39147471451, which passed all five jobs.
 - Reviewer R's re-review of the corrected head, CI and the human merge: PENDING. Reviewer R should re-run `node scripts/capture-connected-studio-posters.mjs --verify-handoff` in a disposable runtime candidate.
 - Packet 20 or later for the host import split and for Contact's opacity; Task 16 is blocked on the first.
 - Terms comparator, hardware, screen readers, Safari and Firefox startup timing: OPEN (not measured here).
