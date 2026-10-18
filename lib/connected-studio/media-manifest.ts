@@ -51,12 +51,12 @@ export const connectedMediaManifest: readonly ConnectedPosterEntry[] = Object.fr
   poster('projects', 'compact'),
   // PLAN-SFC-V1 Task 2 declares the profile-route posters unpublished. Each page packet captures its own
   // pair and flips `published`; until then the Ground shows only the CSS chart and requests no file.
-  poster('studio', 'wide', false),
-  poster('studio', 'compact', false),
-  poster('founder', 'wide', false),
-  poster('founder', 'compact', false),
-  poster('contact', 'wide', false),
-  poster('contact', 'compact', false),
+  poster('studio', 'wide'),
+  poster('studio', 'compact'),
+  poster('founder', 'wide'),
+  poster('founder', 'compact'),
+  poster('contact', 'wide'),
+  poster('contact', 'compact'),
 ]);
 
 /**

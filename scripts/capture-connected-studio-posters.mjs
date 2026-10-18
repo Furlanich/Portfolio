@@ -1,6 +1,16 @@
-// Dev-only: captures the four connected-studio static posters (PLAN-SPF-V1 Task 8).
+// Dev-only: captures the connected-studio static posters (PLAN-SPF-V1 Task 8; PLAN-SFC-V1 Task 14).
 //
-//   node scripts/capture-connected-studio-posters.mjs
+//   node scripts/capture-connected-studio-posters.mjs [--routes=studio,founder,contact] [--out=<dir>] [--allow-legacy]
+//
+// Default: the three Atlas routes (Studio, Founder, Contact), six posters. The published Services and Projects
+// posters are the approved legacy family and are never recaptured by accident: naming either needs `--allow-legacy`
+// (PLAN-SFC-V1 Task 14 preserves them; a required legacy recapture returns with its own packet and owner review).
+//
+// The three Atlas pages mount their live host only while a live tier is enabled in the build (a server-side policy
+// decision). Run this script from a disposable checkout with the runtime candidate applied:
+//   node scripts/prepare-sfc-candidate.mjs apply --kind=runtime
+// and send the files to the task checkout with `--out=<task checkout>/public/brand/connected-studio`. Without the
+// patch the host never mounts and the script stops with that instruction instead of writing a CSS-only image.
 //
 // Starts `next dev` (port 3120 unless PLAYWRIGHT_PORT is set; set CAPTURE_ORIGIN to reuse a server
 // you started yourself with `--hostname 127.0.0.1`), opens each connected route in headless Chromium
@@ -30,15 +40,37 @@ import net from 'node:net';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { CONNECTED_POSTER_CAPTURE, CONNECTED_POSTER_POSE, connectedMediaManifest } from '../lib/connected-studio/media-manifest.ts';
+import { getConnectedProfile } from '../lib/connected-studio/profiles.ts';
+import { computeProjectionLayout, projectAnchor } from '../lib/connected-studio/projection.ts';
 
 const root = process.cwd();
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 3120);
 const reuseOrigin = process.env.CAPTURE_ORIGIN;
 const origin = reuseOrigin ?? `http://127.0.0.1:${port}`;
-const outDir = path.join(root, 'public/brand/connected-studio');
+const argument = (name) => process.argv.find((value) => value.startsWith(`--${name}=`))?.slice(name.length + 3);
+const outDir = path.resolve(argument('out') ?? path.join(root, 'public/brand/connected-studio'));
 const KIB = 1024;
 
-const ROUTE_PATHS = { services: '/servicios/', projects: '/proyectos/' };
+const ROUTE_PATHS = {
+  services: '/servicios/',
+  projects: '/proyectos/',
+  studio: '/estudio/',
+  founder: '/estudio/samuel-furlanich/',
+  contact: '/contacto/',
+};
+const ATLAS_ROUTES = ['studio', 'founder', 'contact'];
+const LEGACY_ROUTES = ['services', 'projects'];
+const requestedRoutes = (argument('routes')?.split(',').map((route) => route.trim()).filter(Boolean)) ?? ATLAS_ROUTES;
+for (const route of requestedRoutes) {
+  if (!Object.hasOwn(ROUTE_PATHS, route)) {
+    console.error(`Unknown route "${route}". Choose from ${Object.keys(ROUTE_PATHS).join(', ')}.`);
+    process.exit(1);
+  }
+}
+if (requestedRoutes.some((route) => LEGACY_ROUTES.includes(route)) && !process.argv.includes('--allow-legacy')) {
+  console.error('Services and Projects have approved, published posters. Recapturing them needs --allow-legacy and its own packet and owner review.');
+  process.exit(1);
+}
 const VIEWPORTS = {
   wide: { viewport: CONNECTED_POSTER_CAPTURE.wide, deviceScaleFactor: 1 },
   compact: { viewport: CONNECTED_POSTER_CAPTURE.compact, deviceScaleFactor: 2 },
@@ -48,6 +80,8 @@ const TARGET_PROGRESS = CONNECTED_POSTER_POSE.progress;
 const TARGET_IDLE_ANGLE = CONNECTED_POSTER_POSE.idleAngleRadians;
 /** How exactly the first frame must equal the pose: it is the same arithmetic, so only float rounding is allowed. */
 const POSE_TOLERANCE = 1e-6;
+/** Rest positions are inverse-projected once; only float rounding may separate a drawn node from its (u, v). */
+const REST_TOLERANCE_PX = 0.05;
 const QUALITY_STEPS = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1];
 
 function isPortInUse(portNumber) {
@@ -193,6 +227,27 @@ async function drawFirstFrame(page) {
   return readDiagnostics(page);
 }
 
+/**
+ * An Atlas poster is the production rest profile at zero excitation: no pointer, no bent string, no suspended or
+ * stimulated state, and every node exactly on its specified (u, v) rest position of the capture frame.
+ */
+function assertAtlasRest(file, entry, pose) {
+  if (pose.profile?.route !== entry.route || pose.profile.nodeStyle !== 'atlas') throw new Error(`${file}: the page runs profile ${JSON.stringify(pose.profile)}, expected the ${entry.route} Atlas profile`);
+  if (pose.pointerActive || pose.formSuspended) throw new Error(`${file}: the scene was stimulated or suspended at capture (pointerActive ${pose.pointerActive}, formSuspended ${pose.formSuspended})`);
+  if (pose.edgeSamples.length) throw new Error(`${file}: ${pose.edgeSamples.length} strings were bent at capture; a poster is the rest pose`);
+  const { width, height } = CONNECTED_POSTER_CAPTURE[entry.quality];
+  const profile = getConnectedProfile(entry.route, entry.quality, { width, height });
+  const layout = computeProjectionLayout(profile, { width, height, tier: entry.quality });
+  if (pose.nodes.length !== profile.restAnchors.length) throw new Error(`${file}: ${pose.nodes.length} nodes drawn, expected ${profile.restAnchors.length}`);
+  for (const rest of profile.restAnchors) {
+    const node = pose.nodes.find((candidate) => candidate.id === rest.id);
+    if (!node) throw new Error(`${file}: node ${rest.id} is missing from the pose`);
+    const at = projectAnchor(node.position, layout);
+    const miss = Math.hypot(at.xPx - rest.u * width, at.yPx - rest.v * height);
+    if (!(miss <= REST_TOLERANCE_PX)) throw new Error(`${file}: node ${rest.id} sits ${miss.toFixed(3)} CSS px from its rest position`);
+  }
+}
+
 /** Encodes PNG bytes to WebP in the page, stepping the quality down until the ceiling holds. */
 async function encodeWebp(page, png, budget) {
   const result = await page.evaluate(
@@ -221,11 +276,11 @@ async function encodeWebp(page, png, budget) {
 let browser;
 let failed = false;
 try {
-  await waitForServer(`${origin}${ROUTE_PATHS.services}`, 120_000);
+  await waitForServer(`${origin}${ROUTE_PATHS[requestedRoutes[0]]}`, 120_000);
   fs.mkdirSync(outDir, { recursive: true });
   browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 
-  for (const entry of connectedMediaManifest) {
+  for (const entry of connectedMediaManifest.filter((candidate) => requestedRoutes.includes(candidate.route))) {
     const { viewport, deviceScaleFactor } = VIEWPORTS[entry.quality];
     const file = path.basename(entry.src);
     const context = await browser.newContext({ viewport, deviceScaleFactor, reducedMotion: 'no-preference', locale: 'es-AR' });
@@ -238,11 +293,19 @@ try {
       window.__FURLANICH_CONNECTED_TEST__ = { allowSoftwareRenderer: true, livePolicy: { wide: true, compact: true } };
     });
     await page.goto(`${origin}${ROUTE_PATHS[entry.route]}`, { waitUntil: 'load' });
+    // The diagnostics hook is installed by the host when it mounts. An Atlas page in a policy-disabled build has no
+    // host at all, so stop here rather than photograph the CSS chart and call it a poster.
+    await page
+      .waitForFunction(() => window.__FURLANICH_CONNECTED__ !== undefined, null, { timeout: 60_000 })
+      .catch(() => {
+        throw new Error(`${file}: the live host never mounted on ${ROUTE_PATHS[entry.route]}. Apply the runtime candidate in a disposable checkout first: node scripts/prepare-sfc-candidate.mjs apply --kind=runtime`);
+      });
     const pose = await drawFirstFrame(page);
     if (pose.mode !== 'live' || pose.renderCount < 1) throw new Error(`${file}: expected the live scene to have drawn, got mode ${pose.mode} and renderCount ${pose.renderCount}`);
     if (pose.tier !== entry.quality) throw new Error(`${file}: the page selected tier "${pose.tier}", expected "${entry.quality}"`);
     if (Math.abs(pose.progress - TARGET_PROGRESS) > POSE_TOLERANCE) throw new Error(`${file}: progress read ${pose.progress}, expected ${TARGET_PROGRESS}`);
     if (Math.abs(pose.idleAngleRadians - TARGET_IDLE_ANGLE) > POSE_TOLERANCE) throw new Error(`${file}: idle angle read ${pose.idleAngleRadians}, expected ${TARGET_IDLE_ANGLE}`);
+    if (ATLAS_ROUTES.includes(entry.route)) assertAtlasRest(file, entry, pose);
 
     // Everything but the Ground is hidden without changing layout, and no text is rasterized.
     await page.addStyleTag({

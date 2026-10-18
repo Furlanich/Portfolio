@@ -17,7 +17,7 @@ const legacyRoutes = ['services', 'projects'];
 const newRoutes = ['studio', 'founder', 'contact'];
 const qualities = ['wide', 'compact'];
 
-test('the manifest declares six unpublished entries for the new routes beside the four published ones', () => {
+test('the manifest declares six entries for the new routes beside the four legacy ones; Task 14 publishes them with their captured files', () => {
   assert.equal(connectedMediaManifest.length, 10);
   for (const route of legacyRoutes) {
     for (const quality of qualities) assert.equal(getConnectedPoster(route, quality).published, true, `${route} ${quality} stays published`);
@@ -25,7 +25,7 @@ test('the manifest declares six unpublished entries for the new routes beside th
   for (const route of newRoutes) {
     for (const quality of qualities) {
       const entry = getConnectedPoster(route, quality);
-      assert.equal(entry.published, false, `${route} ${quality} is unpublished until its page packet captures it`);
+      assert.equal(entry.published, true, `${route} ${quality} is published by PLAN-SFC-V1 Task 14 with its captured file (scripts/connected-studio-media.test.mjs asserts the file)`);
       assert.equal(entry.src, `/brand/connected-studio/${route}-${quality}.webp`);
       assert.equal(entry.maxBytes, (quality === 'wide' ? 150 : 80) * KIB);
       assert.deepEqual({ width: entry.width, height: entry.height }, quality === 'wide' ? { width: 1920, height: 1080 } : { width: 900, height: 1600 });
