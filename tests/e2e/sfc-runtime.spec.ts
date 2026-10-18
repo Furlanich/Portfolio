@@ -1141,7 +1141,8 @@ test.describe('the actual Contact form with the live graph (Task 12)', () => {
 // hides a label that a plate or scrim would cover; this proves nothing else on the page is left uncovered.
 // ---------------------------------------------------------------------------------------------------------------------
 
-type ForegroundBox = Rect & { what: string };
+/** `fixed`: the box sits in a sticky or fixed ancestor, so it keeps its viewport place while the document scrolls. */
+type ForegroundBox = Rect & { what: string; fixed: boolean };
 
 /** The first visible label that overlaps a stored foreground box when the page is scrolled by `scrolled`. */
 function findLabelClash(
@@ -1150,7 +1151,10 @@ function findLabelClash(
   scrolled: number,
 ): string | undefined {
   for (const label of labels.filter((candidate) => candidate.visible)) {
-    const hit = foreground.find((box) => overlaps(label, { left: box.left, right: box.right, top: box.top - scrolled, bottom: box.bottom - scrolled }));
+    const hit = foreground.find((box) => {
+      const shift = box.fixed ? 0 : scrolled;
+      return overlaps(label, { left: box.left, right: box.right, top: box.top - shift, bottom: box.bottom - shift });
+    });
     if (hit) return `label "${label.text}" (${label.id}) overlaps ${hit.what}`;
   }
   return undefined;
@@ -1180,7 +1184,14 @@ const readForeground = (page: Page): Promise<{ labels: (Rect & { id: string; tex
       'footer :is(h2,h3,p,li,a[href],small)',
       '[data-app-bar] :is(a[href],button)',
     ].join(',');
-    const foreground: { left: number; top: number; right: number; bottom: number; what: string }[] = [];
+    const foreground: { left: number; top: number; right: number; bottom: number; what: string; fixed: boolean }[] = [];
+    const isFixed = (element: HTMLElement) => {
+      for (let node: HTMLElement | null = element; node; node = node.parentElement) {
+        const position = getComputedStyle(node).position;
+        if (position === 'sticky' || position === 'fixed') return true;
+      }
+      return false;
+    };
     const alphaOf = (color: string) => {
       const match = color.match(/rgba?\(([^)]+)\)/);
       if (!match) return 0;
@@ -1197,7 +1208,7 @@ const readForeground = (page: Page): Promise<{ labels: (Rect & { id: string; tex
       const what = `${element.tagName.toLowerCase()} "${(element.textContent ?? element.getAttribute('aria-label') ?? '').trim().slice(0, 40)}"`;
       for (const r of Array.from(element.getClientRects())) {
         if (r.width < 1 || r.height < 1) continue;
-        foreground.push({ left: r.left, top: r.top, right: r.right, bottom: r.bottom, what });
+        foreground.push({ left: r.left, top: r.top, right: r.right, bottom: r.bottom, what, fixed: isFixed(element) });
       }
     }
     return { labels, foreground };
