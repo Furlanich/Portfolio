@@ -219,7 +219,8 @@ for (const anatomy of studioAnatomy) {
     expect(bindings).toEqual(['n0', 'n4', 'n8', 'n12'].map((nodeId, index) => ({ nodeId, word: anatomy.words[index] })));
     await expect(main.locator('canvas')).toHaveCount(0);
 
-    expect(connectedRequests, 'no poster is requested while unpublished').toEqual([]);
+    // PLAN-SFC-V1 Task 14 published the matched poster: exactly this page's wide one is requested at the 1440px project viewport.
+    expect(connectedRequests.map((url) => new URL(url).pathname.split('/').pop()), 'only the Studio wide poster is requested').toEqual(['studio-wide.webp']);
     expect(failures).toEqual([]);
   });
 
