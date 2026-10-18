@@ -1,6 +1,6 @@
 # Task 14 / PR 14 — Publish matched static posters and verify release costs
 
-**Status: the six matched posters are captured, measured against their first live frame and published; the static release gate is FAIL, not PASS.** Bytes, vitals and the closure pass. Startup CPU fails on a demonstrated cause outside this packet's write set: `ConnectedStudioGround` imports the connected host statically, so every Atlas page loads it in a policy-disabled build. Two findings go to the planning authority for packets 20 and later (below). Owner approval of the posters and of every changed baseline, Reviewer R, CI and the human merge are PENDING. Nothing was deployed and no hardware was used.
+**Status: the six matched posters are captured, measured against their first live frame and published; the static release gate is FAIL, not PASS.** Bytes, vitals and the closure pass. Startup CPU fails on a demonstrated cause outside this packet's write set: `ConnectedStudioGround` imports the connected host statically, so every Atlas page loads it in a policy-disabled build. Two findings go to the planning authority for packets 20 and later (below). The owner approved the posters and the Windows baselines on 2026-10-18 (below); the Linux images, Reviewer R, CI and the human merge are PENDING. Nothing was deployed and no hardware was used.
 
 Implementer: Claude Sonnet 5.5 (`claude-sonnet-5-5`), Claude Code desktop session; the reasoning-effort level is not exposed to the session, so "High" is not attested. Single primary agent, 0 subagents (SINGLE_AGENT). The skill's whole-branch reviewer subagent was not used (AGENTS.md and GOV-AGENT-USAGE outrank it); the self-review below is the author's own.
 
@@ -48,6 +48,27 @@ Visual QA by the author (not approval): the Studio and Contact wide posters and 
 
 Linux images: NOT collected. They must come from the matching CI run's `*-actual.png` at this head after owner approval, as the baseline workflow requires; a missing Linux golden is a baseline-bootstrap failure, not a pass.
 
+## Owner approval and the ten refreshed page baselines (2026-10-18)
+
+The author prepared expected, actual and pixel-diff images of the ten existing page baselines that the posters change, and a contact sheet of the six posters (kept outside Git in the git-ignored `.superpowers/reports/sfc-14/review/`). The owner reviewed them and wrote: "I approve the six posters, the six new Windows ground baselines, and refreshing the ten affected page baselines on Windows. Linux images will come from CI." That approval covers the six poster files, the six Windows ground baselines above and the ten Windows page baselines below, at the implementation head that carries them; it does not cover Linux images, the host finding or the startup-CPU gate.
+
+The ten Windows baselines were regenerated with `node node_modules/@playwright/test/cli.js test studio.visual.spec.ts founder.visual.spec.ts contact.visual.spec.ts --project=visual-chromium --update-snapshots`; the same specs plus `sfc-static.visual.spec.ts` then passed 32/32 with `--repeat-each=2` and no update flag. In every comparison the only difference is the connected-graph poster behind the page; text, plates and layout are unchanged.
+
+| Windows page baseline (owner spec directory) | SHA-256 |
+| --- | --- |
+| `contact-es-wide` | `8C460F50A32CCAF69E431FD7369CE6D32A0C7E4A17C69078C60AE4463AB607FC` |
+| `contact-es-compact` | `7BFA0C32B98359B448C75AEC1F5824171C08464AE7881BDE3ADD725D0C963F2E` |
+| `contact-en-wide` | `28B2CCC65D80FE567BD00A19CA5C5A674CEAEC52700612D7D3E2B3A9FDCFAF98` |
+| `contact-en-compact` | `C471D9A45934152BBAEDC973197F41985DBE76EA9B4EAE86A7DAB3D6CA399808` |
+| `founder-spanish-wide` | `E601319F809A3BE5D0AA05FC7E62870C6558D5ABC05C556A06D093306DBB8BD2` |
+| `founder-spanish-compact` | `F7A6F7ABC3F205BA167096021410B1CF140AF0165B5BD49B8B6EC9C817069F8F` |
+| `founder-english-wide` | `62CFEBE0779D85AB771D3253F445137A243B401800FE7DE4F411E84BA1BC88F1` |
+| `founder-english-compact` | `FB75CC4BF1D430955062578235BF5D56CC0B58B2734FC9AE615AB9007E5629AD` |
+| `studio-wide` | `46736C8D3BED6CA194C84FB5C561F436C5815AF2512EC9D313EEA456C8A729B9` |
+| `studio-compact` | `A0BA393D06124800CF293E1FA3C7673959AB0A337B8E0EE36A35051049B6E5B9` |
+
+These ten files sit in Task 6, 7 and 10 snapshot directories, outside this packet's list; the Ruling above and the owner's approval authorize exactly these replacements. The matching Linux replacements (ten page images and the six ground images) must come from the CI run at this head: download only the corresponding `*-actual.png`, inspect, commit under the exact Linux name, rerun without update mode.
+
 ## Static release cost
 
 Method and environment: Next.js 16.3.2, React 18.2.0, Three.js 0.186.0, Playwright 1.63.0, Chromium 153.0.8010.12 on the named desktop of the Task 3 baseline (i3-8100, RTX 2060, Windows 11); clean root and `/Portfolio` exports; five cold journeys per route, locale and profile; one raw trace per journey (kept in the git-ignored `.superpowers/reports/sfc-14/` of the task checkout, hashes in the report JSON; not committed, as in Task 3). The first-load definition is Task 3's recommendation: Brotli quality 11 of the scripts requested before the load event (critical), plus the scripts the emitted HTML references; the settled figure is reported, not gated (Rulings).
@@ -81,7 +102,7 @@ Assignment: the fix is in `ConnectedStudioGround.tsx` (and a client entry split)
 
 - Ruling: the compact posters are identical and the plan's "six distinct images" is met only for wide. The binding spec fixes one compact composition for all three pages, so a distinct compact image would be fabricated and would not match the live first frame. The media contract asserts that images are identical exactly when their compositions are. Cost if wrong: the owner wants a visible difference and amends the spec.
 - Ruling: Contact is captured as the scene is drawn today. DESIGN-SFC-V1 says Contact multiplies scene and label opacity by 0.35; no host or runtime applies it (checked; Task 8 left it host-owned, Task 11 did not add it). That is a finding for a packet 20 or later; when it lands both Contact posters must be recaptured so the first live paint still matches (a `node:test` `todo` holds it). Cost if wrong: the Contact poster is brighter than the quiet target until recaptured.
-- Ruling: publication changes ten existing baselines owned by Tasks 6, 7 and 10 (Studio and Founder compact and wide, Contact both languages and sizes): each fails now because it paints the page over the new poster. They are not regenerated in this packet; owner approval and the matching Linux images are required first (Open items). Cost if wrong: integration CI stays red on those ten until they are refreshed.
+- Ruling: publication changes ten existing baselines owned by Tasks 6, 7 and 10 (Studio and Founder compact and wide, Contact both languages and sizes): each failed because it paints the page over the new poster. After the owner's explicit approval they were regenerated here on Windows (section above); the Linux images are still required from CI. Cost if wrong: revert ten files; integration CI stays red on the ten Linux images until they are adopted.
 - Ruling: two existing assertions that encoded "not yet published" were edited, one line each, outside the listed paths because publication makes them false: `scripts/sfc-contracts.test.mjs` (the Task 2 entries are now `published`) and `tests/e2e/studio.spec.ts` (exactly the Studio wide poster is requested). Cost if wrong: revert two assertions.
 - Ruling: the first-load JS gate is the critical figure and the static-HTML figure, each against its own budget; the settled-window figure moves with timing and is reported only (Task 3 Risk 2, whose definition this packet owns). The CPU gate is the Task 3 comparison with a spread rule (beyond 25 ms but inside the baseline's own journey spread is OPEN, beyond both is FAIL) and, where that is OPEN or FAIL, the paired interleaved comparison with median and p95 both over 25 ms as FAIL and one as OPEN (Risk 1). Cost if wrong: one function and its tests.
 - Ruling: a long task counts as added only when the baseline had none of 50 ms or more; against a baseline that already had one a longer task is OPEN. Cost if wrong: the same function.
@@ -106,7 +127,7 @@ Assignment: the fix is in `ConnectedStudioGround.tsx` (and a client entry split)
 - Production script: bytes, closure and posters pass; it FAILS on shipped host code in all six pages at root and `/Portfolio` (the finding).
 - Dev server regression after publication: `chromium-desktop` studio, founder, legal, privacy and the static spec 122/122; `compact-320-chromium` and `mobile-chromium` static, studio-responsive and founder-responsive 188 passed, 14 skipped; the only red is the carried Contact case above.
 - Candidate runtime spec (`SFC_TEST_MODE=candidate`, runtime patch applied in the disposable checkout at `a764edc4`, `sfc-runtime-chromium`, one worker, 14.5 minutes): 63 passed, 3 skipped (the held cases of Task 12), 5 failed. The same five fail on the untouched integration head `fdde3a48` (run separately in the same checkout), so they are not caused by the posters: three `contact form signal` cases and two `direct Contact with the live graph (Task 13)` cases target the removed form or the removed intake plate; Task 13 noted that the candidate runtime was not rerun after its change. They belong to the owner of `sfc-runtime.spec.ts` (Task 18 in the plan's appendix) or a packet 20 or later, and are carried, not hidden.
-- Visual: `sfc-static.visual.spec.ts` 6/6 and stable on repeat; the ten page baselines named in Rulings fail until refreshed.
+- Visual: after the approved refresh, `studio`, `founder`, `contact` and `sfc-static` visual specs 32/32 on `--repeat-each=2` (Windows).
 - Case counts (`playwright test --list`): default 3067 tests in 37 files (2917 before this packet; envelope 3200), candidate 90 in 2 files (envelope 180), served export 74 in 2 files.
 
 Reproduce: `node scripts/measure-connected-studio-production.mjs --skip-build`; `node scripts/measure-connected-studio-vitals.mjs --skip-build --startup-baseline --compare=<task-03-artifacts>/startup-root.json --compare-production=<task-03-artifacts>/production-root.json`; paired: run the vitals script with `--startup-baseline --routes=studio,founder,contact --profile=<p> --out=<dir>/{base,cur}-<p>-<round>.json` from each head's own export in the order base, cur, cur, base, then `--judge-paired=<dir>`; capture: apply `prepare-sfc-candidate.mjs apply --kind=runtime` in a disposable checkout and run the capture script with `--out`; handoff: the same with `--verify-handoff`.
@@ -119,7 +140,7 @@ Reproduce: `node scripts/measure-connected-studio-production.mjs --skip-build`; 
 
 ## Open items
 
-- Owner approval of the six posters, of the six new Windows baselines and of the ten changed page baselines (with their Linux images from CI at the same head): PENDING. Nothing was approved by the author.
+- Owner approval of the posters and the Windows baselines: GIVEN (above). The Linux images of all sixteen baselines from CI at the same head: PENDING.
 - Reviewer R (separate session), CI and the human merge: PENDING. Reviewer R should re-run `node scripts/capture-connected-studio-posters.mjs --verify-handoff` in a disposable runtime candidate.
 - Packet 20 or later for the host import split and for Contact's opacity; Task 16 is blocked on the first.
 - Terms comparator, hardware, screen readers, Safari and Firefox startup timing: OPEN (not measured here).
