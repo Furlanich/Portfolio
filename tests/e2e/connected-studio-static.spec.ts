@@ -243,7 +243,7 @@ test.describe('without JavaScript', () => {
 // canvas and no engine. The poster is chosen by the 768px boundary in the Ground's own CSS, and only the
 // matching file is requested.
 
-const posterPattern = /\/brand\/connected-studio\/(services|projects)-(wide|compact)\.webp/;
+const posterPattern = /\/brand\/connected-studio\/(services|projects|studio|founder|contact)-(wide|compact)\.webp/;
 
 const connectedPages = [
   { route: 'services', locale: 'es', path: stableRoutes.services.es },
@@ -424,4 +424,96 @@ test.describe('project illustrations', () => {
       await expect(page.locator('main article img[fetchpriority="high"]')).toHaveCount(0);
     });
   }
+});
+
+// PLAN-SFC-V1 Task 14: the matched static posters of the three Atlas pages. Their live host is policy-omitted in
+// every merged build, so these pages are the complete static page: a poster over the CSS chart, no host, no canvas
+// and no engine request. Three cases per page keep the shared-project case count inside the 3200 planning
+// envelope (each case runs in every project that matches this file); the served-export family
+// (sfc-production.spec.ts) owns the per-engine and closure proof.
+
+const atlasPages = [
+  { route: 'studio', locale: 'es', path: stableRoutes.studio.es },
+  { route: 'studio', locale: 'en', path: stableRoutes.studio.en },
+  { route: 'founder', locale: 'es', path: stableRoutes.founder.es },
+  { route: 'founder', locale: 'en', path: stableRoutes.founder.en },
+  { route: 'contact', locale: 'es', path: stableRoutes.contact.es },
+  { route: 'contact', locale: 'en', path: stableRoutes.contact.en },
+] as const;
+
+test.describe('Atlas static posters', () => {
+  const sizes = [
+    { width: 320, quality: 'compact' },
+    { width: 767, quality: 'compact' },
+    { width: 768, quality: 'wide' },
+    { width: 1440, quality: 'wide' },
+  ] as const;
+
+  for (const { route, locale, path } of atlasPages) {
+    test(`${locale} ${route} requests only its own matching poster at each width, with no host and no canvas`, async ({ browser, baseURL }) => {
+      // Four sequential page loads (one fresh context per width) against a cold dev compile need more than the default 30 s.
+      test.setTimeout(60_000);
+      for (const { width, quality } of sizes) {
+        // A fresh context per width: a cached poster from the previous size would hide a second request.
+        const context = await browser.newContext({ baseURL, viewport: { width, height: 800 } });
+        const page = await context.newPage();
+        const requested = watchPosterRequests(page);
+        await page.goto(appUrl(path));
+        await waitForLoadedAndSettled(page);
+
+        expect(requested, `${width}px: exactly the ${quality} poster of this page`).toEqual([assetPath(`/brand/connected-studio/${route}-${quality}.webp`)]);
+        const poster = await page.locator('[data-connected-poster]').evaluate((element) => getComputedStyle(element).backgroundImage);
+        expect(poster, `${width}px: the poster layer paints the matching file`).toContain(`${route}-${quality}.webp`);
+        await expect(page.locator('canvas')).toHaveCount(0);
+        // The server omitted the live host: nothing hydrated, so no diagnostics hook exists to read.
+        expect(await readConnected(page), `${width}px: no host on a policy-disabled page`).toBeNull();
+        await expect(page.locator('[data-connected-ground] [data-connected-mount]')).toHaveCount(1);
+        const preloads = await page.locator('link[rel="preload"]').evaluateAll((links) => links.map((link) => (link as HTMLLinkElement).href));
+        expect(preloads.filter((href) => /connected-studio/.test(href)), `${width}px: the poster is never preloaded`).toEqual([]);
+        await context.close();
+      }
+    });
+
+    test(`${locale} ${route} keeps its wide poster under reduced motion and stays complete on the CSS chart when the poster fails`, async ({ browser, baseURL }) => {
+      test.setTimeout(60_000);
+      const context = await browser.newContext({ baseURL, reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+      const page = await context.newPage();
+      const requested = watchPosterRequests(page);
+      await page.goto(appUrl(path));
+      await waitForLoadedAndSettled(page);
+      expect(requested).toEqual([assetPath(`/brand/connected-studio/${route}-wide.webp`)]);
+      await expect(page.locator('canvas')).toHaveCount(0);
+      await context.close();
+
+      const failing = await browser.newContext({ baseURL, viewport: { width: 1440, height: 900 } });
+      const failed = await failing.newPage();
+      const errors: string[] = [];
+      failed.on('pageerror', (error) => errors.push(error.message));
+      await failed.route(posterPattern, (request) => request.fulfill({ status: 404, body: 'missing' }));
+      await failed.goto(appUrl(path));
+      await waitForLoadedAndSettled(failed);
+      await expect(failed.getByRole('main').getByRole('heading', { level: 1 })).toBeVisible();
+      const chart = await failed.locator('[data-connected-ground]').evaluate((element) => getComputedStyle(element).backgroundImage);
+      expect(chart, 'the pure CSS chart is the Ground itself').toContain('gradient');
+      await expect(failed.locator('canvas')).toHaveCount(0);
+      expect(errors).toEqual([]);
+      await failing.close();
+    });
+  }
+
+  test.describe('without JavaScript', () => {
+    test.use({ javaScriptEnabled: false });
+
+    for (const { route, locale, path } of atlasPages) {
+      test(`${locale} ${route} still paints its poster before any enhancement`, async ({ page }) => {
+        await page.setViewportSize({ width: 1440, height: 900 });
+        const requested = watchPosterRequests(page);
+        await page.goto(appUrl(path));
+        await page.waitForLoadState('load');
+        await page.waitForTimeout(800);
+        expect(requested).toEqual([assetPath(`/brand/connected-studio/${route}-wide.webp`)]);
+        await expect(page.locator('canvas')).toHaveCount(0);
+      });
+    }
+  });
 });
