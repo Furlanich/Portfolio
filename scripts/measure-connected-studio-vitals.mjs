@@ -531,6 +531,7 @@ async function runStartupBaseline() {
     notes: [],
   };
   const failures = [];
+  const findings = [];
   try {
     for (const profileName of SELECTED_PROFILES) {
       report.profiles[profileName] = { label: PROFILES[profileName].label, routes: {} };
@@ -538,8 +539,12 @@ async function runStartupBaseline() {
         for (const locale of Object.keys(READING_ROUTES[route])) {
           const journeys = [];
           for (let run = 0; run < JOURNEYS_PER_LOCALE; run += 1) journeys.push(await startupJourney(browser, profileName, route, locale, run, traceDir));
+          // A script that is not critical may be another route's prefetch (a link the page shows), so only the critical ones are
+          // the page's own load; the rest is a note. Findings fail the run after the comparison has been made.
           const optionalCodeRuns = [...new Set(journeys.flatMap((item) => item.optionalCodeFound))];
-          if (optionalCodeRuns.length) failures.push(`${profileName}/${route}/${locale}: optional engine or connected host code in the scripts a policy-disabled page loads: ${optionalCodeRuns.join(', ')}`);
+          const ownCode = optionalCodeRuns.filter((item) => item.includes(', critical)'));
+          if (ownCode.length) findings.push(`${profileName}/${route}/${locale}: optional engine or connected host code in the scripts a policy-disabled page loads before its load event: ${ownCode.join(', ')}`);
+          if (optionalCodeRuns.length > ownCode.length) report.notes.push(`${profileName}/${route}/${locale}: a prefetched script carries connected code (not critical): ${optionalCodeRuns.filter((item) => !ownCode.includes(item)).join(', ')}`);
           const scriptSets = new Set(journeys.map((item) => item.scripts.map((entry) => entry.script).join('|')));
           if (scriptSets.size > 1) report.notes.push(`${profileName}/${route}/${locale}: the requested script set varied between journeys; the largest first-load figure is reported`);
           const summary = summarizeColdBaseline({
@@ -599,6 +604,7 @@ async function runStartupBaseline() {
   const table = Object.entries(report.profiles).flatMap(([profileName, profile]) =>
     Object.entries(profile.routes).map(([key, value]) => ({ profile: profileName, route: key, firstLoadJsBrotliKiB: value.firstLoadJsBrotliKiB, criticalJsBrotliKiB: value.criticalJsBrotliKiB, startupCpuMedianMs: value.startupCpuMedianMs, startupCpuP95Ms: value.startupCpuP95Ms, evaluationCpuP95Ms: value.evaluationCpuP95Ms, longestTaskMs: value.longestTaskMs })));
   console.log(JSON.stringify({ basePath: report.basePath, versions: report.versions, table }, null, 2));
+  failures.push(...findings);
   if (failures.length) {
     console.error('\nStartup baseline failed:\n- ' + failures.join('\n- '));
     process.exit(1);
