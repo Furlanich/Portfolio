@@ -17,7 +17,10 @@ import {
   REQUIRED_VALID_RUNS,
   buildDossier,
   classifyRun,
+  diagnosticReasons,
   judgeRun,
+  reachabilityProblem,
+  validateCollectionOptions,
   validateDeviceRecord,
 } from './measure-connected-studio-hardware.mjs';
 
@@ -28,6 +31,8 @@ const ATLAS = new Set(['studio', 'founder', 'contact']);
 
 const desktop = () => ({ kind: 'desktop', name: 'Owner desktop, Intel Core i3-8100, 24 GB', os: 'Windows 11 Pro 10.0.26300', browser: 'Chromium', browserVersion: '153.0.8010.12', gpu: 'NVIDIA GeForce RTX 2060', refreshHz: 60, operator: 'Samuel Furlanich' });
 const android = () => ({ kind: 'android', name: 'Constrained Android phone, 4 cores', os: 'Android 14', browser: 'Chrome', browserVersion: '153.0.0.0', gpu: 'Adreno 610', refreshHz: 60, operator: 'Samuel Furlanich' });
+
+let startCounter = 0;
 
 /** A complete, valid, passing run. Every test below starts here and breaks exactly one thing. */
 function goodRun({ tier = 'wide', route = 'studio', locale = 'es', n = 1 } = {}) {
@@ -40,10 +45,15 @@ function goodRun({ tier = 'wide', route = 'studio', locale = 'es', n = 1 } = {})
     tier,
     route,
     locale,
+    startedAt: new Date(Date.UTC(2026, 9, 18, 12, 0, 0) + startCounter++ * 60_000).toISOString(),
     device: wide ? desktop() : android(),
+    detected: { controlsAndroidOverCdp: !wide, hostPlatform: 'win32 10.0.26300', cpu: 'Intel(R) Core(TM) i3-8100 CPU @ 3.60GHz', browserVersion: '153.0.8010.12' },
+    remote: wide
+      ? { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36', platform: 'Win32', maxTouchPoints: 0 }
+      : { userAgent: 'Mozilla/5.0 (Linux; Android 14; Phone) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Mobile Safari/537.36', platform: 'Linux armv8l', maxTouchPoints: 5 },
     build: { head: '5d0b3a70a86c8cc71a3a60f9330f3b5a58b562c6', candidate: 'runtime', patchSha256: 'a'.repeat(64), basePath: '/', method: 'node scripts/measure-connected-studio-hardware.mjs' },
-    protocol: { ...PROTOCOL_MINIMA, headed: true, hiddenMethod: 'window-minimized' },
-    machine: { cpuBusyBefore: 0.06, cpuBusyAfter: 0.08, gpuUtilizationBefore: wide ? 0.02 : null },
+    protocol: { ...PROTOCOL_MINIMA, headed: true, hiddenMethod: 'window-minimized', diagnostic: false },
+    machine: { cpuBusyBefore: 0.06, cpuBusyAfter: 0.08, gpuUtilizationBefore: wide ? 0.02 : null, gpuUtilizationAfter: wide ? 0.03 : null },
     renderer: wide ? 'ANGLE (NVIDIA, NVIDIA GeForce RTX 2060 Direct3D11 vs_5_0 ps_5_0)' : 'Adreno (TM) 610',
     liveWithoutOverride: true,
     setsTestHook: false,
@@ -61,14 +71,16 @@ function goodRun({ tier = 'wide', route = 'studio', locale = 'es', n = 1 } = {})
       pausedDraws: 0,
       pausedRafCalls: 0,
       hiddenDraws: 0,
+      hiddenRafCalls: 0,
       footerDraws: 0,
+      footerRafCalls: 0,
       maxContexts: 1,
       listenerGrowth: 0,
       closureBrotliKiB: 119.5,
       lcpMs: 900,
       inpMs: 56,
       clsEnhancement: 0,
-      ...(atlas ? { restDraws: 0 } : {}),
+      ...(atlas ? { restDraws: 0, restRafCalls: 0, settledTailDraws: 0, settledTailRafCalls: 0 } : {}),
       sustainedActiveIntervalP95Ms: 17.5,
       sustainedTaskMaxMs: 0,
       sustainedContexts: 1,
@@ -194,6 +206,8 @@ for (const [metric, value, verdict] of [
   ['hiddenDraws', 1, 'FAIL'],
   ['footerDraws', 1, 'FAIL'],
   ['listenerGrowth', 3, 'FAIL'],
+  ['hiddenRafCalls', 1000, 'FAIL'],
+  ['footerRafCalls', 1000, 'FAIL'],
   ['labelViolations', 1, 'FAIL'],
   ['resumeFailures', 1, 'FAIL'],
   ['routeCycleFailures', 1, 'FAIL'],
@@ -348,4 +362,190 @@ test('--qualify exits 0 only for a PASS tier; OPEN and FAIL exit 1 and still pri
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+// ---- Reviewer R corrections on PR #156 ----
+
+test('R1: a GPU in use after the run invalidates it, at the boundary and beyond; an unqueryable GPU after the run does not', () => {
+  const after = goodRun();
+  after.machine.gpuUtilizationAfter = 1;
+  const verdict = classifyRun(after);
+  assert.equal(verdict.valid, false);
+  assert.ok(verdict.reasons.some((reason) => /gpu/i.test(reason) && /after/i.test(reason)), verdict.reasons.join('|'));
+  const edge = goodRun();
+  edge.machine.gpuUtilizationAfter = QUIESCENCE_LIMITS.gpuUtilization;
+  assert.equal(classifyRun(edge).valid, true, 'exactly the limit is quiet enough');
+  const unqueryable = goodRun();
+  unqueryable.machine.gpuUtilizationAfter = null;
+  assert.equal(classifyRun(unqueryable).valid, true);
+});
+
+test('R2: a diagnostic run is retained but never counts', () => {
+  for (const argv of [['--trace-pipeline=t.json'], ['--frames-out=f.json'], ['--no-gpu-timers'], ['--diagnostic']]) {
+    assert.ok(diagnosticReasons(argv).length > 0, argv.join(' '));
+  }
+  assert.deepEqual(diagnosticReasons(['--route=studio', '--locale=es', '--tier=wide', '--headed', '--extras']), []);
+  const flagged = goodRun();
+  flagged.protocol.diagnostic = true;
+  assert.ok(classifyRun(flagged).reasons.some((reason) => /diagnostic/i.test(reason)));
+  const unflagged = goodRun();
+  delete unflagged.protocol.diagnostic;
+  assert.ok(classifyRun(unflagged).reasons.some((reason) => /diagnostic/i.test(reason)), 'a report that does not say it is not a diagnostic is not trusted');
+  const traced = goodRun();
+  traced.build.method += ' --trace-pipeline=trace.json';
+  assert.ok(classifyRun(traced).reasons.some((reason) => /diagnostic|trace/i.test(reason)), 'the method line alone also gives it away');
+});
+
+test('R3: a tier is qualified for one build and device cohort, never across several', () => {
+  const runs = fullSet('wide');
+  runs.forEach((run, index) => {
+    const variant = index % 3;
+    run.build.head = String(variant + 1).repeat(40);
+    run.build.patchSha256 = String(variant + 4).repeat(64);
+    run.device.name = `${run.device.name} #${variant}`;
+  });
+  const mixed = buildDossier({ tier: 'wide', runs });
+  assert.notEqual(mixed.verdict, 'PASS', 'three different builds never add up to three runs');
+  assert.ok(mixed.cohorts.length > 1);
+  assert.equal(mixed.needsCohort, true);
+  assert.deepEqual(mixed.pairs, {}, 'nothing is aggregated across cohorts');
+});
+
+test('R3: an explicit cohort counts only its own runs, keeps the others as excluded, and is named in the dossier', () => {
+  const fresh = fullSet('wide');
+  const stale = fullSet('wide').map((run) => {
+    run.build.head = 'b'.repeat(40);
+    run.metrics.activeIntervalP95Ms = 33;
+    run.runId = `old-${run.runId}`;
+    return run;
+  });
+  const cohort = { head: fresh[0].build.head, patchSha256: fresh[0].build.patchSha256, basePath: '/', deviceName: fresh[0].device.name };
+  const dossier = buildDossier({ tier: 'wide', runs: [...stale, ...fresh], cohort });
+  assert.equal(dossier.verdict, 'PASS', 'older failing data does not poison the repaired build');
+  assert.deepEqual(dossier.cohort, { ...cohort, device: { name: fresh[0].device.name, os: fresh[0].device.os, gpu: fresh[0].device.gpu, browser: fresh[0].device.browser, browserVersion: fresh[0].device.browserVersion } });
+  assert.equal(dossier.excludedRuns.length, stale.length);
+  assert.match(dossier.excludedRuns[0].reason, /cohort/i);
+});
+
+test('R3: a single cohort among the runs is adopted and named without being asked for', () => {
+  const dossier = buildDossier({ tier: 'wide', runs: fullSet('wide') });
+  assert.equal(dossier.verdict, 'PASS');
+  assert.equal(dossier.cohort.head, '5d0b3a70a86c8cc71a3a60f9330f3b5a58b562c6');
+  assert.equal(dossier.cohort.device.name, desktop().name);
+});
+
+test('R4: copies of one report never add up to three runs', () => {
+  const clones = fullSet('wide', { perPair: 1 }).flatMap((run) => [run, structuredClone(run), structuredClone(run)]);
+  const dossier = buildDossier({ tier: 'wide', runs: clones });
+  assert.notEqual(dossier.verdict, 'PASS');
+  for (const pair of Object.values(dossier.pairs)) {
+    assert.equal(pair.validRuns, 1);
+    assert.ok(pair.runs.filter((run) => !run.valid).every((run) => run.reasons.some((reason) => /duplicate/i.test(reason))));
+  }
+});
+
+test('R4: reports that share a run id but differ are all rejected', () => {
+  const runs = fullSet('wide', { perPair: 2 });
+  const a = goodRun({ route: 'studio', locale: 'es', n: 9 });
+  const b = goodRun({ route: 'studio', locale: 'es', n: 9 });
+  b.metrics.activeIntervalP95Ms = 12;
+  a.runId = 'shared-id';
+  b.runId = 'shared-id';
+  const dossier = buildDossier({ tier: 'wide', runs: [...runs, a, b] });
+  const shared = dossier.pairs['studio/es'].runs.filter((run) => run.runId === 'shared-id');
+  assert.equal(shared.length, 2);
+  assert.ok(shared.every((run) => !run.valid && run.reasons.some((reason) => /conflict/i.test(reason))));
+  assert.equal(dossier.pairs['studio/es'].validRuns, 2);
+});
+
+test('R4: a run needs its own identity and start time, and two runs of one pair cannot start at the same instant', () => {
+  const noId = goodRun();
+  noId.runId = '';
+  assert.ok(classifyRun(noId).reasons.some((reason) => /run id/i.test(reason)));
+  const noStart = goodRun();
+  noStart.startedAt = 'yesterday';
+  assert.ok(classifyRun(noStart).reasons.some((reason) => /start/i.test(reason)));
+  const runs = fullSet('wide', { perPair: 2 });
+  const twin = goodRun({ route: 'studio', locale: 'es', n: 3 });
+  twin.startedAt = runs.find((run) => run.route === 'studio' && run.locale === 'es').startedAt;
+  const dossier = buildDossier({ tier: 'wide', runs: [...runs, twin] });
+  assert.equal(dossier.pairs['studio/es'].validRuns, 2);
+  assert.ok(dossier.pairs['studio/es'].runs.some((run) => !run.valid && run.reasons.some((reason) => /same start|duplicate/i.test(reason))));
+});
+
+test('R5: compact evidence must come from an Android target reached over CDP, and wide evidence must not', () => {
+  const desktopCompact = goodRun({ tier: 'compact' });
+  desktopCompact.detected.controlsAndroidOverCdp = false;
+  assert.ok(classifyRun(desktopCompact).reasons.some((reason) => /android/i.test(reason)));
+  const notAndroid = goodRun({ tier: 'compact' });
+  notAndroid.remote.userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/153.0.0.0';
+  assert.ok(classifyRun(notAndroid).reasons.some((reason) => /android/i.test(reason)));
+  const noTouch = goodRun({ tier: 'compact' });
+  noTouch.remote.maxTouchPoints = 0;
+  assert.ok(classifyRun(noTouch).reasons.some((reason) => /touch/i.test(reason)));
+  const missing = goodRun({ tier: 'compact' });
+  delete missing.remote;
+  assert.ok(classifyRun(missing).reasons.some((reason) => /remote/i.test(reason)));
+  const phoneOnWide = goodRun({ tier: 'wide' });
+  phoneOnWide.detected.controlsAndroidOverCdp = true;
+  assert.ok(classifyRun(phoneOnWide).reasons.some((reason) => /desktop|android/i.test(reason)));
+  assert.equal(classifyRun(goodRun({ tier: 'compact' })).valid, true);
+});
+
+test('R5/R6: the collection options refuse a desktop compact run and an Android run that cannot be served', () => {
+  const problems = (options) => validateCollectionOptions({ tier: 'wide', connectCdp: undefined, servePort: undefined, diagnostic: false, ...options });
+  assert.deepEqual(problems({}), []);
+  assert.ok(problems({ tier: 'compact' }).some((p) => /android|--connect-cdp/i.test(p)), 'compact without a phone');
+  assert.deepEqual(problems({ tier: 'compact', diagnostic: true }), [], 'a desktop compact viewport is allowed only as a diagnostic');
+  assert.ok(problems({ tier: 'compact', connectCdp: 'http://127.0.0.1:9222' }).some((p) => /--serve-port/.test(p)), 'the phone needs a fixed port to reverse');
+  assert.deepEqual(problems({ tier: 'compact', connectCdp: 'http://127.0.0.1:9222', servePort: 3515 }), []);
+  assert.ok(problems({ tier: 'wide', connectCdp: 'http://127.0.0.1:9222', servePort: 3515 }).some((p) => /wide|desktop/i.test(p)));
+  assert.ok(problems({ servePort: 70000 }).some((p) => /port/i.test(p)));
+});
+
+test('R6: a phone that cannot fetch the export is caught before the long protocol', () => {
+  assert.equal(reachabilityProblem({ status: 200, body: '<script src="/_next/static/chunks/a.js"></script>' }), null);
+  assert.match(reachabilityProblem({ status: 404, body: '' }), /404|reach/i);
+  assert.match(reachabilityProblem({ status: 200, body: '<html>captive portal</html>' }), /_next|export/i);
+  assert.match(reachabilityProblem({ error: 'Failed to fetch' }), /adb reverse|reach/i);
+});
+
+test('R7: callbacks in the quiet states are rows of their own, and an Atlas page owes them at rest and after an input tail', () => {
+  const atlas = judgeRun(goodRun({ route: 'contact' })).rows;
+  for (const key of ['restRafCalls', 'settledTailDraws', 'settledTailRafCalls', 'hiddenRafCalls', 'footerRafCalls']) assert.ok(key in atlas, key);
+  const legacy = judgeRun(goodRun({ route: 'services' })).rows;
+  assert.ok('hiddenRafCalls' in legacy && 'footerRafCalls' in legacy);
+  for (const key of ['restRafCalls', 'settledTailDraws', 'settledTailRafCalls']) assert.equal(key in legacy, false, `${key} belongs to a sleeping page`);
+  const spinning = goodRun({ route: 'studio' });
+  Object.assign(spinning.metrics, { restRafCalls: 1000, settledTailRafCalls: 1000 });
+  const judged = judgeRun(spinning);
+  assert.equal(judged.rows.restRafCalls.verdict, 'FAIL');
+  assert.equal(judged.rows.settledTailRafCalls.verdict, 'FAIL');
+  assert.equal(judged.verdict, 'FAIL', 'a loop that schedules without drawing cannot qualify');
+  const absent = goodRun({ route: 'studio' });
+  delete absent.metrics.footerRafCalls;
+  assert.equal(judgeRun(absent).rows.footerRafCalls.verdict, 'OPEN');
+});
+
+test('--qualify refuses copies and mixed cohorts at the command line, and takes the cohort from flags', () => {
+  const qualifyIn = (runs, ...args) => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'sfc-hw-'));
+    try {
+      runs.forEach(([name, run]) => writeFileSync(path.join(dir, name), JSON.stringify(run)));
+      return spawnSync(process.execPath, [script, `--qualify=${dir}`, '--tier=wide', ...args], { encoding: 'utf8' });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  };
+  const copies = qualifyIn(fullSet('wide', { perPair: 1 }).flatMap((run) => [1, 2, 3].map((copy) => [`${run.runId}-copy${copy}.json`, run])));
+  assert.equal(copies.status, 1, copies.stdout);
+  assert.doesNotMatch(copies.stdout, /^ {2}"verdict": "PASS"/m);
+  const fresh = fullSet('wide');
+  const other = fullSet('wide').map((run) => ({ ...run, build: { ...run.build, head: 'c'.repeat(40) }, runId: `x-${run.runId}` }));
+  const mixed = [...fresh, ...other].map((run) => [`${run.runId}.json`, run]);
+  const unchosen = qualifyIn(mixed);
+  assert.equal(unchosen.status, 1);
+  assert.match(unchosen.stdout, /"needsCohort": true/);
+  const chosen = qualifyIn(mixed, `--head=${fresh[0].build.head}`);
+  assert.equal(chosen.status, 0, chosen.stderr + chosen.stdout);
 });

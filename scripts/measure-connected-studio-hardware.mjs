@@ -47,6 +47,35 @@ export const PROTOCOL_MINIMA = Object.freeze({ idleSeconds: 120, traversals: 3, 
 /** "All other heavy work stopped": the host CPU, and the GPU when it can be queried, must be quiet before and after a run. */
 export const QUIESCENCE_LIMITS = Object.freeze({ cpuBusy: 0.3, gpuUtilization: 0.3 });
 
+/** Options that make a run a diagnostic: it is kept and labelled, and never counts toward a qualification (tracing adds overhead; the others change what is measured). */
+export function diagnosticReasons(argv) {
+  const reasons = [];
+  const has = (name) => argv.some((value) => value === `--${name}` || value.startsWith(`--${name}=`));
+  if (has('trace-pipeline')) reasons.push('--trace-pipeline adds tracing overhead');
+  if (has('frames-out')) reasons.push('--frames-out records every frame');
+  if (has('no-gpu-timers')) reasons.push('--no-gpu-timers is a control without the timer queries');
+  if (has('diagnostic')) reasons.push('--diagnostic was requested');
+  return reasons;
+}
+
+/** What the options may combine: the compact tier is an Android phone over CDP with a fixed served port; a desktop viewport is a diagnostic only. */
+export function validateCollectionOptions({ tier, connectCdp, servePort, diagnostic }) {
+  const problems = [];
+  if (tier === 'wide' && connectCdp) problems.push('the wide tier is collected on a desktop browser, not on an Android target (--connect-cdp).');
+  if (tier === 'compact' && !connectCdp && !diagnostic) problems.push('the compact tier needs a physical Android phone: use --connect-cdp (a desktop 390 px viewport is a diagnostic only, with --diagnostic).');
+  if (connectCdp && servePort === undefined) problems.push('--connect-cdp needs --serve-port=<port>, and `adb reverse tcp:<port> tcp:<port>` so the phone can reach the export.');
+  if (servePort !== undefined && !(Number.isInteger(servePort) && servePort >= 1 && servePort <= 65535)) problems.push(`--serve-port must be a port from 1 to 65535, got "${servePort}".`);
+  return problems;
+}
+
+/** The first thing the target must do is fetch the export; a phone that cannot is stopped before a 12-minute protocol. */
+export function reachabilityProblem({ status, body, error }) {
+  if (error) return `the target could not reach the export server (${error}); for a phone run adb reverse tcp:<port> tcp:<port> with the same --serve-port`;
+  if (status !== 200) return `the target reached a server that answered ${status}, not the export`;
+  if (!String(body ?? '').includes('/_next/')) return 'the target did not receive the static export (no /_next/ assets in the page): the wrong server or a captive portal?';
+  return null;
+}
+
 const ROUTE_IDS = ['studio', 'founder', 'contact', 'services', 'projects'];
 const LOCALES = ['es', 'en'];
 const ATLAS_ROUTES = new Set(['studio', 'founder', 'contact']);
@@ -90,6 +119,8 @@ export function validateDeviceRecord(device, tier) {
 export function classifyRun(run) {
   const reasons = [];
   if (run?.kind !== 'sfc-hardware-run' || run?.schemaVersion !== 1) return { valid: false, reasons: ['not a schema 1 hardware run report'] };
+  if (!isText(run.runId)) reasons.push('no run id was recorded');
+  if (!(typeof run.startedAt === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(run.startedAt) && !Number.isNaN(Date.parse(run.startedAt)))) reasons.push('no valid start time was recorded');
   if (!TIER_DEVICE_KIND[run.tier]) reasons.push(`the tier "${run.tier}" is not wide or compact`);
   if (!HARDWARE_ROUTES[run.route] || !LOCALES.includes(run.locale)) reasons.push(`the route "${run.route}" / locale "${run.locale}" is not one of the five connected pairs`);
   for (const problem of validateDeviceRecord(run.device, run.tier).problems) reasons.push(`device record: ${problem}`);
@@ -100,6 +131,15 @@ export function classifyRun(run) {
     if (machine.cpuBusyAfter > QUIESCENCE_LIMITS.cpuBusy) reasons.push(`the machine was busy after the run (CPU ${Math.round(machine.cpuBusyAfter * 100)}% in use): other heavy work was running`);
   }
   if (isFiniteNumber(machine?.gpuUtilizationBefore) && machine.gpuUtilizationBefore > QUIESCENCE_LIMITS.gpuUtilization) reasons.push(`the GPU was in use by something else before the run (${Math.round(machine.gpuUtilizationBefore * 100)}%)`);
+  if (isFiniteNumber(machine?.gpuUtilizationAfter) && machine.gpuUtilizationAfter > QUIESCENCE_LIMITS.gpuUtilization) reasons.push(`the GPU was in use by something else after the run (${Math.round(machine.gpuUtilizationAfter * 100)}%)`);
+  const remote = run.remote;
+  const androidTarget = /Android/i.test(remote?.userAgent ?? '');
+  if (!remote) reasons.push('no remote target record (user agent, touch points) was kept: what was measured is unproven');
+  else if (run.tier === 'compact') {
+    if (run.detected?.controlsAndroidOverCdp !== true) reasons.push('compact evidence must come from a physical Android phone driven over --connect-cdp: this run did not');
+    if (!androidTarget) reasons.push(`the target's user agent is not Android: "${remote.userAgent}"`);
+    if (!(remote.maxTouchPoints >= 1)) reasons.push('the target reports no touch points: it is not a phone');
+  } else if (run.tier === 'wide' && (run.detected?.controlsAndroidOverCdp === true || androidTarget)) reasons.push('wide evidence must come from a desktop browser, not an Android target');
   if (!isText(run.renderer)) reasons.push('no renderer was recorded: the run cannot be shown to be hardware');
   else if (SOFTWARE_RENDERER.test(run.renderer)) reasons.push(`software renderer "${run.renderer}": this run measures nothing`);
   if (run.liveWithoutOverride !== true) reasons.push('the page did not go live by itself on hardware WebGL2');
@@ -113,6 +153,8 @@ export function classifyRun(run) {
   if (!(protocol.traversals >= PROTOCOL_MINIMA.traversals)) reasons.push(`${protocol.traversals} traversals is fewer than the protocol's ${PROTOCOL_MINIMA.traversals}`);
   if (!(protocol.sustainedSeconds >= PROTOCOL_MINIMA.sustainedSeconds)) reasons.push(`the sustained window (${protocol.sustainedSeconds} s) is shorter than the protocol's ${PROTOCOL_MINIMA.sustainedSeconds} s`);
   if (!(protocol.routeCycles >= PROTOCOL_MINIMA.routeCycles)) reasons.push(`${protocol.routeCycles} route cycles is fewer than the protocol's ${PROTOCOL_MINIMA.routeCycles}`);
+  if (protocol.diagnostic !== false) reasons.push('this report is not declared a non-diagnostic collection: a diagnostic run is retained but never counts');
+  if (/--(trace-pipeline|frames-out|no-gpu-timers|diagnostic)\b/.test(run.build?.method ?? '')) reasons.push('the collection method used a diagnostic option (trace, frames, no timers): a diagnostic run never counts');
   if (!/^[0-9a-f]{40}$/.test(run.build?.head ?? '')) reasons.push('no 40-character build head was recorded');
   if (!/^[0-9a-f]{64}$/.test(run.build?.patchSha256 ?? '')) reasons.push('no candidate patch SHA-256 was recorded');
   if (!isText(run.build?.method)) reasons.push('no collection method was recorded');
@@ -141,14 +183,19 @@ const EXTRA_ROWS = {
   labelViolations: [0, 'max', null],
   resumeFailures: [0, 'max', null],
   routeCycleFailures: [0, 'max', null],
+  // Scheduled callbacks, not only draws: a loop that keeps scheduling without drawing is not a quiet page.
+  hiddenRafCalls: [0, 'max', null],
+  footerRafCalls: [0, 'max', null],
 };
+/** A sleeping (Atlas) page owes zero draws and zero callbacks once settled, at rest and after the tail of an input. */
+const ATLAS_ROWS = { restDraws: [0, 'max', null], restRafCalls: [0, 'max', null], settledTailDraws: [0, 'max', null], settledTailRafCalls: [0, 'max', null] };
 
 /** Every row of one run. A value without its observer is OPEN (a zero from a missing observer is not a zero). */
 export function judgeRun(run) {
   const metrics = run.metrics ?? {};
   const rows = { ...judgeHardware(metrics, run.tier).rows };
   const extra = { ...EXTRA_ROWS };
-  if (HARDWARE_ROUTES[run.route]?.atlas) extra.restDraws = [0, 'max', null];
+  if (HARDWARE_ROUTES[run.route]?.atlas) Object.assign(extra, ATLAS_ROWS);
   for (const [key, [limit, direction, observer]] of Object.entries(extra)) {
     const observed = observer === null || run.samples?.[observer] === true;
     rows[key] = { value: metrics[key], limit, verdict: observed ? judgeMetric(metrics[key], limit, direction) : 'OPEN' };
@@ -157,19 +204,65 @@ export function judgeRun(run) {
   return { verdict: verdicts.includes('FAIL') ? 'FAIL' : verdicts.includes('OPEN') ? 'OPEN' : 'PASS', rows, notApplicable: NOT_APPLICABLE.map((item) => ({ ...item })) };
 }
 
+const cohortOf = (run) => ({ head: run.build?.head, patchSha256: run.build?.patchSha256, basePath: run.build?.basePath, deviceName: run.device?.name });
+const cohortKey = (run) => JSON.stringify(Object.values(cohortOf(run)));
+const COHORT_FIELDS = ['head', 'patchSha256', 'basePath', 'deviceName'];
+
 /**
- * The tier dossier: every run of the tier is retained. A pair fails if any valid run fails (no choosing the good ones),
- * stays OPEN below three valid runs or while any valid run has an unmeasured row, and passes only when all valid runs pass.
+ * The tier dossier: every run of the tier is retained, but runs add up only inside ONE cohort (one build, patch, base path and
+ * device), so older data can neither qualify a changed build nor poison a repaired one. A pair fails if any valid run fails (no
+ * choosing the good ones), stays OPEN below three valid runs or while any valid run has an unmeasured row, and passes only when
+ * all valid runs pass. Copies of one report, and reports that share a run id or a start time, never count twice.
  */
-export function buildDossier({ tier, runs }) {
+export function buildDossier({ tier, runs, cohort }) {
+  const base = { tier, requiredValidRuns: REQUIRED_VALID_RUNS, notApplicable: NOT_APPLICABLE.map((item) => ({ ...item })) };
+  const tierRuns = runs.filter((run) => run.tier === tier);
+  const wanted = COHORT_FIELDS.filter((field) => cohort?.[field] !== undefined);
+  const excludedRuns = [];
+  const selected = tierRuns.filter((run) => {
+    if (wanted.every((field) => cohortOf(run)[field] === cohort[field])) return true;
+    excludedRuns.push({ runId: run.runId, cohort: cohortOf(run), reason: 'outside the selected cohort (build, patch, base path or device differ)' });
+    return false;
+  });
+  const groups = new Map();
+  for (const run of selected) groups.set(cohortKey(run), { ...cohortOf(run), runs: (groups.get(cohortKey(run))?.runs ?? 0) + 1 });
+  if (groups.size > 1) {
+    return { ...base, verdict: 'OPEN', needsCohort: true, message: 'the runs span several builds or devices: choose one cohort (--head, --patch, --base-path, --device-name); nothing is added across cohorts', cohorts: [...groups.values()], pairs: {}, missingPairs: [], excludedRuns };
+  }
+  const first = selected[0];
+  const identity = first ? { ...cohortOf(first), device: { name: first.device?.name, os: first.device?.os, gpu: first.device?.gpu, browser: first.device?.browser, browserVersion: first.device?.browserVersion } } : null;
+
+  // Duplicates are decided across the whole cohort before any pair is judged.
+  const rejection = new Map();
+  const byId = new Map();
+  selected.forEach((run, index) => {
+    if (isText(run.runId)) byId.set(run.runId, [...(byId.get(run.runId) ?? []), index]);
+  });
+  for (const [runId, indexes] of byId) {
+    if (indexes.length < 2) continue;
+    const identical = indexes.every((index) => JSON.stringify(selected[index]) === JSON.stringify(selected[indexes[0]]));
+    indexes.forEach((index, position) => {
+      if (!identical) rejection.set(index, `conflicting reports share the run id "${runId}"`);
+      else if (position > 0) rejection.set(index, `duplicate report of run id "${runId}" (an identical copy)`);
+    });
+  }
+  const seenStart = new Map();
+  selected.forEach((run, index) => {
+    if (rejection.has(index) || typeof run.startedAt !== 'string') return;
+    if (seenStart.has(run.startedAt)) rejection.set(index, `duplicate: the same start time as run "${selected[seenStart.get(run.startedAt)].runId}"`);
+    else seenStart.set(run.startedAt, index);
+  });
+
   const pairs = {};
   const missingPairs = [];
   for (const route of ROUTE_IDS) {
     for (const locale of LOCALES) {
       const key = `${route}/${locale}`;
-      const mine = runs.filter((run) => run.tier === tier && run.route === route && run.locale === locale);
-      const entries = mine.map((run) => {
-        const { valid, reasons } = classifyRun(run);
+      const mine = selected.map((run, index) => ({ run, index })).filter(({ run }) => run.route === route && run.locale === locale);
+      const entries = mine.map(({ run, index }) => {
+        const classified = classifyRun(run);
+        const reasons = rejection.has(index) ? [...classified.reasons, rejection.get(index)] : classified.reasons;
+        const valid = reasons.length === 0;
         const judged = valid ? judgeRun(run) : null;
         return { runId: run.runId, valid, reasons, verdict: judged?.verdict ?? null, rows: judged?.rows ?? null };
       });
@@ -181,13 +274,13 @@ export function buildDossier({ tier, runs }) {
     }
   }
   const pairVerdicts = Object.values(pairs).map((pair) => pair.verdict);
-  return { tier, requiredValidRuns: REQUIRED_VALID_RUNS, verdict: pairVerdicts.includes('FAIL') ? 'FAIL' : pairVerdicts.every((v) => v === 'PASS') ? 'PASS' : 'OPEN', pairs, missingPairs, notApplicable: NOT_APPLICABLE.map((item) => ({ ...item })) };
+  return { ...base, verdict: pairVerdicts.includes('FAIL') ? 'FAIL' : pairVerdicts.every((v) => v === 'PASS') ? 'PASS' : 'OPEN', cohort: identity, pairs, missingPairs, excludedRuns };
 }
 
-function qualify({ directory, tier, out }) {
+function qualify({ directory, tier, out, cohort }) {
   if (!['wide', 'compact'].includes(tier)) return { exit: 1, message: `--tier must be wide or compact, got "${tier}"` };
   const runs = fs.readdirSync(directory).filter((name) => name.endsWith('.json')).sort().map((name) => JSON.parse(fs.readFileSync(path.join(directory, name), 'utf8')));
-  const dossier = buildDossier({ tier, runs });
+  const dossier = buildDossier({ tier, runs, cohort });
   if (out) fs.writeFileSync(out, `${JSON.stringify(dossier, null, 2)}\n`);
   console.log(JSON.stringify(dossier, null, 2));
   const gate = gateExit([dossier.verdict]);
@@ -210,10 +303,10 @@ const sha256Text = (text) => createHash('sha256').update(text).digest('hex');
 
 /** Installed before any page script. Self-contained: it is serialized into the page. */
 function installProbe(options) {
-  const hw = { frames: [], current: null, rafCalls: 0, timeoutCalls: 0, longTasks: [], contexts: { alive: 0, max: 0, creates: 0 }, timerExt: undefined, disjoint: 0, pending: [], visibility: [] };
+  const hw = { frames: [], rafLog: [], current: null, rafCalls: 0, timeoutCalls: 0, longTasks: [], contexts: { alive: 0, max: 0, creates: 0 }, timerExt: undefined, disjoint: 0, pending: [], visibility: [] };
   window.__hw = hw;
   const raf = window.requestAnimationFrame.bind(window);
-  window.requestAnimationFrame = (callback) => { hw.rafCalls += 1; return raf(callback); };
+  window.requestAnimationFrame = (callback) => { hw.rafCalls += 1; hw.rafLog.push(performance.now()); return raf(callback); };
   const timeout = window.setTimeout.bind(window);
   window.setTimeout = (...args) => { hw.timeoutCalls += 1; return timeout(...args); };
   let sampling = false;
@@ -408,7 +501,8 @@ function analyzeClosure(outDir, pathname) {
 async function main() {
   const qualifyDirectory = argumentOf('qualify');
   if (qualifyDirectory) {
-    const result = qualify({ directory: qualifyDirectory, tier: argumentOf('tier') ?? 'wide', out: argumentOf('out') });
+    const cohort = Object.fromEntries([['head', argumentOf('head')], ['patchSha256', argumentOf('patch')], ['basePath', argumentOf('base-path')], ['deviceName', argumentOf('device-name')]].filter(([, value]) => value !== undefined));
+    const result = qualify({ directory: qualifyDirectory, tier: argumentOf('tier') ?? 'wide', out: argumentOf('out'), cohort });
     if (result.message) console.error(`measure-connected-studio-hardware: ${result.message}`);
     process.exit(result.exit);
   }
@@ -446,6 +540,10 @@ async function main() {
   const FRAMES_OUT = argumentOf('frames-out');
   if ((TRACE_PIPELINE || FRAMES_OUT) && BROWSER !== 'chromium') fail('--trace-pipeline and --frames-out need --browser=chromium');
   const GPU_TIMERS = !process.argv.includes('--no-gpu-timers'); // a control: without the timer queries, is the frame interval the same?
+  const SERVE_PORT = argumentOf('serve-port') === undefined ? undefined : Number(argumentOf('serve-port'));
+  const DIAGNOSTIC_REASONS = diagnosticReasons(process.argv.slice(2));
+  const optionProblems = validateCollectionOptions({ tier: TIER, connectCdp: CDP_URL, servePort: SERVE_PORT, diagnostic: DIAGNOSTIC_REASONS.length > 0 });
+  if (optionProblems.length) fail(optionProblems.join(' '));
   const basePath = normalizeBasePath(argumentOf('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
   if (basePath && !/^\/[A-Za-z0-9._-]+$/.test(basePath)) fail(`The base path "${basePath}" is not a plain /segment. Run from PowerShell.`);
   if (!fs.existsSync(path.join(outDir, 'index.html'))) fail('No export in out/. Build the candidate first.');
@@ -467,7 +565,7 @@ async function main() {
 
   const loadBefore = await sampleMachine();
   const server = createExportServer({ root: outDir, basePath });
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  await new Promise((resolve) => server.listen(SERVE_PORT ?? 0, '127.0.0.1', resolve));
   const origin = `http://127.0.0.1:${server.address().port}`;
   const url = (pathname) => `${origin}${basePath}${pathname}`;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -487,7 +585,7 @@ async function main() {
     device,
     detected: { browserVersion: browser.version(), cpu: os.cpus()[0]?.model, logicalCores: os.cpus().length, memoryGiB: round(os.totalmem() / 1024 ** 3, 1), hostPlatform: `${os.platform()} ${os.release()}`, controlsAndroidOverCdp: Boolean(CDP_URL) },
     build: { head: candidate.head, candidate: candidate.kind, patchSha256: candidate.patchSha256, policy: candidate.policy, basePath: basePath || '/', method: `node scripts/measure-connected-studio-hardware.mjs ${process.argv.slice(2).join(' ')}` },
-    protocol: { idleSeconds: IDLE_SECONDS, traversals: TRAVERSALS, sustainedSeconds: SUSTAINED_SECONDS, routeCycles: ROUTE_CYCLES, headed: HEADED, extras: EXTRAS, gpuTimersRequested: GPU_TIMERS, browser: BROWSER, hiddenMethod: null },
+    protocol: { idleSeconds: IDLE_SECONDS, traversals: TRAVERSALS, sustainedSeconds: SUSTAINED_SECONDS, routeCycles: ROUTE_CYCLES, headed: HEADED, extras: EXTRAS, gpuTimersRequested: GPU_TIMERS, browser: BROWSER, hiddenMethod: null, diagnostic: DIAGNOSTIC_REASONS.length > 0, diagnosticReasons: DIAGNOSTIC_REASONS, servePort: SERVE_PORT ?? null },
     setsTestHook: false,
     forcesSoftwareRenderer: false,
     frameIntervalSource: FRAME_INTERVAL_SOURCE,
@@ -596,7 +694,17 @@ async function main() {
     // ---- 0. Is the page live on hardware, with no override? ----
     const first = await openPage({ width: TIER === 'wide' ? 1440 : 390, height: TIER === 'wide' ? 900 : 844 });
     const page = first.page;
-    await page.goto(url(pageInfo.pathname), { waitUntil: 'load' });
+    let navigation = null;
+    let navigationError = null;
+    try {
+      navigation = await page.goto(url(pageInfo.pathname), { waitUntil: 'load' });
+    } catch (error) {
+      navigationError = error.message;
+    }
+    // The first thing any target does is fetch the export: a phone that cannot reach it is stopped here, not twelve minutes in.
+    const unreachable = reachabilityProblem(navigationError ? { error: navigationError } : { status: navigation?.status(), body: await page.content() });
+    if (unreachable) throw new Error(unreachable);
+    report.remote = await page.evaluate(() => ({ userAgent: navigator.userAgent, platform: navigator.platform, maxTouchPoints: navigator.maxTouchPoints, hardwareConcurrency: navigator.hardwareConcurrency, deviceMemoryGiB: navigator.deviceMemory ?? null, screen: { width: screen.width, height: screen.height } }));
     const viewport = await viewportOf(page);
     report.viewport = viewport;
     const renderer = await rendererOf(page);
@@ -643,14 +751,20 @@ async function main() {
       // ---- 1. Idle: cadence and cost with nothing happening (an Atlas page must be asleep) ----
       const heapStart = await cdpMetric('JSHeapUsedSize');
       const idleFrom = await frameCount(page);
-      await page.waitForTimeout(IDLE_SECONDS * 1000);
+      const restWindowMs = Math.min(30, IDLE_SECONDS) * 1000;
+      await page.waitForTimeout(IDLE_SECONDS * 1000 - restWindowMs);
+      const restBefore = await counters(page); // the last 30 s of the idle window are the settled rest window
+      await page.waitForTimeout(restWindowMs);
+      const restAfter = await counters(page);
       const idle = await framesSince(page, idleFrom);
       const heapIdleEnd = await cdpMetric('JSHeapUsedSize');
       metrics.ambientFps = idle.length >= 2 ? round(cadenceFps(idle.map((frame) => frame.t)), 1) : 0;
       const idleEnd = idle.length ? idle[idle.length - 1].t : 0;
-      const restWindowMs = Math.min(30, IDLE_SECONDS) * 1000;
       const nowMs = await page.evaluate(() => performance.now());
-      if (ATLAS) metrics.restDraws = idle.filter((frame) => frame.t >= nowMs - restWindowMs - 400).length;
+      if (ATLAS) {
+        metrics.restDraws = restAfter.frames - restBefore.frames;
+        metrics.restRafCalls = restAfter.raf - restBefore.raf;
+      }
       report.idle = { seconds: IDLE_SECONDS, renders: idle.length, fps: metrics.ambientFps, lastRenderAgoMs: idle.length ? round(nowMs - idleEnd, 0) : null, restWindowSeconds: restWindowMs / 1000, gpuP95Ms: round(percentile(idle.map((f) => f.gpuMs).filter((v) => v !== null), 95), 3), heapStartMiB: round(heapStart / 1048576, 1), heapEndMiB: round(heapIdleEnd / 1048576, 1) };
 
       // ---- 2. Traversals (scroll) and pointer passes with stationary tails: active cadence, render cost, draw calls, labels, long tasks ----
@@ -697,6 +811,17 @@ async function main() {
       if (FRAMES_OUT) fs.writeFileSync(FRAMES_OUT, `${JSON.stringify({ unit: 'ms, page performance.now()', frames: active.map((f) => ({ t: round(f.t, 3), cpuMs: round(f.cpu, 3), gpuMs: round(f.gpuMs, 3), draws: f.draws })) })}\n`);
       // Frame intervals come from the render timestamps only (never the CPU submit time or the GPU query); a gap of 250 ms or more
       // is a pause between bursts. No usable interval leaves the row OPEN and the run invalid instead of ending the run.
+      // A sleeping page owes zero draws and zero callbacks once the tail of the last input has died away.
+      if (ATLAS) {
+        await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+        await page.waitForTimeout(5000);
+        const tailBefore = await counters(page);
+        await page.waitForTimeout(3000);
+        const tailAfter = await counters(page);
+        metrics.settledTailDraws = tailAfter.frames - tailBefore.frames;
+        metrics.settledTailRafCalls = tailAfter.raf - tailBefore.raf;
+        report.settledTail = { afterInput: TIER === 'wide' ? 'pointer pass, then a scroll back to the top' : 'scroll traversal, then a scroll back to the top', waitedSeconds: 5, windowSeconds: 3, draws: metrics.settledTailDraws, rafCalls: metrics.settledTailRafCalls };
+      }
       const intervalsOf = (frames) => {
         try {
           return activeFrameIntervals({ source: FRAME_INTERVAL_SOURCE, timestampsMs: frames.map((frame) => frame.t) });
@@ -784,13 +909,14 @@ async function main() {
           const hiddenAt = log.find((entry) => entry[1] === 'hidden')?.[0];
           const shownAt = log.find((entry) => entry[1] === 'visible' && entry[0] > (hiddenAt ?? Infinity))?.[0];
           if (hiddenAt === undefined || shownAt === undefined) return null;
-          return { hiddenMs: shownAt - hiddenAt, draws: window.__hw.frames.filter((frame) => frame.t > hiddenAt + 100 && frame.t < shownAt).length };
+          return { hiddenMs: shownAt - hiddenAt, draws: window.__hw.frames.filter((frame) => frame.t > hiddenAt + 100 && frame.t < shownAt).length, rafCalls: window.__hw.rafLog.filter((at) => at > hiddenAt + 100 && at < shownAt).length };
         }, logFrom);
       };
       const hiddenMode = HIDDEN_MODE ?? (CDP_URL ? 'manual' : HEADED ? 'auto' : null);
       const hidden = hiddenMode ? await hideAndCount(hiddenMode) : null;
       report.protocol.hiddenMethod = hidden ? (hiddenMode === 'manual' ? (CDP_URL ? 'phone screen locked by the operator' : 'window minimized by the operator') : 'headed window minimized through the browser window API') : null;
       metrics.hiddenDraws = hidden && hidden.hiddenMs >= 4_000 ? hidden.draws : null; // a window shorter than 4 s proves nothing: stays OPEN
+      metrics.hiddenRafCalls = hidden && hidden.hiddenMs >= 4_000 ? hidden.rafCalls : null;
       report.hidden = hidden ?? { note: 'not measured: the page never reported hidden. Playwright-driven Chromium keeps document.visibilityState visible when its window is minimized or covered by another tab (checked in Task 15 with the default launch, with the backgrounding switches removed, with focus emulation off and with every default argument dropped), so the row stays OPEN until a real hidden window is observed' };
       await page.bringToFront();
       await page.waitForTimeout(1500);
@@ -800,8 +926,10 @@ async function main() {
       await page.waitForTimeout(2500);
       const footerBefore = await counters(page);
       await page.waitForTimeout(4000);
-      metrics.footerDraws = (await counters(page)).frames - footerBefore.frames;
-      report.footer = { windowSeconds: 4, draws: metrics.footerDraws };
+      const footerAfter = await counters(page);
+      metrics.footerDraws = footerAfter.frames - footerBefore.frames;
+      metrics.footerRafCalls = footerAfter.raf - footerBefore.raf;
+      report.footer = { windowSeconds: 4, draws: metrics.footerDraws, rafCalls: metrics.footerRafCalls };
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
 
       // The first-load vitals are read here, before any route change replaces the page.
