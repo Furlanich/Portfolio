@@ -3,6 +3,7 @@ id: ARCH-CURRENT
 type: existing-system
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - ARCH-FINDINGS
   - IA-SITE
@@ -18,10 +19,14 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - PLAN-SPF-V1
-last_verified: 2026-10-14
+last_verified: 2026-10-18
 ---
 
 # Current system
+
+## Direct-contact update — 2026-10-18
+
+Integration Task 13: both Contact routes use native WhatsApp/mailto/tel links and no form client or mode selector. Privacy describes direct messages and hosting. Dormant inquiry libraries remain outside the route import graph. [ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) supersedes the earlier form implementation details below; publication still awaits human merge/coordinated release.
 
 ## Scope
 
@@ -142,7 +147,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Retained personal data JSON, project assets, and core primitives remain in Git and are outside this cleanup; the obsolete localization shell, sections, helper, and message catalogs are retired.
 - Both normal and /Portfolio static-export modes are verified by the repository artifact checker. Task 4 browser QA repeated all eight routes at 320x800, 375x812, 768x1024, 1024x768, and 1440x900; language switching, keyboard focus, JavaScript-disabled rendering, reduced motion, contact links, Founder links, and CV routing were checked.
 
-## Current Contact demonstration — Task 4 / PR 4 — DEPLOYED
+## Historical Contact demonstration — Task 4 / PR 4 (superseded by Task 13) — DEPLOYED
 
 - The paired /contacto/ and /en/contact/ routes render a shared server-side ContactPage and narrow client-side ContactForm.
 - The form keeps exactly name, email, optional company, and message. Locale-owned content supplies labels, helpers, validation messages, demonstration disclosure, status copy, fallback note, and Privacy/Founder links.

@@ -3,6 +3,7 @@ id: PAGE-SERVICES
 type: page-spec
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
@@ -19,10 +20,14 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-SERVICES-EXPERIENCE
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Services page
+
+## Direct-contact scope — APPROVED 2026-10-18
+
+[PAGE-CONTACT](contact-and-privacy.md) now uses only native WhatsApp/email/phone links. The prior form/provider/counsel release dependencies and demo-form referral wording are superseded. No embedded intake is needed for this page or the complete redesign.
 
 ## Commercial inquiry consistency — APPROVED target, 2026-10-14
 
@@ -733,7 +738,7 @@ The copy intentionally removes generic transformation language, technology catal
 | English content | **READY** | Natural professional adaptation and exact page copy approved. |
 | Responsive/design behavior | **READY** | Page-specific baselines approved in `DESIGN-VISUAL` and `DESIGN-IX-A11Y`. |
 | Final prices, payment, ownership, warranty, liability, and legal terms | **DEFERRED** | `DELIVERY-BOUNDARIES`; bounded informational copy is approved and implementation is not blocked. |
-| Structured inquiry form and privacy flow | **BLOCKED** for complete business-site release, not for this page | `PAGE-CONTACT` and `PAGE-PRIVACY`; the working direct-contact destination remains sufficient for Services implementation. |
+| Direct contact and Privacy | **APPROVED** direct-channel scope | PAGE-CONTACT and PAGE-PRIVACY; native links replace the prior embedded form and its processor/counsel gates. |
 
 ## Acceptance criteria
 
@@ -781,7 +786,7 @@ Current baseline: each service repeats situations, scope levels, outcomes, examp
 | Consulting starting point / fit | Primero se revisa el sistema y los accesos autorizados. El diagnóstico define las opciones; las mejoras y el soporte continuo se acuerdan por separado. | Start with the system and authorized access. Diagnosis identifies options; improvements and ongoing support are agreed separately. | No automatic rebuild, incident response or SLA |
 | Consulting evidence | El enfoque se apoya en la experiencia técnica de Samuel. Todavía no hay una intervención pública autorizada para mostrar. | The approach draws on Samuel’s technical background. There is no authorized public intervention to show yet. | Founder-backed scope, not a case study or employer endorsement |
 | Each service action: varied inquiry labels | Ver contacto | Contact options | Stable current-mode D02/D06 destination; local service context stays in preceding section |
-| Final CTA: inquiry review and response promise | Explorá el contacto y probá la demostración del formulario. | Explore the contact options and try the form demonstration. | Demo mode only; no response block |
+| Final CTA: inquiry review and response promise | Contactanos por WhatsApp, correo o teléfono. | Contact us on WhatsApp, by email or by phone. | Direct-contact invitation; no form |
 
 ### Essential visible boundaries — accepted compressed copy
 

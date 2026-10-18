@@ -102,7 +102,7 @@ const cases = {
       'Los términos definitivos de pago, aceptación, propiedad, garantía y responsabilidad pertenecen a cada propuesta o contrato y siguen sujetos a revisión comercial y legal.',
     ],
     finalHeading: 'Contanos qué necesitás resolver',
-    finalDescription: 'Explorá el contacto y probá la demostración del formulario.',
+    finalDescription: 'Contactanos por WhatsApp, correo o teléfono.',
     finalAction: 'Iniciar una consulta',
   },
   en: {
@@ -195,7 +195,7 @@ const cases = {
       'Final payment, acceptance, ownership, warranty, and liability terms belong in each proposal or contract and remain subject to commercial and legal review.',
     ],
     finalHeading: 'Tell us what you need to solve',
-    finalDescription: 'Explore the contact options and try the form demonstration.',
+    finalDescription: 'Contact us on WhatsApp, by email or by phone.',
     finalAction: 'Start an enquiry',
   },
 } as const;

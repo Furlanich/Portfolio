@@ -3,6 +3,7 @@ id: DESIGN-VISUAL
 type: design-spec
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SPF-V1
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
@@ -32,10 +33,14 @@ related:
   - DESIGN-SFC-V1
   - RFC-SFC-COMMERCIAL-ATLAS-V1
   - PAGE-TERMS
-last_verified: 2026-10-17
+last_verified: 2026-10-18
 ---
 
 # Visual language
+
+## Direct-contact amendment — APPROVED 2026-10-18
+
+[ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) removes the embedded form from both Contact routes. Its old field, validation, submit/state, simulation and processor/counsel activation requirements are superseded for the current release. Native WhatsApp/email/phone links, no-JavaScript behavior and ordinary keyboard/focus/reflow checks govern Contact. The historical candidate project name contact-commercial now exercises direct channels; only the runtime candidate needs live-policy patches.
 
 ## Services, Projects and Footer exception — APPROVED 2026-09-30
 

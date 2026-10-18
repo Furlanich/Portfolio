@@ -3,6 +3,7 @@ id: PRODUCT-INDEX
 type: product-index
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - BRAND-POSITIONING
   - IA-SITE
   - PAGE-HOME
@@ -13,12 +14,16 @@ related:
   - PAGE-TERMS
   - PROJECT-INVENTORY
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
-last_verified: 2026-10-14
+last_verified: 2026-10-18
 ---
 
 # Product documentation
 
 Product documentation defines what the FURLANICH website is, who it serves, why each page exists, and what information the site must communicate. It does not define implementation tasks.
+
+## Direct-contact update — 2026-10-18
+
+Contact now means native WhatsApp/email/phone links, with factual direct-channel Privacy information; the form and processor/counsel activation gates are retired by [ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md). [PAGE-CONTACT](pages/contact-and-privacy.md) owns current requirements; earlier Initiative 6 form descriptions are superseded history.
 
 ## Business foundation
 
@@ -51,4 +56,4 @@ Initiative 3 makes `PAGE-SERVICES` implementation-ready in Spanish and English, 
 
 Initiative 4 makes the Projects product and design decisions complete. General Reservation System, The-System, and MPC Administración are READY for limited image-free bilingual cards and paired summary-only detail pages, satisfying the Task 2 / PR 2 gate and the Task 3 / PR 3 detail gate in [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/completed/projects-evidence-experience.md). Task 4 retires the verified-unused legacy project paths after the approved replacement boundary is in place. The approved inventory-sensitive structure uses one ungrouped editorial grid for these three items, rejects empty groups and launch filters, and keeps `HOME-PROOF` unchanged.
 
-Initiative 6 makes the Contact product, content, and page-design requirements implementation-ready while deliberately leaving the processor architecture unapproved. The form remains the primary action, collects only name, email, optional company, and the problem to solve, submits without leaving FURLANICH, preserves content on error, and retains WhatsApp, email, and phone fallbacks. [`PAGE-CONTACT / PAGE-PRIVACY`](pages/contact-and-privacy.md) owns the complete bilingual copy, state model, notification, abuse, factual data-flow, retention, legal-review, and release gates. A Governance RFC must approve the provider and exact deployed processing path before code changes.
+[PAGE-CONTACT / PAGE-PRIVACY](pages/contact-and-privacy.md) owns the approved direct-channel Contact pages and truthful Privacy information. Native WhatsApp, email and phone links replace the embedded form. No inquiry provider, simulation or mandatory counsel decision is a release prerequisite.

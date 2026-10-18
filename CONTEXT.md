@@ -3,11 +3,12 @@ id: DOMAIN-GLOSSARY
 type: product-glossary
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DOCS-INDEX
   - BRAND-POSITIONING
   - AUDIENCES-SERVICES
   - PROJECT-EVIDENCE
-last_verified: 2026-09-19
+last_verified: 2026-10-18
 ---
 
 # FURLANICH Product Context
@@ -63,5 +64,5 @@ _Avoid_: product, production system, client solution
 ## Conversion
 
 **Inquiry**:
-A prospective client's initial structured request through the contact form or a secondary contact channel.
+A prospective client's initial request through a published direct contact channel (WhatsApp, email or phone). The website has no inquiry form under ADR-CONTACT-DIRECT-CHANNELS.
 _Avoid_: lead when addressing the visitor, support ticket

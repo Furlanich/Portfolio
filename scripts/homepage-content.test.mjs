@@ -175,7 +175,7 @@ test('Spanish home content contains the approved complete homepage contract', ()
     },
     cta: {
       heading: '¿Tenés una necesidad concreta o un sistema que necesita atención?',
-      demoStatement: 'Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario.',
+      demoStatement: 'Contactanos por WhatsApp, correo o teléfono.',
       primaryAction: 'Ver contacto',
       secondaryAction: 'Escribir por WhatsApp',
     },
@@ -240,7 +240,7 @@ test('English home content contains the approved natural adaptation', () => {
     },
     cta: {
       heading: 'Do you have a concrete need or a system that needs attention?',
-      demoStatement: 'Explore the contact options and try the demonstration form. The form does not send inquiries.',
+      demoStatement: 'Contact us on WhatsApp, by email or by phone.',
       primaryAction: 'Contact options',
       secondaryAction: 'Write on WhatsApp',
     },

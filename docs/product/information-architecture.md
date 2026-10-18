@@ -3,6 +3,7 @@ id: IA-SITE
 type: information-architecture
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
@@ -16,7 +17,7 @@ related:
   - PAGE-PRIVACY
   - CONTENT-LOCALIZATION
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Information architecture
@@ -211,9 +212,8 @@ Paths below are logical site paths; deployment prepends the existing /Portfolio 
 | Founder education MPC entry | /proyectos/mpc-administracion/ | /en/work/mpc-administracion/ | Historical educational group evidence; D04 |
 | MPC return/background | /estudio/samuel-furlanich/ | /en/about/samuel-furlanich/ | Replaces commercial related-service emphasis; existing detail routes preserved |
 | Founder Projects bridge | /proyectos/ | /en/work/ | Selected public evidence |
-| Contact Privacy link; footer Privacy | /privacidad/ | /en/privacy/ | Current demonstration disclosure |
-| Contact form submit/retry | No navigation or network | No navigation or network | Local simulated outcome only; existing adapter |
-| Contact/footer WhatsApp | https://wa.me/5491150117565 | Same | Open WhatsApp; no form-value prefill |
+| Contact Privacy link; footer Privacy | /privacidad/ | /en/privacy/ | Direct-contact Privacy information |
+| Contact/footer WhatsApp | https://wa.me/5491150117565 | Same | Open WhatsApp; no message prefill |
 | Contact/footer email | mailto:samuelfurlanich@gmail.com | Same | Visitor-selected external email action |
 | Contact/footer phone | tel:+5491150117565 | Same | Visitor-selected phone action |
 | Project source links | Existing exact URL in each item owner | Same | Inspect source, not a verified running product |
@@ -260,4 +260,4 @@ MPC on Founder uses `https://github.com/Furlanich/MilkyPantsCheese-Administracio
 | Resume background | Reanudar fondo | Resume background |
 | Focused control after fallback | Fondo estático | Static background |
 
-Existing navigation labels and direct-channel values remain those approved in D06-IA. The contact hierarchy is WhatsApp first, followed by email, phone and the localized Contact route. Footer copy proposes a direct-channel invitation; it does not activate the simulated form, promise a response/SLA, adopt the rejected D03 notice/form redesign or introduce a context-prefill feature. Copyright stays `© {build year} FURLANICH`; locale controls use equivalent page routes. On Projects, retain a recognized dossier fragment during locale changes.
+Existing navigation labels and direct-channel values remain those approved in D06-IA. The contact hierarchy is WhatsApp first, followed by email, phone and the localized Contact route. Footer copy proposes a direct-channel invitation; it uses the direct-contact scope approved on 2026-10-18 and carries no message prefill or form activation. Copyright stays `© {build year} FURLANICH`; locale controls use equivalent page routes. On Projects, retain a recognized dossier fragment during locale changes.

@@ -429,21 +429,19 @@ function assertContactArtifact(artifact, html) {
   if (countMatches(html, /<h1\b/g) !== 1 || !html.includes(requirement.heading)) {
     failures.push(artifact.file + ': expected one approved Contact H1');
   }
-  for (const text of [requirement.fallback, ...requirement.fields]) {
-    if (!html.includes(text)) failures.push(artifact.file + ': missing approved Contact text "' + text + '"');
-  }
-  for (const text of requirement.forbiddenText ?? []) {
-    if (html.includes(text)) failures.push(artifact.file + ': contains retired Contact copy "' + text + '"');
+  const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '';
+  for (const href of requirement.channels) {
+    if (!main.includes('href="' + href + '"')) failures.push(artifact.file + ': missing Contact channel ' + href);
   }
   for (const route of [requirement.privacy, requirement.founder]) {
     const expected = expectedPageLinkHref(route);
-    if (!html.includes('href="' + expected + '"')) failures.push(artifact.file + ': missing Contact reference ' + expected);
+    if (!main.includes('href="' + expected + '"')) failures.push(artifact.file + ': missing Contact reference ' + expected);
   }
-  if (!html.includes('<form') || !html.includes('Simul') && !html.includes('Simulate')) {
-    failures.push(artifact.file + ': missing local-only Contact form');
+  if (/<(?:form|input|textarea)\b|<button[^>]*type="submit"/i.test(main)) {
+    failures.push(artifact.file + ': contains retired Contact form controls');
   }
-  if (/NEXT_PUBLIC_FORMSPREE_ENDPOINT|formspree\.io|inquiry sent|consulta enviada/i.test(html)) {
-    failures.push(artifact.file + ': contains live provider or delivery wording');
+  if (/NEXT_PUBLIC_FORMSPREE_ENDPOINT|formspree\.io|inquiry sent|consulta enviada|Simular envío|Simulate submission/i.test(html)) {
+    failures.push(artifact.file + ': contains retired Contact provider or simulation wording');
   }
 }
 

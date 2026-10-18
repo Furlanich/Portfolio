@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import { ConnectedStudioGround } from '@/components/connected-studio/ConnectedStudioGround';
-import { ContactForm } from './ContactForm';
 import type { ContactPageContent } from './content-types';
 import type { Locale } from '@/lib/locales';
 import { resolveActionLink } from '@/components/foundation/content-types';
+import { getFoundationPageLinkHref } from '@/lib/foundation-navigation';
 import { AtlasEditorialContainer } from '@/components/surfaces/AtlasEditorialContainer';
 import { AtlasScrim } from '@/components/surfaces/AtlasScrim';
 import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
+import { ContactChannelIcon } from './ContactChannelIcon';
 import styles from './contact.module.css';
 
 type ContactPageProps = {
@@ -17,7 +18,7 @@ type ContactPageProps = {
 export function ContactPage({ content, locale }: ContactPageProps) {
   const founderLink = resolveActionLink(content.founderContextAction, locale);
   const alternativesHeadingId = 'contact-' + locale + '-alternatives-heading';
-  const formHeadingId = 'contact-' + locale + '-form-heading';
+  const privacyHref = getFoundationPageLinkHref('privacy', locale);
 
   return (
     <main
@@ -42,29 +43,29 @@ export function ContactPage({ content, locale }: ContactPageProps) {
             </div>
           </header>
 
-          <div className={styles.intakeSurface} data-connected-opaque-plate="">
-            <section aria-labelledby={formHeadingId} className={styles.formPanel}>
-              <ContactForm content={content} locale={locale} />
-            </section>
-            <aside className={styles.alternativesPanel}>
-              <section aria-labelledby={alternativesHeadingId}>
-                <h2 id={alternativesHeadingId} className={styles.alternativesHeading}>
-                  {content.alternatives.heading}
-                </h2>
-                <p className={styles.alternativesNote}>{content.alternatives.note}</p>
-                <ul className={styles.alternativesList}>
-                  {content.alternatives.actions.map((action) => (
-                    <li key={action.kind}>
-                      <a href={action.href} className={styles.alternativeAction}>
-                        {action.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-                <p className={styles.location}>{content.location}</p>
-              </section>
-            </aside>
-          </div>
+          <section aria-labelledby={alternativesHeadingId} className={styles.contactSurface} data-contact-channels data-connected-opaque-plate="">
+            <div>
+              <h2 id={alternativesHeadingId} className={styles.channelsHeading}>{content.channels.heading}</h2>
+              <p className={styles.channelsNote}>{content.channels.note}</p>
+              <p className={styles.location}>{content.location}</p>
+            </div>
+            <div>
+              <ul className={styles.channelsList}>
+                {content.actions.map((action) => (
+                  <li key={action.kind}>
+                    <a href={action.href} className={styles.channelAction}>
+                      <ContactChannelIcon kind={action.kind} className={styles.channelIcon} />
+                      <span className={styles.channelLabel}>{action.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <p className={styles.privacyContext}>
+                {content.channels.privacyContext}{' '}
+                <Link href={privacyHref} className={styles.inlineLink}>{content.privacyLabel}</Link>
+              </p>
+            </div>
+          </section>
 
           <div className={styles.founderBridge}>
             <Link href={founderLink.href} className={styles.founderLink}>

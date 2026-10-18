@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - REVIEW-SFC-PLAN-2026-10-14
   - PLAN-SFC-V1
   - DESIGN-SFC-V1
@@ -50,7 +51,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-10-14
+last_verified: 2026-10-18
 ---
 
 # FURLANICH project knowledge
@@ -58,6 +59,10 @@ last_verified: 2026-10-14
 This directory is the authoritative source for durable FURLANICH product, content, design, and known-system knowledge. It is written to remain useful independently of any chat, coding agent, or vendor.
 
 When documentation and conversation history disagree, this documentation wins. When approved documentation and the current application disagree, the documentation describes the intended product and the application describes the current implementation.
+
+## Direct-contact update — 2026-10-18
+
+The 2026-10-18 [direct-contact decision](decisions/contact-direct-channels.md) replaces the public form with WhatsApp/email/phone links under Task 13. Formspree and mandatory counsel decisions are no longer release requirements. Earlier demonstration/provider sections below are historical and superseded for Contact.
 
 ## Status vocabulary
 
@@ -114,9 +119,9 @@ Initiative 5 closes the distinct Studio and Founder experiences in [PAGE-STUDIO 
 
 [`PAGE-CONTACT / PAGE-PRIVACY`](product/pages/contact-and-privacy.md) owns the four-field experience, bilingual demonstration and dormant commercial copy, state model, fallbacks, factual privacy scope, and verification boundaries. [`DESIGN-VISUAL`](design/visual-language.md) and [`DESIGN-IX-A11Y`](design/interaction-responsive-accessibility.md) own the Contact-specific visual, responsive, semantic, focus, status, and zero-transmission behavior.
 
-[`RFC-CONTACT-INQUIRY-PIPELINE`](rfcs/contact-inquiry-pipeline.md) and [`ADR-CONTACT-INQUIRY-PIPELINE`](decisions/contact-inquiry-pipeline.md) preserve Formspree behind `submitInquiry()` for a future commercial activation. The provider-neutral types, validator, and adapter are merged but dormant.
+The earlier inquiry RFC/ADRs and completed demonstration plan remain historical engineering records. The current Contact target is [direct channels](decisions/contact-direct-channels.md); dormant transport modules are outside the public import path.
 
-[`ADR-CONTACT-INQUIRY-DEMO-MODE`](decisions/contact-inquiry-demonstration-mode.md) records the current deployment decision: `https://furlanich.github.io/Portfolio/` remains a non-commercial portfolio/technical demonstration, and its public form simulates outcomes locally without sending or storing values. [`REF-CONTACT-DEMO-KIT`](references/contact-inquiry-demonstration/index.md) provides the approved synthetic resources. [`PLAN-CONTACT-INQUIRY-PIPELINE`](plans/completed/contact-inquiry-pipeline.md) records the completed demonstration Privacy/Contact implementation and deployed zero-transmission proof. Real processor/legal/inbox/deletion gates remain OPEN for a separately reviewed commercial activation.
+Task 13 replaces the simulated Contact form and Privacy disclosure in the integration candidate. The coordinated release still requires human review and merge. No Formspree or counsel decision is a prerequisite of the direct-channel release.
 
 ## Marketing narrative decision review — PROPOSED
 

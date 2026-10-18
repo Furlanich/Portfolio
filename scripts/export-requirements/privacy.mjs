@@ -1,37 +1,47 @@
-// Declarative static-export requirements for Privacy (PLAN-SFC-V1 Tasks 2 and 9: one owner per page, data only).
-// Privacy now uses the shared legal reading template. The verifier continues to own route/content assertions;
-// these navigation fields are also consumed by the focused browser contract in tests/e2e/legal.spec.ts.
+// Direct-contact Privacy contract.
 export const privacyRequirements = {
-  'privacidad/index.html': {
-    heading: 'Privacidad de esta demostración',
-    introduction:
-      'Este sitio funciona como portfolio y demostración técnica. No acepta consultas comerciales mediante el formulario y no presenta esta página como una política revisada por un profesional legal.',
-    sections: [
-      'Qué ocurre con los datos del formulario',
-      'Alojamiento y datos técnicos',
-      'Alternativas externas',
-      'Información sensible',
-      'Conservación y consultas',
-      'Activación comercial futura',
+  "privacidad/index.html": {
+    "heading": "Privacidad y contacto",
+    "introduction": "Esta página explica qué ocurre al navegar por el sitio y al contactar a Samuel Furlanich por los canales publicados.",
+    "sections": [
+      "Responsable y contacto",
+      "Contacto directo",
+      "Alojamiento y datos técnicos",
+      "Preferencias de navegación",
+      "Información que compartís",
+      "Mensajes y solicitudes sobre tus datos"
     ],
-    contentsLabel: 'Contenido',
-    sectionIds: ['form-data', 'hosting', 'external-alternatives', 'sensitive-information', 'retention-questions', 'future-commercial-activation'],
-    githubLabel: 'Ver la declaración de privacidad de GitHub',
-  },
-  'en/privacy/index.html': {
-    heading: 'Privacy in this demonstration',
-    introduction:
-      'This site operates as a portfolio and technical showcase. It does not accept commercial inquiries through the form and does not present this page as a professionally reviewed legal policy.',
-    sections: [
-      'What happens to form data',
-      'Hosting and technical data',
-      'External alternatives',
-      'Sensitive information',
-      'Retention and questions',
-      'Future commercial activation',
+    "contentsLabel": "Contenido",
+    "sectionIds": [
+      "responsible-party",
+      "direct-contact",
+      "hosting",
+      "preferences",
+      "sensitive-information",
+      "retention-questions"
     ],
-    contentsLabel: 'Contents',
-    sectionIds: ['form-data', 'hosting', 'external-alternatives', 'sensitive-information', 'retention-questions', 'future-commercial-activation'],
-    githubLabel: "View GitHub's privacy statement",
+    "githubLabel": "Ver la declaración de privacidad de GitHub"
   },
+  "en/privacy/index.html": {
+    "heading": "Privacy and contact",
+    "introduction": "This page explains what happens when you browse the website and contact Samuel Furlanich through the published channels.",
+    "sections": [
+      "Responsible party and contact",
+      "Direct contact",
+      "Hosting and technical data",
+      "Browsing preferences",
+      "Information you share",
+      "Messages and requests about your information"
+    ],
+    "contentsLabel": "Contents",
+    "sectionIds": [
+      "responsible-party",
+      "direct-contact",
+      "hosting",
+      "preferences",
+      "sensitive-information",
+      "retention-questions"
+    ],
+    "githubLabel": "View GitHub's privacy statement"
+  }
 };

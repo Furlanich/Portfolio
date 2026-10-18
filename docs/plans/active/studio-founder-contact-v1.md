@@ -5,6 +5,7 @@ status: PROPOSED
 plan_status: ACTIVE
 execution_policy: ADE-AGENT-USAGE-V1
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SFC-V1
   - SPEC-SFC-V1
   - RFC-SFC-COMMERCIAL-ATLAS-V1
@@ -18,20 +19,28 @@ related:
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
   - TEST-VISUAL-REGRESSION
-last_verified: 2026-10-17
+last_verified: 2026-10-18
 ---
 
 # Studio, Founder, Contact and legal implementation plan
 
 > Implement with `superpowers:executing-plans`, one primary top-level session per packet, zero subagents. GOV-AGENT-USAGE overrides delegation requested by Skills. Separate worktrees/branches are mandatory. Claude implements/reviews only; the planning authority authors the master plan.
 
-**Goal:** deliver the approved bilingual Atlas Studio/Founder/Contact/legal experience, genuine public inquiries, and measured yielding nodes/pinned strings on the five connected page pairs.
+**Goal:** deliver the approved bilingual Atlas Studio/Founder/Contact/legal experience, genuine direct contact, and measured yielding nodes/pinned strings on the five connected page pairs.
 
-**Architecture:** extend the existing pure model/controller and single direct-Three.js host/engine with route profiles and one pure projection seam. Preserve semantic server pages, typed locale copy, the provider-neutral inquiry port/Formspree adapter, static export and `/Portfolio`. Home remains a separate runtime. Commercial release does not depend on hardware tier qualification.
+**Architecture:** extend the existing pure model/controller and single direct-Three.js host/engine with route profiles and one pure projection seam. Preserve semantic server pages, typed locale copy, native direct contact links, static export and `/Portfolio`. Home remains a separate runtime. Commercial release does not depend on hardware tier qualification.
 
 **Stack:** installed Next.js 16.3.2-compatible version, React 18.2, TypeScript, Tailwind 3, Three.js 0.186, React Hook Form 7, Node tests, Playwright 1.63/axe. No new dependency, backend, font or hosting system.
 
-**Authority:** [DESIGN-SFC-V1](../../design/studio-founder-contact-v1.md) written revision 1/copy/bounded scope was owner-approved in Q14. Q15 approved the provider-probe → coordinated deployment → immediate deployed receipts/rollback sequence. Q16 approves **Sonnet 5.5 High and GPT-6 Luna High**; Q17 approves **a nondeployed integration branch and one coordinated main release**; Q18 approves the corrected Studio H1 and acceptance-only Contact success text. Technical/visual clarifications added for this review are explicitly identified in the spec; acceptance of this revised plan closes those target clarifications, not legal sufficiency.
+**Authority:** [DESIGN-SFC-V1](../../design/studio-founder-contact-v1.md) written revision 1/copy/bounded scope was owner-approved in Q14. Q15 originally approved a provider probe and delivery/deletion receipts; the direct-contact amendment replaces those steps with read-only link/disclosure checks while retaining coordinated deployment and human rollback. Q16 approves **Sonnet 5.5 High and GPT-6 Luna High**; Q17 approves **a nondeployed integration branch and one coordinated main release**; Q18 approves the corrected Studio H1 and the former acceptance-only Contact success text (retired with the form). Technical/visual clarifications added for this review are explicitly identified in the spec; acceptance of this revised plan closes those target clarifications, not legal sufficiency.
+
+## Direct contact amendment — APPROVED 2026-10-18
+
+The owner explicitly approved removal of the embedded form from both Contact locales and removal of Formspree and counsel decisions as prerequisites. [ADR-CONTACT-DIRECT-CHANNELS](../../decisions/contact-direct-channels.md) records the scoped supersession of the older inquiry ADRs. This amendment governs Contact, Privacy/Terms copy and the remaining tasks below. Prior Tasks 1–12 and their form-specific receipts remain dated implementation history, not instructions to restore or activate the removed form.
+
+Task 13 now implements direct WhatsApp/email/phone links and synchronizes public disclosures/referrals, design, tests and documentation. It is authorized in this session, including this expanded write set. Formspree account evidence, counsel approval, provider probes, live delivery/deletion receipts and readiness.json are NOT APPLICABLE. No account is changed and none of these removed gates is reported PASS. Native links and factual privacy information still need deterministic/browser review. No legal exemption or professional certification is inferred. Task 16 retains the coherent redesign/Terms release; Task 17 verifies deployed pages and links without sending inquiries. Existing model routing is retained, with the previously granted current-runtime exception for Task 13. No additional subagents or review delegation is authorized.
+
+The pre-amendment revision/status and review findings below remain provenance for already reviewed work; they do not reopen this explicit owner decision or revive removed gates.
 
 ## Status and independent review
 
@@ -46,7 +55,7 @@ Exact geometry, graph anchors/edges/depth, equations and full public copy remain
 | Area | Binding target |
 | --- | --- |
 | Routes | Existing Studio, Founder, Contact, Privacy pairs; new `/terminos/`, `/en/terms/`, ID `terms`. Sixteen final localized foundation documents. Preserve actual 404s for retired project details and all service/process/dossier fragments. |
-| Hierarchy | Studio identity → accountability/collaborators → principles → location → Founder bridge → Contact. Founder complete biography → professional links → experience → education → capabilities → evidence → Contact. Contact introduction/expectation → form/privacy → alternatives → Founder. Legal title/update/contents → all sections → contact/reciprocal link. |
+| Hierarchy | Studio identity → accountability/collaborators → principles → location → Founder bridge → Contact. Founder complete biography → professional links → experience → education → capabilities → evidence → Contact. Contact introduction/expectation → direct channels/privacy → Founder. Legal title/update/contents → all sections → contact/reciprocal link. |
 | Visual | Owner-approved 1180px inner editorial container; 32/20px gutters; 1024/768 breakpoints; H1 Studio/Contact 68/48/42, Founder 88/64/56, weight 600; body 18/1.6. These are intentional page-type variants, not changes to Services/Projects/Home. Shared W1 primitive owns the values; no three copies of plate/scrim CSS. |
 | Reading surfaces | Editorial opaque plate `#0A1E33`, border `#36536C` 1px, radius 16px, padding 40/32/24; no blur/shadow/ticks in this variant. Scrim: opaque Abyss, radius 8px, no feather/border/shadow, 24px clearance, Contact intro 32px. Existing default AtlasPlate/Home material unchanged. |
 | Exact decisions | Studio retains both intro actions, then reserved Pause; Founder Pause follows professional links within intro plate; Contact Pause follows response expectation before intake. Static mode shows quiet static-background text in the 44px slot. Contact tablet padding 32px, splits at **820px**, stacks below; gap 32px until 1024, then 64px/40px padding. |
@@ -54,11 +63,11 @@ Exact geometry, graph anchors/edges/depth, equations and full public copy remain
 | Shared graph | New profiles: spec's 16-node Studio/Founder/Contact meanings and compact eight-node composition. Services/Projects keep 16/33 and 8/13, existing vocabulary/proportions/growth/tracers. FOV 35°, camera z=12. New normalized anchors are inverse-projected once; no legacy spread/depth scaling on Atlas profiles. |
 | Motion | Radius 280px, nearest five squared weights, caps 34/24/14px; spring 42/10, normalized momentum, ≤1/120s steps/50ms gap. Seven string samples, pinned ends/five interiors, tension 90, stiffness/damping 32/7, caps 16/10/6px, Contact 4px, ≤12 curve segments. All spec pressure/decay/rest equations apply. |
 | Eligibility | No new excitation over controls/forms, opaque plates +8px, or text scrims expanded by their 24/32px clearance +8px. Cached rectangles only. Existing tails damp; no hidden-pointer momentum on re-entry. Touch native scrolling only; no taps/drag, textarea scroll or history/anchor/resize replay. |
-| Lifecycle | New pages sleep at rest; SPF retains 1.2°/s, ≤30/20fps ambient; active ≤60fps. Contact nodes fixed; focus/submission clears stimulation/suspends drawing. Pause/hidden/offscreen/Footer/dispose zero callbacks. Reduced motion/Save-Data/denied/software/context-loss: no optional engine import. Existing session keys only; Home flag read only. |
-| Contact | Four public fields, 100/254/120/4000 code points, 24KiB transport, 10s timeout; native maxlength retained at **200/508/240/8000 UTF-16 units**. Real trap, synchronous lock, request identities/cancellation; accepted only 2xx JSON `ok:true`; failures preserve values, explicit retry, no storage/logs/autosend. |
-| Focus | Valid submit transfers focus to submit **before** disabling only the fields. Busy submit remains focusable with `aria-disabled`, lock blocks duplicate activation. Initial unhydrated submit natively disabled. Busy live status is unfocused; success/global failure goes to a nonlive named/described result region; field rejection focuses first invalid field. No focus + live-result double announcement. |
-| Intake configuration | Exact public endpoint `https://formspree.io/f/meaqwnbr`; committed mode/release record plus allowlisted build-time endpoint; no public/environment-only mode switch. Missing commercial endpoint fails build; unavailable runtime never simulates success. Ordinary tests intercept provider traffic. |
-| Legal | Original ES/EN language; Samuel/owner-supplied address/email only; Terms website use/initial inquiries only. Professional Argentine review/actual processors/transfers/retention/rights are blockers. No invented corporation, date, registration, deletion guarantee, consent checkbox or service contract. |
+| Lifecycle | New pages sleep at rest; SPF retains 1.2°/s, ≤30/20fps ambient; active ≤60fps. Contact nodes fixed; controls and reading surfaces exclude graph excitation. Pause/hidden/offscreen/Footer/dispose zero callbacks. Reduced motion/Save-Data/denied/software/context-loss: no optional engine import. Existing session keys only; Home flag read only. |
+| Contact | Native WhatsApp, email and phone links; no embedded form, field collection, POST, simulation, submit state or provider endpoint. Complete without JavaScript. |
+| Focus | Ordinary native link order, visible focus and 48px channel targets; no form validation, busy, result or retry focus behavior. |
+| Intake configuration | No website intake provider or application mode selection. Public Contact never imports the dormant inquiry adapters or release configuration. |
+| Legal | Factual bilingual direct-contact Privacy and website-use Terms; owner-approved identity/contact only. No Formspree or mandatory counsel gate, no unverified retention/deletion/transfer claim. |
 | Graph budgets | Optional closure ≤120KiB Brotli with no critical-chunk evasion; posters ≤150/80KiB, draws ≤28/18, DPR ≤1.5/1.25; physical active frame-interval p95 ≤20ms, scene task <50ms; LCP ≤2.5s, INP ≤200ms, enhancement CLS zero. Disabled-tier release can proceed without hardware qualification, not claim the interactive objective complete. |
 | Critical route budgets | Relative to Task 3's same-version/base-path cold baseline: added first-load JS Brotli ≤12KiB Studio/Founder, ≤16KiB Contact, ≤2KiB legal (Terms compared to Privacy). Added startup evaluation/hydration CPU p95 ≤25ms; no added ≥50ms task. Five cold journeys/profile, exclude network/idle/optional engine, retain raw trace/method. No host hydration in policy-disabled builds; verify emitted requests rather than assume tree shaking. |
 
@@ -68,7 +77,7 @@ Preserve brand/fonts/palette/mark, shared App Bar and Footer composition. No ana
 
 Each packet declares its target explicitly. **OpenAI GPT-6 Luna High: `gpt-6-luna`, reasoning `high`**, as originally requested and reaffirmed Q16. **Anthropic Claude Sonnet 5.5 High: `claude-sonnet-5-5`, effort `high`**, explicitly authorized Q16; no floating `sonnet` alias or Sonnet 5 target remains. Record actual resolved identifiers/effort at session start; a mismatch/unavailable authorized target stops dispatch for explicit resolution. This is a capability check, not an unresolved model selection. Luna owns bounded content/page/form/evidence work after W1 design seams freeze; Sonnet owns coupled contracts/physics/engine/lifecycle/measurement/release work.
 
-**Reviewer R:** separate top-level Codex review through the repository plugin, actual resolved model recorded, no source writes, no contribution to that PR. For inquiry Tasks **5 and 10**, additionally require **fresh independent Claude Sonnet 5.5 High** review for transport/focus/privacy risk; it is read-only, not an implementer subagent or master-plan author. The plan-specific supplemental review is recorded in Governance PR 1 under I-8. Every PR gets human review/merge. Counsel decides legal sufficiency; Samuel attests authenticated operations. The independent Opus master-plan gate is separate from these PR reviews.
+**Reviewer R:** separate top-level Codex review through the repository plugin, actual resolved model recorded, no source writes, no contribution to that PR. For inquiry Tasks **5 and 10**, additionally require **fresh independent Claude Sonnet 5.5 High** review for transport/focus/privacy risk; it is read-only, not an implementer subagent or master-plan author. The plan-specific supplemental review is recorded in Governance PR 1 under I-8. Every PR gets human review/merge. Counsel is no longer a required release actor for the direct-contact scope; Samuel owns public facts and release authorization. The independent Opus master-plan gate is separate from these PR reviews.
 
 ## Branches, worktrees and release strategy
 
@@ -84,7 +93,7 @@ One task = one primary, no subagents/nesting. At most three concurrent implement
 
 Ignored operational state: `.worktrees/.sfc-control/requests/task-NN.json` (requester-owned) and `leases/<resource>.json` (coordinator-owned). Only one coordinator grants leases, using atomic create-new and atomic updates; no implicit lock by prose. Lease fields: schemaVersion, machine, resource, task, checkout, head, holder PID/CI run, leaseId, grantedAt, heartbeatAt, expiresAt. Browser/GPU, measurement, deploy/live-probe and shared-contract resources use the names listed per packet. Worktree-local build/cache/server ownership is recorded separately.
 
-Request a grant before use; after five minutes without grant record WAITING_RESOURCE and continue independent editing or stop, not spin. Lease expires after 90 minutes, heartbeat every five minutes during long work. Expiry never permits stealing: coordinator verifies the holder/process/run stopped before marking stale and regranting. Release only after server/capture/measurement processes stop; record outcome/release timestamp. Browser/capture/benchmark locks are machine-specific; CI shards are separate machines. Physical benchmarks additionally exclude other builds/heavy tests. Samuel holds `SFC-DEPLOY` and `SFC-FORMSPREE-LIVE`; ordinary CI never acquires the live-probe lock.
+Request a grant before use; after five minutes without grant record WAITING_RESOURCE and continue independent editing or stop, not spin. Lease expires after 90 minutes, heartbeat every five minutes during long work. Expiry never permits stealing: coordinator verifies the holder/process/run stopped before marking stale and regranting. Release only after server/capture/measurement processes stop; record outcome/release timestamp. Browser/capture/benchmark locks are machine-specific; CI shards are separate machines. Physical benchmarks additionally exclude other builds/heavy tests. Samuel holds `SFC-DEPLOY`. The former SFC-FORMSPREE-LIVE lock is retired for this scope; no live inquiry probe is scheduled.
 
 W4.5 Task 12 owns actual form/host integration. Any later finding outside an active packet's write set creates a **new numbered Task N / PR N (starting at 20)** authored by the planning authority, naming finding, exact provider, base/dependencies/wave, transferred paths, locks, RED, acceptance, verification and independent reviewer. Prior owner exits first. Coordinator holds dependent checkpoints; the repair is reviewed/merged and the original failing check rerun before release. No closed task, coordinator or release implementer silently widens ownership. Material design/processor/budget changes reopen governance/owner approval.
 
@@ -99,10 +108,10 @@ W4.5 Task 12 owns actual form/host integration. Any later finding outside an act
 | W3 | 7 ←2,3; 8 ←4; 9 ←2 | Founder; engine; legal template, disjoint. Early closure checkpoint after 8. |
 | W4 | 10 ←5,9; 11 ←4,6,7,8 | Contact and host independently use frozen form signal. |
 | W4.5 | 12 ←10,11 | Combined actual-page behavior and rendered five-profile evidence with owned repairs. |
-| W5 | 13 ←9,10 + human facts; 14 ←4,6,7,8,10,11,12 | Final legal/account copy versus posters/static-release measurement; independent writes; collection/build locks serialize measurement. |
+| W5 | 13 ←9,10; 14 ←4,6,7,8,10,11,12 | Direct-contact removal/copy versus posters/static-release measurement; independent writes; collection/build locks serialize measurement. |
 | W6-H | 15 ←12,14 | Hardware qualification lane; can defer collection until after 17. No active agent waits for missing hardware; no release dependency on its verdict. |
 | W7 | 16 ←1–14 (not 15) | Coherent commercial/visual release and rollback approval. |
-| W8 | 17 ←16 deployment | Immediate deployed ES/EN delivery/deletion receipt. |
+| W8 | 17 ←16 deployment | Read-only deployed ES/EN direct-links/disclosure receipt. |
 | W9 | 18 ←15 qualified tier(s),16,17 PASS | Separate bounded live-policy enablement; unresolved tier remains OPEN. |
 | W10 | 19 ←all required acceptance/approved amended target | Planning-authority documentation closeout; no premature interactive completion. |
 
@@ -120,9 +129,9 @@ Merged prerequisites mean human-reviewed code at the declared checkpoint, not a 
 | 4: controller | Existing update/pause/resume/snapshot/dispose remain; options accept profile/interaction; update optionally accepts pointer, classified ordinary scroll and inputEnabled. Controller owns cadence/sleep; host never creates a second physics loop. Legacy defaults preserve old calls. |
 | 8: runtime | Existing createConnectedScene/SceneHandle; optional profile, optional unused legacy words. Reexports pure profile/interaction/controller factories through the one gated entry. Geometry, labels and poster projection delegate to the pure projection seam; no second camera conversion. New physics stays in measured optional closure. |
 | 5: inquiry | `SubmitInquiry(payload,context?:{honeypot?:string;signal?:AbortSignal}):Promise<InquirySubmissionResult>`. Payload unchanged. `createInquirySubmissionController({submit,dispatch})` exposes `submit(values,locale:'es-AR'|'en',honeypot:string):Promise<void>`/dispose. Export InquiryAction: local validation without request ID allowed only outside submitting; provider failures require matching ID. Synchronous lock, monotonic sequence and abort/ignore own races. |
-| 5/16: configuration | `INQUIRY_RELEASE:{mode:'demonstration'|'commercial';releaseId:string}` initially demonstration; getInquiryConfiguration validates the exact endpoint or throws for commercial; createConfiguredSubmitInquiry selects port/adapter. No public toggle. |
-| 10/11: form signal | `form[data-inquiry-phase]` exposes reducer phase plus data-contact-hydrated; no values/event bus. Delegated focus and phase observation suspend/clear the graph. Next eligible background input resumes after focusout. |
-| 9/13: legal | `LegalPageContent` locale, privacy/terms ID, heading/introduction, update label/date, contents label, section IDs/headings/paragraphs/links, contact/reciprocal labels. Legacy demo may omit date/Terms link; final reviewed commercial data cannot. Server LegalPage renders all sections. Canonical final public strings live in bounded `SFC-PUBLIC-COPY-ES/EN` JSON fences in Markdown owners; tests compare full typed public data to those blocks. |
+| 5: historical configuration | Dormant inquiry implementation only. Task 16 must not activate it or add an endpoint. Contact routes have no dependency on INQUIRY_RELEASE. |
+| 10/11: historical form signal | No public form exists after Task 13. Generic host control masks and existing runtime gates remain; synthetic pure tests do not require a public form. |
+| 9/13: legal | `LegalPageContent` locale, privacy/terms ID, heading/introduction, update label/date, contents label, section IDs/headings/paragraphs/links, contact/reciprocal labels. Legacy demo may omit date/Terms link; the coordinated legal release supplies its actual publication date. Server LegalPage renders all sections. Canonical final public strings live in bounded `SFC-PUBLIC-COPY-ES/EN` JSON fences in Markdown owners; tests compare full typed public data to those blocks. |
 | 2: export partition | `scripts/export-requirements/{studio,founder,contact,privacy,home,services}.mjs` owns each existing declarative requirement map; verifier imports them. Page-owner root tests `{studio,founder,contact}-export.test.mjs` drive real verifier fixtures using shared `export-test-support.mjs`. No page PR needs to edit another page's requirements or the shared verifier. |
 
 Task 2 partitions mixed Studio/Founder browser/Node source assertions without losing cases, including page.tsx shell assertions in foundation-content. Future `studio.spec.ts`, `founder.spec.ts`, each responsive counterpart, legal/contact-commercial/sfc-runtime/sfc-accessibility and production families have explicit owners below. Never treat a JSX Node-source assertion as a rendered visual test.
@@ -133,7 +142,7 @@ Commit `tests/fixtures/sfc/{commercial-release,live-policy}.patch` and `scripts/
 
 Before committed commercial mode, contact-commercial projects exist **only** with SFC_TEST_MODE=candidate; new-route sfc-runtime cases likewise require the runtime/combined candidate. Default CI retains legacy runtime cases and demo/static tests, not a selected skipped commercial family. From 10 onward a dedicated candidate job applies fixtures in its disposable checkout, blocks unmocked provider traffic, runs nonzero implemented ES/EN commercial/runtime cases and restores in always cleanup. Reviewer R uses the same commands/fixture at the exact head. After 16 committed commercial tests need no mode patch, while runtime candidate tests still apply only the policy fixture until qualification. SFC_TEST_MODE selects tests, never application mode. Do not bypass server omission with a public host-mount test switch.
 
-Current evidence: **2749 tests/31 files** from playwright test --list; PR #141 browser job succeeded in **51m59s** ([run](https://github.com/Furlanich/Portfolio/actions/runs/38623461245)), not an unmeasured >45-minute job. Task 2 adds four CI shards --shard=1/4…4/4 --workers=2, per-job target≤25min/hard35min; candidate job target≤20/hard30min. Measure real durations/counts at each wave; planning envelope default list≤3200, candidate≤180. Do not drop unique coverage or extend timeout to conceal failure; deduplicate equivalent assertions/shard based on evidence or amend the packet. Preserve existing engine coverage; new Firefox/WebKit cases use tagged cross-browser behavior smoke, Chromium owns exhaustive state permutations. All new page types/locales still cover real three-engine form/navigation/focus behavior.
+Current evidence: **2749 tests/31 files** from playwright test --list; PR #141 browser job succeeded in **51m59s** ([run](https://github.com/Furlanich/Portfolio/actions/runs/38623461245)), not an unmeasured >45-minute job. Task 2 adds four CI shards --shard=1/4…4/4 --workers=2, per-job target≤25min/hard35min; candidate job target≤20/hard30min. Measure real durations/counts at each wave; planning envelope default list≤3200, candidate≤180. Do not drop unique coverage or extend timeout to conceal failure; deduplicate equivalent assertions/shard based on evidence or amend the packet. Preserve existing engine coverage; new Firefox/WebKit cases use tagged cross-browser behavior smoke, Chromium owns exhaustive state permutations. All new page types/locales still cover three-engine direct-link/navigation/focus behavior.
 
 Shared CI must trigger main **and** codex/sfc-integration PRs. Bootstrap PR2 with workflow_dispatch at its immutable head if necessary; human merge requires actual recorded checks. Upload shard/candidate reports and traces with `if:always()` and unique run/shard names, retention7 days. Local browser port `3200+task`, reviewer `3300+task`; own outputs per checkout, no reused server in export runs.
 
@@ -206,6 +215,8 @@ Baseline procedure for 6/7/9/10/14/16: keep deterministic visual-Chromium/reduce
 
 ## Task 5 / PR 5 – Harden inquiry transport, configuration and request identity
 
+**Historical delivered scope.** Form-specific targets in this completed packet are superseded by the approved direct-contact amendment and Task 13; retain its receipt as history.
+
 **Execution**
 - Execution Mode: SINGLE_AGENT
 - Work Class: IMPLEMENTATION
@@ -270,6 +281,8 @@ Baseline procedure for 6/7/9/10/14/16: keep deterministic visual-Chromium/reduce
 
 ## Task 9 / PR 9 – Build the quiet legal template and canonical draft contracts
 
+**Historical delivered scope.** Form-specific targets in this completed packet are superseded by the approved direct-contact amendment and Task 13; retain its receipt as history.
+
 **Execution**
 - Execution Mode: SINGLE_AGENT
 - Work Class: IMPLEMENTATION
@@ -285,6 +298,8 @@ Baseline procedure for 6/7/9/10/14/16: keep deterministic visual-Chromium/reduce
 - **Acceptance criteria:** complete server reading surface, original gated bilingual drafts and exact canonical-to-code equivalence; no accidental new processor claim. **Verification:** legal/copy/privacy suites, actual export/browser checks. **Reviewer:** R; counsel review in13.
 
 ## Task 10 / PR 10 – Integrate native, accessible real-flow Contact behavior
+
+**Historical delivered scope.** Form-specific targets in this completed packet are superseded by the approved direct-contact amendment and Task 13; retain its receipt as history.
 
 **Execution**
 - Execution Mode: SINGLE_AGENT
@@ -320,6 +335,8 @@ Baseline procedure for 6/7/9/10/14/16: keep deterministic visual-Chromium/reduce
 
 ## Task 12 / PR 12 – Verify actual Contact integration and five rendered profiles
 
+**Historical delivered scope.** Form-specific targets in this completed packet are superseded by the approved direct-contact amendment and Task 13; retain its receipt as history.
+
 **Execution**
 - Execution Mode: SINGLE_AGENT
 - Work Class: IMPLEMENTATION
@@ -334,24 +351,23 @@ Baseline procedure for 6/7/9/10/14/16: keep deterministic visual-Chromium/reduce
 - [ ] Run actual-page Node/browser/axe/keyboard and defined Emil/Impeccable audits. Record input eligibility over plates/scrims, touch native behavior, phase suspension/Pause, preference/import/no-JS and renderer/resource cycles. Reverify baseline/export/validate.
 - **Acceptance criteria:** combined real pages pass, named repair owner exists, five-profile rendered intent matches spec and inaccessible focus/states absent. **Verification:** combined candidate suites, screenshots/recordings/manual focus, validate/export. **Reviewer:** R + owner motion acceptance; missing manual screen-reader check remains explicit release gate.
 
-## Task 13 / PR 13 – Close processor and Argentine legal readiness
+## Task 13 / PR 13 – Replace inquiry intake with direct contact
 
 **Execution**
 - Execution Mode: SINGLE_AGENT
 - Work Class: IMPLEMENTATION
 - Subagents Allowed: 0
 
-- **Provider/model:** OpenAI GPT-6 Luna High (`gpt-6-luna`, high), compiling facts only. **Dependencies:** 9,10 + human account/counsel evidence initiated in1; no host/hardware prerequisite. **Concurrency wave:** W5.
-- **Owned write paths:** legal/operational/public-copy blocks in `docs/product/pages/{contact-and-privacy,terms-and-conditions}.md`; `app/(es)/_content/commercial/{contact,privacy,terms}.ts` and English equivalents; `scripts/{legal-content,sfc-copy-contracts}.test.mjs`; acceptance `{processor-readiness,legal-review}.md`, `readiness.json`, `task-13.md`.
-- **Forbidden/shared paths:** no public route/mode/component/workflow activation; no credentials/inquiry body in Git or AI legal certification. **Exclusive locks:** SFC-LEGAL-COPY; Samuel's SFC-FORMSPREE-LIVE for labeled probes.
-- **RED:** evidence collection N/A. Received approved public-string corrections first fail canonical/code equivalence; final publish readiness rejects unresolved markers/date/facts. Do not invent the expectation.
-- [ ] Samuel opens existing `/f/meaqwnbr`, verifies control/active form/verified Gmail; Workflow has one notification to `samuelfurlanich@gmail.com`, submitter email Reply-To, no unapproved actions/autoresponders/integrations.
-- [ ] Project Settings domain `furlanich.github.io` (no scheme/path); verify actual referrer. Workflow Validation required name text≤100, required email≤254, optional company≤120, required message≤4000, source/locale retained; verify Unicode/multiline. If Free lacks a needed control/semantics, record actual limitation and return policy issue, no silent paid upgrade.
-- [ ] Record Spam/reCAPTCHA posture matching filtering+actual trap/domain with no challenge script/redirect. Verify Inbox/Spam/Over Limit/quota/reset/deletion. Samuel confirms business-day monitoring and 75% notice decision. Challenge/processor change reopens design; never exhaust Free allowance in tests.
-- [ ] Counsel verifies identity/address, actual providers/subprocessors/countries/transfers, notice/consent, rights/authority, retention/exceptions and website-use Terms. Test feasibility of existing 30-day provider/12-month nonconverted mailbox targets; no history-as-erasure claim. Final ES/EN public fences are canonical counsel/owner-approved text/date; typed modules must deep-equal them.
-- [ ] After these gates, prepare one reviewed manual browser-console fetch from existing approved `/Portfolio/contacto/` origin to exact endpoint with labeled synthetic four values, source/locale/_gotcha and JSON headers. Samuel enters test Reply-To privately; no forged Node origin. Verify acceptance/dashboard/Gmail/Reply-To/Unicode/multiline/deletion; safe support/config evidence for spam/quota. Extra probes individually bounded/owner-authorized. **This is a provider probe, not the new deployed form.**
-- [ ] Create owner-attested readiness.json: schemaVersion1/releaseId/approval dates/receipt paths, hashes of canonical public blocks and all six typed commercial modules; verifier requires equivalence as well as hashes. Sensitive counsel advice may remain private with a dated redacted disposition. Run copy/legal tests, docs/validate and review.
-- **Acceptance criteria:** no publication-critical legal/account fact unresolved; original final bilingual text, explicit operations and distinct predeployment probe receipt. **Verification:** canonical equivalence/hashes, redacted owner/counsel receipts, Node/docs/validate. **Reviewer:** R for fidelity, Samuel/counsel for actual facts/sufficiency. Missing evidence leaves task inactive WAITING_HUMAN, not a guessing agent.
+- **Provider/model:** original Luna High route; current session exception explicitly owner-authorized. **Dependencies:** 9,10; base includes reviewed Task 12. **Wave:** W5.
+- **Owned write paths:** Contact page/type/style and ES/EN routes/content; remove ContactForm; existing Privacy content and typed commercial Contact/Privacy/Terms; referral text in Home/Services/Studio locale content; direct-contact ADR and indexes; current product/design/architecture/status docs; this plan and acceptance index/Task 13; affected Node export/copy/route tests, shared export verifier, Contact/Privacy/legal/referral/browser/runtime/visual expectations. This expanded set is explicitly authorized by the 2026-10-18 owner request. Old ADRs/completed receipts remain immutable.
+- **Forbidden:** provider/account mutations, live messages/calls, invented legal facts or certification, runtime physics/policy changes, deployment. Ordinary PR review and human merge remain required. No Formspree or counsel lock/evidence dependency.
+- [ ] RED: both Contact copies still own form values and routes still select the inquiry mode. New contracts reject those dependencies. Update export/browser expectations before implementing the direct links.
+- [ ] Remove form markup/client boundary, simulation/commercial outcomes and form styles. Preserve native WhatsApp/email/phone destinations, usual response expectation, Atlas surfaces, locale links, Privacy and Founder bridge. Keep links usable with JavaScript disabled.
+- [ ] Replace Privacy simulation/activation copy with factual direct-message, hosting and preference information. Update canonical typed legal text, Terms inquiry wording and incoming Home/Services/Studio referrals. Do not invent retention/deletion guarantees or imply a legal exemption.
+- [ ] Record [ADR-CONTACT-DIRECT-CHANNELS](../../decisions/contact-direct-channels.md), update authoritative/dependent docs and future Tasks 16/17. Retire account/counsel/probe/readiness-manifest gates as NOT APPLICABLE rather than PASS.
+- [ ] Verify root and /Portfolio export, no form/provider requests, exact links, both languages, keyboard/focus, responsive/text-spacing/forced-colors/no-JS, axe and narrow/wide rendered review. Run canonical/legal contracts and full validate; review complete diff and prepare the PR against codex/sfc-integration.
+- **Acceptance:** two genuine direct-contact pages; synchronized disclosures and plan; no Formspree/counsel release dependency. **Reviewer:** R + human owner. No legal sufficiency claim or inquiry-delivery receipt.
+
 
 ## Task 14 / PR 14 – Publish matched static posters and verify release costs
 
@@ -386,39 +402,36 @@ Baseline procedure for 6/7/9/10/14/16: keep deterministic visual-Chromium/reduce
 - [ ] Apply systematic-debugging to a failure, separating scheduling/CPU/GPU/presentation; report measured options without weakening fidelity/caps. A repair has a new exact owner/RED/reviewer then recollection at its head. Both intended tiers must qualify or remain explicit unfinished objectives.
 - **Acceptance criteria:** honest tier-by-tier PASS/FAIL/OPEN dossier; qualifier PASS is required only for18, never16. Evidence PR may record failure; that does not satisfy live acceptance or complete the plan. **Verification:** protocol/fixtures, full raw valid runs/method, redacted receipt. **Reviewer:** R + named device operator/owner acceptance.
 
-## Task 16 / PR 16 – Release the coherent commercial redesign atomically
+## Task 16 / PR 16 – Release the coherent redesign and direct-contact legal pages
 
 **Execution**
 - Execution Mode: SINGLE_AGENT
 - Work Class: IMPLEMENTATION
 - Subagents Allowed: 0
 
-- **Provider/model:** Claude Sonnet 5.5 High (`claude-sonnet-5-5`, high). **Dependencies:** 1–14 human-merged integration/governance; **not15**. **Concurrency wave:** W7, no simultaneous local hardware collection.
-- **Owned write paths:** `lib/{site-routes,foundation-navigation}.ts`, `lib/inquiry/{release,configuration}.ts`; `components/foundation/{SiteFooter.tsx,footer-content.ts,content-types.ts}`; Contact page/form only final mode/legal-link wiring; ES/EN Contact/Privacy routes/content and Home/Services consistency data; Studio/Founder ending data only `app/(es)/_content/{studio,founder}.ts`, English equivalents; new ES/EN Terms routes; `.github/workflows/deploy.yml`; shared verifier/global route/Footer/release tests, `scripts/export-requirements/{contact,privacy,home,services,terms}.mjs`; new verify-inquiry-release.mjs/inquiry-release.test.mjs; `tests/e2e/support/paths.ts`, smoke/navigation/Services/Footer/Contact/Privacy/legal/production/accessibility release cases and final Contact/legal/Footer visual specs/snapshot directories; `task-16.md`. Explicit full paths are listed in the ownership appendix below.
-- **Forbidden/shared paths:** live flags, graph/model/engine, other page-layout repairs, substantive final legal rewriting or new social/sitemap initiative. Inherited staging changes are reviewed in this PR but not silently editable by16. **Exclusive locks:** SFC-RELEASE-CONFIG, SFC-ROUTES-FOOTER, browser; Samuel controls deploy/live locks.
-- **RED:** expect Terms route/metadata/equivalents/sixteen actual docs and retired404s; commercial cannot retain demo Privacy/CTA strings or changed canonical/hash/receipt/QA marker. Current default14-route demo fails these assertions; retain explicit demo transport contract.
-- [ ] Fork accepted integration head; wire final reviewed Contact/Privacy/Terms, exact Home/Services consistency and all Studio/Founder demo-dependent changes in **one** release commit/build. Add Terms Footer utility label without touching every old Footer prop object; preserve primary navigation/protected mark/fragments. Commercial is explicit committed release, not environment-only.
-- [ ] Verify releaseId/readiness canonical blocks and typed hashes/equivalence; allow only exact public endpoint supplied via workflow `NEXT_PUBLIC_FORMSPREE_ENDPOINT`. Deployment rejects candidate marker/diff/policy patch, absent receipt, draft/unmatched public strings; ordinary commercial build rejects missing endpoint. No reused candidate out/ or public toggle; both policy flags false unless separately qualified via18.
-- [ ] Run full validate, clean root and /Portfolio build/export, production Chromium/Firefox/WebKit journeys, responsive/zoom/text-spacing/forced-colors/prefers-contrast/reduced-motion/axe/manual screen readers and final visual/Skill audits. All real provider traffic mocked. Recheck static critical/vitals and complete Contact-host combined behavior; final optional/hardware facts remain classified under15/18.
-- [ ] Prepare tested whole-release rollback to the prior coherent public SHA/export, matching demo mode/copy and previous Terms absence. Hold human merge until Samuel is ready for17's immediate receipt window/account access/allowance. R reviews **entire** combined main diff, producer receipts and all release gates; human merge deploys the complete redesign once.
-- **Acceptance criteria:** coherent final commercial candidate and static public composition, final legal/account gates closed, no mixed notices/unfinished posters, rollback/operator ready. Hardware FAIL/OPEN does not block this release while graphs stay safely static. **Verification:** full deterministic/export/browser/manual/visual matrix; no deployed delivery claim before17. **Reviewer:** R + Samuel release authorization + counsel wording reference.
+- **Provider/model:** Claude Sonnet 5.5 High. **Dependencies:** 1–14 human-merged; not 15. **Wave:** W7.
+- **Owned paths:** final route registry/navigation/Footer and Terms pair; shared export/global route/metadata tests; ES/EN Privacy/Terms legal-template wiring and canonical copy equivalence; final referral consistency, release browser/accessibility/visual expectations and task-16.md. Contact remains the direct-channel page delivered by Task 13. No inquiry mode, configuration, workflow or release-manifest activation is owned or required.
+- [ ] Consume accepted producer receipts and Task 13 direct-contact decision. Register Terms in route equivalence, metadata, Footer and sixteen-document root/base export verification. Use owner-approved canonical text and actual publication dates without a counsel or processor manifest.
+- [ ] Build the final reviewed integration SHA, with both live graph flags false unless separately qualified via Task 18. Verify no form/provider request, stale simulation notice, Formspree endpoint or form-specific client import; all direct links remain usable without JavaScript.
+- [ ] Run full validate and root/base clean-export checks; production three-engine navigation/links, responsive, zoom/text spacing, forced colors, contrast, reduced motion, axe/manual semantic checks and visual review. Recheck static critical/vitals budgets; qualification remains independent.
+- [ ] Prepare a whole-release rollback to the prior public SHA/export. Reviewer R checks the complete main diff and receipts; human merge/deploy remains the final action. No account access, probe allowance or thirty-minute message observation window is a prerequisite.
+- **Acceptance:** coherent sixteen-route redesign, direct Contact and matching Privacy/Terms, static performance gates, rollback ready. **Verification:** deterministic/export/browser/manual/visual matrix. **Reviewer:** R + Samuel release authorization. No inbox delivery or legal certification claim.
 
-## Task 17 / PR 17 – Verify actual deployed intake and operational recovery
+
+## Task 17 / PR 17 – Verify deployed direct contact and disclosures
 
 **Execution**
 - Execution Mode: SINGLE_AGENT
 - Work Class: IMPLEMENTATION
 - Subagents Allowed: 0
 
-- **Provider/model:** OpenAI GPT-6 Luna High (`gpt-6-luna`, high); Samuel does authenticated/live actions. **Dependencies:** 16 deployment; operator prepared before merge. **Concurrency wave:** W8.
-- **Owned write paths:** acceptance `{deployed-inquiry,operations,release-checkpoint}.md`, `task-17.md`, verified current-state sections of `ARCHITECTURE.md`/`docs/product/pages/contact-and-privacy.md`.
-- **Forbidden/shared paths:** product hotfix/account credentials/body content, CI real inquiries or graph policy. **Exclusive locks:** Samuel's SFC-DEPLOY/SFC-FORMSPREE-LIVE, browser for operator checks.
-- **RED:** N/A receipts-only; record actual PASS/FAIL/OPEN. Product correction requires its own remediation/TDD/review.
-- [ ] Within prepared30-minute observation window, Samuel submits one labeled synthetic inquiry from each actual deployed locale and checks acceptance/dashboard/Gmail/Reply-To, four-field Unicode/multiline integrity and source/locale. Success copy is Q18 acceptance-only. Provider probe13 is a different receipt.
-- [ ] Verify active-copy deletion in Inbox/Spam/Over Limit/Gmail as applicable, approved exceptions/log-backup limitations, matching public Privacy/Terms/locales/direct channels/no-JS and no draft/demo falsehood. Record dates/outcomes, not messages/credentials.
-- [ ] On contradicting acceptance/delivery/integrity/disclosure/deletion failure, freeze probes and execute prepared **human-controlled whole PR16 rollback**. Restore coherent demo/disclosures/previous Terms state; do not erase already-received-data history or claim rollback deletes it. Confirm previous public build and assign root issue/remediation. Checkpoint FAIL blocks18/overall completion.
-- [ ] On PASS confirm Samuel's business-day quota/Spam/Over Limit/inbox monitoring, 75% response and approved retention runbook. R independently checks public read-only facts without an extra inquiry; docs/diff/receipt PR to main.
-- **Acceptance criteria:** two genuine deployed-locale delivery/deletion receipts and operational owner/recovery; no local/console probe mislabeled E2E. **Verification:** redacted live/manual observations + deployed read-only smoke/docs. **Reviewer:** R + Samuel; counsel if actual facts change disclosure.
+- **Provider/model:** OpenAI GPT-6 Luna High. **Dependencies:** Task 16 deployment. **Wave:** W8.
+- **Owned paths:** acceptance operations/release-checkpoint/task-17.md and verified current-state Contact/architecture summaries. No account evidence or deployed-inquiry receipt is needed.
+- [ ] Read-only smoke of both actual deployed Contact locales: one H1/main, no form controls, exact WhatsApp/mailto/tel destinations, no prefill or provider request, localized Privacy/Terms/Footer/locale links and no-JavaScript usability. Do not send a message, place a call or use a console inquiry probe.
+- [ ] Verify published Privacy describes actual direct communications and technical preferences; verify Terms/metadata and absence of draft/simulation/processor activation language. Record deployed SHA/URLs/date and actual outcomes.
+- [ ] On a material public route/link/disclosure failure, preserve evidence and assign a bounded remediation; Samuel controls the prepared whole-release rollback when required. No provider deletion or quota runbook is involved.
+- **Acceptance:** deployed ES/EN routes and direct links match the reviewed build. **Verification:** read-only browser/export/disclosure observations. **Reviewer:** R + Samuel; no mandatory counsel decision.
+
 
 ## Task 18 / PR 18 – Enable qualified graph tiers and verify final behavior
 
@@ -460,7 +473,7 @@ Directory-local shorthand above is closed, not permission to edit a whole family
 - Task10: `components/contact/content-types.ts`, `components/contact/contact.module.css`, `app/(en)/en/{contact/page.tsx,_content/contact.ts,_content/commercial/contact.ts}`, `tests/e2e/visual/contact.visual.spec.ts`, its `-snapshots/**` directory.
 - Task9: `app/(en)/en/_content/commercial/{privacy,terms}.ts`; Task13: both locale `_content/commercial/{contact,privacy,terms}.ts` paths. Any named acceptance basename/task-NN is under `docs/reviews/studio-founder-contact-acceptance-v1/`.
 - Task14: `scripts/{measure-connected-studio-production,measure-connected-studio-vitals}.mjs`, `tests/e2e/visual/{connected-studio-static,sfc-static}.visual.spec.ts`, only their respective `-snapshots/**` directories.
-- Task16: `components/contact/{ContactPage,ContactForm}.tsx`; `app/(es)/{contacto/page.tsx,privacidad/page.tsx,_content/contact.ts,_content/privacy.ts,_content/home.ts,_content/services.ts,_content/studio.ts,_content/founder.ts,terminos/page.tsx}`; `app/(en)/en/{contact/page.tsx,privacy/page.tsx,_content/contact.ts,_content/privacy.ts,_content/home.ts,_content/services.ts,_content/studio.ts,_content/founder.ts,terms/page.tsx}`; `scripts/{verify-static-export.mjs,verify-static-export.test.mjs,site-routes.test.mjs,foundation-route.test.mjs,foundation-content.test.mjs,site-footer.test.mjs,contact-route.test.mjs,contact-content.test.mjs,privacy-route.test.mjs,privacy-content.test.mjs,homepage-content.test.mjs,services-content.test.mjs,verify-inquiry-release.mjs,inquiry-release.test.mjs}`; `tests/e2e/{smoke,marketing-services,marketing-navigation,connected-studio-services,connected-studio-footer,privacy,contact,contact-commercial,legal,sfc-production,accessibility,sfc-accessibility}.spec.ts`; `tests/e2e/visual/{contact,legal,connected-studio-footer}.visual.spec.ts` and only corresponding snapshot directories.
+- Task16: `components/contact/ContactPage.tsx`; `app/(es)/{contacto/page.tsx,privacidad/page.tsx,_content/contact.ts,_content/privacy.ts,_content/home.ts,_content/services.ts,_content/studio.ts,_content/founder.ts,terminos/page.tsx}`; `app/(en)/en/{contact/page.tsx,privacy/page.tsx,_content/contact.ts,_content/privacy.ts,_content/home.ts,_content/services.ts,_content/studio.ts,_content/founder.ts,terms/page.tsx}`; `scripts/{verify-static-export.mjs,verify-static-export.test.mjs,site-routes.test.mjs,foundation-route.test.mjs,foundation-content.test.mjs,site-footer.test.mjs,contact-route.test.mjs,contact-content.test.mjs,privacy-route.test.mjs,privacy-content.test.mjs,homepage-content.test.mjs,services-content.test.mjs}`; `tests/e2e/{smoke,marketing-services,marketing-navigation,connected-studio-services,connected-studio-footer,privacy,contact,contact-commercial,legal,sfc-production,accessibility,sfc-accessibility}.spec.ts`; `tests/e2e/visual/{contact,legal,connected-studio-footer}.visual.spec.ts` and only corresponding snapshot directories.
 - Task18: `scripts/connected-studio-capability.test.mjs`, `tests/e2e/{connected-studio-production,sfc-production,sfc-runtime,sfc-accessibility}.spec.ts`.
 - Task6/9 visuals own only their named visual spec and matching `-snapshots/**`; no shared/all-image baseline write permission. Task2 acceptance ADR index is exactly `docs/decisions/index.md`.
 
@@ -472,7 +485,7 @@ Skills guide work under repository authority; they do not invent product decisio
 | --- | --- |
 | Taste v1, before visual construction6/7/9/10 and after rendered QA12/16/18 | Does hierarchy/material/spacing/readability serve this page under approved tokens? Record viewport/element/reference, severity, proposed correction, accepted/adapted/rejected and governing authority. These pre/post audits are the **repository frontend-implementation procedure**, not a vendored Taste command. Historical taste-audit overrides are superseded by current design owners. |
 | Impeccable adapt,6/7/10 | Does the same hierarchy work at five widths/zoom/keyboard? Receipt: width, clipping/overflow/order/target evidence and disposition; no new layout concept. |
-| Impeccable clarify,9/10/16 | Can readers understand contents/legal links/form result and recovery without processor jargon? Receipt: exact copy/state/reading evidence, approved correction or counsel gate. |
+| Impeccable clarify,9/10/16 | Can readers understand contents/legal links and direct channels? Receipt: exact copy/reading evidence and owner-approved correction. |
 | Impeccable harden,10/12/16 | Are errors, no-JS, focus, forced colors/contrast and storage/transport boundaries complete? Receipt: state/input, behavior test/manual result and fix owner. |
 | Impeccable optimize,3/8/11/14/15/18 | Which measured CPU/bundle/layout/allocation cost prevents the target? Receipt: method/head, before/after, preserved fidelity, RED/fix owner. No speculative animation/dependency rewrite. |
 | Emil/review-animations,12/16/18 | Purpose, interruption, stationary tail/rest and native interaction remain clear? Receipt: wide/touch/reduced-motion recording, pointer60/120 checks, interruption/settling/caps/field exclusion, verdict and justified correction. |
@@ -486,32 +499,32 @@ If a Skill requests subagent producers/critics, run inline with a degraded-run r
 
 | Evidence | Owner and required proof |
 | --- | --- |
-| Contracts/content/export | 2/4–10/13/16: exact field/fact preservation, pure shared projection/caps, canonical legal equivalence, trap/endpoint/bytes/timeout/races; each page's current root/base export remains green; final sixteen documents/locale metadata/Terms/Footer and actual retired404s. |
-| Form behavior | 5/10/12/16: every classified result mocked, same-tick lock, late provider errors/unmount, Unicode/maxlength, value retention/accepted-only clear, native busy focus/result pattern, no-JS/direct channels/no URL/storage/log leakage. Candidate CI and reviewer use committed identical patch; no live ordinary CI. |
-| Responsive/a11y | 6/7/9/10/12/16/18: ES/EN320/390/768/820/1024/1440, portrait/landscape/mobile keyboard/textarea,200% browser/text zoom, 44px targets and source order; axe plus manual keyboard/headings/landmarks/anchor scroll/contrast. WCAG1.4.12 override line-height≥1.5, paragraph gap2em, letter0.12em, word0.16em causes no loss/clipping. Test prefers-contrast:more and forced colors separately; graph decoration suppressed where required. |
-| Screen readers | 10/12/16: actual NVDA+Firefox/Chromium and VoiceOver+Safari, named versions/operator/date; busy then success/global failure announces each phase once, first invalid associated error, no body focus/drop or unexpected repeated result. Missing human tool/device remains OPEN; axe cannot substitute. |
-| Runtime/motion | 4/8/11/12/15/18: one projection/renderer/controller, flexible growth/tracer path/pins, elapsed-time invariance/caps, pointer occlusion rules/touch-only scroll, form suspension, session/preferences/import races, zero inactive callbacks, resource/listener baseline, matched poster handoff. Node engine proof8 precedes feasible real-page rendered proof12. |
+| Contracts/content/export | 2/4–10/13/16: exact public fact preservation, pure shared projection/caps and canonical legal equivalence; each page's current root/base export remains green; final sixteen documents/locale metadata/Terms/Footer and actual retired404s. |
+| Direct contact | 13/16/17: no form controls, intake client dependency or provider request; native exact WhatsApp/mailto/tel destinations without message prefill; no-JavaScript and base-path/localized Privacy/Founder links, keyboard/focus/reflow. Historical transport tests remain dormant library evidence. |
+| Responsive/a11y | 6/7/9/10/12/16/18: ES/EN320/390/768/820/1024/1440, portrait/landscape,200% browser/text zoom, 44px targets and source order; axe plus manual keyboard/headings/landmarks/anchor scroll/contrast. WCAG1.4.12 override line-height≥1.5, paragraph gap2em, letter0.12em, word0.16em causes no loss/clipping. Test prefers-contrast:more and forced colors separately; graph decoration suppressed where required. |
+| Screen readers | Ordinary native links, legal contents and Pause/navigation semantics; no form busy/result announcement gate. Record actual manual observations and tool availability; axe cannot replace human screen-reader checks. |
+| Runtime/motion | 4/8/11/12/15/18: one projection/renderer/controller, flexible growth/tracer path/pins, elapsed-time invariance/caps, pointer occlusion rules/touch-only scroll, control masks, session/preferences/import races, zero inactive callbacks, resource/listener baseline, matched poster handoff. Node engine proof8 precedes feasible real-page rendered proof12. |
 | Visual | Existing Studio/Founder and bounded Contact/legal/static-poster subjects, deterministic reduced-motion Chromium; platform-matched owner-approved baseline workflow. Firefox/WebKit behavior/layout smoke, no duplicate pixels. Skill receipts name actual questions/findings/dispositions. Live motion recorded, no animated pixel golden. |
 | Static release performance | 3/14/16: baseline/current emitted route JS+startup CPU, five cold journeys/profile, correct responsive image and no disabled new-route host hydration/optional request; LCP2.5/INP200/zero enhancement CLS. This gate is independent of qualification15. |
 | Live qualification | Early risk/closure3/8 then physical15/18: all five route pairs per tier, full optional/transitive closure≤120, draw/DPR/active frame interval/tasks/vitals/zeroCLS and sustained lifecycle. At least three valid runs, named physical desktop/constrained Android, no missing-as-zero/cherry-pick/software-as-hardware. |
-| Real intake | 13 legal/account/provider probe **before deployment**;17 actual deployed ES/EN acceptance/dashboard/Gmail/Reply-To/deletion with rollback. Distinct receipts under Q15. |
+| Direct-channel release | 13 removes form/provider/counsel requirements; 16 releases consistent direct Contact/Privacy/Terms; 17 verifies deployed links and disclosures read-only. No live inquiry, dashboard, Gmail or deletion receipt. |
 | Completion | Fresh npm run validate, appropriate Node/three-engine/axe/root/base/export/measurement/manual/visual runs, full diff/self-review, independent R and human merges. Hardware/software/console/static evidence never substitutes for another layer. Plan remains ACTIVE for an unmet interactive target. |
 
 Command recipe: each task sets its declared PLAYWRIGHT_PORT and NEXT_PUBLIC_BASE_PATH, runs owned specs/projects with nonzero required cases and clears overrides after. Production uses a clean build then verify:static-export and `PLAYWRIGHT_SERVE_EXPORT=1` with `sfc-production-{chromium,firefox,webkit}`; never reuse next dev. Measurement --skip-build only for recorded exact export/head. Windows cleanup resolves/checks `.next`/`out` under **that task's** absolute checkout before deletion. Per-checkout generated outputs remain ignored; only approved baselines/reference receipts commit.
 
-PR boundaries: W0 accepted governance; W1 frozen interfaces/CI/export ownership; W1.5 early measured risk; W3 early closure; W4.5 owned real integration; W5 canonical legal/account gate and independent static-release gate; W7 coordinated release; W8 actual deployed receipt; W9 qualified live tiers; W10 truthful documentation closure. FAIL blocks **its declared dependent checkpoint**, not unrelated commercial work. Resource locks may serialize measured work despite disjoint source dependencies.
+PR boundaries: W0 accepted governance; W1 frozen interfaces/CI/export ownership; W1.5 early measured risk; W3 early closure; W4.5 owned real integration; W5 direct-contact/canonical copy and independent static-release gate; W7 coordinated release; W8 actual deployed receipt; W9 qualified live tiers; W10 truthful documentation closure. FAIL blocks **its declared dependent checkpoint**, not unrelated commercial work. Resource locks may serialize measured work despite disjoint source dependencies.
 
 ## Progress, risks and review history
 
 | Gate | Current state |
 | --- | --- |
 | Discovery/A–B–C/A.2 and written revision1 | Complete; owner Q14 approved exact package. |
-| Controlled release order | Q15 approved; legal/account prerequisites unchanged. |
+| Controlled release order | Coordinated release retained; provider/counsel/probe requirements retired by the 2026-10-18 amendment. |
 | Model/staging/copy corrections | Q16–18 approved2026-10-14, recorded in owners and disposition record. |
 | Independent revision1 review | Opus5.5 High, reviewed bedbed06; REVISION REQUIRED,35 findings preserved. |
 | Master plan revision2 | PROPOSED,19 packets; finding dispositions prepared by planning authority, re-review/owner acceptance pending. |
-| Execution/governance/new ADR/live release | NOT STARTED; current demonstration/disabled policies effective. |
-| Legal/account/actual receipts/hardware | OPEN, owned by13/15/17; do not invent to unblock. |
+| Execution/governance/new ADR/live release | Task 12 merged at 60b76daa; amended Task 13 in progress on the nondeployed integration candidate. Live policies remain disabled. |
+| External gates | Formspree/counsel/probe/deletion N/A; deployed direct-link verification 17 and hardware 15/18 remain independently owned. |
 
 Known risk: narrow engine headroom and historical desktop failures/absent compact evidence. Early measurements now precede host integration, and hardware qualification cannot block a safely static commercial release. If live fidelity cannot fit the retained budget, return measured options to owner; never call the interactive redesign complete merely because static works. Model IDs and staging strategy are resolved; real session availability remains an honest preflight. Shared/sibling fixes always receive a new exact packet, not silent write expansion. Final metadata closure belongs to the planning authority, not Claude's flag implementer.
 
@@ -519,4 +532,8 @@ Planning verification will be recorded in the review owner after this revision's
 
 ## Deviations discovered during execution
 
-None: execution has not started. This is a planning-authority revision responding to independent review, with Q16–18 owner decisions.
+The original planning revision and its review remain history. The explicit 2026-10-18 owner change expands Task 13 and replaces form activation with direct channels; see its decision record and receipt.
+
+### 2026-10-18 owner amendment
+
+Task 13 supersedes the previously pending human account/counsel evidence with direct-contact implementation. The three interim waiting records are replaced with NOT APPLICABLE dispositions. No provider or legal evidence is inferred. Exact implementation, validation and review outcomes live in [task-13.md](../../reviews/studio-founder-contact-acceptance-v1/task-13.md).

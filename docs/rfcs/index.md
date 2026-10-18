@@ -3,6 +3,7 @@ id: RFC-INDEX
 type: rfc-index
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - RFC-SFC-COMMERCIAL-ATLAS-V1
   - RFC-SPF-REDESIGN-V1
   - DESIGN-SPF-V1
@@ -22,10 +23,14 @@ related:
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
   - RFC-ADE-AGENT-USAGE-V1
   - PLAN-ADE-AGENT-USAGE-V1
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # RFCs
+
+## Direct-contact update — 2026-10-18
+
+[ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) supersedes the inquiry portions of RFC-CONTACT-INQUIRY-PIPELINE and RFC-SFC-COMMERCIAL-ATLAS-V1 for the current product. Their comparisons remain historical; Formspree/counsel are no longer current release gates.
 
 ## Commercial Atlas and inquiry activation
 

@@ -3,6 +3,7 @@ id: ARCHITECTURE-MAP
 type: architecture-map
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - REVIEW-ADAPTIVE-IMMERSIVE-HOMEPAGE-ACCEPTANCE-V1
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
   - ADR-ADAPTIVE-IMMERSIVE-HOMEPAGE
@@ -42,10 +43,14 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - PLAN-SPF-V1
-last_verified: 2026-10-14
+last_verified: 2026-10-18
 ---
 
 # FURLANICH architecture map
+
+## Direct-contact update — 2026-10-18
+
+Integration Task 13 implements [ADR-CONTACT-DIRECT-CHANNELS](docs/decisions/contact-direct-channels.md): Contact is a shared Server Component with WhatsApp/email/phone links, no form or inquiry configuration dependency, and direct-message Privacy copy. Formspree/counsel/probe readiness is not a release gate. Earlier form/demo/current-main passages below are dated pre-amendment history; the candidate is not a deployed-state claim.
 
 ## CURRENT
 
@@ -83,7 +88,7 @@ Delivered by [PLAN-SPF-V1](docs/plans/completed/services-projects-footer-v1.md) 
 
 Ordinary Services and Projects Header, Footer and content actions resolve through `getFoundationPageLinkHref` to the existing `#site-top` marker (since PR #126). Canonical paths, locale equivalents and intentional dossier and service-section fragments keep their separate helpers. Both locale roots opt into Next.js 16's documented smooth-scroll handling and mount `PageTopNavigation`, a render-nothing client leaf that tracks an ordinary same-origin top-link click and performs one instant reset after the destination commits, cancelling residual smooth scroll from the source page. Modified clicks, other destinations and Back and Forward do not initiate that reset.
 
-## Current Contact demonstration — Task 4 / PR 4
+## Historical Contact demonstration — Task 4 / PR 4 (superseded by Task 13)
 
 This section supersedes the older pre-merge baseline wording above: Contact Task 4 is merged in `e17fd1e`, deployed on `gh-pages`, and recorded by the completed Contact + Inquiry plan.
 

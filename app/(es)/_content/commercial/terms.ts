@@ -1,13 +1,9 @@
-import type { CommercialLegalDraft } from '@/components/legal/content-types';
+import type { StudioLegalContent } from '@/components/legal/content-types';
 
 export const legalContent = {
   "locale": "es",
   "routeId": "terms",
   "title": "Términos y condiciones",
-  "publication": {
-    "status": "nonpublishable",
-    "releaseGate": "professional-review-and-factual-gates-open"
-  },
   "chrome": {
     "contentsLabel": "Contenido",
     "updateLabel": "Última actualización",
@@ -34,7 +30,7 @@ export const legalContent = {
       "id": "consultas-y-contratacion",
       "heading": "Consultas y contratación",
       "paragraphs": [
-        "Podés usar el formulario y los canales publicados para contarnos qué necesitás resolver. Enviar una consulta, recibir una confirmación técnica o conversar con Samuel no crea por sí solo un contrato de prestación de servicios ni una obligación de contratar.",
+        "Podés usar WhatsApp, correo o teléfono para contarnos qué necesitás resolver. Enviar una consulta, intercambiar mensajes o conversar con Samuel no crea por sí solo un contrato de prestación de servicios ni una obligación de contratar.",
         "Los precios, pagos, responsabilidades, propiedad intelectual de los entregables, garantías, soporte y mantenimiento se definen en la propuesta o acuerdo correspondiente."
       ]
     },
@@ -56,7 +52,7 @@ export const legalContent = {
       "id": "enlaces-y-disponibilidad",
       "heading": "Enlaces y disponibilidad",
       "paragraphs": [
-        "Algunos enlaces llevan a servicios externos, como GitHub, LinkedIn o WhatsApp, sujetos a sus propias condiciones. La disponibilidad del sitio, el formulario y esos servicios puede variar. Si no podés completar una consulta por el formulario, podés usar los canales alternativos publicados."
+        "Algunos enlaces llevan a servicios externos, como GitHub, LinkedIn o WhatsApp, sujetos a sus propias condiciones. La disponibilidad del sitio y de esos servicios puede variar. Podés elegir entre los canales de contacto publicados."
       ]
     },
     {
@@ -71,4 +67,4 @@ export const legalContent = {
     "title": "Términos y condiciones | FURLANICH",
     "description": "Condiciones de uso del sitio FURLANICH y de las consultas iniciales, bajo la responsabilidad de Samuel Furlanich."
   }
-} satisfies CommercialLegalDraft;
+} satisfies StudioLegalContent;

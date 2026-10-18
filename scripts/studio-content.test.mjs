@@ -23,7 +23,7 @@ const approved = {
     location: 'Desde Buenos Aires, Argentina, con disponibilidad para proyectos en el país y el exterior. Comunicación en español e inglés.',
     founderBridge: 'Conocé la experiencia y formación de quien dirige el trabajo.',
     // Demonstration-dependent until the coordinated release (Task 16 owns the atomic selection).
-    finalCta: 'Explorá las opciones de contacto y la demostración del formulario.',
+    finalCta: 'Contactanos por WhatsApp, correo o teléfono.',
   },
   en: {
     heading: 'Custom software with direct technical accountability.',
@@ -34,7 +34,7 @@ const approved = {
     collaborator: 'When the scope calls for another specialty, collaborator involvement and responsibilities are agreed. Samuel retains technical leadership.',
     location: 'Based in Buenos Aires, Argentina, with availability for work in Argentina and internationally. Communication is available in Spanish and English.',
     founderBridge: 'Explore the experience and background of the person leading the work.',
-    finalCta: 'Explore contact options and the form demonstration.',
+    finalCta: 'Contact us on WhatsApp, by email or by phone.',
   },
 };
 
