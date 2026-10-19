@@ -6,7 +6,7 @@ import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
 import { CONNECTED_LIVE_POLICY, chooseConnectedMode } from '@/lib/connected-studio/capability';
 import { createConnectedController, type ConnectedPointerInput, type ProfiledConnectedController } from '@/lib/connected-studio/controller';
 import { createFrameScheduler, type FrameEnvironment } from '@/lib/connected-studio/frame-scheduler';
-import { resolveLabelVisibility, resolveNodeWord, type LabelWordSource } from '@/lib/connected-studio/labels';
+import { isOccludedAt, resolveLabelVisibility, resolveNodeWord, type LabelWordSource } from '@/lib/connected-studio/labels';
 import { CONNECTED_POSTER_POSE } from '@/lib/connected-studio/media-manifest';
 import { getQualityForTier, getTierForWidth, isFooterDominant } from '@/lib/connected-studio/model';
 import { markConnectedContextLost, readConnectedSession, setConnectedPaused } from '@/lib/connected-studio/session';
@@ -321,8 +321,12 @@ function createLabelLayer(mount: HTMLElement) {
         const result = resolved.get(entry.id);
         const visible = result?.visible === true;
         // The labels sit in the fixed ground and reading surfaces scroll over them faster than any fade: an occluded
-        // label goes at once (the CSS drops its transition), so it never shows inside a mask while it fades.
-        const occluded = result?.occluded === true;
+        // label goes at once (the CSS drops its transition), so it never shows inside a mask while it fades. A hidden
+        // label keeps painting at its last position until it has faded, so a mask over that spot counts too, whatever
+        // hid it (out of view, a nearer label, or an occluder at its new projection).
+        const occluded =
+          result?.occluded === true ||
+          (!visible && isOccludedAt({ left: entry.x, top: entry.y, width: entry.width, height: entry.height }, occluders));
         if (occluded !== entry.occluded) {
           entry.occluded = occluded;
           entry.element.dataset.occluded = String(occluded);

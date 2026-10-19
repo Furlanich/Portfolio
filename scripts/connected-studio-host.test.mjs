@@ -550,9 +550,8 @@ function labelLayerHarness({ width = 100, height = 20 } = {}) {
   runInNewContext(outputText, {
     exports: moduleExports, document, window,
     styles: { labels: 'labels', label: 'label' },
-    resolveLabelVisibility: labelsModule.resolveLabelVisibility,
-    resolveNodeWord: labelsModule.resolveNodeWord,
-    labelOccluders: input.labelOccluders,
+    ...labelsModule,
+    ...input,
   });
   const layer = moduleExports.createLabelLayer(mount);
   return { layer, masks, window, labels: () => mount.children[0].children };
