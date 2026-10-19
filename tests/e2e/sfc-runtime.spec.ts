@@ -10,6 +10,7 @@ import {
   expectStatic,
   expectStopped,
   navigateInApp,
+  observeEnhancementShifts,
   observePageErrors,
   overlaps,
   pauseLabels,
@@ -867,6 +868,47 @@ test.describe('direct Contact with the live graph (Task 13)', () => {
     await expect(page.locator('[data-contact-channels]')).toBeVisible();
     expect(await gl.maxAlive(), 'never more than one live context').toBeLessThanOrEqual(1);
   });
+});
+
+// ---------------------------------------------------------------------------------------------------------------------
+// PLAN-SFC-V1 Task 20: the Contact Pause control replaces the static label in the frame it mounts, as on Studio and
+// Founder, so the enhancement moves nothing. The host's own effect hides the label only after a paint.
+// ---------------------------------------------------------------------------------------------------------------------
+
+test.describe('the Contact Pause control mounts without a layout shift (Task 20)', () => {
+  for (const locale of LOCALES) {
+    test(`contact ${locale}: one visible Pause control and zero enhancement shift at 1440x900 and 1280x720`, async ({ page }) => {
+      const shifts = await observeEnhancementShifts(page);
+      // The static label's style in the same task the control is inserted, before any effect of the host runs.
+      await page.addInitScript(() => {
+        const state = { labelDisplay: null as string | null };
+        (window as unknown as { __pauseMount: typeof state }).__pauseMount = state;
+        new MutationObserver(() => {
+          if (state.labelDisplay !== null) return;
+          const slot = document.getElementById('connected-pause-contact');
+          const label = slot?.querySelector('[data-connected-static-label]');
+          if (label && slot?.querySelector('[data-connected-pause]')) state.labelDisplay = getComputedStyle(label).display;
+        }).observe(document, { childList: true, subtree: true });
+      });
+      await enableLiveForTest(page);
+
+      for (const viewport of [{ width: 1440, height: 900 }, { width: 1280, height: 720 }]) {
+        const at = `${viewport.width}x${viewport.height}`;
+        await page.setViewportSize(viewport);
+        await goto(page, 'contact', locale);
+        await expectLive(page);
+        const slot = pauseSlot(page, 'contact');
+        await expect(slot.getByRole('button', { name: pauseLabels[locale].pause })).toBeVisible();
+        await expect(slot.locator('[data-connected-static-label]')).toBeHidden();
+        const shown = await slot.evaluate((element) => Array.from(element.children).filter((child) => child.getClientRects().length > 0).length);
+        expect(shown, `${at}: the slot shows the control alone`).toBe(1);
+        const mount = await page.evaluate(() => (window as unknown as { __pauseMount: { labelDisplay: string | null } }).__pauseMount);
+        expect(mount.labelDisplay, `${at}: the static label is gone in the frame the control mounts`).toBe('none');
+        await page.waitForTimeout(1_200);
+        expect(await shifts.shiftsAfterActivation(), `${at}: layout shift caused by the enhancement`).toBe(0);
+      }
+    });
+  }
 });
 
 // ---------------------------------------------------------------------------------------------------------------------
