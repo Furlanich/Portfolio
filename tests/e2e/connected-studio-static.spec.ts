@@ -1,5 +1,6 @@
 import { expect, test, type Page, type Route } from '@playwright/test';
 import { readConnected } from './support/connected-studio';
+import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
 
 // PLAN-SPF-V1 Task 3: the Projects index is the one place where both dossiers live. These tests run
@@ -272,7 +273,18 @@ async function waitForLoadedAndSettled(page: Page) {
   await page.waitForTimeout(600);
 }
 
+// PLAN-SFC-V1 Task 18: the shipped policy takes a wide visitor live, and whether a headless engine reports a software renderer
+// (Chromium does, so it stays static; Firefox and WebKit on a Linux runner may not) depends on the machine. These cases prove the
+// static page, so they close both tiers through the test hook; the served-export family (sfc-production.spec.ts and
+// connected-studio-production.spec.ts) owns what the shipped policy does.
+const STATIC_POLICY = { wide: false, compact: false } as const;
+const staticPolicy = (page: Page) => setConnectedTestHook(page, { livePolicy: STATIC_POLICY });
+
 test.describe('static posters', () => {
+  test.beforeEach(async ({ page }) => {
+    await staticPolicy(page);
+  });
+
   const widths = [
     { width: 320, quality: 'compact' },
     { width: 390, quality: 'compact' },
@@ -426,9 +438,9 @@ test.describe('project illustrations', () => {
   }
 });
 
-// PLAN-SFC-V1 Task 14: the matched static posters of the three Atlas pages. Their live host is policy-omitted in
-// every merged build, so these pages are the complete static page: a poster over the CSS chart, no host, no canvas
-// and no engine request. Three cases per page keep the shared-project case count inside the 3200 planning
+// PLAN-SFC-V1 Task 14 (and Task 18): the matched static posters of the three Atlas pages. Under a closed policy these pages are
+// the complete static page: a poster over the CSS chart, no canvas and no engine request. Their host is attached through the live-host
+// seam since Task 18, so it hydrates and reads static. Three cases per page keep the shared-project case count inside the 3200 planning
 // envelope (each case runs in every project that matches this file); the served-export family
 // (sfc-production.spec.ts) owns the per-engine and closure proof.
 
@@ -450,13 +462,14 @@ test.describe('Atlas static posters', () => {
   ] as const;
 
   for (const { route, locale, path } of atlasPages) {
-    test(`${locale} ${route} requests only its own matching poster at each width, with no host and no canvas`, async ({ browser, baseURL }) => {
+    test(`${locale} ${route} requests only its own matching poster at each width, with no canvas and no engine`, async ({ browser, baseURL }) => {
       // Four sequential page loads (one fresh context per width) against a cold dev compile need more than the default 30 s.
       test.setTimeout(60_000);
       for (const { width, quality } of sizes) {
         // A fresh context per width: a cached poster from the previous size would hide a second request.
         const context = await browser.newContext({ baseURL, viewport: { width, height: 800 } });
         const page = await context.newPage();
+        await staticPolicy(page);
         const requested = watchPosterRequests(page);
         await page.goto(appUrl(path));
         await waitForLoadedAndSettled(page);
@@ -465,8 +478,12 @@ test.describe('Atlas static posters', () => {
         const poster = await page.locator('[data-connected-poster]').evaluate((element) => getComputedStyle(element).backgroundImage);
         expect(poster, `${width}px: the poster layer paints the matching file`).toContain(`${route}-${quality}.webp`);
         await expect(page.locator('canvas')).toHaveCount(0);
-        // The server omitted the live host: nothing hydrated, so no diagnostics hook exists to read.
-        expect(await readConnected(page), `${width}px: no host on a policy-disabled page`).toBeNull();
+        // The host hydrates through the seam and reads static; a production export has no hook, and the canvas assertion above holds either way.
+        const reading = await readConnected(page);
+        if (reading) {
+          expect(reading.mode, `${width}px: a static page`).toBe('static');
+          expect(reading.imports, `${width}px: the engine import never started`).toBe(0);
+        }
         await expect(page.locator('[data-connected-ground] [data-connected-mount]')).toHaveCount(1);
         const preloads = await page.locator('link[rel="preload"]').evaluateAll((links) => links.map((link) => (link as HTMLLinkElement).href));
         expect(preloads.filter((href) => /connected-studio/.test(href)), `${width}px: the poster is never preloaded`).toEqual([]);
@@ -487,6 +504,7 @@ test.describe('Atlas static posters', () => {
 
       const failing = await browser.newContext({ baseURL, viewport: { width: 1440, height: 900 } });
       const failed = await failing.newPage();
+      await staticPolicy(failed);
       const errors: string[] = [];
       failed.on('pageerror', (error) => errors.push(error.message));
       await failed.route(posterPattern, (request) => request.fulfill({ status: 404, body: 'missing' }));

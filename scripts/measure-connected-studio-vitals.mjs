@@ -35,6 +35,7 @@ import { chromium } from 'playwright';
 import {
   attributeShifts,
   COLD_BASELINE_JOURNEYS,
+  CONNECTED_HOST_MARKERS,
   findOptionalCodeInCriticalChunks,
   collectPairedStartup,
   gateExit,
@@ -582,8 +583,11 @@ async function runStartupBaseline() {
           // A script that is not critical may be another route's prefetch (a link the page shows), so only the critical ones are
           // the page's own load; the rest is a note. Findings fail the run after the comparison has been made.
           const optionalCodeRuns = [...new Set(journeys.flatMap((item) => item.optionalCodeFound))];
-          const ownCode = optionalCodeRuns.filter((item) => item.includes(', critical)'));
-          if (ownCode.length) findings.push(`${profileName}/${route}/${locale}: optional engine or connected host code in the scripts a policy-disabled page loads before its load event: ${ownCode.join(', ')}`);
+          // PLAN-SFC-V1 Task 18: Studio, Founder and Contact carry the host through the live-host seam, so the host is expected in
+          // their critical scripts; engine-only code is not, and Privacy and Terms must carry neither.
+          const hostExpected = ['studio', 'founder', 'contact'].includes(route);
+          const ownCode = optionalCodeRuns.filter((item) => item.includes(', critical)') && !(hostExpected && CONNECTED_HOST_MARKERS.some((marker) => item.includes(`(${marker},`))));
+          if (ownCode.length) findings.push(`${profileName}/${route}/${locale}: optional engine code${hostExpected ? '' : ' or connected host code'} in the scripts the page loads before its load event: ${ownCode.join(', ')}`);
           if (optionalCodeRuns.length > ownCode.length) report.notes.push(`${profileName}/${route}/${locale}: a prefetched script carries connected code (not critical): ${optionalCodeRuns.filter((item) => !ownCode.includes(item)).join(', ')}`);
           const scriptSets = new Set(journeys.map((item) => item.scripts.map((entry) => entry.script).join('|')));
           if (scriptSets.size > 1) report.notes.push(`${profileName}/${route}/${locale}: the requested script set varied between journeys; the largest first-load figure is reported`);

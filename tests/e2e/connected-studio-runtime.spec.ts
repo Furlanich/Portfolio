@@ -171,7 +171,16 @@ test('a stored Home context loss keeps connected routes static (read-only, PC-5)
     expect(later?.idleAngleRadians).toBe(first?.idleAngleRadians);
   });
 
-test('the shipped policy keeps an ordinary page static even when the software gate is open', async ({ page }) => {
+// PLAN-SFC-V1 Task 18: the shipped policy is { wide: true, compact: false }. Only the software gate is opened here, so the policy
+  // under test is the one the build ships.
+  test('the shipped policy takes a wide page live when the software gate is open', async ({ page }) => {
+    await setConnectedTestHook(page, { allowSoftwareRenderer: true });
+    await gotoConnected(page, 'services', 'en');
+    await expectLive(page);
+  });
+
+  test('the shipped policy keeps the unqualified compact tier static even when the software gate is open', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
     await setConnectedTestHook(page, { allowSoftwareRenderer: true });
     await gotoConnected(page, 'services', 'en');
     await expectStatic(page, 'services');
