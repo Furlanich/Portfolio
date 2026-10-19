@@ -5,8 +5,8 @@ export const contactContent = {
   routeId: 'contact',
   wordBindings: [
     { nodeId: 'n0', word: 'Contexto' },
-    { nodeId: 'n5', word: 'Consulta' },
-    { nodeId: 'n10', word: 'Conversación' },
+    { nodeId: 'n4', word: 'Consulta' },
+    { nodeId: 'n8', word: 'Conversación' },
   ],
   heading: 'Contanos qué necesitás resolver.',
   introduction:
