@@ -25,6 +25,14 @@ function clamp(value: number, min: number, max: number): number {
 type Candidate = { index: number; id: string; depthScale: number; rect: Rect };
 
 /**
+ * Whether a label box strictly overlaps any usable occluder. The resolver applies it at the clamped position; the host
+ * also applies it where a hidden label still paints while it fades, so both use one rule.
+ */
+export function isOccludedAt(rect: Rect, occluders: readonly OccluderRect[]): boolean {
+  return isUsableRect(rect) && occluders.some((occluder) => isUsableRect(occluder) && intersects(rect, occluder));
+}
+
+/**
  * PC-2 label visibility. Each label is clamped into the viewport at its full size, and hidden when
  * it cannot fit, is entirely out of view, or (at its clamped position) intersects an occluder.
  * Remaining overlaps resolve greedily by descending depthScale, then ascending node id, and a
@@ -54,7 +62,7 @@ export function resolveLabelVisibility(
       width: label.width,
       height: label.height,
     };
-    if (blockers.some((blocker) => intersects(rect, blocker))) {
+    if (isOccludedAt(rect, blockers)) {
       results[index] = { id: label.id, visible: false, occluded: true, left: label.left, top: label.top };
       return;
     }
