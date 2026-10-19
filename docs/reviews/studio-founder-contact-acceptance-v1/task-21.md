@@ -2,11 +2,15 @@
 
 **Status: repaired on the runtime candidate, with one disclosed exception OPEN for a planning/design decision.** The fade and ordering defects are fixed, and so is Reviewer R's retained-position finding. In the evidence collected, the unchanged Task 15 gesture probe reads 0 violating label-frames on all ten route/locale pairs, the unchanged wheel probe reads 0 on nine of them in every run and on Services/es in 6 of 7 runs, and the SwiftShader browser cases pass. That evidence is one traversal down and back per pair and per probe at 1440×900 on the implementer's desktop GPU (not a quiet hardware run), plus the browser cases.
 
-The exception is Services/es under the wheel probe. A catalogue card's approved 3 px hover lift can put a label up to 3 px into the lifted card for one frame, in 1 of 7 runs at the head. **Whether the zero-violation gate is met therefore depends on the decision in "Open decision: the catalogue-card hover lift" below, and this receipt does not claim it.** Labels at rest and frame cost were unchanged at `0dada242`. The planning authority's acceptance of this packet number, Reviewer R's re-review and the human merge are OPEN.
+The exception is Services/es under the wheel probe. A catalogue card's approved 3 px hover lift can put a label up to 3 px into the lifted card for one frame, in 1 of 7 runs at the head. **Whether the zero-violation gate is met therefore depends on the decision in "Open decision: the catalogue-card hover lift" below, and this receipt does not claim it.** Labels at rest and frame cost were unchanged at `0dada242`. The planning authority's acceptance of this packet number, Reviewer R's re-review of the follow-up and its human merge are OPEN.
 
 Agent usage: primary Claude Opus 5.5 (`claude-opus-5-5`), Claude Code desktop session started by the Task 15 wide-tier session; subagents 0/0 (none). Independent review stays a separate session.
 
 Branch/worktree: `codex/sfc-21-label-occlusion` in a Claude Code worktree (`.claude/worktrees/pensive-hawking-5733e1`), cut from `origin/main` at `ab177ea2`, the merge of PR #159 (Task 20). Targets `main`.
+
+Pull requests:
+- [#160](https://github.com/Furlanich/Portfolio/pull/160) carried repairs 1 and 2. A human merged it at `26c4653e` (2026-10-19 17:39 UTC) with head `747a270d`, before Reviewer R's finding was addressed.
+- [#161](https://github.com/Furlanich/Portfolio/pull/161) carries the review follow-up on the same branch: repair 3 (`e0ec2208` RED, `734607e8` fix) and this revised receipt. It is open for human review.
 
 ## Packet
 
