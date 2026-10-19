@@ -19,6 +19,7 @@ export type FooterConclusionContent = {
   locationAccountability: string;
   exploreHeading: string;
   accountabilityHeading: string;
+  termsAction: string;
 };
 
 const footerConclusion: Record<Locale, FooterConclusionContent> = {
@@ -32,6 +33,7 @@ const footerConclusion: Record<Locale, FooterConclusionContent> = {
     locationAccountability: 'Buenos Aires, Argentina · Estudio liderado por su fundador',
     exploreHeading: 'Explorar',
     accountabilityHeading: 'Responsabilidad directa',
+    termsAction: 'Términos y condiciones',
   },
   en: {
     headline: 'Give your project a next step.',
@@ -43,6 +45,7 @@ const footerConclusion: Record<Locale, FooterConclusionContent> = {
     locationAccountability: 'Buenos Aires, Argentina · Founder-led studio',
     exploreHeading: 'Explore',
     accountabilityHeading: 'Direct accountability',
+    termsAction: 'Terms and Conditions',
   },
 };
 

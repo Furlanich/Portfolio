@@ -7,6 +7,7 @@ export const foundationRouteIds = [
   'projects',
   'contact',
   'privacy',
+  'terms',
   'studio',
   'founder',
 ] as const;
@@ -19,6 +20,7 @@ export const foundationRoutes = {
   projects: { es: '/proyectos/', en: '/en/work/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
   privacy: { es: '/privacidad/', en: '/en/privacy/' },
+  terms: { es: '/terminos/', en: '/en/terms/' },
   studio: { es: '/estudio/', en: '/en/about/' },
   founder: {
     es: '/estudio/samuel-furlanich/',

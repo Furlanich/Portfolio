@@ -1,57 +1,16 @@
 import type { PrivacyContent } from '@/components/privacy/content-types';
+// @ts-expect-error Node's built-in TypeScript test loader requires the explicit extension.
+import { legalContent } from './commercial/privacy.ts';
 
 export const privacyContent = {
   "locale": "es",
   "routeId": "privacy",
-  "heading": "Privacidad y contacto",
+  "heading": legalContent.title,
   "introduction": "Esta página explica qué ocurre al navegar por el sitio y al contactar a Samuel Furlanich por los canales publicados.",
-  "sections": [
-    {
-      "id": "responsible-party",
-      "heading": "Responsable y contacto",
-      "paragraphs": [
-        "Samuel Furlanich presenta su trabajo bajo la marca FURLANICH, desde Buenos Aires, Argentina. Para consultas sobre tus datos, escribí a samuelfurlanich@gmail.com."
-      ]
-    },
-    {
-      "id": "direct-contact",
-      "heading": "Contacto directo",
-      "paragraphs": [
-        "Podés contactar a Samuel por WhatsApp, correo electrónico o teléfono. Los enlaces abren el servicio o la aplicación que elijas; vos decidís qué información enviar. Samuel usa los datos que compartís para evaluar y responder tu consulta y coordinar una posible conversación o trabajo.",
-        "El correo publicado se recibe en Gmail, de Google. Los mensajes de WhatsApp y las llamadas se gestionan a través de los servicios correspondientes. Esos servicios tienen sus propias políticas de privacidad y pueden procesar datos técnicos de la comunicación."
-      ]
-    },
-    {
-      "id": "hosting",
-      "heading": "Alojamiento y datos técnicos",
-      "paragraphs": [
-        "GitHub Pages publica los archivos estáticos del sitio en https://furlanich.github.io/Portfolio/. GitHub informa que registra la dirección IP de quienes visitan sitios de GitHub Pages por motivos de seguridad. Ese tratamiento se rige por su declaración de privacidad.",
-        "El sitio no agrega analítica, publicidad, perfiles, CRM ni seguimiento de conversiones."
-      ]
-    },
-    {
-      "id": "preferences",
-      "heading": "Preferencias de navegación",
-      "paragraphs": [
-        "El sitio puede guardar durante la sesión tu preferencia de pausa de las animaciones y un indicador técnico de fallo gráfico. Esos valores no contienen mensajes ni datos de contacto. Si ese almacenamiento no está disponible, se usa una alternativa estática o una preferencia temporal en memoria."
-      ]
-    },
-    {
-      "id": "sensitive-information",
-      "heading": "Información que compartís",
-      "paragraphs": [
-        "Para una consulta inicial alcanza con describir brevemente el problema y cómo te gustaría avanzar. No compartas contraseñas, credenciales, datos de producción de clientes ni información sensible."
-      ]
-    },
-    {
-      "id": "retention-questions",
-      "heading": "Mensajes y solicitudes sobre tus datos",
-      "paragraphs": [
-        "Los mensajes que enviás quedan en el correo o servicio usado para la conversación. El sitio no crea otra copia en un sistema de recepción de consultas. Para consultar por el uso de tus datos o solicitar acceso, corrección o eliminación, escribí a samuelfurlanich@gmail.com.",
-        "La atención de esas solicitudes depende de los datos involucrados y de las obligaciones aplicables. Los proveedores gestionan sus propios registros técnicos y copias de seguridad conforme a sus políticas."
-      ]
-    }
-  ],
+  "updatedLabel": legalContent.chrome.updateLabel,
+  "updatedAt": "18 de octubre de 2026",
+  "sections": legalContent.sections,
+  "termsLink": { "label": legalContent.chrome.reciprocalLabel, "href": legalContent.chrome.reciprocalHref },
   "githubLink": {
     "label": "Ver la declaración de privacidad de GitHub",
     "href": "https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"

@@ -24,6 +24,7 @@ const approved = {
     locationAccountability: 'Buenos Aires, Argentina · Estudio liderado por su fundador',
     exploreHeading: 'Explorar',
     accountabilityHeading: 'Responsabilidad directa',
+    termsAction: 'Términos y condiciones',
   },
   en: {
     headline: 'Give your project a next step.',
@@ -35,6 +36,7 @@ const approved = {
     locationAccountability: 'Buenos Aires, Argentina · Founder-led studio',
     exploreHeading: 'Explore',
     accountabilityHeading: 'Direct accountability',
+    termsAction: 'Terms and Conditions',
   },
 };
 
@@ -92,6 +94,8 @@ test('the Footer keeps its compatible props and the shared locale control', () =
   assert.match(footer, /labels: SiteFooterLabels/);
   assert.match(footer, /paths: FoundationNavigationPaths/);
   assert.match(footer, /<LanguageSwitch/);
+  assert.match(footer, /href=\{paths\.terms\}[^>]*>\{content\.termsAction\}/);
+  assert.ok(footer.indexOf('paths.privacy') < footer.indexOf('paths.terms'), 'Terms follows Privacy in the utility row');
   assert.match(footer, /data-site-footer/);
   assert.match(footer, /new Date\(\)\.getFullYear\(\)/);
 });

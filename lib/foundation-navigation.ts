@@ -11,6 +11,7 @@ export type FoundationNavigationPaths = {
   studio: string;
   founder: string;
   privacy: string;
+  terms: string;
   process: string;
   alternateLocale: Locale;
   alternateHref: string;
@@ -36,6 +37,7 @@ export function getFoundationNavigationPaths(
     studio: getFoundationPath('studio', locale),
     founder: getFoundationPath('founder', locale),
     privacy: getFoundationPath('privacy', locale),
+    terms: getFoundationPath('terms', locale),
     process: getHomeProcessHref(locale),
     alternateLocale,
     alternateHref: getFoundationPath(currentRouteId, alternateLocale),

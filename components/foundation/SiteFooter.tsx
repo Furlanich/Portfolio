@@ -99,6 +99,7 @@ export function SiteFooter({ contactActions, founderLinks, labels, paths }: Site
         <div className={styles.utility}>
           <p className={styles.copyright}>© {copyrightYear} FURLANICH</p>
           <Link href={paths.privacy} className={styles.link}>{labels.privacy}</Link>
+          <Link href={paths.terms} className={styles.link}>{content.termsAction}</Link>
           <LanguageSwitch
             alternateHref={paths.alternateHref}
             alternateLocale={paths.alternateLocale}

@@ -12,6 +12,9 @@ import { studioRequirements } from './export-requirements/studio.mjs';
 const { projectPageContent: spanishProjects } = await import('../app/(es)/_content/projects.ts');
 const { projectPageContent: englishProjects } = await import('../app/(en)/en/_content/projects.ts');
 const { getPublishedProjectDossiers } = await import('../lib/projects/publication.ts');
+// PLAN-SFC-V1 Task 16: the Terms documents are verified against the canonical typed copy the routes render.
+const { legalContent: spanishTerms } = await import('../app/(es)/_content/commercial/terms.ts');
+const { legalContent: englishTerms } = await import('../app/(en)/en/_content/commercial/terms.ts');
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 // STATIC_EXPORT_DIR lets `scripts/verify-static-export.test.mjs` run this verifier against a fixture
@@ -25,6 +28,7 @@ const artifacts = [
   { route: '/proyectos/', file: 'proyectos/index.html', lang: 'es-AR' },
   { route: '/contacto/', file: 'contacto/index.html', lang: 'es-AR' },
   { route: '/privacidad/', file: 'privacidad/index.html', lang: 'es-AR' },
+  { route: '/terminos/', file: 'terminos/index.html', lang: 'es-AR' },
   { route: '/estudio/', file: 'estudio/index.html', lang: 'es-AR' },
   { route: '/estudio/samuel-furlanich/', file: 'estudio/samuel-furlanich/index.html', lang: 'es-AR' },
   { route: '/en/', file: 'en/index.html', lang: 'en' },
@@ -32,6 +36,7 @@ const artifacts = [
   { route: '/en/work/', file: 'en/work/index.html', lang: 'en' },
   { route: '/en/contact/', file: 'en/contact/index.html', lang: 'en' },
   { route: '/en/privacy/', file: 'en/privacy/index.html', lang: 'en' },
+  { route: '/en/terms/', file: 'en/terms/index.html', lang: 'en' },
   { route: '/en/about/', file: 'en/about/index.html', lang: 'en' },
   { route: '/en/about/samuel-furlanich/', file: 'en/about/samuel-furlanich/index.html', lang: 'en' },
 ];
@@ -85,14 +90,14 @@ const chromeRequirements = {
     menu: 'Abrir navegación principal',
     subjects: ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio'],
     primary: 'Ver contacto',
-    footerLabels: ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio', 'Información de contacto', 'Privacidad'],
+    footerLabels: ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio', 'Información de contacto', 'Privacidad', 'Términos y condiciones'],
   },
   en: {
     navigation: 'Primary navigation',
     menu: 'Open primary navigation',
     subjects: ['Services', 'Work', 'How we work', 'About'],
     primary: 'Contact options',
-    footerLabels: ['Services', 'Work', 'How we work', 'About', 'Contact information', 'Privacy'],
+    footerLabels: ['Services', 'Work', 'How we work', 'About', 'Contact information', 'Privacy', 'Terms and Conditions'],
   },
 };
 
@@ -413,12 +418,98 @@ function assertPrivacyArtifact(artifact, html) {
     previousHeadingPosition = position;
   }
 
+  const legal = legalReciprocalRequirements[artifact.file];
+  const privacyMain = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '';
+  assertLegalUpdateDate(artifact, 'Privacy', legal, privacyMain);
+  if (!privacyMain.includes('href="' + expectedHref(legal.terms) + '"')) {
+    failures.push(artifact.file + ': missing Terms reciprocal link ' + expectedHref(legal.terms));
+  }
+
   const githubHref = 'https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement';
   if (!html.includes('href="' + githubHref + '"') || !html.includes(requirement.githubLabel)) {
     failures.push(artifact.file + ': missing GitHub privacy statement reference');
   }
   if (/DPA|subprocessor|(?:consulta enviada|inquiry sent)/i.test(html)) {
     failures.push(artifact.file + ': live-processing or commercial inquiry claim leaked into Privacy artifact');
+  }
+}
+
+// The legal pair links to each other and shows a real update date; the date's wording is per locale and the
+// exact value is a release fact owned by the route modules, so the verifier requires a genuine date.
+const legalReciprocalRequirements = {
+  'privacidad/index.html': { updateLabel: 'Última actualización', date: /^\d{1,2} de [a-záéíóú]+ de \d{4}$/, terms: '/terminos/' },
+  'en/privacy/index.html': { updateLabel: 'Last updated', date: /^[A-Z][a-z]+ \d{1,2}, \d{4}$/, terms: '/en/terms/' },
+};
+const termsRequirements = {
+  'terminos/index.html': { content: spanishTerms, privacy: '/privacidad/', ...legalReciprocalRequirements['privacidad/index.html'] },
+  'en/terms/index.html': { content: englishTerms, privacy: '/en/privacy/', ...legalReciprocalRequirements['en/privacy/index.html'] },
+};
+
+function decodeHtmlText(value) {
+  return value
+    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+}
+
+function assertLegalUpdateDate(artifact, label, requirement, main) {
+  const pattern = new RegExp('<dt\\b[^>]*>' + escapeRegExp(requirement.updateLabel) + '</dt>\\s*<dd\\b[^>]*>([^<]+)</dd>');
+  const date = main.match(pattern)?.[1];
+  if (!date || !requirement.date.test(date.trim())) {
+    failures.push(artifact.file + ': ' + label + ' is missing its "' + requirement.updateLabel + '" update date');
+  }
+}
+
+function assertTermsArtifact(artifact, html) {
+  const requirement = termsRequirements[artifact.file];
+  if (!requirement) return;
+  const { content } = requirement;
+  const main = decodeHtmlText(html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '');
+
+  if (countMatches(html, /<main\b/g) !== 1) failures.push(artifact.file + ': expected exactly one Terms main landmark');
+  if (countMatches(html, /<h1\b/g) !== 1 || !main.includes('>' + content.title + '</h1>')) {
+    failures.push(artifact.file + ': expected one approved visible Terms H1');
+  }
+  assertLegalUpdateDate(artifact, 'Terms', requirement, main);
+  if (!main.includes('aria-label="' + content.chrome.contentsLabel + '"')) {
+    failures.push(artifact.file + ': missing the labelled Terms contents navigation');
+  }
+
+  let previousHeadingPosition = -1;
+  for (const section of content.sections) {
+    const position = main.search(new RegExp('<h2\\b[^>]*>' + escapeRegExp(section.heading) + '</h2>'));
+    if (position === -1 || position <= previousHeadingPosition) {
+      failures.push(artifact.file + ': Terms sections are missing or out of approved order (' + section.id + ')');
+    }
+    previousHeadingPosition = position;
+    if (!main.includes('id="' + section.id + '"') || !main.includes('href="#' + section.id + '"')) {
+      failures.push(artifact.file + ': Terms section anchor is missing from the contents (' + section.id + ')');
+    }
+    for (const paragraph of section.paragraphs) {
+      if (!main.includes('<p>' + paragraph + '</p>')) {
+        failures.push(artifact.file + ': Terms paragraph differs from the canonical copy (' + section.id + ')');
+      }
+    }
+  }
+
+  const reciprocal = expectedHref(requirement.privacy);
+  if (!main.includes('href="' + reciprocal + '"') || !main.includes(content.chrome.reciprocalLabel)) {
+    failures.push(artifact.file + ': missing Privacy reciprocal link ' + reciprocal);
+  }
+
+  const title = decodeHtmlText(html.match(/<title>([^<]*)<\/title>/)?.[1] ?? '');
+  const description = decodeHtmlText(html.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/)?.[1] ?? '');
+  if (title !== content.metadata.title || description !== content.metadata.description) {
+    failures.push(artifact.file + ': Terms metadata differs from the canonical title or description');
+  }
+
+  if (/<(?:form|input|textarea)\b|<button[^>]*type="submit"/i.test(main)) {
+    failures.push(artifact.file + ': Terms contains retired form controls');
+  }
+  if (/formspree|simul|nonpublishable|professional-review|revisión profesional|professional review|borrador|draft/i.test(main)) {
+    failures.push(artifact.file + ': Terms contains simulation, provider or unpublished-gate wording');
   }
 }
 
@@ -567,6 +658,7 @@ for (const { artifact, html } of allHtml) {
   assertStudioArtifact(artifact, html);
   assertFounderArtifact(artifact, html);
   assertPrivacyArtifact(artifact, html);
+  assertTermsArtifact(artifact, html);
   assertContactArtifact(artifact, html);
   const requirement = homepageRequirements[artifact.file];
   if (!requirement) continue;
