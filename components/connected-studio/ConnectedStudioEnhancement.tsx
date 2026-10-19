@@ -234,6 +234,7 @@ type LabelEntry = {
   height: number;
   depthScale: number;
   visible: boolean;
+  occluded: boolean;
   x: number;
   y: number;
 };
@@ -271,7 +272,7 @@ function createLabelLayer(mount: HTMLElement) {
         element.dataset.visible = 'false';
         element.textContent = word;
         host.appendChild(element);
-        entries.push({ id: node.id, element, width: 0, height: 0, depthScale: node.depthScale, visible: false, x: 0, y: 0 });
+        entries.push({ id: node.id, element, width: 0, height: 0, depthScale: node.depthScale, visible: false, occluded: false, x: 0, y: 0 });
       }
       byId = new Map(entries.map((entry) => [entry.id, entry]));
     },
@@ -315,11 +316,18 @@ function createLabelLayer(mount: HTMLElement) {
       }
       const occluders: OccluderRect[] = labelOccluders(boxes, scrollY);
       if (appBarRect) occluders.push(appBarRect);
-      const shown = new Map(resolveLabelVisibility(labelBoxes, occluders, viewport).filter((result) => result.visible).map((result) => [result.id, result]));
+      const resolved = new Map(resolveLabelVisibility(labelBoxes, occluders, viewport).map((result) => [result.id, result]));
       for (const entry of entries) {
-        const result = shown.get(entry.id);
-        const visible = result !== undefined;
-        if (result && (entry.x !== result.left || entry.y !== result.top)) {
+        const result = resolved.get(entry.id);
+        const visible = result?.visible === true;
+        // The labels sit in the fixed ground and reading surfaces scroll over them faster than any fade: an occluded
+        // label goes at once (the CSS drops its transition), so it never shows inside a mask while it fades.
+        const occluded = result?.occluded === true;
+        if (occluded !== entry.occluded) {
+          entry.occluded = occluded;
+          entry.element.dataset.occluded = String(occluded);
+        }
+        if (result && visible && (entry.x !== result.left || entry.y !== result.top)) {
           entry.x = result.left;
           entry.y = result.top;
           entry.element.style.transform = `translate3d(${result.left}px, ${result.top}px, 0)`;
@@ -498,7 +506,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         controller.pause();
       } else controller.resume();
     };
-    const push = (velocity: number, scrollDeltaPx = 0) => {
+    const push = (velocity: number, scrollDeltaPx = 0, fromScroll = false) => {
       const scrollY = window.scrollY;
       cachedScrollY = scrollY;
       const footerDominant = isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight);
@@ -522,10 +530,17 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       });
       // A suspended scene (hidden tab, Footer handoff) is hidden. Any other scene whose controller drew nothing for
       // this update (a paused one, or an Atlas page asleep at rest) keeps its pose, but its labels still follow the
-      // content that scrolls past them: one coalesced refresh from the cached boxes, without waking the physics.
+      // content that scrolls past them: one refresh from the cached boxes, without waking the physics. A scroll refreshes
+      // in its own event, which runs before every animation-frame callback of the frame, so nothing in that frame sees a
+      // label the masks have already moved over; other input coalesces into one animation frame.
       const state = controller.snapshot().state;
       options.mount.dataset.connectedState = state;
-      if (state !== 'suspended' && draws === drawsBefore && lastPose && !labelFrame) labelFrame = window.requestAnimationFrame(refreshLabels);
+      if (state === 'suspended' || draws !== drawsBefore || !lastPose) return;
+      if (fromScroll) {
+        window.cancelAnimationFrame(labelFrame);
+        labelFrame = 0;
+        drawLabels(lastPose);
+      } else if (!labelFrame) labelFrame = window.requestAnimationFrame(refreshLabels);
     };
     let labelFrame = 0;
     const refreshLabels = () => {
@@ -556,7 +571,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       lastAt = now;
       lastVelocity = velocity;
       if (delta !== 0 && formSuspension.backgroundInput()) syncPause();
-      push(velocity, delta);
+      push(velocity, delta, true);
     };
     // Desktop mouse only: touch and pen keep ordinary native scrolling and nothing else. The handler reads the
     // event and the cached boxes, never layout.

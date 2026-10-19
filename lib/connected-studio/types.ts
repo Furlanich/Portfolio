@@ -169,6 +169,8 @@ export type OccluderRect = {
 export type LabelVisibility = {
   readonly id: string;
   readonly visible: boolean;
+  /** Hidden because it intersects an occluder at its clamped position, rather than for fit, view or overlap. */
+  readonly occluded: boolean;
   readonly left: number;
   readonly top: number;
 };

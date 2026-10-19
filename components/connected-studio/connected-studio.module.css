@@ -125,6 +125,11 @@
   transition: opacity var(--dur-2) var(--ease-out);
 }
 
+/* An occluded label leaves at once: a reading surface scrolling over the fixed label would otherwise show it mid-fade. */
+.label[data-occluded='true'] {
+  transition: none;
+}
+
 .mount[data-connected-state='suspended'] {
   visibility: hidden;
 }

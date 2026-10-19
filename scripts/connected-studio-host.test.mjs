@@ -497,8 +497,23 @@ test('the visitor Pause takes no pointer sample and cancels queued pointer work'
 
 test('a controller that drew nothing still refreshes the labels once, from the cached boxes', () => {
   const push = blockAfter(enhancement, 'const push = ');
-  assert.match(push, /draws === drawsBefore/);
+  assert.match(push, /draws !== drawsBefore/);
   assert.doesNotMatch(push, /state === 'paused' && lastPose/);
+  // PLAN-SFC-V1 Task 21: a scroll refreshes in its own event, before the frame's callbacks; other input coalesces.
+  assert.match(push, /if \(fromScroll\) \{[^}]*drawLabels\(lastPose\);/);
+  assert.match(push, /requestAnimationFrame\(refreshLabels\)/);
+  assert.match(blockAfter(enhancement, 'const onScroll = '), /push\(velocity, delta, true\)/);
+});
+
+// PLAN-SFC-V1 Task 21: labels sit in the fixed ground and reading surfaces scroll over them, so the opacity fade would
+// leave a hidden label showing inside a reading mask for its whole duration. An occluded label goes at once.
+test('an occluded label is removed without its fade, which still applies to every other show and hide', () => {
+  const update = blockAfter(enhancement, 'update(projections');
+  assert.match(update, /dataset\.occluded = String\(occluded\)/);
+  const label = blockAfter(css, '.label {');
+  assert.match(label, /transition: opacity var\(--dur-2\) var\(--ease-out\)/, 'the fade token is unchanged');
+  const occluded = blockAfter(css, ".label[data-occluded='true'] {");
+  assert.match(occluded, /transition: none/);
 });
 
 // PLAN-SFC-V1 Task 12: the five rendered profiles are measured from the live pose, not read off the canvas.
