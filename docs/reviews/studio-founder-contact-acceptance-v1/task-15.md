@@ -1,6 +1,6 @@
 # Task 15 / PR 15 — Qualify graph tiers on actual hardware independently
 
-**Status: the qualification tooling is implemented and tested; no tier has been qualified. Wide and compact are both OPEN.** *Update 2026-10-19 ([wide-tier preparation](#wide-tier-preparation-on-released-main-2026-10-19)): the hidden checkpoint is now measured automatically on a desktop, the collector accepts the released runtime candidate, and `--batch` collects the wide tier unattended; a deterministic Contact layout shift found at released main must be repaired in its own packet before a wide collection can pass. Both tiers remain OPEN.* The collector now drives all five connected route pairs in both locales and writes one run report per route, locale and tier; a pure judge decides whether a run counts and what each row says; `--qualify` adds the runs up and exits 0 only for a PASS tier; a protocol document says how an operator collects the evidence. No qualifying run was collected in this session: the owner's desktop was running a game (V Rising and its server, CPU 68 to 87 % busy and the GPU 41 to 52 % in use by something else), and there is no Android phone attached. The seven smoke runs that were made are INVALID by the collector's rules, so there is no PASS, no FAIL and no figure to report for either tier. Nothing was deployed, no flag or policy changed (`CONNECTED_LIVE_POLICY` stays `{ wide: false, compact: false }`), and no product code was touched.
+**Status: the qualification tooling is implemented and tested; no tier has been qualified. Wide and compact are both OPEN.** *Update 2026-10-19 ([wide-tier preparation](#wide-tier-preparation-on-released-main-2026-10-19)): the hidden checkpoint is now measured automatically on a desktop, the collector accepts the released runtime candidate, and `--batch` collects the wide tier unattended. The Contact layout shift it found was repaired by Task 20, and traversals now use a smooth scroll gesture. Decorative labels overlapping reading masks during scroll (Studio, Services, Projects) need a design decision and their own packet before a wide collection can pass. Both tiers remain OPEN.* The collector now drives all five connected route pairs in both locales and writes one run report per route, locale and tier; a pure judge decides whether a run counts and what each row says; `--qualify` adds the runs up and exits 0 only for a PASS tier; a protocol document says how an operator collects the evidence. No qualifying run was collected in this session: the owner's desktop was running a game (V Rising and its server, CPU 68 to 87 % busy and the GPU 41 to 52 % in use by something else), and there is no Android phone attached. The seven smoke runs that were made are INVALID by the collector's rules, so there is no PASS, no FAIL and no figure to report for either tier. Nothing was deployed, no flag or policy changed (`CONNECTED_LIVE_POLICY` stays `{ wide: false, compact: false }`), and no product code was touched.
 
 Implementer: Claude Sonnet 5.5 (`claude-sonnet-5-5`), Claude Code desktop session; the reasoning-effort level is not exposed to the session, so "High" is not attested. Single primary agent, 0 subagents (SINGLE_AGENT). The skill's whole-branch reviewer subagent was not used (AGENTS.md and GOV-AGENT-USAGE outrank it); the self-review below is the author's own. Reviewer R reviewed `ff800127` on [PR #156](https://github.com/Furlanich/Portfolio/pull/156) and left seven findings (two P2 standards, two P1 and three more spec findings, one more P2), all validated by reproduction and corrected (section below). Reviewer R's re-review of the corrected head, the named device operator and the owner's acceptance are PENDING.
 
@@ -151,12 +151,34 @@ Cause, by reading: Studio and Founder hide their static label when the control m
 - Ruling: the Contact layout shift is recorded as a finding with its attribution and is not repaired here (forbidden path; the plan forbids silent widening). Cost if wrong: one CSS rule lands a packet later.
 - Ruling: the batch waits for quiet using the validity limits themselves (CPU ≤ 30 %, GPU ≤ 30 %), twice, ten seconds apart. Load that starts mid-run can still invalidate a run, which is then kept and retried. Cost if wrong: a stricter pre-run margin.
 
-### Next steps (in order)
+### Next steps (as first written; see the update below)
 
-1. Repair the Contact Pause-slot shift in its own packet and merge it to `main`.
-2. Build a fresh runtime candidate at that `main` head (protocol section 1) and confirm a smoke run reads `clsEnhancement` 0 on Contact.
-3. Owner: restart and quiet the desktop, then run `--batch` (about six hours) and keep the runs directory and dossier.
+1. Repair the Contact Pause-slot shift in its own packet and merge it to `main`. *Done: Task 20, [PR #159](https://github.com/Furlanich/Portfolio/pull/159), merged at `ab177ea2`.*
+2. Build a fresh runtime candidate at that `main` head (protocol section 1) and confirm a smoke run reads `clsEnhancement` 0 on Contact. *Done, below.*
+3. Owner: restart and quiet the desktop, then run `--batch` (about six hours) and keep the runs directory and dossier. *Held: see the label finding below.*
 4. A PASS dossier is Task 15's wide PASS for Reviewer R and the owner; Task 18 may then enable `wide` only. Compact stays OPEN until a constrained Android phone and operator are available.
+
+### Update after Task 20 (2026-10-19, candidate at `ab177ea2`)
+
+The branch was rebased onto `ab177ea2` (Task 20 merged) and a fresh runtime candidate was built there (same patch SHA-256 `336853b2…`).
+
+- **Layout shift:** a load of all ten pairs at 1440×900 and 1280×720 now shows no layout shift at all, and every page goes live.
+- **A third tooling defect, the scroll input.** A smoke run of Contact/es on a moderately quiet machine (CPU 23 % / 22 %, GPU 0 % / 17 %) still failed the active frame interval (p95 83.2 ms, sustained 100.3 ms) while its pointer frames (17.1 ms) and the page-only control (16.8 ms) were smooth; Contact had read 83 to 84 ms on every run so far, on any machine. Cause: Playwright's `mouse.wheel` jumps the page instantly, once per call (one scroll event per 80 ms step), and Contact's scene draws only when the page moves (its nodes never move), so it drew once per jump: 21 renders against Studio's 365 over the same traversal. Under Chromium's smooth scroll gesture (`Input.synthesizeScrollGesture`, mouse source) the same build drew on 56 of 58 scroll events at a 16.8 ms median. The traversals, the page-only control and sustained use now scroll with that gesture (`scrollGestureParameters`, cases S1; RED 2 failing, then 87/87).
+- **Smoke runs with the gesture** (still INVALID by their short windows; CPU 18 to 21 %, GPU 0 to 25 %): Contact/es `6cfb6fbb…` every row PASS (active p95 17.2 ms, 146 scroll renders, CLS 0, hidden 10 s with 0 draws and 0 callbacks); Services/en `9701df82…` every row PASS; Studio/en `90e43592…` every row PASS but `labelViolations` 1. Raw reports are in `.worktrees/sfc-15w-evidence/smoke-ab177ea2-gesture/`.
+
+### Finding outside this packet: decorative labels overlap reading masks while the page scrolls
+
+To see whether Studio's one label violation was chance, every animation frame was sampled during a full traversal down and back on the same candidate, applying the collector's own rule (a label with opacity above 0.01 whose box overlaps a `[data-connected-reading-mask]` or the App Bar):
+
+| Pair | Frames sampled (gesture / wheel) | Violating label-frames (gesture / wheel) | What overlaps |
+| --- | --- | --- | --- |
+| Studio/en | 582 / 532 | 55 / 59 | three labels into a reading mask by 5 to 24 px, opacity 0.01 to 0.59 (mid-fade, 0.16 s transition) |
+| Studio/es | 585 / – | 53 / – | the same three labels |
+| Services/en | 1071 / 970 | 414 / 421 | all eight capability labels, 4 to 24 px into reading masks, **opacity up to 1.0** |
+| Projects/en | 629 / 578 | 228 / 248 | all eight capability labels, the same pattern, opacity up to 1.0 |
+| Founder/en, Contact/en | 760, 352 / 678, 309 | 0 / 0 | none |
+
+The figures are the same under the old wheel input, so this is the label layer's behavior during scroll, not an effect of the new input. The collector samples labels only a few times per traversal, so a run catches it by chance, and with three traversals per run a 30-run wide collection would almost certainly fail Studio, Services and Projects pairs on `labelViolations`. DESIGN-SPF-V1 requires labels "occluded behind reading" surfaces to be suppressed and lists "upright/occlusion-safe labels" in its motion acceptance; it says nothing about the fade while a label crosses a mask. Whether this is a product defect (Services and Projects show fully opaque labels inside masks, which reads as one) or a fade the protocol should tolerate is a design and planning decision, not a measurement one; no fidelity, cap or rule was changed. The repair, or a clarified rule, needs its own packet; the six-hour collection should wait for it.
 
 ### Validation (this branch)
 
@@ -164,5 +186,6 @@ Fresh, 2026-10-19, `.worktrees/sfc-15w` after `npm ci`:
 
 - `npm run validate`: exit 0. docs:check 355 Markdown files, 121 document IDs, 38 Skills; `npm test` 967 tests, 966 pass, 1 `todo` (the Task 14 Contact-opacity placeholder), 0 fail; lint 0 errors, 282 warnings (the baseline); typecheck pass; build pass.
 - `node --test scripts/measure-connected-studio-hardware.test.mjs`: 85/85 (72 before this work); ESLint on the collector and its test: no problems.
+- After the rebase onto `ab177ea2` and the scroll-gesture change: `npm run validate` exit 0 (docs:check 356 Markdown files, 121 document IDs, 38 Skills; 969 tests, 968 pass, 1 `todo`, 0 fail; lint 0 errors, 282 warnings; typecheck pass; build pass); the collector's own suite 87/87.
 - Candidate at `84c5c98a`: `npm ci`, the runtime patch and the root build passed; the two smoke runs and the `--batch` start-up above. Not run: a full-length run, the `/Portfolio` subpath, Firefox, the Android path.
 - No product, browser spec, visual baseline or export file changed.
