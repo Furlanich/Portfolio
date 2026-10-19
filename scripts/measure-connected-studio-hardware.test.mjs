@@ -18,7 +18,11 @@ import {
   buildDossier,
   classifyRun,
   diagnosticReasons,
+  hiddenRows,
   judgeRun,
+  measureHiddenWindow,
+  planBatch,
+  plainChromiumArguments,
   reachabilityProblem,
   validateCollectionOptions,
   validateDeviceRecord,
@@ -548,4 +552,116 @@ test('--qualify refuses copies and mixed cohorts at the command line, and takes 
   assert.match(unchosen.stdout, /"needsCohort": true/);
   const chosen = qualifyIn(mixed, `--head=${fresh[0].build.head}`);
   assert.equal(chosen.status, 0, chosen.stderr + chosen.stdout);
+});
+
+// ---- Wide-tier collection on released main: a real hidden window and an unattended batch ----
+
+test('H1: the hidden window is read from the page log, starting 100 ms after it hid and ending when it showed again', () => {
+  const frames = [500, 900, 1050, 5000, 9000, 11500].map((t) => ({ t }));
+  const rafLog = [800, 950, 1080, 6000, 11600];
+  const visibility = [[1000, 'hidden'], [11000, 'visible']];
+  assert.deepEqual(measureHiddenWindow({ visibility, frames, rafLog }), { hiddenMs: 10000, draws: 2, rafCalls: 1, drawsBefore: 2 });
+});
+
+test('H1: a page that never hid, or never showed again, has no hidden window', () => {
+  assert.equal(measureHiddenWindow({ visibility: [], frames: [{ t: 1 }], rafLog: [1] }), null);
+  assert.equal(measureHiddenWindow({ visibility: [[10, 'visible']], frames: [], rafLog: [] }), null);
+  assert.equal(measureHiddenWindow({ visibility: [[1000, 'hidden']], frames: [], rafLog: [] }), null);
+});
+
+test('H2: the hidden rows are measured only over a window of at least 4 s on a scene that was drawing when it hid', () => {
+  assert.deepEqual(hiddenRows({ hiddenMs: 10000, draws: 0, rafCalls: 0, drawsBefore: 6 }), { hiddenDraws: 0, hiddenRafCalls: 0 });
+  assert.deepEqual(hiddenRows({ hiddenMs: 10000, draws: 3, rafCalls: 4, drawsBefore: 6 }), { hiddenDraws: 3, hiddenRafCalls: 4 });
+  assert.deepEqual(hiddenRows({ hiddenMs: 3999, draws: 0, rafCalls: 0, drawsBefore: 6 }), { hiddenDraws: null, hiddenRafCalls: null }, 'too short a window proves nothing');
+  assert.deepEqual(hiddenRows({ hiddenMs: 10000, draws: 0, rafCalls: 0, drawsBefore: 0 }), { hiddenDraws: null, hiddenRafCalls: null }, 'a scene that was already still cannot show that hiding stopped it');
+  assert.deepEqual(hiddenRows(null), { hiddenDraws: null, hiddenRafCalls: null });
+});
+
+test('H3: the hidden-window browser is the plain executable with no automation or anti-backgrounding switch', () => {
+  const args = plainChromiumArguments({ userDataDir: 'C:/tmp/profile', width: 1440, height: 900 });
+  for (const expected of ['--remote-debugging-port=0', '--user-data-dir=C:/tmp/profile', '--window-size=1440,900', '--no-first-run']) assert.ok(args.includes(expected), expected);
+  for (const forbidden of [/^--enable-automation/, /^--headless/, /backgrounding/, /background-timer-throttling/, /occlu/, /^--use-gl=swiftshader/, /^--disable-gpu/]) {
+    assert.ok(!args.some((arg) => forbidden.test(arg)), `no argument matches ${forbidden}`);
+  }
+});
+
+const COHORT = { head: '5d0b3a70a86c8cc71a3a60f9330f3b5a58b562c6', patchSha256: 'a'.repeat(64), basePath: '/', deviceName: desktop().name };
+
+test('B1: an empty runs directory schedules the first pair, three runs per pair for all ten pairs', () => {
+  const plan = planBatch({ tier: 'wide', runs: [], cohort: COHORT });
+  assert.deepEqual(plan.next, { route: 'studio', locale: 'es', runId: 'wide-studio-es-1' });
+  assert.equal(plan.pending.length, 10);
+  assert.ok(plan.pending.every((pair) => pair.needed === 3));
+  assert.equal(plan.complete, false);
+});
+
+test('B1: a full passing set needs nothing more', () => {
+  const plan = planBatch({ tier: 'wide', runs: fullSet('wide'), cohort: COHORT });
+  assert.equal(plan.next, null);
+  assert.equal(plan.complete, true);
+});
+
+test('B2: pairs with the fewest valid runs go first, so the rounds interleave across routes', () => {
+  const runs = [goodRun({ route: 'studio', locale: 'es', n: 1 })];
+  assert.deepEqual(planBatch({ tier: 'wide', runs, cohort: COHORT }).next, { route: 'studio', locale: 'en', runId: 'wide-studio-en-1' });
+});
+
+test('B3: an invalid run does not count but keeps its id, and runs of another cohort neither count nor collide', () => {
+  const busy = goodRun({ route: 'studio', locale: 'es', n: 1 });
+  busy.machine.cpuBusyBefore = 0.8;
+  const otherBuild = { ...goodRun({ route: 'studio', locale: 'es', n: 2 }), build: { ...goodRun().build, head: 'c'.repeat(40) } };
+  const plan = planBatch({ tier: 'wide', runs: [busy, otherBuild], cohort: COHORT });
+  const studio = plan.pending.find((pair) => pair.route === 'studio' && pair.locale === 'es');
+  assert.equal(studio.validRuns, 0);
+  assert.equal(studio.attempts, 1);
+  assert.deepEqual(plan.next, { route: 'studio', locale: 'es', runId: 'wide-studio-es-3' });
+});
+
+test('B3: the next run id follows the highest one used, so a gap can never lead to a reused id', () => {
+  const runs = [2, 3].map((n) => {
+    const run = goodRun({ route: 'studio', locale: 'es', n });
+    run.machine.cpuBusyBefore = 0.8;
+    return run;
+  });
+  assert.equal(planBatch({ tier: 'wide', runs, cohort: COHORT }).next.runId, 'wide-studio-es-4');
+});
+
+test('B4: a valid failing run stops its pair (no recollection until a cause is named); the other pairs continue', () => {
+  const failing = goodRun({ route: 'studio', locale: 'es', n: 1 });
+  failing.metrics.activeIntervalP95Ms = 40;
+  const plan = planBatch({ tier: 'wide', runs: [failing], cohort: COHORT });
+  assert.deepEqual(plan.failedPairs, ['studio/es']);
+  assert.ok(!plan.pending.some((pair) => pair.route === 'studio' && pair.locale === 'es'));
+  assert.deepEqual(plan.next, { route: 'studio', locale: 'en', runId: 'wide-studio-en-1' });
+  assert.equal(plan.complete, false, 'a failed pair is not a complete collection');
+});
+
+test('B5: three valid runs with an OPEN row need a fix, not more runs; a pair out of attempts is reported, not retried', () => {
+  const runs = fullSet('wide');
+  runs.find((run) => run.route === 'founder' && run.locale === 'en').metrics.hiddenDraws = null;
+  const busy = [1, 2].map((n) => {
+    const run = goodRun({ route: 'projects', locale: 'en', n: 10 + n });
+    run.machine.cpuBusyAfter = 0.9;
+    return run;
+  });
+  const withoutProjectsEn = runs.filter((run) => !(run.route === 'projects' && run.locale === 'en'));
+  const plan = planBatch({ tier: 'wide', runs: [...withoutProjectsEn, ...busy], cohort: COHORT, maxAttempts: 2 });
+  assert.deepEqual(plan.openPairs, ['founder/en']);
+  assert.deepEqual(plan.exhaustedPairs, ['projects/en']);
+  assert.equal(plan.next, null);
+  assert.equal(plan.complete, false);
+});
+
+test('B6: the batch collects the wide tier only, and needs a device record', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'sfc-hw-'));
+  try {
+    const compact = spawnSync(process.execPath, [script, `--batch=${dir}`, '--tier=compact', '--device=x.json'], { encoding: 'utf8' });
+    assert.equal(compact.status, 1);
+    assert.match(compact.stderr, /--batch collects the wide tier only/);
+    const noDevice = spawnSync(process.execPath, [script, `--batch=${dir}`, '--tier=wide'], { encoding: 'utf8' });
+    assert.equal(noDevice.status, 1);
+    assert.match(noDevice.stderr, /--device=<file\.json> is required/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
