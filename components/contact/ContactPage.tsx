@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ConnectedStudioGround } from '@/components/connected-studio/ConnectedStudioGround';
+import { ConnectedStudioAtlasGround } from '@/components/connected-studio/ConnectedStudioAtlasGround';
 import type { ContactPageContent } from './content-types';
 import type { Locale } from '@/lib/locales';
 import { resolveActionLink } from '@/components/foundation/content-types';
@@ -27,7 +27,7 @@ export function ContactPage({ content, locale }: ContactPageProps) {
       data-connected-locale={locale}
       className={styles.page}
     >
-      <ConnectedStudioGround route="contact" locale={locale} wordBindings={content.wordBindings} />
+      <ConnectedStudioAtlasGround route="contact" locale={locale} wordBindings={content.wordBindings} />
       <AtlasEditorialContainer>
         <div className={styles.stack}>
           <header className={styles.introduction}>

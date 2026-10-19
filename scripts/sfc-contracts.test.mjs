@@ -39,13 +39,18 @@ test('getConnectedPoster rejects an unknown route or quality instead of inventin
   assert.throws(() => getConnectedPoster('studio', 'tablet'), RangeError);
 });
 
-test('the Ground never references a poster before it is published and mounts the live leaf only by policy', () => {
-  const ground = read('components/connected-studio/ConnectedStudioGround.tsx');
-  assert.match(ground, /\.published\)/, 'poster custom properties are set only for published entries');
-  assert.match(ground, /CONNECTED_LIVE_POLICY/, 'the Ground reads the live policy on the server');
-  assert.doesNotMatch(ground, /['"]use client['"]/, 'the Ground stays a server component');
-  assert.match(ground, /wordBindings/, 'new routes carry word bindings');
-  assert.match(ground, /data-capability-words/, 'legacy routes keep the capability-words attribute');
+test('the Ground layer never references a poster before it is published; each Ground carries its own words and live leaf', () => {
+  const layer = read('components/connected-studio/ConnectedStudioGroundLayer.tsx');
+  const legacy = read('components/connected-studio/ConnectedStudioGround.tsx');
+  const atlas = read('components/connected-studio/ConnectedStudioAtlasGround.tsx');
+  const seam = read('components/connected-studio/atlas-live-host.tsx');
+  assert.match(layer, /\.published\)/, 'poster custom properties are set only for published entries');
+  for (const source of [layer, legacy, atlas, seam]) assert.doesNotMatch(source, /['"]use client['"]/, 'the Ground files stay server components');
+  assert.match(atlas, /data-word-bindings/, 'new routes carry word bindings');
+  assert.match(legacy, /data-capability-words/, 'legacy routes keep the capability-words attribute');
+  // The shipped seam imports nothing: it is the only place a qualified enablement attaches the host to an Atlas page.
+  assert.doesNotMatch(seam, /^import(?!\s+type)/m, 'the shipped live-host seam has no runtime import');
+  assert.match(seam, /return null/, 'the shipped seam renders nothing');
 });
 
 test('the shared primitives are server-only and expose the frozen data attributes', () => {
@@ -366,4 +371,51 @@ test('the commercial Atlas ADR names both partially superseded predecessors in s
   assert.deepEqual(superseded.sort(), ['ADR-CONNECTED-STUDIO-PAGE-RUNTIME', 'ADR-CONTACT-INQUIRY-DEMO-MODE']);
   // Retained dependencies stay `related`, not superseded.
   assert.ok(front.includes('  - ADR-CONTACT-INQUIRY-PIPELINE') && !superseded.includes('ADR-CONTACT-INQUIRY-PIPELINE'));
+});
+
+// --- Host reachability (PLAN-SFC-V1 Task 16, the Task 14 "host ships in every Atlas page" finding) -----------------
+// Next ships a client component's chunk with every page whose server module graph can reach it, rendered or not
+// (measured: Studio, Founder and Contact loaded the host in a policy-disabled build, +27 to +144 ms startup CPU).
+// Reachability is therefore the contract, and a source import graph proves it without a build.
+
+function reachableFiles(entry) {
+  const seen = new Set();
+  const pending = [entry];
+  while (pending.length > 0) {
+    const file = pending.pop();
+    if (seen.has(file)) continue;
+    seen.add(file);
+    const source = readFileSync(`${root}${file}`, 'utf8');
+    for (const match of source.matchAll(/(?:import|export)\s[^;]*?from\s+'([^']+)'|import\s+'([^']+)'/g)) {
+      const specifier = match[1] ?? match[2];
+      const base = specifier.startsWith('@/') ? specifier.slice(2) : specifier.startsWith('.') ? posixJoin(file, specifier) : undefined;
+      if (!base) continue;
+      const found = ['', '.ts', '.tsx', '/index.ts', '/index.tsx'].map((suffix) => base + suffix).find((candidate) => existsSync(`${root}${candidate}`) && !candidate.endsWith('.css'));
+      if (found && /\.(ts|tsx)$/.test(found)) pending.push(found);
+    }
+  }
+  return seen;
+}
+
+function posixJoin(from, specifier) {
+  const parts = from.split('/').slice(0, -1);
+  for (const part of specifier.split('/')) {
+    if (part === '..') parts.pop();
+    else if (part !== '.') parts.push(part);
+  }
+  return parts.join('/');
+}
+
+const HOST = 'components/connected-studio/ConnectedStudioEnhancement.tsx';
+
+test('Studio, Founder and Contact cannot reach the connected host, so a policy-disabled build never ships it', () => {
+  for (const page of ['components/studio/StudioPage.tsx', 'components/founder/FounderPage.tsx', 'components/contact/ContactPage.tsx']) {
+    assert.equal(reachableFiles(page).has(HOST), false, `${page} must not import the host, even behind a policy branch`);
+  }
+});
+
+test('Services and Projects keep the host: they always mount the leaf, which gates itself', () => {
+  for (const page of ['components/services/ServicesPage.tsx', 'components/projects/ProjectsPage.tsx']) {
+    assert.equal(reachableFiles(page).has(HOST), true, `${page} still mounts the host`);
+  }
 });

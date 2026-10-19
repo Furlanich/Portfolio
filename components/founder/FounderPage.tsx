@@ -1,4 +1,4 @@
-import { ConnectedStudioGround } from '@/components/connected-studio/ConnectedStudioGround';
+import { ConnectedStudioAtlasGround } from '@/components/connected-studio/ConnectedStudioAtlasGround';
 import { resolveActionLink } from '@/components/foundation/content-types';
 import { AtlasEditorialContainer } from '@/components/surfaces/AtlasEditorialContainer';
 import { AtlasPlate } from '@/components/surfaces/AtlasPlate';
@@ -23,7 +23,7 @@ export function FounderPage({ content }: FounderPageProps) {
 
   return (
     <main data-connected-page data-connected-route="founder" data-connected-locale={content.locale} className={styles.page}>
-      <ConnectedStudioGround route="founder" locale={content.locale} wordBindings={content.wordBindings} />
+      <ConnectedStudioAtlasGround route="founder" locale={content.locale} wordBindings={content.wordBindings} />
       <AtlasEditorialContainer>
         <div data-founder-layout className={styles.stack}>
           <div data-founder-intro-plate className={styles.introPlate}>

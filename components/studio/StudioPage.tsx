@@ -1,4 +1,4 @@
-import { ConnectedStudioGround } from '@/components/connected-studio/ConnectedStudioGround';
+import { ConnectedStudioAtlasGround } from '@/components/connected-studio/ConnectedStudioAtlasGround';
 import { resolveActionLink } from '@/components/foundation/content-types';
 import { AtlasEditorialContainer } from '@/components/surfaces/AtlasEditorialContainer';
 import { AtlasScrim } from '@/components/surfaces/AtlasScrim';
@@ -30,7 +30,7 @@ export function StudioPage({ content }: StudioPageProps) {
 
   return (
     <main data-connected-page data-connected-route="studio" data-connected-locale={locale} className={styles.page}>
-      <ConnectedStudioGround route="studio" locale={locale} wordBindings={content.wordBindings} />
+      <ConnectedStudioAtlasGround route="studio" locale={locale} wordBindings={content.wordBindings} />
       <AtlasEditorialContainer>
         <div className={styles.stack}>
           <StudioIntroduction

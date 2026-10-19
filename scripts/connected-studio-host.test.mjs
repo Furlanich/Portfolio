@@ -38,9 +38,9 @@ function blockAfter(source, marker) {
 test('the enhancement is a thin client leaf and the Ground stays a server component', () => {
   assert.match(enhancement, /^'use client';/);
   assert.doesNotMatch(ground, /'use client'/);
-  // Legacy routes always mount the leaf (it gates itself); PLAN-SFC-V1 profile routes mount it only by policy (sfc-contracts.test.mjs).
-  assert.match(ground, /<ConnectedStudioEnhancement route=\{props\.route\} locale=\{locale\} capabilityWords=\{props\.capabilityWords\} \/>/);
-  assert.match(ground, /aria-hidden="true"/);
+  // Legacy routes always mount the leaf (it gates itself); the Atlas routes cannot reach it (sfc-contracts.test.mjs).
+  assert.match(ground, /<ConnectedStudioEnhancement route=\{route\} locale=\{locale\} capabilityWords=\{capabilityWords\} \/>/);
+  assert.match(read('components/connected-studio/ConnectedStudioGroundLayer.tsx'), /aria-hidden="true"/);
 });
 
 test('the engine is one dynamic import behind the gates, never a static or server-side import', () => {

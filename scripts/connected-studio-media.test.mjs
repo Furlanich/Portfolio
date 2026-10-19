@@ -43,7 +43,7 @@ test('compact static media selects an existing ≤80KiB matched poster without e
     assert.deepEqual(webpSize(publicFile(poster.src)), { width: poster.width, height: poster.height }, `${route} compact poster has its intrinsic size`);
   }
   // Static selection is manifest data plus CSS: neither module imports the engine, Three or a client boundary.
-  for (const file of ['lib/connected-studio/media-manifest.ts', 'components/connected-studio/ConnectedStudioGround.tsx']) {
+  for (const file of ['lib/connected-studio/media-manifest.ts', 'components/connected-studio/ConnectedStudioGroundLayer.tsx']) {
     const source = readFileSync(`${root}${file}`, 'utf8');
     assert.doesNotMatch(source, /from ['"]three['"]|create-connected-scene|['"]use client['"]/, `${file} stays free of the engine`);
   }
@@ -214,7 +214,7 @@ test('the dossier image offers every variant, sizes, its intrinsic size and lazy
 });
 
 test('no page preloads a poster or either project illustration', () => {
-  for (const file of ['components/connected-studio/ConnectedStudioGround.tsx', 'components/projects/ProjectDossier.tsx', 'app/(es)/layout.tsx', 'app/(en)/layout.tsx']) {
+  for (const file of ['components/connected-studio/ConnectedStudioGroundLayer.tsx', 'components/projects/ProjectDossier.tsx', 'app/(es)/layout.tsx', 'app/(en)/layout.tsx']) {
     const source = readFileSync(`${root}${file}`, 'utf8');
     assert.doesNotMatch(source, /rel=["']preload["']|preload\(|fetchPriority=["']high["']|priority(?:=|\s|\})/, `${file} adds no preload or priority hint for artwork`);
   }

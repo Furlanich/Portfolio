@@ -2,6 +2,7 @@
 // `npm run typecheck` and never executed: it passes only when the declared interfaces exist with the
 // stated shapes, and each `@ts-expect-error` line fails the build if its misuse ever starts to compile.
 import type { ComponentProps } from 'react';
+import type { ConnectedStudioAtlasGround } from '@/components/connected-studio/ConnectedStudioAtlasGround';
 import type { ConnectedStudioGround } from '@/components/connected-studio/ConnectedStudioGround';
 import type { ConnectedLayout } from '@/components/connected-studio/runtime/connected-geometry';
 import type { AtlasEditorialContainer } from '@/components/surfaces/AtlasEditorialContainer';
@@ -19,6 +20,8 @@ import type {
 } from '@/lib/connected-studio/types';
 
 type GroundProps = ComponentProps<typeof ConnectedStudioGround>;
+// PLAN-SFC-V1 Task 16: Studio, Founder and Contact use a Ground that cannot reach the live host.
+type AtlasGroundProps = ComponentProps<typeof ConnectedStudioAtlasGround>;
 
 const words: CapabilityWords = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const bindings: readonly ConnectedWordBinding[] = [{ nodeId: 'n0', word: 'Contexto' }];
@@ -31,14 +34,14 @@ export const legacyGround: GroundProps = { route: 'services', locale: 'es', capa
 export const legacyProjectsGround: GroundProps = { route: 'projects', locale: 'en', capabilityWords: words };
 
 // New routes take readonly word bindings and never fabricate eight services.
-export const studioGround: GroundProps = { route: 'studio', locale: 'es', wordBindings: bindings };
-export const founderGround: GroundProps = { route: 'founder', locale: 'en', wordBindings: bindings };
-export const contactGround: GroundProps = { route: 'contact', locale: 'en', wordBindings: [] };
+export const studioGround: AtlasGroundProps = { route: 'studio', locale: 'es', wordBindings: bindings };
+export const founderGround: AtlasGroundProps = { route: 'founder', locale: 'en', wordBindings: bindings };
+export const contactGround: AtlasGroundProps = { route: 'contact', locale: 'en', wordBindings: [] };
 
 // @ts-expect-error a legacy route must not take word bindings
 export const badLegacy: GroundProps = { route: 'services', locale: 'es', wordBindings: bindings };
 // @ts-expect-error a new route must not take the eight-word capability tuple
-export const badNew: GroundProps = { route: 'studio', locale: 'es', capabilityWords: words };
+export const badNew: AtlasGroundProps = { route: 'studio', locale: 'es', capabilityWords: words };
 // @ts-expect-error a legacy route requires its capability words
 export const missingWords: GroundProps = { route: 'projects', locale: 'es' };
 
