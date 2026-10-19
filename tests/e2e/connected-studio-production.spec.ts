@@ -25,8 +25,9 @@ import { appPathname, appUrl, stableRoutes } from './support/paths';
 // project (PLAYWRIGHT_SERVE_EXPORT=1), against the clean static export in `out/` served by
 // scripts/serve-static-export.mjs, which never rewrites a missing route to an index. The production build
 // compiles the diagnostics hook out, so everything here observes the public DOM, the network and the WebGL
-// API. The live cases opt in through the controlled test hook and run on SwiftShader: they are functional
-// evidence, never the shipped policy and never hardware acceptance.
+// API. The live cases open the software-renderer gate (and, where they need a tier the shipped policy leaves off,
+// the policy) through the controlled test hook and run on SwiftShader: they are functional evidence, never
+// hardware acceptance. Since PLAN-SFC-V1 Task 18 the shipped policy is { wide: true, compact: false }.
 
 test.describe.configure({ timeout: 120_000 });
 
@@ -325,9 +326,10 @@ test.describe('session loss, import races and failures', () => {
     });
     await page.goto(appUrl(stableRoutes.services.es));
     await expect.poll(() => delayed, { timeout: 15_000 }).toBeGreaterThan(0);
-    // Leave for an ordinary page before the import resolves.
-    await page.locator('a[data-app-bar-nav-link]:is([href$="/estudio/"], [href$="/estudio/#site-top"]):visible').first().click();
-    await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.studio.es));
+    // Leave for an ordinary page before the import resolves. Studio is connected since Task 18 and would load the engine
+    // legitimately, so the destination is Privacy, which mounts no scene.
+    await page.locator('[data-site-footer] a[href$="/privacidad/"]').first().click();
+    await expect(page).toHaveURL((url) => url.pathname === appPathname(stableRoutes.privacy.es));
     await page.waitForTimeout(6_000);
     await expect(page.locator('canvas')).toHaveCount(0);
     const events = await contexts.events();
@@ -461,13 +463,23 @@ test.describe('preferences and capability gates fetch no engine', () => {
   }
 
   for (const connected of [connectedPages[1], connectedPages[2]]) {
-    test(`the shipped policy keeps ${connected.route}/${connected.locale} static even when the software gate is open`, async ({ page }) => {
+    // Task 18: the shipped policy takes the qualified wide tier live. Only the software gate is opened here (SwiftShader
+    // stands in for hardware); the policy is the one the build ships.
+    test(`the shipped policy takes the wide tier live on ${connected.route}/${connected.locale} once the software gate is open`, async ({ page }) => {
+      await setConnectedTestHook(page, { allowSoftwareRenderer: true });
+      await page.goto(appUrl(connected.pathname));
+      await expectLiveProduction(page);
+      await expect(connectedCanvas(page)).toHaveCount(1);
+    });
+
+    test(`the shipped policy keeps the unqualified compact tier static on ${connected.route}/${connected.locale} even when the software gate is open`, async ({ page }) => {
       const names = engineChunkNames();
       const requested: string[] = [];
       page.on('request', (request) => {
         const chunk = chunkOf(request);
         if (chunk && names.includes(chunk)) requested.push(chunk);
       });
+      await page.setViewportSize({ width: 390, height: 844 });
       await setConnectedTestHook(page, { allowSoftwareRenderer: true });
       await page.goto(appUrl(connected.pathname));
       await page.waitForTimeout(2_000);
