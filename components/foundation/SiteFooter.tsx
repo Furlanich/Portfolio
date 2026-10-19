@@ -98,8 +98,10 @@ export function SiteFooter({ contactActions, founderLinks, labels, paths }: Site
 
         <div className={styles.utility}>
           <p className={styles.copyright}>© {copyrightYear} FURLANICH</p>
-          <Link href={paths.privacy} className={styles.link}>{labels.privacy}</Link>
-          <Link href={paths.terms} className={styles.link}>{content.termsAction}</Link>
+          <div className={styles.legal}>
+            <Link href={paths.privacy} className={styles.link}>{labels.privacy}</Link>
+            <Link href={paths.terms} className={styles.link}>{content.termsAction}</Link>
+          </div>
           <LanguageSwitch
             alternateHref={paths.alternateHref}
             alternateLocale={paths.alternateLocale}
