@@ -5,7 +5,13 @@
 //     node <worktree>/scripts/measure-connected-studio-hardware.mjs --route=studio|founder|contact|services|projects --locale=es|en
 //       --tier=wide|compact --device=<device.json> --run-id=<id> --out=<runs-dir>/<id>.json [--headed] [--browser=chromium|firefox]
 //       [--idle-seconds=120] [--traversals=3] [--sustained-seconds=300] [--route-cycles=5] [--base-path=/Portfolio]
-//       [--connect-cdp=http://127.0.0.1:9222] [--extras] [--trace-pipeline=<file>] [--frames-out=<file>] [--no-gpu-timers]
+//       [--connect-cdp=http://127.0.0.1:9222] [--hidden=auto|manual] [--extras] [--trace-pipeline=<file>] [--frames-out=<file>] [--no-gpu-timers]
+//     A headed desktop run measures the hidden checkpoint automatically, after the measurement browser closes, in a plainly started
+//     Chromium (Playwright's own launch keeps a page visible when it is minimized or covered).
+//
+//   Collect the whole wide tier unattended, resumable, one run after another, then the dossier for this cohort:
+//     node <worktree>/scripts/measure-connected-studio-hardware.mjs --batch=<runs-dir> --device=<device.json> [--base-path=/Portfolio]
+//       [--max-attempts=6] [--quiet-wait-minutes=30] [--out=<dossier.json>]
 //
 //   Add the runs up: node scripts/measure-connected-studio-hardware.mjs --qualify=<runs-dir> --tier=wide|compact [--out=dossier.json]
 //     Exits 0 only when every one of the ten route and locale pairs has three valid passing runs; OPEN and FAIL exit 1.
@@ -22,12 +28,12 @@
 //     constrained Android phone (--connect-cdp over adb); that path is written but has not been run on a phone.
 //   - The 200% / 400% check (--extras) is the viewport-equivalent of browser zoom, not Ctrl-plus. The accessibility tree is a proxy for
 //     assistive technology, never an NVDA or VoiceOver result.
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import zlib from 'node:zlib';
 import { chromium, firefox } from 'playwright';
 import { activeFrameIntervals, attributeShifts, buildRouteClosure, cadenceFps, chunkImports, classifyLateFrames, crossCheckClosure, findOptionalCodeInCriticalChunks, FRAME_INTERVAL_SOURCE, gateExit, judgeHardware, judgeMetric, OPTIONAL_ENGINE_MARKERS } from '../lib/connected-studio/measurement.ts';
@@ -277,6 +283,81 @@ export function buildDossier({ tier, runs, cohort }) {
   return { ...base, verdict: pairVerdicts.includes('FAIL') ? 'FAIL' : pairVerdicts.every((v) => v === 'PASS') ? 'PASS' : 'OPEN', cohort: identity, pairs, missingPairs, excludedRuns };
 }
 
+// ---- The hidden window. Playwright's own launch keeps every page focused through Emulation.setFocusEmulationEnabled, which
+// holds the tab visible: in Task 15 a minimized or covered window never reported `hidden`. The hidden checkpoint therefore runs
+// in the same Chromium executable started plainly and attached with `noDefaults` (no focus emulation on the default context),
+// and hides the page behind a real second tab.
+
+/**
+ * The command line of the hidden-window browser: a fresh profile, a debugging port, the tier's window size and nothing else. No
+ * automation, headless, anti-backgrounding or software-rendering switch: any of them would keep a hidden page running or fake it.
+ */
+export function plainChromiumArguments({ userDataDir, width, height }) {
+  return ['--remote-debugging-port=0', `--user-data-dir=${userDataDir}`, `--window-size=${width},${height}`, '--no-first-run', '--no-default-browser-check', 'about:blank'];
+}
+
+/** The first hidden window in the page's own visibility log, with the draws and callbacks inside it and the draws in the second before it. */
+export function measureHiddenWindow({ visibility, frames, rafLog }) {
+  const hiddenAt = visibility.find((entry) => entry[1] === 'hidden')?.[0];
+  if (hiddenAt === undefined) return null;
+  const shownAt = visibility.find((entry) => entry[1] === 'visible' && entry[0] > hiddenAt)?.[0];
+  if (shownAt === undefined) return null;
+  const inside = (t) => t > hiddenAt + 100 && t < shownAt; // 100 ms for the frame already in flight when the tab hid
+  return {
+    hiddenMs: shownAt - hiddenAt,
+    draws: frames.filter((frame) => inside(frame.t)).length,
+    rafCalls: rafLog.filter(inside).length,
+    drawsBefore: frames.filter((frame) => frame.t >= hiddenAt - 1000 && frame.t <= hiddenAt).length,
+  };
+}
+
+/** A hidden window proves suspension only if it lasted 4 s and the scene was drawing when it hid; anything else is OPEN, never zero. */
+export function hiddenRows(hidden) {
+  const measured = hidden && hidden.hiddenMs >= 4_000 && hidden.drawsBefore >= 1;
+  return { hiddenDraws: measured ? hidden.draws : null, hiddenRafCalls: measured ? hidden.rafCalls : null };
+}
+
+// ---- The unattended batch: the wide tier's thirty runs, one at a time, on one cohort ----
+
+/** Default attempts per pair before the batch gives up on it (a busy machine makes a run invalid; it is kept and retried). */
+export const BATCH_MAX_ATTEMPTS = 6;
+
+/**
+ * What the batch collects next, from the runs already in the directory. Counting is the dossier's own (one cohort, duplicates
+ * rejected), so the batch can never think a pair is done when --qualify would not. A pair with a valid failing run is never
+ * recollected (the protocol names a cause first); three valid runs with an OPEN row need a fix, not more runs. The pairs with
+ * the fewest valid runs go first, so a long batch interleaves routes instead of finishing one before starting the next.
+ */
+export function planBatch({ tier, runs, cohort, maxAttempts = BATCH_MAX_ATTEMPTS }) {
+  const dossier = buildDossier({ tier, runs, cohort });
+  const failedPairs = [];
+  const openPairs = [];
+  const exhaustedPairs = [];
+  const pending = [];
+  ROUTE_IDS.forEach((route, routeIndex) =>
+    LOCALES.forEach((locale, localeIndex) => {
+      const key = `${route}/${locale}`;
+      const pair = dossier.pairs[key];
+      const attempts = pair.runs.length;
+      if (pair.verdict === 'FAIL') failedPairs.push(key);
+      else if (pair.validRuns >= REQUIRED_VALID_RUNS) {
+        if (pair.verdict === 'OPEN') openPairs.push(key);
+      } else if (attempts >= maxAttempts) exhaustedPairs.push(key);
+      else pending.push({ route, locale, validRuns: pair.validRuns, attempts, needed: REQUIRED_VALID_RUNS - pair.validRuns, order: routeIndex * LOCALES.length + localeIndex });
+    }),
+  );
+  pending.sort((a, b) => a.validRuns - b.validRuns || a.order - b.order);
+  const first = pending[0];
+  let next = null;
+  if (first) {
+    // A run id is never reused, whatever cohort used it before: every report stays a separate file.
+    const prefix = `${tier}-${first.route}-${first.locale}-`;
+    const used = runs.map((run) => run.runId).filter((id) => typeof id === 'string' && id.startsWith(prefix)).map((id) => Number(id.slice(prefix.length))).filter(Number.isInteger);
+    next = { route: first.route, locale: first.locale, runId: `${prefix}${Math.max(0, ...used) + 1}` };
+  }
+  return { next, pending: pending.map(({ route, locale, validRuns, attempts, needed }) => ({ route, locale, validRuns, attempts, needed })), failedPairs, openPairs, exhaustedPairs, complete: dossier.verdict === 'PASS' };
+}
+
 function qualify({ directory, tier, out, cohort }) {
   if (!['wide', 'compact'].includes(tier)) return { exit: 1, message: `--tier must be wide or compact, got "${tier}"` };
   const runs = fs.readdirSync(directory).filter((name) => name.endsWith('.json')).sort().map((name) => JSON.parse(fs.readFileSync(path.join(directory, name), 'utf8')));
@@ -471,6 +552,47 @@ async function sampleMachine(seconds = 3) {
   return { cpuBusy: total > 0 ? round(1 - idle / total, 3) : null, gpuUtilization: measured.length ? Math.max(...measured) : null };
 }
 
+// ---- The scroll input. Playwright's mouse.wheel moves the page in one instant jump per call, which no visitor's browser does:
+// a wheel smooth-scrolls. A scene that draws only when the page moves (Contact's nodes never move) then draws once per jump, and
+// the frame interval measured the test's input cadence (about 83 ms), not the scene. A traversal is therefore Chromium's own
+// smooth scroll gesture, continuous over the remaining distance, from a mouse on the wide tier and a finger on the compact one.
+
+/** Chromium's default synthetic scroll speed (Input.synthesizeScrollGesture), in CSS pixels per second. */
+export const SCROLL_GESTURE_SPEED = 800;
+
+/** The gesture that scrolls from here to the end in one direction (1 down, -1 up), or null when nothing is left to scroll. */
+export function scrollGestureParameters({ direction, scrollY, scrollHeight, innerHeight, viewport, tier }) {
+  const remaining = direction > 0 ? scrollHeight - innerHeight - scrollY : scrollY;
+  if (remaining <= 2) return null;
+  return {
+    x: Math.round(viewport.width / 2),
+    y: Math.round(viewport.height / 2),
+    yDistance: -direction * remaining, // a negative distance moves the content up, which scrolls down
+    speed: SCROLL_GESTURE_SPEED,
+    gestureSourceType: tier === 'compact' ? 'touch' : 'mouse',
+    preventFling: true,
+  };
+}
+
+/** The files a git patch changes, from its `diff --git a/<path> b/<path>` headers, sorted. */
+export function patchedFiles(patchText) {
+  return [...new Set([...String(patchText).matchAll(/^diff --git a\/(\S+) b\/\S+$/gm)].map((match) => match[1]))].sort();
+}
+
+/**
+ * A runtime candidate may differ from its head in exactly the files its applied patch names: since Task 16 the live-policy patch
+ * also attaches the live host through the Atlas seam, so it is not only capability.ts. Anything more is an uncommitted change
+ * that would be measured as if it were the build; anything less is a patch that did not apply.
+ */
+export function candidateDiffProblem({ changed, expected }) {
+  if (!expected.length) return 'the applied candidate names no patch files: no patch was read';
+  if (!changed.length) return `the candidate changes nothing; its patch should change ${expected.join(', ')}`;
+  const extra = changed.filter((file) => !expected.includes(file));
+  const missing = expected.filter((file) => !changed.includes(file));
+  if (!extra.length && !missing.length) return null;
+  return `the candidate diff must be exactly the patch's files (${expected.join(', ')})${extra.length ? `; also changed: ${extra.join(', ')}` : ''}${missing.length ? `; not changed: ${missing.join(', ')}` : ''}`;
+}
+
 /** The candidate's own record: head, applied patch hashes and the working-tree files it changed. */
 function readCandidate(root) {
   const git = (args) => spawnSync('git', args, { cwd: root, encoding: 'utf8' }).stdout.trim();
@@ -479,9 +601,15 @@ function readCandidate(root) {
   const state = fs.existsSync(stateFile) ? JSON.parse(fs.readFileSync(stateFile, 'utf8')) : null;
   const changed = git(['diff', '--name-only']).split('\n').filter(Boolean);
   const hashes = (state?.patches ?? []).map((patch) => patch.sha256);
+  // The applied patches, read back from this checkout's fixtures; one that differs from what was applied names no files.
+  const expected = [...new Set((state?.patches ?? []).flatMap((patch) => {
+    const file = path.join(root, 'tests', 'fixtures', 'sfc', patch.name);
+    const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n') : ''; // hashed as LF, as prepare-sfc-candidate records it
+    return text && sha256Text(text) === patch.sha256 ? patchedFiles(text) : [];
+  }))].sort();
   const policySource = fs.readFileSync(path.join(root, 'lib', 'connected-studio', 'capability.ts'), 'utf8');
   const policy = { wide: /wide:\s*true/.test(policySource), compact: /compact:\s*true/.test(policySource) };
-  return { head, kind: state?.kind ?? null, stateHead: state?.head ?? null, patchSha256: hashes.length === 1 ? hashes[0] : hashes.length ? sha256Text(hashes.join('\n')) : '', changed, policy };
+  return { head, kind: state?.kind ?? null, stateHead: state?.head ?? null, patchSha256: hashes.length === 1 ? hashes[0] : hashes.length ? sha256Text(hashes.join('\n')) : '', changed, expected, policy };
 }
 
 /** The optional closure of a route read from the emitted export, with Brotli sizes, as measure-connected-studio-production counts it. */
@@ -498,6 +626,73 @@ function analyzeClosure(outDir, pathname) {
   return { referenced, entries, closure, evasion: findOptionalCodeInCriticalChunks({ chunks: critical, markers: OPTIONAL_ENGINE_MARKERS }) };
 }
 
+const isRunReport = (value) => value?.kind === 'sfc-hardware-run';
+const readRuns = (directory) =>
+  fs.readdirSync(directory).filter((name) => name.endsWith('.json')).sort().map((name) => JSON.parse(fs.readFileSync(path.join(directory, name), 'utf8'))).filter(isRunReport);
+
+/** Two quiet samples ten seconds apart before a run starts, so a busy machine waits instead of spending a 12-minute invalid run. */
+async function waitForQuiet(minutes) {
+  const quiet = (sample) => sample.cpuBusy !== null && sample.cpuBusy <= QUIESCENCE_LIMITS.cpuBusy && (sample.gpuUtilization === null || sample.gpuUtilization <= QUIESCENCE_LIMITS.gpuUtilization);
+  const deadline = Date.now() + minutes * 60_000;
+  let last = null;
+  while (Date.now() < deadline) {
+    last = await sampleMachine();
+    if (quiet(last)) {
+      await new Promise((resolve) => setTimeout(resolve, 10_000));
+      last = await sampleMachine();
+      if (quiet(last)) return { quiet: true, last };
+    }
+    console.error(`Batch: waiting for a quiet machine (CPU ${Math.round((last.cpuBusy ?? 0) * 100)}%, GPU ${last.gpuUtilization === null ? 'n/a' : `${Math.round(last.gpuUtilization * 100)}%`}).`);
+    await new Promise((resolve) => setTimeout(resolve, 30_000));
+  }
+  return { quiet: false, last };
+}
+
+/**
+ * --batch=<runs-dir>: the wide tier's runs, collected one after another from this candidate checkout until every pair has three
+ * valid runs, a pair fails, or a pair runs out of attempts; then the dossier for this cohort. Each run is the ordinary one-run
+ * command at the protocol minima in its own process; the batch adds nothing to a run and never shortens one.
+ */
+async function runBatch({ directory, root, fail }) {
+  const tier = argumentOf('tier') ?? 'wide';
+  if (tier !== 'wide') fail('--batch collects the wide tier only: a compact run needs an operator at the phone for its hidden checkpoint (protocol section 6).');
+  const deviceFile = argumentOf('device');
+  if (!deviceFile) fail('--device=<file.json> is required: the plan records the physical device before anything is collected.');
+  const device = JSON.parse(fs.readFileSync(deviceFile, 'utf8'));
+  const deviceProblems = validateDeviceRecord(device, tier).problems;
+  if (deviceProblems.length) fail(`the device record is incomplete: ${deviceProblems.join('; ')}`);
+  const candidate = readCandidate(root);
+  if (candidate.kind !== 'runtime' || candidate.stateHead !== candidate.head || !candidate.policy.wide) fail('Run --batch from a runtime candidate checkout at its own head with the wide tier enabled (prepare-sfc-candidate.mjs apply --kind=runtime).');
+  const diffProblem = candidateDiffProblem({ changed: candidate.changed, expected: candidate.expected });
+  if (diffProblem) fail(`${diffProblem}.`);
+  const basePath = normalizeBasePath(argumentOf('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
+  const maxAttempts = Number(argumentOf('max-attempts') ?? BATCH_MAX_ATTEMPTS);
+  const quietMinutes = Number(argumentOf('quiet-wait-minutes') ?? 30);
+  if (!(Number.isInteger(maxAttempts) && maxAttempts >= 1) || !(quietMinutes > 0)) fail('--max-attempts must be a positive integer and --quiet-wait-minutes a positive number.');
+  const cohort = { head: candidate.head, patchSha256: candidate.patchSha256, basePath: basePath || '/', deviceName: device.name };
+  fs.mkdirSync(directory, { recursive: true });
+  const script = fileURLToPath(import.meta.url);
+  for (;;) {
+    const plan = planBatch({ tier, runs: readRuns(directory), cohort, maxAttempts });
+    if (!plan.next) {
+      console.error(`Batch: nothing more to collect. Failed pairs: ${plan.failedPairs.join(', ') || 'none'}. OPEN with three valid runs: ${plan.openPairs.join(', ') || 'none'}. Out of attempts: ${plan.exhaustedPairs.join(', ') || 'none'}.`);
+      break;
+    }
+    const remaining = plan.pending.reduce((sum, pair) => sum + pair.needed, 0);
+    const wait = await waitForQuiet(quietMinutes);
+    if (!wait.quiet) fail(`the machine stayed busy for ${quietMinutes} minutes; the batch stopped before ${plan.next.runId} without spending an attempt. Close the other work and run the same command again: it resumes.`);
+    console.error(`\nBatch: ${plan.next.runId} (${plan.next.route}/${plan.next.locale}); about ${remaining} valid runs still needed.`);
+    const out = path.join(directory, `${plan.next.runId}.json`);
+    const args = [script, `--route=${plan.next.route}`, `--locale=${plan.next.locale}`, '--tier=wide', '--headed', `--device=${deviceFile}`, `--run-id=${plan.next.runId}`, `--out=${out}`, ...(basePath ? [`--base-path=${basePath}`] : [])];
+    spawnSync(process.execPath, args, { cwd: root, stdio: 'inherit' });
+    if (!fs.existsSync(out)) fail(`${plan.next.runId} wrote no report (the collector stopped before the run); the batch stopped so it cannot loop. Check the message above.`);
+  }
+  const dossierFile = argumentOf('out') ?? `${path.resolve(directory)}.dossier.json`;
+  const result = qualify({ directory, tier, out: dossierFile, cohort });
+  console.error(`Batch: dossier written to ${dossierFile}.`);
+  process.exit(result.exit);
+}
+
 async function main() {
   const qualifyDirectory = argumentOf('qualify');
   if (qualifyDirectory) {
@@ -512,6 +707,8 @@ async function main() {
     console.error(`measure-connected-studio-hardware: ${message}`);
     process.exit(1);
   };
+  const batchDirectory = argumentOf('batch');
+  if (batchDirectory) await runBatch({ directory: batchDirectory, root, fail });
   const positive = (name, fallback) => {
     const raw = argumentOf(name) ?? String(fallback);
     if (!/^[0-9]+$/.test(raw) || Number(raw) < 1) fail(`--${name} must be a positive integer, got "${raw}"`);
@@ -554,7 +751,8 @@ async function main() {
   const candidate = readCandidate(root);
   if (candidate.kind !== 'runtime') fail('This checkout is not a runtime candidate (node scripts/prepare-sfc-candidate.mjs apply --kind=runtime). Never run it against a committed build.');
   if (candidate.stateHead !== candidate.head) fail(`The candidate was applied at ${candidate.stateHead}, not at this head ${candidate.head}.`);
-  if (candidate.changed.length !== 1 || candidate.changed[0] !== 'lib/connected-studio/capability.ts') fail(`The candidate diff must be exactly lib/connected-studio/capability.ts, got: ${candidate.changed.join(', ') || 'nothing'}.`);
+  const diffProblem = candidateDiffProblem({ changed: candidate.changed, expected: candidate.expected });
+  if (diffProblem) fail(`${diffProblem}.`);
   if (!candidate.policy[TIER]) fail(`The candidate does not enable the ${TIER} tier in CONNECTED_LIVE_POLICY.`);
 
   const target = HARDWARE_ROUTES[ROUTE];
@@ -637,14 +835,89 @@ async function main() {
   const frameCount = (page) => page.evaluate(() => window.__hw.frames.length);
   const counters = (page) => page.evaluate(() => ({ frames: window.__hw.frames.length + (window.__hw.current ? 1 : 0), raf: window.__hw.rafCalls, timeouts: window.__hw.timeoutCalls }));
   const viewportOf = (page) => page.evaluate(() => ({ width: window.innerWidth, height: window.innerHeight, devicePixelRatio: window.devicePixelRatio }));
+  /** The hidden window since a point in the page's visibility log, read with the pure measureHiddenWindow. */
+  const readHiddenWindow = async (page, logFrom) => {
+    await page.evaluate(() => window.__hw.flush());
+    const log = await page.evaluate((from) => ({ visibility: window.__hw.visibility.slice(from), frames: window.__hw.frames.map((frame) => ({ t: frame.t })), rafLog: window.__hw.rafLog }), logFrom);
+    return measureHiddenWindow(log);
+  };
+  let deferredHidden = null;
 
+  /**
+   * The automatic hidden checkpoint on a desktop. The same Chromium executable is started plainly (plainChromiumArguments) and
+   * attached with `noDefaults`, so its default context carries no focus emulation and a page really reports `hidden`. The page
+   * loads, goes live, the pointer moves the scene, and a second tab in the same window is brought to the front for 10 s.
+   */
+  async function hiddenInPlainBrowser({ viewport }) {
+    const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sfc-hidden-'));
+    const plainProcess = spawn(chromium.executablePath(), plainChromiumArguments({ userDataDir, width: viewport.width, height: viewport.height }), { stdio: ['ignore', 'ignore', 'pipe'] });
+    let plain = null;
+    try {
+      const endpoint = await new Promise((resolve, reject) => {
+        let buffer = '';
+        const timer = setTimeout(() => reject(new Error('the plain browser opened no debugging port within 30 s')), 30_000);
+        plainProcess.stderr.on('data', (chunk) => {
+          buffer += chunk;
+          const match = buffer.match(/DevTools listening on (ws:\S+)/);
+          if (match) {
+            clearTimeout(timer);
+            resolve(match[1]);
+          }
+        });
+        plainProcess.once('exit', (code) => reject(new Error(`the plain browser exited (${code})`)));
+      });
+      plain = await chromium.connectOverCDP(endpoint, { noDefaults: true });
+      const context = plain.contexts()[0];
+      const page = context.pages()[0] ?? (await context.newPage());
+      await page.addInitScript(installProbe, { gpuTimers: false });
+      await page.goto(url(pageInfo.pathname), { waitUntil: 'load' });
+      if (!(await waitLive(page))) return { hidden: null, note: 'the page did not go live in the plain browser: the hidden rows stay OPEN' };
+      await page.waitForTimeout(5_000);
+      const view = await viewportOf(page);
+      const logFrom = await page.evaluate(() => window.__hw.visibility.length);
+      await pointerSweep(page, view); // the scene is moving at the instant the page hides
+      const cover = await context.newPage(); // a new tab in the same window comes to the front and hides the page
+      await cover.bringToFront();
+      await sleep(10_000);
+      await page.bringToFront();
+      await page.waitForTimeout(1500);
+      await cover.close();
+      return { hidden: await readHiddenWindow(page, logFrom), browserVersion: plain.version(), viewport: view };
+    } finally {
+      // Cleanup never replaces a measurement: wait for the browser to exit (it holds its profile until then), and leave a profile
+      // that still cannot be removed in the temporary directory rather than throw.
+      await plain?.close().catch(() => {});
+      if (plainProcess.exitCode === null) {
+        const exited = new Promise((resolve) => plainProcess.once('exit', resolve));
+        plainProcess.kill();
+        await Promise.race([exited, sleep(10_000)]);
+      }
+      try {
+        fs.rmSync(userDataDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 });
+      } catch (error) {
+        console.error(`measure-connected-studio-hardware: the temporary profile ${userDataDir} was left behind (${error.code ?? error.message}).`);
+      }
+    }
+  }
+
+  const gestureSessions = new WeakMap();
+  /** One traversal to the end in one direction: a smooth scroll gesture in Chromium (scrollGestureParameters); wheel steps in Firefox, which has no timing. */
   async function scrollThrough(page, direction, viewport) {
-    await page.mouse.move(viewport.width / 2, viewport.height / 2);
-    for (let guard = 0; guard < 400; guard += 1) {
-      const done = await page.evaluate((dir) => (dir > 0 ? window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2 : window.scrollY <= 0), direction);
-      if (done) return;
-      await page.mouse.wheel(0, 100 * direction);
-      await page.waitForTimeout(80);
+    if (TIER === 'wide') await page.mouse.move(viewport.width / 2, viewport.height / 2);
+    const position = () => page.evaluate(() => ({ scrollY: window.scrollY, scrollHeight: document.documentElement.scrollHeight, innerHeight: window.innerHeight }));
+    if (BROWSER !== 'chromium') {
+      for (let guard = 0; guard < 400; guard += 1) {
+        if (!scrollGestureParameters({ direction, viewport, tier: TIER, ...(await position()) })) return;
+        await page.mouse.wheel(0, 100 * direction);
+        await page.waitForTimeout(80);
+      }
+      return;
+    }
+    if (!gestureSessions.has(page)) gestureSessions.set(page, await page.context().newCDPSession(page));
+    for (let guard = 0; guard < 5; guard += 1) { // a page that grows while it scrolls gets another gesture for the rest
+      const gesture = scrollGestureParameters({ direction, viewport, tier: TIER, ...(await position()) });
+      if (!gesture) return;
+      await gestureSessions.get(page).send('Input.synthesizeScrollGesture', gesture);
     }
   }
   /** A pointer pass over the scene: a slow sine across the viewport, then still, so the stationary tail is visible. Mouse devices only. */
@@ -888,38 +1161,34 @@ async function main() {
       metrics.resumeFailures = report.paused.resumedDraws > 0 ? 0 : 1;
       if (metrics.resumeFailures) findings.push('Resume did not draw again');
 
-      // ---- 4. Hidden: a second tab hides the first; on a phone the operator locks the screen. Draws are counted from the page's own log. ----
-      const hideAndCount = async (mode) => {
+      // ---- 4. Hidden. On a phone the operator locks the screen; a desktop operator may minimize the window (--hidden=manual). The
+      // automatic desktop checkpoint cannot run here: this launch keeps the page focused, so it runs after this browser closes, in
+      // a plain browser (see hiddenInPlainBrowser). Draws are counted from the page's own log either way. ----
+      const hiddenMode = HIDDEN_MODE ?? (CDP_URL ? 'manual' : HEADED && BROWSER === 'chromium' ? 'auto' : null);
+      metrics.hiddenDraws = null;
+      metrics.hiddenRafCalls = null;
+      if (hiddenMode === 'manual') {
         const logFrom = await page.evaluate(() => window.__hw.visibility.length);
-        if (mode === 'manual') {
-          console.error(CDP_URL ? '\nLOCK THE PHONE SCREEN NOW for at least 10 seconds, then unlock it (waiting up to 120 s).' : '\nMINIMIZE THE BROWSER WINDOW NOW for at least 10 seconds, then restore it (waiting up to 120 s).');
-          await page.waitForFunction((n) => window.__hw.visibility.length >= n + 2, logFrom, { timeout: 120_000 }).catch(() => {});
-        } else {
-          // The real window is minimized through the browser's own window API, then restored; no emulation of visibility is involved.
-          const windowSession = await context.newCDPSession(page);
-          const { windowId } = await windowSession.send('Browser.getWindowForTarget');
-          await windowSession.send('Browser.setWindowBounds', { windowId, bounds: { windowState: 'minimized' } });
-          await sleep(6_000);
-          await windowSession.send('Browser.setWindowBounds', { windowId, bounds: { windowState: 'normal' } });
-          await page.bringToFront();
-          await page.waitForTimeout(1500);
+        console.error(CDP_URL ? '\nLOCK THE PHONE SCREEN NOW for at least 10 seconds, then unlock it (waiting up to 120 s).' : '\nMINIMIZE THE BROWSER WINDOW NOW for at least 10 seconds, then restore it (waiting up to 120 s).');
+        // Keep the scene moving until the page hides, so a scene that went on drawing while hidden would show it.
+        const deadline = Date.now() + 120_000;
+        for (let direction = 1; Date.now() < deadline; direction = -direction) {
+          if (await page.evaluate((n) => window.__hw.visibility.slice(n).some((entry) => entry[1] === 'hidden'), logFrom)) break;
+          await page.mouse.wheel(0, 120 * direction);
+          await page.waitForTimeout(250);
         }
-        return page.evaluate((from) => {
-          const log = window.__hw.visibility.slice(from);
-          const hiddenAt = log.find((entry) => entry[1] === 'hidden')?.[0];
-          const shownAt = log.find((entry) => entry[1] === 'visible' && entry[0] > (hiddenAt ?? Infinity))?.[0];
-          if (hiddenAt === undefined || shownAt === undefined) return null;
-          return { hiddenMs: shownAt - hiddenAt, draws: window.__hw.frames.filter((frame) => frame.t > hiddenAt + 100 && frame.t < shownAt).length, rafCalls: window.__hw.rafLog.filter((at) => at > hiddenAt + 100 && at < shownAt).length };
-        }, logFrom);
-      };
-      const hiddenMode = HIDDEN_MODE ?? (CDP_URL ? 'manual' : HEADED ? 'auto' : null);
-      const hidden = hiddenMode ? await hideAndCount(hiddenMode) : null;
-      report.protocol.hiddenMethod = hidden ? (hiddenMode === 'manual' ? (CDP_URL ? 'phone screen locked by the operator' : 'window minimized by the operator') : 'headed window minimized through the browser window API') : null;
-      metrics.hiddenDraws = hidden && hidden.hiddenMs >= 4_000 ? hidden.draws : null; // a window shorter than 4 s proves nothing: stays OPEN
-      metrics.hiddenRafCalls = hidden && hidden.hiddenMs >= 4_000 ? hidden.rafCalls : null;
-      report.hidden = hidden ?? { note: 'not measured: the page never reported hidden. Playwright-driven Chromium keeps document.visibilityState visible when its window is minimized or covered by another tab (checked in Task 15 with the default launch, with the backgrounding switches removed, with focus emulation off and with every default argument dropped), so the row stays OPEN until a real hidden window is observed' };
-      await page.bringToFront();
-      await page.waitForTimeout(1500);
+        await page.waitForFunction((n) => window.__hw.visibility.length >= n + 2, logFrom, { timeout: Math.max(1, deadline - Date.now()) }).catch(() => {});
+        const hidden = await readHiddenWindow(page, logFrom);
+        report.protocol.hiddenMethod = hidden ? (CDP_URL ? 'phone screen locked by the operator' : 'window minimized by the operator') : null;
+        Object.assign(metrics, hiddenRows(hidden));
+        report.hidden = hidden ?? { note: 'not measured: the page never reported a complete hidden window' };
+        await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+        await page.waitForTimeout(1500);
+      } else if (hiddenMode === 'auto') {
+        deferredHidden = { viewport: { width: viewport.width, height: viewport.height } };
+      } else {
+        report.hidden = { note: 'not measured: a headless run has no window to hide; the rows stay OPEN' };
+      }
 
       // ---- 5. Footer: the scene is suspended ----
       await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
@@ -1093,6 +1362,18 @@ async function main() {
     failures.push(`the run stopped: ${error.message}`);
   } finally {
     await browser.close().catch(() => {});
+    if (deferredHidden) {
+      // An error here leaves the rows OPEN and is a finding; it never ends or invalidates the run.
+      try {
+        const result = await hiddenInPlainBrowser(deferredHidden);
+        Object.assign(report.metrics, hiddenRows(result.hidden));
+        report.protocol.hiddenMethod = result.hidden ? 'second tab brought to the front in a plain Chromium (same executable, no focus emulation), after the measurement browser closed' : null;
+        report.hidden = result.hidden ? { ...result.hidden, browserVersion: result.browserVersion, viewport: result.viewport, windowSeconds: 10 } : { note: result.note ?? 'not measured: the page never reported a complete hidden window' };
+      } catch (error) {
+        report.hidden = { note: `not measured: ${error.message}` };
+        findings.push(`hidden checkpoint not measured: ${error.message}`);
+      }
+    }
     server.close();
     const loadAfter = await sampleMachine();
     report.machine = { cpuBusyBefore: loadBefore.cpuBusy, cpuBusyAfter: loadAfter.cpuBusy, gpuUtilizationBefore: loadBefore.gpuUtilization, gpuUtilizationAfter: loadAfter.gpuUtilization, limits: QUIESCENCE_LIMITS, note: 'host CPU in use over 3 s, and nvidia-smi GPU utilization when it exists; measured with the browser closed' };
