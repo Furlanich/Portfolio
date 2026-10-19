@@ -17,6 +17,7 @@ import {
   pauseSlot,
   readConnected,
   scrollInstant,
+  scrollGestureLabelViolations,
   seedSession,
   trackWebglContexts,
   type ConnectedLocale,
@@ -302,6 +303,16 @@ test.describe('sleeping scene contracts (Reviewer R)', () => {
     await page.waitForTimeout(200);
     expect((await labelState(page)).filter((label) => label.visible).map((label) => label.id), 'the labels the masks left are shown again').toEqual(shownAtTop);
     await expectAsleep(page);
+  });
+
+  // PLAN-SFC-V1 Task 21: a scrim scrolling over a fixed label must not show it through its fade.
+  test('studio: no label shows inside a reading mask or the App Bar on any frame of a smooth scroll down and back', async ({ page }) => {
+    test.setTimeout(120_000);
+    await liveRest(page, 'studio', 'en');
+    const { frames, shownLabelFrames, violations } = await scrollGestureLabelViolations(page);
+    expect(frames, 'frames were sampled').toBeGreaterThan(100);
+    expect(shownLabelFrames, 'the check is not vacuous: labels show where nothing covers them').toBeGreaterThan(0);
+    expect(violations, `${violations.length} label-frames show inside a reading mask or the App Bar`).toEqual([]);
   });
 
   test('the host reads no App Bar, plate or scrim geometry while the pointer is active or the scene is paused', async ({ page }) => {

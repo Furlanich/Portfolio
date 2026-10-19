@@ -19,15 +19,15 @@ function byId(result) {
 
 test('a label fully inside the viewport and clear of everything stays where it is', () => {
   const [result] = resolve([box('a', 200, 100)]);
-  assert.deepEqual(result, { id: 'a', visible: true, left: 200, top: 100 });
+  assert.deepEqual(result, { id: 'a', visible: true, occluded: false, left: 200, top: 100 });
 });
 
 test('a partly outside label is clamped into the viewport at its full size', () => {
   const results = byId(resolve([box('right', 950, 100), box('left', -40, 100), box('top', 400, -10), box('bottom', 400, 590)]));
-  assert.deepEqual(results.right, { id: 'right', visible: true, left: 900, top: 100 });
-  assert.deepEqual(results.left, { id: 'left', visible: true, left: 0, top: 100 });
-  assert.deepEqual(results.top, { id: 'top', visible: true, left: 400, top: 0 });
-  assert.deepEqual(results.bottom, { id: 'bottom', visible: true, left: 400, top: 576 });
+  assert.deepEqual(results.right, { id: 'right', visible: true, occluded: false, left: 900, top: 100 });
+  assert.deepEqual(results.left, { id: 'left', visible: true, occluded: false, left: 0, top: 100 });
+  assert.deepEqual(results.top, { id: 'top', visible: true, occluded: false, left: 400, top: 0 });
+  assert.deepEqual(results.bottom, { id: 'bottom', visible: true, occluded: false, left: 400, top: 576 });
 });
 
 test('a label that cannot fit the viewport is hidden', () => {
@@ -48,6 +48,35 @@ test('a label that intersects a reading mask, caption, Pause or App Bar is hidde
   assert.equal(results.edge.visible, true, 'touching the occluder edge is not an intersection');
   assert.equal(results.clear.visible, true);
   assert.equal(results.above.visible, true, 'ending exactly at the occluder top is not an intersection');
+});
+
+// PLAN-SFC-V1 Task 21: labels live in a fixed layer and reading surfaces scroll over them, so a label the occlusion
+// test hides must leave at once. The host removes an occluded label without its fade; any other hide may still fade.
+test('a label hidden by an occluder says so; a label hidden for any other reason does not', () => {
+  const occluders = [{ left: 300, top: 90, width: 200, height: 60 }];
+  const results = byId(
+    resolve(
+      [
+        box('over', 350, 100),
+        box('clear', 600, 100),
+        box('outOfView', 400, 800),
+        box('tooWide', 100, 300, { width: 1200 }),
+        box('near', 600, 300, { depthScale: 0.95 }),
+        box('far', 650, 305, { depthScale: 0.7 }),
+      ],
+      occluders,
+    ),
+  );
+  assert.equal(results.over.occluded, true, 'an occluded label is reported as occluded');
+  assert.equal(results.clear.occluded, false, 'a shown label is not occluded');
+  assert.equal(results.near.occluded, false);
+  for (const id of ['outOfView', 'tooWide', 'far']) {
+    assert.equal(results[id].visible, false, id);
+    assert.equal(results[id].occluded, false, `${id} is hidden, but not by an occluder`);
+  }
+  // Clamping decides: a label clamped into an occluder is occluded where it would be drawn.
+  const [clamped] = resolve([box('left', -60, 100)], [{ left: 50, top: 90, width: 40, height: 60 }]);
+  assert.equal(clamped.occluded, true);
 });
 
 test('the occlusion test uses the clamped position the label would be drawn at', () => {

@@ -501,6 +501,17 @@ test('a controller that drew nothing still refreshes the labels once, from the c
   assert.doesNotMatch(push, /state === 'paused' && lastPose/);
 });
 
+// PLAN-SFC-V1 Task 21: labels sit in the fixed ground and reading surfaces scroll over them, so the opacity fade would
+// leave a hidden label showing inside a reading mask for its whole duration. An occluded label goes at once.
+test('an occluded label is removed without its fade, which still applies to every other show and hide', () => {
+  const update = blockAfter(enhancement, 'update(projections');
+  assert.match(update, /dataset\.occluded = String\(occluded\)/);
+  const label = blockAfter(css, '.label {');
+  assert.match(label, /transition: opacity var\(--dur-2\) var\(--ease-out\)/, 'the fade token is unchanged');
+  const occluded = blockAfter(css, ".label[data-occluded='true'] {");
+  assert.match(occluded, /transition: none/);
+});
+
 // PLAN-SFC-V1 Task 12: the five rendered profiles are measured from the live pose, not read off the canvas.
 test('the diagnostics reading carries the bent strings, empty at rest, and only in non-production builds', () => {
   assert.match(enhancement, /edgeSamples: readonly \{ id: string; points: readonly/);
