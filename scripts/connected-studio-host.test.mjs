@@ -497,8 +497,12 @@ test('the visitor Pause takes no pointer sample and cancels queued pointer work'
 
 test('a controller that drew nothing still refreshes the labels once, from the cached boxes', () => {
   const push = blockAfter(enhancement, 'const push = ');
-  assert.match(push, /draws === drawsBefore/);
+  assert.match(push, /draws !== drawsBefore/);
   assert.doesNotMatch(push, /state === 'paused' && lastPose/);
+  // PLAN-SFC-V1 Task 21: a scroll refreshes in its own event, before the frame's callbacks; other input coalesces.
+  assert.match(push, /if \(fromScroll\) \{[^}]*drawLabels\(lastPose\);/);
+  assert.match(push, /requestAnimationFrame\(refreshLabels\)/);
+  assert.match(blockAfter(enhancement, 'const onScroll = '), /push\(velocity, delta, true\)/);
 });
 
 // PLAN-SFC-V1 Task 21: labels sit in the fixed ground and reading surfaces scroll over them, so the opacity fade would
