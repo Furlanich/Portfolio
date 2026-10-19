@@ -1,6 +1,6 @@
 # Task 22 / PR 22 — Contact words bound to the profile nodes, and the Pause control cleared of the scrim backing
 
-**Status: repaired on the runtime candidate; rendered evidence collected on the implementer's GPU; one judgment call for the reviewer to confirm (the Pause fix, below).** Both Task 12 findings that were recorded as "OPEN, packet 20+ proposed" are fixed with failing-first cases. These two defects become public when Task 18 enables the wide live tier, which is why they are fixed first.
+**Status: repaired on the runtime candidate; rendered evidence collected on the implementer's GPU; the two Contact compact visual baselines are adopted on the owner's approval (below); one judgment call for the reviewer to confirm (the Pause fix).** Both Task 12 findings that were recorded as "OPEN, packet 20+ proposed" are fixed with failing-first cases. These two defects become public when Task 18 enables the wide live tier, which is why they are fixed first.
 
 Agent usage: primary Claude Sonnet 5.5 (`claude-sonnet-5-5`), Claude Code desktop session started by the Task 18 session; subagents 0/0 (none). Independent review stays a separate session.
 
@@ -51,6 +51,22 @@ Probes: the Task 18 evidence scripts `pause-probe.mjs` and `label-probe.mjs`, pl
 - **Labels, compact (390):** two elements (`n0`, `n4`), both reach full opacity during a full scroll, es and en. On this candidate compact was also live, as the runtime patch enables it; Task 18 enables wide only.
 - **Label occlusion:** `label-probe.mjs contact:en,contact:es`: 351 and 349 frames sampled, **0 violating label-frames** in both, with the words now present.
 
+## Visual baselines
+
+The first CI run on the PR head `84d9104a` ([Quality run 39328465311](https://github.com/Furlanich/Portfolio/actions/runs/39328465311)) passed `validate` and browser shards 1 to 3; shard 4 reported **2 failed, 753 passed**: exactly `Spanish Contact compact visual baseline` and `English Contact compact visual baseline` (`tests/e2e/visual/contact.visual.spec.ts`), failing on both attempts with byte-identical actuals. The wide cases passed. The changed pixels are the intended change: the static "Static background" / "Fondo estático" label now sits inside the taller dark introduction backing at 390 wide, and the page is otherwise as before.
+
+**Owner approval, 2026-10-19**, relayed by the Task 18 session that started this one: "I approve the new Contact compact baselines in PR #165. Have the Task 22 session adopt them and push." Adopted: `contact-es-compact` and `contact-en-compact`, Windows and Linux (four files). Nothing else was updated.
+
+- Linux: the `contact-{es,en}-compact-actual.png` files of that run's artifact `playwright-report-shard-4-39328465311-1` (artifact ID 12223758266), downloaded into a new empty directory, committed under the exact Linux snapshot names. The two retries of each case were byte-identical; the size stays 390 by 844.
+- Windows: regenerated locally with `--update-snapshots` for the two cases only (`-g "Contact compact visual baseline"`), then the whole Contact visual spec ran in compare mode with no update flag: 4 of 4 passed.
+
+| Baseline | SHA-256 (first 16) |
+| --- | --- |
+| `contact-en-compact` Linux | `EA0EA76478B47D64` |
+| `contact-es-compact` Linux | `C3558E15109BBB0E` |
+| `contact-en-compact` Windows | `4E6D84E109163C8D` |
+| `contact-es-compact` Windows | `28DEF695749943AC` |
+
 ## Validation
 
 - `node --test scripts/contact-content.test.mjs`: passes (6 tests, both new assertions green).
@@ -60,5 +76,5 @@ Probes: the Task 18 evidence scripts `pause-probe.mjs` and `label-probe.mjs`, pl
 ## Open items
 
 - The numbering 22 and the Pause-fix shape (above) are for the planning authority and the owner.
-- No visual baseline was changed or adopted; Contact's committed responsive/visual specs were not part of the runtime project and are covered by `npm run validate` only where they run in the default list.
+- Only the two Contact compact visual baselines changed (next section); the two wide baselines are unchanged and pass.
 - Phones, a screen reader pass and the owner's motion acceptance remain with the owner.
