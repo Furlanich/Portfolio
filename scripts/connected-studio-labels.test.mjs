@@ -79,6 +79,16 @@ test('a label hidden by an occluder says so; a label hidden for any other reason
   assert.equal(clamped.occluded, true);
 });
 
+// Reviewer R on PR #160: the host also checks where a hidden label still paints, with the same intersection rule.
+test('isOccludedAt uses the resolver rule: strict overlap with any usable occluder', async () => {
+  const { isOccludedAt } = await import('../lib/connected-studio/labels.ts');
+  const painted = { left: 900, top: 100, width: 100, height: 20 };
+  assert.equal(isOccludedAt(painted, [{ left: 880, top: 90, width: 120, height: 50 }]), true);
+  assert.equal(isOccludedAt(painted, [{ left: 880, top: 120, width: 120, height: 50 }]), false, 'touching the bottom edge is not overlap');
+  assert.equal(isOccludedAt(painted, [{ left: 0, top: 0, width: 0, height: 0 }, { left: Number.NaN, top: 100, width: 50, height: 50 }]), false, 'unusable occluders occlude nothing');
+  assert.equal(isOccludedAt({ ...painted, width: Number.NaN }, [{ left: 880, top: 90, width: 120, height: 50 }]), false, 'an unusable label box is never reported occluded');
+});
+
 test('the occlusion test uses the clamped position the label would be drawn at', () => {
   const occluders = [{ left: 880, top: 90, width: 120, height: 60 }];
   const [result] = resolve([box('edge', 960, 100)], occluders);

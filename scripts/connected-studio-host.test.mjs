@@ -516,6 +516,85 @@ test('an occluded label is removed without its fade, which still applies to ever
   assert.match(occluded, /transition: none/);
 });
 
+// PLAN-SFC-V1 Task 21, Reviewer R on PR #160: a hidden label keeps painting at its last position while it fades, so
+// occlusion is also checked there, not only at the new projection. The real `createLabelLayer` runs on a DOM double.
+const labelsModule = await import('../lib/connected-studio/labels.ts');
+
+function labelLayerHarness({ width = 100, height = 20 } = {}) {
+  const start = enhancement.indexOf('function createLabelLayer(');
+  const end = enhancement.indexOf('\ntype ConnectedEntry', start);
+  assert.ok(start >= 0 && end > start);
+  const isolated = `const counters = { layoutReads: 0 };\n${enhancement.slice(start, end)}\nexports.createLabelLayer = createLabelLayer;`;
+  const { outputText } = ts.transpileModule(isolated, { compilerOptions: { module: ts.ModuleKind.CommonJS } });
+  const masks = [];
+  const window = { scrollY: 0 };
+  const element = () => {
+    const children = [];
+    return {
+      dataset: {}, style: {}, textContent: '', className: '', offsetWidth: width, offsetHeight: height,
+      setAttribute() {}, appendChild(child) { children.push(child); }, replaceChildren() { children.length = 0; }, remove() {}, children,
+    };
+  };
+  const document = {
+    createElement: element,
+    querySelector: () => null,
+    querySelectorAll: () => masks.map((mask) => ({
+      hasAttribute: (name) => name === 'data-connected-reading-mask',
+      getAttribute: () => null,
+      getBoundingClientRect: () => ({ left: mask.left, top: mask.docTop - window.scrollY, width: mask.width, height: mask.height }),
+    })),
+  };
+  const mount = { ...element(), clientWidth: 1000, clientHeight: 600 };
+  const moduleExports = {};
+  // The module's own imports, which the extracted function reads as free names.
+  runInNewContext(outputText, {
+    exports: moduleExports, document, window,
+    styles: { labels: 'labels', label: 'label' },
+    resolveLabelVisibility: labelsModule.resolveLabelVisibility,
+    resolveNodeWord: labelsModule.resolveNodeWord,
+    labelOccluders: input.labelOccluders,
+  });
+  const layer = moduleExports.createLabelLayer(mount);
+  return { layer, masks, window, labels: () => mount.children[0].children };
+}
+
+const node = (id, capabilityIndex, depthScale = 1) => ({ id, capabilityIndex, depthScale });
+const projection = (id, xPx, yPx, inView = true, depthScale = 1) => ({ id, xPx, yPx, inView, depthScale });
+
+test('a label whose projection leaves the view is removed at once when a mask covers where it still paints', () => {
+  const { layer, masks, window, labels } = labelLayerHarness();
+  layer.rebuild({ nodes: [node('a', 0)] }, { capabilityWords: ['Apps'] });
+  masks.push({ left: 880, docTop: 150, width: 120, height: 50 });
+  layer.measure();
+  layer.update([projection('a', 995, 100)], 0);
+  const [label] = labels();
+  assert.equal(label.dataset.visible, 'true', 'first shown, clamped to 900..1000');
+  assert.match(label.style.transform, /900px, 100px/);
+
+  // The page scrolls 60px: the cached mask now covers 90..140, over the label's painted 100..120, while the node leaves the view.
+  window.scrollY = 60;
+  layer.update([projection('a', 1005, 100, false)], 60);
+  assert.equal(label.dataset.visible, 'false');
+  assert.match(label.style.transform, /900px, 100px/, 'it still paints where it was');
+  assert.equal(label.dataset.occluded, 'true', 'so it goes without its fade');
+});
+
+test('a label hidden by a nearer label is removed at once when a mask covers where it still paints', () => {
+  const { layer, masks, window, labels } = labelLayerHarness();
+  layer.rebuild({ nodes: [node('far', 0, 0.6), node('near', 1, 0.9)] }, { capabilityWords: ['Apps', 'Agents'] });
+  masks.push({ left: 0, docTop: 300, width: 1000, height: 40 });
+  layer.measure();
+  layer.update([projection('far', 250, 200, true, 0.6), projection('near', 650, 400, true, 0.9)], 0);
+  const far = labels()[0];
+  assert.equal(far.dataset.visible, 'true');
+
+  // The nearer label moves onto the far one's new spot, and the mask scrolls up over the far label's painted 200..220.
+  window.scrollY = 90;
+  layer.update([projection('far', 250, 420, true, 0.6), projection('near', 255, 425, true, 0.9)], 90);
+  assert.equal(far.dataset.visible, 'false', 'hidden by the nearer label at its new spot');
+  assert.equal(far.dataset.occluded, 'true', 'its painted spot is under the mask, so it goes without its fade');
+});
+
 // PLAN-SFC-V1 Task 12: the five rendered profiles are measured from the live pose, not read off the canvas.
 test('the diagnostics reading carries the bent strings, empty at rest, and only in non-production builds', () => {
   assert.match(enhancement, /edgeSamples: readonly \{ id: string; points: readonly/);
