@@ -552,6 +552,28 @@ async function sampleMachine(seconds = 3) {
   return { cpuBusy: total > 0 ? round(1 - idle / total, 3) : null, gpuUtilization: measured.length ? Math.max(...measured) : null };
 }
 
+// ---- The scroll input. Playwright's mouse.wheel moves the page in one instant jump per call, which no visitor's browser does:
+// a wheel smooth-scrolls. A scene that draws only when the page moves (Contact's nodes never move) then draws once per jump, and
+// the frame interval measured the test's input cadence (about 83 ms), not the scene. A traversal is therefore Chromium's own
+// smooth scroll gesture, continuous over the remaining distance, from a mouse on the wide tier and a finger on the compact one.
+
+/** Chromium's default synthetic scroll speed (Input.synthesizeScrollGesture), in CSS pixels per second. */
+export const SCROLL_GESTURE_SPEED = 800;
+
+/** The gesture that scrolls from here to the end in one direction (1 down, -1 up), or null when nothing is left to scroll. */
+export function scrollGestureParameters({ direction, scrollY, scrollHeight, innerHeight, viewport, tier }) {
+  const remaining = direction > 0 ? scrollHeight - innerHeight - scrollY : scrollY;
+  if (remaining <= 2) return null;
+  return {
+    x: Math.round(viewport.width / 2),
+    y: Math.round(viewport.height / 2),
+    yDistance: -direction * remaining, // a negative distance moves the content up, which scrolls down
+    speed: SCROLL_GESTURE_SPEED,
+    gestureSourceType: tier === 'compact' ? 'touch' : 'mouse',
+    preventFling: true,
+  };
+}
+
 /** The files a git patch changes, from its `diff --git a/<path> b/<path>` headers, sorted. */
 export function patchedFiles(patchText) {
   return [...new Set([...String(patchText).matchAll(/^diff --git a\/(\S+) b\/\S+$/gm)].map((match) => match[1]))].sort();
@@ -878,13 +900,24 @@ async function main() {
     }
   }
 
+  const gestureSessions = new WeakMap();
+  /** One traversal to the end in one direction: a smooth scroll gesture in Chromium (scrollGestureParameters); wheel steps in Firefox, which has no timing. */
   async function scrollThrough(page, direction, viewport) {
-    await page.mouse.move(viewport.width / 2, viewport.height / 2);
-    for (let guard = 0; guard < 400; guard += 1) {
-      const done = await page.evaluate((dir) => (dir > 0 ? window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2 : window.scrollY <= 0), direction);
-      if (done) return;
-      await page.mouse.wheel(0, 100 * direction);
-      await page.waitForTimeout(80);
+    if (TIER === 'wide') await page.mouse.move(viewport.width / 2, viewport.height / 2);
+    const position = () => page.evaluate(() => ({ scrollY: window.scrollY, scrollHeight: document.documentElement.scrollHeight, innerHeight: window.innerHeight }));
+    if (BROWSER !== 'chromium') {
+      for (let guard = 0; guard < 400; guard += 1) {
+        if (!scrollGestureParameters({ direction, viewport, tier: TIER, ...(await position()) })) return;
+        await page.mouse.wheel(0, 100 * direction);
+        await page.waitForTimeout(80);
+      }
+      return;
+    }
+    if (!gestureSessions.has(page)) gestureSessions.set(page, await page.context().newCDPSession(page));
+    for (let guard = 0; guard < 5; guard += 1) { // a page that grows while it scrolls gets another gesture for the rest
+      const gesture = scrollGestureParameters({ direction, viewport, tier: TIER, ...(await position()) });
+      if (!gesture) return;
+      await gestureSessions.get(page).send('Input.synthesizeScrollGesture', gesture);
     }
   }
   /** A pointer pass over the scene: a slow sine across the viewport, then still, so the stationary tail is visible. Mouse devices only. */

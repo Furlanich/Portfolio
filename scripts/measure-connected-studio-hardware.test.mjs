@@ -26,6 +26,8 @@ import {
   planBatch,
   plainChromiumArguments,
   reachabilityProblem,
+  SCROLL_GESTURE_SPEED,
+  scrollGestureParameters,
   validateCollectionOptions,
   validateDeviceRecord,
 } from './measure-connected-studio-hardware.mjs';
@@ -673,6 +675,22 @@ test('B5: three valid runs with an OPEN row need a fix, not more runs; a pair ou
   assert.deepEqual(plan.exhaustedPairs, ['projects/en']);
   assert.equal(plan.next, null);
   assert.equal(plan.complete, false);
+});
+
+test('S1: a traversal is one continuous smooth scroll gesture over the remaining distance, not instant wheel jumps', () => {
+  const down = scrollGestureParameters({ direction: 1, scrollY: 0, scrollHeight: 1957, innerHeight: 900, viewport: { width: 1440, height: 900 }, tier: 'wide' });
+  assert.deepEqual(down, { x: 720, y: 450, yDistance: -1057, speed: SCROLL_GESTURE_SPEED, gestureSourceType: 'mouse', preventFling: true });
+  const up = scrollGestureParameters({ direction: -1, scrollY: 1057, scrollHeight: 1957, innerHeight: 900, viewport: { width: 1440, height: 900 }, tier: 'wide' });
+  assert.equal(up.yDistance, 1057);
+  assert.equal(SCROLL_GESTURE_SPEED, 800, "Chromium's default synthetic scroll speed");
+});
+
+test('S1: the compact tier scrolls by touch, and nothing is left to scroll at either end', () => {
+  const compact = scrollGestureParameters({ direction: 1, scrollY: 100, scrollHeight: 3000, innerHeight: 844, viewport: { width: 390, height: 844 }, tier: 'compact' });
+  assert.equal(compact.gestureSourceType, 'touch');
+  assert.equal(compact.yDistance, -2056);
+  assert.equal(scrollGestureParameters({ direction: 1, scrollY: 1056, scrollHeight: 1957, innerHeight: 900, viewport: { width: 1440, height: 900 }, tier: 'wide' }), null);
+  assert.equal(scrollGestureParameters({ direction: -1, scrollY: 1, scrollHeight: 1957, innerHeight: 900, viewport: { width: 1440, height: 900 }, tier: 'wide' }), null);
 });
 
 test('B6: the batch collects the wide tier only, and needs a device record', () => {
