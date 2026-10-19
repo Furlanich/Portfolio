@@ -17,6 +17,7 @@ import {
   liveContexts,
   overlaps,
   readLabelGeometry,
+  MIN_SAMPLED_FRAMES,
   scrollGestureLabelViolations,
   navigateInApp,
   pauseLabels,
@@ -593,7 +594,7 @@ test('resizing across a tier rebuilds the graph in the same renderer without a s
       await expectLive(page);
       await expectSettled(page);
       const { frames, shownLabelFrames, violations } = await scrollGestureLabelViolations(page);
-      expect(frames, 'frames were sampled').toBeGreaterThan(100);
+      expect(frames, 'frames were sampled').toBeGreaterThan(MIN_SAMPLED_FRAMES);
       expect(shownLabelFrames, 'the check is not vacuous: labels show where nothing covers them').toBeGreaterThan(0);
       expect(violations, `${violations.length} label-frames show inside a reading mask or the App Bar`).toEqual([]);
     });

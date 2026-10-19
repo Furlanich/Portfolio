@@ -309,6 +309,14 @@ export const readLabelGeometry = (page: Page): Promise<LabelGeometry> =>
     return { labels, occluders, viewport: { width: window.innerWidth, height: window.innerHeight } };
   });
 
+/**
+ * The fewest animation frames a gesture traversal must sample to count as a check. How many frames a traversal
+ * spans depends on the machine (a local desktop samples 500 to 1000, a CI runner under SwiftShader about 80), so this
+ * is a small absolute floor that only proves frames were read. `shownLabelFrames > 0` is what keeps the check from
+ * being vacuous.
+ */
+export const MIN_SAMPLED_FRAMES = 20;
+
 export type LabelFrameViolation = { phase: 'animation-frame' | 'painted'; label: string; opacity: number; scrollY: number; occluder: string; depthPx: number };
 
 /**
