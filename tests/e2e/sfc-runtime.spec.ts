@@ -17,6 +17,7 @@ import {
   pauseSlot,
   readConnected,
   scrollInstant,
+  MIN_SAMPLED_FRAMES,
   scrollGestureLabelViolations,
   seedSession,
   trackWebglContexts,
@@ -310,7 +311,7 @@ test.describe('sleeping scene contracts (Reviewer R)', () => {
     test.setTimeout(120_000);
     await liveRest(page, 'studio', 'en');
     const { frames, shownLabelFrames, violations } = await scrollGestureLabelViolations(page);
-    expect(frames, 'frames were sampled').toBeGreaterThan(100);
+    expect(frames, 'frames were sampled').toBeGreaterThan(MIN_SAMPLED_FRAMES);
     expect(shownLabelFrames, 'the check is not vacuous: labels show where nothing covers them').toBeGreaterThan(0);
     expect(violations, `${violations.length} label-frames show inside a reading mask or the App Bar`).toEqual([]);
   });
