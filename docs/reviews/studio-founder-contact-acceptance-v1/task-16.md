@@ -47,7 +47,10 @@ Branch/worktree: `codex/sfc-16-release` at `D:/Projects/NextJS/Portfolio/.worktr
 
 **What the remaining mobile cost is.** It is not shipped code. Compared with the baseline the Studio page references the same script set with the same sizes (the only difference is a 40-byte chunk), the same three client components (`NavigationDisclosure`, `LanguageSwitch`, `AppBarBehavior`), a smaller document (63.9 to 57.9 KB; 187 to 174 elements; 37.6 to 34.3 thousand flight characters), and lower layout and style time in the traces. An experiment isolated the poster: the same export with the poster custom properties removed from the Studio pages against the unmodified one, mobile, interleaved, two rounds: the poster costs about **+32 ms (Studio en, OPEN) and +37 ms median, +50 p95 (Studio es, FAIL)**. The posters are the owner-approved Task 14 deliverable, so the residual is a design cost, not a defect, and I did not change them.
 
-**So the gate command still exits 1** on the unresolved mobile rows (an OPEN or FAIL row never satisfies it, by Reviewer R's Task 14 finding), and I did not weaken that rule. The decision this leaves to the owner: accept the poster's mobile cost (the budget was set before the posters existed) or ask for a lighter compact poster (it is 900 by 1600 px; a smaller decode would cut the cost at some loss of line sharpness, needing a recapture, a handoff check and new baselines).
+**So the gate command still exits 1** on the unresolved mobile rows (an OPEN or FAIL row never satisfies it, by Reviewer R's Task 14 finding), and I did not weaken that rule.
+
+**Owner decision, 2026-10-18: ACCEPTED.** Given the choice between accepting the poster's mobile cost and lightening the compact poster (900 by 1600 px), the owner wrote: "Accept the poster's mobile startup cost." The posters, their captured frames and their baselines are therefore unchanged, and the mobile startup-CPU rows that remain OPEN or FAIL on that account (Studio, Founder and Contact at the 4x throttle, +15 to +48 ms median against the 25 ms allowance) are recorded as an accepted design cost, not as PASS. The allowance itself was set before the posters existed and is not amended here; only the planning authority may change it. The code-attributable cost, the host chunk, is gone, and desktop is 6 of 6 PASS.
+
 
 Terms against its Privacy comparator (the collectors do not know Terms, and those scripts are Task 14's): each Terms page references exactly the same scripts as its Privacy page (0 B added JavaScript) and its HTML is 77 B (es) and 101 B (en) larger Brotli, inside the 2 KiB legal budget. No paired startup-CPU measurement of Terms exists; its scripts are identical to Privacy's, so that row stays OPEN.
 
@@ -67,7 +70,22 @@ Reduced-motion Windows Chromium captures were inspected: Terms and Privacy at 14
 | `footer-wide` | `CEE3ED07871A5E69` |
 | `terms-*` (four) | the reviewed captures, unchanged |
 
-Linux images for the same ten cases come from the matching CI actuals at the PR head, adopted only after they are inspected against the approved rendering (visual regression policy); the missing or stale Linux goldens make the first CI visual shard fail by design until then.
+**Linux images (adopted 2026-10-19).** The first CI run on the PR head `cbaf5d14` ([Quality run 39190888204](https://github.com/Furlanich/Portfolio/actions/runs/39190888204)) passed `validate` and browser shards 1 to 3; shard 4 reported **10 failed, 744 passed**, exactly the ten changed or new visual cases and nothing else (the host-code production case and every other case passed). The Linux sources are the `*-actual.png` files of that run's `playwright-report-shard-4-39190888204-1` artifact (artifact ID 12160224074), downloaded into a new empty directory. Each retried case produced byte-identical images in both attempts, every image has the same pixel size as its approved Windows counterpart (the new Footer compact image is 28 px taller than the old Linux one, the wrapped Terms link), and all ten were inspected against the approved rendering. They were committed under their exact Linux snapshot names without update mode or renaming a Windows image.
+
+| Linux baseline | SHA-256 (first 16) |
+| --- | --- |
+| `privacy-en-compact` | `940AAA62A7CEECBB` |
+| `privacy-en-wide` | `FFF59B04386BBF45` |
+| `privacy-es-compact` | `A4D0EB31EA860629` |
+| `privacy-es-wide` | `23B637B606C20B32` |
+| `terms-en-compact` | `AAB26ABEE9ECCD71` |
+| `terms-en-wide` | `D62FB1BFCE80DD10` |
+| `terms-es-compact` | `84186619EBDB52BD` |
+| `terms-es-wide` | `E449C41AE01A72D5` |
+| `footer-compact` | `C96E49E8908681F1` |
+| `footer-wide` | `86E0ACE2A151E7C0` |
+
+The CI run at the head that carries them is the clean no-update comparison; its result is recorded in the PR.
 
 ## Rollback
 
@@ -87,8 +105,8 @@ Prior public state: `main` at `cd8c0d45` (PR #142), deployed by [run 38728080880
 
 ## Open items and deferred minors
 
-- **Mobile startup CPU.** Not fully PASS: the poster costs about 30 to 40 ms at the 4x throttle; the owner decides to accept it or to lighten the compact poster (above). Desktop is 6 of 6 PASS.
-- **Linux baselines.** Adopt from CI actuals at the PR head after inspection. Confirm the update date (see Rulings).
+- **Mobile startup CPU.** Not PASS on the unresolved rows; the poster costs about 30 to 40 ms at the 4x throttle and the owner accepted that cost on 2026-10-18 (above). Desktop is 6 of 6 PASS. A future change of the 25 ms allowance belongs to the planning authority.
+- **Update date.** Confirm 18 de octubre de 2026 / October 18, 2026 (see Rulings). The Linux baselines are adopted (above).
 - **Contact's 0.35 scene opacity** (the other Task 14 finding) is not implemented and is not part of this task.
 - **Reviewer R and human merge** are separate and OPEN. The plan's own status text still says "execution NOT AUTHORIZED"; only the planning authority may change plan substance.
 - Deferred minor: Contact links to Privacy only. DESIGN-SFC-V1 gives Contact's quiet legal links to PAGE-CONTACT; a Terms link there would be a Task 13 page change. Terms is reachable from every Footer.

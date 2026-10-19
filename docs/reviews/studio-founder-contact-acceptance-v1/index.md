@@ -33,7 +33,7 @@ Task 13 replaces the waiting account/counsel packet with direct contact under th
 ## Receipts
 
 - [Task 1 — Accept bounded governance and coordinated release](task-01.md)
-- [Task 16 — Release the coherent redesign and direct-contact legal pages](task-16.md) — Terms pair and host-import fix implemented and verified on the candidate; mobile startup CPU not fully PASS (owner-approved poster cost), Linux baselines pending CI
+- [Task 16 — Release the coherent redesign and direct-contact legal pages](task-16.md) — Terms pair and host-import fix implemented and verified on the candidate; mobile startup CPU not PASS on some rows (poster cost accepted by the owner), baselines adopted
 
 Receipts for Tasks 2 to 19 are added by their owners.
 
@@ -42,7 +42,7 @@ Receipts for Tasks 2 to 19 are added by their owners.
 | Task | Pull request | Merge commit | Notes |
 | --- | --- | --- | --- |
 | 1 Governance | [#142](https://github.com/Furlanich/Portfolio/pull/142) (open, review corrections pushed; CI and human merge pending) | PENDING | Targets `main`; W0 passes on human merge |
-| 16 Release | Draft PR from `codex/sfc-16-release` (link added when opened) | PENDING | Targets `main`; desktop startup gate PASS, mobile residual is the poster; Windows baselines owner-approved, Linux from CI; see the Task 16 receipt |
+| 16 Release | [#157](https://github.com/Furlanich/Portfolio/pull/157) — draft | PENDING | Targets `main`; desktop startup gate PASS, mobile residual is the owner-accepted poster cost; Windows and Linux baselines adopted; independent review and human merge OPEN; see the Task 16 receipt |
 | 13 Direct contact | [#154](https://github.com/Furlanich/Portfolio/pull/154) — draft | PENDING | All affected visual transfers owner-approved on 2026-10-18; local CI repair checks PASS (5 behavior, 40 normal visual comparisons). Full Linux CI: [latest checks](https://github.com/Furlanich/Portfolio/pull/154/checks). Independent review OPEN; see the Task 13 receipt. |
 
 ## External gates and owners
