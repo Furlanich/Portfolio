@@ -552,6 +552,25 @@ async function sampleMachine(seconds = 3) {
   return { cpuBusy: total > 0 ? round(1 - idle / total, 3) : null, gpuUtilization: measured.length ? Math.max(...measured) : null };
 }
 
+/** The files a git patch changes, from its `diff --git a/<path> b/<path>` headers, sorted. */
+export function patchedFiles(patchText) {
+  return [...new Set([...String(patchText).matchAll(/^diff --git a\/(\S+) b\/\S+$/gm)].map((match) => match[1]))].sort();
+}
+
+/**
+ * A runtime candidate may differ from its head in exactly the files its applied patch names: since Task 16 the live-policy patch
+ * also attaches the live host through the Atlas seam, so it is not only capability.ts. Anything more is an uncommitted change
+ * that would be measured as if it were the build; anything less is a patch that did not apply.
+ */
+export function candidateDiffProblem({ changed, expected }) {
+  if (!expected.length) return 'the applied candidate names no patch files: no patch was read';
+  if (!changed.length) return `the candidate changes nothing; its patch should change ${expected.join(', ')}`;
+  const extra = changed.filter((file) => !expected.includes(file));
+  const missing = expected.filter((file) => !changed.includes(file));
+  if (!extra.length && !missing.length) return null;
+  return `the candidate diff must be exactly the patch's files (${expected.join(', ')})${extra.length ? `; also changed: ${extra.join(', ')}` : ''}${missing.length ? `; not changed: ${missing.join(', ')}` : ''}`;
+}
+
 /** The candidate's own record: head, applied patch hashes and the working-tree files it changed. */
 function readCandidate(root) {
   const git = (args) => spawnSync('git', args, { cwd: root, encoding: 'utf8' }).stdout.trim();
@@ -560,9 +579,15 @@ function readCandidate(root) {
   const state = fs.existsSync(stateFile) ? JSON.parse(fs.readFileSync(stateFile, 'utf8')) : null;
   const changed = git(['diff', '--name-only']).split('\n').filter(Boolean);
   const hashes = (state?.patches ?? []).map((patch) => patch.sha256);
+  // The applied patches, read back from this checkout's fixtures; one that differs from what was applied names no files.
+  const expected = [...new Set((state?.patches ?? []).flatMap((patch) => {
+    const file = path.join(root, 'tests', 'fixtures', 'sfc', patch.name);
+    const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n') : ''; // hashed as LF, as prepare-sfc-candidate records it
+    return text && sha256Text(text) === patch.sha256 ? patchedFiles(text) : [];
+  }))].sort();
   const policySource = fs.readFileSync(path.join(root, 'lib', 'connected-studio', 'capability.ts'), 'utf8');
   const policy = { wide: /wide:\s*true/.test(policySource), compact: /compact:\s*true/.test(policySource) };
-  return { head, kind: state?.kind ?? null, stateHead: state?.head ?? null, patchSha256: hashes.length === 1 ? hashes[0] : hashes.length ? sha256Text(hashes.join('\n')) : '', changed, policy };
+  return { head, kind: state?.kind ?? null, stateHead: state?.head ?? null, patchSha256: hashes.length === 1 ? hashes[0] : hashes.length ? sha256Text(hashes.join('\n')) : '', changed, expected, policy };
 }
 
 /** The optional closure of a route read from the emitted export, with Brotli sizes, as measure-connected-studio-production counts it. */
@@ -616,6 +641,8 @@ async function runBatch({ directory, root, fail }) {
   if (deviceProblems.length) fail(`the device record is incomplete: ${deviceProblems.join('; ')}`);
   const candidate = readCandidate(root);
   if (candidate.kind !== 'runtime' || candidate.stateHead !== candidate.head || !candidate.policy.wide) fail('Run --batch from a runtime candidate checkout at its own head with the wide tier enabled (prepare-sfc-candidate.mjs apply --kind=runtime).');
+  const diffProblem = candidateDiffProblem({ changed: candidate.changed, expected: candidate.expected });
+  if (diffProblem) fail(`${diffProblem}.`);
   const basePath = normalizeBasePath(argumentOf('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
   const maxAttempts = Number(argumentOf('max-attempts') ?? BATCH_MAX_ATTEMPTS);
   const quietMinutes = Number(argumentOf('quiet-wait-minutes') ?? 30);
@@ -702,7 +729,8 @@ async function main() {
   const candidate = readCandidate(root);
   if (candidate.kind !== 'runtime') fail('This checkout is not a runtime candidate (node scripts/prepare-sfc-candidate.mjs apply --kind=runtime). Never run it against a committed build.');
   if (candidate.stateHead !== candidate.head) fail(`The candidate was applied at ${candidate.stateHead}, not at this head ${candidate.head}.`);
-  if (candidate.changed.length !== 1 || candidate.changed[0] !== 'lib/connected-studio/capability.ts') fail(`The candidate diff must be exactly lib/connected-studio/capability.ts, got: ${candidate.changed.join(', ') || 'nothing'}.`);
+  const diffProblem = candidateDiffProblem({ changed: candidate.changed, expected: candidate.expected });
+  if (diffProblem) fail(`${diffProblem}.`);
   if (!candidate.policy[TIER]) fail(`The candidate does not enable the ${TIER} tier in CONNECTED_LIVE_POLICY.`);
 
   const target = HARDWARE_ROUTES[ROUTE];
@@ -834,9 +862,19 @@ async function main() {
       await cover.close();
       return { hidden: await readHiddenWindow(page, logFrom), browserVersion: plain.version(), viewport: view };
     } finally {
+      // Cleanup never replaces a measurement: wait for the browser to exit (it holds its profile until then), and leave a profile
+      // that still cannot be removed in the temporary directory rather than throw.
       await plain?.close().catch(() => {});
-      plainProcess.kill();
-      fs.rmSync(userDataDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 });
+      if (plainProcess.exitCode === null) {
+        const exited = new Promise((resolve) => plainProcess.once('exit', resolve));
+        plainProcess.kill();
+        await Promise.race([exited, sleep(10_000)]);
+      }
+      try {
+        fs.rmSync(userDataDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 });
+      } catch (error) {
+        console.error(`measure-connected-studio-hardware: the temporary profile ${userDataDir} was left behind (${error.code ?? error.message}).`);
+      }
     }
   }
 

@@ -16,11 +16,13 @@ import {
   QUIESCENCE_LIMITS,
   REQUIRED_VALID_RUNS,
   buildDossier,
+  candidateDiffProblem,
   classifyRun,
   diagnosticReasons,
   hiddenRows,
   judgeRun,
   measureHiddenWindow,
+  patchedFiles,
   planBatch,
   plainChromiumArguments,
   reachabilityProblem,
@@ -555,6 +557,27 @@ test('--qualify refuses copies and mixed cohorts at the command line, and takes 
 });
 
 // ---- Wide-tier collection on released main: a real hidden window and an unattended batch ----
+
+const LIVE_PATCH = [
+  'diff --git a/components/connected-studio/atlas-live-host.tsx b/components/connected-studio/atlas-live-host.tsx',
+  '--- a/components/connected-studio/atlas-live-host.tsx',
+  '+++ b/components/connected-studio/atlas-live-host.tsx',
+  '@@ -1 +1 @@',
+  'diff --git a/lib/connected-studio/capability.ts b/lib/connected-studio/capability.ts',
+  '--- a/lib/connected-studio/capability.ts',
+  '+++ b/lib/connected-studio/capability.ts',
+  '@@ -1 +1 @@',
+].join('\n');
+
+test('C1: the candidate may change exactly the files its applied patch names, since Task 16 also attaches the live host', () => {
+  assert.deepEqual(patchedFiles(LIVE_PATCH), ['components/connected-studio/atlas-live-host.tsx', 'lib/connected-studio/capability.ts']);
+  const expected = patchedFiles(LIVE_PATCH);
+  assert.equal(candidateDiffProblem({ changed: ['lib/connected-studio/capability.ts', 'components/connected-studio/atlas-live-host.tsx'], expected }), null);
+  assert.match(candidateDiffProblem({ changed: ['lib/connected-studio/capability.ts'], expected }), /atlas-live-host\.tsx/);
+  assert.match(candidateDiffProblem({ changed: [...expected, 'scripts/measure-connected-studio-hardware.mjs'], expected }), /measure-connected-studio-hardware\.mjs/);
+  assert.match(candidateDiffProblem({ changed: [], expected }), /nothing/);
+  assert.match(candidateDiffProblem({ changed: expected, expected: [] }), /no patch/);
+});
 
 test('H1: the hidden window is read from the page log, starting 100 ms after it hid and ending when it showed again', () => {
   const frames = [500, 900, 1050, 5000, 9000, 11500].map((t) => ({ t }));
