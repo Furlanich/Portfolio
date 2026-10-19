@@ -61,6 +61,11 @@
   line-height: 1.6;
 }
 
+/* The live control replaces the static label in the frame it mounts, so the control never moves (as on Studio and Founder). */
+.pauseSlot:has([data-connected-pause]) .staticLabel {
+  display: none;
+}
+
 
 .contactSurface {
   display: grid;
