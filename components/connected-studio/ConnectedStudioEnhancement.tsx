@@ -506,7 +506,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
         controller.pause();
       } else controller.resume();
     };
-    const push = (velocity: number, scrollDeltaPx = 0) => {
+    const push = (velocity: number, scrollDeltaPx = 0, fromScroll = false) => {
       const scrollY = window.scrollY;
       cachedScrollY = scrollY;
       const footerDominant = isFooterDominant(scrollY, layout.footerDocumentTop, layout.viewportHeight);
@@ -530,10 +530,17 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       });
       // A suspended scene (hidden tab, Footer handoff) is hidden. Any other scene whose controller drew nothing for
       // this update (a paused one, or an Atlas page asleep at rest) keeps its pose, but its labels still follow the
-      // content that scrolls past them: one coalesced refresh from the cached boxes, without waking the physics.
+      // content that scrolls past them: one refresh from the cached boxes, without waking the physics. A scroll refreshes
+      // in its own event, which runs before every animation-frame callback of the frame, so nothing in that frame sees a
+      // label the masks have already moved over; other input coalesces into one animation frame.
       const state = controller.snapshot().state;
       options.mount.dataset.connectedState = state;
-      if (state !== 'suspended' && draws === drawsBefore && lastPose && !labelFrame) labelFrame = window.requestAnimationFrame(refreshLabels);
+      if (state === 'suspended' || draws !== drawsBefore || !lastPose) return;
+      if (fromScroll) {
+        window.cancelAnimationFrame(labelFrame);
+        labelFrame = 0;
+        drawLabels(lastPose);
+      } else if (!labelFrame) labelFrame = window.requestAnimationFrame(refreshLabels);
     };
     let labelFrame = 0;
     const refreshLabels = () => {
@@ -564,7 +571,7 @@ function attachLiveScene(options: LiveOptions): LiveScene {
       lastAt = now;
       lastVelocity = velocity;
       if (delta !== 0 && formSuspension.backgroundInput()) syncPause();
-      push(velocity, delta);
+      push(velocity, delta, true);
     };
     // Desktop mouse only: touch and pen keep ordinary native scrolling and nothing else. The handler reads the
     // event and the cached boxes, never layout.
