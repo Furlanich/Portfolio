@@ -1,33 +1,12 @@
-diff --git a/components/connected-studio/atlas-live-host.tsx b/components/connected-studio/atlas-live-host.tsx
-index 7e92b16d..a9d3d548 100644
---- a/components/connected-studio/atlas-live-host.tsx
-+++ b/components/connected-studio/atlas-live-host.tsx
-@@ -1,5 +1,6 @@
- import type { ConnectedWordBinding, ProfileConnectedRoute } from '@/lib/connected-studio/types';
- import type { Locale } from '@/lib/locales';
-+import { ConnectedStudioEnhancement } from './ConnectedStudioEnhancement';
- 
- type AtlasLiveHostProps = {
-   route: ProfileConnectedRoute;
-@@ -19,7 +20,6 @@ type AtlasLiveHostProps = {
-  * intended: a flag cannot make a bundler drop an import, and shipping the host to disabled pages cost
-  * 27 to 144 ms of startup CPU in the Task 14 measurement.
-  */
--export function AtlasLiveHost(props: AtlasLiveHostProps): null {
--  void props;
--  return null;
-+export function AtlasLiveHost({ route, locale, wordBindings }: AtlasLiveHostProps) {
-+  return <ConnectedStudioEnhancement route={route} locale={locale} wordBindings={wordBindings} />;
- }
 diff --git a/lib/connected-studio/capability.ts b/lib/connected-studio/capability.ts
-index 48e3ac99..5863ef17 100644
+index 2374fc6..fd7d1e1 100644
 --- a/lib/connected-studio/capability.ts
 +++ b/lib/connected-studio/capability.ts
-@@ -6,7 +6,7 @@ import type { ConnectedLivePolicy, ConnectedMode, SceneGateInput } from './types
-  * Per-tier live policy (OD-2/OD-4). `wide` covers the wide and tablet tiers. Every merged build
-  * ships both false; only a bounded follow-up PR carrying passing hardware evidence turns a tier on.
+@@ -8,7 +8,7 @@ import type { ConnectedLivePolicy, ConnectedMode, SceneGateInput } from './types
+  * wide tier (docs/reviews/studio-founder-contact-acceptance-v1/task-15.md). `compact` has no qualification and stays
+  * off, so a constrained phone keeps the complete static page until a later numbered packet enables it.
   */
--export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object.freeze({ wide: false, compact: false });
+-export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object.freeze({ wide: true, compact: false });
 +export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object.freeze({ wide: true, compact: true });
  
  /**

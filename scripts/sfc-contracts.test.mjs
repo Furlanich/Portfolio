@@ -48,9 +48,10 @@ test('the Ground layer never references a poster before it is published; each Gr
   for (const source of [layer, legacy, atlas, seam]) assert.doesNotMatch(source, /['"]use client['"]/, 'the Ground files stay server components');
   assert.match(atlas, /data-word-bindings/, 'new routes carry word bindings');
   assert.match(legacy, /data-capability-words/, 'legacy routes keep the capability-words attribute');
-  // The shipped seam imports nothing: it is the only place a qualified enablement attaches the host to an Atlas page.
-  assert.doesNotMatch(seam, /^import(?!\s+type)/m, 'the shipped live-host seam has no runtime import');
-  assert.match(seam, /return null/, 'the shipped seam renders nothing');
+  // Task 18 filled the seam: it is the only place the host attaches to an Atlas page, and it renders it with the route props.
+  assert.match(seam, /^import \{ ConnectedStudioEnhancement \} from '\.\/ConnectedStudioEnhancement';$/m, 'the seam imports the host');
+  assert.match(seam, /<ConnectedStudioEnhancement route=\{route\} locale=\{locale\} wordBindings=\{wordBindings\} \/>/, 'the seam mounts the host with the route, locale and word bindings');
+  assert.doesNotMatch(seam, /return null/, 'the filled seam no longer renders nothing');
 });
 
 test('the shared primitives are server-only and expose the frozen data attributes', () => {
@@ -281,7 +282,11 @@ test('the committed fixtures apply to the real live-policy target and to the fro
   // Runtime patch: the real repository file (read-only check; nothing is applied).
   const livePolicy = nodePath.join(root, 'tests/fixtures/sfc/live-policy.patch');
   applyPatch(root, livePolicy, '--check');
-  assert.match(readText(livePolicy, 'utf8'), /\+export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object\.freeze\(\{ wide: true, compact: true \}\);/);
+  // Task 18 enabled the wide tier, so the runtime candidate now flips only the unqualified compact tier (a later packet's candidate).
+  const patchText = readText(livePolicy, 'utf8');
+  assert.match(patchText, /\+export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object\.freeze\(\{ wide: true, compact: true \}\);/);
+  assert.match(patchText, /-export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object\.freeze\(\{ wide: true, compact: false \}\);/);
+  assert.deepEqual([...patchText.matchAll(/^diff --git a\/(\S+) b\//gm)].map((match) => match[1]), ['lib/connected-studio/capability.ts'], 'the host is already attached: the candidate changes the policy file only');
 
   // Commercial patch: cut against the frozen declaration, which Task 5 creates identically.
   const dir = makeRepo({ 'lib/inquiry/release.ts': FROZEN_RELEASE });
@@ -408,10 +413,15 @@ function posixJoin(from, specifier) {
 
 const HOST = 'components/connected-studio/ConnectedStudioEnhancement.tsx';
 
-test('Studio, Founder and Contact cannot reach the connected host, so a policy-disabled build never ships it', () => {
+test('Studio, Founder and Contact reach the connected host only through the live-host seam (PLAN-SFC-V1 Task 18)', () => {
+  const SEAM = 'components/connected-studio/atlas-live-host.tsx';
+  const importers = (file) =>
+    [...reachableFiles(file)].filter((candidate) => /^import\s[^;]*?from\s+'(?:@\/components\/connected-studio\/|\.\/)ConnectedStudioEnhancement'/m.test(readFileSync(`${root}${candidate}`, 'utf8')));
   for (const page of ['components/studio/StudioPage.tsx', 'components/founder/FounderPage.tsx', 'components/contact/ContactPage.tsx']) {
-    assert.equal(reachableFiles(page).has(HOST), false, `${page} must not import the host, even behind a policy branch`);
+    assert.equal(reachableFiles(page).has(HOST), true, `${page} reaches the host now that the wide tier is qualified`);
+    assert.deepEqual(importers(page), [SEAM], `${page}: the seam is the only file that imports the host`);
   }
+  assert.equal(reachableFiles('components/connected-studio/ConnectedStudioGroundLayer.tsx').has(HOST), false, 'the shared static ground still carries no host import');
 });
 
 test('Services and Projects keep the host: they always mount the leaf, which gates itself', () => {
