@@ -20,7 +20,7 @@ Observation date 2026-10-19, public site `https://furlanich.github.io/Portfolio/
 | No provider request, no storage | Resource timing and `sessionStorage`/`localStorage`/`document.cookie` on load | PASS: every request goes to `furlanich.github.io`; no Formspree string anywhere in the six documents; storage and cookies empty |
 | Locale, Privacy, Terms, Footer links | Live DOM | PASS: ES↔EN Contact switch resolves both ways; Contact links Privacy; the Footer links Privacy and Terms in both locales with the `/Portfolio` base path; Privacy and Terms link each other |
 | No-JavaScript usability | The six routes' raw server HTML (no script executed) | PASS: copy, three channel links, legal sections, contents anchors and reciprocal links are all in the document |
-| Contact copy equals the page owner | Ten approved strings from PAGE-CONTACT searched in the raw HTML | PASS, each found exactly once |
+| Contact copy equals the page owner | Ten approved strings of PAGE-CONTACT (H1, introduction, response expectation, channels heading, channel note; five per locale) counted in the deployed Contact files after removing `<script>` elements, stripping tags and decoding HTML entities (the English apostrophe is `&#x27;` in markup), with the raw file counted for comparison | PASS: each string occurs exactly once in the visible document. In the raw file each occurs twice, because the serialized React payload in a `<script>` repeats it; that duplicate is not visible copy. An earlier version of this row said "found exactly once" from a line count (`grep -c`), which counts matching lines and not occurrences; corrected after Reviewer R's finding |
 | Privacy describes actual direct communications and technical preferences | Live headings and text against `_content/commercial/privacy.ts`; byte-identical to the deployed file | PASS: responsible party, direct contact (Gmail, WhatsApp, calls), GitHub Pages hosting and IP logging, session preferences, sensitive-information caution, data requests by email |
 | Privacy's preference statement is true | Observed `sessionStorage` after load; code search for storage use | PASS: the only storage use in source is the Home graphics-failure flag and the connected pause session keys, both session scope; nothing stored on a plain load |
 | Terms published with metadata | Live `<title>` and `<meta name="description">` | PASS: "Términos y condiciones \| FURLANICH" and "Terms and Conditions \| FURLANICH" with specific descriptions; update date 18 de octubre de 2026 / October 18, 2026; seven sections each |
@@ -38,6 +38,10 @@ This packet changes only documentation. `npm run docs:check` exit 0 (355 Markdow
 - **No keyboard traversal of the live page.** Source order follows the DOM list captured above; focus behavior is covered by the Task 13 and 16 browser specs against the same code.
 - **No counsel decision.** None is required by [ADR-CONTACT-DIRECT-CHANNELS](../../decisions/contact-direct-channels.md); this receipt certifies no legal sufficiency.
 - **The graph tiers.** Both policy flags remain false; that is Task 15 and 18 territory and is not observed here beyond the absence of host code.
+
+## Reviewer R findings (2026-10-19)
+
+**1. [P3] Copy-count method not reproducible — valid, corrected.** Reproduced: counting occurrences instead of lines gives raw 2, outside `<script>` 1 for every one of the ten strings in the Spanish and English Contact files at `da2f6a58`. The first row text was wrong about method (a line count was presented as an occurrence count); the page copy itself was and is correct. The row above now states the scope and both counts. No other evidence in this receipt used `grep -c`: the other counts are DOM queries, byte comparisons and HTTP statuses. Agent usage for the correction: primary Claude Sonnet 5.5; subagents 0/0 (none).
 
 ## Observations (not failures)
 
