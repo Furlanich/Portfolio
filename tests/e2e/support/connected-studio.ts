@@ -309,19 +309,20 @@ export const readLabelGeometry = (page: Page): Promise<LabelGeometry> =>
     return { labels, occluders, viewport: { width: window.innerWidth, height: window.innerHeight } };
   });
 
-export type LabelFrameViolation = { label: string; opacity: number; scrollY: number; occluder: string; depthPx: number };
+export type LabelFrameViolation = { phase: 'animation-frame' | 'painted'; label: string; opacity: number; scrollY: number; occluder: string; depthPx: number };
 
 /**
  * PLAN-SFC-V1 Task 21: a smooth scroll gesture down the page and back (Chromium's own input, as the hardware collector
  * uses), checking every frame for a label that shows (opacity above 0.01) while it overlaps a reading mask or the App Bar.
- * Each frame is read in a task right after its animation-frame callbacks, so it sees the state that frame paints rather
- * than the moment between the scroll and the host's label refresh. Chromium only (CDP).
+ * Each frame is read twice: inside an animation-frame callback queued the frame before (so it runs before any callback
+ * the page queues during this frame's scroll event), and in a task right after the frame's callbacks, which is the state
+ * the frame paints. Both must be clean: the labels follow a scroll from the scroll event itself. Chromium only (CDP).
  */
 export async function scrollGestureLabelViolations(page: Page, speed = 800): Promise<{ frames: number; shownLabelFrames: number; violations: LabelFrameViolation[] }> {
   await page.evaluate(() => {
-    const state = { run: true, frames: 0, shown: 0, violations: [] as { label: string; opacity: number; scrollY: number; occluder: string; depthPx: number }[] };
+    const state = { run: true, frames: 0, shown: 0, violations: [] as { phase: 'animation-frame' | 'painted'; label: string; opacity: number; scrollY: number; occluder: string; depthPx: number }[] };
     (window as typeof window & { __labelFrames?: typeof state }).__labelFrames = state;
-    const sample = () => {
+    const sample = (phase: 'animation-frame' | 'painted') => {
       const occluders = Array.from(document.querySelectorAll('[data-connected-reading-mask],[data-app-bar]')).map((element) => ({
         name: element.hasAttribute('data-app-bar') ? 'app-bar' : 'reading-mask',
         rect: element.getBoundingClientRect(),
@@ -329,12 +330,12 @@ export async function scrollGestureLabelViolations(page: Page, speed = 800): Pro
       for (const element of Array.from(document.querySelectorAll<HTMLElement>('[data-connected-label]'))) {
         const opacity = parseFloat(getComputedStyle(element).opacity);
         if (!(opacity > 0.01)) continue;
-        state.shown += 1;
+        if (phase === 'painted') state.shown += 1;
         const r = element.getBoundingClientRect();
         for (const { name, rect: o } of occluders) {
           if (r.left < o.right - 0.5 && o.left < r.right - 0.5 && r.top < o.bottom - 0.5 && o.top < r.bottom - 0.5) {
             const depthPx = Math.round(Math.min(r.bottom, o.bottom) - Math.max(r.top, o.top));
-            state.violations.push({ label: element.textContent ?? '', opacity: Math.round(opacity * 100) / 100, scrollY: Math.round(window.scrollY), occluder: name, depthPx });
+            state.violations.push({ phase, label: element.textContent ?? '', opacity: Math.round(opacity * 100) / 100, scrollY: Math.round(window.scrollY), occluder: name, depthPx });
           }
         }
       }
@@ -342,7 +343,8 @@ export async function scrollGestureLabelViolations(page: Page, speed = 800): Pro
     const tick = () => {
       if (!state.run) return;
       state.frames += 1;
-      setTimeout(sample, 0);
+      sample('animation-frame');
+      setTimeout(() => sample('painted'), 0);
       requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
