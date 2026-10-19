@@ -112,12 +112,10 @@ test.describe('the Atlas pages in the static export', () => {
     });
   }
 
-  // HELD, named owner (Task 14 finding, packet 20+): ConnectedStudioGround imports the host statically for its Services and
-  // Projects branch, so a policy-disabled Atlas page still references the whole host chunk (about 13.7 KiB Brotli, 42 KB raw:
-  // session keys, diagnostics hook, controller). Measured paired on one machine, removing that reference recovers about 90 ms of
-  // startup CPU on desktop. The case is the RED for that packet; remove `fixme` with its fix.
+  // The Task 14 finding, fixed in Task 16: Studio, Founder and Contact used a Ground that imported the host for Services and
+  // Projects, so a policy-disabled page referenced the whole host chunk (about 13.7 KiB Brotli, 42 KB raw, about 90 ms of
+  // desktop startup CPU). They now use a Ground that cannot reach it (scripts/sfc-contracts.test.mjs walks the import graph).
   test('a policy-disabled Atlas page references no connected host code', async () => {
-    test.fixme(true, 'ConnectedStudioGround statically imports the host: every Atlas page ships it (Task 14 finding; packet 20+)');
     for (const { route, locale, pathname } of atlasPages) {
       const closure = emittedClosure(pathname);
       expect(closure.entries, `${route}/${locale}: the page names no optional entry chunk (the shipped host names the engine loader)`).toEqual([]);
