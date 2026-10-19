@@ -28,8 +28,9 @@ type Candidate = { index: number; id: string; depthScale: number; rect: Rect };
  * PC-2 label visibility. Each label is clamped into the viewport at its full size, and hidden when
  * it cannot fit, is entirely out of view, or (at its clamped position) intersects an occluder.
  * Remaining overlaps resolve greedily by descending depthScale, then ascending node id, and a
- * hidden label never claims space. Labels are never scaled: the host measures them at 11px or
- * more, and this function only moves or hides them. Results keep the input order.
+ * hidden label never claims space. An occluded label says so, so the host can remove it at once.
+ * Labels are never scaled: the host measures them at 11px or more, and this function only moves or
+ * hides them. Results keep the input order.
  */
 export function resolveLabelVisibility(
   labels: readonly LabelBox[],
@@ -40,7 +41,7 @@ export function resolveLabelVisibility(
   const viewportUsable = isUsableRect(viewportRect);
   const blockers = occluders.filter(isUsableRect);
 
-  const results: LabelVisibility[] = labels.map((label) => ({ id: label.id, visible: false, left: label.left, top: label.top }));
+  const results: LabelVisibility[] = labels.map((label) => ({ id: label.id, visible: false, occluded: false, left: label.left, top: label.top }));
   const candidates: Candidate[] = [];
 
   labels.forEach((label, index) => {
@@ -53,7 +54,10 @@ export function resolveLabelVisibility(
       width: label.width,
       height: label.height,
     };
-    if (blockers.some((blocker) => intersects(rect, blocker))) return;
+    if (blockers.some((blocker) => intersects(rect, blocker))) {
+      results[index] = { id: label.id, visible: false, occluded: true, left: label.left, top: label.top };
+      return;
+    }
     candidates.push({ index, id: label.id, depthScale: label.depthScale, rect });
   });
 
@@ -63,7 +67,7 @@ export function resolveLabelVisibility(
   for (const candidate of candidates) {
     if (accepted.some((other) => intersects(candidate.rect, other.rect))) continue;
     accepted.push(candidate);
-    results[candidate.index] = { id: candidate.id, visible: true, left: candidate.rect.left, top: candidate.rect.top };
+    results[candidate.index] = { id: candidate.id, visible: true, occluded: false, left: candidate.rect.left, top: candidate.rect.top };
   }
   return results;
 }

@@ -234,6 +234,7 @@ type LabelEntry = {
   height: number;
   depthScale: number;
   visible: boolean;
+  occluded: boolean;
   x: number;
   y: number;
 };
@@ -271,7 +272,7 @@ function createLabelLayer(mount: HTMLElement) {
         element.dataset.visible = 'false';
         element.textContent = word;
         host.appendChild(element);
-        entries.push({ id: node.id, element, width: 0, height: 0, depthScale: node.depthScale, visible: false, x: 0, y: 0 });
+        entries.push({ id: node.id, element, width: 0, height: 0, depthScale: node.depthScale, visible: false, occluded: false, x: 0, y: 0 });
       }
       byId = new Map(entries.map((entry) => [entry.id, entry]));
     },
@@ -315,11 +316,18 @@ function createLabelLayer(mount: HTMLElement) {
       }
       const occluders: OccluderRect[] = labelOccluders(boxes, scrollY);
       if (appBarRect) occluders.push(appBarRect);
-      const shown = new Map(resolveLabelVisibility(labelBoxes, occluders, viewport).filter((result) => result.visible).map((result) => [result.id, result]));
+      const resolved = new Map(resolveLabelVisibility(labelBoxes, occluders, viewport).map((result) => [result.id, result]));
       for (const entry of entries) {
-        const result = shown.get(entry.id);
-        const visible = result !== undefined;
-        if (result && (entry.x !== result.left || entry.y !== result.top)) {
+        const result = resolved.get(entry.id);
+        const visible = result?.visible === true;
+        // The labels sit in the fixed ground and reading surfaces scroll over them faster than any fade: an occluded
+        // label goes at once (the CSS drops its transition), so it never shows inside a mask while it fades.
+        const occluded = result?.occluded === true;
+        if (occluded !== entry.occluded) {
+          entry.occluded = occluded;
+          entry.element.dataset.occluded = String(occluded);
+        }
+        if (result && visible && (entry.x !== result.left || entry.y !== result.top)) {
           entry.x = result.left;
           entry.y = result.top;
           entry.element.style.transform = `translate3d(${result.left}px, ${result.top}px, 0)`;
