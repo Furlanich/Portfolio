@@ -363,61 +363,10 @@ test.describe('sleeping scene contracts (Reviewer R)', () => {
   });
 });
 
-test.describe('contact form signal', () => {
-  test('focus in the form pauses the graph, and only the next eligible background input resumes it', async ({ page }) => {
-    await liveRest(page, 'contact', 'es');
-    const field = page.locator('form[data-inquiry-phase] input:not([name="_gotcha"])').first();
-    await expect(page.locator('form[data-inquiry-phase]')).toHaveAttribute('data-contact-hydrated', 'true');
-
-    await field.focus();
-    await expect.poll(async () => (await readConnected(page))?.formSuspended).toBe(true);
-    await expectStopped(page);
-    expect((await readConnected(page))?.controller).toBe('paused');
-
-    // Typing inside the field changes nothing.
-    await page.keyboard.type('Ada');
-    await expectStopped(page, 300);
-
-    // Focus leaving the form does not resume it by itself ...
-    await page.locator('body').click({ position: { x: 5, y: 5 } });
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await page.waitForTimeout(400);
-    expect((await readConnected(page))?.formSuspended).toBe(true);
-    // ... the next eligible background input does.
-    await page.mouse.move(FREE_X, 400, { steps: 4 });
-    await expect.poll(async () => (await readConnected(page))?.formSuspended).toBe(false);
-    await expectAsleep(page);
-  });
-
-  test('a submission in flight suspends the graph; an outcome alone does not resume it', async ({ page }) => {
-    await liveRest(page, 'contact', 'es');
-    const form = page.locator('form[data-inquiry-phase]');
-    // The form-signal fixture: the phase marker is the whole contract (no values, no event bus).
-    await form.evaluate((element) => element.setAttribute('data-inquiry-phase', 'submitting'));
-    await expect.poll(async () => (await readConnected(page))?.formSuspended).toBe(true);
-    await expectStopped(page);
-    await page.mouse.move(FREE_X, 350, { steps: 4 });
-    expect((await readConnected(page))?.formSuspended, 'input cannot lift a submission').toBe(true);
-
-    await form.evaluate((element) => element.setAttribute('data-inquiry-phase', 'error'));
-    await page.waitForTimeout(200);
-    expect((await readConnected(page))?.formSuspended, 'the outcome alone does not resume').toBe(true);
-    await page.mouse.move(FREE_X, 420, { steps: 4 });
-    await expect.poll(async () => (await readConnected(page))?.formSuspended).toBe(false);
-  });
-
-  test('the visitor Pause is kept when the form suspension lifts', async ({ page }) => {
-    await liveRest(page, 'contact', 'es');
-    await pauseSlot(page, 'contact').getByRole('button', { name: pauseLabels.es.pause }).click();
-    await expect.poll(async () => (await readConnected(page))?.controller).toBe('paused');
-    const field = page.locator('form[data-inquiry-phase] input:not([name="_gotcha"])').first();
-    await field.focus();
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await page.mouse.move(FREE_X, 400, { steps: 4 });
-    await expect.poll(async () => (await readConnected(page))?.formSuspended).toBe(false);
-    expect((await readConnected(page))?.controller, 'still paused by the visitor').toBe('paused');
-  });
-});
+// PLAN-SFC-V1 Task 18 removed the three "contact form signal" cases that stood here. They exercised the host's form suspension on
+// Contact's embedded form, and Task 13 (ADR-CONTACT-DIRECT-CHANNELS) removed that form: Contact has no field to focus or submit, so
+// they could only time out waiting for `form[data-inquiry-phase]`. The suspension logic itself stays covered by the Node host suite
+// (scripts/connected-studio-host.test.mjs); Contact's direct channels are covered by the cases below.
 
 test.describe('lifecycle on the Atlas routes', () => {
   test('hidden and Footer-dominated states hold zero callbacks and draw nothing', async ({ page }) => {
@@ -815,6 +764,7 @@ test.describe('the five rendered profiles (Task 12)', () => {
 // ---------------------------------------------------------------------------------------------------------------------
 
 async function openActualContact(page: Page, locale: ConnectedLocale = 'es') {
+  await enableLiveForTest(page);
   await goto(page, 'contact', locale);
   await expect(page.locator('[data-contact-channels]')).toBeVisible();
   await expect(page.locator('main form')).toHaveCount(0);
