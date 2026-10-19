@@ -24,6 +24,7 @@ const expectedRoutes = {
   projects: { es: '/proyectos/', en: '/en/work/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
   privacy: { es: '/privacidad/', en: '/en/privacy/' },
+  terms: { es: '/terminos/', en: '/en/terms/' },
   studio: { es: '/estudio/', en: '/en/about/' },
   founder: {
     es: '/estudio/samuel-furlanich/',
@@ -32,7 +33,7 @@ const expectedRoutes = {
 };
 
 test('defines the exact foundation route ids and localized paths', () => {
-  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'studio', 'founder']);
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'terms', 'studio', 'founder']);
   assert.deepEqual(foundationRoutes, expectedRoutes);
 
   const paths = foundationRouteIds.flatMap((routeId) => [
@@ -40,7 +41,7 @@ test('defines the exact foundation route ids and localized paths', () => {
     foundationRoutes[routeId].en,
   ]);
 
-  assert.equal(new Set(paths).size, 14);
+  assert.equal(new Set(paths).size, 16);
   assert.ok(paths.filter((path) => path !== '/').every((path) => path.endsWith('/')));
 });
 
@@ -55,7 +56,7 @@ test('resolves the localized homepage Process anchor without adding a route', ()
   assert.deepEqual(homeProcessAnchors, { es: 'proceso', en: 'process' });
   assert.equal(getHomeProcessHref('es'), '/#proceso');
   assert.equal(getHomeProcessHref('en'), '/en/#process');
-  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'studio', 'founder']);
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'terms', 'studio', 'founder']);
 });
 
 test('resolves localized Services fragments without adding routes', () => {
@@ -71,7 +72,7 @@ test('resolves localized Services fragments without adding routes', () => {
   assert.equal(getServiceSectionHref('en', 'web'), '/en/services/#web');
   assert.equal(getServiceSectionHref('en', 'whatsapp'), '/en/services/#whatsapp');
   assert.equal(getServiceSectionHref('en', 'consulting'), '/en/services/#consulting');
-  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'studio', 'founder']);
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'terms', 'studio', 'founder']);
 });
 
 test('resolves the two Projects dossiers as the localized index plus a stable fragment', () => {
@@ -80,7 +81,7 @@ test('resolves the two Projects dossiers as the localized index plus a stable fr
   assert.equal(getProjectDossierHref('es', 'the-system'), '/proyectos/#the-system');
   assert.equal(getProjectDossierHref('en', 'general-reservation-system'), '/en/work/#general-reservation-system');
   assert.equal(getProjectDossierHref('en', 'the-system'), '/en/work/#the-system');
-  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'studio', 'founder']);
+  assert.deepEqual(foundationRouteIds, ['home', 'services', 'projects', 'contact', 'privacy', 'terms', 'studio', 'founder']);
 });
 
 test('fails closed for a dossier slug outside the approved pair, including the retired MPC slug', () => {
@@ -124,6 +125,8 @@ test('returns working navigation links, Projects, Process, and the equivalent-la
           contact: paths.contact,
           studio: paths.studio,
           founder: paths.founder,
+          privacy: paths.privacy,
+          terms: paths.terms,
           process: paths.process,
         },
         {
@@ -133,6 +136,8 @@ test('returns working navigation links, Projects, Process, and the equivalent-la
           contact: expectedRoutes.contact[locale],
           studio: expectedRoutes.studio[locale],
           founder: expectedRoutes.founder[locale],
+          privacy: expectedRoutes.privacy[locale],
+          terms: expectedRoutes.terms[locale],
           process: getHomeProcessHref(locale),
         },
       );

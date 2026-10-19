@@ -3,6 +3,7 @@ id: PAGE-PROJECTS
 type: page-spec
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
   - RFC-MARKETING-NARRATIVE-CLOSURE
@@ -12,7 +13,7 @@ related:
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PAGE-CONTACT
   - PAGE-FOUNDER
-last_verified: 2026-09-30
+last_verified: 2026-10-18
 ---
 
 # Projects and project-detail pages
@@ -125,7 +126,7 @@ Accepted index outline under D04: global demo notice → short introduction → 
 | Evidence action: Repositorio público aprobado / Approved public repository | Ver código fuente | View source code | Plain action; same approved public repository URLs |
 | Index disclosure: confidentiality/publication-policy lead | La selección reúne código de repositorios públicos publicados por Samuel. Su ejecución actual no está verificada. | This selection contains code from public repositories published by Samuel. Current execution has not been verified. | Does not imply exclusive authorship; item relationships remain adjacent |
 | GRS and Lab final Contact invitation | Ver contacto | Contact options | Stable route action; D03 proposed notice is not adopted |
-| Detail final copy: Need to solve something similar? | Explorá las opciones de contacto y la demostración del formulario. | Explore the contact options and the form demonstration. | Avoids real-inquiry promise during demo |
+| Detail final copy: Need to solve something similar? | Contactanos por WhatsApp, correo o teléfono. | Explore the contact options and the form demonstration. | Avoids real-inquiry promise during demo |
 
 Do not use a capability heading to relabel RPG work as a real business deployment. Keep proper project names and exact source relationships. The literal internal token limited is a separate correctness repair: render the already approved localized publication-scope text until and unless revised wording is approved. It is not public copy to retain.
 

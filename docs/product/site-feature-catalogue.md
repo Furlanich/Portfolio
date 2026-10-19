@@ -3,6 +3,7 @@ id: FEATURE-CATALOGUE
 type: product-catalogue
 status: PROPOSED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - IA-SITE
   - PAGE-CONTACT
   - PAGE-SERVICES
@@ -11,12 +12,16 @@ related:
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
-last_verified: 2026-09-14
+last_verified: 2026-10-18
 ---
 
 # Site feature catalogue
 
 This concise catalogue traces visitor-facing capabilities to their authoritative requirements. It is not an implementation backlog and does not redefine navigation, contact, evidence, or launch exclusions.
+
+## Direct-contact scope — APPROVED 2026-10-18
+
+[PAGE-CONTACT](pages/contact-and-privacy.md) now uses only native WhatsApp/email/phone links. The prior form/provider/counsel release dependencies and demo-form referral wording are superseded. No embedded intake is needed for this page or the complete redesign.
 
 ## APPROVED launch capabilities
 
@@ -26,7 +31,7 @@ This concise catalogue traces visitor-facing capabilities to their authoritative
 | Business communication | [`PAGE-HOME`](pages/home.md), [`PAGE-SERVICES`](pages/services.md), [`PAGE-CONTACT`](pages/contact-and-privacy.md) |
 | Project evidence | [`PROJECT-EVIDENCE`](project-evidence.md), [`PAGE-PROJECTS`](pages/projects.md) |
 | Founder profile | [`PAGE-FOUNDER`](pages/studio-and-founder.md) |
-| Inquiry demonstration | [`PAGE-CONTACT`](pages/contact-and-privacy.md) and [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../decisions/contact-inquiry-demonstration-mode.md): four fields, validation, loading, simulated success/failure, failure preservation, retry, and fallbacks with zero submission transmission |
+| Direct Contact | [PAGE-CONTACT](pages/contact-and-privacy.md): native WhatsApp, email and phone links with localized Privacy and Founder references. |
 | Services in-page navigation | Stable localized fragments and non-sticky service index in [`PAGE-SERVICES`](pages/services.md#stable-service-anchors-approved) |
 
 ## PROPOSED launch capabilities
@@ -36,12 +41,9 @@ This concise catalogue traces visitor-facing capabilities to their authoritative
 - Localized canonical, `hreflang`, sitemap, Open Graph, and structured-data metadata. See [`CONTENT-LOCALIZATION`](content-and-localization.md).
 - A conceptual-image disclosure where generated imagery is used. See [`PROJECT-EVIDENCE`](project-evidence.md).
 
-## OPEN capabilities and dependencies
+## Contact dependency disposition
 
-- Commercial Contact delivery: [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) retains Formspree behind `submitInquiry()` for a later activation. Provider configuration/retention, processor/transfer facts, professionally reviewed notice/consent wording, and live delivery/deletion evidence remain OPEN. They do not block the completed zero-transmission demonstration recorded by [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md).
-- Final project search/filter behavior and public project demos or video walkthroughs. See [`PROJECT-EVIDENCE`](project-evidence.md).
-- Analytics and conversion measurement.
-- Blog or resources after launch. They are excluded from the initial sitemap by [`IA-SITE`](information-architecture.md#launch-exclusions).
+- Contact is direct communication through native WhatsApp/email/phone links. The prior provider/demo delivery records remain history; no Formspree/counsel readiness or live delivery/deletion gate applies to the current scope.
 
 ## Explicit non-features at launch
 

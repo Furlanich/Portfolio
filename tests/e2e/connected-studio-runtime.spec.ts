@@ -797,3 +797,32 @@ test('a paused scene retains its painted frame through remeasurement and resize'
   expect((await readConnected(page))!.nodes).toHaveLength(8);
   expect(await connectedCanvas(page).evaluate(canvas => (canvas as HTMLCanvasElement).width)).toBe(390);
 });
+
+// PLAN-SFC-V1 Task 11: all five connected routes share one host. Services and Projects keep their capped ambient
+// loop and their scroll-driven base pose, and gain the same bounded proximity layer on top of it.
+for (const route of ['services', 'projects'] as const) {
+  test(`${route}: a nearby mouse nudges nodes on top of the unchanged scroll pose, and the ambient loop continues`, async ({ page }) => {
+    await enableLiveForTest(page);
+    await gotoConnected(page, route, 'es');
+    await expectLive(page);
+    await expectSettled(page);
+    const nodesOf = async () => new Map(((await readConnected(page))?.nodes ?? []).map((node) => [node.id, node.position] as const));
+    const rest = await nodesOf();
+    const farthest = (now: Map<string, readonly [number, number, number]>) =>
+      Math.max(...[...rest].map(([id, from]) => { const to = now.get(id)!; return Math.hypot(from[0] - to[0], from[1] - to[1], from[2] - to[2]); }));
+
+    let peak = 0;
+    await page.mouse.move(1425, 120);
+    for (const y of [160, 220, 280, 340, 420, 520, 620]) {
+      await page.mouse.move(1425, y, { steps: 8 });
+      peak = Math.max(peak, farthest(await nodesOf()));
+    }
+    expect(peak, 'a node near the pointer yields').toBeGreaterThan(0.002);
+
+    await pauseSlot(page, route).getByRole('button').hover();
+    await expect.poll(async () => farthest(await nodesOf()), { timeout: 20_000 }).toBeLessThan(0.002);
+    const after = await readConnected(page);
+    expect(after?.targetFps, 'the capped ambient loop keeps running').toBeGreaterThan(0);
+    expect(after?.pendingCallbacks).toBe(1);
+  });
+}

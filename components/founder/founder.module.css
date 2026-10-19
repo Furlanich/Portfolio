@@ -1,0 +1,482 @@
+/* PLAN-SFC-V1 Task 7: text-led Founder Atlas. Shared plates and scrims own their surface materials. */
+
+.page {
+  position: relative;
+  overflow-x: clip;
+  overflow-wrap: anywhere;
+  padding-block: 32px 56px;
+  color: #F9F6EE;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding-block: 48px 72px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    padding-block: 56px 96px;
+  }
+}
+
+.stack {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.stack > * {
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .stack {
+    gap: 72px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stack {
+    gap: 96px;
+  }
+}
+
+.introPlate,
+.historyPlate {
+  width: min(100%, 800px);
+}
+
+.introPlate {
+  align-self: flex-start;
+}
+
+.historyPlate {
+  align-self: flex-end;
+}
+
+.plate {
+  width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .introPlate,
+  .historyPlate {
+    width: 100%;
+  }
+
+  .historyPlate {
+    align-self: flex-start;
+  }
+}
+
+/* Founder H1: 56px compact, 64px tablet, 88px wide; name words remain unforced. */
+.eyebrow {
+  margin: 0;
+  color: #9CC4EC;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.name {
+  margin: 16px 0 0;
+  color: #F9F6EE;
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .name {
+    font-size: 64px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .name {
+    font-size: 88px;
+  }
+}
+
+.biographySection {
+  margin-top: 40px;
+}
+
+.sectionHeading {
+  margin: 0;
+  color: #F9F6EE;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .sectionHeading {
+    font-size: 34px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sectionHeading {
+    font-size: 40px;
+  }
+}
+
+.subsectionHeading {
+  margin: 0;
+  color: #F9F6EE;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+@media (min-width: 1024px) {
+  .subsectionHeading {
+    font-size: 24px;
+  }
+}
+
+.biographyCopy {
+  max-width: 64ch;
+  margin-top: 20px;
+  color: #B9C3CC;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.biographyCopy p {
+  margin: 16px 0 0;
+}
+
+.biographyCopy p:first-child {
+  margin-top: 0;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+/* Profile links follow the full biography; all three keep the same underlined treatment and target size. */
+.profile {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid #36536C;
+}
+
+.profileLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.profileLinks li {
+  min-width: 0;
+}
+
+.textAction {
+  display: inline-flex;
+  min-height: 44px;
+  max-width: 100%;
+  align-items: center;
+  border-radius: 4px;
+  color: #F9F6EE;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration-line: underline;
+  text-decoration-color: rgba(156, 196, 236, 0.72);
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  overflow-wrap: anywhere;
+  scroll-margin-top: calc(var(--app-bar-height) + 24px);
+  transition: color var(--dur-2) var(--ease-out);
+}
+
+.textAction:hover {
+  color: #9CC4EC;
+}
+
+.textAction:focus-visible,
+.finalAction:focus-visible {
+  outline: 3px solid #9CC4EC;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #0A1E33;
+}
+
+.pauseSlot {
+  display: flex;
+  min-height: 44px;
+  margin-top: 16px;
+  align-items: center;
+}
+
+.staticLabel {
+  color: #B9C3CC;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.pauseSlot:has([data-connected-pause]) .staticLabel {
+  display: none;
+}
+
+/* One continuous second plate; horizontal rules distinguish entries without a timeline or card grid. */
+.section + .section {
+  margin-top: 36px;
+  padding-top: 36px;
+  border-top: 1px solid #36536C;
+}
+
+@media (min-width: 768px) {
+  .section + .section {
+    margin-top: 40px;
+    padding-top: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section + .section {
+    margin-top: 48px;
+    padding-top: 48px;
+  }
+}
+
+.body {
+  max-width: 64ch;
+  margin: 0;
+  color: #B9C3CC;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.experienceList,
+.educationList {
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.experienceList {
+  display: grid;
+  gap: 24px;
+}
+
+.experienceEntry {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  border-top: 1px solid #36536C;
+  padding-top: 20px;
+}
+
+@media (min-width: 768px) {
+  .experienceEntry {
+    grid-template-columns: minmax(112px, 0.28fr) minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+
+.period,
+.metadata {
+  margin: 0;
+  color: #9CC4EC;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.context {
+  margin: 4px 0 0;
+  color: #B9C3CC;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.experienceDetails .body {
+  margin-top: 12px;
+}
+
+.educationList {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .educationList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+}
+
+.educationEntry {
+  min-width: 0;
+  border-top: 1px solid #36536C;
+  padding-top: 20px;
+}
+
+.educationEntry .body {
+  margin-top: 8px;
+}
+
+.educationEntry .metadata {
+  margin-top: 12px;
+}
+
+.educationProject {
+  grid-column: 1 / -1;
+}
+
+.educationProject .metadata + .body {
+  margin-top: 12px;
+}
+
+.educationProject .body + .body,
+.limit {
+  margin-top: 12px;
+}
+
+.limit {
+  max-width: 64ch;
+  margin-bottom: 0;
+  color: #B9C3CC;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.educationProject .textAction {
+  margin-top: 8px;
+}
+
+.capabilitiesIntroduction {
+  margin-top: 16px;
+}
+
+.capabilityGroups {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px 32px;
+  margin-top: 28px;
+}
+
+@media (min-width: 768px) {
+  .capabilityGroups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+}
+
+.capabilityGroups > section {
+  min-width: 0;
+  border-top: 1px solid #36536C;
+  padding-top: 20px;
+}
+
+.capabilityItems {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding-left: 1.25rem;
+  color: #B9C3CC;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.projectsDescription {
+  margin-top: 16px;
+}
+
+.projectsDescription + .textAction {
+  margin-top: 12px;
+}
+
+.finalCta {
+  max-width: 64ch;
+}
+
+.finalCtaScrim {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.finalCtaDescription {
+  margin-top: 16px;
+}
+
+.finalAction {
+  display: inline-flex;
+  min-height: 48px;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  padding: 10px 24px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background-color: #004589;
+  color: #F9F6EE;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out);
+}
+
+.finalAction:hover {
+  background-color: #6FA8E0;
+  color: #09243D;
+}
+
+@media (forced-colors: active) {
+  .eyebrow,
+  .period,
+  .metadata,
+  .staticLabel,
+  .body,
+  .context,
+  .biographyCopy,
+  .capabilityItems,
+  .limit {
+    color: CanvasText;
+  }
+
+  .profile,
+  .experienceEntry,
+  .educationEntry,
+  .capabilityGroups > section {
+    border-color: CanvasText;
+  }
+
+  .textAction {
+    color: LinkText;
+    text-decoration-color: LinkText;
+  }
+
+  .textAction:focus-visible,
+  .finalAction:focus-visible {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+
+  .finalAction {
+    border-color: LinkText;
+    background-color: Canvas;
+    color: LinkText;
+  }
+}

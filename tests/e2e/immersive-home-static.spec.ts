@@ -345,14 +345,16 @@ for (const route of [stableRoutes.home.es, stableRoutes.home.en]) {
   });
 }
 
-// PLAN-SPF-V1 Task 6 (owner-approved transfer, this test only): Services is now a connected route, and a
-// connected route pins its Abyss ground on `html` (as Projects already does), so this uses Studio, a route
-// with no connected ground, as the example of "every other route keeps the Bone canvas".
-test('html keeps the Bone canvas on non-Home routes', async ({ page }) => {
-  await page.goto(appUrl(stableRoutes.studio.en));
-  const htmlBackground = await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
-  expect(htmlBackground).toBe('rgb(249, 246, 238)');
-});
+// PLAN-SFC-V1 Task 9 (owner-approved palette amendment): Privacy now uses the shared static connected Azure
+// ground, so the Abyss fallback on `html` must match that route instead of the prior Bone legal canvas.
+for (const route of [stableRoutes.privacy.es, stableRoutes.privacy.en]) {
+  test(`html pins the Abyss canvas behind connected Privacy (${route})`, async ({ page }) => {
+    await page.goto(appUrl(route));
+    await expect(page.locator('[data-connected-ground]')).toHaveCount(1);
+    const htmlBackground = await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
+    expect(htmlBackground).toBe('rgb(6, 18, 31)');
+  });
+}
 
 // The ground is not just declared correctly (RED 5): it must actually be the pixel that
 // paints in an area no content covers, at both a wide and a compact width. This is the

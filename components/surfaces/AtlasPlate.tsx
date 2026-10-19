@@ -5,6 +5,12 @@ interface AtlasPlateProps {
   as?: 'article' | 'div' | 'li' | 'section';
   plateNumber?: string;
   blur?: boolean;
+  /**
+   * `default` is the SKY-CHART-V2 translucent chart plate. `editorial-opaque` is the PLAN-SFC-V1 reading
+   * surface for Studio, Founder, Contact and legal pages: opaque Deep fill, 1px border, 16px radius, no
+   * blur, shadow or registration ticks (DESIGN-SFC-V1, "Visual system and dimensions").
+   */
+  variant?: 'default' | 'editorial-opaque';
   className?: string;
   children?: ReactNode;
 }
@@ -18,9 +24,20 @@ export function AtlasPlate({
   as: Component = 'div',
   plateNumber,
   blur = true,
+  variant = 'default',
   className,
   children,
 }: AtlasPlateProps) {
+  if (variant === 'editorial-opaque') {
+    // Marked so the connected host can treat the plate as an opaque reading box (+8px) when it
+    // decides where pointer excitation is eligible.
+    return (
+      <Component className={[styles.editorialPlate, className].filter(Boolean).join(' ')} data-connected-opaque-plate="">
+        {children}
+      </Component>
+    );
+  }
+
   const classes = [
     styles.atlasPlate,
     blur ? 'sky-plate-material' : 'sky-plate-material-solid',

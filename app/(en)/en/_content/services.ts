@@ -129,7 +129,7 @@ export const servicesPageContent = {
   },
   finalCta: {
     heading: 'Tell us what you need to solve',
-    description: 'Explore the contact options and try the form demonstration.',
+    description: 'Contact us on WhatsApp, by email or by phone.',
     action: {
       label: 'Start an enquiry',
       routeId: 'contact',

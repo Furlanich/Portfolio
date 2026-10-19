@@ -66,7 +66,39 @@ test('Privacy routes and shared page remain Server Components', async () => {
   } catch (error) {
     assert.fail('Shared PrivacyPage component is missing (' + error.code + ')');
   }
-  assert.ok(component.includes('<main'));
-  assert.ok(component.includes('<h1'));
+  assert.ok(component.includes('LegalPage'));
   assert.equal(/['"]use client['"]/.test(component), false);
+  const legalPage = await readFile(new URL('../components/legal/LegalPage.tsx', import.meta.url), 'utf8');
+  assert.equal(/['"]use client['"]/.test(legalPage), false);
+});
+
+const termsDefinitions = [
+  { locale: 'es', path: '../app/(es)/terminos/page.tsx', content: "from '../_content/commercial/terms'" },
+  { locale: 'en', path: '../app/(en)/en/terms/page.tsx', content: "from '../_content/commercial/terms'" },
+];
+
+for (const definition of termsDefinitions) {
+  test(definition.locale + ' Terms route is a Server Component that renders the canonical copy in the shared legal template', async () => {
+    const source = await readFile(new URL(definition.path, import.meta.url), 'utf8');
+    assert.ok(source.includes("import { LegalPage } from '@/components/legal/LegalPage'"));
+    assert.ok(source.includes("routeId: 'terms'"));
+    assert.ok(source.includes("locale: '" + definition.locale + "'"));
+    assert.equal(source.includes(definition.content), true);
+    assert.ok(source.includes('getFoundationNavigationPaths(route.locale, route.routeId)'));
+    assert.ok(source.includes('<SiteHeader'));
+    assert.ok(source.includes('<SiteFooter'));
+    assert.match(source, /export const metadata: Metadata = \{[\s\S]*legalContent\.metadata\.title[\s\S]*legalContent\.metadata\.description/);
+    assert.equal(source.includes(definition.locale === 'es' ? '(en)' : '(es)'), false);
+    assert.doesNotMatch(source, /['"]use client['"]/);
+  });
+}
+
+test('Terms is registered once with semantic, trailing-slash-safe language switching', async () => {
+  const { foundationRoutes } = await import('../lib/site-routes.ts');
+  const { getFoundationNavigationPaths } = await import('../lib/foundation-navigation.ts');
+  assert.deepEqual(foundationRoutes.terms, { es: '/terminos/', en: '/en/terms/' });
+  assert.equal(getFoundationNavigationPaths('es', 'terms').alternateHref, '/en/terms/');
+  assert.equal(getFoundationNavigationPaths('en', 'terms').alternateHref, '/terminos/');
+  assert.equal(getFoundationNavigationPaths('es', 'privacy').terms, '/terminos/');
+  assert.equal(getFoundationNavigationPaths('en', 'privacy').terms, '/en/terms/');
 });

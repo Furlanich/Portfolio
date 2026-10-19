@@ -3,6 +3,7 @@ id: DESIGN-IX-A11Y
 type: design-spec
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SPF-V1
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - RFC-ADAPTIVE-IMMERSIVE-HOMEPAGE-PRODUCTION-V1
@@ -27,10 +28,14 @@ related:
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
   - REVIEW-SKY-CHART-DIRECTION-2026-09-23
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Interaction, responsive behavior, and accessibility
+
+## Direct-contact amendment — APPROVED 2026-10-18
+
+[ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) removes the embedded form from both Contact routes. Its old field, validation, submit/state, simulation and processor/counsel activation requirements are superseded for the current release. Native WhatsApp/email/phone links, no-JavaScript behavior and ordinary keyboard/focus/reflow checks govern Contact. The historical candidate project name contact-commercial now exercises direct channels; only the runtime candidate needs live-policy patches.
 
 ## Connected-page exception — APPROVED 2026-09-30
 
@@ -296,7 +301,7 @@ These requirements implement the `PAGE-CONTACT` state model without claiming aud
 - Below 1024px, source and visual order is intro, form, response expectation/alternatives, Founder context. At 1024px and above, the form may occupy approximately eight columns and the supporting block four without CSS ordering that changes reading or focus order.
 - All fields are full width and single column. At 320px, approximately 390px, 768px, 1024px, and 1440px, verify translated-copy/error expansion, textarea resizing, 200% zoom, landscape/tablet use, and no clipping or horizontal overflow.
 - If client-side JavaScript fails, the localized Contact content and WhatsApp, email, and phone alternatives remain usable. Do not replace the primary in-page form with a `mailto:` action, provider-hosted success page, or false success state.
-- The demonstration notice remains visible without JavaScript. Submission in demonstration mode must not initiate `fetch`, XHR, beacon, document navigation, mail activation, storage, logging, or analytics; external fallback links act only after the visitor activates them.
+- The current public demonstration notice remains visible without JavaScript. In the owner-approved, non-public Task 10 integration preview it is omitted from the Contact form panel in both locales; the hydrated-disabled submit button and direct alternatives remain available without JavaScript. Submission in demonstration mode must not initiate `fetch`, XHR, beacon, document navigation, mail activation, storage, logging, or analytics; external fallback links act only after the visitor activates them. The preview exception must be reconciled before public release; see [PAGE-CONTACT](../product/pages/contact-and-privacy.md#task-10-integration-preview-exception-approved-2026-10-17).
 
 ### Verification boundary
 

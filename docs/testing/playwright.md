@@ -3,6 +3,7 @@ id: TEST-PLAYWRIGHT
 type: testing-guidance
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - TEST-STRATEGY
   - TEST-VISUAL-REGRESSION
   - DESIGN-IX-A11Y
@@ -10,12 +11,16 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-14
+last_verified: 2026-10-18
 ---
 
 # Playwright QA
 
 `playwright.config.ts` owns a fixed local origin, Next.js development-server startup, normalized optional base path, conservative parallelism, CI-only retry, and failure evidence. Install matching browser binaries after `npm ci` with `npx playwright install chromium firefox webkit`. CI instead runs its browser job in the official `mcr.microsoft.com/playwright:v1.63.0-noble` container, so it installs no browsers or system libraries per run; the image tag must equal the locked `@playwright/test` version and be changed with it, `npm ci` still runs, and the full `npm run test:e2e` is unchanged ([Playwright CI containers](https://playwright.dev/docs/ci#via-containers), [Docker](https://playwright.dev/docs/docker)).
+
+## Direct-contact amendment — APPROVED 2026-10-18
+
+[ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) removes the embedded form from both Contact routes. Its old field, validation, submit/state, simulation and processor/counsel activation requirements are superseded for the current release. Native WhatsApp/email/phone links, no-JavaScript behavior and ordinary keyboard/focus/reflow checks govern Contact. The historical candidate project name contact-commercial now exercises direct channels; only the runtime candidate needs live-policy patches.
 
 ## Commands
 
@@ -41,7 +46,8 @@ Set `NEXT_PUBLIC_BASE_PATH=/Portfolio` to reproduce GitHub Pages routing. The co
 | `accessibility-chromium` | Axe and representative structural/keyboard assertions |
 | `immersive-chromium` | `immersive-home.spec.ts`, `immersive-home-acceptance.spec.ts` and `sky-chart-acceptance.spec.ts` (the Home acceptance matrix, described below), at 1440×900 on the SwiftShader software backend (`--use-angle=swiftshader --enable-unsafe-swiftshader`) |
 | `visual-chromium` | Reduced-motion element baselines under `tests/e2e/visual/`, including `home-sections.visual.spec.ts` (see [visual regression](visual-regression.md)) |
-| `connected-production-chromium` | Only when `PLAYWRIGHT_SERVE_EXPORT=1`: `connected-studio-production.spec.ts` at 1440×900 against the served clean static export. In that mode it is the only project (see [Connected studio specs](#connected-studio-specs-plan-spf-v1)) |
+| `connected-production-chromium`, `sfc-production-{chromium,firefox,webkit}` | Only when `PLAYWRIGHT_SERVE_EXPORT=1`: `connected-studio-production.spec.ts` (Chromium) and `sfc-production.spec.ts` (three engines) at 1440×900 against the served clean static export. In that mode they are the only projects (see [Production serving](#production-serving)). |
+| `contact-commercial-{chromium,firefox,webkit}`, `sfc-runtime-chromium` | Only with `SFC_TEST_MODE=candidate`: the commercial inquiry and new-route runtime families against the QA candidate patches (see [PLAN-SFC-V1 harness](#plan-sfc-v1-harness-and-qa-candidate)). In that mode they are the only projects. |
 
 Mobile WebKit link tabbing depends on host Safari Full Keyboard Access, so exact first-link Tab order is asserted in mobile Chromium. Both mobile engines verify disclosure activation and dismissal by keyboard.
 
@@ -144,3 +150,64 @@ Run it with `npx playwright test --project=immersive-chromium tests/e2e/sky-char
 | `connected-studio-test-hooks.ts` | `setConnectedTestHook(page, hook)`: the one test-injection mechanism for the connected routes. It sets `window.__FURLANICH_CONNECTED_TEST__ = { allowSoftwareRenderer?, livePolicy? }` only through `page.addInitScript`, mirroring Home's `__SKY_CHART_ALLOW_SOFTWARE_RENDERER__`, and rejects any other field or a non-boolean value. Functional tests and poster capture may use it and label the result controlled test evidence. Production measurements and owner hardware acceptance never set it. The only production-adjacent use is the functional production spec, which labels its live cases controlled test evidence |
 | `connected-studio.ts` | The runtime-spec helpers: `enableLiveForTest` (the controlled opt-in), `gotoConnected`, `expectLive`, `expectStatic`, `expectFellBack`, `expectStopped`, the `readConnected` reader of the development-only diagnostics hook (its `ConnectedDiagnostics` type lives with the component), `trackWebglContexts` (create and `WEBGL_lose_context` events, never two live), `holdPageLoad`, `controlVisibility`, `seedSession`/`readSession`, `navigateInApp` (a real client-side navigation using the shipped scroll behavior), `readLabelGeometry`/`overlaps` (the label oracle read from the DOM), `observeEnhancementShifts` (layout shift after activation) and `isConnectedEngineRequest`/`observeEngineRequests` (the request-level observer, used against the production export) |
 | `production-instrumentation.mjs` | Browser-level instrumentation for the production measurements (draw calls, label textures, idle frames, backdrop surfaces and layout-shift attribution); shared by `measure:immersive` and `measure:home-vitals`, which cannot use the dev-only debug hook. The connected-studio scripts carry their own observers and do not import it |
+
+## PLAN-SFC-V1 harness and QA candidate
+
+PLAN-SFC-V1 Task 2 partitioned the Playwright specs by page owner and added the candidate and production families. The partition moved cases without changing them: the default list is **2749 cases in 33 files** (was 2749 in 31), with the same case title in the same project for every case. The planning envelope is at most 3200 default cases and at most 180 candidate cases.
+
+### Spec families and owners
+
+| Family | Files | Projects | Owner |
+| --- | --- | --- | --- |
+| Studio | `studio.spec.ts`, `studio-responsive.spec.ts` | `chromium-desktop`; responsive on `compact-320-chromium`, `tablet-portrait-chromium` and the projects that match `/responsive\.spec\.ts/` | Task 6 |
+| Founder | `founder.spec.ts`, `founder-responsive.spec.ts` | same as Studio | Task 7 |
+| Legal | `legal.spec.ts` | every project that runs `privacy.spec.ts` | Task 9 |
+| Contact commercial | `contact-commercial.spec.ts` | `contact-commercial-{chromium,firefox,webkit}`, **candidate mode only** | Task 10 |
+| New-route runtime | `sfc-runtime.spec.ts` | `sfc-runtime-chromium` (SwiftShader), **candidate mode only** | Tasks 11 (host) and 12 (integration) |
+| New-route accessibility | `sfc-accessibility.spec.ts` | `accessibility-chromium` (the unanchored `/accessibility\.spec\.ts/` pattern already matches it) | Tasks 11 and 12 |
+| New-route production | `sfc-production.spec.ts` | `sfc-production-{chromium,firefox,webkit}`, only with `PLAYWRIGHT_SERVE_EXPORT=1` | Tasks 16 and 18 |
+
+Founder coverage (Task 7) checks the complete bilingual profile order, preserved professional URLs and CV download, the four fixed word bindings, and the retained Projects/Contact bridges. Its responsive cases inspect the two plates at 320, 390, 768, 1024, and 1440px; check the 720×450 CSS viewport equivalent to 200% zoom; verify glyph bounds under 200% font/line-height growth and the WCAG text-spacing override; and confirm the complete compact page when JavaScript is disabled. Pixel baselines remain a separate owner-approval gate.
+
+A family with no spec file yet lists nothing; `playwright test --list` then exits 1 with "No tests found" in its report. Chromium owns the exhaustive state permutations. Firefox and WebKit run only cases tagged `@cross-browser`, for the real form, navigation and focus behavior, not duplicate pixel or permutation coverage. Tag a case with `test('submits and recovers', { tag: '@cross-browser' }, async ({ page }) => { ... })`; the two candidate projects filter on that tag (`grep` in `playwright.config.ts`), so an untagged case is Chromium-only and cannot duplicate the matrix against the 180-case candidate envelope. `scripts/sfc-ci-budget.test.mjs` proves the filter with a throwaway tagged and untagged fixture.
+
+`SFC_TEST_MODE=candidate` selects the candidate families and replaces the default project set. It selects tests only. The application's own mode comes from committed release records, never from this variable or any environment value.
+
+### QA candidate workflow
+
+The commercial inquiry mode and the live-graph policy are off in committed source, so their browser tests run against a disposable checkout with a committed patch applied. Never use the shared checkout, and never deploy from a candidate.
+
+```bash
+node scripts/prepare-sfc-candidate.mjs apply --kind=commercial   # or runtime, or combined
+SFC_TEST_MODE=candidate PLAYWRIGHT_PORT=3200 npx playwright test
+node scripts/prepare-sfc-candidate.mjs restore --kind=commercial
+```
+
+- `apply` requires a clean tracked tree, an optional `--expect-head=<sha>` match, and `git apply --check` of every patch. It applies all or none, records the head and the SHA-256 of each patch in the git directory, and refuses a second candidate.
+- `restore` refuses a patch that changed since it was applied or a target that drifted, then reverses the patches with `git apply -R`.
+- `verify-clean` runs in the CI `validate` job. It fails when `QA-CANDIDATE-NOT-FOR-DEPLOYMENT` appears in `app`, `components`, `lib`, `data` or `public`, or when a candidate is still applied. It does not reject `CONNECTED_LIVE_POLICY` being true: PLAN-SFC-V1 Task 18 changes it in its own reviewed PR.
+- Patches are read and applied as LF text, so a Windows checkout that converts them to CRLF still works.
+- `tests/fixtures/sfc/live-policy.patch` sets both live tiers true in `lib/connected-studio/capability.ts`. `tests/fixtures/sfc/commercial-release.patch` sets the release mode to `commercial` and the release id to the QA marker in `lib/inquiry/release.ts`. That file does not exist yet: **PLAN-SFC-V1 Task 5 must create it with exactly this declaration**, and `apply --kind=commercial` fails until it does.
+
+```ts
+export type InquiryReleaseRecord = { readonly mode: 'demonstration' | 'commercial'; readonly releaseId: string };
+
+export const INQUIRY_RELEASE: InquiryReleaseRecord = {
+  mode: 'demonstration',
+  releaseId: 'DEMONSTRATION',
+};
+```
+
+Reviewer R uses the same commands and fixtures at the exact head. After the coordinated release (Task 16), committed commercial tests need no mode patch; the runtime candidate tests keep applying only the live-policy patch until a tier is qualified.
+
+### Export requirements and fixtures
+
+Each page owns one declarative export requirement map in `scripts/export-requirements/<page>.mjs` (`studio`, `founder`, `contact`, `privacy`, `home`, `services`), imported by `scripts/verify-static-export.mjs`, which keeps the assertion logic. A page owner's `<page>-export.test.mjs` builds a small fixture with `createExportFixture` and runs the real verifier through `runVerifier` from `scripts/export-test-support.mjs`; the verifier reports every missing route, so assert only on your own pair. No page packet edits another page's requirements.
+
+### Continuous integration
+
+- The workflow runs for pull requests to `main` and to `codex/sfc-integration`, and by `workflow_dispatch`. Use the manual trigger at a PR's immutable head to bootstrap a PR that changes the workflow itself; record the run.
+- The `browser` job runs four shards, `--shard=N/4 --workers=2`, with `fail-fast: false` and a 35-minute hard limit (target 25). The last single-job run took 51m59s ([run 38623461245](https://github.com/Furlanich/Portfolio/actions/runs/38623461245)). The first four-shard run ([run 38735223527](https://github.com/Furlanich/Portfolio/actions/runs/38735223527), PR #143, all green) took 12m37s, 16m17s, 8m54s and 17m35s per shard, from GitHub's started and completed timestamps; the shards are unbalanced, so each wave re-measures. Do not extend the limit or drop unique coverage to hide a failure.
+- Every shard uploads its report and traces with `if: always()`, named by shard, run and attempt, kept 7 days.
+- The dedicated candidate job joins in Task 10, with an always-run restore step.
+- Local ports: owner sessions use `3200 + task number`, reviewers `3300 + task number`; each checkout has its own `.next` and `out`, and export runs never reuse a server.

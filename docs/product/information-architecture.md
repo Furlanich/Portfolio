@@ -3,6 +3,7 @@ id: IA-SITE
 type: information-architecture
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - DESIGN-SPF-V1
   - RFC-SPF-REDESIGN-V1
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
@@ -16,18 +17,18 @@ related:
   - PAGE-PRIVACY
   - CONTENT-LOCALIZATION
   - ADR-CONTACT-INQUIRY-DEMO-MODE
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Information architecture
 
 ## Atlas legal destinations — APPROVED target, 2026-10-14
 
-[DESIGN-SFC-V1](../design/studio-founder-contact-v1.md), approved in Q14, selects the new `terms` route pair `/terminos/` and `/en/terms/`. Retain `privacy` at `/privacidad/` and `/en/privacy/`. Register Terms in the same static localized route/equivalence and metadata architecture; do not add a client-side routing layer or a duplicate Privacy path. [RFC-SFC-COMMERCIAL-ATLAS-V1](../rfcs/studio-founder-contact-commercial-atlas-v1.md) accepts the pair as a target (APPROVED 2026-10-15, effective on human merge of Governance PR 1); it is registered only when PLAN-SFC-V1 implementation lands, and the current fourteen foundation routes stand until then.
+[DESIGN-SFC-V1](../design/studio-founder-contact-v1.md), approved in Q14, selects the new `terms` route pair `/terminos/` and `/en/terms/`. Retain `privacy` at `/privacidad/` and `/en/privacy/`. Register Terms in the same static localized route/equivalence and metadata architecture; do not add a client-side routing layer or a duplicate Privacy path. [RFC-SFC-COMMERCIAL-ATLAS-V1](../rfcs/studio-founder-contact-commercial-atlas-v1.md) accepts the pair as a target (APPROVED 2026-10-15, effective on human merge of Governance PR 1); PLAN-SFC-V1 Task 16 registers it in the release candidate, so the integration code now has sixteen foundation routes; the deployed site keeps its fourteen until the human-reviewed coordinated release.
 
 Footer legal utilities become `Privacidad` → localized Privacy and `Términos y condiciones` → localized Terms; English `Privacy` and `Terms and Conditions`. Both remain subordinate ordinary links, outside primary commercial navigation and outside the professional-link group. Legal pages reciprocally link Privacy/Terms; Contact's quiet legal links are owned by PAGE-CONTACT. The existing Footer composition, protected whole-mark watermark and direct-channel prominence are unchanged.
 
-The new pair raises the foundation count from fourteen to sixteen. Canonical/alternate links, locale switching, route/export verification and real static 404 behavior must include Terms, preserve `/Portfolio`, and retain every project-detail retirement. No new sitemap/robots initiative is introduced. The target is owner-approved; governance acceptance and implementation are pending.
+The new pair raises the foundation count from fourteen to sixteen. Canonical/alternate links, locale switching, route/export verification and real static 404 behavior must include Terms, preserve `/Portfolio`, and retain every project-detail retirement. No new sitemap/robots initiative is introduced. The target is owner-approved and implemented for the release candidate by Task 16; deployment and the read-only deployed check (Task 17) are pending.
 
 ## Sitemap
 
@@ -211,9 +212,8 @@ Paths below are logical site paths; deployment prepends the existing /Portfolio 
 | Founder education MPC entry | /proyectos/mpc-administracion/ | /en/work/mpc-administracion/ | Historical educational group evidence; D04 |
 | MPC return/background | /estudio/samuel-furlanich/ | /en/about/samuel-furlanich/ | Replaces commercial related-service emphasis; existing detail routes preserved |
 | Founder Projects bridge | /proyectos/ | /en/work/ | Selected public evidence |
-| Contact Privacy link; footer Privacy | /privacidad/ | /en/privacy/ | Current demonstration disclosure |
-| Contact form submit/retry | No navigation or network | No navigation or network | Local simulated outcome only; existing adapter |
-| Contact/footer WhatsApp | https://wa.me/5491150117565 | Same | Open WhatsApp; no form-value prefill |
+| Contact Privacy link; footer Privacy | /privacidad/ | /en/privacy/ | Direct-contact Privacy information |
+| Contact/footer WhatsApp | https://wa.me/5491150117565 | Same | Open WhatsApp; no message prefill |
 | Contact/footer email | mailto:samuelfurlanich@gmail.com | Same | Visitor-selected external email action |
 | Contact/footer phone | tel:+5491150117565 | Same | Visitor-selected phone action |
 | Project source links | Existing exact URL in each item owner | Same | Inspect source, not a verified running product |
@@ -260,4 +260,4 @@ MPC on Founder uses `https://github.com/Furlanich/MilkyPantsCheese-Administracio
 | Resume background | Reanudar fondo | Resume background |
 | Focused control after fallback | Fondo estático | Static background |
 
-Existing navigation labels and direct-channel values remain those approved in D06-IA. The contact hierarchy is WhatsApp first, followed by email, phone and the localized Contact route. Footer copy proposes a direct-channel invitation; it does not activate the simulated form, promise a response/SLA, adopt the rejected D03 notice/form redesign or introduce a context-prefill feature. Copyright stays `© {build year} FURLANICH`; locale controls use equivalent page routes. On Projects, retain a recognized dossier fragment during locale changes.
+Existing navigation labels and direct-channel values remain those approved in D06-IA. The contact hierarchy is WhatsApp first, followed by email, phone and the localized Contact route. Footer copy proposes a direct-channel invitation; it uses the direct-contact scope approved on 2026-10-18 and carries no message prefill or form activation. Copyright stays `© {build year} FURLANICH`; locale controls use equivalent page routes. On Projects, retain a recognized dossier fragment during locale changes.

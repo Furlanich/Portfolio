@@ -232,9 +232,16 @@ test('every new connected-studio spec is registered under exactly the planned pr
   assert.ok(!projects.some((project) => project.name === 'connected-production-chromium'), 'the production project is absent without PLAYWRIGHT_SERVE_EXPORT=1');
 });
 
-test('PLAYWRIGHT_SERVE_EXPORT=1 defines only the connected production project', () => {
+test('PLAYWRIGHT_SERVE_EXPORT=1 defines only the production projects', () => {
   const projects = listProjects({ PLAYWRIGHT_SERVE_EXPORT: '1' });
-  assert.deepEqual(projects.map((project) => project.name), ['connected-production-chromium']);
+  // PLAN-SFC-V1 Task 2 added the sfc-production family on three engines beside the connected Chromium project.
+  assert.deepEqual(projects.map((project) => project.name), [
+    'connected-production-chromium',
+    'sfc-production-chromium',
+    'sfc-production-firefox',
+    'sfc-production-webkit',
+  ]);
   assert.deepEqual(matchingProjects(projects, 'tests/e2e/connected-studio-production.spec.ts'), ['connected-production-chromium']);
+  assert.deepEqual(matchingProjects(projects, 'tests/e2e/sfc-production.spec.ts'), ['sfc-production-chromium', 'sfc-production-firefox', 'sfc-production-webkit']);
   assert.deepEqual(matchingProjects(projects, 'tests/e2e/connected-studio-static.spec.ts'), [], 'no other spec runs against the export');
 });

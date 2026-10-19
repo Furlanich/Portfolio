@@ -6,8 +6,13 @@ export const founderContent = {
   header: {
     context: 'Fundador de FURLANICH · Ingeniero de software',
     name: 'Samuel Furlanich',
-    opening: 'Ingeniero de software y fundador de FURLANICH. Su trabajo abarca aplicaciones web, sistemas de gestión, integraciones y mantenimiento.',
   },
+  wordBindings: [
+    { nodeId: 'n0', word: '.NET' },
+    { nodeId: 'n4', word: 'React' },
+    { nodeId: 'n8', word: 'Next.js' },
+    { nodeId: 'n12', word: 'Blazor' },
+  ],
   biography: {
     heading: 'Biografía profesional',
     paragraphs: [
@@ -58,7 +63,7 @@ export const founderContent = {
     },
   },
   capabilities: {
-    heading: 'Sistemas que podemos construir',
+    heading: 'Capacidades para construir y mejorar sistemas',
     introduction:
       'El foco está en lo que el sistema permite ordenar, automatizar y hacer evolucionar, no en acumular nombres de herramientas.',
     groups: [
@@ -86,8 +91,7 @@ export const founderContent = {
   },
   projectsBridge: {
     heading: 'Trabajo y evidencia técnica',
-    description:
-      'La selección pública de Proyectos reúne evidencia de implementación y trabajo clasificado por madurez, con sus límites explícitos. Ese índice concentra el contexto para evitar duplicar historias o confundir evidencia técnica con experiencia profesional.',
+    description: 'Los proyectos públicos permiten explorar código, contexto y límites.',
     action: { label: 'Ver proyectos seleccionados', routeId: 'projects' },
   },
   finalCta: {

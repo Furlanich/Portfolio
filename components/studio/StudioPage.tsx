@@ -1,49 +1,62 @@
+import { ConnectedStudioAtlasGround } from '@/components/connected-studio/ConnectedStudioAtlasGround';
 import { resolveActionLink } from '@/components/foundation/content-types';
+import { AtlasEditorialContainer } from '@/components/surfaces/AtlasEditorialContainer';
+import { AtlasScrim } from '@/components/surfaces/AtlasScrim';
+import { CONNECTED_CONTROL_LABELS } from '@/lib/connected-studio/content';
 import type { StudioPageContent } from './content-types';
 import { StudioAccountability } from './StudioAccountability';
 import { StudioFinalCta } from './StudioFinalCta';
 import { StudioFounderBridge } from './StudioFounderBridge';
 import { StudioIntroduction } from './StudioIntroduction';
 import { StudioPrinciples } from './StudioPrinciples';
+import styles from './studio.module.css';
 
 interface StudioPageProps {
   content: StudioPageContent;
 }
 
+/**
+ * The Atlas Studio page (DESIGN-SFC-V1, "Studio"): identity, accountability and collaborators, principles,
+ * location, one Founder bridge and the Contact ending, in that order, over the decorative connected ground.
+ * Everything meaningful is server HTML; the ground, its poster and the optional live scene are decorative.
+ * `main` carries the connected-page contract the host reads.
+ */
 export function StudioPage({ content }: StudioPageProps) {
-  const primaryAction = resolveActionLink(content.intro.primaryAction, content.locale);
-  const secondaryAction = resolveActionLink(content.intro.secondaryAction, content.locale);
-  const founderAction = resolveActionLink(content.founderBridge.action, content.locale);
-  const finalAction = resolveActionLink(content.finalCta.action, content.locale);
+  const locale = content.locale;
+  const primaryAction = resolveActionLink(content.intro.primaryAction, locale);
+  const secondaryAction = resolveActionLink(content.intro.secondaryAction, locale);
+  const founderAction = resolveActionLink(content.founderBridge.action, locale);
+  const finalAction = resolveActionLink(content.finalCta.action, locale);
 
   return (
-    <main>
-      <StudioIntroduction
-        content={content.intro}
-        operatingModel={content.operatingModel}
-        primaryActionHref={primaryAction.href}
-        secondaryActionHref={secondaryAction.href}
-      />
-      <StudioAccountability
-        accountability={content.accountability}
-        collaboratorModel={content.collaboratorModel}
-      />
-      <StudioPrinciples content={content.principles} />
-      <section aria-labelledby="studio-location-heading" className="bg-foundation-surface py-12 md:py-16">
-        <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8 lg:px-12">
-          <div className="grid gap-4 border-t-2 border-foundation-ink pt-8 md:pt-10 lg:grid-cols-12 lg:gap-12">
-            <div className="lg:col-span-6">
-              <p data-sequence aria-hidden="true" className="mb-4 font-mono text-sm font-semibold leading-5 text-foundation-action">03</p>
-              <h2 id="studio-location-heading" className="max-w-[28ch] text-2xl font-bold leading-8 text-foundation-ink md:text-3xl md:leading-10">
+    <main data-connected-page data-connected-route="studio" data-connected-locale={locale} className={styles.page}>
+      <ConnectedStudioAtlasGround route="studio" locale={locale} wordBindings={content.wordBindings} />
+      <AtlasEditorialContainer>
+        <div className={styles.stack}>
+          <StudioIntroduction
+            content={content.intro}
+            sceneCaption={content.sceneCaption}
+            primaryActionHref={primaryAction.href}
+            secondaryActionHref={secondaryAction.href}
+            staticLabel={CONNECTED_CONTROL_LABELS[locale].staticBackground}
+          />
+          <StudioAccountability
+            accountability={content.accountability}
+            collaboratorModel={content.collaboratorModel}
+          />
+          <StudioPrinciples content={content.principles} />
+          <section aria-labelledby="studio-location-heading">
+            <AtlasScrim clearance={24} className={styles.textBlock}>
+              <h2 id="studio-location-heading" className={styles.sectionHeading}>
                 {content.location.heading}
               </h2>
-            </div>
-            <p className="max-w-[68ch] text-base leading-7 text-foundation-muted lg:col-span-6 lg:pt-9">{content.location.description}</p>
-          </div>
+              <p className={styles.body}>{content.location.description}</p>
+            </AtlasScrim>
+          </section>
+          <StudioFounderBridge content={content.founderBridge} actionHref={founderAction.href} />
+          <StudioFinalCta content={content.finalCta} actionHref={finalAction.href} />
         </div>
-      </section>
-      <StudioFounderBridge content={content.founderBridge} actionHref={founderAction.href} />
-      <StudioFinalCta content={content.finalCta} actionHref={finalAction.href} />
+      </AtlasEditorialContainer>
     </main>
   );
 }

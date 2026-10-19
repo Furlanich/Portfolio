@@ -31,7 +31,7 @@ export type ConnectedPosterEntry = {
   published: boolean;
 };
 
-function poster(route: ConnectedRoute, quality: ConnectedQuality): ConnectedPosterEntry {
+function poster(route: ConnectedRoute, quality: ConnectedQuality, published = true): ConnectedPosterEntry {
   const wide = quality === 'wide';
   return Object.freeze({
     route,
@@ -40,7 +40,7 @@ function poster(route: ConnectedRoute, quality: ConnectedQuality): ConnectedPost
     width: wide ? 1920 : 900,
     height: wide ? 1080 : 1600,
     maxBytes: (wide ? 150 : 80) * KIB,
-    published: true,
+    published,
   });
 }
 
@@ -49,6 +49,15 @@ export const connectedMediaManifest: readonly ConnectedPosterEntry[] = Object.fr
   poster('services', 'compact'),
   poster('projects', 'wide'),
   poster('projects', 'compact'),
+  // PLAN-SFC-V1 Task 2 declared the profile-route posters unpublished; Task 14 captured the six
+  // (scripts/capture-connected-studio-posters.mjs) and published them. Studio, Founder and Contact each have a wide
+  // and a compact poster; the compact scene is one composition for all three (DESIGN-SFC-V1).
+  poster('studio', 'wide'),
+  poster('studio', 'compact'),
+  poster('founder', 'wide'),
+  poster('founder', 'compact'),
+  poster('contact', 'wide'),
+  poster('contact', 'compact'),
 ]);
 
 /**

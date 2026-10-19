@@ -66,3 +66,65 @@ test('ignores stale submission results, safely normalizes reasons, retries, and 
   });
   assert.deepEqual(inquiryReducer(state, { type: 'RESET' }), initialState);
 });
+
+test('a provider field rejection needs the matching request id and ends the busy phase', () => {
+  requireImplementation();
+  const submitting = inquiryReducer(initialState, { type: 'SUBMIT_STARTED', requestId: 3 });
+  const fieldErrors = { message: 'max-length', email: 'invalid-email' };
+
+  assert.equal(inquiryReducer(submitting, { type: 'SUBMIT_REJECTED', requestId: 2, fieldErrors }), submitting);
+  assert.equal(inquiryReducer(submitting, { type: 'SUBMIT_REJECTED', requestId: 4, fieldErrors }), submitting);
+  assert.deepEqual(inquiryReducer(submitting, { type: 'SUBMIT_REJECTED', requestId: 3, fieldErrors }), {
+    phase: 'idle',
+    fieldErrors,
+    focusField: 'email',
+    requestId: 3,
+  });
+});
+
+test('a provider field rejection outside a submission changes nothing', () => {
+  requireImplementation();
+  const fieldErrors = { name: 'required' };
+  for (const state of [
+    initialState,
+    inquiryReducer(initialState, { type: 'VALIDATE' }),
+    inquiryReducer(inquiryReducer(initialState, { type: 'SUBMIT_STARTED', requestId: 1 }), { type: 'SUBMIT_SUCCEEDED', requestId: 1 }),
+    inquiryReducer(inquiryReducer(initialState, { type: 'SUBMIT_STARTED', requestId: 1 }), { type: 'SUBMIT_FAILED', requestId: 1, reason: 'unknown' }),
+  ]) {
+    assert.equal(inquiryReducer(state, { type: 'SUBMIT_REJECTED', requestId: state.requestId, fieldErrors }), state);
+  }
+});
+
+test('local validation cannot touch a submission in flight', () => {
+  requireImplementation();
+  const submitting = inquiryReducer(initialState, { type: 'SUBMIT_STARTED', requestId: 6 });
+  assert.equal(inquiryReducer(submitting, { type: 'VALIDATE' }), submitting);
+  assert.equal(inquiryReducer(submitting, { type: 'VALIDATION_FAILED', fieldErrors: { name: 'required' } }), submitting);
+});
+
+test('a late success, failure or rejection from an older request cannot replace a newer one', () => {
+  requireImplementation();
+  const first = inquiryReducer(initialState, { type: 'SUBMIT_STARTED', requestId: 1 });
+  const failed = inquiryReducer(first, { type: 'SUBMIT_FAILED', requestId: 1, reason: 'unavailable' });
+  const second = inquiryReducer(inquiryReducer(failed, { type: 'VALIDATE' }), { type: 'SUBMIT_STARTED', requestId: 2 });
+
+  assert.equal(second.requestId, 2);
+  assert.equal(inquiryReducer(second, { type: 'SUBMIT_SUCCEEDED', requestId: 1 }), second);
+  assert.equal(inquiryReducer(second, { type: 'SUBMIT_FAILED', requestId: 1, reason: 'unknown' }), second);
+  assert.equal(inquiryReducer(second, { type: 'SUBMIT_REJECTED', requestId: 1, fieldErrors: { name: 'required' } }), second);
+});
+
+test('a request id that does not advance cannot start a second submission', () => {
+  requireImplementation();
+  const done = inquiryReducer(inquiryReducer(initialState, { type: 'SUBMIT_STARTED', requestId: 5 }), { type: 'SUBMIT_FAILED', requestId: 5, reason: 'unknown' });
+  assert.equal(inquiryReducer(done, { type: 'SUBMIT_STARTED', requestId: 5 }), done);
+  assert.equal(inquiryReducer(done, { type: 'SUBMIT_STARTED', requestId: 4 }), done);
+  assert.equal(inquiryReducer(done, { type: 'SUBMIT_STARTED', requestId: 6 }).phase, 'submitting');
+});
+
+test('a success followed by a late failure keeps the accepted state', () => {
+  requireImplementation();
+  const accepted = inquiryReducer(inquiryReducer(initialState, { type: 'SUBMIT_STARTED', requestId: 1 }), { type: 'SUBMIT_SUCCEEDED', requestId: 1 });
+  assert.equal(inquiryReducer(accepted, { type: 'SUBMIT_FAILED', requestId: 1, reason: 'unavailable' }), accepted);
+  assert.equal(inquiryReducer(accepted, { type: 'SUBMIT_SUCCEEDED', requestId: 1 }), accepted);
+});

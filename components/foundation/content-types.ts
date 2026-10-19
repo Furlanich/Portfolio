@@ -112,6 +112,9 @@ export type PrivacyContent = {
   routeId: 'privacy';
   heading: string;
   introduction: string;
+  updatedLabel: string;
+  updatedAt: string;
   sections: PrivacySection[];
+  termsLink: ExternalLink;
   githubLink: ExternalLink;
 };

@@ -15,6 +15,8 @@ const representativeRoutes = [
   ['English Founder', stableRoutes.founder.en],
   ['Spanish Privacy', stableRoutes.privacy.es],
   ['English Privacy', stableRoutes.privacy.en],
+  ['Spanish Terms', stableRoutes.terms.es],
+  ['English Terms', stableRoutes.terms.en],
   ['Spanish Contact', stableRoutes.contact.es],
   ['English Contact', stableRoutes.contact.en],
 ] as const;
@@ -37,7 +39,7 @@ for (const [name, route] of representativeRoutes) {
   });
 }
 
-// PLAN-SPF-V1 Task 9: all fourteen hosts of the shared Footer (seven pages in two locales) keep one set of
+// PLAN-SPF-V1 Task 9: all sixteen hosts of the shared Footer (eight pages in two locales) keep one set of
 // landmarks, an ordered heading outline and a Footer a keyboard user can walk in reading order. Axe alone
 // does not prove any of this; contrast is judged by hand in the receipt.
 for (const [name, route] of representativeRoutes) {

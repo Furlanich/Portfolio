@@ -1,9 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
+import { runVerifier as runVerifierOn } from './export-test-support.mjs';
 
 // PLAN-SKY-CHART-HOME-REDESIGN-V2 Task 11 / L-04: `verify-static-export.mjs` must require the
 // HOME-IMPACT section ("Position fix", id `impact`) between Services and Proof, with its exact
@@ -13,8 +10,6 @@ import path from 'node:path';
 
 const { homeContent: spanish } = await import('../app/(es)/_content/home.ts');
 const { homeContent: english } = await import('../app/(en)/en/_content/home.ts');
-
-const verifier = path.join(process.cwd(), 'scripts/verify-static-export.mjs');
 
 const locales = {
   es: { content: spanish, file: 'index.html', lang: 'es-AR', processId: 'proceso' },
@@ -52,21 +47,9 @@ function homeHtml(locale, transform = (sections) => sections, tags = 2) {
 }
 
 function runVerifier(transform, tags) {
-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'verify-static-export-'));
-  try {
-    for (const locale of Object.values(locales)) {
-      const target = path.join(directory, locale.file);
-      fs.mkdirSync(path.dirname(target), { recursive: true });
-      fs.writeFileSync(target, homeHtml(locale, transform, tags));
-    }
-    const result = spawnSync(process.execPath, [verifier], {
-      env: { ...process.env, STATIC_EXPORT_DIR: directory, NEXT_PUBLIC_BASE_PATH: '' },
-      encoding: 'utf8',
-    });
-    return `${result.stdout}\n${result.stderr}`;
-  } finally {
-    fs.rmSync(directory, { recursive: true, force: true });
-  }
+  const files = {};
+  for (const locale of Object.values(locales)) files[locale.file] = homeHtml(locale, transform, tags);
+  return runVerifierOn({ files }).output;
 }
 
 const withoutImpact = (sections) => sections.filter(([id]) => id !== 'impact');
@@ -105,3 +88,111 @@ test('Home export whose impact section lacks the two visible illustrative tags f
   assert.match(output, /impact section must show the illustrative-scenario tag twice/);
   assert.doesNotMatch(runVerifier(undefined, 2), /illustrative-scenario tag/);
 });
+
+// PLAN-SFC-V1 Task 16: the sixteenth and fifteenth documents are the localized Terms pair, and the
+// reciprocal Privacy/Terms navigation is part of the same legal contract. These fixtures are built from the
+// real typed Terms copy, so the verifier compares emitted HTML with what the route renders.
+const { legalContent: spanishTerms } = await import('../app/(es)/_content/commercial/terms.ts');
+const { legalContent: englishTerms } = await import('../app/(en)/en/_content/commercial/terms.ts');
+
+const legalLocales = {
+  es: {
+    terms: { file: 'terminos/index.html', content: spanishTerms, route: '/terminos/', privacyRoute: '/privacidad/', date: '18 de octubre de 2026' },
+    privacyFile: 'privacidad/index.html',
+    lang: 'es-AR',
+    header: ['Navegación principal', 'Abrir navegación principal', ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio'], 'Ver contacto'],
+    footer: ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio', 'Información de contacto', 'Privacidad', 'Términos y condiciones'],
+  },
+  en: {
+    terms: { file: 'en/terms/index.html', content: englishTerms, route: '/en/terms/', privacyRoute: '/en/privacy/', date: 'October 18, 2026' },
+    privacyFile: 'en/privacy/index.html',
+    lang: 'en',
+    header: ['Primary navigation', 'Open primary navigation', ['Services', 'Work', 'How we work', 'About'], 'Contact options'],
+    footer: ['Services', 'Work', 'How we work', 'About', 'Contact information', 'Privacy', 'Terms and Conditions'],
+  },
+};
+
+const escapeHtml = (value) => value.replace(/&/g, '&amp;').replace(/'/g, '&#x27;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+function legalChrome(locale) {
+  const [navigation, menu, subjects, primary] = locale.header;
+  const header = `<header><nav aria-label="${navigation}"></nav><button aria-label="${menu}"></button>${subjects.map((label) => `<a>${label}</a>`).join('')}<a>${primary}</a></header>`;
+  const footer = `<footer>${locale.footer.map((label) => `<a>${label}</a>`).join('')}<a hrefLang="x">switch</a>©<span>2026</span>FURLANICH`
+    + '<a href="https://wa.me/5491150117565">w</a><a href="mailto:samuelfurlanich@gmail.com">m</a><a href="tel:+5491150117565">t</a></footer>';
+  return { header, footer };
+}
+
+function termsHtml(locale, base = '', mutate = {}) {
+  const { terms } = locale;
+  const content = terms.content;
+  const { header, footer } = legalChrome(locale);
+  const sections = content.sections
+    .filter((section) => section.id !== mutate.dropSection)
+    .map((section) => `<section id="${section.id}"><h2 id="${section.id}-heading">${escapeHtml(section.heading)}</h2>${section.paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('')}</section>`)
+    .join('');
+  const contents = content.sections.map((section) => `<li><a href="#${section.id}">${escapeHtml(section.heading)}</a></li>`).join('');
+  const date = mutate.date ?? terms.date;
+  const reciprocal = mutate.reciprocalHref ?? base + terms.privacyRoute;
+  return [
+    `<!doctype html><html lang="${locale.lang}"><head><title>${escapeHtml(content.metadata.title)}</title>`,
+    `<meta name="description" content="${escapeHtml(content.metadata.description)}"/></head><body>`,
+    header,
+    `<main><h1>${escapeHtml(content.title)}</h1><dl><div><dt>${content.chrome.updateLabel}</dt><dd>${date}</dd></div></dl>`,
+    `<nav aria-label="${content.chrome.contentsLabel}"><h2>${content.chrome.contentsLabel}</h2><ol>${contents}</ol></nav>`,
+    `<article>${sections}<ul><li><a href="${reciprocal}">${escapeHtml(content.chrome.reciprocalLabel)}</a></li></ul></article>${mutate.extra ?? ''}</main>`,
+    footer,
+    '</body></html>',
+  ].join('');
+}
+
+function termsMessages(locale, html, base = '') {
+  const file = locale.terms.file;
+  return runVerifierOn({ files: { [file]: html }, basePath: base }).output.split('\n').filter((line) => line.startsWith(`- ${file}:`));
+}
+
+for (const [name, locale] of Object.entries(legalLocales)) {
+  test(`${name} Terms export is a required document`, () => {
+    const output = runVerifierOn({ files: {} }).output;
+    assert.match(output, new RegExp(`missing static artifact: ${locale.terms.file.replace('/', '\/')}`));
+  });
+
+  test(`${name} Terms export with the canonical sections, date, metadata and reciprocal link passes at root and /Portfolio`, () => {
+    for (const base of ['', '/Portfolio']) assert.deepEqual(termsMessages(locale, termsHtml(locale, base), base), [], base || 'root');
+  });
+
+  test(`${name} Terms export without a section, a real update date or the Privacy link fails`, () => {
+    assert.ok(termsMessages(locale, termsHtml(locale, '', { dropSection: locale.terms.content.sections[2].id })).some((line) => /Terms sections/.test(line)));
+    assert.ok(termsMessages(locale, termsHtml(locale, '', { date: 'Pending' })).some((line) => /update date/.test(line)));
+    assert.ok(termsMessages(locale, termsHtml(locale, '', { reciprocalHref: '/elsewhere/' })).some((line) => /Privacy reciprocal link/.test(line)));
+    assert.ok(termsMessages(locale, termsHtml(locale, '', {}), '/Portfolio').some((line) => /base path/.test(line) || /Privacy reciprocal link/.test(line)));
+  });
+
+  test(`${name} Terms export rejects form controls, provider wording and unpublished-gate language`, () => {
+    for (const extra of ['<form></form>', '<input name="message">', 'formspree.io', 'Simulate submission', 'nonpublishable', 'professional-review-and-factual-gates-open']) {
+      assert.ok(termsMessages(locale, termsHtml(locale, '', { extra })).some((line) => /Terms/.test(line)), extra);
+    }
+  });
+
+  test(`${name} Footer export requires the localized Terms label`, () => {
+    const html = termsHtml(locale).replace(`<a>${locale.footer.at(-1)}</a>`, '');
+    assert.ok(termsMessages(locale, html).some((line) => line.includes(`missing approved footer label "${locale.footer.at(-1)}"`)));
+  });
+}
+
+for (const [name, locale] of Object.entries(legalLocales)) {
+  const privacyMessages = (main, base = '') => runVerifierOn({
+    files: { [locale.privacyFile]: `<!doctype html><html lang="${locale.lang}"><body><main><h1>x</h1>${main}</main></body></html>` },
+    basePath: base,
+  }).output.split('\n').filter((line) => line.startsWith(`- ${locale.privacyFile}:`));
+  const label = name === 'es' ? 'Última actualización' : 'Last updated';
+
+  test(`${name} Privacy export requires a real update date and the reciprocal Terms link`, () => {
+    const dated = `<dl><div><dt>${label}</dt><dd>${locale.terms.date}</dd></div></dl>`;
+    const link = `<a href="${locale.terms.route}">Terms</a>`;
+    assert.ok(privacyMessages(dated).some((line) => /missing Terms reciprocal link/.test(line)));
+    assert.ok(privacyMessages(link).some((line) => /Privacy is missing its .* update date/.test(line)));
+    const ok = privacyMessages(dated + link);
+    assert.ok(!ok.some((line) => /Terms reciprocal link|update date/.test(line)), ok.join('\n'));
+    assert.ok(privacyMessages(dated + link, '/Portfolio').some((line) => /missing Terms reciprocal link/.test(line)), 'base path is required on the reciprocal link');
+  });
+}

@@ -21,6 +21,7 @@ const copy = {
     explore: 'Explorar',
     accountability: 'Responsabilidad directa',
     privacy: 'Privacidad',
+    terms: 'Términos y condiciones',
     languageSwitchName: 'Ver sitio en inglés',
     alternateHreflang: 'en',
     navigation: ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio'],
@@ -37,6 +38,7 @@ const copy = {
     explore: 'Explore',
     accountability: 'Direct accountability',
     privacy: 'Privacy',
+    terms: 'Terms and Conditions',
     languageSwitchName: 'View site in Spanish',
     alternateHreflang: 'es-AR',
     navigation: ['Services', 'Work', 'How we work', 'About'],
@@ -64,6 +66,7 @@ const hosts = [
   { role: 'Founder', route: stableRoutes.founder },
   { role: 'Contact', route: stableRoutes.contact },
   { role: 'Privacy', route: stableRoutes.privacy },
+  { role: 'Terms', route: stableRoutes.terms },
 ] as const;
 const locales: readonly FooterLocale[] = ['es', 'en'];
 
@@ -139,6 +142,7 @@ for (const host of hosts) {
       const profiles = founderLinks.map((link) => footer.getByRole('link', { name: link.name, exact: true }));
       const copyright = footer.getByText(/^© \d{4} FURLANICH$/);
       const privacy = footer.getByRole('link', { name: text.privacy, exact: true });
+      const terms = footer.getByRole('link', { name: text.terms, exact: true });
       const languageSwitch = footer.locator(`a[hreflang="${text.alternateHreflang}"]`);
 
       // Approved destinations.
@@ -154,6 +158,7 @@ for (const host of hosts) {
         await expect(profiles[index]).toHaveAttribute('href', link.href);
       }
       await expect(privacy).toHaveAttribute('href', appPathname(stableRoutes.privacy[locale]));
+      await expect(terms).toHaveAttribute('href', appPathname(stableRoutes.terms[locale]));
       await expect(languageSwitch).toHaveCount(1);
       await expect(languageSwitch).toHaveAttribute('href', appPathname(host.route[locale === 'es' ? 'en' : 'es']));
       await expect(languageSwitch).toHaveAttribute('aria-label', text.languageSwitchName);
@@ -173,7 +178,7 @@ for (const host of hosts) {
         directHeading, email, phone, contactRoute, location,
         exploreHeading, ...exploreLinks,
         accountabilityHeading, founder, ...profiles,
-        copyright, privacy, languageSwitch,
+        copyright, privacy, terms, languageSwitch,
       ];
       const positions = await Promise.all(
         ordered.map((target) =>
@@ -579,15 +584,29 @@ test('every internal footer link resolves at the served base path', async ({ pag
   }
 });
 
-test('the global demonstration disclosure stays where it is, and the footer adds no new claim', async ({ page }) => {
-  await page.goto(appUrl(stableRoutes.home.es));
-  await expect(page.getByText('Explorá las opciones de contacto y probá el formulario de demostración.', { exact: false })).toHaveCount(1);
-  await page.goto(appUrl(stableRoutes.home.en));
-  await expect(page.getByText('Explore the contact options and try the demonstration form.', { exact: false })).toHaveCount(1);
-  await page.goto(appUrl(stableRoutes.contact.es));
-  await expect(page.getByRole('heading', { name: 'Demostración interactiva' })).toBeVisible();
-  await page.goto(appUrl(stableRoutes.contact.en));
-  await expect(page.getByRole('heading', { name: 'Interactive demonstration' })).toBeVisible();
+test('Home refers to direct contact, Contact offers native channels, and the footer adds no new claim', async ({ page }) => {
+  // ADR-CONTACT-DIRECT-CHANNELS supersedes the historical demonstration/form contract.
+  const referrals = {
+    es: 'Contactanos por WhatsApp, correo o teléfono.',
+    en: 'Contact us on WhatsApp, by email or by phone.',
+  } as const;
+  for (const locale of ['es', 'en'] as const) {
+    await page.goto(appUrl(stableRoutes.home[locale]));
+    const closing = page.locator('main section#cta');
+    await expect(closing.getByText(referrals[locale], { exact: true })).toBeVisible();
+    await expect(closing.locator(`a[href="${appPathname(stableRoutes.contact[locale])}"]`)).toBeVisible();
+    await expect(closing).not.toContainText(/demostraci[oó]n|demonstration|simulad|simulat/i);
+
+    await page.goto(appUrl(stableRoutes.contact[locale]));
+    const main = page.getByRole('main');
+    await expect(main.locator('form, input, textarea, button[type="submit"]')).toHaveCount(0);
+    const links = main.locator('[data-contact-channels] ul a');
+    await expect(links).toHaveCount(3);
+    for (const href of Object.values(channels)) {
+      await expect(main.locator(`[data-contact-channels] ul a[href="${href}"]`)).toBeVisible();
+    }
+    await expect(main).not.toContainText(/demostraci[oó]n|demonstration|simulad|simulat/i);
+  }
 
   const footerText = (await footerOf(page).innerText()).toLowerCase();
   expect(footerText).not.toMatch(/respuesta|response time|sla|agend|schedule/);

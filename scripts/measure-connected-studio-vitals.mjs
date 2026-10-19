@@ -25,12 +25,30 @@
 // one fails the run: it never contributes a sample. Layout shift from the enhancement is attributed by
 // `attributeShifts` and gated unrounded at zero.
 import { execSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import http from 'node:http';
+import os from 'node:os';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { chromium } from 'playwright';
-import { attributeShifts, missingInteractions, validateVitalsOptions } from '../lib/connected-studio/measurement.ts';
+import {
+  attributeShifts,
+  COLD_BASELINE_JOURNEYS,
+  findOptionalCodeInCriticalChunks,
+  collectPairedStartup,
+  gateExit,
+  judgePairedStartup,
+  judgeStaticRouteCost,
+  judgeTermsAgainstPrivacy,
+  mainThreadStartupCost,
+  missingInteractions,
+  percentileOf,
+  readBaselineEntry,
+  requireLegalPairing,
+  summarizeColdBaseline,
+  validateVitalsOptions,
+} from '../lib/connected-studio/measurement.ts';
 import { normalizeBasePath } from './serve-static-export.mjs';
 
 const root = process.cwd();
@@ -55,20 +73,81 @@ const PROFILES = {
   },
 };
 
+// `--startup-baseline` (PLAN-SFC-V1 Task 3) does not measure vitals: it records the cold first-load JS and the
+// main-thread startup cost of the reading, intake and legal routes, with one raw Chromium trace per journey.
+const STARTUP = process.argv.includes('--startup-baseline');
+
+// The pages the vitals journeys can measure (PLAN-SFC-V1 Task 14 adds the three Atlas pages).
+const KNOWN_ROUTES = ['services', 'projects', 'studio', 'founder', 'contact'];
+// The routes --startup-baseline can measure; --routes narrows either list.
+const READING_ROUTE_NAMES = ['studio', 'founder', 'contact', 'privacy', 'terms'];
+
 // Validate before building, serving or launching anything: a typo must not become a passing gate.
 let options;
 try {
   options = validateVitalsOptions({
-    journeys: argument('journeys') ?? '10',
+    journeys: argument('journeys') ?? (STARTUP ? String(COLD_BASELINE_JOURNEYS) : '10'),
     profile: argument('profile'),
     profiles: Object.keys(PROFILES),
     expectMode: argument('expect-mode'),
+    routes: argument('routes'),
+    knownRoutes: STARTUP ? READING_ROUTE_NAMES : KNOWN_ROUTES,
   });
 } catch (error) {
   console.error(`measure-connected-studio-vitals: ${error.message}`);
   process.exit(1);
 }
-const { journeys: JOURNEYS_PER_LOCALE, profiles: SELECTED_PROFILES, expectMode: EXPECT_MODE } = options;
+const { journeys: JOURNEYS_PER_LOCALE, profiles: SELECTED_PROFILES, expectMode: EXPECT_MODE, routes: SELECTED_ROUTES } = options;
+if (STARTUP) {
+  try {
+    requireLegalPairing(SELECTED_ROUTES);
+  } catch (error) {
+    console.error(`measure-connected-studio-vitals: ${error.message}`);
+    process.exit(1);
+  }
+}
+if (STARTUP && JOURNEYS_PER_LOCALE < COLD_BASELINE_JOURNEYS) {
+  console.error(`measure-connected-studio-vitals: --startup-baseline needs --journeys of at least ${COLD_BASELINE_JOURNEYS}, got ${JOURNEYS_PER_LOCALE}`);
+  process.exit(1);
+}
+// --judge-paired=<dir> (PLAN-SFC-V1 Task 14) measures nothing. It judges paired, interleaved --startup-baseline reports that were
+// written as <dir>/{base,cur}-<profile>-<round>.json (rounds 1 and 2, run baseline, current, current, baseline from each head's own
+// checkout with --routes and --profile): ten journeys per side, the median and p95 added against the 25 ms allowance.
+if (argument('judge-paired') !== undefined) {
+  const dir = argument('judge-paired');
+  // The declared selection: the chosen profile or both, and the chosen reading routes (default Studio, Founder and Contact) in
+  // both locales. Every one must be present in all four reports, or nothing is judged.
+  const pairedRoutes = argument('routes') !== undefined ? SELECTED_ROUTES : ['studio', 'founder', 'contact'];
+  const pairedKeys = pairedRoutes.flatMap((route) => ['es', 'en'].map((locale) => `${route}/${locale}`));
+  const verdicts = [];
+  try {
+    const unmeasurable = pairedRoutes.filter((route) => !READING_ROUTE_NAMES.includes(route));
+    if (unmeasurable.length) throw new Error(`--routes names routes the startup measurement does not cover: ${unmeasurable.join(', ')}`);
+    for (const profileName of SELECTED_PROFILES) {
+      const read = (side, round) => {
+        const file = path.join(dir, `${side}-${profileName}-${round}.json`);
+        return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : undefined;
+      };
+      const collected = collectPairedStartup({
+        profile: profileName,
+        keys: pairedKeys,
+        reports: { base: [read('base', 1), read('base', 2)], cur: [read('cur', 1), read('cur', 2)] },
+      });
+      for (const key of pairedKeys) {
+        const judged = judgePairedStartup({ baseline: collected[key].baseline, current: collected[key].current });
+        verdicts.push(judged.verdict);
+        console.log(`${judged.verdict} ${profileName} ${key}: baseline median ${judged.baselineMedianMs.toFixed(1)} p95 ${judged.baselineP95Ms.toFixed(1)}; current median ${judged.currentMedianMs.toFixed(1)} p95 ${judged.currentP95Ms.toFixed(1)}; ${judged.note}`);
+      }
+    }
+  } catch (error) {
+    console.error(`measure-connected-studio-vitals: ${error.message}`);
+    process.exit(1);
+  }
+  const gate = gateExit(verdicts);
+  console.log(`\nPaired startup CPU verdicts: ${JSON.stringify(gate.counts)}`);
+  console.log(gate.message);
+  process.exit(gate.ok ? 0 : 1);
+}
 const HARDWARE = process.argv.includes('--hardware');
 const basePath = normalizeBasePath(argument('base-path') ?? process.env.NEXT_PUBLIC_BASE_PATH ?? '');
 if (basePath && !/^\/[A-Za-z0-9._-]+$/.test(basePath)) {
@@ -85,7 +164,22 @@ const DESTINATIONS = {
     es: { pathname: '/proyectos/', other: '/servicios/', pause: 'Pausar fondo', resume: 'Reanudar fondo' },
     en: { pathname: '/en/work/', other: '/en/services/', pause: 'Pause background', resume: 'Resume background' },
   },
+  // PLAN-SFC-V1 Task 14: the Atlas pages have no in-page fragment links in their main content (checked in the emitted
+  // HTML), so they say so explicitly instead of silently skipping the step; every other journey step is the same.
+  studio: {
+    es: { pathname: '/estudio/', other: '/servicios/', pause: 'Pausar fondo', resume: 'Reanudar fondo', fragmentLink: false },
+    en: { pathname: '/en/about/', other: '/en/services/', pause: 'Pause background', resume: 'Resume background', fragmentLink: false },
+  },
+  founder: {
+    es: { pathname: '/estudio/samuel-furlanich/', other: '/proyectos/', pause: 'Pausar fondo', resume: 'Reanudar fondo', fragmentLink: false },
+    en: { pathname: '/en/about/samuel-furlanich/', other: '/en/work/', pause: 'Pause background', resume: 'Resume background', fragmentLink: false },
+  },
+  contact: {
+    es: { pathname: '/contacto/', other: '/servicios/', pause: 'Pausar fondo', resume: 'Reanudar fondo', fragmentLink: false },
+    en: { pathname: '/en/contact/', other: '/en/services/', pause: 'Pause background', resume: 'Resume background', fragmentLink: false },
+  },
 };
+if (JSON.stringify(Object.keys(DESTINATIONS)) !== JSON.stringify(KNOWN_ROUTES)) throw new Error('DESTINATIONS and KNOWN_ROUTES must list the same routes in the same order');
 
 if (!process.argv.includes('--skip-build')) {
   execSync('npm run build', { stdio: 'inherit', env: { ...process.env, NEXT_PUBLIC_BASE_PATH: basePath } });
@@ -225,9 +319,14 @@ async function journey(browser, profile, route, locale) {
       completed.push('resume');
     }
     const fragment = page.locator('main a[href^="#"]:visible').first();
-    if ((await fragment.count()) === 0) throw new Error(`${route}/${locale}: no visible in-page fragment link to follow`);
-    await tap(fragment);
-    completed.push('fragment-link');
+    if (copy.fragmentLink === false) {
+      // Declared fragment-free: a fragment link appearing here means the declaration is stale, which must be noticed.
+      if ((await fragment.count()) > 0) throw new Error(`${route}/${locale}: the page now has an in-page fragment link; update its journey declaration`);
+    } else {
+      if ((await fragment.count()) === 0) throw new Error(`${route}/${locale}: no visible in-page fragment link to follow`);
+      await tap(fragment);
+      completed.push('fragment-link');
+    }
     await page.keyboard.press('Tab');
     await page.keyboard.press('Tab');
     completed.push('keyboard-focus');
@@ -247,7 +346,7 @@ async function journey(browser, profile, route, locale) {
     await page.waitForURL((url) => url.pathname === `${basePath}${copy.other}`, { timeout: 30_000 });
     await page.getByRole('heading', { level: 1 }).first().waitFor({ state: 'visible', timeout: 30_000 });
     completed.push('route-link');
-    const missing = missingInteractions({ mode, completed });
+    const missing = missingInteractions({ mode, completed, fragmentLink: copy.fragmentLink !== false });
     if (missing.length) throw new Error(`${route}/${locale}: journey incomplete, missing ${missing.join(', ')}`);
 
     const { events, shifts, fontLoads, activationAt } = await page.evaluate(() => window.__connectedVitals);
@@ -274,6 +373,308 @@ async function journey(browser, profile, route, locale) {
     await context.close();
   }
 }
+
+// --- Startup baseline (PLAN-SFC-V1 Task 3) -----------------------------------------------------------------
+// The routes the commercial redesign changes. Terms has no Task 3 baseline: its comparator is Privacy, measured in the same run.
+const READING_ROUTES = {
+  studio: { es: '/estudio/', en: '/en/about/' },
+  founder: { es: '/estudio/samuel-furlanich/', en: '/en/about/samuel-furlanich/' },
+  contact: { es: '/contacto/', en: '/en/contact/' },
+  privacy: { es: '/privacidad/', en: '/en/privacy/' },
+  terms: { es: '/terminos/', en: '/en/terms/' },
+};
+if (JSON.stringify(Object.keys(READING_ROUTES)) !== JSON.stringify(READING_ROUTE_NAMES)) throw new Error('READING_ROUTES and READING_ROUTE_NAMES must list the same routes in the same order');
+const TRACE_CATEGORIES = ['devtools.timeline', 'disabled-by-default-devtools.timeline', 'v8.execute', 'toplevel', 'blink.user_timing', 'loading'];
+const STARTUP_SETTLE_MS = 2_000;
+const STARTUP_METHOD =
+  `one cold fresh-context navigation per journey under the profile's CPU/network throttling and the gzip lab server, no test hook and no forced renderer; ` +
+  `a Chromium trace (${TRACE_CATEGORIES.join(', ')}) from before the navigation until ${STARTUP_SETTLE_MS} ms after the load event; startup CPU is the top-level script work ` +
+  `(EvaluateScript, v8.compile, FunctionCall, RunMicrotasks: evaluation and hydration) of the document's CrRendererMain thread from its navigationStart; network and idle time are not tasks and cost nothing; ` +
+  `first-load JS is the Brotli quality 11 size of the emitted files for every script the browser requested`;
+const brotliSize = (buffer) => zlib.brotliCompressSync(buffer, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 } }).length;
+const packageVersion = (name) => JSON.parse(fs.readFileSync(path.join(root, 'node_modules', name, 'package.json'), 'utf8')).version;
+const sizeCache = new Map();
+const emittedScriptSize = (relative) => {
+  if (!sizeCache.has(relative)) {
+    const buffer = fs.readFileSync(path.join(outDir, '_next/static', relative));
+    sizeCache.set(relative, { rawBytes: buffer.length, brotliBytes: brotliSize(buffer) });
+  }
+  return sizeCache.get(relative);
+};
+
+async function startupJourney(browser, profileName, route, locale, run, traceDir) {
+  const profile = PROFILES[profileName];
+  const documentUrl = `${origin}${basePath}${READING_ROUTES[route][locale]}`;
+  const context = await browser.newContext({
+    ...profile.context,
+    extraHTTPHeaders: { 'x-lab-rtt': String(profile.network.latency), 'x-lab-down': String(profile.network.downloadThroughput) },
+  });
+  let tracing = false;
+  try {
+    const page = await context.newPage();
+    const cdp = await context.newCDPSession(page);
+    await cdp.send('Network.enable');
+    await cdp.send('Network.emulateNetworkConditions', { offline: false, ...profile.network });
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: profile.cpu });
+    const scripts = new Set();
+    const critical = new Set(); // requested before the load event; the rest is fetched after it (route prefetch, deferred work)
+    let loaded = false;
+    page.on('load', () => {
+      loaded = true;
+    });
+    page.on('request', (request) => {
+      if (request.resourceType() !== 'script') return;
+      const match = decodeURIComponent(new URL(request.url()).pathname).match(/_next\/static\/(.+\.js)$/);
+      if (!match) return;
+      scripts.add(match[1]);
+      if (!loaded) critical.add(match[1]);
+    });
+    const tracePath = path.join(traceDir, `${route}-${locale}-${profileName}-${run + 1}.json`);
+    await browser.startTracing(page, { path: tracePath, categories: TRACE_CATEGORIES });
+    tracing = true;
+    await page.goto(documentUrl, { waitUntil: 'load', timeout: 90_000 });
+    await page.waitForTimeout(STARTUP_SETTLE_MS);
+    await browser.stopTracing();
+    tracing = false;
+    const trace = JSON.parse(fs.readFileSync(tracePath, 'utf8'));
+    const cost = mainThreadStartupCost({ events: trace.traceEvents ?? trace, documentUrl });
+    const canvases = await page.locator('canvas').count();
+    if (canvases) throw new Error(`${route}/${locale}: the page drew ${canvases} canvas(es): a baseline of the static route would be wrong`);
+    const sizes = [...scripts].sort().map((script) => ({ script, critical: critical.has(script), ...emittedScriptSize(script) }));
+    // PLAN-SFC-V1 Task 14: a byte budget alone would pass a small slice of the optional engine moved into the code a
+    // static route loads, so every script the journey requested is scanned for engine-only text.
+    const optionalCode = findOptionalCodeInCriticalChunks({
+      chunks: sizes.map((entry) => ({ path: entry.script, text: fs.readFileSync(path.join(outDir, '_next/static', entry.script), 'utf8') })),
+    });
+    // Reported, not thrown: the run still measures what the page costs, and the finding fails the run at the end.
+    const optionalCodeFound = optionalCode.map((item) => `${item.path} (${item.marker}${critical.has(item.path) ? ', critical' : ''})`);
+    return {
+      startupCpuMs: cost.scriptCpuMs,
+      evaluationCpuMs: cost.evaluationCpuMs,
+      longestTaskMs: cost.longestTaskMs,
+      taskCpuMs: cost.taskCpuMs,
+      tasks: cost.tasks,
+      scripts: sizes,
+      optionalCodeFound,
+      firstLoadJsBrotliBytes: sizes.reduce((sum, item) => sum + item.brotliBytes, 0),
+      firstLoadJsRawBytes: sizes.reduce((sum, item) => sum + item.rawBytes, 0),
+      criticalJsBrotliBytes: sizes.filter((item) => item.critical).reduce((sum, item) => sum + item.brotliBytes, 0),
+      tracePath,
+      traceSha256: crypto.createHash('sha256').update(fs.readFileSync(tracePath)).digest('hex'),
+    };
+  } finally {
+    if (tracing) await browser.stopTracing().catch(() => {});
+    await context.close();
+  }
+}
+
+/** Brotli bytes of the scripts a route's own emitted HTML references: the deterministic second first-load measure. */
+function staticHtmlJsBrotliBytes(pathname) {
+  const html = fs.readFileSync(path.join(outDir, ...pathname.split('/').filter(Boolean), 'index.html'), 'utf8');
+  const scripts = [...new Set([...html.matchAll(/_next\/static\/(chunks\/[A-Za-z0-9._-]+\.js)/g)].map((match) => match[1]))];
+  if (!scripts.length) throw new Error(`${pathname}: the emitted HTML references no scripts`);
+  return scripts.reduce((sum, script) => sum + emittedScriptSize(script).brotliBytes, 0);
+}
+
+const readJsonArgument = (name) => {
+  const file = argument(name);
+  if (file === undefined) return undefined;
+  if (!file || !fs.existsSync(file)) throw new Error(`--${name} must name an existing report file, got "${file}"`);
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+};
+
+/** The legal budget compares Terms against Privacy; Privacy itself is judged against its Task 3 baseline, Terms against Privacy (compareTermsWithPrivacy). */
+const COST_KIND = { studio: 'studio', founder: 'founder', contact: 'contact', privacy: 'legal' };
+/**
+ * Terms has no Task 3 baseline: it is judged against the same locale's Privacy page measured in this run, on the same profile
+ * (PLAN-SFC-V1, "Critical route budgets": Terms compared to Privacy). The emitted-byte and critical-byte rows come from the
+ * same pair; the CPU and long-task rows are measured here, never inferred from identical script files.
+ */
+function compareTermsWithPrivacy(report) {
+  const comparison = [];
+  for (const [profileName, profile] of Object.entries(report.profiles)) {
+    for (const locale of Object.keys(READING_ROUTES.terms)) {
+      const terms = profile.routes[`terms/${locale}`];
+      if (!terms) continue;
+      const judged = judgeTermsAgainstPrivacy({ privacy: profile.routes[`privacy/${locale}`], terms });
+      comparison.push({ profile: profileName, route: `terms/${locale}`, kind: 'legal', verdict: judged.verdict, rows: judged.rows, comparator: `privacy/${locale}`,
+        firstLoadSettledJsAddedKiB: +((terms.firstLoadJsBrotliBytes - profile.routes[`privacy/${locale}`].firstLoadJsBrotliBytes) / 1024).toFixed(1) });
+    }
+  }
+  return comparison;
+}
+
+
+/** Judges every measured route of a finished startup report against Task 3's committed baseline. */
+function compareWithBaseline(report, baselineReport, baselineProduction) {
+  const comparison = [];
+  for (const [profileName, profile] of Object.entries(report.profiles)) {
+    for (const [key, entry] of Object.entries(profile.routes)) {
+      const [route, locale] = key.split('/');
+      if (route === 'terms') continue; // no Task 3 baseline exists; compareTermsWithPrivacy judges it
+      const baseline = readBaselineEntry({ report: baselineReport, route, locale, profile: profileName });
+      const productionEntry = baselineProduction?.readingRoutes?.find((item) => item.route === route && item.locale === locale);
+      if (productionEntry) baseline.staticHtmlJsBrotliBytes = Math.round(productionEntry.jsBrotliKiB * 1024);
+      const current = {
+        route,
+        locale,
+        profile: profileName,
+        basePath: report.basePath,
+        journeys: entry.journeys,
+        criticalJsBrotliBytes: entry.criticalJsBrotliBytes,
+        firstLoadJsBrotliBytes: entry.firstLoadJsBrotliBytes,
+        staticHtmlJsBrotliBytes: entry.staticHtmlJsBrotliBytes,
+        startupCpuP95Ms: entry.startupCpuP95Ms,
+        startupCpuSpreadMs: Math.max(...entry.journeysDetail.map((item) => item.startupCpuMs)) - Math.min(...entry.journeysDetail.map((item) => item.startupCpuMs)),
+        longestTaskMs: entry.longestTaskMs,
+      };
+      if (baseline.basePath !== current.basePath) throw new Error(`${key} ${profileName}: the baseline is for base path ${baseline.basePath}, this run is ${current.basePath}`);
+      const judged = judgeStaticRouteCost({ kind: COST_KIND[route], baseline, current });
+      comparison.push({
+        profile: profileName,
+        route: key,
+        kind: COST_KIND[route],
+        verdict: judged.verdict,
+        rows: judged.rows,
+        firstLoadSettledJsAddedKiB: +((current.firstLoadJsBrotliBytes - baseline.firstLoadJsBrotliBytes) / 1024).toFixed(1),
+      });
+    }
+  }
+  return comparison;
+}
+
+async function runStartupBaseline() {
+  // --compare=<Task 3 startup report> judges this run against it; --compare-production=<Task 3 production report> adds the
+  // static-HTML first-load figure. Both are read before any browser work so a wrong path fails fast.
+  const baselineReport = readJsonArgument('compare');
+  const baselineProduction = readJsonArgument('compare-production');
+  if (baselineProduction && !baselineReport) throw new Error('--compare-production needs --compare');
+  const traceDir = path.resolve(argument('trace-dir') ?? path.join(root, '.superpowers', 'reports', baselineReport ? 'sfc-14' : 'sfc-03', 'traces', basePath ? basePath.slice(1) : 'root'));
+  fs.mkdirSync(traceDir, { recursive: true });
+  const browser = await chromium.launch();
+  const report = {
+    kind: 'cold startup baseline of the reading, intake and legal routes (one machine, lab throttling; not field data, not a pass/fail gate)',
+    basePath: basePath || '/',
+    journeysPerRoute: JOURNEYS_PER_LOCALE,
+    method: STARTUP_METHOD,
+    limitations: [
+      'Tracing adds overhead to every figure; the same method must be used for any later comparison against this baseline.',
+      'Lab data on one machine: the p95 of five journeys is the largest of the five (nearest rank).',
+      'Terms has no Task 3 baseline: it is judged against the same locale Privacy measured in this run.',
+      'The server charges the navigation document the profile latency; scripts are served gzip with no added latency.',
+    ],
+    machine: { cpu: os.cpus()[0]?.model, logicalCores: os.cpus().length, memoryGiB: +(os.totalmem() / 1024 ** 3).toFixed(1), platform: `${os.platform()} ${os.release()}`, node: process.version },
+    versions: { next: packageVersion('next'), react: packageVersion('react'), 'react-dom': packageVersion('react-dom'), three: packageVersion('three'), playwright: packageVersion('playwright'), chromium: browser.version() },
+    head: execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim(),
+    traceDir,
+    profiles: {},
+    notes: [],
+  };
+  const failures = [];
+  const findings = [];
+  try {
+    for (const profileName of SELECTED_PROFILES) {
+      report.profiles[profileName] = { label: PROFILES[profileName].label, routes: {} };
+      for (const route of SELECTED_ROUTES) {
+        for (const locale of Object.keys(READING_ROUTES[route])) {
+          const journeys = [];
+          for (let run = 0; run < JOURNEYS_PER_LOCALE; run += 1) journeys.push(await startupJourney(browser, profileName, route, locale, run, traceDir));
+          // A script that is not critical may be another route's prefetch (a link the page shows), so only the critical ones are
+          // the page's own load; the rest is a note. Findings fail the run after the comparison has been made.
+          const optionalCodeRuns = [...new Set(journeys.flatMap((item) => item.optionalCodeFound))];
+          const ownCode = optionalCodeRuns.filter((item) => item.includes(', critical)'));
+          if (ownCode.length) findings.push(`${profileName}/${route}/${locale}: optional engine or connected host code in the scripts a policy-disabled page loads before its load event: ${ownCode.join(', ')}`);
+          if (optionalCodeRuns.length > ownCode.length) report.notes.push(`${profileName}/${route}/${locale}: a prefetched script carries connected code (not critical): ${optionalCodeRuns.filter((item) => !ownCode.includes(item)).join(', ')}`);
+          const scriptSets = new Set(journeys.map((item) => item.scripts.map((entry) => entry.script).join('|')));
+          if (scriptSets.size > 1) report.notes.push(`${profileName}/${route}/${locale}: the requested script set varied between journeys; the largest first-load figure is reported`);
+          const summary = summarizeColdBaseline({
+            route,
+            locale,
+            profile: profileName,
+            basePath: basePath || '/',
+            firstLoadJsBrotliBytes: Math.max(...journeys.map((item) => item.firstLoadJsBrotliBytes)),
+            criticalJsBrotliBytes: Math.max(...journeys.map((item) => item.criticalJsBrotliBytes)),
+            samples: journeys.map((item) => ({ startupCpuMs: item.startupCpuMs, longestTaskMs: item.longestTaskMs })),
+            method: STARTUP_METHOD,
+            tracePaths: journeys.map((item) => item.tracePath),
+          });
+          report.profiles[profileName].routes[`${route}/${locale}`] = {
+            ...summary,
+            firstLoadJsBrotliKiB: +(summary.firstLoadJsBrotliBytes / 1024).toFixed(1),
+            criticalJsBrotliKiB: +(summary.criticalJsBrotliBytes / 1024).toFixed(1),
+            staticHtmlJsBrotliBytes: staticHtmlJsBrotliBytes(READING_ROUTES[route][locale]),
+            firstLoadJsRawKiB: +(Math.max(...journeys.map((item) => item.firstLoadJsRawBytes)) / 1024).toFixed(1),
+            scriptCount: journeys[0].scripts.length,
+            startupCpuMedianMs: +percentileOf(journeys.map((item) => item.startupCpuMs), 50).toFixed(1),
+            startupCpuP95Ms: +summary.startupCpuP95Ms.toFixed(1),
+            evaluationCpuP95Ms: +percentileOf(journeys.map((item) => item.evaluationCpuMs), 95).toFixed(1),
+            taskCpuP95Ms: +percentileOf(journeys.map((item) => item.taskCpuMs), 95).toFixed(1),
+            longestTaskMs: +summary.longestTaskMs.toFixed(1),
+            journeysDetail: journeys.map((item) => ({ startupCpuMs: +item.startupCpuMs.toFixed(1), evaluationCpuMs: +item.evaluationCpuMs.toFixed(1), taskCpuMs: +item.taskCpuMs.toFixed(1), longestTaskMs: +item.longestTaskMs.toFixed(1), tasks: item.tasks, traceSha256: item.traceSha256 })),
+            scripts: journeys[0].scripts.map((entry) => ({ script: entry.script, critical: entry.critical, rawKiB: +(entry.rawBytes / 1024).toFixed(1), brotliKiB: +(entry.brotliBytes / 1024).toFixed(1) })),
+          };
+        }
+      }
+    }
+  } catch (error) {
+    failures.push(error.stack ?? error.message);
+  } finally {
+    await browser.close();
+    server.close();
+  }
+  let comparison = null;
+  if (!failures.length && baselineReport) {
+    try {
+      comparison = compareWithBaseline(report, baselineReport, baselineProduction);
+      report.comparison = comparison;
+    } catch (error) {
+      failures.push(error.message);
+    }
+  }
+  let termsComparison = null;
+  if (!failures.length && SELECTED_ROUTES.includes('terms')) {
+    try {
+      termsComparison = compareTermsWithPrivacy(report);
+      report.termsComparison = termsComparison;
+    } catch (error) {
+      failures.push(error.message);
+    }
+  }
+  const outFile = argument('out');
+  if (outFile) fs.writeFileSync(outFile, `${JSON.stringify(report, null, 2)}\n`);
+  if (termsComparison) {
+    for (const item of termsComparison) {
+      console.log(`${item.verdict} ${item.profile} ${item.route} against ${item.comparator} (${item.kind}): ${item.rows.map((row) => `${row.metric} ${row.verdict} [${row.note}]`).join('; ')}`);
+    }
+    const termsGate = gateExit(termsComparison.map((item) => item.verdict));
+    console.log(`\nTerms against Privacy: ${JSON.stringify(termsGate.counts)}`);
+    console.log(termsGate.message);
+    if (!termsGate.ok) failures.push(`Terms against Privacy is not satisfied: ${termsGate.message}`);
+  }
+  if (comparison) {
+    for (const item of comparison) {
+      console.log(`${item.verdict} ${item.profile} ${item.route} (${item.kind}): ${item.rows.map((row) => `${row.metric} ${row.verdict} [${row.note}]`).join('; ')}; settled first-load JS ${item.firstLoadSettledJsAddedKiB >= 0 ? '+' : ''}${item.firstLoadSettledJsAddedKiB} KiB (reported, not gated)`);
+    }
+    const counts = comparison.reduce((tally, item) => ({ ...tally, [item.verdict]: (tally[item.verdict] ?? 0) + 1 }), {});
+    console.log(`\nStatic release cost against the Task 3 baseline: ${JSON.stringify(counts)}`);
+    // An OPEN row stays OPEN in the report, but unresolved evidence cannot satisfy the gate: run the paired adjudication
+    // (--judge-paired) for those rows. Only an all-PASS comparison exits successfully.
+    const gate = gateExit(comparison.map((item) => item.verdict));
+    console.log(gate.message);
+    if (!gate.ok) failures.push(`the static release cost against the Task 3 baseline is not satisfied: ${gate.message}`);
+  }
+  const table = Object.entries(report.profiles).flatMap(([profileName, profile]) =>
+    Object.entries(profile.routes).map(([key, value]) => ({ profile: profileName, route: key, firstLoadJsBrotliKiB: value.firstLoadJsBrotliKiB, criticalJsBrotliKiB: value.criticalJsBrotliKiB, startupCpuMedianMs: value.startupCpuMedianMs, startupCpuP95Ms: value.startupCpuP95Ms, evaluationCpuP95Ms: value.evaluationCpuP95Ms, longestTaskMs: value.longestTaskMs })));
+  console.log(JSON.stringify({ basePath: report.basePath, versions: report.versions, table }, null, 2));
+  failures.push(...findings);
+  if (failures.length) {
+    console.error('\nStartup baseline failed:\n- ' + failures.join('\n- '));
+    process.exit(1);
+  }
+  console.log('\nStartup baseline recorded (no pass/fail gate).');
+  process.exit(0);
+}
+if (STARTUP) await runStartupBaseline();
 
 const browser = await chromium.launch(HARDWARE ? { channel: 'chromium' } : {});
 let rendererName = null;
@@ -315,7 +716,7 @@ try {
   for (const name of SELECTED_PROFILES) {
     const profile = PROFILES[name];
     report.profiles[name] = {};
-    for (const route of Object.keys(DESTINATIONS)) {
+    for (const route of SELECTED_ROUTES) {
       const journeys = [];
       for (let run = 0; run < JOURNEYS_PER_LOCALE; run += 1) {
         for (const locale of Object.keys(DESTINATIONS[route])) journeys.push(await journey(browser, profile, route, locale));

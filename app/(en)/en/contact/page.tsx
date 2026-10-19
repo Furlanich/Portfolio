@@ -2,7 +2,7 @@ import { ContactPage } from '@/components/contact/ContactPage';
 import { SiteFooter } from '@/components/foundation/SiteFooter';
 import { SiteHeader } from '@/components/foundation/SiteHeader';
 import { getFoundationNavigationPaths } from '@/lib/foundation-navigation';
-import { contactContent } from '../_content/contact';
+import { contactContent as content } from '../_content/contact';
 import { founderContent } from '../_content/founder';
 
 const route = { locale: 'en' as const, routeId: 'contact' as const };
@@ -25,10 +25,10 @@ export default function Page() {
           languageSwitch: 'View site in Spanish',
         }}
       />
-      <ContactPage content={contactContent} locale={route.locale} mode="demonstration" />
+      <ContactPage content={content} locale={route.locale} />
       <SiteFooter
         paths={paths}
-        contactActions={contactContent.actions}
+        contactActions={content.actions}
         founderLinks={[founderContent.professionalLinks.linkedin, founderContent.professionalLinks.github]}
         labels={{
           navigation: 'Navigation',
@@ -41,7 +41,7 @@ export default function Page() {
           directContact: 'Direct contact',
           privacy: 'Privacy',
           professional: 'Professional links',
-          location: contactContent.location,
+          location: content.location,
           languageSwitch: 'View site in Spanish',
         }}
       />

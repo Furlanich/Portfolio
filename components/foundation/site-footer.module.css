@@ -208,6 +208,18 @@
   border-top: 1px solid var(--footer-line);
 }
 
+/* Privacy and Terms read as one legal group beside the copyright; the language control keeps the far edge, also when it wraps. */
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+}
+
+.legal ~ * {
+  margin-left: auto;
+}
+
 .copyright,
 .utility .link {
   margin: 0;

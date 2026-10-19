@@ -3,6 +3,7 @@ id: PLAN-INDEX
 type: execution-plan-index
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - REVIEW-SFC-PLAN-2026-10-14
   - PLAN-SFC-V1
   - REVIEW-SPF-PLAN-2026-09-30
@@ -27,7 +28,7 @@ related:
   - RFC-ADE-AGENT-USAGE-V1
   - ADR-ADE-AGENT-USAGE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-14
+last_verified: 2026-10-18
 ---
 
 # Execution plans
@@ -36,6 +37,10 @@ Use lightweight in-task planning for small, bounded, reversible work. Use a vers
 
 - [Plan template](template.md)
 - [Completed Stage B harness plan](completed/stage-b-agent-engineering-harness.md)
+
+## Direct-contact update — 2026-10-18
+
+PLAN-SFC-V1 Task 13 now removes the form and delivers direct channels under [ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md). Tasks 16/17 use direct links and factual disclosures without processor/counsel or delivery/deletion prerequisites.
 
 ## Active
 

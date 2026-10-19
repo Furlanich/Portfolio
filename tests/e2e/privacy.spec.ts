@@ -9,34 +9,20 @@ const routeCases = [
     name: 'Spanish Privacy',
     route: stableRoutes.privacy.es,
     language: 'es-AR',
-    heading: 'Privacidad de esta demostración',
+    heading: 'Privacidad y contacto',
     introduction:
-      'Este sitio funciona como portfolio y demostración técnica. No acepta consultas comerciales mediante el formulario y no presenta esta página como una política revisada por un profesional legal.',
-    sections: [
-      'Qué ocurre con los datos del formulario',
-      'Alojamiento y datos técnicos',
-      'Alternativas externas',
-      'Información sensible',
-      'Conservación y consultas',
-      'Activación comercial futura',
-    ],
+      'Esta página explica qué ocurre al navegar por el sitio y al contactar a Samuel Furlanich por los canales publicados.',
+    sections: ["Responsable y contacto","Contacto directo","Alojamiento y datos técnicos","Preferencias de navegación","Información que compartís","Mensajes y solicitudes sobre tus datos"],
     githubLabel: 'Ver la declaración de privacidad de GitHub',
   },
   {
     name: 'English Privacy',
     route: stableRoutes.privacy.en,
     language: 'en',
-    heading: 'Privacy in this demonstration',
+    heading: 'Privacy and contact',
     introduction:
-      'This site operates as a portfolio and technical showcase. It does not accept commercial inquiries through the form and does not present this page as a professionally reviewed legal policy.',
-    sections: [
-      'What happens to form data',
-      'Hosting and technical data',
-      'External alternatives',
-      'Sensitive information',
-      'Retention and questions',
-      'Future commercial activation',
-    ],
+      'This page explains what happens when you browse the website and contact Samuel Furlanich through the published channels.',
+    sections: ["Responsible party and contact","Direct contact","Hosting and technical data","Browsing preferences","Information you share","Messages and requests about your information"],
     githubLabel: "View GitHub's privacy statement",
   },
 ] as const;
@@ -51,6 +37,8 @@ for (const pageCase of routeCases) {
     await expect(page.locator('main')).toHaveCount(1);
     await expect(page.locator('main h1:visible')).toHaveText(pageCase.heading);
     await expect(page.locator('main p').first()).toHaveText(pageCase.introduction);
+    const contents = page.getByRole('navigation', { name: pageCase.language === 'es-AR' ? 'Contenido' : 'Contents' });
+    await expect(contents.getByRole('listitem')).toHaveCount(pageCase.sections.length);
 
     for (const section of pageCase.sections) {
       await expect(page.getByRole('heading', { level: 2, name: section })).toBeVisible();
@@ -60,10 +48,23 @@ for (const pageCase of routeCases) {
       'href',
       'https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement',
     );
+    await expect(page.getByRole('main').getByRole('link', { name: pageCase.githubLabel })).not.toHaveAttribute('target', '_blank');
     await expect(page.locator('form')).toHaveCount(0);
     assertNoBrowserErrors();
   });
 }
+
+test('Privacy contents links stay below the sticky App Bar', async ({ page }) => {
+  await page.goto(appUrl(stableRoutes.privacy.es));
+  const link = page.getByRole('navigation', { name: 'Contenido' }).getByRole('link').first();
+  const targetId = await link.getAttribute('href');
+  await link.click();
+  await expect(page).toHaveURL(new RegExp('#' + targetId?.slice(1) + '$'));
+  const target = page.locator(targetId ?? '');
+  const targetTop = await target.evaluate((element) => element.getBoundingClientRect().top);
+  const appBarBottom = await page.getByRole('banner').evaluate((element) => element.getBoundingClientRect().bottom);
+  expect(targetTop).toBeGreaterThanOrEqual(appBarBottom - 1);
+});
 
 async function switchLanguage(page: Page, language: string, route: string) {
   await Promise.all([

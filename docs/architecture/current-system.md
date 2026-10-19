@@ -3,6 +3,7 @@ id: ARCH-CURRENT
 type: existing-system
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - PLAN-MARKETING-PRESENTATION-EXCELLENCE
   - ARCH-FINDINGS
   - IA-SITE
@@ -18,10 +19,14 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - PLAN-SPF-V1
-last_verified: 2026-10-14
+last_verified: 2026-10-18
 ---
 
 # Current system
+
+## Direct-contact update — 2026-10-18
+
+Integration Task 13: both Contact routes use native WhatsApp/mailto/tel links and no form client or mode selector. Privacy describes direct messages and hosting. Dormant inquiry libraries remain outside the route import graph. [ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) supersedes the earlier form implementation details below; publication still awaits human merge/coordinated release.
 
 ## Scope
 
@@ -134,7 +139,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 
 ## Current foundation implementation — Task 3
 
-- Fourteen static foundation routes are rendered by locale-specific Server Component trees: Spanish at the root routes with document language es-AR, and English below /en/ with document language en.
+- Sixteen static foundation routes (the Terms pair added by PLAN-SFC-V1 Task 16) are rendered by locale-specific Server Component trees: Spanish at the root routes with document language es-AR, and English below /en/ with document language en.
 - Shared foundation components provide the semantic header, footer, language switch, typography-led hero, useful Services and Contact destinations, and the minimum Founder profile.
 - `/privacidad/` and `/en/privacy/` render the shared server-rendered `PrivacyPage` from locale-owned exact demonstration copy. The disclosure describes temporary page memory, GitHub Pages hosting metadata, external fallback boundaries, no form transmission or inbox copy, no inquiry analytics, and future commercial re-review gates.
 - The public foundation has no `next-intl` dependency, legacy client provider, locale React state, `window.location` parsing, or document-language mutation.
@@ -142,7 +147,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Retained personal data JSON, project assets, and core primitives remain in Git and are outside this cleanup; the obsolete localization shell, sections, helper, and message catalogs are retired.
 - Both normal and /Portfolio static-export modes are verified by the repository artifact checker. Task 4 browser QA repeated all eight routes at 320x800, 375x812, 768x1024, 1024x768, and 1440x900; language switching, keyboard focus, JavaScript-disabled rendering, reduced motion, contact links, Founder links, and CV routing were checked.
 
-## Current Contact demonstration — Task 4 / PR 4 — DEPLOYED
+## Historical Contact demonstration — Task 4 / PR 4 (superseded by Task 13) — DEPLOYED
 
 - The paired /contacto/ and /en/contact/ routes render a shared server-side ContactPage and narrow client-side ContactForm.
 - The form keeps exactly name, email, optional company, and message. Locale-owned content supplies labels, helpers, validation messages, demonstration disclosure, status copy, fallback note, and Privacy/Founder links.
@@ -156,7 +161,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Both localized home routes render one shared `CommercialHomepage` Server Component with the existing hero followed by Problems, Services, Audiences, Proof fallback, Process, Founder, and final CTA in the approved order.
 - The seven later sections use route-owned typed content from the Spanish and English home modules. Shared components contain no public copy or client-side locale state.
 - `HOME-PROOF` is the approved single-panel credibility fallback with direct-responsibility, verifiable-claims, and confidentiality commitments; no project cards, project links, metrics, or client claims were added.
-- The existing header and footer expose the localized in-page Process destination (`/#proceso` and `/en/#process`) on all fourteen foundation routes without adding a route ID.
+- The existing header and footer expose the localized in-page Process destination (`/#proceso` and `/en/#process`) on all sixteen foundation routes without adding a route ID.
 - The static artifact verifier checks both homepage narratives, stable labelled sections, visible headings, required internal actions, the confirmed WhatsApp action, document languages, route references, and optional base-path integrity.
 - The implementation uses the existing foundation palette, typography, spacing, borders, responsive grid rules, target sizing, focus treatment, and reduced-motion behavior. No dependencies, routes, hosting settings, metadata architecture, form, imagery, or project evidence changed.
 
@@ -240,7 +245,7 @@ Delivered by [PLAN-SPF-V1](../plans/completed/services-projects-footer-v1.md) (T
 
 ### The connected scene
 
-- The scene is optional and sits behind readable server HTML. `lib/connected-studio/` holds the pure logic (`types`, `model`, `labels`, `controller`, `capability`, `session`, `content`, `media-manifest`, `frame-scheduler`, `measurement`); `components/connected-studio/` holds `ConnectedStudioGround` (server), `ConnectedStudioEnhancement` (the thin client lifecycle leaf) and `ConnectedPauseControl`; `components/connected-studio/runtime/` holds the Three engine, loaded by a dynamic import inside the client leaf after load, visibility, preferences, policy and a coarse WebGL probe.
+- The scene is optional and sits behind readable server HTML. `lib/connected-studio/` holds the pure logic (`types`, `model`, `labels`, `controller`, `capability`, `session`, `content`, `media-manifest`, `frame-scheduler`, `measurement`); `components/connected-studio/` holds `ConnectedStudioGroundLayer` (the shared static ground), `ConnectedStudioGround` (server; Services and Projects, which always mount the host) and `ConnectedStudioAtlasGround` (server; Studio, Founder and Contact, whose import graph cannot reach the host, with the empty `atlas-live-host.tsx` as the one live seam; `scripts/sfc-contracts.test.mjs` walks that graph), `ConnectedStudioEnhancement` (the thin client lifecycle leaf) and `ConnectedPauseControl`; `components/connected-studio/runtime/` holds the Three engine, loaded by a dynamic import inside the client leaf after load, visibility, preferences, policy and a coarse WebGL probe.
 - `chooseConnectedMode` fails closed: every condition must be the exact expected boolean, including `CONNECTED_LIVE_POLICY[tier]`. The shipped policy is `{ wide: false, compact: false }`, so no page imports the engine. A test-only hook (`window.__FURLANICH_CONNECTED_TEST__`, set through `addInitScript`) lets the specs open the gate; production measurements never set it.
 - Wide and tablet use 16 nodes and 33 connections, compact 8 and 13; reduced motion, Save-Data, forced colors, no WebGL2, a software renderer, a context loss (session-wide) and a module or image failure all keep the static page. Pause persists across the connected routes and locales for the session.
 - The host scheduler runs frames on animation frames (PR #139). On the desktop candidate the live scene's cadence during scroll is not reliably within its budget; see the acceptance record.
@@ -256,7 +261,7 @@ Delivered by [PLAN-SPF-V1](../plans/completed/services-projects-footer-v1.md) (T
 
 ### Static export, base path and verification
 
-- The export has fourteen routes at the root and under `/Portfolio`, with no project-detail artifact; `npm run verify:static-export` checks both and fails on any retired artifact, payload link or leaked identity.
+- The export has sixteen routes at the root and under `/Portfolio`, with no project-detail artifact; `npm run verify:static-export` checks both and fails on any retired artifact, payload link or leaked identity. For the Terms pair it also compares the emitted sections, metadata, update date and reciprocal Privacy link with the canonical typed copy, requires the Footer Terms label, and fails on form controls or simulation/unpublished-gate wording; for Privacy it requires the update date and the reciprocal Terms link.
 - `scripts/serve-static-export.mjs` serves a clean `out/` like GitHub Pages: files and `<dir>/index.html` under the base path, a 301 from a directory without its slash, `max-age=600`, and a real 404 for anything else, never an index; on a Windows export it maps the dotted segment-prefetch request to the nested file. `PLAYWRIGHT_SERVE_EXPORT=1` runs only `connected-production-chromium` against it.
 - Measurements: `npm run measure:connected-studio` (the optional engine closure, 114.4 KiB Brotli in two chunks against 120 KiB; the posters), `npm run measure:connected-studio-vitals` (synthetic lab LCP and INP, enhancement layout shift) and the hardware-candidate script `scripts/measure-connected-studio-hardware.mjs` run by hand against a private candidate. None sets the connected test hook. The [W7 checkpoint](../reviews/services-projects-footer-acceptance-v1/w7-checkpoint.md) records the results on merged `main` at `77ccb9f1`.
 

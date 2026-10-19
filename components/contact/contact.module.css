@@ -1,0 +1,211 @@
+/* Direct contact retains the approved Atlas introduction and Bone reading surface. */
+.page {
+  position: relative;
+  overflow-x: clip;
+  overflow-wrap: anywhere;
+  padding-block: 32px 56px;
+  color: #F9F6EE;
+}
+
+.stack {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.introduction {
+  width: min(100%, 780px);
+}
+
+.introScrim {
+  max-width: 74ch;
+}
+
+.pageHeading {
+  max-width: 18ch;
+  margin: 0;
+  color: #F9F6EE;
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.introBody {
+  margin: 20px 0 0;
+  color: #B9C3CC;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.responseExpectation {
+  margin: 16px 0 0;
+  color: #B9C3CC;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.pauseSlot {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.staticLabel {
+  color: #B9C3CC;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+.contactSurface {
+  display: grid;
+  min-width: 0;
+  gap: 32px;
+  padding: 24px;
+  border: 1px solid #D6D0C4;
+  border-radius: 16px;
+  background: #F9F6EE;
+  color: #09243D;
+}
+.contactSurface > div {
+  min-width: 0;
+}
+.channelsHeading {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+.channelsNote {
+  max-width: 52ch;
+  margin: 16px 0 0;
+  color: #526473;
+  font-size: 18px;
+  line-height: 1.6;
+}
+.channelsList {
+  display: grid;
+  grid-auto-rows: 1fr;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.channelsList > li {
+  display: flex;
+  min-width: 0;
+}
+.channelAction {
+  display: grid;
+  min-width: 0;
+  min-height: 48px;
+  flex: 1;
+  grid-template-columns: 20px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid #004589;
+  border-radius: 8px;
+  color: #004589;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+}
+/* Matching side columns keep every label centered independently of its icon. */
+.channelAction::after {
+  content: '';
+}
+.channelIcon {
+  width: 20px;
+  height: 20px;
+}
+.channelLabel {
+  min-width: 0;
+}
+.channelAction:hover {
+  background: #ECE8DE;
+}
+.privacyContext {
+  margin: 20px 0 0;
+  color: #526473;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.inlineLink, .founderLink {
+  color: #004589;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.channelAction:focus-visible, .inlineLink:focus-visible, .founderLink:focus-visible {
+  outline: 3px solid #004589;
+  outline-offset: 3px;
+}
+.location {
+  margin: 24px 0 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.founderBridge {
+  padding-top: 4px;
+}
+.founderLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: #9CC4EC;
+  font-size: 16px;
+}
+@media (min-width: 768px) {
+  .page {
+    padding-block: 48px 72px;
+  }
+  .stack {
+    gap: 72px;
+  }
+  .pageHeading {
+    font-size: 48px;
+  }
+  .contactSurface {
+    padding: 32px;
+  }
+}
+@media (min-width: 820px) {
+  .contactSurface {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  }
+}
+@media (min-width: 1024px) {
+  .page {
+    padding-block: 56px 96px;
+  }
+  .stack {
+    gap: 96px;
+  }
+  .pageHeading {
+    font-size: 68px;
+  }
+  .contactSurface {
+    gap: 64px;
+    padding: 40px;
+  }
+}
+@media (forced-colors: active) {
+  .contactSurface, .channelAction {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+  .inlineLink, .founderLink, .channelAction {
+    color: LinkText;
+  }
+}

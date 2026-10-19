@@ -368,3 +368,40 @@ test('an unknown quality or tier fails closed instead of guessing', () => {
   assert.equal(isConnectedQuality('compact'), true);
   assert.equal(isConnectedQuality('tablet'), false, 'tablet is a tier, not a graph quality');
 });
+
+// PLAN-SFC-V1 Task 4: the new profile routes hold a fixed rest pose. Only the page-driven travel and the slow idle
+// rotation stop; connection growth still follows the graph's own reveal span, so an Atlas graph (zero span) is full.
+const { getConnectedProfile } = await import('../lib/connected-studio/profiles.ts');
+
+test('fixedRest holds every node on its anchor at any progress and scroll speed, with no idle rotation', () => {
+  const profile = getConnectedProfile('studio', 'wide', { width: 1440, height: 900 });
+  let pose;
+  for (const [progress, velocity] of [[0, 0], [0.5, 3000], [1, -2000], [0.2, 900]]) {
+    pose = sampleConnectedPose(pose, { graph: profile.graph, tier: 'wide', progress, velocityPxPerSecond: velocity, deltaSeconds: 0.05, fixedRest: true });
+    assert.deepEqual(pose.nodes.map((node) => node.position), profile.graph.nodes.map((node) => node.anchor));
+    assert.equal(pose.scrollActivity, 0, 'scrolling is not activity on a fixed-rest scene');
+  }
+  const held = sampleConnectedPose({ ...pose, idleAngleRadians: 0.5 }, { graph: profile.graph, tier: 'wide', progress: 0.5, velocityPxPerSecond: 0, deltaSeconds: 0.2, fixedRest: true });
+  assert.equal(held.idleAngleRadians, 0.5, 'the idle angle does not advance, so the start pose stays the poster pose');
+  assert.deepEqual(held.nodes.map((node) => node.rotation), pose.nodes.map((node) => node.rotation.map((value, axis) => (axis === 1 ? value + 0.5 - pose.idleAngleRadians : value))));
+});
+
+test('an Atlas graph is fully grown at every progress while a legacy graph with fixedRest still reveals by progress', () => {
+  const atlas = getConnectedProfile('contact', 'wide', { width: 1440, height: 900 }).graph;
+  for (const progress of [0, 0.4, 1]) {
+    const pose = sampleConnectedPose(undefined, { graph: atlas, tier: 'wide', progress, velocityPxPerSecond: 0, deltaSeconds: 0, fixedRest: true });
+    assert.ok(pose.edges.every((edge) => edge.growth === 1), `progress ${progress}`);
+  }
+  const legacy = getConnectedGraph('wide');
+  const early = sampleConnectedPose(undefined, { graph: legacy, tier: 'wide', progress: 0, velocityPxPerSecond: 0, deltaSeconds: 0, fixedRest: true });
+  assert.ok(early.edges.some((edge) => edge.growth < 1), 'legacy reveal still follows progress');
+});
+
+test('without fixedRest the pose is exactly what it was: nodes travel with progress and the idle angle advances', () => {
+  const moving = sampleConnectedPose(undefined, { graph: GRAPH, tier: 'wide', progress: 0.5, velocityPxPerSecond: 0, deltaSeconds: 0.1 });
+  assert.notDeepEqual(moving.nodes.map((node) => node.position), GRAPH.nodes.map((node) => node.anchor));
+  const advanced = sampleConnectedPose(moving, { graph: GRAPH, tier: 'wide', progress: 0.5, velocityPxPerSecond: 0, deltaSeconds: 0.1 });
+  assert.ok(advanced.idleAngleRadians > moving.idleAngleRadians);
+  const explicit = sampleConnectedPose(undefined, { graph: GRAPH, tier: 'wide', progress: 0.5, velocityPxPerSecond: 0, deltaSeconds: 0.1, fixedRest: false });
+  assert.deepEqual(explicit, moving);
+});

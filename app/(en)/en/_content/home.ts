@@ -216,7 +216,7 @@ export const homeContent = {
   },
   cta: {
     heading: 'Do you have a concrete need or a system that needs attention?',
-    demoStatement: 'Explore the contact options and try the demonstration form. The form does not send inquiries.',
+    demoStatement: 'Contact us on WhatsApp, by email or by phone.',
     primaryAction: {
       label: 'Contact options',
       routeId: 'contact',

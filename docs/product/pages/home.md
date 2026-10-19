@@ -3,6 +3,7 @@ id: PAGE-HOME
 type: page-spec
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - RFC-VISUAL-IDENTITY-IMMERSIVE-EXPERIENCE-V1
   - REVIEW-VISUAL-IDENTITY-G0-G1-2026-09-20
   - RFC-MARKETING-NARRATIVE-CLOSURE
@@ -18,10 +19,14 @@ related:
   - RFC-SKY-CHART-VISUAL-SYSTEM-V2
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
   - PLAN-SKY-CHART-HOME-REDESIGN-V2
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Spanish homepage
+
+## Direct-contact scope — APPROVED 2026-10-18
+
+[PAGE-CONTACT](contact-and-privacy.md) now uses only native WhatsApp/email/phone links. The prior form/provider/counsel release dependencies and demo-form referral wording are superseded. No embedded intake is needed for this page or the complete redesign.
 
 ## Commercial inquiry consistency — APPROVED target, 2026-10-14
 
@@ -44,7 +49,7 @@ The homepage qualifies and builds trust with prospective clients. Within approxi
 
 **Secondary CTA:** `Ver servicios` → `/servicios/`
 
-The full inquiry form lives on `PAGE-CONTACT`, not the homepage.
+The Contact page owns direct WhatsApp, email and phone channels; the homepage links there without collecting inquiry fields.
 
 ## Section order
 
@@ -516,7 +521,7 @@ This concise homepage copy is **APPROVED**. The detailed biography remains owned
 
 ## HOME-CTA
 
-**Status:** **APPROVED** in Spanish and English for the current direct-contact destination. The structured inquiry form and privacy flow remain release blockers for the complete business-site launch, not blockers for this homepage section while the Contact page offers working direct channels.
+**Status:** **APPROVED** in Spanish and English for the direct-contact destination. No embedded inquiry form or processor activation is required.
 
 **Objective:** Give a qualified visitor an immediate, low-ambiguity next step.
 
@@ -538,7 +543,7 @@ This concise homepage copy is **APPROVED**. The detailed biography remains owned
 
 **Evidence:** The response statement is an operating commitment and should be reviewed after launch.
 
-**Dependencies:** Working localized Contact routes and the confirmed WhatsApp destination. These exist and are sufficient for this homepage CTA. Enabling the structured form still requires the provider and privacy decisions owned by `PAGE-CONTACT`.
+**Dependencies:** Working localized Contact routes and the confirmed direct-channel destinations. These are sufficient for the homepage CTA.
 
 ### HOME-CTA approved English adaptation
 
@@ -635,7 +640,7 @@ Accepted source order under D05: global demo notice → HOME-HERO → HOME-PROBL
 | Proof secondary link: founder-only bridge | Ver proyectos y sus límites | Explore projects and their limitations | Accepted generic Projects-index bridge under D04; no featured item/card/media |
 | Process opening and step descriptions | Cómo trabajamos / Entender: revisar el proceso y el problema. / Definir: acordar alcance, responsabilidades y entregables. / Construir y revisar: comprobar los recorridos importantes. / Entregar: documentar el uso y acordar los pasos siguientes. | How we work / Understand: review the process and the problem. / Define: agree scope, responsibilities and deliverables. / Build and review: check important user journeys. / Hand over: document use and agree next steps. | Four ordered steps; preserves proportional validation, not certification or SLA |
 | Founder long biography bridge | Samuel Furlanich dirige FURLANICH. Conocé su experiencia y formación. | Samuel Furlanich leads FURLANICH. Explore his experience and background. | Link to Founder; no duplicated education/history or employer claim |
-| Final conditional inquiry/response paragraph | Explorá las opciones de contacto y probá el formulario de demostración. No se envían consultas desde el formulario. | Explore the contact options and try the demonstration form. The form does not send inquiries. | Current demo mode; primary label from D02, no response-time line |
+| Final conditional inquiry/response paragraph | Contactanos por WhatsApp, correo o teléfono. | Contact us on WhatsApp, by email or by phone. | Direct-contact invitation; primary label from D02 |
 
 Services card text not listed for replacement remains approved. Other copy within a removed block is retired from that location only. Accepted Home keeps seven semantic sections after consolidation, with distinct relevance, offer, trust, process, person and next-action roles. The low-fidelity study uses these roles; it does not approve final spacing or type changes.
 

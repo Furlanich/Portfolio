@@ -43,6 +43,8 @@ const allRoutes = [
   stableRoutes.founder.en,
   stableRoutes.privacy.es,
   stableRoutes.privacy.en,
+  stableRoutes.terms.es,
+  stableRoutes.terms.en,
   stableRoutes.contact.es,
   stableRoutes.contact.en,
 ] as const;

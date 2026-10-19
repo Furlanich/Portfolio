@@ -1,0 +1,454 @@
+{
+  "kind": "production export measurement (not field data)",
+  "basePath": "/Portfolio",
+  "limitKiB": 120,
+  "destinations": [
+    {
+      "route": "services",
+      "locale": "es",
+      "pathname": "/servicios/",
+      "staticChunkCount": 12,
+      "entries": [
+        "chunks/0xefnise8yeqz.js",
+        "chunks/1wwnr8s91lzay.js"
+      ],
+      "closure": {
+        "chunks": [
+          {
+            "path": "chunks/1wwnr8s91lzay.js",
+            "rawKiB": 547.3,
+            "brotliKiB": 109.7
+          },
+          {
+            "path": "chunks/0xefnise8yeqz.js",
+            "rawKiB": 12.4,
+            "brotliKiB": 4.7
+          }
+        ],
+        "rawBytes": 573165,
+        "brotliBytes": 117138,
+        "limitBytes": 122880,
+        "withinLimit": true,
+        "violations": [],
+        "brotliKiB": 114.4,
+        "rawKiB": 559.7,
+        "limitKiB": 120
+      },
+      "violations": [],
+      "shipped": {
+        "closureRequests": [],
+        "canvases": 0,
+        "requestedChunkCount": 15
+      },
+      "preferences": {
+        "reduced-motion": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "save-data": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "forced-colors": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "stored-context-loss": {
+          "closureRequests": [],
+          "canvases": 0
+        }
+      }
+    },
+    {
+      "route": "services",
+      "locale": "en",
+      "pathname": "/en/services/",
+      "staticChunkCount": 12,
+      "entries": [
+        "chunks/0xefnise8yeqz.js",
+        "chunks/1wwnr8s91lzay.js"
+      ],
+      "closure": {
+        "chunks": [
+          {
+            "path": "chunks/1wwnr8s91lzay.js",
+            "rawKiB": 547.3,
+            "brotliKiB": 109.7
+          },
+          {
+            "path": "chunks/0xefnise8yeqz.js",
+            "rawKiB": 12.4,
+            "brotliKiB": 4.7
+          }
+        ],
+        "rawBytes": 573165,
+        "brotliBytes": 117138,
+        "limitBytes": 122880,
+        "withinLimit": true,
+        "violations": [],
+        "brotliKiB": 114.4,
+        "rawKiB": 559.7,
+        "limitKiB": 120
+      },
+      "violations": [],
+      "shipped": {
+        "closureRequests": [],
+        "canvases": 0,
+        "requestedChunkCount": 15
+      },
+      "preferences": {
+        "reduced-motion": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "save-data": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "forced-colors": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "stored-context-loss": {
+          "closureRequests": [],
+          "canvases": 0
+        }
+      }
+    },
+    {
+      "route": "projects",
+      "locale": "es",
+      "pathname": "/proyectos/",
+      "staticChunkCount": 12,
+      "entries": [
+        "chunks/0xefnise8yeqz.js",
+        "chunks/1wwnr8s91lzay.js"
+      ],
+      "closure": {
+        "chunks": [
+          {
+            "path": "chunks/1wwnr8s91lzay.js",
+            "rawKiB": 547.3,
+            "brotliKiB": 109.7
+          },
+          {
+            "path": "chunks/0xefnise8yeqz.js",
+            "rawKiB": 12.4,
+            "brotliKiB": 4.7
+          }
+        ],
+        "rawBytes": 573165,
+        "brotliBytes": 117138,
+        "limitBytes": 122880,
+        "withinLimit": true,
+        "violations": [],
+        "brotliKiB": 114.4,
+        "rawKiB": 559.7,
+        "limitKiB": 120
+      },
+      "violations": [],
+      "shipped": {
+        "closureRequests": [],
+        "canvases": 0,
+        "requestedChunkCount": 15
+      },
+      "preferences": {
+        "reduced-motion": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "save-data": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "forced-colors": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "stored-context-loss": {
+          "closureRequests": [],
+          "canvases": 0
+        }
+      }
+    },
+    {
+      "route": "projects",
+      "locale": "en",
+      "pathname": "/en/work/",
+      "staticChunkCount": 12,
+      "entries": [
+        "chunks/0xefnise8yeqz.js",
+        "chunks/1wwnr8s91lzay.js"
+      ],
+      "closure": {
+        "chunks": [
+          {
+            "path": "chunks/1wwnr8s91lzay.js",
+            "rawKiB": 547.3,
+            "brotliKiB": 109.7
+          },
+          {
+            "path": "chunks/0xefnise8yeqz.js",
+            "rawKiB": 12.4,
+            "brotliKiB": 4.7
+          }
+        ],
+        "rawBytes": 573165,
+        "brotliBytes": 117138,
+        "limitBytes": 122880,
+        "withinLimit": true,
+        "violations": [],
+        "brotliKiB": 114.4,
+        "rawKiB": 559.7,
+        "limitKiB": 120
+      },
+      "violations": [],
+      "shipped": {
+        "closureRequests": [],
+        "canvases": 0,
+        "requestedChunkCount": 15
+      },
+      "preferences": {
+        "reduced-motion": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "save-data": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "forced-colors": {
+          "closureRequests": [],
+          "canvases": 0
+        },
+        "stored-context-loss": {
+          "closureRequests": [],
+          "canvases": 0
+        }
+      }
+    }
+  ],
+  "readingRoutes": [
+    {
+      "route": "studio",
+      "locale": "es",
+      "pathname": "/estudio/",
+      "jsChunks": 9,
+      "jsBrotliKiB": 151.9,
+      "jsRawKiB": 568.3,
+      "cssBrotliKiB": 11.3,
+      "chunks": [
+        "chunks/02fh7_m5mrih8.js",
+        "chunks/0cz1d0mv5g_q7.js",
+        "chunks/0vs9jlvgo5y49.js",
+        "chunks/2mmpezlrfmbu5.js",
+        "chunks/2shp6_88oti3k.js",
+        "chunks/310vm2bl3xxpt.js",
+        "chunks/3fntmmi971322.js",
+        "chunks/40j4cpr03ks_4.js",
+        "chunks/turbopack-2qg9b587kc-8i.js"
+      ]
+    },
+    {
+      "route": "studio",
+      "locale": "en",
+      "pathname": "/en/about/",
+      "jsChunks": 9,
+      "jsBrotliKiB": 151.9,
+      "jsRawKiB": 568.3,
+      "cssBrotliKiB": 11.3,
+      "chunks": [
+        "chunks/02fh7_m5mrih8.js",
+        "chunks/0cz1d0mv5g_q7.js",
+        "chunks/0vs9jlvgo5y49.js",
+        "chunks/2mmpezlrfmbu5.js",
+        "chunks/2shp6_88oti3k.js",
+        "chunks/310vm2bl3xxpt.js",
+        "chunks/3fntmmi971322.js",
+        "chunks/40j4cpr03ks_4.js",
+        "chunks/turbopack-2qg9b587kc-8i.js"
+      ]
+    },
+    {
+      "route": "founder",
+      "locale": "es",
+      "pathname": "/estudio/samuel-furlanich/",
+      "jsChunks": 9,
+      "jsBrotliKiB": 151.9,
+      "jsRawKiB": 568.3,
+      "cssBrotliKiB": 11.3,
+      "chunks": [
+        "chunks/02fh7_m5mrih8.js",
+        "chunks/0cz1d0mv5g_q7.js",
+        "chunks/0vs9jlvgo5y49.js",
+        "chunks/2mmpezlrfmbu5.js",
+        "chunks/2shp6_88oti3k.js",
+        "chunks/310vm2bl3xxpt.js",
+        "chunks/3fntmmi971322.js",
+        "chunks/40j4cpr03ks_4.js",
+        "chunks/turbopack-2qg9b587kc-8i.js"
+      ]
+    },
+    {
+      "route": "founder",
+      "locale": "en",
+      "pathname": "/en/about/samuel-furlanich/",
+      "jsChunks": 9,
+      "jsBrotliKiB": 151.9,
+      "jsRawKiB": 568.3,
+      "cssBrotliKiB": 11.3,
+      "chunks": [
+        "chunks/02fh7_m5mrih8.js",
+        "chunks/0cz1d0mv5g_q7.js",
+        "chunks/0vs9jlvgo5y49.js",
+        "chunks/2mmpezlrfmbu5.js",
+        "chunks/2shp6_88oti3k.js",
+        "chunks/310vm2bl3xxpt.js",
+        "chunks/3fntmmi971322.js",
+        "chunks/40j4cpr03ks_4.js",
+        "chunks/turbopack-2qg9b587kc-8i.js"
+      ]
+    },
+    {
+      "route": "contact",
+      "locale": "es",
+      "pathname": "/contacto/",
+      "jsChunks": 10,
+      "jsBrotliKiB": 161,
+      "jsRawKiB": 596.8,
+      "cssBrotliKiB": 11.3,
+      "chunks": [
+        "chunks/02fh7_m5mrih8.js",
+        "chunks/0cz1d0mv5g_q7.js",
+        "chunks/0vs9jlvgo5y49.js",
+        "chunks/1qbezb71mmvt4.js",
+        "chunks/2mmpezlrfmbu5.js",
+        "chunks/2shp6_88oti3k.js",
+        "chunks/310vm2bl3xxpt.js",
+        "chunks/3fntmmi971322.js",
+        "chunks/40j4cpr03ks_4.js",
+        "chunks/turbopack-2qg9b587kc-8i.js"
+      ]
+    },
+    {
+      "route": "contact",
+      "locale": "en",
+      "pathname": "/en/contact/",
+      "jsChunks": 10,
+      "jsBrotliKiB": 161,
+      "jsRawKiB": 596.8,
+      "cssBrotliKiB": 11.3,
+      "chunks": [
+        "chunks/02fh7_m5mrih8.js",
+        "chunks/0cz1d0mv5g_q7.js",
+        "chunks/0vs9jlvgo5y49.js",
+        "chunks/1qbezb71mmvt4.js",
+        "chunks/2mmpezlrfmbu5.js",
+        "chunks/2shp6_88oti3k.js",
+        "chunks/310vm2bl3xxpt.js",
+        "chunks/3fntmmi971322.js",
+        "chunks/40j4cpr03ks_4.js",
+        "chunks/turbopack-2qg9b587kc-8i.js"
+      ]
+    },
+    {
+      "route": "privacy",
+      "locale": "es",
+      "pathname": "/privacidad/",
+      "jsChunks": 9,
+      "jsBrotliKiB": 151.9,
+      "jsRawKiB": 568.3,
+      "cssBrotliKiB": 11.3,
+      "chunks": [
+        "chunks/02fh7_m5mrih8.js",
+        "chunks/0cz1d0mv5g_q7.js",
+        "chunks/0vs9jlvgo5y49.js",
+        "chunks/2mmpezlrfmbu5.js",
+        "chunks/2shp6_88oti3k.js",
+        "chunks/310vm2bl3xxpt.js",
+        "chunks/3fntmmi971322.js",
+        "chunks/40j4cpr03ks_4.js",
+        "chunks/turbopack-2qg9b587kc-8i.js"
+      ]
+    },
+    {
+      "route": "privacy",
+      "locale": "en",
+      "pathname": "/en/privacy/",
+      "jsChunks": 9,
+      "jsBrotliKiB": 151.9,
+      "jsRawKiB": 568.3,
+      "cssBrotliKiB": 11.3,
+      "chunks": [
+        "chunks/02fh7_m5mrih8.js",
+        "chunks/0cz1d0mv5g_q7.js",
+        "chunks/0vs9jlvgo5y49.js",
+        "chunks/2mmpezlrfmbu5.js",
+        "chunks/2shp6_88oti3k.js",
+        "chunks/310vm2bl3xxpt.js",
+        "chunks/3fntmmi971322.js",
+        "chunks/40j4cpr03ks_4.js",
+        "chunks/turbopack-2qg9b587kc-8i.js"
+      ]
+    }
+  ],
+  "sharing": {
+    "identicalAcrossDestinations": true,
+    "sharedChunks": [
+      "chunks/1wwnr8s91lzay.js",
+      "chunks/0xefnise8yeqz.js"
+    ],
+    "note": "derived from the emitted graph, not observed: a second connected route reuses these same files from the shared HTTP cache (the export is served with max-age). The cold figure is never reduced by it. The functional spec observes the reuse with the controlled test hook."
+  },
+  "posters": {
+    "services-wide": {
+      "bytes": 87164,
+      "kiB": 85.1,
+      "ceilingKiB": 150
+    },
+    "services-compact": {
+      "bytes": 50434,
+      "kiB": 49.3,
+      "ceilingKiB": 80
+    },
+    "projects-wide": {
+      "bytes": 87164,
+      "kiB": 85.1,
+      "ceilingKiB": 150
+    },
+    "projects-compact": {
+      "bytes": 50434,
+      "kiB": 49.3,
+      "ceilingKiB": 80
+    }
+  },
+  "notes": [
+    "Closure bytes come from the emitted export (raw, Brotli quality 11), not from a network trace. Live-tier behavior and its hardware figures are OPEN until the owner-executed device protocol; nothing here is a live measurement."
+  ],
+  "closureHeadroom": [
+    {
+      "destination": "services/es",
+      "brotliKiB": 114.4,
+      "headroomKiB": 5.6,
+      "headroomWarning": false
+    },
+    {
+      "destination": "services/en",
+      "brotliKiB": 114.4,
+      "headroomKiB": 5.6,
+      "headroomWarning": false
+    },
+    {
+      "destination": "projects/es",
+      "brotliKiB": 114.4,
+      "headroomKiB": 5.6,
+      "headroomWarning": false
+    },
+    {
+      "destination": "projects/en",
+      "brotliKiB": 114.4,
+      "headroomKiB": 5.6,
+      "headroomWarning": false
+    }
+  ]
+}

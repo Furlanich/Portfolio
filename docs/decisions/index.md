@@ -3,6 +3,7 @@ id: ADR-INDEX
 type: adr-index
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - GOV-ENGINEERING-LIFECYCLE
   - ADR-SKY-CHART-HOMEPAGE-RUNTIME
@@ -13,14 +14,21 @@ related:
   - ADR-STATIC-LOCALIZED-ROUTING
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - ADR-ADE-AGENT-USAGE
-last_verified: 2026-10-07
+  - ADR-SFC-COMMERCIAL-ATLAS-V1
+last_verified: 2026-10-18
 ---
 
 # Architecture decision records
 
 An ADR records a consequential architectural decision after it is accepted. Use [the template](template.md). Accepted ADRs use `APPROVED` status and remain immutable historical records. A changed decision gets a new ADR whose `supersedes` metadata identifies the earlier record; do not rewrite the earlier decision.
 
+## Direct-contact update — 2026-10-18
+
+[ADR-CONTACT-DIRECT-CHANNELS](contact-direct-channels.md): **APPROVED — 2026-10-18.** Replaces the public form with native WhatsApp/email/phone links. Supersedes inquiry provider activation, demonstration form and mandatory processor/counsel/probe/deletion gates for the current scope; prior ADRs remain history.
+
 ## Approved
+
+- [ADR-SFC-COMMERCIAL-ATLAS-V1](studio-founder-contact-commercial-atlas.md): **APPROVED — 2026-10-15.** Records [RFC-SFC-COMMERCIAL-ATLAS-V1](../rfcs/studio-founder-contact-commercial-atlas-v1.md): the connected runtime extended to Studio, Founder and Contact through route profiles, yielding nodes and pinned strings on all five connected routes, genuine public inquiry through the retained Formspree port only by a committed commercial release record, the Terms route pair, and staging on a nondeployed integration branch with one coordinated release. Partially supersedes the demonstration-only decision in `ADR-CONTACT-INQUIRY-DEMO-MODE` and the two-route limit of `ADR-CONNECTED-STUDIO-PAGE-RUNTIME`, each only as its reviewed checkpoint lands; those files are unchanged. Live-graph tiers, legal sufficiency, provider and deployment receipts stay separate open gates.
 
 - [ADR-ADE-AGENT-USAGE](ade-agent-usage.md): **APPROVED — 2026-10-07.** One task = one primary agent; `SINGLE_AGENT` with 0 subagents by default; up to 3 justified, bounded subagents with no nesting; independent review as a separate session; hard limits in Claude Code and Codex project configuration. Records owner decisions D1–D6, including the D6 amendment that drops the GPT-6 Luna and GPT-6.1 Sol requirements. Owning record: [GOV-AGENT-USAGE](../governance/agent-usage.md). No product or runtime change.
 

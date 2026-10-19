@@ -3,6 +3,7 @@ id: REVIEW-SFC-ACCEPTANCE-V1
 type: acceptance-record
 status: PROPOSED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - PLAN-SFC-V1
   - DESIGN-SFC-V1
   - RFC-SFC-COMMERCIAL-ATLAS-V1
@@ -12,7 +13,7 @@ related:
   - PAGE-TERMS
   - GOV-ENGINEERING-LIFECYCLE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-15
+last_verified: 2026-10-18
 ---
 
 # Studio, Founder, Contact and legal Atlas v1 acceptance
@@ -23,11 +24,16 @@ Acceptance evidence for [PLAN-SFC-V1](../../plans/active/studio-founder-contact-
 
 - **Execution authorized, 2026-10-15.** The owner authorized execution in the Claude Code session, waiving the independent re-review gate of plan revision 2 and the Luna assignment of Task 1. See the [Task 1 receipt](task-01.md) for the exact wording, what it does and does not waive, and the rulings.
 - **Task 1 (W0) is in review.** Governance PR 1 is [#142](https://github.com/Furlanich/Portfolio/pull/142), open against `main`. Independent review (Reviewer R) posted two findings on 2026-10-15; both were verified and corrected in a follow-up commit (see the receipt). CI and the human merge are pending. Nothing downstream starts until a human merges it and `codex/sfc-integration` is created at the merged SHA.
-- **Nothing is implemented.** No product code, account, deployment or live setting has changed. The inquiry form stays a local demonstration and the live graph policy stays disabled.
+- **Historical Task 1 checkpoint.** No product code, account, deployment or live setting has changed. The inquiry form stays a local demonstration and the live graph policy stays disabled.
+
+## Current amendment
+
+Task 13 replaces the waiting account/counsel packet with direct contact under the explicit 2026-10-18 owner decision. All older status text is the dated Task 1 checkpoint, not current integration status.
 
 ## Receipts
 
 - [Task 1 — Accept bounded governance and coordinated release](task-01.md)
+- [Task 16 — Release the coherent redesign and direct-contact legal pages](task-16.md) — Terms pair and host-import fix implemented and verified on the candidate; mobile startup CPU not PASS on some rows (poster cost accepted by the owner), baselines adopted
 
 Receipts for Tasks 2 to 19 are added by their owners.
 
@@ -36,21 +42,19 @@ Receipts for Tasks 2 to 19 are added by their owners.
 | Task | Pull request | Merge commit | Notes |
 | --- | --- | --- | --- |
 | 1 Governance | [#142](https://github.com/Furlanich/Portfolio/pull/142) (open, review corrections pushed; CI and human merge pending) | PENDING | Targets `main`; W0 passes on human merge |
+| 16 Release | [#157](https://github.com/Furlanich/Portfolio/pull/157) — draft | PENDING | Targets `main`; desktop startup gate PASS, mobile residual is the owner-accepted poster cost; Windows and Linux baselines adopted; independent review and human merge OPEN; see the Task 16 receipt |
+| 13 Direct contact | [#154](https://github.com/Furlanich/Portfolio/pull/154) — draft | PENDING | All affected visual transfers owner-approved on 2026-10-18; local CI repair checks PASS (5 behavior, 40 normal visual comparisons). Full Linux CI: [latest checks](https://github.com/Furlanich/Portfolio/pull/154/checks). Independent review OPEN; see the Task 13 receipt. |
 
 ## External gates and owners
 
-These gates are not agent work. Each stays OPEN until its owner supplies authenticated evidence, and no receipt may infer one.
+The 2026-10-18 owner amendment removes the form and its external prerequisites. [Task 13](task-13.md) records direct-channel implementation. Formspree account checks, counsel decision, provider probe and inbox/deletion receipts are NOT APPLICABLE, not PASS. Earlier Task 1 checklist initiation remains history.
 
-| Gate | Owner | Plan task | Where the requirement lives |
+| Gate | Owner | Plan task | Requirement |
 | --- | --- | --- | --- |
-| Professional Argentine legal review of the Privacy and Terms drafts | Samuel with counsel | 13 | [Contact and Privacy](../../product/pages/contact-and-privacy.md), [Terms](../../product/pages/terms-and-conditions.md) |
-| Formspree account facts, recipient, domain restriction, Workflow, quota monitoring | Samuel | 13 | [Formspree Free readiness checklist](../../product/pages/contact-and-privacy.md#formspree-free-readiness-checklist-proposed-operational-requirements) |
-| Predeployment live provider probe (lock `SFC-FORMSPREE-LIVE`) | Samuel | 13 | Same checklist; ordinary CI never holds this lock |
-| Coordinated deployment (lock `SFC-DEPLOY`) and immediate ES/EN delivery and deletion receipt, with rollback | Samuel | 16, 17 | [RFC](../../rfcs/studio-founder-contact-commercial-atlas-v1.md) release section |
-| Physical desktop and constrained Android hardware qualification | Named operator and device | 15, 18 | [Design](../../design/studio-founder-contact-v1.md); a missing device stays OPEN |
-| Screen-reader checks (NVDA with Firefox and Chromium, VoiceOver with Safari) | Named human operator | 10, 12, 16 | Plan verification matrix |
+| Coordinated release and read-only deployed routes/links/disclosure check | Samuel and reviewer | 16,17 | Amended PLAN-SFC-V1; no real send or call |
+| Physical desktop/constrained Android qualification | Named operator/device | 15,18 | DESIGN-SFC-V1; missing evidence stays OPEN |
+| Ordinary review and human merge | Reviewer R and owner | Each PR | Engineering lifecycle |
 
-Task 1 starts the external checklist by recording this ownership table. It contacts no one, changes no account and sends nothing.
 
 ## Open items
 

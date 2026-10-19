@@ -26,7 +26,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { chromium } from 'playwright';
-import { buildRouteClosure, chunkImports, OPTIONAL_CLOSURE_LIMIT_BYTES } from '../lib/connected-studio/measurement.ts';
+import { buildRouteClosure, chunkImports, findOptionalCodeInCriticalChunks, OPTIONAL_CLOSURE_LIMIT_BYTES } from '../lib/connected-studio/measurement.ts';
 import { createExportServer, normalizeBasePath } from './serve-static-export.mjs';
 
 const root = process.cwd();
@@ -46,6 +46,32 @@ const DESTINATIONS = [
   { route: 'projects', locale: 'en', pathname: '/en/work/' },
 ];
 const POSTER_CEILINGS = { wide: 150 * KIB, compact: 80 * KIB };
+const POSTER_ROUTES = ['services', 'projects', 'studio', 'founder', 'contact'];
+// PLAN-SFC-V1 Task 14: the Atlas pages ship policy-disabled, so their static release must carry the poster, no host
+// and no optional request: nothing of the optional closure may be referenced by their HTML or requested by the page,
+// and no script they request may carry engine-only code.
+const ATLAS_DESTINATIONS = [
+  { route: 'studio', locale: 'es', pathname: '/estudio/' },
+  { route: 'studio', locale: 'en', pathname: '/en/about/' },
+  { route: 'founder', locale: 'es', pathname: '/estudio/samuel-furlanich/' },
+  { route: 'founder', locale: 'en', pathname: '/en/about/samuel-furlanich/' },
+  { route: 'contact', locale: 'es', pathname: '/contacto/' },
+  { route: 'contact', locale: 'en', pathname: '/en/contact/' },
+];
+// PLAN-SFC-V1 Task 3 and 16: the reading, intake and legal routes the commercial redesign changes (Terms is judged
+// against Privacy). They have no optional engine: only the chunks their own HTML references are measured.
+const READING_DESTINATIONS = [
+  { route: 'studio', locale: 'es', pathname: '/estudio/' },
+  { route: 'studio', locale: 'en', pathname: '/en/about/' },
+  { route: 'founder', locale: 'es', pathname: '/estudio/samuel-furlanich/' },
+  { route: 'founder', locale: 'en', pathname: '/en/about/samuel-furlanich/' },
+  { route: 'contact', locale: 'es', pathname: '/contacto/' },
+  { route: 'contact', locale: 'en', pathname: '/en/contact/' },
+  { route: 'privacy', locale: 'es', pathname: '/privacidad/' },
+  { route: 'privacy', locale: 'en', pathname: '/en/privacy/' },
+  { route: 'terms', locale: 'es', pathname: '/terminos/' },
+  { route: 'terms', locale: 'en', pathname: '/en/terms/' },
+];
 
 if (!process.argv.includes('--skip-build')) {
   execSync('npm run build', { stdio: 'inherit', env: { ...process.env, NEXT_PUBLIC_BASE_PATH: basePath } });
@@ -114,7 +140,7 @@ async function observe(destination, { preference = null, seedLoss = false } = {}
   }
 }
 
-const report = { kind: 'production export measurement (not field data)', basePath: basePath || '/', limitKiB: OPTIONAL_CLOSURE_LIMIT_BYTES / KIB, destinations: [], sharing: null, posters: {}, notes: [] };
+const report = { kind: 'production export measurement (not field data)', basePath: basePath || '/', limitKiB: OPTIONAL_CLOSURE_LIMIT_BYTES / KIB, destinations: [], readingRoutes: [], atlasRoutes: [], sharing: null, posters: {}, notes: [] };
 const failures = [];
 
 try {
@@ -161,14 +187,72 @@ try {
   };
   if (!report.sharing.identicalAcrossDestinations) report.notes.push('The closure differs between destinations; a second route does not reuse all of it.');
 
-  for (const route of ['services', 'projects']) {
+  for (const route of POSTER_ROUTES) {
     for (const quality of ['wide', 'compact']) {
       const file = path.join(outDir, 'brand/connected-studio', `${route}-${quality}.webp`);
+      if (!fs.existsSync(file)) {
+        failures.push(`poster ${route}-${quality} is not in the export`);
+        continue;
+      }
       const bytes = fs.statSync(file).size;
       report.posters[`${route}-${quality}`] = { bytes, kiB: +(bytes / KIB).toFixed(1), ceilingKiB: POSTER_CEILINGS[quality] / KIB };
       if (bytes > POSTER_CEILINGS[quality]) failures.push(`poster ${route}-${quality} is ${bytes} bytes, above ${POSTER_CEILINGS[quality]}`);
     }
   }
+  // The Atlas pages: poster present, the host and the optional closure absent, whatever the preference path.
+  const closureUnion = new Set(report.destinations.flatMap((item) => item.closure.chunks.map((chunk) => chunk.path)));
+  for (const destination of ATLAS_DESTINATIONS) {
+    const tag = `${destination.route}/${destination.locale}`;
+    const referenced = routeChunks(destination.pathname);
+    const inClosure = referenced.filter((item) => closureUnion.has(item));
+    const html = fs.readFileSync(path.join(outDir, ...destination.pathname.split('/').filter(Boolean), 'index.html'), 'utf8');
+    const posterRefs = [...html.matchAll(/brand\/connected-studio\/([a-z]+)-(wide|compact)\.webp/g)].map((match) => `${match[1]}-${match[2]}`);
+    const scripts = referenced.filter((item) => item.endsWith('.js')).map((item) => ({ path: item, text: fs.readFileSync(path.join(outDir, '_next/static', item), 'utf8') }));
+    const hidden = findOptionalCodeInCriticalChunks({ chunks: scripts });
+    const shipped = await observe(destination);
+    const requestedClosure = shipped.requested.filter((item) => closureUnion.has(item));
+    const record = {
+      ...destination,
+      referencedChunks: referenced.length,
+      closureChunksInHtml: inClosure,
+      optionalCodeInReferencedScripts: hidden,
+      posterReferences: [...new Set(posterRefs)].sort(),
+      shipped: { closureRequests: requestedClosure, canvases: shipped.canvases, requestedChunkCount: shipped.requested.length },
+      preferences: {},
+    };
+    if (inClosure.length) failures.push(`${tag}: its HTML references optional closure chunks: ${inClosure.join(', ')}`);
+    if (hidden.length) failures.push(`${tag}: optional engine or connected host code in referenced scripts: ${hidden.map((item) => `${item.path} (${item.marker})`).join(', ')}`);
+    const expectedPosters = [`${destination.route}-compact`, `${destination.route}-wide`].sort();
+    if (JSON.stringify(record.posterReferences) !== JSON.stringify(expectedPosters)) failures.push(`${tag}: the HTML names posters ${JSON.stringify(record.posterReferences)}, expected only ${JSON.stringify(expectedPosters)}`);
+    if (requestedClosure.length || shipped.canvases) failures.push(`${tag}: the shipped (static) policy fetched the optional closure or drew a canvas`);
+    for (const [name, options] of Object.entries({ 'reduced-motion': { preference: 'reduced-motion' }, 'save-data': { preference: 'save-data' }, 'forced-colors': { preference: 'forced-colors' }, 'stored-context-loss': { seedLoss: true } })) {
+      const result = await observe(destination, options);
+      record.preferences[name] = { closureRequests: result.requested.filter((item) => closureUnion.has(item)), canvases: result.canvases };
+      if (record.preferences[name].closureRequests.length || result.canvases) failures.push(`${tag}: the ${name} path fetched the optional closure or drew a canvas`);
+    }
+    report.atlasRoutes.push(record);
+  }
+  // First-load JS of the reading routes: the JS chunks the route's own HTML references, from the emitted export.
+  // This is the static-analysis side of the Task 3 baseline; the browser-observed side is `--startup-baseline` in the vitals script.
+  const chunkByPath = new Map(chunks.map((item) => [item.path, item]));
+  for (const destination of READING_DESTINATIONS) {
+    const referenced = routeChunks(destination.pathname);
+    const missing = referenced.filter((item) => !chunkByPath.has(item));
+    if (missing.length) failures.push(`${destination.route}/${destination.locale}: referenced chunks are not in the emitted export: ${missing.join(', ')}`);
+    const scripts = referenced.filter((item) => item.endsWith('.js')).map((item) => chunkByPath.get(item)).filter(Boolean);
+    const styles = referenced.filter((item) => item.endsWith('.css')).map((item) => chunkByPath.get(item)).filter(Boolean);
+    const total = (list, key) => list.reduce((sum, item) => sum + item[key], 0);
+    report.readingRoutes.push({
+      ...destination,
+      jsChunks: scripts.length,
+      jsBrotliKiB: +(total(scripts, 'brotliBytes') / KIB).toFixed(1),
+      jsRawKiB: +(total(scripts, 'rawBytes') / KIB).toFixed(1),
+      cssBrotliKiB: +(total(styles, 'brotliBytes') / KIB).toFixed(1),
+      chunks: scripts.map((item) => item.path).sort(),
+    });
+  }
+  const headroom = report.destinations.map((item) => ({ destination: `${item.route}/${item.locale}`, brotliKiB: item.closure.brotliKiB, headroomKiB: +(report.limitKiB - item.closure.brotliKiB).toFixed(1), headroomWarning: item.closure.brotliBytes > 118 * KIB }));
+  report.closureHeadroom = headroom;
   report.notes.push('Closure bytes come from the emitted export (raw, Brotli quality 11), not from a network trace. Live-tier behavior and its hardware figures are OPEN until the owner-executed device protocol; nothing here is a live measurement.');
 } catch (error) {
   failures.push(error.message);
@@ -178,7 +262,7 @@ try {
 }
 
 const summary = report.destinations.map((item) => ({ destination: `${item.route}/${item.locale}`, brotliKiB: item.closure.brotliKiB, rawKiB: item.closure.rawKiB, chunks: item.closure.chunks.length, limitKiB: item.closure.limitKiB }));
-console.log(JSON.stringify({ basePath: report.basePath, summary, sharing: report.sharing, posters: report.posters }, null, 2));
+console.log(JSON.stringify({ basePath: report.basePath, summary, closureHeadroom: report.closureHeadroom, readingRoutes: report.readingRoutes.map((item) => ({ route: item.route, locale: item.locale, jsChunks: item.jsChunks, jsBrotliKiB: item.jsBrotliKiB, jsRawKiB: item.jsRawKiB, cssBrotliKiB: item.cssBrotliKiB })), atlasRoutes: report.atlasRoutes.map((item) => ({ route: item.route, locale: item.locale, referencedChunks: item.referencedChunks, posterReferences: item.posterReferences, closureChunksInHtml: item.closureChunksInHtml.length, optionalCode: item.optionalCodeInReferencedScripts.length, shippedClosureRequests: item.shipped.closureRequests.length, canvases: item.shipped.canvases })), sharing: report.sharing, posters: report.posters }, null, 2));
 const outFile = argument('out');
 if (outFile) fs.writeFileSync(outFile, `${JSON.stringify(report, null, 2)}\n`);
 if (failures.length) {

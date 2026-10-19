@@ -189,8 +189,8 @@ test('the working-boundaries link label equals the approved wording and the fina
   assert.equal(english.workingBoundariesLabel, 'Read working boundaries');
   assert.equal(spanish.finalCta.heading, 'Contanos qué necesitás resolver');
   assert.equal(english.finalCta.heading, 'Tell us what you need to solve');
-  assert.equal(spanish.finalCta.description, 'Explorá el contacto y probá la demostración del formulario.');
-  assert.equal(english.finalCta.description, 'Explore the contact options and try the form demonstration.');
+  assert.equal(spanish.finalCta.description, 'Contactanos por WhatsApp, correo o teléfono.');
+  assert.equal(english.finalCta.description, 'Contact us on WhatsApp, by email or by phone.');
   assert.equal(spanish.finalCta.action.label, 'Iniciar una consulta');
   assert.equal(english.finalCta.action.label, 'Start an enquiry');
 });

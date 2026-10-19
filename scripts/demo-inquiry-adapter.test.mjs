@@ -54,3 +54,24 @@ test('has no global fetch, endpoint, storage, logging, or retry dependency', asy
     globalThis.fetch = originalFetch;
   }
 });
+
+test('accepts the provider-neutral submission context and still transmits nothing', async () => {
+  requireImplementation();
+  const originalFetch = globalThis.fetch;
+  const originalBeacon = globalThis.navigator?.sendBeacon;
+  let transmissions = 0;
+  globalThis.fetch = async () => { transmissions += 1; throw new Error('fetch must not run'); };
+  try {
+    const submit = createDemoSubmitInquiry({ wait: async () => {} });
+    const controller = new AbortController();
+    assert.deepEqual(await submit(validPayload, { honeypot: 'a bot filled this', signal: controller.signal }), { status: 'accepted' });
+    assert.deepEqual(
+      await submit({ ...validPayload, email: 'failure@example.invalid' }, { honeypot: '' }),
+      { status: 'failed', reason: 'unavailable' },
+    );
+    assert.equal(transmissions, 0);
+    assert.equal(globalThis.navigator?.sendBeacon, originalBeacon);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

@@ -3,6 +3,7 @@ id: ARCH-INDEX
 type: architecture-index
 status: APPROVED
 related:
+  - ADR-CONTACT-DIRECT-CHANNELS
   - GOV-STATUS
   - ARCHITECTURE-MAP
   - ADR-STATIC-LOCALIZED-ROUTING
@@ -14,7 +15,7 @@ related:
   - PAGE-PRIVACY
   - PLAN-PROJECTS-EVIDENCE-EXPERIENCE
   - PLAN-CONTACT-INQUIRY-PIPELINE
-last_verified: 2026-09-14
+last_verified: 2026-10-18
 ---
 
 # Existing-system documentation
@@ -28,12 +29,16 @@ These documents describe the repository as it exists during Stage A. They are ev
 
 The homepage-foundation localized-routing target is approved and delivered under [`ADR-STATIC-LOCALIZED-ROUTING`](../decisions/static-localized-routing.md). The current-system record separates retained legacy material from the merged localized foundation, commercial homepage, and completed Projects cleanup. The complete Services implementation and approved Projects/Evidence target fit that architecture. [`PLAN-PROJECTS-EVIDENCE-EXPERIENCE`](../plans/completed/projects-evidence-experience.md) owns the completed fail-closed static public-content boundary, conditional route sequence, and legacy cleanup; no RFC or new ADR is required. Broader target architecture remains subject to the [engineering lifecycle](../governance/engineering-lifecycle.md).
 
+## Direct-contact update — 2026-10-18
+
+Task 13 replaces ContactForm with a server-rendered direct-channel surface; no public Contact import reaches the dormant inquiry library/configuration. [ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) supersedes the form/demo/provider activation sections below. No Formspree/counsel gate remains for this release.
+
 ## Preserved discovery recommendation — PROPOSED
 
 Incrementally modernize this repository, remain static-first initially, reduce unnecessary client boundaries, and modernize CI later rather than adopt a greenfield rebuild. This is preserved discovery knowledge, not a target-architecture decision. It authorizes no architecture or CI change until a later architecture stage resolves it.
 
-## Contact inquiry architecture — ACCEPTED DUAL MODE, EXECUTION COMPLETE
+## Direct-contact architecture — APPROVED
 
-The current public mode is the zero-transmission demonstration recorded by [`ADR-CONTACT-INQUIRY-DEMO-MODE`](../decisions/contact-inquiry-demonstration-mode.md): `ContactForm -> submitInquiry() -> demo adapter -> local simulated outcome`. It preserves the complete form, validation, state, localization, and accessibility behavior without a provider, inbox, storage, or commercial-intake claim.
+The Contact pair uses a shared server-rendered direct-channel surface with no form component or inquiry-mode dependency. Both locales expose the existing WhatsApp/mailto/tel links and localized Privacy/Founder references.
 
-Governance PR #43 and [`ADR-CONTACT-INQUIRY-PIPELINE`](../decisions/contact-inquiry-pipeline.md) preserve `ContactForm -> submitInquiry() -> Formspree adapter -> Formspree HTTPS endpoint -> configured inbox` for a separately reviewed commercial activation. PR #45 merged that provider-neutral boundary without route integration. [`PLAN-CONTACT-INQUIRY-PIPELINE`](../plans/completed/contact-inquiry-pipeline.md) records the completed demonstration delivery and deployed zero-transmission proof; real account/configuration, processor/transfer, professional review, inbox delivery, and deletion remain OPEN future gates.
+Governance PR #43 and the older inquiry ADRs preserve the historical transport design. Its pure modules/tests remain dormant and are not imported by public Contact. [ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) supersedes their form activation and provider/counsel prerequisites for the current release.

@@ -6,15 +6,17 @@ export const studioPageContent = {
   intro: {
     eyebrow: 'Founder-led software studio',
     heading: 'Custom software with direct technical accountability.',
-    positioning: 'FURLANICH designs, builds, and improves custom software for businesses with concrete operational needs. Samuel Furlanich leads discovery, technical direction, and delivery, keeping decisions explicit and systems maintainable.',
-    supportingStatement: 'When the scope calls for additional expertise, specialist collaborators are brought in explicitly.',
+    positioning: 'FURLANICH designs, builds, and improves custom software for businesses with concrete operational needs.',
     primaryAction: { label: 'Tell us what you need to solve', routeId: 'contact' },
     secondaryAction: { label: 'Meet Samuel', routeId: 'founder' },
   },
-  operatingModel: {
-    label: 'Operating model',
-    items: ['Founder-led', 'Direct technical accountability', 'Buenos Aires, Argentina', 'Spanish and English', 'Specialist collaborators when the scope calls for them'],
-  },
+  sceneCaption: 'Central accountability, connected specialties.',
+  wordBindings: [
+    { nodeId: 'n0', word: 'Accountability' },
+    { nodeId: 'n4', word: 'Scope' },
+    { nodeId: 'n8', word: 'Specialists' },
+    { nodeId: 'n12', word: 'Review' },
+  ],
   accountability: {
     heading: 'Technical direction from start to finish',
     paragraphs: [
@@ -46,7 +48,8 @@ export const studioPageContent = {
   },
   finalCta: {
     heading: "Let's talk about what's holding your business back",
-    description: 'Explore contact options and the form demonstration.',
+    // Demonstration-dependent: the coordinated commercial release (PLAN-SFC-V1 Task 16) owns the final wording.
+    description: 'Contact us on WhatsApp, by email or by phone.',
     action: { label: 'Start an enquiry', routeId: 'contact' },
   },
 } satisfies StudioPageContent;
