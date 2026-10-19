@@ -139,7 +139,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 
 ## Current foundation implementation — Task 3
 
-- Fourteen static foundation routes are rendered by locale-specific Server Component trees: Spanish at the root routes with document language es-AR, and English below /en/ with document language en.
+- Sixteen static foundation routes (the Terms pair added by PLAN-SFC-V1 Task 16) are rendered by locale-specific Server Component trees: Spanish at the root routes with document language es-AR, and English below /en/ with document language en.
 - Shared foundation components provide the semantic header, footer, language switch, typography-led hero, useful Services and Contact destinations, and the minimum Founder profile.
 - `/privacidad/` and `/en/privacy/` render the shared server-rendered `PrivacyPage` from locale-owned exact demonstration copy. The disclosure describes temporary page memory, GitHub Pages hosting metadata, external fallback boundaries, no form transmission or inbox copy, no inquiry analytics, and future commercial re-review gates.
 - The public foundation has no `next-intl` dependency, legacy client provider, locale React state, `window.location` parsing, or document-language mutation.
@@ -161,7 +161,7 @@ Content is oriented toward personal credentials and recruiters rather than the a
 - Both localized home routes render one shared `CommercialHomepage` Server Component with the existing hero followed by Problems, Services, Audiences, Proof fallback, Process, Founder, and final CTA in the approved order.
 - The seven later sections use route-owned typed content from the Spanish and English home modules. Shared components contain no public copy or client-side locale state.
 - `HOME-PROOF` is the approved single-panel credibility fallback with direct-responsibility, verifiable-claims, and confidentiality commitments; no project cards, project links, metrics, or client claims were added.
-- The existing header and footer expose the localized in-page Process destination (`/#proceso` and `/en/#process`) on all fourteen foundation routes without adding a route ID.
+- The existing header and footer expose the localized in-page Process destination (`/#proceso` and `/en/#process`) on all sixteen foundation routes without adding a route ID.
 - The static artifact verifier checks both homepage narratives, stable labelled sections, visible headings, required internal actions, the confirmed WhatsApp action, document languages, route references, and optional base-path integrity.
 - The implementation uses the existing foundation palette, typography, spacing, borders, responsive grid rules, target sizing, focus treatment, and reduced-motion behavior. No dependencies, routes, hosting settings, metadata architecture, form, imagery, or project evidence changed.
 
@@ -261,7 +261,7 @@ Delivered by [PLAN-SPF-V1](../plans/completed/services-projects-footer-v1.md) (T
 
 ### Static export, base path and verification
 
-- The export has fourteen routes at the root and under `/Portfolio`, with no project-detail artifact; `npm run verify:static-export` checks both and fails on any retired artifact, payload link or leaked identity.
+- The export has sixteen routes at the root and under `/Portfolio`, with no project-detail artifact; `npm run verify:static-export` checks both and fails on any retired artifact, payload link or leaked identity. For the Terms pair it also compares the emitted sections, metadata, update date and reciprocal Privacy link with the canonical typed copy, requires the Footer Terms label, and fails on form controls or simulation/unpublished-gate wording; for Privacy it requires the update date and the reciprocal Terms link.
 - `scripts/serve-static-export.mjs` serves a clean `out/` like GitHub Pages: files and `<dir>/index.html` under the base path, a 301 from a directory without its slash, `max-age=600`, and a real 404 for anything else, never an index; on a Windows export it maps the dotted segment-prefetch request to the nested file. `PLAYWRIGHT_SERVE_EXPORT=1` runs only `connected-production-chromium` against it.
 - Measurements: `npm run measure:connected-studio` (the optional engine closure, 114.4 KiB Brotli in two chunks against 120 KiB; the posters), `npm run measure:connected-studio-vitals` (synthetic lab LCP and INP, enhancement layout shift) and the hardware-candidate script `scripts/measure-connected-studio-hardware.mjs` run by hand against a private candidate. None sets the connected test hook. The [W7 checkpoint](../reviews/services-projects-footer-acceptance-v1/w7-checkpoint.md) records the results on merged `main` at `77ccb9f1`.
 

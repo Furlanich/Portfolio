@@ -34,3 +34,14 @@ test('English Privacy compact reading surface', async ({ page }) => {
   await hideDevelopmentIndicator(page);
   await expect(page).toHaveScreenshot('privacy-en-compact.png');
 });
+
+for (const [language, route] of [['es', stableRoutes.terms.es], ['en', stableRoutes.terms.en]] as const) {
+  for (const [name, viewport] of [['wide', { width: 1440, height: 1000 }], ['compact', { width: 390, height: 844 }]] as const) {
+    test((language === 'es' ? 'Spanish' : 'English') + ' Terms ' + name + ' reading surface', async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(appUrl(route));
+      await hideDevelopmentIndicator(page);
+      await expect(page).toHaveScreenshot('terms-' + language + '-' + name + '.png');
+    });
+  }
+}

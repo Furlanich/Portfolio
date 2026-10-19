@@ -114,7 +114,7 @@ const legalLocales = {
 
 const escapeHtml = (value) => value.replace(/&/g, '&amp;').replace(/'/g, '&#x27;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
-function legalChrome(locale, base) {
+function legalChrome(locale) {
   const [navigation, menu, subjects, primary] = locale.header;
   const header = `<header><nav aria-label="${navigation}"></nav><button aria-label="${menu}"></button>${subjects.map((label) => `<a>${label}</a>`).join('')}<a>${primary}</a></header>`;
   const footer = `<footer>${locale.footer.map((label) => `<a>${label}</a>`).join('')}<a hrefLang="x">switch</a>©<span>2026</span>FURLANICH`
@@ -125,7 +125,7 @@ function legalChrome(locale, base) {
 function termsHtml(locale, base = '', mutate = {}) {
   const { terms } = locale;
   const content = terms.content;
-  const { header, footer } = legalChrome(locale, base);
+  const { header, footer } = legalChrome(locale);
   const sections = content.sections
     .filter((section) => section.id !== mutate.dropSection)
     .map((section) => `<section id="${section.id}"><h2 id="${section.id}-heading">${escapeHtml(section.heading)}</h2>${section.paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('')}</section>`)

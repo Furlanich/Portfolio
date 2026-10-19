@@ -10,6 +10,7 @@ export const stableRoutes = {
     en: '/en/about/samuel-furlanich/',
   },
   privacy: { es: '/privacidad/', en: '/en/privacy/' },
+  terms: { es: '/terminos/', en: '/en/terms/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
 } as const;
 

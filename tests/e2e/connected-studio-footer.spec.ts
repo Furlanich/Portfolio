@@ -21,6 +21,7 @@ const copy = {
     explore: 'Explorar',
     accountability: 'Responsabilidad directa',
     privacy: 'Privacidad',
+    terms: 'Términos y condiciones',
     languageSwitchName: 'Ver sitio en inglés',
     alternateHreflang: 'en',
     navigation: ['Servicios', 'Proyectos', 'Cómo trabajamos', 'El estudio'],
@@ -37,6 +38,7 @@ const copy = {
     explore: 'Explore',
     accountability: 'Direct accountability',
     privacy: 'Privacy',
+    terms: 'Terms and Conditions',
     languageSwitchName: 'View site in Spanish',
     alternateHreflang: 'es-AR',
     navigation: ['Services', 'Work', 'How we work', 'About'],
@@ -64,6 +66,7 @@ const hosts = [
   { role: 'Founder', route: stableRoutes.founder },
   { role: 'Contact', route: stableRoutes.contact },
   { role: 'Privacy', route: stableRoutes.privacy },
+  { role: 'Terms', route: stableRoutes.terms },
 ] as const;
 const locales: readonly FooterLocale[] = ['es', 'en'];
 
@@ -139,6 +142,7 @@ for (const host of hosts) {
       const profiles = founderLinks.map((link) => footer.getByRole('link', { name: link.name, exact: true }));
       const copyright = footer.getByText(/^© \d{4} FURLANICH$/);
       const privacy = footer.getByRole('link', { name: text.privacy, exact: true });
+      const terms = footer.getByRole('link', { name: text.terms, exact: true });
       const languageSwitch = footer.locator(`a[hreflang="${text.alternateHreflang}"]`);
 
       // Approved destinations.
@@ -154,6 +158,7 @@ for (const host of hosts) {
         await expect(profiles[index]).toHaveAttribute('href', link.href);
       }
       await expect(privacy).toHaveAttribute('href', appPathname(stableRoutes.privacy[locale]));
+      await expect(terms).toHaveAttribute('href', appPathname(stableRoutes.terms[locale]));
       await expect(languageSwitch).toHaveCount(1);
       await expect(languageSwitch).toHaveAttribute('href', appPathname(host.route[locale === 'es' ? 'en' : 'es']));
       await expect(languageSwitch).toHaveAttribute('aria-label', text.languageSwitchName);
@@ -173,7 +178,7 @@ for (const host of hosts) {
         directHeading, email, phone, contactRoute, location,
         exploreHeading, ...exploreLinks,
         accountabilityHeading, founder, ...profiles,
-        copyright, privacy, languageSwitch,
+        copyright, privacy, terms, languageSwitch,
       ];
       const positions = await Promise.all(
         ordered.map((target) =>

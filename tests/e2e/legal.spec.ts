@@ -1,10 +1,38 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { appUrl, stableRoutes } from './support/paths';
+import { appPathname, appUrl, stableRoutes } from './support/paths';
+
+const termsCases = [
+  {
+    route: stableRoutes.terms.es,
+    language: 'es-AR',
+    title: 'Términos y condiciones',
+    pageTitle: 'Términos y condiciones | FURLANICH',
+    contents: 'Contenido',
+    updateLabel: 'Última actualización',
+    updatedAt: '18 de octubre de 2026',
+    headings: ['Responsable y alcance', 'Información del sitio', 'Consultas y contratación', 'Uso responsable', 'Materiales y licencias', 'Enlaces y disponibilidad', 'Privacidad y cambios'],
+    reciprocal: { name: 'Ver la política de privacidad', route: stableRoutes.privacy.es },
+    footerName: 'Términos y condiciones',
+  },
+  {
+    route: stableRoutes.terms.en,
+    language: 'en',
+    title: 'Terms and Conditions',
+    pageTitle: 'Terms and Conditions | FURLANICH',
+    contents: 'Contents',
+    updateLabel: 'Last updated',
+    updatedAt: 'October 18, 2026',
+    headings: ['Responsible party and scope', 'Website information', 'Inquiries and engagements', 'Responsible use', 'Materials and licenses', 'Links and availability', 'Privacy and changes'],
+    reciprocal: { name: 'Read the Privacy Policy', route: stableRoutes.privacy.en },
+    footerName: 'Terms and Conditions',
+  },
+] as const;
 
 const cases = [
   { route: stableRoutes.privacy.es, contents: 'Contenido', headings: ["Responsable y contacto","Contacto directo","Alojamiento y datos técnicos","Preferencias de navegación","Información que compartís","Mensajes y solicitudes sobre tus datos"] },
   { route: stableRoutes.privacy.en, contents: 'Contents', headings: ["Responsible party and contact","Direct contact","Hosting and technical data","Browsing preferences","Information you share","Messages and requests about your information"] },
+  ...termsCases.map(({ route, contents, headings }) => ({ route, contents, headings })),
 ];
 
 test('Privacy is complete and navigable without JavaScript', async ({ browser }) => {
@@ -21,7 +49,7 @@ test('Privacy is complete and navigable without JavaScript', async ({ browser })
 });
 
 for (const pageCase of cases) {
-  test('legal reading surface has unique ordered sections for ' + pageCase.contents, async ({ page }) => {
+  test('legal reading surface has unique ordered sections for ' + pageCase.route, async ({ page }) => {
     await page.goto(appUrl(pageCase.route));
     const contents = page.getByRole('navigation', { name: pageCase.contents });
     await expect(contents.getByRole('listitem')).toHaveCount(pageCase.headings.length);
@@ -93,12 +121,57 @@ test('legal titles stay inside the reading surface at 200% text size and 320px',
   }
 });
 
-test('Terms routes remain unpublished', async ({ page }) => {
-  for (const route of ['/terminos/', '/en/terms/']) {
-    const response = await page.goto(appUrl(route));
-    expect(response?.status()).toBe(404);
-  }
-});
+for (const termsCase of termsCases) {
+  test('Terms ' + termsCase.language + ' is published with one H1, its update date and the canonical sections', async ({ page }) => {
+    const response = await page.goto(appUrl(termsCase.route));
+    expect(response?.ok()).toBe(true);
+    await expect(page.locator('html')).toHaveAttribute('lang', termsCase.language);
+    await expect(page).toHaveTitle(termsCase.pageTitle);
+    await expect(page.locator('main')).toHaveCount(1);
+    await expect(page.locator('main h1:visible')).toHaveText(termsCase.title);
+    await expect(page.locator('main dt')).toHaveText(termsCase.updateLabel);
+    await expect(page.locator('main dd')).toHaveText(termsCase.updatedAt);
+    for (const heading of termsCase.headings) await expect(page.getByRole('heading', { level: 2, name: heading })).toBeVisible();
+    await expect(page.locator('form, input, textarea, button[type="submit"]')).toHaveCount(0);
+  });
+
+  test('Terms ' + termsCase.language + ' is complete without JavaScript and links back to Privacy', async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1440, height: 900 } });
+    try {
+      const page = await context.newPage();
+      await page.goto(appUrl(termsCase.route));
+      await expect(page.getByRole('navigation', { name: termsCase.contents })).toBeVisible();
+      for (const heading of termsCase.headings) await expect(page.getByRole('heading', { level: 2, name: heading })).toBeVisible();
+      const reciprocal = page.getByRole('main').getByRole('link', { name: termsCase.reciprocal.name });
+      await expect(reciprocal).toHaveAttribute('href', appPathname(termsCase.reciprocal.route));
+      await Promise.all([page.waitForURL((url) => url.pathname === appPathname(termsCase.reciprocal.route)), reciprocal.click()]);
+    } finally {
+      await context.close();
+    }
+  });
+
+  test('Terms ' + termsCase.language + ' is reachable from the Footer and switches language to its pair', async ({ page }) => {
+    await page.goto(appUrl(termsCase.route.startsWith('/en/') ? stableRoutes.home.en : stableRoutes.home.es));
+    const footerLink = page.getByRole('contentinfo').getByRole('link', { name: termsCase.footerName, exact: true });
+    await expect(footerLink).toHaveAttribute('href', appPathname(termsCase.route));
+    await Promise.all([page.waitForURL((url) => url.pathname === appPathname(termsCase.route)), footerLink.click()]);
+    const other = termsCase.language === 'en' ? stableRoutes.terms.es : stableRoutes.terms.en;
+    const hreflang = termsCase.language === 'en' ? 'es-AR' : 'en';
+    await Promise.all([page.waitForURL((url) => url.pathname === appPathname(other)), page.getByRole('banner').locator('a[hreflang="' + hreflang + '"]').click()]);
+  });
+}
+
+for (const privacyRoute of [stableRoutes.privacy.es, stableRoutes.privacy.en]) {
+  test('Privacy ' + privacyRoute + ' shows its update date and links to its Terms pair', async ({ page }) => {
+    const english = privacyRoute.startsWith('/en/');
+    const pair = termsCases[english ? 1 : 0];
+    await page.goto(appUrl(privacyRoute));
+    await expect(page.locator('main dt')).toHaveText(pair.updateLabel);
+    await expect(page.locator('main dd')).toHaveText(pair.updatedAt);
+    const link = page.getByRole('main').getByRole('link', { name: english ? 'Read the Terms and Conditions' : 'Ver los términos y condiciones' });
+    await expect(link).toHaveAttribute('href', appPathname(pair.route));
+  });
+}
 
 test('Privacy has no serious or critical axe violations', async ({ page }) => {
   for (const route of [stableRoutes.privacy.es, stableRoutes.privacy.en]) {

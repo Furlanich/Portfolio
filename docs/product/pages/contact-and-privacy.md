@@ -67,7 +67,7 @@ Formspree configuration, processor-chain verification, live provider probes, quo
 
 ## Canonical direct-contact Privacy copy
 
-The bounded JSON below is the canonical legal-template copy and must equal both typed commercial modules. The published Privacy modules use the same sections and locale title/introduction. Task 13 updates existing Privacy routes now; the Terms pair and reciprocal legal navigation remain assigned to Task 16. Publication dates reflect actual publication, not inferred counsel approval.
+The bounded JSON below is the canonical legal-template copy and must equal both typed commercial modules. The published Privacy modules use the same sections and locale title/introduction. Task 13 updated the Privacy routes; Task 16 publishes the Terms pair, the Footer link and the reciprocal Privacy/Terms navigation. Publication dates reflect actual publication, not inferred counsel approval.
 
 <!-- SFC-PUBLIC-COPY-ES:START -->
 ```json

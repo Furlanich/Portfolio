@@ -20,6 +20,8 @@ const routeCases = [
   ['English Studio', stableRoutes.studio.en, 'en'],
   ['Spanish Founder', stableRoutes.founder.es, 'es-AR'],
   ['English Founder', stableRoutes.founder.en, 'en'],
+  ['Spanish Terms', stableRoutes.terms.es, 'es-AR'],
+  ['English Terms', stableRoutes.terms.en, 'en'],
 ] as const;
 
 for (const [name, route, language] of routeCases) {

@@ -19,7 +19,7 @@ Website use and initial contact only. Project scope, price, payment, deliverable
 
 ## Routes and presentation
 
-Task 16 retains the planned `/terminos/` and `/en/terms/` pair with semantic locale equivalence, localized title/description, App Bar/Footer and reciprocal Privacy link. These routes remain unpublished until that coordinated release. Use the shared static legal template: title, actual update date, compact contents, all sections, contact and Privacy. No accordion or optional graph runtime. Never expose editorial gate notes as public text.
+Task 16 retains the planned `/terminos/` and `/en/terms/` pair with semantic locale equivalence, localized title/description, App Bar/Footer and reciprocal Privacy link. Task 16 registers them once in the route registry, navigation paths and Footer, and renders the canonical typed copy below through the shared legal template with the update date 18 de octubre de 2026 / October 18, 2026 (the date the owner-approved text was finalized). They reach production only on the human-reviewed coordinated release. Use the shared static legal template: title, actual update date, compact contents, all sections, contact and Privacy. No accordion or optional graph runtime. Never expose editorial gate notes as public text.
 
 ## Canonical direct-contact Terms copy
 
