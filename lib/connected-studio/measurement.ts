@@ -641,6 +641,68 @@ export function readBaselineEntry(input: { report: BaselineReport; route: string
   };
 }
 
+
+/** One measured route entry of a finished `--startup-baseline` report: the shape the collector writes. */
+export type MeasuredRouteEntry = {
+  route: string;
+  locale: string;
+  profile: string;
+  basePath: string;
+  journeys: number;
+  criticalJsBrotliBytes: number;
+  firstLoadJsBrotliBytes: number;
+  staticHtmlJsBrotliBytes?: number;
+  startupCpuP95Ms: number;
+  longestTaskMs: number;
+  journeysDetail?: ReadonlyArray<{ startupCpuMs?: number }>;
+};
+
+function measuredFigures(label: string, entry: MeasuredRouteEntry | undefined, route: 'privacy' | 'terms'): RouteCostFigures {
+  if (!entry) throw new Error(`Terms is judged against Privacy in the same run: the ${label} measurement is missing`);
+  if (entry.route !== route) throw new Error(`The ${label} entry must be the ${route === 'privacy' ? 'Privacy' : 'Terms'} page, got "${String(entry.route)}"`);
+  const detail = entry.journeysDetail;
+  if (!Array.isArray(detail) || detail.length < COLD_BASELINE_JOURNEYS) {
+    throw new Error(`The ${label} measurement retains ${Array.isArray(detail) ? detail.length : 0} journeys; at least ${COLD_BASELINE_JOURNEYS} cold journeys per profile are required`);
+  }
+  const cpu = detail.map((journey) => journey.startupCpuMs);
+  if (cpu.some((value) => typeof value !== 'number' || !Number.isFinite(value))) throw new Error(`The ${label} measurement has a journey without a startup CPU`);
+  if (typeof entry.staticHtmlJsBrotliBytes !== 'number' || !Number.isFinite(entry.staticHtmlJsBrotliBytes)) {
+    throw new Error(`The ${label} measurement has no emitted-byte (static HTML) figure: the byte comparison is part of the gate`);
+  }
+  return {
+    route: entry.route,
+    locale: entry.locale,
+    profile: entry.profile,
+    basePath: entry.basePath,
+    journeys: entry.journeys,
+    criticalJsBrotliBytes: entry.criticalJsBrotliBytes,
+    firstLoadJsBrotliBytes: entry.firstLoadJsBrotliBytes,
+    staticHtmlJsBrotliBytes: entry.staticHtmlJsBrotliBytes,
+    startupCpuP95Ms: entry.startupCpuP95Ms,
+    startupCpuSpreadMs: Math.max(...(cpu as number[])) - Math.min(...(cpu as number[])),
+    longestTaskMs: entry.longestTaskMs,
+  };
+}
+
+/**
+ * The legal route budget (PLAN-SFC-V1, "Critical route budgets": 2 KiB, 25 ms, no added 50 ms task) compares Terms with
+ * Privacy. Terms has no committed Task 3 baseline, so its comparator is the same locale's Privacy page measured in the same
+ * run on the same profile and base path, and the spread that decides OPEN against FAIL is Privacy's own. Identical script
+ * files settle the byte rows only; the CPU and long-task rows are measured. A missing, mismatched or thin comparator throws.
+ */
+export function judgeTermsAgainstPrivacy(input: { privacy: MeasuredRouteEntry | undefined; terms: MeasuredRouteEntry | undefined }): { rows: CostRow[]; verdict: Verdict } {
+  const baseline = measuredFigures('Privacy', input.privacy, 'privacy');
+  const current = measuredFigures('Terms', input.terms, 'terms');
+  return judgeStaticRouteCost({ kind: 'legal', baseline, current });
+}
+
+/** A Terms measurement must carry its Privacy comparator in the same run, so a Terms-only run can never pass vacuously. */
+export function requireLegalPairing(routes: readonly string[]): void {
+  if (routes.includes('terms') && !routes.includes('privacy')) {
+    throw new Error('--routes names terms without privacy: Terms is judged against the same locale Privacy measured in the same run, so name both (--routes=privacy,terms)');
+  }
+}
+
 /** Text that only the optional engine carries. Present in a critical chunk, the optional bytes are hidden in critical code. */
 export const OPTIONAL_ENGINE_MARKERS = Object.freeze(['webglcontextlost', 'WebGLRenderer']);
 

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 // PLAN-SPF-V1 Task 9: the deterministic helper behind the production measurement scripts. It decides
@@ -695,4 +696,81 @@ test('the paired judge command requires every declared profile unless one is cho
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+// --- Terms against Privacy (PLAN-SFC-V1 Task 16, "Critical route budgets": Terms compared to Privacy) ------------
+// Terms has no Task 3 baseline, so its comparator is the same locale's Privacy page measured in the same run, on
+// the same profile and base path. Identical script files prove the byte result only; the startup CPU and the
+// long-task rows are measured, never assumed.
+
+const { judgeTermsAgainstPrivacy, requireLegalPairing } = staticRelease;
+
+const measured = (route, overrides = {}) => ({
+  route,
+  locale: 'es',
+  profile: 'desktop',
+  basePath: '/',
+  journeys: 5,
+  criticalJsBrotliBytes: 117 * KIB,
+  firstLoadJsBrotliBytes: 146 * KIB,
+  staticHtmlJsBrotliBytes: 146 * KIB,
+  startupCpuP95Ms: 110,
+  longestTaskMs: 40,
+  journeysDetail: [95, 98, 100, 104, 110].map((startupCpuMs) => ({ startupCpuMs })),
+  ...overrides,
+});
+
+test('Terms is judged against the same locale Privacy of the same run on the legal budget, bytes and CPU together', () => {
+  const result = judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { startupCpuP95Ms: 112 }) });
+  assert.equal(result.verdict, 'PASS');
+  assert.deepEqual(result.rows.map((row) => row.metric), ['critical-js', 'static-html-js', 'startup-cpu-p95', 'long-task']);
+  assert.equal(result.rows.find((row) => row.metric === 'critical-js').limit, 2 * KIB, 'the legal budget is 2 KiB');
+  const heavy = judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { criticalJsBrotliBytes: 117 * KIB + 2 * KIB + 1 }) });
+  assert.equal(heavy.rows.find((row) => row.metric === 'critical-js').verdict, 'FAIL');
+  assert.equal(heavy.verdict, 'FAIL');
+  const emitted = judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { staticHtmlJsBrotliBytes: 146 * KIB + 2 * KIB + 1 }) });
+  assert.equal(emitted.rows.find((row) => row.metric === 'static-html-js').verdict, 'FAIL', 'the emitted-byte comparison is a gated row');
+});
+
+test('the Terms CPU row is OPEN inside Privacy\'s own journey spread and FAIL beyond it; a new 50 ms task fails', () => {
+  const spread = 110 - 95;
+  const open = judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { startupCpuP95Ms: 110 + 25 + spread }) });
+  assert.equal(open.rows.find((row) => row.metric === 'startup-cpu-p95').verdict, 'OPEN');
+  const fail = judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { startupCpuP95Ms: 110 + 25 + spread + 1 }) });
+  assert.equal(fail.rows.find((row) => row.metric === 'startup-cpu-p95').verdict, 'FAIL');
+  const task = judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { longestTaskMs: 51 }) });
+  assert.equal(task.rows.find((row) => row.metric === 'long-task').verdict, 'FAIL');
+});
+
+test('a missing, mismatched or thin comparator throws instead of passing', () => {
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: undefined, terms: measured('terms') }), /Privacy/);
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: undefined }), /Terms/);
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: measured('terms'), terms: measured('terms') }), /Privacy/);
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('privacy') }), /Terms/);
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { locale: 'en' }) }), /locale/);
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { profile: 'mobile' }) }), /profile/);
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { basePath: '/Portfolio' }) }), /base path/);
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: measured('privacy', { staticHtmlJsBrotliBytes: undefined }), terms: measured('terms') }), /emitted|static/i);
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: measured('privacy'), terms: measured('terms', { journeysDetail: [{ startupCpuMs: 100 }] }) }), new RegExp(String(COLD_BASELINE_JOURNEYS)));
+  assert.throws(() => judgeTermsAgainstPrivacy({ privacy: measured('privacy', { journeysDetail: [{ startupCpuMs: 100 }] }), terms: measured('terms') }), new RegExp(String(COLD_BASELINE_JOURNEYS)));
+});
+
+test('a Terms measurement must carry its Privacy comparator in the same run', () => {
+  assert.throws(() => requireLegalPairing(['terms']), /privacy/);
+  assert.throws(() => requireLegalPairing(['studio', 'terms']), /privacy/);
+  assert.doesNotThrow(() => requireLegalPairing(['privacy', 'terms']));
+  assert.doesNotThrow(() => requireLegalPairing(['studio', 'privacy']));
+  assert.doesNotThrow(() => requireLegalPairing(['studio', 'contact']));
+});
+
+test('the startup collector knows Terms, and refuses it without Privacy before launching anything', () => {
+  const script = fileURLToPath(new URL('./measure-connected-studio-vitals.mjs', import.meta.url));
+  const alone = spawnSync(process.execPath, [script, '--skip-build', '--startup-baseline', '--routes=terms'], { encoding: 'utf8', timeout: 30_000 });
+  assert.notEqual(alone.status, 0);
+  assert.doesNotMatch(alone.stderr, /unknown: terms/, 'terms is a known startup route');
+  assert.match(alone.stderr, /privacy/i, 'it names the missing comparator');
+  const production = fileURLToPath(new URL('./measure-connected-studio-production.mjs', import.meta.url));
+  const source = readFileSync(production, 'utf8');
+  assert.match(source, /route: 'terms', locale: 'es', pathname: '\/terminos\/'/);
+  assert.match(source, /route: 'terms', locale: 'en', pathname: '\/en\/terms\/'/);
 });

@@ -40,10 +40,12 @@ import {
   gateExit,
   judgePairedStartup,
   judgeStaticRouteCost,
+  judgeTermsAgainstPrivacy,
   mainThreadStartupCost,
   missingInteractions,
   percentileOf,
   readBaselineEntry,
+  requireLegalPairing,
   summarizeColdBaseline,
   validateVitalsOptions,
 } from '../lib/connected-studio/measurement.ts';
@@ -78,7 +80,7 @@ const STARTUP = process.argv.includes('--startup-baseline');
 // The pages the vitals journeys can measure (PLAN-SFC-V1 Task 14 adds the three Atlas pages).
 const KNOWN_ROUTES = ['services', 'projects', 'studio', 'founder', 'contact'];
 // The routes --startup-baseline can measure; --routes narrows either list.
-const READING_ROUTE_NAMES = ['studio', 'founder', 'contact', 'privacy'];
+const READING_ROUTE_NAMES = ['studio', 'founder', 'contact', 'privacy', 'terms'];
 
 // Validate before building, serving or launching anything: a typo must not become a passing gate.
 let options;
@@ -96,6 +98,14 @@ try {
   process.exit(1);
 }
 const { journeys: JOURNEYS_PER_LOCALE, profiles: SELECTED_PROFILES, expectMode: EXPECT_MODE, routes: SELECTED_ROUTES } = options;
+if (STARTUP) {
+  try {
+    requireLegalPairing(SELECTED_ROUTES);
+  } catch (error) {
+    console.error(`measure-connected-studio-vitals: ${error.message}`);
+    process.exit(1);
+  }
+}
 if (STARTUP && JOURNEYS_PER_LOCALE < COLD_BASELINE_JOURNEYS) {
   console.error(`measure-connected-studio-vitals: --startup-baseline needs --journeys of at least ${COLD_BASELINE_JOURNEYS}, got ${JOURNEYS_PER_LOCALE}`);
   process.exit(1);
@@ -365,12 +375,13 @@ async function journey(browser, profile, route, locale) {
 }
 
 // --- Startup baseline (PLAN-SFC-V1 Task 3) -----------------------------------------------------------------
-// The routes the commercial redesign changes. Terms does not exist yet: its legal baseline is Privacy.
+// The routes the commercial redesign changes. Terms has no Task 3 baseline: its comparator is Privacy, measured in the same run.
 const READING_ROUTES = {
   studio: { es: '/estudio/', en: '/en/about/' },
   founder: { es: '/estudio/samuel-furlanich/', en: '/en/about/samuel-furlanich/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
   privacy: { es: '/privacidad/', en: '/en/privacy/' },
+  terms: { es: '/terminos/', en: '/en/terms/' },
 };
 if (JSON.stringify(Object.keys(READING_ROUTES)) !== JSON.stringify(READING_ROUTE_NAMES)) throw new Error('READING_ROUTES and READING_ROUTE_NAMES must list the same routes in the same order');
 const TRACE_CATEGORIES = ['devtools.timeline', 'disabled-by-default-devtools.timeline', 'v8.execute', 'toplevel', 'blink.user_timing', 'loading'];
@@ -472,8 +483,27 @@ const readJsonArgument = (name) => {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 };
 
-/** The legal budget compares Terms against Privacy; Terms does not exist yet, so Privacy is judged against its own baseline. */
+/** The legal budget compares Terms against Privacy; Privacy itself is judged against its Task 3 baseline, Terms against Privacy (compareTermsWithPrivacy). */
 const COST_KIND = { studio: 'studio', founder: 'founder', contact: 'contact', privacy: 'legal' };
+/**
+ * Terms has no Task 3 baseline: it is judged against the same locale's Privacy page measured in this run, on the same profile
+ * (PLAN-SFC-V1, "Critical route budgets": Terms compared to Privacy). The emitted-byte and critical-byte rows come from the
+ * same pair; the CPU and long-task rows are measured here, never inferred from identical script files.
+ */
+function compareTermsWithPrivacy(report) {
+  const comparison = [];
+  for (const [profileName, profile] of Object.entries(report.profiles)) {
+    for (const locale of Object.keys(READING_ROUTES.terms)) {
+      const terms = profile.routes[`terms/${locale}`];
+      if (!terms) continue;
+      const judged = judgeTermsAgainstPrivacy({ privacy: profile.routes[`privacy/${locale}`], terms });
+      comparison.push({ profile: profileName, route: `terms/${locale}`, kind: 'legal', verdict: judged.verdict, rows: judged.rows, comparator: `privacy/${locale}`,
+        firstLoadSettledJsAddedKiB: +((terms.firstLoadJsBrotliBytes - profile.routes[`privacy/${locale}`].firstLoadJsBrotliBytes) / 1024).toFixed(1) });
+    }
+  }
+  return comparison;
+}
+
 
 /** Judges every measured route of a finished startup report against Task 3's committed baseline. */
 function compareWithBaseline(report, baselineReport, baselineProduction) {
@@ -481,6 +511,7 @@ function compareWithBaseline(report, baselineReport, baselineProduction) {
   for (const [profileName, profile] of Object.entries(report.profiles)) {
     for (const [key, entry] of Object.entries(profile.routes)) {
       const [route, locale] = key.split('/');
+      if (route === 'terms') continue; // no Task 3 baseline exists; compareTermsWithPrivacy judges it
       const baseline = readBaselineEntry({ report: baselineReport, route, locale, profile: profileName });
       const productionEntry = baselineProduction?.readingRoutes?.find((item) => item.route === route && item.locale === locale);
       if (productionEntry) baseline.staticHtmlJsBrotliBytes = Math.round(productionEntry.jsBrotliKiB * 1024);
@@ -529,7 +560,7 @@ async function runStartupBaseline() {
     limitations: [
       'Tracing adds overhead to every figure; the same method must be used for any later comparison against this baseline.',
       'Lab data on one machine: the p95 of five journeys is the largest of the five (nearest rank).',
-      'Terms does not exist yet: its comparator is Privacy.',
+      'Terms has no Task 3 baseline: it is judged against the same locale Privacy measured in this run.',
       'The server charges the navigation document the profile latency; scripts are served gzip with no added latency.',
     ],
     machine: { cpu: os.cpus()[0]?.model, logicalCores: os.cpus().length, memoryGiB: +(os.totalmem() / 1024 ** 3).toFixed(1), platform: `${os.platform()} ${os.release()}`, node: process.version },
@@ -600,8 +631,26 @@ async function runStartupBaseline() {
       failures.push(error.message);
     }
   }
+  let termsComparison = null;
+  if (!failures.length && SELECTED_ROUTES.includes('terms')) {
+    try {
+      termsComparison = compareTermsWithPrivacy(report);
+      report.termsComparison = termsComparison;
+    } catch (error) {
+      failures.push(error.message);
+    }
+  }
   const outFile = argument('out');
   if (outFile) fs.writeFileSync(outFile, `${JSON.stringify(report, null, 2)}\n`);
+  if (termsComparison) {
+    for (const item of termsComparison) {
+      console.log(`${item.verdict} ${item.profile} ${item.route} against ${item.comparator} (${item.kind}): ${item.rows.map((row) => `${row.metric} ${row.verdict} [${row.note}]`).join('; ')}`);
+    }
+    const termsGate = gateExit(termsComparison.map((item) => item.verdict));
+    console.log(`\nTerms against Privacy: ${JSON.stringify(termsGate.counts)}`);
+    console.log(termsGate.message);
+    if (!termsGate.ok) failures.push(`Terms against Privacy is not satisfied: ${termsGate.message}`);
+  }
   if (comparison) {
     for (const item of comparison) {
       console.log(`${item.verdict} ${item.profile} ${item.route} (${item.kind}): ${item.rows.map((row) => `${row.metric} ${row.verdict} [${row.note}]`).join('; ')}; settled first-load JS ${item.firstLoadSettledJsAddedKiB >= 0 ? '+' : ''}${item.firstLoadSettledJsAddedKiB} KiB (reported, not gated)`);

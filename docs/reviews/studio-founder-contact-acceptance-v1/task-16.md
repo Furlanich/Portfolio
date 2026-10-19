@@ -24,7 +24,7 @@ Branch/worktree: `codex/sfc-16-release` at `D:/Projects/NextJS/Portfolio/.worktr
 
 ## Verification
 
-- `npm run validate` (clean `.next`/`out`, run again on the final head `e4ab2bef` plus this receipt) exit 0: docs:check 352 Markdown files, 121 document IDs, 38 Skills; Node 949 tests, 948 pass, 1 `todo`, 0 fail (828 at Task 13, 857 at Task 14); lint 0 errors and the 282-warning baseline (an extra warning in the first run came from a git-ignored scratch script of mine, since deleted, and one earlier in a new test, fixed); typecheck; production build of 16 static routes. `npm run verify:static-export` on that build: 16 routes.
+- `npm run validate` (clean `.next`/`out`, final head after Reviewer R's corrections) exit 0: docs:check 352 Markdown files, 121 document IDs, 38 Skills; Node 954 tests, 953 pass, 1 `todo`, 0 fail (828 at Task 13, 857 at Task 14); lint 0 errors and the 282-warning baseline; typecheck; production build of 16 static routes. `npm run verify:static-export` on that build: 16 routes. The default Playwright case list stays inside its 3200 envelope (`scripts/sfc-ci-budget.test.mjs`).
 - `npm run verify:static-export`: 16 routes at the root and 16 at `/Portfolio` (base-path build done in PowerShell; Git Bash rewrites `/Portfolio` into a Windows path, which a first attempt exposed).
 - Browser, served `/Portfolio` export, ten default projects (Chromium, Firefox, WebKit, mobile Chromium/WebKit, tablet, wide, 320, tablet-portrait, accessibility) on the legal, privacy, Footer-host, accessibility, navigation and smoke specs: **719 passed, 64 skipped, 0 failed** (783 cases). After the Footer grouping change, the root export for the Footer, legal, accessibility and privacy specs: 468 passed, 3 failed under three parallel workers (two Firefox and one WebKit Footer case), all three passing in isolation (8/8, one worker). Cause: load-related navigation timeouts under parallel workers, the same pattern earlier receipts record for cold servers; no assertion was changed. A first run against `next dev` also showed one cold-compile `net::ERR_ABORTED`, which is why the matrix runs on the served export.
 - Accessibility: axe finds no serious or critical violation on all sixteen pages; each page keeps one banner, one main and one Footer, an ordered outline and a keyboard-ordered Footer (now including Terms). Contrast and screen-reader behavior beyond axe were not checked manually in this task.
@@ -52,7 +52,7 @@ Branch/worktree: `codex/sfc-16-release` at `D:/Projects/NextJS/Portfolio/.worktr
 **Owner decision, 2026-10-18: ACCEPTED.** Given the choice between accepting the poster's mobile cost and lightening the compact poster (900 by 1600 px), the owner wrote: "Accept the poster's mobile startup cost." The posters, their captured frames and their baselines are therefore unchanged, and the mobile startup-CPU rows that remain OPEN or FAIL on that account (Studio, Founder and Contact at the 4x throttle, +15 to +48 ms median against the 25 ms allowance) are recorded as an accepted design cost, not as PASS. The allowance itself was set before the posters existed and is not amended here; only the planning authority may change it. The code-attributable cost, the host chunk, is gone, and desktop is 6 of 6 PASS.
 
 
-Terms against its Privacy comparator (the collectors do not know Terms, and those scripts are Task 14's): each Terms page references exactly the same scripts as its Privacy page (0 B added JavaScript) and its HTML is 77 B (es) and 101 B (en) larger Brotli, inside the 2 KiB legal budget. No paired startup-CPU measurement of Terms exists; its scripts are identical to Privacy's, so that row stays OPEN.
+Terms against Privacy: measured, see the Reviewer R section below (4 of 4 PASS, 0 B added JavaScript, -4.3 to +2.7 ms startup CPU).
 
 ## Visual review and baselines
 
@@ -87,6 +87,33 @@ Reduced-motion Windows Chromium captures were inspected: Terms and Privacy at 14
 
 The CI run at the head that carries them is the clean no-update comparison; its result is recorded in the PR.
 
+## Reviewer R findings (review of `0108d554`, 2026-10-19)
+
+Both findings are P2 and both were valid; each was reproduced before any change.
+
+**1. Spanish Terms contents clipped at 320 px with enlarged text and spacing — valid, corrected.** With the Contact tests' text-spacing style (200% font size, 1.5 line height, 0.12em letter and 0.16em word spacing, 2em paragraph gap), "Enlaces y disponibilidad" (and the English Terms equivalent) crossed the reading plate and widened the document to 328 px; the existing enlargement test only inspected the H1, so it missed the contents links.
+
+- RED: the assertion "contents and reciprocal links stay inside the plate" failed for `/terminos/` and `/en/terms/` (Privacy passed), first as a separate case and again, after folding it into the existing narrow-width test, against a build with the CSS reverted.
+- Fix: `components/legal/legal.module.css` gives the contents and reciprocal links `min-width: 0; max-width: 100%; overflow-wrap: anywhere`, so a long word wraps inside the column; no other legal rendering changes.
+- GREEN: the test passes for all four legal pages on Chromium, Firefox, WebKit and the 320 px project; the legal and privacy specs then passed 198 of 198 across nine projects; the whole visual project passed 93 of 93 with no baseline change. The assertion lives inside the existing test (now "legal titles, contents and reciprocal links stay inside the reading surface at enlarged text, spacing and 320px"), because a separate case ran on every project and pushed the default list to 3226, over the 3200 envelope; the envelope test caught that, and folding the check in adds no case.
+
+**2. Terms excluded from the required cold-start comparison against Privacy — valid, corrected.** `--startup-baseline --routes=terms` exited with "unknown: terms"; my earlier receipt line "no Terms CPU comparison exists" was an honest gap, not evidence.
+
+- RED: five cases in `scripts/connected-studio-measurement.test.mjs` failed (no `judgeTermsAgainstPrivacy`, no `requireLegalPairing`, the collector refused `terms`, the production collector did not list it).
+- Fix: `lib/connected-studio/measurement.ts` adds `judgeTermsAgainstPrivacy` (the same locale's Privacy measured in the same run on the same profile and base path is the baseline; the spread that separates OPEN from FAIL is Privacy's own; the emitted-byte row is mandatory; a missing, mismatched or thin comparator, or fewer than five cold journeys, throws) and `requireLegalPairing` (a Terms run must name Privacy, so it cannot pass vacuously). `measure-connected-studio-vitals.mjs` now knows `terms`, skips it in the Task 3 comparison (no baseline exists), and judges it against Privacy in every startup run, failing the command on any non-PASS row; `measure-connected-studio-production.mjs` lists both Terms pages for emitted bytes and the optional-code scan. These scripts are Task 14's, edited here because the reviewer's finding and Task 16's own "recheck budgets" require it.
+- GREEN: 52 of 52 measurement cases. Measured at the final build, root export, five cold journeys per locale per profile, one session:
+
+| Profile and page | Added critical JS / emitted JS | Startup CPU p95 added | Long task | Verdict |
+| --- | --- | --- | --- | --- |
+| mobile terms/es against privacy/es | 0.0 / 0.0 KiB | +2.7 ms | 425.3 ms, no longer than Privacy's 436.7 ms | PASS |
+| mobile terms/en against privacy/en | 0.0 / 0.0 KiB | -4.3 ms | 379.2 ms, no longer than Privacy's 429.9 ms | PASS |
+| desktop terms/es against privacy/es | 0.0 / 0.0 KiB | -3.1 ms | 42.6 ms, under 50 ms | PASS |
+| desktop terms/en against privacy/en | 0.0 / 0.0 KiB | +2.6 ms | 41.9 ms, under 50 ms | PASS |
+
+  The production collector's gates pass with Terms listed (152 KiB emitted JavaScript for each Terms page, the same as Privacy). Raw reports and traces are in the git-ignored `.superpowers/reports/sfc-16/` of the checkout, as in Tasks 3 and 14; the Terms row is no longer OPEN.
+
+Review hygiene: ESLint scanned git-ignored downloaded Playwright trace bundles under `.superpowers/` and stopped the composed `npm run validate` locally (the reviewer hit it; so did my downloaded CI artifact). `eslint.config.mjs` now ignores `.superpowers/**`, as it already ignores `.playwright/**`; source lint returned 0 errors and the 282-warning baseline, as before. Agent usage for these corrections: primary Claude Sonnet 5.5; subagents 0/0 (none).
+
 ## Rollback
 
 Prior public state: `main` at `cd8c0d45` (PR #142), deployed by [run 38728080880](https://github.com/Furlanich/Portfolio/actions/runs/38728080880) on 2026-10-15, the latest deploy at the time of this task. Deployment is the `push` to `main` workflow, so the whole-release rollback is a human action: `gh run rerun 38728080880` rebuilds and republishes `cd8c0d45`, or revert the PR 16 merge commit on `main` (the revert push redeploys). Samuel controls both. Nothing in this branch changes hosting or the workflow.
@@ -103,6 +130,8 @@ Prior public state: `main` at `cd8c0d45` (PR #142), deployed by [run 38728080880
 - The seam design (empty `atlas-live-host.tsx` filled together with the policy flags) instead of a flag-only enablement: the only way a policy-disabled build ships no host chunk, because the build cannot fold a flag across modules and Next ships a client chunk by reachability. Cost if wrong: the Task 18 enablement carries one more file.
 - Open the PR as a draft although two mobile rows stay OPEN or FAIL: the owner asked for the PR once the gate was fixed; the code-attributable cost is gone and the rest is documented here. A draft cannot merge or deploy. Cost if wrong: close the draft.
 
+- Review corrections: the measurement scripts and `eslint.config.mjs` are outside the Task 16 appendix list; the reviewer's finding and a failing local validate required them. Cost if wrong: Reviewer R or the planning authority may ask to split them.
+
 ## Open items and deferred minors
 
 - **Mobile startup CPU.** Not PASS on the unresolved rows; the poster costs about 30 to 40 ms at the 4x throttle and the owner accepted that cost on 2026-10-18 (above). Desktop is 6 of 6 PASS. A future change of the 25 ms allowance belongs to the planning authority.
@@ -110,5 +139,5 @@ Prior public state: `main` at `cd8c0d45` (PR #142), deployed by [run 38728080880
 - **Contact's 0.35 scene opacity** (the other Task 14 finding) is not implemented and is not part of this task.
 - **Reviewer R and human merge** are separate and OPEN. The plan's own status text still says "execution NOT AUTHORIZED"; only the planning authority may change plan substance.
 - Deferred minor: Contact links to Privacy only. DESIGN-SFC-V1 gives Contact's quiet legal links to PAGE-CONTACT; a Terms link there would be a Task 13 page change. Terms is reachable from every Footer.
-- Deferred minor: no manual screen-reader pass and no paired CPU measurement of Terms were done.
+- Deferred minor: no manual screen-reader pass was done.
 - Not done by design: no deployment, no live graph flag, no Task 17 deployed check, no hardware work.

@@ -84,7 +84,7 @@ test('legal reading surface reflows without horizontal overflow', async ({ page 
   }
 });
 
-test('legal titles stay inside the reading surface at 200% text size and 320px', async ({ browser }) => {
+test('legal titles, contents and reciprocal links stay inside the reading surface at enlarged text, spacing and 320px', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 320, height: 800 } });
 
   try {
@@ -115,6 +115,31 @@ test('legal titles stay inside the reading surface at 200% text size and 320px',
         expect(line.left, pageCase.route + ' title line ' + index + ' left edge').toBeGreaterThanOrEqual(-0.5);
         expect(line.right, pageCase.route + ' title line ' + index + ' right edge').toBeLessThanOrEqual(bounds.clientWidth + 0.5);
       }
+
+      // WCAG 1.4.12 text spacing at the narrowest width: the contents and reciprocal links wrap inside the reading plate
+      // (Reviewer R found "Enlaces y disponibilidad" crossing the plate, 328px of document width on a 320px viewport).
+      const spacing = await context.newPage();
+      await spacing.goto(appUrl(pageCase.route));
+      await spacing.addStyleTag({
+        content:
+          'main p, main a { font-size: 200% !important; line-height: 1.5 !important; letter-spacing: .12em !important; word-spacing: .16em !important; } main p { margin-bottom: 2em !important; }',
+      });
+      const reflow = await spacing.evaluate(() => {
+        const plate = document.querySelector('[data-connected-opaque-plate]')!.getBoundingClientRect();
+        const links = Array.from(document.querySelectorAll('main nav a, main article ul a'));
+        const outside = links
+          .filter((link) => {
+            const range = document.createRange();
+            range.selectNodeContents(link);
+            return Array.from(range.getClientRects()).some((rect) => rect.right > plate.right + 0.5 || rect.left < plate.left - 0.5);
+          })
+          .map((link) => link.textContent);
+        return { width: window.innerWidth, scrollWidth: document.documentElement.scrollWidth, count: links.length, outside };
+      });
+      expect(reflow.count, pageCase.route + ' has its contents and reciprocal links').toBeGreaterThanOrEqual(pageCase.headings.length);
+      expect(reflow.outside, pageCase.route + ' links outside the reading plate').toEqual([]);
+      expect(reflow.scrollWidth, pageCase.route + ' horizontal overflow').toBeLessThanOrEqual(reflow.width);
+      await spacing.close();
     }
   } finally {
     await context.close();

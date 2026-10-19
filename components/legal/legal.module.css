@@ -92,6 +92,10 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+  /* Long words wrap inside the reading column instead of crossing the plate under enlarged text and spacing (WCAG 1.4.12). */
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   color: #9cc4ec;
   text-decoration: underline;
   text-decoration-thickness: 1px;

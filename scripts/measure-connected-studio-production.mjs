@@ -58,8 +58,8 @@ const ATLAS_DESTINATIONS = [
   { route: 'contact', locale: 'es', pathname: '/contacto/' },
   { route: 'contact', locale: 'en', pathname: '/en/contact/' },
 ];
-// PLAN-SFC-V1 Task 3: the reading, intake and legal routes the commercial redesign changes (Terms does not exist
-// yet; Privacy is its baseline). They have no optional engine: only the chunks their own HTML references are measured.
+// PLAN-SFC-V1 Task 3 and 16: the reading, intake and legal routes the commercial redesign changes (Terms is judged
+// against Privacy). They have no optional engine: only the chunks their own HTML references are measured.
 const READING_DESTINATIONS = [
   { route: 'studio', locale: 'es', pathname: '/estudio/' },
   { route: 'studio', locale: 'en', pathname: '/en/about/' },
@@ -69,6 +69,8 @@ const READING_DESTINATIONS = [
   { route: 'contact', locale: 'en', pathname: '/en/contact/' },
   { route: 'privacy', locale: 'es', pathname: '/privacidad/' },
   { route: 'privacy', locale: 'en', pathname: '/en/privacy/' },
+  { route: 'terms', locale: 'es', pathname: '/terminos/' },
+  { route: 'terms', locale: 'en', pathname: '/en/terms/' },
 ];
 
 if (!process.argv.includes('--skip-build')) {
