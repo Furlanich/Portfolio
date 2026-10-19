@@ -19,7 +19,7 @@ related:
   - PLAN-CONTACT-INQUIRY-PIPELINE
   - REF-CONTACT-DEMO-KIT
   - RFC-HOME-HERO-IMPLEMENTATION-BOUNDARY
-last_verified: 2026-10-18
+last_verified: 2026-10-19
 ---
 
 # Contact and privacy pages
@@ -29,6 +29,10 @@ last_verified: 2026-10-18
 The owner approved removal of the embedded inquiry form from both Contact routes and requested removal of Formspree and mandatory counsel decisions from PLAN-SFC-V1. [ADR-CONTACT-DIRECT-CHANNELS](../../decisions/contact-direct-channels.md) records the explicit supersession. This owner decision replaces the demonstration/commercial form requirements, field/state contracts, provider readiness checklist, and professional-review release gate formerly in this document. Earlier evidence remains dated history in the completed plans and ADRs.
 
 No provider account, backend, endpoint, automated submission, simulated success, inquiry storage, or consent checkbox is part of the website Contact experience. Native links open WhatsApp, the visitor's email application, or their phone application. The visitor decides whether to send a message or place a call. Opening a link is not a delivery confirmation.
+
+## Deployed verification — 2026-10-19
+
+The direct-contact Contact, Privacy and Terms pages are live at `https://furlanich.github.io/Portfolio/` from `main` `5d8055a3` (PR #157). A read-only check found both Contact locales with one H1 and main, no form controls, the three exact destinations above without prefill, only same-host requests, empty storage on load, matching reciprocal Privacy/Terms/Footer/locale links, and no draft, simulation or processor wording. Contact and Privacy still use the default site title and no page description; only Terms carries page metadata, as specified. No message was sent and no call placed. See the [Task 17 receipt](../../reviews/studio-founder-contact-acceptance-v1/task-17.md).
 
 ## PAGE-CONTACT responsibility and hierarchy
 

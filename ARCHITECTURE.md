@@ -43,14 +43,14 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - PLAN-SPF-V1
-last_verified: 2026-10-18
+last_verified: 2026-10-19
 ---
 
 # FURLANICH architecture map
 
 ## Direct-contact update — 2026-10-18
 
-Integration Task 13 implements [ADR-CONTACT-DIRECT-CHANNELS](docs/decisions/contact-direct-channels.md): Contact is a shared Server Component with WhatsApp/email/phone links, no form or inquiry configuration dependency, and direct-message Privacy copy. Formspree/counsel/probe readiness is not a release gate. Earlier form/demo/current-main passages below are dated pre-amendment history; the candidate is not a deployed-state claim.
+Integration Task 13 implements [ADR-CONTACT-DIRECT-CHANNELS](docs/decisions/contact-direct-channels.md): Contact is a shared Server Component with WhatsApp/email/phone links, no form or inquiry configuration dependency, and direct-message Privacy copy. Formspree/counsel/probe readiness is not a release gate. Earlier form/demo/current-main passages below are dated pre-amendment history. **Deployed state, verified read-only on 2026-10-19:** `https://furlanich.github.io/Portfolio/` serves `main` at `5d8055a3` (PR #157, [deploy run 39201533556](https://github.com/Furlanich/Portfolio/actions/runs/39201533556)); both Contact locales show only the three native links, no form controls, provider request or stored data; Privacy and Terms are published and link each other and the Footer. The evidence is the [Task 17 receipt](docs/reviews/studio-founder-contact-acceptance-v1/task-17.md); the graph live-policy flags remain false.
 
 ## CURRENT
 
@@ -112,7 +112,7 @@ Initiative 4's Projects/Evidence decisions also fit the accepted boundary. [`PLA
 
 Initiative 5 closes Studio and Founder product/design decisions within the same accepted boundary. The approved implementation adds the existing sitemap's /estudio/ and /en/about/ pair as semantic Studio routes, retains the nested Founder pair, routes primary navigation to Studio, and uses route-owned localized content with shared locale-agnostic semantic components. It reuses existing tokens, primitives, static export, trailing slashes, and optional base-path behavior. The completed work is recorded by [`PLAN-STUDIO-FOUNDER-COMPLETION`](docs/plans/completed/studio-founder-completion.md), which sequences route/content contracts, Studio publication, Founder completion, and cross-page verification in four reviewable implementation PRs. It requires no RFC, new ADR, CMS, backend, runtime localization, dependency, hosting change, or new design-system architecture.
 
-Initiative 6 has two accepted modes. [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) governs the current public portfolio/technical demonstration at `https://furlanich.github.io/Portfolio/`: the complete four-field Contact UI uses a local adapter, simulates success/failure, and sends or stores nothing. [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md) retains Formspree behind the same provider-neutral port for a later commercial activation. [`PLAN-CONTACT-INQUIRY-PIPELINE`](docs/plans/completed/contact-inquiry-pipeline.md) records the completed demonstration Privacy/Contact and deployed zero-transmission proof while preserving real privacy/legal/provider/inbox/deletion gates for separate activation.
+Historical, superseded 2026-10-18 by [`ADR-CONTACT-DIRECT-CHANNELS`](docs/decisions/contact-direct-channels.md) (the demonstration form left the deployed site on 2026-10-19): Initiative 6 had two accepted modes. [`ADR-CONTACT-INQUIRY-DEMO-MODE`](docs/decisions/contact-inquiry-demonstration-mode.md) governed the public portfolio/technical demonstration at `https://furlanich.github.io/Portfolio/`: the complete four-field Contact UI uses a local adapter, simulates success/failure, and sends or stores nothing. [`ADR-CONTACT-INQUIRY-PIPELINE`](docs/decisions/contact-inquiry-pipeline.md) retains Formspree behind the same provider-neutral port for a later commercial activation. [`PLAN-CONTACT-INQUIRY-PIPELINE`](docs/plans/completed/contact-inquiry-pipeline.md) records the completed demonstration Privacy/Contact and deployed zero-transmission proof while preserving real privacy/legal/provider/inbox/deletion gates for separate activation.
 
 The static-compatible App Router and localization structure was accepted through the routing RFC and is recorded in [`ADR-STATIC-LOCALIZED-ROUTING`](docs/decisions/static-localized-routing.md). [`PLAN-HOMEPAGE-FOUNDATION`](docs/plans/completed/homepage-foundation.md) records foundation delivery, and [`PLAN-HOMEPAGE-COMPLETION`](docs/plans/completed/homepage-completion.md) records the completed homepage implementation sequence. The default GitHub Pages project URL is the approved canonical deployment URL; no custom domain is planned. Long-term hosting may still be reconsidered only through a future architecture decision while current static-export and `/Portfolio` base-path constraints remain.
 
