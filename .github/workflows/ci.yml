@@ -70,5 +70,66 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 7
-    # The dedicated candidate job (commercial and new-route runtime cases against the QA patches, restored in
-    # an always-run cleanup step) is added by PLAN-SFC-V1 Task 10, when the first implemented cases exist.
+
+  # PLAN-SFC-V1 Task 26: the dedicated candidate job. The commercial-inquiry and new-route runtime families
+  # only exist with SFC_TEST_MODE=candidate and only make sense against the QA candidate patches, so they never
+  # ran in the sharded `browser` job above. This job applies both patches to its own disposable checkout
+  # (every job checks out fresh), runs the 90 candidate cases, and ALWAYS restores. A candidate is never
+  # deployable: this job builds and publishes nothing, holds no secret, keeps the workflow's read-only token,
+  # and the `validate` job rejects any QA marker or unrestored candidate in the tree it checks.
+  # Budget: target 20 minutes, hard limit 30. Never extend it, drop a case or weaken a test to hide a failure;
+  # measure the real duration at each wave (docs/testing/playwright.md, "Continuous integration").
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The same prebuilt Playwright image and options as `browser`. The extra --add-host entries point the
+    # inquiry provider at loopback, so an unmocked request to it cannot leave the container: it fails to
+    # connect instead of reaching the real endpoint. The tag MUST equal the locked `@playwright/test` version.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: >-
+        --user 1001 --init --ipc=host
+        --add-host formspree.io:127.0.0.1
+        --add-host www.formspree.io:127.0.0.1
+    env:
+      # Selects the test families only. The application's own mode comes from the applied patches.
+      SFC_TEST_MODE: candidate
+      NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Prove provider traffic is blocked
+        run: |
+          for host in formspree.io www.formspree.io; do
+            getent hosts "$host" | grep -q '^127\.0\.0\.1 ' || { echo "$host does not resolve to loopback"; exit 1; }
+          done
+      - name: Start from a clean tree
+        run: node scripts/prepare-sfc-candidate.mjs verify-clean
+      - name: Apply the commercial and live-policy candidates
+        run: node scripts/prepare-sfc-candidate.mjs apply --kind=combined --expect-head=${{ github.sha }}
+      - name: Run the candidate families
+        run: npx playwright test --workers=2
+      # Runs whether the cases passed, failed or were cancelled. It restores only when a candidate is still
+      # applied, then proves the checkout is clean either way.
+      - name: Restore the candidate
+        if: always()
+        run: |
+          if ! node scripts/prepare-sfc-candidate.mjs verify-clean; then
+            node scripts/prepare-sfc-candidate.mjs restore --kind=combined
+          fi
+          node scripts/prepare-sfc-candidate.mjs verify-clean
+      # Uploaded whether the cases passed or failed, under a name unique to the run and attempt.
+      - name: Upload Playwright report and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
