@@ -27,7 +27,7 @@ import { appPathname, appUrl, stableRoutes } from './support/paths';
 // compiles the diagnostics hook out, so everything here observes the public DOM, the network and the WebGL
 // API. The live cases open the software-renderer gate (and, where they need a tier the shipped policy leaves off,
 // the policy) through the controlled test hook and run on SwiftShader: they are functional evidence, never
-// hardware acceptance. Since PLAN-SFC-V1 Task 18 the shipped policy is { wide: true, compact: false }.
+// hardware acceptance. Since PLAN-SFC-V1 Tasks 18 and 25 the shipped policy is { wide: true, compact: true }.
 
 test.describe.configure({ timeout: 120_000 });
 
@@ -472,19 +472,13 @@ test.describe('preferences and capability gates fetch no engine', () => {
       await expect(connectedCanvas(page)).toHaveCount(1);
     });
 
-    test(`the shipped policy keeps the unqualified compact tier static on ${connected.route}/${connected.locale} even when the software gate is open`, async ({ page }) => {
-      const names = engineChunkNames();
-      const requested: string[] = [];
-      page.on('request', (request) => {
-        const chunk = chunkOf(request);
-        if (chunk && names.includes(chunk)) requested.push(chunk);
-      });
+    // Task 25: the shipped policy takes the compact tier live too (the owner's manual acceptance); same software-gate-only hook.
+    test(`the shipped policy takes the compact tier live on ${connected.route}/${connected.locale} once the software gate is open`, async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 });
       await setConnectedTestHook(page, { allowSoftwareRenderer: true });
       await page.goto(appUrl(connected.pathname));
-      await page.waitForTimeout(2_000);
-      await expectNoCanvas(page);
-      expect(requested).toEqual([]);
+      await expectLiveProduction(page);
+      await expect(connectedCanvas(page)).toHaveCount(1);
     });
 
     test(`a software renderer is rejected on ${connected.route}/${connected.locale} even with the live policy on`, async ({ page }) => {
@@ -505,7 +499,7 @@ test.describe('preferences and capability gates fetch no engine', () => {
 
 test.describe('the emitted closure and the browser agree (functional evidence)', () => {
   // Controlled test evidence: the hook and SwiftShader are the only way to exercise the engine while both live
-  // tiers are off. Sizes and budgets are gated by `measure:connected-studio`, which never sets the hook.
+  // tiers were off. Sizes and budgets are gated by `measure:connected-studio`, which never sets the hook.
   const cases = [
     ...connectedPages.map((connected) => ({ connected, quality: 'wide', viewport: { width: 1440, height: 900 } })),
     { connected: connectedPages[0], quality: 'compact', viewport: { width: 390, height: 844 } },

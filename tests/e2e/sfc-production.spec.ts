@@ -7,7 +7,7 @@ import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 
 // PLAN-SFC-V1 Task 14: the Studio, Founder and Contact pages as the clean static export ships them. This spec runs
 // only in the `sfc-production-{chromium,firefox,webkit}` projects (PLAYWRIGHT_SERVE_EXPORT=1), against `out/` served
-// by scripts/serve-static-export.mjs. Since Task 18 the shipped policy is { wide: true, compact: false }: the host is
+// by scripts/serve-static-export.mjs. Since Tasks 18 and 25 the shipped policy is { wide: true, compact: true }: the host is
 // attached to the three pages through the live-host seam and goes live for an eligible wide visitor, while every other
 // visitor (compact, reduced motion, Save-Data, no hardware WebGL2) keeps a complete static page: their own matched poster
 // (the responsive variant only), no canvas, no optional engine request and no engine-only code in anything they load.
@@ -53,7 +53,7 @@ type Observed = { posters: string[]; scripts: string[] };
 
 /**
  * Reduced motion is how the static page is reached on a wide viewport in every engine: since Task 18 a wide visitor whose browser reports
- * a hardware WebGL2 renderer goes live, and whether a headless engine reports one depends on the machine. The compact tier is static by policy.
+ * a hardware WebGL2 renderer goes live, and whether a headless engine reports one depends on the machine. A compact visitor now goes live under the shipped policy too (Task 25).
  */
 async function load(browser: Browser, baseURL: string | undefined, viewport: { width: number; height: number }, pathname: string): Promise<{ page: Page; observed: Observed; close: () => Promise<void> }> {
   const context = await browser.newContext({ baseURL, viewport, reducedMotion: 'reduce' });
@@ -138,7 +138,7 @@ test.describe('the Atlas pages in the static export', () => {
   // Controlled functional evidence on SwiftShader (Chromium only): the hook opens the software-renderer gate and nothing else, so the
   // policy under test is the one the build ships.
   for (const { route, locale, pathname } of atlasPages) {
-    test(`${route}/${locale}: the shipped policy takes an eligible wide visitor live and keeps compact and ineligible visitors static`, async ({ browser, baseURL, browserName }) => {
+    test(`${route}/${locale}: the shipped policy takes an eligible wide and compact visitor live and keeps ineligible visitors static`, async ({ browser, baseURL, browserName }) => {
       test.skip(browserName !== 'chromium', 'WebGL2 on SwiftShader is exercised in Chromium only');
       const engine = engineChunkNames();
       const open = async (viewport: { width: number; height: number }, arrange?: (page: Page) => Promise<void>) => {
@@ -165,8 +165,17 @@ test.describe('the Atlas pages in the static export', () => {
         await wide.close();
       }
 
+      const compact = await open({ width: 390, height: 844 });
+      try {
+        await expect(compact.page.locator('main [data-connected-ground]')).toHaveAttribute('data-connected-live', 'true', { timeout: 45_000 });
+        await expect(compact.page.locator('main [data-connected-ground] canvas')).toHaveCount(1);
+        await expect(compact.page.locator(`#connected-pause-${route} button`)).toHaveCount(1);
+        expect(compact.requested.length, 'the engine was requested for the eligible compact visitor').toBeGreaterThan(0);
+      } finally {
+        await compact.close();
+      }
+
       const ineligible: Array<{ name: string; viewport: { width: number; height: number }; arrange?: (page: Page) => Promise<void> }> = [
-        { name: 'the unqualified compact tier', viewport: { width: 390, height: 844 } },
         { name: 'reduced motion', viewport: { width: 1440, height: 900 }, arrange: async (page) => { await page.emulateMedia({ reducedMotion: 'reduce' }); } },
         {
           name: 'Save-Data',

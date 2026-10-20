@@ -30,11 +30,11 @@ import { createEdgePath, PATH_SEGMENTS } from '../../components/connected-studio
 import { evaluateRestEdge } from '../../lib/connected-studio/rest-path';
 import type { ConnectedRoute, ConnectedTier, EdgeSamplePoints, Vec3 } from '../../lib/connected-studio/types';
 
-// PLAN-SFC-V1 Task 11: the shared host on the three new routes, behind the runtime candidate
-// (SFC_TEST_MODE=candidate with the live-policy fixture applied; see playwright.config.ts). WebGL here runs on
-// SwiftShader, so these specs prove functional lifecycle and input behavior only, never frame pacing or feel.
-// Task 12 adds the actual Contact form and the five rendered profiles below (the combined candidate:
-// `prepare-sfc-candidate.mjs apply --kind=combined`, NEXT_PUBLIC_FORMSPREE_ENDPOINT set, provider traffic mocked).
+// PLAN-SFC-V1 Task 11: the shared host on the three new routes, in the candidate family (SFC_TEST_MODE=candidate; see
+// playwright.config.ts). Since Tasks 18 and 25 both live tiers are enabled in committed source, so no policy patch is needed
+// any more (the live-policy fixture was retired); the commercial candidate (`prepare-sfc-candidate.mjs apply --kind=commercial`)
+// is what the CI candidate job applies. WebGL here runs on SwiftShader, so these specs prove functional lifecycle and input
+// behavior only, never frame pacing or feel. Task 12 added the Contact integration and the five rendered profiles below.
 
 test.describe.configure({ timeout: 90_000 });
 

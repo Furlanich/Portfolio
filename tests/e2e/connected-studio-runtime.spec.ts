@@ -171,7 +171,7 @@ test('a stored Home context loss keeps connected routes static (read-only, PC-5)
     expect(later?.idleAngleRadians).toBe(first?.idleAngleRadians);
   });
 
-// PLAN-SFC-V1 Task 18: the shipped policy is { wide: true, compact: false }. Only the software gate is opened here, so the policy
+// PLAN-SFC-V1 Tasks 18 and 25: the shipped policy is { wide: true, compact: true }. Only the software gate is opened here, so the policy
   // under test is the one the build ships.
   test('the shipped policy takes a wide page live when the software gate is open', async ({ page }) => {
     await setConnectedTestHook(page, { allowSoftwareRenderer: true });
@@ -179,11 +179,11 @@ test('a stored Home context loss keeps connected routes static (read-only, PC-5)
     await expectLive(page);
   });
 
-  test('the shipped policy keeps the unqualified compact tier static even when the software gate is open', async ({ page }) => {
+  test('the shipped policy takes a compact page live when the software gate is open (Task 25)', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await setConnectedTestHook(page, { allowSoftwareRenderer: true });
     await gotoConnected(page, 'services', 'en');
-    await expectStatic(page, 'services');
+    await expectLive(page);
   });
 
   // PLAN-SFC-V1 Task 23 (Reviewer R, SFC-18-22-02): DESIGN-SFC-V1 says a runtime preference change cancels and disposes live

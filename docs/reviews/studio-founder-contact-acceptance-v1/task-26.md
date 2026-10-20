@@ -2,6 +2,8 @@
 
 **Status: READY FOR HUMAN REVIEW ([PR #173](https://github.com/Furlanich/Portfolio/pull/173), open, not merged).** The `candidate` job exists and is green on a real CI run: 90 of 90 cases passed on the first attempt in 7m21s ([run 39426095562](https://github.com/Furlanich/Portfolio/actions/runs/39426095562)). The job closes the "dedicated candidate CI job" item that the [Task 19 closeout](task-19.md) carried as OPEN. It does not accept the compact tier (Task 25) or the manual round (Task 27).
 
+> **Update, 2026-10-20 (later): PR #173 merged, and Task 25 then changed the job's candidate.** The job applied the `combined` candidate (commercial release plus live policy). Task 25 enabled the compact tier in committed source and retired `live-policy.patch`, so the job now applies `--kind=commercial` and `prepare-sfc-candidate.mjs` has only that kind. The 90-case count and the 7m21s run above are the measurement at merge, before that change; the job's duration after it is re-measured by the first CI run of the Task 25 closeout PR.
+
 Agent usage: primary Claude Sonnet 5.5 (`claude-sonnet-5-5`; the session does not expose reasoning effort); `SINGLE_AGENT`, subagents 0/0. Self-review only; no independent reviewer has read this PR.
 
 Branch/worktree: `codex/sfc-26-candidate-ci` in the `sfc-26-candidate-ci` worktree. It is **stacked on [PR #172](https://github.com/Furlanich/Portfolio/pull/172)** (`codex/sfc-19-closeout`, not merged when this was written), because the `docs/testing/playwright.md` bullets this task rewrites exist only there. The PR targets `main`, so until #172 merges it also shows #172's two commits; review the commits after `4a47ba95`.

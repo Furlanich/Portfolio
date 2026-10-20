@@ -39,7 +39,7 @@ This concise catalogue traces visitor-facing capabilities to their authoritative
 | Founder profile | [`PAGE-FOUNDER`](pages/studio-and-founder.md) |
 | Direct Contact | [PAGE-CONTACT](pages/contact-and-privacy.md): native WhatsApp, email and phone links with localized Privacy and Founder references. |
 | Studio, Founder and legal pages | Delivered by PLAN-SFC-V1 (completed 2026-10-20): Atlas [`PAGE-STUDIO` / `PAGE-FOUNDER`](pages/studio-and-founder.md), Privacy and the new Terms pair (`/terminos/`, `/en/terms/`) in [`PAGE-PRIVACY` / `PAGE-TERMS`](pages/contact-and-privacy.md). |
-| Interactive connected graph | Wide tier live on Studio, Founder, Contact, Services and Projects ([`DESIGN-SFC-V1`](../design/studio-founder-contact-v1.md)); **compact tier OPEN and static**. Reduced motion, Save-Data, forced colors, denied, software-renderer and context-loss visitors always get the static page. |
+| Interactive connected graph | Live on both tiers (wide and compact) on Studio, Founder, Contact, Services and Projects ([`DESIGN-SFC-V1`](../design/studio-founder-contact-v1.md)), on the owner's acceptance rather than a measured qualification. Reduced motion, Save-Data, forced colors, denied, software-renderer and context-loss visitors always get the static page. |
 | Services in-page navigation | Stable localized fragments and non-sticky service index in [`PAGE-SERVICES`](pages/services.md#stable-service-anchors-approved) |
 
 ## PROPOSED launch capabilities

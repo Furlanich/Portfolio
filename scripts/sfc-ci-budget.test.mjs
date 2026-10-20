@@ -189,11 +189,11 @@ test('the candidate job runs the candidate families on the pinned Playwright ima
   assert.doesNotMatch(read('.github/workflows/ci.yml'), /continue-on-error/);
 });
 
-test('the candidate job applies both patches in its own checkout before the browser run', () => {
+test('the candidate job applies the commercial patch in its own checkout before the browser run', () => {
   const steps = candidateSteps();
-  const apply = steps.findIndex((step) => /prepare-sfc-candidate\.mjs apply --kind=combined/.test(step.text));
+  const apply = steps.findIndex((step) => /prepare-sfc-candidate\.mjs apply --kind=commercial/.test(step.text));
   const run = steps.findIndex((step) => /npx playwright test/.test(step.text));
-  assert.ok(apply >= 0, 'a step applies the combined (commercial + live-policy) candidate');
+  assert.ok(apply >= 0, 'a step applies the commercial candidate');
   assert.ok(run > apply, 'Playwright runs after the candidate is applied');
   assert.match(steps[apply].text, /--expect-head=\$\{\{ github\.sha \}\}/, 'the candidate is bound to the checked-out head');
   assert.ok(steps.findIndex((step) => /npm ci/.test(step.text)) < apply, 'dependencies are installed before the candidate is applied');
@@ -213,7 +213,7 @@ test('the candidate job blocks provider traffic at the network layer and checks 
 test('the candidate job always restores the candidate, after the run, and proves the checkout is clean', () => {
   const steps = candidateSteps();
   const run = steps.findIndex((step) => /npx playwright test/.test(step.text));
-  const cleanup = steps.findIndex((step) => /prepare-sfc-candidate\.mjs restore --kind=combined/.test(step.text));
+  const cleanup = steps.findIndex((step) => /prepare-sfc-candidate\.mjs restore --kind=commercial/.test(step.text));
   assert.ok(cleanup > run, 'the restore step comes after the browser run');
   assert.match(steps[cleanup].text, /if:\s*always\(\)/, 'the restore runs even when the run fails');
   assert.match(steps[cleanup].text, /prepare-sfc-candidate\.mjs verify-clean/, 'the cleanup ends by verifying the checkout is clean');
@@ -241,7 +241,6 @@ test('the candidate job is never deployable: read-only token, no secrets, no pub
 
 test('the stale runtime-closure patch is gone and nothing in the tree executes it', () => {
   assert.equal(existsSync(`${root}tests/fixtures/sfc/runtime-closure.patch`), false, 'the stale Task 8 fixture is deleted');
-  for (const name of ['commercial-release.patch', 'live-policy.patch']) {
-    assert.ok(existsSync(`${root}tests/fixtures/sfc/${name}`), `${name} stays: the candidate job applies it`);
-  }
+  assert.ok(existsSync(`${root}tests/fixtures/sfc/commercial-release.patch`), 'commercial-release.patch stays: the candidate job applies it');
+  assert.equal(existsSync(`${root}tests/fixtures/sfc/live-policy.patch`), false, 'live-policy.patch is retired: both tiers are enabled in committed source (PLAN-SFC-V1 Task 25)');
 });

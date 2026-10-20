@@ -309,7 +309,7 @@ Write one line per finding: session, page, item, what you heard, what you expect
 
 ## 6. Physical phone pass
 
-Compact is static by policy (`CONNECTED_LIVE_POLICY.compact` is `false`), so a phone below 768 CSS px shows the complete static page with its poster and **no Pause control**. This pass checks that complete page on a real device. It does not qualify the compact tier, which stays OPEN under Task 25.
+Compact was static by policy when this protocol was written; since PLAN-SFC-V1 Task 25 `CONNECTED_LIVE_POLICY.compact` is `true`, so an eligible phone below 768 CSS px now runs the live scene with its Pause control, and the static page is what a reduced-motion, Save-Data or software-renderer visitor sees. This pass checks the complete static page on a real device. The owner has attested to having tested the compact live scene and the screen-reader and phone checks manually (see the [Task 27](task-27.md) update); this protocol is kept for per-item sheets if the owner or an operator wants them.
 
 Use a real iPhone and, if one exists, a real Android phone, with the site opened from the browser's address bar (not a desktop emulation). For each device run the pages below in both languages, portrait first, then landscape for Studio and Contact.
 

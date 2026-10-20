@@ -18,8 +18,9 @@ type AtlasLiveHostProps = {
  *
  * It stays the single import path (scripts/sfc-contracts.test.mjs walks the module graph): the shared static
  * ground never imports the host, and the host chunk (about 13.7 KiB Brotli) reaches the three Atlas pages only here.
- * Next ships a client component's chunk with every page that can reach it, whether or not the tier is enabled for the
- * visitor, which is why the compact tier pays the host's bytes and startup cost while it stays static (Task 18 receipt).
+ * Next ships a client component's chunk with every page that can reach it, whether or not the visitor qualifies, which is
+ * why a reduced-motion, Save-Data or software-renderer visitor pays the host's bytes and startup cost while staying static
+ * (Task 18 receipt; since Task 25 both tiers are enabled, so this applies to those visitors only).
  */
 export function AtlasLiveHost({ route, locale, wordBindings }: AtlasLiveHostProps) {
   return <ConnectedStudioEnhancement route={route} locale={locale} wordBindings={wordBindings} />;
