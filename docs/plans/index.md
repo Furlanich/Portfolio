@@ -3,6 +3,7 @@ id: PLAN-INDEX
 type: execution-plan-index
 status: APPROVED
 related:
+  - PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE
   - ADR-CONTACT-DIRECT-CHANNELS
   - REVIEW-SFC-PLAN-2026-10-14
   - PLAN-SFC-V1
@@ -44,7 +45,7 @@ PLAN-SFC-V1 Task 13 now removes the form and delivers direct channels under [ADR
 
 ## Active
 
-No plans are currently active. PLAN-SFC-V1 was the last; see Completed.
+- [PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE](active/founder-localized-cv-and-experience.md): **PROPOSED — 2026-10-20 (revision 2).** One serial Founder task/PR for localized native CV downloads, removal of the legacy `Samuel-Furlanich-CV.pdf`, and one CleverSoft S.A. experience entry (joined June 2026, owner correction). Planning only; implementation awaits independent plan review and owner acceptance. The owner's ES/EN PDF drafts are recorded with open input-gate findings (G1–G7), which, with visual-baseline approval, remain completion gates.
 
 ## Completed
 
