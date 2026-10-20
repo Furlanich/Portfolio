@@ -174,8 +174,8 @@ This register summarizes status. Detailed requirements remain authoritative in t
 - Studio uses six sections: intro, accountability/collaborator model, four unnumbered principles, location/availability, Founder bridge, and final Contact CTA.
 - Studio approves “Software a medida con responsabilidad técnica directa. / Custom software with direct technical accountability.” as its H1 and rejects the two recorded alternatives for that role.
 - Studio uses no metrics panel, team-size claim, stock team imagery, second process timeline, service catalogue, project cards, or full biography.
-- Founder preserves the approved detailed biography and adds a second source-backed 2021 internship entry, factual education, four applied capability groups, a compact CV/LinkedIn/GitHub group, one Projects bridge, and a final Contact CTA.
-- Clever Soft SA remains narrative biography only and is not an experience-timeline entry, logo, endorsement, or FURLANICH evidence claim.
+- Founder preserves the approved detailed biography and adds a second source-backed 2021 internship entry (a CleverSoft S.A. entry was added 2026-10-20, see the amendment), factual education, four applied capability groups, a compact CV/LinkedIn/GitHub group, one Projects bridge, and a final Contact CTA.
+- Clever Soft SA remains narrative biography only and is not an experience-timeline entry, logo, endorsement, or FURLANICH evidence claim. *(Superseded 2026-10-20: CleverSoft S.A. is now the first experience entry and each locale has its own CV; it remains not a logo, endorsement or FURLANICH evidence claim. See the [PAGE-FOUNDER amendment](../product/pages/studio-and-founder.md#founder-cv-experience-amendment-approved-2026-10-20); input gates G1 to G7, implementation and visual acceptance stay OPEN until evidenced.)*
 - A separate technology wall and duplicated selected-project summaries are rejected. Exact technologies live inside capability groups; Projects remains the evidence owner.
 - No approved portrait exists. The text-led layout is complete without one; photography is deferred.
 - The CV asset/path and professional URLs are approved for preservation. Root and /Portfolio downloads and intended external destinations require re-verification during implementation; CV content refresh/redesign is separate deferred work.
@@ -186,7 +186,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 
 - Samuel completed his Computer Science studies at the University of Buenos Aires.
 - He has worked independently since 2024.
-- He began working at Clever Soft SA as a Software Developer in June 2026; this belongs in narrative biography rather than a résumé-style fact list or experience timeline.
+- He began working at Clever Soft SA as a Software Developer in June 2026; this belongs in narrative biography rather than a résumé-style fact list or experience timeline. *(Superseded 2026-10-20: he joined CleverSoft S.A. in June 2026 as a Support Analyst and later moved into the Software Developer role, date not stated; the entry is on the Founder experience timeline.)*
 - Chivilcoy may appear in contact information or biography but should not narrow the general market-positioning copy.
 
 ### Project disclosure

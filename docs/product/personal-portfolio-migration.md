@@ -24,7 +24,7 @@ Preserve useful professional history while making the business site the primary 
 | Personal hero and introduction | `PAGE-FOUNDER` | Rewrite as founder biography and business-relevant professional summary. |
 | CV download | `PAGE-FOUNDER` | Preserve after verifying content and filename. |
 | Full skills catalogue | `PAGE-FOUNDER` | Preserve technical depth here; use outcome-oriented capabilities on business pages. |
-| Experience timeline | `PAGE-FOUNDER` | Fact-check, update, and preserve as secondary content. Clever Soft SA belongs in narrative biography, not in this résumé-style timeline. |
+| Experience timeline | `PAGE-FOUNDER` | Fact-check, update, and preserve as secondary content. Clever Soft SA belongs in narrative biography, not in this résumé-style timeline. *(Superseded 2026-10-20 by the [Founder CV and experience amendment](pages/studio-and-founder.md#founder-cv-experience-amendment-approved-2026-10-20).)* |
 | Education timeline | `PAGE-FOUNDER` | Correctly state completed UBA studies and technical education. |
 | Current projects | `PAGE-PROJECTS` or Founder/Laboratory | Reclassify by maturity, relevance, and disclosure permission. |
 | Game-development and experimental work | Founder/Laboratory | Keep secondary; do not use as primary commercial proof. |
@@ -88,8 +88,8 @@ These are migration findings, not authorization to edit application code in the 
 - Studio becomes the primary “El estudio / About” navigation destination. Founder remains a nested professional destination.
 - Studio owns the operating model, accountability, collaborator wording, principles, availability, short Founder bridge, and commercial CTA.
 - Founder owns the approved detailed biography, the independent-practice and 2021 internship entries, factual education, grouped applied capabilities, CV/LinkedIn/GitHub, one Projects bridge, and the final Contact bridge.
-- Clever Soft SA remains in narrative biography only. It is not added to the experience timeline or presented as an endorsement.
+- Clever Soft SA remains in narrative biography only. It is not added to the experience timeline or presented as an endorsement. *(Superseded 2026-10-20 by the [Founder CV and experience amendment](pages/studio-and-founder.md#founder-cv-experience-amendment-approved-2026-10-20).)* It is now a timeline entry; it is still not presented as an endorsement.
 - The complete Projects index is not copied into Founder; one localized bridge preserves evidence authority.
 - No approved portrait exists. The implementation remains complete without imagery, and photography is deferred.
-- public/Samuel-Furlanich-CV.pdf remains the preserved asset. Its technical download path and professional links must be reverified in root and /Portfolio modes during implementation. CV content review/redesign remains separate deferred work and must not be performed silently.
+- public/Samuel-Furlanich-CV.pdf remains the preserved asset. *(Superseded 2026-10-20 by the [Founder CV and experience amendment](pages/studio-and-founder.md#founder-cv-experience-amendment-approved-2026-10-20).)* The legacy file is removed; each Founder locale has its own CV. Its technical download path and professional links must be reverified in root and /Portfolio modes during implementation. CV content review/redesign remains separate deferred work and must not be performed silently.
 - Legacy source may be removed only after repository search proves that the completed Founder content and any other consumer no longer require it.

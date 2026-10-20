@@ -129,7 +129,7 @@ The Studio page remains an explanation of FURLANICH. Home owns the delivery proc
 
 | Order | Exact treatment |
 | --- | --- |
-| Name and biography | Left-aligned opaque plate, at most 800px wide; role context, one H1 and all three approved biography paragraphs. First paragraph 20px, others 18px. Clever Soft SA remains narrative-only. |
+| Name and biography | Left-aligned opaque plate, at most 800px wide; role context, one H1 and all three approved biography paragraphs. First paragraph 20px, others 18px. Clever Soft SA remains narrative-only. *(Superseded 2026-10-20; see the Founder CV and experience amendment below.)* |
 | Professional links | Immediately after the biography, in the same plate: CV, LinkedIn, GitHub. All are ordinary underlined links with accessible download/external behavior and 44px targets. They wrap without overflow. |
 | Experience | Complete two-entry semantic list, including the 2021 internship, with period/context, role and full summary. No invented employment, tenure or endorsement. |
 | Education | Both factual education entries, followed by complete MPC educational/group/fictional-business context, limitations and the approved source-code link. |
@@ -139,7 +139,7 @@ The Studio page remains an explanation of FURLANICH. Home owns the delivery proc
 
 At wide sizes, sections after the introductory plate share a continuous reading plate of at most 800px, aligned toward the right of the container. Use internal rules and spacing, not nested cards. Below 1024px both plates fill the container and align to the same edge. The complete introductory content may extend beyond the first viewport; do not shorten it to manufacture a hero screenshot. No portrait, silhouette or empty media space is created.
 
-Preserve `/Samuel-Furlanich-CV.pdf`, its download filename and the existing professional URLs. Verify PDF content type/signature and actual download in root and `/Portfolio` exports. An authentication wall is not authority to change the approved LinkedIn destination. CV content currency/redesign remains separate work.
+Preserve `/Samuel-Furlanich-CV.pdf`, its download filename *(Superseded 2026-10-20; see the Founder CV and experience amendment below.)* and the existing professional URLs. Verify PDF content type/signature and actual download in root and `/Portfolio` exports. An authentication wall is not authority to change the approved LinkedIn destination. CV content currency/redesign remains separate work.
 
 ### Contact
 
@@ -315,3 +315,7 @@ The owner approved written revision 1, linked copy and bounded RFC scope in Q14,
 ## Commercial Contact and activation
 
 Retired historical anchor. The direct-contact amendment and current Contact section above replace the former processor/counsel activation flow.
+
+## Founder CV and experience amendment (2026-10-20)
+
+Bounded current amendment owned by [PAGE-FOUNDER](../product/pages/studio-and-founder.md#founder-cv-experience-amendment-approved-2026-10-20). The Founder experience list has three entries (CleverSoft S.A. first, then the two existing entries) in the existing four-field schema and layout, and each locale downloads its own native CV (`/Samuel-Furlanich-CV-ES.pdf`, `/Samuel-Furlanich-CV-EN.pdf`) with a matching download filename; the legacy `/Samuel-Furlanich-CV.pdf` is removed. Layout, typography, native link treatment, runtime decisions and historical approvals are unchanged.
