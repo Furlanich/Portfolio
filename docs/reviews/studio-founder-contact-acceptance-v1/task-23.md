@@ -26,25 +26,13 @@ I confirmed it by reading the code (`ConnectedStudioEnhancement.tsx` subscribes 
 
 ## Validation
 
-Fresh, 2026-10-19,  after Unknown command: "ci"
+Fresh, 2026-10-19, `.worktrees/sfc-23` after `npm ci`:
 
-
-Did you mean this?
-  npm ci # Clean install a project
-To see a list of supported npm commands, run:
-  npm help:
-
-- : exit 0. docs:check 360 Markdown files, 121 document IDs, 38 Skills; Unknown command: "test"
-
-
-Did you mean this?
-  npm test # Test a package
-To see a list of supported npm commands, run:
-  npm help 983 tests, 982 pass, 1  (the Task 14 Contact-opacity placeholder, which is Task 24's), 0 fail (977 at the base, plus this packet's 6); lint 0 errors, 282 warnings (the baseline); typecheck pass; build pass.
-- , , full file at two workers: 64 passed, 3 failed with "browserContext.close: Test ended" (SwiftShader timeouts under load); those three pass in isolation at one worker, 3 of 3. The two new cases are among the 64.
-- , candidate mode, , one worker: **71 passed, 0 failed, 0 skipped** (the Task 12  cases were removed by Task 22).
-- Hardware: all ten pages one canvas to zero on the Save-Data event (above).
-- Not run: the visual projects (no rendering changed for any visitor), the served-export family (no emitted-file change beyond the host chunk's bytes), Firefox/WebKit.
+- `npm run validate`: exit 0. docs:check 360 Markdown files, 121 document IDs, 38 Skills; `npm test` 983 tests, 982 pass, 1 `todo` (the Task 14 Contact-opacity placeholder, which is Task 24's), 0 fail (977 at the base, plus this packet's 6); lint 0 errors, 282 warnings (the baseline); typecheck pass; build pass.
+- `connected-studio-runtime.spec.ts`, `immersive-chromium`, full file at two workers: 64 passed, 3 failed with "browserContext.close: Test ended" (SwiftShader timeouts under load); those three pass in isolation at one worker, 3 of 3. The two new cases are among the 64.
+- `sfc-runtime.spec.ts`, candidate mode, `sfc-runtime-chromium`, one worker: **71 passed, 0 failed, 0 skipped** (the Task 12 `fixme` cases were removed by Task 22).
+- Hardware: all ten pages go from one canvas to zero on the Save-Data event (above).
+- Not run: the visual projects (no rendering changed for any visitor), the served-export family (no emitted-file change beyond the host chunk's bytes), Firefox and WebKit.
 
 ## Rulings
 
