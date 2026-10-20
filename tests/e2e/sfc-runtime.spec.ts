@@ -773,8 +773,14 @@ test.describe('direct Contact with the live graph (Task 13)', () => {
     await expect(plate).toHaveCount(1);
     await expect(plate.locator('form')).toHaveCount(0);
     await expect(plate.locator('ul a')).toHaveCount(3);
-    const scrim = page.locator('[data-connected-reading-mask]');
+    // The introduction scrim is the one mask with a backing; the Founder bridge is a measured keep-out for labels with none
+    // (Task 25), so it is a second reading mask without a clearance and holds the Founder link and nothing else.
+    const scrim = page.locator('[data-connected-reading-mask][data-connected-clearance]');
     await expect(scrim).toHaveCount(1);
+    const bridge = page.locator('[data-connected-reading-mask]:not([data-connected-clearance])');
+    await expect(bridge).toHaveCount(1);
+    await expect(bridge.getByRole('link')).toHaveCount(1);
+    await expect(page.locator('[data-connected-reading-mask]')).toHaveCount(2);
     await expect(scrim).toHaveAttribute('data-connected-clearance', '32');
     await expect(scrim.getByRole('heading', { level: 1 })).toHaveCount(1);
 

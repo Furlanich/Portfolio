@@ -54,6 +54,7 @@ Acceptance evidence for [PLAN-SFC-V1](../../plans/completed/studio-founder-conta
 - [Task 22 — Contact words and Pause clearance](task-22.md)
 - [Task 23 — Runtime Save-Data disposal](task-23.md)
 - [Task 27 — Manual acceptance round: protocol and automatable evidence](task-27.md), with the [manual acceptance protocol](manual-acceptance-protocol.md)
+- [Task 25 — Compact tier: Contact label repair; qualification OPEN (no device)](task-25.md)
 
 Historical, retired by the 2026-10-18 amendment: [legal review](legal-review.md) and [processor readiness](processor-readiness.md).
 
