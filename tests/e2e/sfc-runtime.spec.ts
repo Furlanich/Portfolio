@@ -30,11 +30,11 @@ import { createEdgePath, PATH_SEGMENTS } from '../../components/connected-studio
 import { evaluateRestEdge } from '../../lib/connected-studio/rest-path';
 import type { ConnectedRoute, ConnectedTier, EdgeSamplePoints, Vec3 } from '../../lib/connected-studio/types';
 
-// PLAN-SFC-V1 Task 11: the shared host on the three new routes, behind the runtime candidate
-// (SFC_TEST_MODE=candidate with the live-policy fixture applied; see playwright.config.ts). WebGL here runs on
-// SwiftShader, so these specs prove functional lifecycle and input behavior only, never frame pacing or feel.
-// Task 12 adds the actual Contact form and the five rendered profiles below (the combined candidate:
-// `prepare-sfc-candidate.mjs apply --kind=combined`, NEXT_PUBLIC_FORMSPREE_ENDPOINT set, provider traffic mocked).
+// PLAN-SFC-V1 Task 11: the shared host on the three new routes, in the candidate family (SFC_TEST_MODE=candidate; see
+// playwright.config.ts). Since Tasks 18 and 25 both live tiers are enabled in committed source, so no policy patch is needed
+// any more (the live-policy fixture was retired); the commercial candidate (`prepare-sfc-candidate.mjs apply --kind=commercial`)
+// is what the CI candidate job applies. WebGL here runs on SwiftShader, so these specs prove functional lifecycle and input
+// behavior only, never frame pacing or feel. Task 12 added the Contact integration and the five rendered profiles below.
 
 test.describe.configure({ timeout: 90_000 });
 
@@ -773,8 +773,14 @@ test.describe('direct Contact with the live graph (Task 13)', () => {
     await expect(plate).toHaveCount(1);
     await expect(plate.locator('form')).toHaveCount(0);
     await expect(plate.locator('ul a')).toHaveCount(3);
-    const scrim = page.locator('[data-connected-reading-mask]');
+    // The introduction scrim is the one mask with a backing; the Founder bridge is a measured keep-out for labels with none
+    // (Task 25), so it is a second reading mask without a clearance and holds the Founder link and nothing else.
+    const scrim = page.locator('[data-connected-reading-mask][data-connected-clearance]');
     await expect(scrim).toHaveCount(1);
+    const bridge = page.locator('[data-connected-reading-mask]:not([data-connected-clearance])');
+    await expect(bridge).toHaveCount(1);
+    await expect(bridge.getByRole('link')).toHaveCount(1);
+    await expect(page.locator('[data-connected-reading-mask]')).toHaveCount(2);
     await expect(scrim).toHaveAttribute('data-connected-clearance', '32');
     await expect(scrim.getByRole('heading', { level: 1 })).toHaveCount(1);
 
@@ -990,6 +996,9 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
         let sawLabel = false;
         for (let top = 0; top <= max; top += 180) {
           await scrollInstant(page, top);
+          // The scroll event, and with it the host's label pass, runs at the next rendering opportunity: a read before that
+          // sees the labels decided for the previous position and can pass over a clash that stays on screen.
+          await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
           // A label fades out within a frame or two of a mask reaching it, but a software-rendered page can hold its main
           // thread for seconds between frames: a clash that outlasts eight seconds is a defect, not a slow frame.
           await expect

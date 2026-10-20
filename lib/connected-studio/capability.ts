@@ -5,10 +5,12 @@ import type { ConnectedLivePolicy, ConnectedMode, SceneGateInput } from './types
 /**
  * Per-tier live policy (OD-2/OD-4). `wide` covers the wide and tablet tiers. A tier is turned on only by a bounded
  * enablement PR that carries its qualification: PLAN-SFC-V1 Task 18 enabled `wide` on the owner's acceptance of the
- * wide tier (docs/reviews/studio-founder-contact-acceptance-v1/task-15.md). `compact` has no qualification and stays
- * off, so a constrained phone keeps the complete static page until a later numbered packet enables it.
+ * wide tier (docs/reviews/studio-founder-contact-acceptance-v1/task-15.md). PLAN-SFC-V1 Task 25 enabled `compact` on the
+ * owner's manual test of the compact live scene on a phone (docs/reviews/studio-founder-contact-acceptance-v1/task-25.md);
+ * like the wide tier it is an owner acceptance, not a measured hardware qualification. The remaining gates (reduced
+ * motion, Save-Data, WebGL2, software renderer, context loss) still keep a visitor on the complete static page.
  */
-export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object.freeze({ wide: true, compact: false });
+export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object.freeze({ wide: true, compact: true });
 
 /**
  * Fail-closed gate: the live scene only runs when every condition is the exact expected boolean.

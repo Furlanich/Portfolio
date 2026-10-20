@@ -11,6 +11,7 @@ import {
   pauseSlot,
   type ConnectedLocale,
 } from './support/connected-studio';
+import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 import { appUrl, stableRoutes } from './support/paths';
 import type { ConnectedRoute } from '../../lib/connected-studio/types';
 
@@ -35,6 +36,10 @@ const horizontalOverflow = (page: Page) =>
 test.describe('static background, every registered project', () => {
   for (const { route, locale } of pages) {
     test(`${route} ${locale} keeps the Pause slot reserved, empty and inside the page width`, async ({ page }) => {
+      // These cases prove the static page in every engine. Since Tasks 18 and 25 both tiers are live under the shipped policy,
+      // and Firefox and WebKit on a Linux runner do not reveal a software renderer, so a mobile WebKit page would go live; the
+      // policy is closed through the test hook, as the static media cases do (connected-studio-static.spec.ts).
+      await setConnectedTestHook(page, { livePolicy: { wide: false, compact: false } });
       await gotoConnected(page, route, locale);
       await expectStatic(page, route);
       const slot = await pauseSlot(page, route).boundingBox();

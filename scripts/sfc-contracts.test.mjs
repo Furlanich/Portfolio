@@ -170,13 +170,11 @@ function cutPatch(dir, patchPath, file, edit) {
 function fixture() {
   const dir = makeRepo({
     'lib/inquiry/release.ts': FROZEN_RELEASE,
-    'lib/connected-studio/capability.ts': 'export const CONNECTED_LIVE_POLICY = Object.freeze({ wide: false, compact: false });\n',
     'app/page.ts': 'export {};\n',
   });
   const patchDir = nodePath.join(dir, '.patches');
   cutPatch(dir, nodePath.join(patchDir, 'commercial-release.patch'), 'lib/inquiry/release.ts', (source) =>
     source.replace("mode: 'demonstration'", "mode: 'commercial'").replace("releaseId: 'DEMONSTRATION'", `releaseId: '${candidate.QA_MARKER}'`));
-  cutPatch(dir, nodePath.join(patchDir, 'live-policy.patch'), 'lib/connected-studio/capability.ts', (source) => source.replace(/false/g, 'true'));
   git(dir, 'add', '-A');
   git(dir, 'commit', '-q', '-m', 'patches');
   return { dir, patchDir, run: (command, kind, extra = {}) => candidate.runCandidate({ command, kind, repoRoot: dir, patchDir, ...extra }) };
@@ -203,14 +201,14 @@ test('apply records the head and patch hashes, and restore returns a clean tree'
   }
 });
 
-test('the combined kind applies both patches and restore reverses both', () => {
+test('only the commercial kind exists: the retired runtime and combined kinds are refused (PLAN-SFC-V1 Task 25)', () => {
   const { dir, run } = fixture();
   try {
-    assert.equal(run('apply', 'combined').ok, true);
-    assert.match(text(dir, 'lib/connected-studio/capability.ts'), /wide: true, compact: true/);
-    assert.match(text(dir, 'lib/inquiry/release.ts'), /commercial/);
+    assert.deepEqual(Object.keys(candidate.KINDS), ['commercial']);
+    for (const kind of ['runtime', 'combined']) assert.equal(run('apply', kind).ok, false, kind + ' is no longer a candidate kind');
+    assert.equal(run('apply', 'commercial').ok, true);
     assert.equal(run('restore', 'runtime').ok, false, 'restore must name the kind that was applied');
-    assert.equal(run('restore', 'combined').ok, true);
+    assert.equal(run('restore', 'commercial').ok, true);
     assert.equal(git(dir, 'status', '--porcelain', '--untracked-files=no'), '');
   } finally {
     rm(dir, { recursive: true, force: true });
@@ -221,19 +219,18 @@ test('apply refuses a dirty tree, a different expected head, an unknown kind and
   const { dir, run } = fixture();
   try {
     write(nodePath.join(dir, 'app/page.ts'), 'export const changed = true;\n');
-    assert.equal(run('apply', 'runtime').ok, false, 'a dirty tree is refused');
+    assert.equal(run('apply', 'commercial').ok, false, 'a dirty tree is refused');
     git(dir, 'checkout', '--', 'app/page.ts');
 
-    assert.equal(run('apply', 'runtime', { expectHead: '0'.repeat(40) }).ok, false, 'an unexpected head is refused');
+    assert.equal(run('apply', 'commercial', { expectHead: '0'.repeat(40) }).ok, false, 'an unexpected head is refused');
     assert.equal(run('apply', 'bogus').ok, false, 'an unknown kind is refused');
 
     // Mismatch: the target moved on after the patch was cut.
     write(nodePath.join(dir, 'lib/inquiry/release.ts'), FROZEN_RELEASE.replace("releaseId: 'DEMONSTRATION'", "releaseId: 'SOMETHING-ELSE'"));
     git(dir, 'commit', '-q', '-am', 'drift');
-    const mismatched = run('apply', 'combined');
+    const mismatched = run('apply', 'commercial');
     assert.equal(mismatched.ok, false, 'a patch whose context no longer matches is refused');
     assert.equal(git(dir, 'status', '--porcelain', '--untracked-files=no'), '', 'nothing stays applied when one patch fails');
-    assert.match(text(dir, 'lib/connected-studio/capability.ts'), /wide: false/, 'the runtime patch did not stay applied');
 
     rm(nodePath.join(dir, 'lib/inquiry/release.ts'));
     git(dir, 'commit', '-q', '-am', 'missing');
@@ -246,14 +243,14 @@ test('apply refuses a dirty tree, a different expected head, an unknown kind and
 test('restore refuses a patch file that changed since apply and a tree that drifted', () => {
   const { dir, patchDir, run } = fixture();
   try {
-    assert.equal(run('apply', 'runtime').ok, true);
-    const patchFile = nodePath.join(patchDir, 'live-policy.patch');
+    assert.equal(run('apply', 'commercial').ok, true);
+    const patchFile = nodePath.join(patchDir, 'commercial-release.patch');
     const original = readText(patchFile, 'utf8');
     write(patchFile, `${original}\n`);
-    assert.equal(run('restore', 'runtime').ok, false, 'a patch with a different hash is not trusted');
+    assert.equal(run('restore', 'commercial').ok, false, 'a patch with a different hash is not trusted');
     write(patchFile, original);
-    write(nodePath.join(dir, 'lib/connected-studio/capability.ts'), 'export const CONNECTED_LIVE_POLICY = "drifted";\n');
-    assert.equal(run('restore', 'runtime').ok, false, 'a drifted target cannot be reversed');
+    write(nodePath.join(dir, 'lib/inquiry/release.ts'), 'export const drifted = true;');
+    assert.equal(run('restore', 'commercial').ok, false, 'a drifted target cannot be reversed');
   } finally {
     rm(dir, { recursive: true, force: true });
   }
@@ -278,15 +275,10 @@ test('verify-clean rejects the QA marker in application source and an unrestored
   }
 });
 
-test('the committed fixtures apply to the real live-policy target and to the frozen release declaration', () => {
-  // Runtime patch: the real repository file (read-only check; nothing is applied).
-  const livePolicy = nodePath.join(root, 'tests/fixtures/sfc/live-policy.patch');
-  applyPatch(root, livePolicy, '--check');
-  // Task 18 enabled the wide tier, so the runtime candidate now flips only the unqualified compact tier (a later packet's candidate).
-  const patchText = readText(livePolicy, 'utf8');
-  assert.match(patchText, /\+export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object\.freeze\(\{ wide: true, compact: true \}\);/);
-  assert.match(patchText, /-export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object\.freeze\(\{ wide: true, compact: false \}\);/);
-  assert.deepEqual([...patchText.matchAll(/^diff --git a\/(\S+) b\//gm)].map((match) => match[1]), ['lib/connected-studio/capability.ts'], 'the host is already attached: the candidate changes the policy file only');
+test('the live-policy candidate is retired and the commercial fixture applies to the frozen release declaration', () => {
+  // Tasks 18 and 25 enabled both tiers in committed source, so no patch can flip the policy any more.
+  assert.equal(existsSync(nodePath.join(root, 'tests/fixtures/sfc/live-policy.patch')), false, 'the live-policy fixture was deleted with the last tier it could flip');
+  assert.match(read('lib/connected-studio/capability.ts'), /Object\.freeze\(\{ wide: true, compact: true \}\)/, 'both tiers are enabled in committed source');
 
   // Commercial patch: cut against the frozen declaration, which Task 5 creates identically.
   const dir = makeRepo({ 'lib/inquiry/release.ts': FROZEN_RELEASE });

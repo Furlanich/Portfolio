@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // PLAN-SFC-V1 Task 2: the reproducible QA candidate. Applies a committed patch to a disposable checkout so
-// browser tests can run the commercial inquiry mode or the live-graph policy before either is committed,
+// browser tests can run the commercial inquiry mode before it is committed (the live-graph policy candidate was retired when Tasks 18 and 25 enabled both tiers),
 // and restores the checkout afterwards. A candidate is never deployable: it carries a QA marker release id,
 // and `verify-clean` (run by the validate job) fails when that marker or an unrestored candidate is present.
 //
-//   node scripts/prepare-sfc-candidate.mjs apply --kind=commercial|runtime|combined [--expect-head=<sha>]
+//   node scripts/prepare-sfc-candidate.mjs apply --kind=commercial [--expect-head=<sha>]
 //   node scripts/prepare-sfc-candidate.mjs restore [--kind=<the kind that was applied>]
 //   node scripts/prepare-sfc-candidate.mjs verify-clean
 //
@@ -20,8 +20,6 @@ export const QA_MARKER = 'QA-CANDIDATE-NOT-FOR-DEPLOYMENT';
 /** Patch files, in application order, for each candidate kind. */
 export const KINDS = Object.freeze({
   commercial: Object.freeze(['commercial-release.patch']),
-  runtime: Object.freeze(['live-policy.patch']),
-  combined: Object.freeze(['commercial-release.patch', 'live-policy.patch']),
 });
 
 const SCHEMA_VERSION = 1;
@@ -51,7 +49,7 @@ function loadPatch(patchDir, name) {
 
 function readPatches(patchDir, kind) {
   const names = KINDS[kind];
-  if (!names) return { error: `Unknown kind "${String(kind)}" (expected commercial, runtime or combined)` };
+  if (!names) return { error: `Unknown kind "${String(kind)}" (expected commercial)` };
   const patches = [];
   for (const name of names) {
     if (!existsSync(path.join(patchDir, name))) return { error: `Missing candidate patch ${name} in ${patchDir}` };

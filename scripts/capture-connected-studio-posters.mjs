@@ -12,11 +12,10 @@
 // posters are the approved legacy family and are never recaptured by accident: naming either needs `--allow-legacy`
 // (PLAN-SFC-V1 Task 14 preserves them; a required legacy recapture returns with its own packet and owner review).
 //
-// The three Atlas pages mount their live host only while a live tier is enabled in the build (a server-side policy
-// decision). Run this script from a disposable checkout with the runtime candidate applied:
-//   node scripts/prepare-sfc-candidate.mjs apply --kind=runtime
-// and send the files to the task checkout with `--out=<task checkout>/public/brand/connected-studio`. Without the
-// patch the host never mounts and the script stops with that instruction instead of writing a CSS-only image.
+// The three Atlas pages mount their live host through the Atlas seam (attached by PLAN-SFC-V1 Task 18; both live tiers have
+// been enabled in committed source since Task 25), so no candidate patch is needed any more. If the host never mounts the
+// script stops with an instruction instead of writing a CSS-only image. Send the files to a task checkout with
+// `--out=<task checkout>/public/brand/connected-studio`.
 //
 // Starts `next dev` (port 3120 unless PLAYWRIGHT_PORT is set; set CAPTURE_ORIGIN to reuse a server
 // you started yourself with `--hostname 127.0.0.1`), opens each connected route in headless Chromium
@@ -24,7 +23,7 @@
 // the capability gate declines by default, so the documented controlled-test hooks are set:
 //   window.__FURLANICH_CONNECTED_TEST__ = { allowSoftwareRenderer: true, livePolicy: both tiers on }
 // This is controlled test evidence for a still image. It never changes the shipped live policy,
-// which stays `{ wide: false, compact: false }`, and it is never set in a measurement run.
+// which is `{ wide: true, compact: true }` since PLAN-SFC-V1 Tasks 18 and 25, and it is never set in a measurement run.
 //
 // Frozen capture settings (one shared poster family; identical for Services and Projects):
 //   - tier, viewport, device scale: wide 1920x1080 at 1x; compact 450x800 at 2x (900x1600 pixels,
@@ -460,7 +459,7 @@ try {
     await page
       .waitForFunction(() => window.__FURLANICH_CONNECTED__ !== undefined, null, { timeout: 60_000 })
       .catch(() => {
-        throw new Error(`${file}: the live host never mounted on ${ROUTE_PATHS[entry.route]}. Apply the runtime candidate in a disposable checkout first: node scripts/prepare-sfc-candidate.mjs apply --kind=runtime`);
+        throw new Error(`${file}: the live host never mounted on ${ROUTE_PATHS[entry.route]}. The Atlas seam should attach it in committed source (PLAN-SFC-V1 Task 18), so check that the dev server is this checkout's and that the live policy is enabled.`);
       });
     const pose = await drawFirstFrame(page);
     if (pose.mode !== 'live' || pose.renderCount < 1) throw new Error(`${file}: expected the live scene to have drawn, got mode ${pose.mode} and renderCount ${pose.renderCount}`);

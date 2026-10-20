@@ -4,6 +4,8 @@
 
 Agent usage: primary Claude Sonnet 5.5 (`claude-sonnet-5-5`), Claude Code desktop session; the session does not expose reasoning effort. Subagents 0/0 (none, `SINGLE_AGENT`). Self-review only; Reviewer R remains a separate session.
 
+> **Update, later on 2026-10-20: this receipt's compact verdicts are superseded.** After the follow-up packets 25 to 27 merged, the owner said they had already tested the compact live scene, the screen-reader checks and the phone checks manually, and asked for the plan closure to continue. They chose to enable compact. [Task 25](task-25.md) did that, so `CONNECTED_LIVE_POLICY` is `{ wide: true, compact: true }`, and [Task 27](task-27.md) rows 5 to 11 are closed on the same attestation. The rows, rulings and follow-up list below are the state at the merge of PR #172 and are kept as history; the current state is in [index](index.md), [Task 25](task-25.md) and the plan's status note. Still OPEN: Firefox and WebKit timing, and Task 7 R1. The owner's testing is an attestation with no per-item figures, like the wide tier's acceptance. PR #175 (Task 25's first commits) had merged into this branch after #172 reached `main`, so those commits reached `main` only with the closing PR.
+
 Branch: `codex/sfc-19-closeout`, cut from `origin/main` at `971f9594` (the merge of PR #171). Targets `main`. Documentation only: no product code, test, workflow, fixture or deployment file changed.
 
 ## The owner decision
