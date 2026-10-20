@@ -102,6 +102,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      # Resolved in getaddrinfo order, as the browser does: `getent hosts` would print an IPv4-mapped address.
       - name: Prove provider traffic is blocked
         run: |
           for host in formspree.io www.formspree.io; do
