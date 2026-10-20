@@ -118,7 +118,7 @@ Numbers start at 25 because 24 was prospective and is retired. Each needs the ow
 Run on this branch after the last edit:
 
 - `npm run docs:check`: **passed**, 398 Markdown files, 123 document IDs, 38 Skills (after the plan move and the 12 link rewrites).
-- `npm test` on this branch: **982 pass, 0 fail, 0 todo** (the Task 23 receipt's one `todo` was retired by PR #169). `git diff --cached --check`: no whitespace errors. Diff: 25 files, two renames (the plan, Task 7 receipt at 100%), one new file.
+- `npm test` on this branch: **982 pass, 0 fail, 0 todo** (the Task 23 receipt's one `todo` was retired by PR #169). `git diff --cached --check`: no whitespace errors. Diff: 25 files, two renames (the plan at 96% similarity, the Task 7 receipt at 100%), one new file.
 - Source verification is **not re-run**: the plan says prose needs no redundant benchmark. The fresh evidence is each task's own receipt and `npm run validate` in [Task 23](task-23.md) (983 tests, 982 pass, 1 todo that PR #169 retired, 0 fail) at `673d5120`.
 
 ## Self-review
