@@ -185,7 +185,7 @@ This register summarizes status. Detailed requirements remain authoritative in t
 ### Founder facts
 
 - Samuel completed his Computer Science studies at the University of Buenos Aires.
-- He has worked independently since 2024.
+- He has worked independently since 2024. *(Superseded 2026-10-20: since 2023, owner decision OD-5; see the [PAGE-FOUNDER amendment](../product/pages/studio-and-founder.md#founder-cv-experience-amendment-approved-2026-10-20).)*
 - He began working at Clever Soft SA as a Software Developer in June 2026; this belongs in narrative biography rather than a résumé-style fact list or experience timeline. *(Superseded 2026-10-20: he joined CleverSoft S.A. in June 2026 as a Support Analyst and later moved into the Software Developer role, date not stated; the entry is on the Founder experience timeline.)*
 - Chivilcoy may appear in contact information or biography but should not narrow the general market-positioning copy.
 

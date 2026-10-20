@@ -230,7 +230,7 @@ const founderLocalized = [
     cvFile: 'Samuel-Furlanich-CV-ES.pdf',
     alternate: { language: 'en', pathname: stableRoutes.founder.en, cvPath: '/Samuel-Furlanich-CV-EN.pdf' },
     entry: { period: 'Desde junio de 2026', role: 'Software Developer', context: 'CleverSoft S.A.' },
-    periods: ['Desde junio de 2026', 'Desde 2024', '2021'],
+    periods: ['Desde junio de 2026', 'Desde 2023', '2021'],
   },
   {
     locale: 'en',
@@ -240,7 +240,7 @@ const founderLocalized = [
     cvFile: 'Samuel-Furlanich-CV-EN.pdf',
     alternate: { language: 'es-AR', pathname: stableRoutes.founder.es, cvPath: '/Samuel-Furlanich-CV-ES.pdf' },
     entry: { period: 'Since June 2026', role: 'Software Developer', context: 'CleverSoft S.A.' },
-    periods: ['Since June 2026', 'Since 2024', '2021'],
+    periods: ['Since June 2026', 'Since 2023', '2021'],
   },
 ] as const;
 

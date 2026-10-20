@@ -20,12 +20,12 @@ const expectedProfessionalLinks = {
 
 const approvedBiographies = {
   es: [
-    'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
+    'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2023, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
     'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.',
     'También se desempeña como Software Developer en CleverSoft S.A., experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
   ],
   en: [
-    'Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations.',
+    'Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2023, designing and maintaining web and desktop applications, management systems, and automations.',
     'He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor.',
     'He also works as a Software Developer at CleverSoft S.A., experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
   ],
@@ -57,7 +57,7 @@ const cleverSoftEntries = {
 const existingEntries = {
   es: [
     {
-      period: 'Desde 2024',
+      period: 'Desde 2023',
       role: 'Desarrollo de software independiente',
       context: 'Práctica profesional',
       summary:
@@ -73,7 +73,7 @@ const existingEntries = {
   ],
   en: [
     {
-      period: 'Since 2024',
+      period: 'Since 2023',
       role: 'Independent software development',
       context: 'Professional practice',
       summary:

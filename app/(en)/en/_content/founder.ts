@@ -16,7 +16,7 @@ export const founderContent = {
   biography: {
     heading: 'Professional biography',
     paragraphs: [
-      'Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations.',
+      'Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2023, designing and maintaining web and desktop applications, management systems, and automations.',
       'He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor.',
       'He also works as a Software Developer at CleverSoft S.A., experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
     ],
@@ -42,7 +42,7 @@ export const founderContent = {
           'Joined as a Support Analyst and later moved into the Software Developer role. Maintenance and development of ERP and payment-resolution software.',
       },
       {
-        period: 'Since 2024',
+        period: 'Since 2023',
         role: 'Independent software development',
         context: 'Professional practice',
         summary:

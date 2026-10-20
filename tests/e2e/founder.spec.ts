@@ -18,7 +18,7 @@ const founderCases = [
     projectsHeading: 'Trabajo y evidencia técnica',
     finalHeading: '¿Querés conversar sobre una necesidad de tu negocio?',
     biography: [
-      'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
+      'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2023, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
       'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.',
       'También se desempeña como Software Developer en CleverSoft S.A., experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
     ],
@@ -33,7 +33,7 @@ const founderCases = [
       summary:
         'Ingreso como analista de soporte (Support Analyst) y posterior paso a Software Developer. Mantenimiento y desarrollo de soluciones ERP y de software para la resolución de pagos.',
     },
-    periods: ['Desde junio de 2026', 'Desde 2024', '2021'],
+    periods: ['Desde junio de 2026', 'Desde 2023', '2021'],
     projectsLabel: 'Ver proyectos seleccionados',
     contactLabel: 'Iniciar una consulta',
     contactRoute: '/contacto/',
@@ -52,7 +52,7 @@ const founderCases = [
     projectsHeading: 'Work and technical evidence',
     finalHeading: 'Want to discuss a business need?',
     biography: [
-      'Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations.',
+      'Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2023, designing and maintaining web and desktop applications, management systems, and automations.',
       'He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor.',
       'He also works as a Software Developer at CleverSoft S.A., experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
     ],
@@ -67,7 +67,7 @@ const founderCases = [
       summary:
         'Joined as a Support Analyst and later moved into the Software Developer role. Maintenance and development of ERP and payment-resolution software.',
     },
-    periods: ['Since June 2026', 'Since 2024', '2021'],
+    periods: ['Since June 2026', 'Since 2023', '2021'],
     projectsLabel: 'View selected work',
     contactLabel: 'Start an enquiry',
     contactRoute: '/en/contact/',

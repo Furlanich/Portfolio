@@ -73,7 +73,7 @@ Legacy `data/projects.json` copy and unapproved `public/projects/` imagery remai
 
 The business homepage and minimum bilingual Founder destinations are implemented. Retained legacy source still requires deliberate migration treatment rather than automatic deletion:
 
-- data/experience.json still ends independent work at 2026; the completed Founder requirement uses “Desde 2024 / Since 2024.”
+- data/experience.json still ends independent work at 2026; the completed Founder requirement uses “Desde 2024 / Since 2024.” *(Superseded 2026-10-20: “Desde 2023 / Since 2023”, see the [Founder CV and experience amendment](pages/studio-and-founder.md#founder-cv-experience-amendment-approved-2026-10-20).)*
 - The minimum Founder implementation currently exposes only the independent-work entry. Initiative 5 approves the retained 2021 IT Technician internship as the second editorial experience entry.
 - data/education.json uses legacy degree/date wording; public Founder content continues to use the approved factual “studies completed” and technical-education language.
 - data/skills.json is a recruiter-oriented icon catalogue. Initiative 5 replaces its presentation with four business-relevant capability groups and rejects a technology-logo wall.

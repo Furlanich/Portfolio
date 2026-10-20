@@ -50,7 +50,7 @@ function experienceEntry({ period, role, context, summary }) {
 
 const approvedEntries = [
   { period: 'Since June 2026', role: 'Software Developer', context: employer, summary: 'Joined as a Support Analyst.' },
-  { period: 'Since 2024', role: 'Independent software development', context: 'Professional practice', summary: 'Independent work.' },
+  { period: 'Since 2023', role: 'Independent software development', context: 'Professional practice', summary: 'Independent work.' },
   { period: '2021', role: 'IT Technician professional internship', context: 'E.E.S.T. No. 1, Chivilcoy', summary: 'Internship.' },
 ];
 
