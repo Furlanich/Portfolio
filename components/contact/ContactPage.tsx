@@ -67,7 +67,7 @@ export function ContactPage({ content, locale }: ContactPageProps) {
             </div>
           </section>
 
-          <div className={styles.founderBridge}>
+          <div className={styles.founderBridge} data-connected-reading-mask="">
             <Link href={founderLink.href} className={styles.founderLink}>
               {founderLink.label}
             </Link>
