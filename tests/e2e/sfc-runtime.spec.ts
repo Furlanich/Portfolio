@@ -990,6 +990,9 @@ test.describe('labels stay clear of text and controls on the five pages (Task 12
         let sawLabel = false;
         for (let top = 0; top <= max; top += 180) {
           await scrollInstant(page, top);
+          // The scroll event, and with it the host's label pass, runs at the next rendering opportunity: a read before that
+          // sees the labels decided for the previous position and can pass over a clash that stays on screen.
+          await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
           // A label fades out within a frame or two of a mask reaching it, but a software-rendered page can hold its main
           // thread for seconds between frames: a clash that outlasts eight seconds is a defect, not a slow frame.
           await expect
