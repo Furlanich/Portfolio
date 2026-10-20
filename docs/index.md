@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - REVIEW-SFC-TASKS-18-22-2026-10-19
   - REVIEW-SFC-T23-BRIGHTNESS-2026-10-20
   - ADR-CONTACT-DIRECT-CHANNELS
   - REVIEW-SFC-PLAN-2026-10-14
@@ -92,6 +93,8 @@ Front matter records the overall governance status of a document. In mixed-statu
 - [Domain glossary](../CONTEXT.md): canonical project-specific terminology.
 
 ## Independent implementation reviews
+
+The [SFC Tasks 18 and 22 independent review](reviews/studio-founder-contact-tasks-18-22-review-2026-10-19.md) reviews merged PRs [#164](https://github.com/Furlanich/Portfolio/pull/164) and [#165](https://github.com/Furlanich/Portfolio/pull/165) at their pinned heads and combined main `317467b2`. It records two **OPEN P2** live-runtime specification findings for bounded follow-up: Contact's required opacity multiplier and runtime Save-Data disposal. Task 22's word-binding and Pause-placement fixes are retained; the owner-accepted qualification and startup-cost exceptions remain separate.
 
 The [Task 23 and Contact brightness review](reviews/studio-founder-contact-task-23-brightness-review-2026-10-20.md) reviews PRs [#168](https://github.com/Furlanich/Portfolio/pull/168) and [#169](https://github.com/Furlanich/Portfolio/pull/169). It verifies the Save-Data repair and the recorded owner supersession of the Contact opacity requirement, with one nonblocking **P3** verification-date correction and no new specification finding. Human merges, deployed verification and planning-authority closeout remain separate; the report links the earlier findings in PR #167.
 

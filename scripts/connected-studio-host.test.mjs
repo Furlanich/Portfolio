@@ -163,12 +163,19 @@ function delayedHost(props = LEGACY_PROPS) {
   let resolveImport;
   let rejectImport;
   let attachments = 0;
+  let disposals = 0;
   let imports = 0;
   const media = new Map();
   const timers = [];
   const mount = {};
   const session = { paused: false, contextLost: false };
-  const connection = { saveData: false };
+  // The Network Information API: a mutable saveData and a 'change' event target.
+  const connectionListeners = new Set();
+  const connection = {
+    saveData: false,
+    addEventListener(type, listener) { if (type === 'change') connectionListeners.add(listener); },
+    removeEventListener(type, listener) { if (type === 'change') connectionListeners.delete(listener); },
+  };
   const policy = { wide: true, compact: true };
   const matchMedia = (query) => {
     if (!media.has(query)) media.set(query, {
@@ -197,7 +204,7 @@ function delayedHost(props = LEGACY_PROPS) {
       addEventListener() {}, removeEventListener() {},
     },
     loadScene() { imports++; return new Promise((resolve, reject) => { resolveImport = resolve; rejectImport = reject; }); },
-    attachScene() { attachments++; return { controller: {}, dispose() {} }; },
+    attachScene() { attachments++; return { controller: {}, dispose() { disposals++; } }; },
     require(path) {
       if (path === 'react') return {
         useEffect(callback) { effect ??= callback; }, useRef: () => ({ current: null }),
@@ -216,7 +223,13 @@ function delayedHost(props = LEGACY_PROPS) {
   timers.shift()();
   assert.equal(imports, 1, 'the module was requested before the test changes eligibility');
   return {
-    session, connection, document, policy, cleanup,
+    session, connection, document, policy, cleanup, connectionListeners,
+    disposals: () => disposals,
+    /** The visitor's connection reports a new Save-Data value: the property changes, then the event fires. */
+    saveDataChanged(saveData) {
+      connection.saveData = saveData;
+      for (const listener of [...connectionListeners]) listener({ type: 'change' });
+    },
     preference(query, matches) {
       const pref = matchMedia(query);
       pref.matches = matches;
@@ -250,6 +263,32 @@ for (const [name, change] of [
       assert.equal(await host.finish(), 0);
     });
   }
+
+  // PLAN-SFC-V1 Task 23 (Reviewer R, SFC-18-22-02): DESIGN-SFC-V1 says a runtime preference change cancels and disposes live
+  // resources. Save-Data is announced by the Network Information API's change event, which the host did not subscribe to.
+  test(`${kind}: a live scene is disposed when Save-Data turns on, and nothing restarts it when it turns off`, async () => {
+    const host = delayedHost(props);
+    assert.equal(await host.finish(), 1, 'the scene attached');
+    assert.equal(host.disposals(), 0);
+    host.saveDataChanged(true);
+    assert.equal(host.disposals(), 1, 'the live scene was disposed by the Save-Data change event');
+    host.saveDataChanged(false);
+    assert.equal(host.disposals(), 1, 'turning Save-Data off disposes nothing more');
+  });
+
+  test(`${kind}: a pending import is cancelled by the Save-Data change event itself`, async () => {
+    const host = delayedHost(props);
+    host.saveDataChanged(true);
+    host.connection.saveData = false; // even if the preference is reported false again before the import resolves
+    assert.equal(await host.finish(), 0, 'the import cannot attach after the visitor asked for Save-Data');
+  });
+
+  test(`${kind}: the Save-Data listener is removed on cleanup`, () => {
+    const host = delayedHost(props);
+    assert.equal(host.connectionListeners.size, 1, 'one connection listener while mounted');
+    host.cleanup();
+    assert.equal(host.connectionListeners.size, 0, 'none after route cleanup');
+  });
 
   test(`${kind}: an eligible delayed import attaches once`, async () => {
     const host = delayedHost(props);
