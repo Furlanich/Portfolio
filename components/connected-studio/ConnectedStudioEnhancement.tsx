@@ -176,9 +176,13 @@ function readTestHook(): { allowSoftwareRenderer: boolean; livePolicy?: Connecte
   };
 }
 
+/** The Network Information API's connection: Save-Data is a mutable property announced by a `change` event (WICG Save-Data). */
+type SaveDataConnection = { saveData?: boolean; addEventListener?: (type: 'change', listener: () => void) => void; removeEventListener?: (type: 'change', listener: () => void) => void };
+const readConnection = () => (navigator as Navigator & { connection?: SaveDataConnection }).connection;
+
 /** Preferences known at activation. With reduced motion, Save-Data or forced colors set, the optional engine is never fetched. */
 function readPreferences(): { reducedMotion: boolean; saveData: boolean; forcedColors: boolean } {
-  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const connection = readConnection();
   return {
     reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     saveData: connection?.saveData === true,
@@ -920,6 +924,13 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
     };
     reducedMotion.addEventListener('change', onPreference);
     forcedColors.addEventListener('change', onPreference);
+    // Save-Data turned on while the scene runs ends it the same way, and turning it off never restarts it (DESIGN-SFC-V1: a runtime
+    // preference change cancels and disposes live resources). A later route or locale reads the preference at its own activation.
+    const connection = readConnection();
+    const onConnection = () => {
+      if (connection?.saveData === true) fallBack('static');
+    };
+    connection?.addEventListener?.('change', onConnection);
 
     return () => {
       cancelled = true;
@@ -928,6 +939,7 @@ export function ConnectedStudioEnhancement(props: ConnectedStudioEnhancementProp
       document.removeEventListener('visibilitychange', onVisibility);
       reducedMotion.removeEventListener('change', onPreference);
       forcedColors.removeEventListener('change', onPreference);
+      connection?.removeEventListener?.('change', onConnection);
       liveScene?.dispose();
       liveScene = null;
       sceneRef.current = null;
