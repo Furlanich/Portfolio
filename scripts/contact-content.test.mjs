@@ -21,3 +21,23 @@ for (const [locale, path] of [
     assert.doesNotMatch(JSON.stringify(content), /Formspree|simula|demonstration|formulario|\bform\b|accepted for sending/i);
   });
 }
+
+// PLAN-SFC-V1 Task 22: DESIGN-SFC-V1 ("Composition data") and the Contact scene profile draw the three decorative
+// words at n0, n4 and n8 (n0 and n4 on compact). The host follows the profile, so a binding on any other node id
+// is never drawn.
+const contactWords = {
+  es: ['Contexto', 'Consulta', 'Conversación'],
+  en: ['Context', 'Inquiry', 'Conversation'],
+};
+for (const [locale, path] of [
+  ['es', '../app/(es)/_content/contact.ts'],
+  ['en', '../app/(en)/en/_content/contact.ts'],
+]) {
+  test(locale + ' Contact binds its three decorative words to the nodes of its scene profile', async () => {
+    const { contactContent: content } = await import(path);
+    assert.deepEqual(
+      content.wordBindings,
+      ['n0', 'n4', 'n8'].map((nodeId, index) => ({ nodeId, word: contactWords[locale][index] })),
+    );
+  });
+}

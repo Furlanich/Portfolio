@@ -35,12 +35,12 @@ export function ContactPage({ content, locale }: ContactPageProps) {
               <h1 className={styles.pageHeading}>{content.heading}</h1>
               <p className={styles.introBody}>{content.introduction}</p>
               <p className={styles.responseExpectation}>{content.responseExpectation}</p>
+              <div id="connected-pause-contact" data-connected-pause-slot className={styles.pauseSlot}>
+                <span data-connected-static-label className={styles.staticLabel}>
+                  {CONNECTED_CONTROL_LABELS[locale].staticBackground}
+                </span>
+              </div>
             </AtlasScrim>
-            <div id="connected-pause-contact" data-connected-pause-slot className={styles.pauseSlot}>
-              <span data-connected-static-label className={styles.staticLabel}>
-                {CONNECTED_CONTROL_LABELS[locale].staticBackground}
-              </span>
-            </div>
           </header>
 
           <section aria-labelledby={alternativesHeadingId} className={styles.contactSurface} data-contact-channels data-connected-opaque-plate="">
