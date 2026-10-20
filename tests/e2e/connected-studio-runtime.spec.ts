@@ -294,7 +294,9 @@ test('one live renderer across the whole navigation journey', async ({ page }) =
     await gotoConnected(page, 'services', 'es');
     await expectLive(page);
     await navigateInApp(page, stableRoutes.projects.es);
-    await expect(connectedCanvas(page)).toHaveCount(1);
+    // The remounted scene on a loaded SwiftShader runner can take longer than the default 5 s expectation; this is the same
+    // 30 s window `expectLive` gives the next line (PR #176's CI failed here twice with the scene live in the failure screenshot).
+    await expect(connectedCanvas(page)).toHaveCount(1, { timeout: 30_000 });
     await expectLive(page);
     await navigateInApp(page, stableRoutes.services.es);
     await expectLive(page);
