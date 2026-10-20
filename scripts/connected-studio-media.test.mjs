@@ -116,13 +116,6 @@ test('a poster differs from another exactly when its rest composition differs, a
   }
 });
 
-// Held, named owner: DESIGN-SFC-V1 says Contact multiplies scene opacity by 0.35, and no host or runtime applies it
-// (Task 14 finding). The Contact posters are the scene as drawn; when the multiplier lands they must be recaptured so
-// the first live paint still matches. Remove `todo` with that remediation packet.
-test('the Contact poster carries the 0.35 scene multiplier the live scene applies', { todo: 'no host or runtime applies the specified Contact 0.35 scene opacity (Task 14 finding; packet 20+)' }, () => {
-  assert.fail('not applicable until the live Contact scene applies its multiplier');
-});
-
 test('the capture script defaults to the Atlas routes and refuses the legacy posters unless asked for them by name', () => {
   const capture = readFileSync(`${root}scripts/capture-connected-studio-posters.mjs`, 'utf8');
   assert.match(capture, /ATLAS_ROUTES/, 'the capture script names the Atlas routes');

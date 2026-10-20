@@ -31,6 +31,10 @@ last_verified: 2026-10-18
 
 The owner replaced the form with existing WhatsApp/email/phone links and removed mandatory Formspree/counsel gates. [ADR-CONTACT-DIRECT-CHANNELS](../decisions/contact-direct-channels.md) supersedes form-specific requirements below and in historical references. Retain the Atlas visual/runtime scope and static export. There is no form client, provider activation or simulated/commercial result UI.
 
+## Owner Contact-brightness amendment — APPROVED 2026-10-20
+
+The owner decided that the live Contact scene and its labels keep the same opacity as Studio and Founder, and **retired the 0.35 Contact multiplier** that revision 1 specified under "Page-specific graph specification". Contact's posters, which were captured as the scene is drawn, therefore stay as they are and need no recapture. Reviewer R's finding SFC-18-22-01 ([PR #167](https://github.com/Furlanich/Portfolio/pull/167)) is resolved by this decision, not by an implementation change. The owner's words: "Keep Contact at full brightness. Record that as the owner's design decision: update DESIGN-SFC-V1 and the Task 14 todo so the 0.35 requirement is retired, in a docs-only PR." Every other value in this document is unchanged.
+
 ## Status and intent
 
 **Written specification revision 1 — APPROVED by the owner on 2026-10-14 (Q14).** Approval covers this complete design, linked copy selections and bounded supersession scope, and authorizes the ADE v2 plan. The owner selected Direction A after three structurally different interactive comparisons, retained A.1 node motion and A.2 flexible strings/compositions. Approval does not authorize implementation, live activation or legal sufficiency. Governance PR acceptance and independent plan review remain separate gates.
@@ -172,7 +176,7 @@ These are target rest positions in normalized viewport coordinates `(u,v)`, from
 
 All three new profiles compact to eight anchors `(.09,.16),(.59,.12),(.91,.30),(.24,.39),(.76,.54),(.08,.66),(.39,.86),(.89,.82)` with ten edges `0–1,1–2,1–3,2–4,3–4,3–5,4–6,4–7,5–6,6–7`. The lower-density phone composition retains connection and brand identity without reproducing every desktop branch. Services/Projects keep their existing 16/33 and 8/13 topology and approved vocabulary.
 
-New profiles use flat camera-facing dots, one thin ring and the approved small bead; no sphere, orbit sculpture or bloom. Target ring diameter is 18px wide / 16px tablet / 14px compact, dot diameter 6/5/4px, ring stroke approximately 1px and edge weight approximately 1px. Services/Projects retain their approved larger node/path proportions. New-profile line color is chart lit, opacity up to 0.55, node opacity up to 0.88; Contact multiplies scene/label opacity by 0.35. Keep fixed positions at rest, no new idle positional wandering or continuous camera animation.
+New profiles use flat camera-facing dots, one thin ring and the approved small bead; no sphere, orbit sculpture or bloom. Target ring diameter is 18px wide / 16px tablet / 14px compact, dot diameter 6/5/4px, ring stroke approximately 1px and edge weight approximately 1px. Services/Projects retain their approved larger node/path proportions. New-profile line color is chart lit, opacity up to 0.55, node opacity up to 0.88; Contact uses the same scene and label opacity as Studio and Founder (the 0.35 Contact multiplier of revision 1 was retired by the owner on 2026-10-20; see the Contact-brightness amendment above). Keep fixed positions at rest, no new idle positional wandering or continuous camera animation.
 
 Studio is a central accountability junction with specialty branches. Founder has a right-side spine with branches suggesting professional depth. Contact converges along the outer right edge and stays visually subordinate to intake. These are illustrative compositions, not architecture diagrams, data transmission, team rosters, degree timelines or proof of a client result.
 
