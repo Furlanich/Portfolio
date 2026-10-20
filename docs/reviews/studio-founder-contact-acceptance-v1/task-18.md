@@ -1,10 +1,10 @@
 # Task 18 / PR 18 — Enable the qualified wide graph tier and verify final behavior
 
-**Status: the wide tier is enabled and verified on the committed build. The owner accepted the host's startup cost as an exception to the plan's 25 ms allowance (+80 to +93 ms median on desktop, +68 to +147 ms on the mobile profile; see "The static cost of the host"), and started Task 22 for the two Contact defects that Task 12 recorded and never fixed ([PR #165](https://github.com/Furlanich/Portfolio/pull/165), open, not merged).** `CONNECTED_LIVE_POLICY` is `{ wide: true, compact: false }`. The PR stays a DRAFT until Task 22 merges, so the Contact defects are not public with the flag. Reviewer R, the owner's rendered and hardware acceptance, and the deployed smoke are PENDING.
+**Status: MERGED and DEPLOYED. The wide tier is live on the public site; compact stays static and OPEN.** [PR #164](https://github.com/Furlanich/Portfolio/pull/164) merged at `317467b2` on 2026-10-19, after [Task 22's PR #165](https://github.com/Furlanich/Portfolio/pull/165) (`ed57bc06`) so the live Contact page ships without its two known defects. The owner accepted the host's startup cost as an exception to the plan's 25 ms allowance (+80 to +93 ms median on desktop, +68 to +147 ms on the mobile profile; see "The static cost of the host"). `CONNECTED_LIVE_POLICY` is `{ wide: true, compact: false }`. The read-only deployed smoke passed (below). Reviewer R's review and the owner's rendered and hardware acceptance are PENDING; the planning authority records closure in Task 19.
 
 Agent usage: primary Claude Sonnet 5.5 (`claude-sonnet-5-5`, the model the plan assigns; the session does not expose reasoning effort, so "High" is not attested); subagents 0/0 (none). The executing-plans whole-branch reviewer subagent was not used (AGENTS.md and GOV-AGENT-USAGE outrank it); the self-review below is the author's own, and Reviewer R remains a separate session.
 
-Branch/worktree: `codex/sfc-18-enable-wide` at `D:/Projects/NextJS/Portfolio/.worktrees/sfc-18`, cut from `origin/main` at `0d01fa52` (the merge of PR #163), which contains Tasks 1 to 17, 20 and 21 and the Task 15 wide-tier record. Targets `main`. Draft PR: [#164](https://github.com/Furlanich/Portfolio/pull/164). Master plan, indexes and status were not edited (not transferred to this packet).
+Branch/worktree: `codex/sfc-18-enable-wide` at `D:/Projects/NextJS/Portfolio/.worktrees/sfc-18`, cut from `origin/main` at `0d01fa52` (the merge of PR #163), which contains Tasks 1 to 17, 20 and 21 and the Task 15 wide-tier record. Targets `main`. PR: [#164](https://github.com/Furlanich/Portfolio/pull/164), merged. Master plan, indexes and status were not edited (not transferred to this packet).
 
 ## Gate
 
@@ -90,6 +90,23 @@ Studio, Founder, Services and Projects show neither. Both are product CSS and co
 - **Emil/review-animations**: rest, Pause, Footer and hidden behavior come from the collector's smoke rows (Task 15 record) and the runtime family: zero draws and zero animation-frame callbacks at rest, in the settled tail after input, while paused, in the Footer and while hidden (a 10 s hidden window with 0 draws), and Resume draws again. Interruption, pointer exclusion over plates and scrims, and the stationary tail are covered by the runtime cases that passed. **Not done:** a wide recording and a 120 Hz pointer check (the desktop is 60 Hz); the owner's rendered acceptance covers feel. Verdict on the evidence: no correction needed; feel is the owner's.
 - **Impeccable optimize**: the cost that prevents the target is the host's startup cost on pages that stay static (table above); per-frame cost did not change and fidelity is preserved (no cap, token or budget touched). Fix owner if the owner chooses option 2: a new packet (23 or later).
 
+## Deployed smoke (read-only, 2026-10-19, after the merge)
+
+Public site `https://furlanich.github.io/Portfolio/`. Nothing was sent, no form exists, no call or message probe was made, and no account was touched.
+
+| Check | Method | Result |
+| --- | --- | --- |
+| The deployed build is the reviewed build | `gh-pages` head `42041841` is `deploy: 317467b2…`; the Deploy run on `317467b2` succeeded; eight pages (Studio, Contact and Services in both locales, Founder in Spanish and Projects in Spanish) fetched with `curl` and compared with `cmp` to that `gh-pages` tree | **Identical**, eight of eight. |
+| Wide visitors get the live graph | Headed Chromium on the owner's RTX 2060, no test hook, 1440×900, ten pages (five routes, both locales) | **10 of 10 live** with exactly one canvas, one H1 and one Pause control; 2 to 6 labels visible at rest; Pause and Resume each toggle the control's state and restore it. |
+| Compact visitors, reduced motion and Save-Data stay static | The same ten pages at 390×844, with `prefers-reduced-motion`, and with `navigator.connection.saveData` | **Static on all ten in all three conditions**: no canvas, no live flag, one H1; the engine chunks are requested only by the live wide loads. |
+| Requests stay on the site | Every request of the 40 loads | Same origin only (the router's `HEAD` link prefetches are the only non-GET requests); no page error. |
+| Task 22 on the live Contact page | Screenshot of `/en/contact/` at 1440×900 | The Pause control has its full border and the words "Inquiry" and "Conversation" show. |
+| Fresh-browser activation | Four fresh headed browsers on `/estudio/` | Live in 0.83 to 1.14 s each. |
+
+**A disclosed first-pass anomaly.** The first full pass, run within minutes of the deployment, read Studio (both locales) as static at 1440 px, with no Pause control, while the other eight pages were live. The same pages read live on every later load (the corrected full pass, a re-check of three Studio loads, and four fresh browsers), and the files are byte-identical to the deployed tree. The likeliest cause is the CDN still serving the previous Studio files for a few minutes after the publish; I did not prove that. If a visitor does see the static Studio, they get the complete static page. The same first pass also flagged same-origin `HEAD` prefetches as foreign requests, a defect of the probe's own check that was corrected.
+
+Not done: no deployed run of the Task 15 collector (the owner waived the collection), no mobile device or screen reader, and Firefox and WebKit were checked against the local export, not the deployed site.
+
 ## Rulings
 
 - Ruling 1: `atlas-live-host.tsx` is part of this change although the plan's owned-path list names only `capability.ts`. The seam is the only place the host attaches to an Atlas page, and Task 16's receipt and the seam's own comment say the enablement is these two files; flag-only enablement leaves the pages static. Cost if wrong: split the seam fill into its own commit.
@@ -99,13 +116,13 @@ Studio, Founder, Services and Projects show neither. Both are product CSS and co
 - Ruling 5: the three `contact form signal` cases were removed, not rewritten: Task 13 removed the form, the host's suspension logic stays covered by the Node host suite, and the two Task 13 direct-Contact cases were repaired by opening the software gate like every other live case. Cost if wrong: a form returns and three cases are rewritten.
 - Ruling 6: the runtime fixture now flips the compact tier only; a future compact packet applies it. Cost if wrong: regenerate it.
 - Ruling 7: the paired startup result is reported as FAIL against the plan's 25 ms allowance even though the budget was written for the static release; I did not reinterpret it as an expected cost. The owner then accepted it as an exception (above).
-- Ruling 8: the PR stays a draft until Task 22 merges, so the live Contact page does not ship with its two known defects. Cost if wrong: mark it ready sooner and merge in the other order.
+- Ruling 8: the PR stays a draft until Task 22 merges, so the live Contact page does not ship with its two known defects. Task 22 merged first and then this PR, as written.
 - Ruling 9: the stray `docs/testing/playwright.md` mention of `sfc-accessibility.spec.ts` was left; no such file exists and the new-route axe cases live in `sfc-runtime.spec.ts`, which ran. Cost if wrong: one sentence.
 
 ## Not done, by design or by limit
 
 - **No measured hardware qualification** (owner acceptance, Task 15), no 120 Hz check, no wide recording, no Android phone, no iPhone, no screen reader (NVDA, VoiceOver, Narrator): human items in the plan's matrix.
-- **No deployed smoke**: it follows the merge ("R/human bounded enablement merge; deployed read-only graph/fallback smoke").
+- **Deployed smoke**: done after the merge (section above).
 - **Firefox and WebKit timing**: functional activation only; the wide tier was accepted on Chromium hardware evidence, and Firefox and Safari visitors on a wide screen will get the live scene.
 - **An intermittent Contact compact label overlap** (the runtime case above) is carried, not fixed: it reproduces on `main` with the runtime candidate (2 of 24) and on this head (5 of 32), only on the compact profile that is not enabled, and it concerns the same Contact labels that Task 22 binds correctly. It belongs to that packet or to the compact qualification.
 - **The compact tier** stays OPEN and static. Task 19 evidence handoff: this receipt, the Task 15 record, and the evidence listed above.
