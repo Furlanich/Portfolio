@@ -1,8 +1,8 @@
 ---
 id: PLAN-SFC-V1
 type: execution-plan
-status: PROPOSED
-plan_status: ACTIVE
+status: APPROVED
+plan_status: COMPLETED
 execution_policy: ADE-AGENT-USAGE-V1
 related:
   - ADR-CONTACT-DIRECT-CHANNELS
@@ -19,7 +19,7 @@ related:
   - TEST-STRATEGY
   - TEST-PLAYWRIGHT
   - TEST-VISUAL-REGRESSION
-last_verified: 2026-10-18
+last_verified: 2026-10-20
 ---
 
 # Studio, Founder, Contact and legal implementation plan
@@ -44,7 +44,9 @@ The pre-amendment revision/status and review findings below remain provenance fo
 
 ## Status and independent review
 
-**Revision 2 — PROPOSED; execution NOT AUTHORIZED.** ACTIVE is the repository location/status schema, not evidence of dispatch. Discovery base: main/origin at `bd5cd66aa0282735245605f1063ad5912a60d3ed`. Revision 1 reviewed head: `bedbed0604deec73384e50c573bfeaf91ea27737`, [PR #141](https://github.com/Furlanich/Portfolio/pull/141). Reconcile newer human-merged changes before execution without resetting owner work.
+**COMPLETED 2026-10-20 against an owner-amended target.** The text below this note is the plan as revised on 2026-10-14 and amended on 2026-10-18; it is preserved as written. Execution was authorized by the owner on 2026-10-15 (waiving the independent revision-2 re-review, as the [Task 1 receipt](../../reviews/studio-founder-contact-acceptance-v1/task-01.md) records). Tasks 1 to 18 and the remediation packets 20 to 23 were human-merged into `main` (PRs #142 to #171). On 2026-10-20 the owner decided in the Claude Code session that the interactive target is the **wide tier only** and directed the closeout; the compact tier, and the other items the [Task 19 receipt](../../reviews/studio-founder-contact-acceptance-v1/task-19.md) lists, remain **OPEN** and are proposed as follow-up packets rather than hidden. Closeout touched this file's front matter, this note, the progress table and the final deviations entry only.
+
+**Historical status at revision 2 (2026-10-14): PROPOSED; execution NOT AUTHORIZED.** ACTIVE was the repository location/status schema, not evidence of dispatch. Discovery base: main/origin at `bd5cd66aa0282735245605f1063ad5912a60d3ed`. Revision 1 reviewed head: `bedbed0604deec73384e50c573bfeaf91ea27737`, [PR #141](https://github.com/Furlanich/Portfolio/pull/141). Reconcile newer human-merged changes before execution without resetting owner work.
 
 Independent **Claude Opus 5.5 High**, separate top-level/read-only session, returned **REVISION REQUIRED**: four blocking, eleven high, thirteen medium, seven low. The [review disposition record](../../reviews/studio-founder-contact-plan-review-2026-10-14.md) preserves every finding, verified evidence, accepted/adapted/rejected reasoning and old/new packet mapping. The reviewer did not write this revision. Return revision 2 for independent re-review; the planning authority handles justified amendments. Owner approval, Governance PR and human merges remain required. No product implementation follows this draft automatically.
 
@@ -522,9 +524,10 @@ PR boundaries: W0 accepted governance; W1 frozen interfaces/CI/export ownership;
 | Controlled release order | Coordinated release retained; provider/counsel/probe requirements retired by the 2026-10-18 amendment. |
 | Model/staging/copy corrections | Q16–18 approved2026-10-14, recorded in owners and disposition record. |
 | Independent revision1 review | Opus5.5 High, reviewed bedbed06; REVISION REQUIRED,35 findings preserved. |
-| Master plan revision2 | PROPOSED,19 packets; finding dispositions prepared by planning authority, re-review/owner acceptance pending. |
-| Execution/governance/new ADR/live release | Task 12 merged at 60b76daa; amended Task 13 in progress on the nondeployed integration candidate. Live policies remain disabled. |
-| External gates | Formspree/counsel/probe/deletion N/A; deployed direct-link verification 17 and hardware 15/18 remain independently owned. |
+| Master plan revision2 | Executed. Owner authorized execution 2026-10-15 and waived the independent re-review; COMPLETED 2026-10-20 against the owner-amended wide-tier target (status note above). |
+| Execution/governance/new ADR/live release | Tasks 1 to 18 and 20 to 23 human-merged into main (PRs #142 to #171) and deployed; `{ wide: true, compact: false }` is the live policy since Task 18 (PR #164, merge 317467b2). |
+| External gates | Formspree/counsel/probe/deletion N/A. Task 17 deployed direct-link verification PASS (2026-10-19). Hardware: wide PASS by owner acceptance with the collection waived; compact OPEN (no device or operator). |
+| Closeout (Task 19) | Documentation reconciled and plan moved to completed on 2026-10-20 under the owner's amended target; the OPEN items and proposed follow-up packets are in the [Task 19 receipt](../../reviews/studio-founder-contact-acceptance-v1/task-19.md). Human merge of the closeout PR is the last step. |
 
 Known risk: narrow engine headroom and historical desktop failures/absent compact evidence. Early measurements now precede host integration, and hardware qualification cannot block a safely static commercial release. If live fidelity cannot fit the retained budget, return measured options to owner; never call the interactive redesign complete merely because static works. Model IDs and staging strategy are resolved; real session availability remains an honest preflight. Shared/sibling fixes always receive a new exact packet, not silent write expansion. Final metadata closure belongs to the planning authority, not Claude's flag implementer.
 
@@ -537,3 +540,7 @@ The original planning revision and its review remain history. The explicit 2026-
 ### 2026-10-18 owner amendment
 
 Task 13 supersedes the previously pending human account/counsel evidence with direct-contact implementation. The three interim waiting records are replaced with NOT APPLICABLE dispositions. No provider or legal evidence is inferred. Exact implementation, validation and review outcomes live in [task-13.md](../../reviews/studio-founder-contact-acceptance-v1/task-13.md).
+
+### 2026-10-20 owner closure decision (Task 19)
+
+Packets 20 to 23 were numbered by their implementers under the remediation protocol; the planning-authority role accepted those numbers at closeout (20 Contact Pause-control shift, 21 decorative-label occlusion with its frame-floor follow-up, 22 Contact words and Pause clearance, 23 runtime Save-Data disposal). The prospective Task 24 was never created: the owner's full-brightness decision retired the requirement it would have implemented. The owner then amended the interactive target to the wide tier and closed the plan with the compact tier OPEN. Nothing in the plan's text above was rewritten. The [Task 19 receipt](../../reviews/studio-founder-contact-acceptance-v1/task-19.md) holds the evidence, the carried items and the follow-up packets.

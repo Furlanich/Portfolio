@@ -43,14 +43,23 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - PLAN-SPF-V1
-last_verified: 2026-10-19
+last_verified: 2026-10-20
 ---
 
 # FURLANICH architecture map
 
 ## Direct-contact update — 2026-10-18
 
-Integration Task 13 implements [ADR-CONTACT-DIRECT-CHANNELS](docs/decisions/contact-direct-channels.md): Contact is a shared Server Component with WhatsApp/email/phone links, no form or inquiry configuration dependency, and direct-message Privacy copy. Formspree/counsel/probe readiness is not a release gate. Earlier form/demo/current-main passages below are dated pre-amendment history. **Deployed state, verified read-only on 2026-10-19:** `https://furlanich.github.io/Portfolio/` serves `main` at `5d8055a3` (PR #157, [deploy run 39201533556](https://github.com/Furlanich/Portfolio/actions/runs/39201533556)); both Contact locales show only the three native links, no form controls, provider request or stored data; Privacy and Terms are published and link each other and the Footer. The evidence is the [Task 17 receipt](docs/reviews/studio-founder-contact-acceptance-v1/task-17.md); the graph live-policy flags remain false.
+Integration Task 13 implements [ADR-CONTACT-DIRECT-CHANNELS](docs/decisions/contact-direct-channels.md): Contact is a shared Server Component with WhatsApp/email/phone links, no form or inquiry configuration dependency, and direct-message Privacy copy. Formspree/counsel/probe readiness is not a release gate. Earlier form/demo/current-main passages below are dated pre-amendment history. **Deployed state, verified read-only on 2026-10-19:** `https://furlanich.github.io/Portfolio/` serves `main` at `5d8055a3` (PR #157, [deploy run 39201533556](https://github.com/Furlanich/Portfolio/actions/runs/39201533556)); both Contact locales show only the three native links, no form controls, provider request or stored data; Privacy and Terms are published and link each other and the Footer. The evidence is the [Task 17 receipt](docs/reviews/studio-founder-contact-acceptance-v1/task-17.md); that Task 17 state predates the live graph: Task 18 later enabled the wide tier (see the closure section below).
+
+## Studio, Founder, Contact and legal — current implementation (PLAN-SFC-V1 closure, 2026-10-20)
+
+[PLAN-SFC-V1](docs/plans/completed/studio-founder-contact-v1.md) is COMPLETED against an **owner-amended target** (the wide interactive tier only; see the [Task 19 receipt](docs/reviews/studio-founder-contact-acceptance-v1/task-19.md)). Its Tasks 1 to 18 and the remediation packets 20 to 23 are human-merged into `main` (PRs #142 to #171); `codex/sfc-integration` has no commit that `main` lacks. Facts that hold on `main`:
+
+- **Pages.** Atlas Studio, Founder, Contact, Privacy and the new Terms pair (`/terminos/`, `/en/terms/`) are semantic Server Component pages in both locales. They use the shared editorial primitives (`AtlasPlate` `editorial-opaque`, `AtlasScrim`, `AtlasEditorialContainer`) and the one shared `LegalPage` template. Contact is native WhatsApp/email/phone links only: no form, field, POST, provider or inquiry-release import. The dormant `lib/inquiry/` modules and the `INQUIRY_RELEASE` record (`demonstration`) are unused library history.
+- **Live graph.** One pure projection seam, route profiles, the inertial interaction model and the pooled-path engine extend the existing connected-studio controller and single direct-Three.js host. `CONNECTED_LIVE_POLICY` is `{ wide: true, compact: false }` (Task 18), so a qualifying wide visitor gets the live scene on Studio, Founder, Contact, Services and Projects. Every compact visitor, and every reduced-motion, Save-Data, forced-colors, denied, software-renderer or context-loss visitor, keeps the static poster page. A runtime Save-Data change disposes a live scene (Task 23). Contact keeps the same scene and label brightness as Studio and Founder (owner decision, 2026-10-20: the 0.35 multiplier is retired).
+- **Cost.** Studio, Founder and Contact carry the host chunk for every visitor, an owner-accepted exception to the plan's +25 ms startup allowance ([Task 18](docs/reviews/studio-founder-contact-acceptance-v1/task-18.md)). The optional closure measured 119.49 KiB Brotli against the 120 KiB budget.
+- **OPEN, not claimed.** The compact tier is not qualified and stays static. The wide tier is PASS by owner acceptance, not by the 30-run hardware collection (waived). Firefox and WebKit timing, screen-reader passes and a real Android device are unmeasured. The dedicated candidate CI job the plan called for was never added, so candidate-mode browser families run locally and at the reviewer's head only. The [Task 19 receipt](docs/reviews/studio-founder-contact-acceptance-v1/task-19.md) lists these as proposed follow-up packets.
 
 ## CURRENT
 

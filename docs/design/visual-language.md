@@ -725,4 +725,4 @@ Outside these named boundaries, `VISUAL-IDENTITY-V1`, the commercial homepage se
 
 **Boundary.** This supersedes, only for Studio, Founder, Contact, Privacy and Terms, the older light composition recorded by this document and keeps every other named surface authoritative: Home, Services, Projects, the App Bar and the Footer.
 
-**Not yet in effect.** No page has been rebuilt. Each page's presentation changes only when its [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) packet (Tasks 2, 6, 7, 9 and 10) and the coordinated release (Task 16) land. Until then the sections above describe the deployed pages. Rendered evidence, not CSS-string tests, judges the result.
+**Not yet in effect.** No page has been rebuilt. Each page's presentation changes only when its [PLAN-SFC-V1](../plans/completed/studio-founder-contact-v1.md) packet (Tasks 2, 6, 7, 9 and 10) and the coordinated release (Task 16) land. Until then the sections above describe the deployed pages. Rendered evidence, not CSS-string tests, judges the result.

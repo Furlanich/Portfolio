@@ -37,6 +37,8 @@ The owner decided that the live Contact scene and its labels keep the same opaci
 
 ## Status and intent
 
+**Implementation status — 2026-10-20.** [PLAN-SFC-V1](../plans/completed/studio-founder-contact-v1.md) is COMPLETED against an owner-amended target (the [Task 19 receipt](../reviews/studio-founder-contact-acceptance-v1/task-19.md) holds the evidence and the carried OPEN items). Studio, Founder, Contact, Privacy and Terms are released in both locales with direct-channel Contact. The **wide** live graph tier is enabled and is PASS by the owner's acceptance of 2026-10-19, which waived the 30-run hardware collection; the **compact** tier is OPEN and stays static until a constrained Android device and operator qualify it. The sections below keep the target text as written; where this note and a dated amendment above differ from a later section, the dated amendment governs.
+
 **Written specification revision 1 — APPROVED by the owner on 2026-10-14 (Q14).** Approval covers this complete design, linked copy selections and bounded supersession scope, and authorizes the ADE v2 plan. The owner selected Direction A after three structurally different interactive comparisons, retained A.1 node motion and A.2 flexible strings/compositions. Approval does not authorize implementation, live activation or legal sufficiency. Governance PR acceptance and independent plan review remain separate gates.
 
 **Review amendments, 2026-10-14:** Q16 authorizes `claude-sonnet-5-5` High with `gpt-6-luna` High; Q17 selects a nondeployed integration branch and one coherent release to main; Q18 corrects Studio's software-focused H1 and Contact's acceptance-only success text in their owners. The additional execution-ready clarifications below respond to independent review and are **PROPOSED with plan revision 2** until that revision is accepted. They do not reopen the approved A.2 compositions or certify professional legal/processor facts.
@@ -267,7 +269,7 @@ The current host scheduler defect is already fixed; a second scene-related prese
 
 ## Performance and activation gates
 
-Historical current-main evidence: optional connected engine closure 114.4KiB Brotli against 120KiB, two of four desktop active-frame runs failing a 20ms p95 limit, and no compact hardware acceptance. Both live-policy flags are false. These are risks and starting evidence, not new results for this spec.
+Historical current-main evidence: optional connected engine closure 114.4KiB Brotli against 120KiB, two of four desktop active-frame runs failing a 20ms p95 limit, and no compact hardware acceptance. At the time of that evidence both live-policy flags were false; since PLAN-SFC-V1 Task 18 the shipped policy is `{ wide: true, compact: false }`. These are risks and starting evidence, not new results for this spec.
 
 | Gate | Required target for all five connected route pairs |
 | --- | --- |
@@ -302,7 +304,7 @@ For each behavior change: **RED → run and verify the intended failure → mini
 
 Static screenshot comparisons run in controlled Chromium with reduced motion and stable content after approval; Firefox/WebKit supply behavior/layout smoke, not redundant pixel baselines. Ordinary reports stay out of source. The committed design-reference gallery documents the deliberate alternatives, not automatic golden approval. Do not mask a visual regression or update baselines to make tests green. Any test's zero selected tests or unmeasured mode is a failure/missing evidence, not a pass.
 
-Independent plan review uses Claude Opus 5.5 High in a separate top-level review-only session, with no rewrite by the reviewer. [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) is authored by this planning authority after Q14 written-spec approval. Revision 1 received REVISION REQUIRED; revision 2 and its [finding dispositions](../reviews/studio-founder-contact-plan-review-2026-10-14.md) await re-review. Q16 authorizes the exact GPT-6 Luna High / Claude Sonnet 5.5 High implementation targets, verified identifiers before dispatch and task-level isolation under GOV-AGENT-USAGE. No unavailable-model substitution or implementation task execution is authorized by this design artifact.
+Independent plan review uses Claude Opus 5.5 High in a separate top-level review-only session, with no rewrite by the reviewer. [PLAN-SFC-V1](../plans/completed/studio-founder-contact-v1.md) is authored by this planning authority after Q14 written-spec approval. Revision 1 received REVISION REQUIRED; revision 2 and its [finding dispositions](../reviews/studio-founder-contact-plan-review-2026-10-14.md) await re-review. Q16 authorizes the exact GPT-6 Luna High / Claude Sonnet 5.5 High implementation targets, verified identifiers before dispatch and task-level isolation under GOV-AGENT-USAGE. No unavailable-model substitution or implementation task execution is authorized by this design artifact.
 
 ## Current evidence and approval gate
 
