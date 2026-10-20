@@ -53,6 +53,7 @@ Acceptance evidence for [PLAN-SFC-V1](../../plans/completed/studio-founder-conta
 - [Task 21 — Decorative labels out of reading masks](task-21.md)
 - [Task 22 — Contact words and Pause clearance](task-22.md)
 - [Task 23 — Runtime Save-Data disposal](task-23.md)
+- [Task 27 — Manual acceptance round: protocol and automatable evidence](task-27.md), with the [manual acceptance protocol](manual-acceptance-protocol.md)
 
 Historical, retired by the 2026-10-18 amendment: [legal review](legal-review.md) and [processor readiness](processor-readiness.md).
 
@@ -78,7 +79,7 @@ The follow-up packets are proposed, not authorized (see the [Task 19 receipt](ta
 
 - Compact tier qualification and enablement (Task 25).
 - A dedicated candidate CI job and removal of the stale `runtime-closure.patch` (Task 26).
-- Manual screen-reader passes, a physical phone pass and Firefox/WebKit timing (Task 27).
+- Manual screen-reader passes, a physical phone pass and Firefox/WebKit timing (Task 27): the [protocol](manual-acceptance-protocol.md) and the automatable functional evidence are written ([receipt](task-27.md)); **every manual session is still OPEN** until an operator runs it, and nothing there was inferred.
 - Task 7 R1: a PDF MIME mapping in `scripts/serve-static-export.mjs`, outside that packet's owned paths, merged through human-reviewed PR #148. Recorded as a deviation; the owner may close it at the merge of the Task 19 PR.
 - Plan revision 2 never had its independent re-review; the owner waived the gate on 2026-10-15, which does not turn the Opus review's open points into approved ones.
 - Legal sufficiency is never inferred from this record.
