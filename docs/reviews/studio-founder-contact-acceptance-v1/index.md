@@ -53,6 +53,7 @@ Acceptance evidence for [PLAN-SFC-V1](../../plans/completed/studio-founder-conta
 - [Task 21 — Decorative labels out of reading masks](task-21.md)
 - [Task 22 — Contact words and Pause clearance](task-22.md)
 - [Task 23 — Runtime Save-Data disposal](task-23.md)
+- [Task 25 — Compact tier: Contact label repair; qualification OPEN (no device)](task-25.md)
 
 Historical, retired by the 2026-10-18 amendment: [legal review](legal-review.md) and [processor readiness](processor-readiness.md).
 
