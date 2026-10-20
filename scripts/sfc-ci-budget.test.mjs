@@ -205,7 +205,7 @@ test('the candidate job blocks provider traffic at the network layer and checks 
   assert.match(options, /--add-host formspree\.io:127\.0\.0\.1/, 'formspree.io resolves to loopback in the container');
   assert.match(options, /--add-host www\.formspree\.io:127\.0\.0\.1/);
   const steps = candidateSteps();
-  const check = steps.findIndex((step) => /formspree\.io/.test(step.text) && /getent hosts/.test(step.text));
+  const check = steps.findIndex((step) => /formspree\.io/.test(step.text) && /getent ahosts/.test(step.text));
   const run = steps.findIndex((step) => /npx playwright test/.test(step.text));
   assert.ok(check >= 0 && check < run, 'a step proves the provider host is blocked before the run');
 });

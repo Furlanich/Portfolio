@@ -105,7 +105,8 @@ jobs:
       - name: Prove provider traffic is blocked
         run: |
           for host in formspree.io www.formspree.io; do
-            getent hosts "$host" | grep -q '^127\.0\.0\.1 ' || { echo "$host does not resolve to loopback"; exit 1; }
+            addresses=$(getent ahosts "$host" | awk '{ print $1 }' | sort -u)
+            [ "$addresses" = "127.0.0.1" ] || { echo "$host resolves to: $addresses"; exit 1; }
           done
       - name: Start from a clean tree
         run: node scripts/prepare-sfc-candidate.mjs verify-clean
