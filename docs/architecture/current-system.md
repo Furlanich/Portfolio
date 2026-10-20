@@ -19,7 +19,7 @@ related:
   - DESIGN-VISUAL
   - DESIGN-IX-A11Y
   - PLAN-SPF-V1
-last_verified: 2026-10-18
+last_verified: 2026-10-20
 ---
 
 # Current system

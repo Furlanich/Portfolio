@@ -11,7 +11,7 @@ related:
   - REVIEW-SKY-CHART-ACCEPTANCE-V2
   - PLAN-SPF-V1
   - DESIGN-SPF-V1
-last_verified: 2026-10-18
+last_verified: 2026-10-20
 ---
 
 # Playwright QA
