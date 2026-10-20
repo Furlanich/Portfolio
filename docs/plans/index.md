@@ -28,7 +28,7 @@ related:
   - RFC-ADE-AGENT-USAGE-V1
   - ADR-ADE-AGENT-USAGE
   - GOV-AGENT-USAGE
-last_verified: 2026-10-18
+last_verified: 2026-10-20
 ---
 
 # Execution plans
@@ -44,9 +44,11 @@ PLAN-SFC-V1 Task 13 now removes the form and delivers direct channels under [ADR
 
 ## Active
 
-- [PLAN-SFC-V1](active/studio-founder-contact-v1.md): **PROPOSED revision 2 — 2026-10-14; execution NOT AUTHORIZED.** Nineteen ADE task/PR packets, after [Opus 5.5 High's revision-required review](../reviews/studio-founder-contact-plan-review-2026-10-14.md). Q16 authorizes exact Sonnet 5.5 High/GPT-6 Luna High targets, Q17 coordinated integration-branch release, Q18 copy corrections. Added early risk/shared projection/export ownership/candidate CI/actual integration/static-cost/hardware lanes and planning-authority closeout; retains strict TDD/isolated disjoint ownership. Commercial release does not depend on hardware qualification. All35 findings have critical dispositions; independent re-review/owner acceptance are next. No task started; current demo/live decisions remain effective.
+No plans are currently active. PLAN-SFC-V1 was the last; see Completed.
 
 ## Completed
+
+- [PLAN-SFC-V1](completed/studio-founder-contact-v1.md): **APPROVED / COMPLETED on 2026-10-20 against an owner-amended target, with the compact tier OPEN.** Revision 2 delivered the bilingual Atlas Studio, Founder, Contact, Privacy and Terms pages, direct WhatsApp/email/phone contact (the owner's 2026-10-18 amendment removed the form and the Formspree and counsel gates) and the yielding-node graph through Tasks 1 to 18 and remediation packets 20 to 23 (PRs #142 to #171, all human-merged). The wide interactive tier is live, PASS by the owner's acceptance with the hardware collection waived. The compact tier, Firefox and WebKit timing, screen-reader passes and the dedicated candidate CI job are **OPEN** and listed as proposed follow-up packets in the [Task 19 closeout](../reviews/studio-founder-contact-acceptance-v1/task-19.md). Acceptance record: [REVIEW-SFC-ACCEPTANCE-V1](../reviews/studio-founder-contact-acceptance-v1/index.md).
 
 - [PLAN-SPF-V1](completed/services-projects-footer-v1.md): **APPROVED 2026-10-05 (revision 5); COMPLETED 2026-10-14** on the owner's merge of the Task 10 pull request under [owner authorization](../reviews/services-projects-footer-plan-review-2026-09-30.md#owner-approval-2026-10-05), after fresh independent GPT-6.1 Sol round 6 and correction verification returned zero unresolved findings. Ten ADE v2 task/PR packets retain the [approved Sonnet/Luna/Sol routing](completed/services-projects-footer-v1.md#model-routing), exclusive ownership, Skills contract, wave checkpoints and strict behavioral TDD. Task 3 now owns the GRS Services test migration before Task 6; both live tiers stay disabled until hardware evidence passes. [Historical review outcomes](../reviews/services-projects-footer-plan-review-2026-09-30.md) are preserved. Human-merged task delivery and checkpoint evidence are recorded in Progress. From 2026-10-07 its remaining tasks follow [GOV-AGENT-USAGE](../governance/agent-usage.md): single-agent by default, a coordination-only orchestrator, and independent review by a separate session (see its [adoption decision](completed/services-projects-footer-v1.md#important-implementation-decisions)). Current delivery and remaining gates are summarized below.
 

@@ -153,7 +153,7 @@ Run it with `npx playwright test --project=immersive-chromium tests/e2e/sky-char
 
 ## PLAN-SFC-V1 harness and QA candidate
 
-PLAN-SFC-V1 Task 2 partitioned the Playwright specs by page owner and added the candidate and production families. The partition moved cases without changing them: the default list is **2749 cases in 33 files** (was 2749 in 31), with the same case title in the same project for every case. The planning envelope is at most 3200 default cases and at most 180 candidate cases.
+PLAN-SFC-V1 Task 2 partitioned the Playwright specs by page owner and added the candidate and production families. The partition moved cases without changing them: the default list is **2749 cases in 33 files** (was 2749 in 31), with the same case title in the same project for every case. The planning envelope is at most 3200 default cases and at most 180 candidate cases. **At the PLAN-SFC-V1 closeout (2026-10-20, `main` at `971f9594`) `playwright test --list` reports 3195 default cases in 37 files and `SFC_TEST_MODE=candidate` reports 90 in 2 files**, both inside the envelope.
 
 ### Spec families and owners
 
@@ -186,8 +186,9 @@ node scripts/prepare-sfc-candidate.mjs restore --kind=commercial
 - `apply` requires a clean tracked tree, an optional `--expect-head=<sha>` match, and `git apply --check` of every patch. It applies all or none, records the head and the SHA-256 of each patch in the git directory, and refuses a second candidate.
 - `restore` refuses a patch that changed since it was applied or a target that drifted, then reverses the patches with `git apply -R`.
 - `verify-clean` runs in the CI `validate` job. It fails when `QA-CANDIDATE-NOT-FOR-DEPLOYMENT` appears in `app`, `components`, `lib`, `data` or `public`, or when a candidate is still applied. It does not reject `CONNECTED_LIVE_POLICY` being true: PLAN-SFC-V1 Task 18 changed it for the wide tier in its own reviewed PR.
+- `tests/fixtures/sfc/runtime-closure.patch` is Task 8's early-measurement fixture. It is **stale**: `git apply --check` fails on `components/connected-studio/ConnectedStudioEnhancement.tsx` at `main`, because Task 18 attached the host for real. No script or test references it; a future packet may delete it, and nobody should apply it.
 - Patches are read and applied as LF text, so a Windows checkout that converts them to CRLF still works.
-- `tests/fixtures/sfc/live-policy.patch` sets the compact tier true in `lib/connected-studio/capability.ts` and nothing else: the wide tier and the Atlas host seam are in committed source since Task 18. `tests/fixtures/sfc/commercial-release.patch` sets the release mode to `commercial` and the release id to the QA marker in `lib/inquiry/release.ts`. That file does not exist yet: **PLAN-SFC-V1 Task 5 must create it with exactly this declaration**, and `apply --kind=commercial` fails until it does.
+- `tests/fixtures/sfc/live-policy.patch` sets the compact tier true in `lib/connected-studio/capability.ts` and nothing else: the wide tier and the Atlas host seam are in committed source since Task 18. `tests/fixtures/sfc/commercial-release.patch` sets the release mode to `commercial` and the release id to the QA marker in `lib/inquiry/release.ts`. Task 5 created that file with exactly this declaration, and the patch still applies on `main` (checked with `git apply --check` at the closeout). Contact is direct-link only, so no public route reads it.
 
 ```ts
 export type InquiryReleaseRecord = { readonly mode: 'demonstration' | 'commercial'; readonly releaseId: string };
@@ -209,5 +210,5 @@ Each page owns one declarative export requirement map in `scripts/export-require
 - The workflow runs for pull requests to `main` and to `codex/sfc-integration`, and by `workflow_dispatch`. Use the manual trigger at a PR's immutable head to bootstrap a PR that changes the workflow itself; record the run.
 - The `browser` job runs four shards, `--shard=N/4 --workers=2`, with `fail-fast: false` and a 35-minute hard limit (target 25). The last single-job run took 51m59s ([run 38623461245](https://github.com/Furlanich/Portfolio/actions/runs/38623461245)). The first four-shard run ([run 38735223527](https://github.com/Furlanich/Portfolio/actions/runs/38735223527), PR #143, all green) took 12m37s, 16m17s, 8m54s and 17m35s per shard, from GitHub's started and completed timestamps; the shards are unbalanced, so each wave re-measures. Do not extend the limit or drop unique coverage to hide a failure.
 - Every shard uploads its report and traces with `if: always()`, named by shard, run and attempt, kept 7 days.
-- The dedicated candidate job joins in Task 10, with an always-run restore step.
+- **The dedicated candidate job was never added.** `.github/workflows/ci.yml` still carries only the comment that Task 10 would add it; Task 10 recorded that its owned paths forbid the workflow, and no later packet took it. Candidate-mode families (`contact-commercial-*`, `sfc-runtime-chromium`) therefore run locally and at the reviewer's head, never in CI. This is an OPEN carried item (PLAN-SFC-V1 Task 19 closeout), not a passing gate.
 - Local ports: owner sessions use `3200 + task number`, reviewers `3300 + task number`; each checkout has its own `.next` and `out`, and export runs never reuse a server.

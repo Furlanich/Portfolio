@@ -1,6 +1,6 @@
 # Early performance and critical-route baselines (PLAN-SFC-V1 Task 3)
 
-Status: **recorded, not a verdict.** This is the W1.5 baseline that the later budget gates compare against. It qualifies nothing, passes nothing and changes no policy. Where a metric was not measured it says OPEN. The collectors, their fixtures and this document are the whole deliverable of [Task 3](task-03.md); the plan text is [PLAN-SFC-V1 Task 3](../../plans/active/studio-founder-contact-v1.md).
+Status: **recorded, not a verdict.** This is the W1.5 baseline that the later budget gates compare against. It qualifies nothing, passes nothing and changes no policy. Where a metric was not measured it says OPEN. The collectors, their fixtures and this document are the whole deliverable of [Task 3](task-03.md); the plan text is [PLAN-SFC-V1 Task 3](../../plans/completed/studio-founder-contact-v1.md).
 
 ## Summary
 

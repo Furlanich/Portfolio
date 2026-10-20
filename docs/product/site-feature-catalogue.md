@@ -6,13 +6,19 @@ related:
   - ADR-CONTACT-DIRECT-CHANNELS
   - IA-SITE
   - PAGE-CONTACT
+  - PAGE-STUDIO
+  - PAGE-FOUNDER
+  - PAGE-PRIVACY
+  - PAGE-TERMS
+  - DESIGN-SFC-V1
+  - PLAN-SFC-V1
   - PAGE-SERVICES
   - PROJECT-EVIDENCE
   - RFC-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-PIPELINE
   - ADR-CONTACT-INQUIRY-DEMO-MODE
   - PLAN-CONTACT-INQUIRY-PIPELINE
-last_verified: 2026-10-18
+last_verified: 2026-10-20
 ---
 
 # Site feature catalogue
@@ -32,6 +38,8 @@ This concise catalogue traces visitor-facing capabilities to their authoritative
 | Project evidence | [`PROJECT-EVIDENCE`](project-evidence.md), [`PAGE-PROJECTS`](pages/projects.md) |
 | Founder profile | [`PAGE-FOUNDER`](pages/studio-and-founder.md) |
 | Direct Contact | [PAGE-CONTACT](pages/contact-and-privacy.md): native WhatsApp, email and phone links with localized Privacy and Founder references. |
+| Studio, Founder and legal pages | Delivered by PLAN-SFC-V1 (completed 2026-10-20): Atlas [`PAGE-STUDIO` / `PAGE-FOUNDER`](pages/studio-and-founder.md), Privacy and the new Terms pair (`/terminos/`, `/en/terms/`) in [`PAGE-PRIVACY` / `PAGE-TERMS`](pages/contact-and-privacy.md). |
+| Interactive connected graph | Wide tier live on Studio, Founder, Contact, Services and Projects ([`DESIGN-SFC-V1`](../design/studio-founder-contact-v1.md)); **compact tier OPEN and static**. Reduced motion, Save-Data, forced colors, denied, software-renderer and context-loss visitors always get the static page. |
 | Services in-page navigation | Stable localized fragments and non-sticky service index in [`PAGE-SERVICES`](pages/services.md#stable-service-anchors-approved) |
 
 ## PROPOSED launch capabilities

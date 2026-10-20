@@ -17,14 +17,14 @@ related:
   - PAGE-CONTACT
   - PAGE-PRIVACY
   - PROJECTS-EXPERIENCE-CLOSURE
-last_verified: 2026-10-14
+last_verified: 2026-10-20
 ---
 
 # Design documentation
 
 ## Studio, Founder, Contact and legal — written review
 
-[DESIGN-SFC-V1](studio-founder-contact-v1.md) written revision 1 is **APPROVED Q14**, with controlled release Q15 and Q16–18 model/staging/copy amendments. The spec now identifies **proposed revision 2 construction/focus/projection clarifications** separately from approved A.2/type/composition. [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) revision 2 and [critical review dispositions](../reviews/studio-founder-contact-plan-review-2026-10-14.md) await independent Opus 5.5 High re-review/owner acceptance; its first review required revision. The [RFC](../rfcs/studio-founder-contact-commercial-atlas-v1.md) still needs Governance PR acceptance. No current demo/live-policy/implementation/legal/hardware acceptance is inferred.
+[DESIGN-SFC-V1](studio-founder-contact-v1.md) written revision 1 is **APPROVED Q14**, with controlled release Q15, Q16–18 model/staging/copy amendments, the 2026-10-18 direct-contact amendment and the 2026-10-20 Contact-brightness decision. It is **implemented and released** through [PLAN-SFC-V1](../plans/completed/studio-founder-contact-v1.md), which is COMPLETED against an owner-amended target: the wide interactive tier is live (PASS by owner acceptance, not a measured qualification) and the compact tier is **OPEN** and static. See the [Task 19 closeout](../reviews/studio-founder-contact-acceptance-v1/task-19.md). The [critical review dispositions](../reviews/studio-founder-contact-plan-review-2026-10-14.md) remain history. The independent revision-2 re-review was waived by the owner; no legal sufficiency or compact-hardware acceptance is inferred.
 
 ## Services, Projects and Footer — proposed connected studio
 

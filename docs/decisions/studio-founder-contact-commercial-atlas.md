@@ -24,7 +24,7 @@ last_verified: 2026-10-15
 
 ## Context
 
-[RFC-SFC-COMMERCIAL-ATLAS-V1](../rfcs/studio-founder-contact-commercial-atlas-v1.md) was approved with Governance PR 1 ([#142](https://github.com/Furlanich/Portfolio/pull/142)). It accepts ten bounded supersessions of earlier requirements and records that the earlier ADRs stay immutable and effective until a new ADR names what replaces them. This is that ADR. [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md) owns the design, and [PLAN-SFC-V1](../plans/active/studio-founder-contact-v1.md) owns the sequencing.
+[RFC-SFC-COMMERCIAL-ATLAS-V1](../rfcs/studio-founder-contact-commercial-atlas-v1.md) was approved with Governance PR 1 ([#142](https://github.com/Furlanich/Portfolio/pull/142)). It accepts ten bounded supersessions of earlier requirements and records that the earlier ADRs stay immutable and effective until a new ADR names what replaces them. This is that ADR. [DESIGN-SFC-V1](../design/studio-founder-contact-v1.md) owns the design, and [PLAN-SFC-V1](../plans/completed/studio-founder-contact-v1.md) owns the sequencing.
 
 ## Decision
 
