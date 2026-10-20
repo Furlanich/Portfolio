@@ -87,6 +87,7 @@ The export and production-browser evidence is local only; CI runs neither `verif
 ## Not done, and why
 
 - **Visual baselines (plan step 6).** Replacement Windows baselines need owner approval of the new renderings, and Linux files need a same-head CI run. Neither exists, so the eight Founder PNGs are untouched and the visual gate stays OPEN.
+- **Broad `npm run test:e2e` (full default matrix).** Started locally and stopped after about 80 of 3195 cases (no failures observed in those) because it ran far too slowly to finish. The default matrix is left to the four-shard CI run; only the focused Founder, responsive, accessibility and visual gates above ran here.
 - **Manual rendered inspection at 320, 390, 768, 1024 and 1440px.** The automated responsive and axe gates pass; a human visual review of the added entry has not been recorded.
 - **Plan closeout (step 8).** The plan stays in `active/`. Moving it to `completed/` before the gates above close would claim completion that has not happened.
 - **Independent Codex review and CI.** Not run.
