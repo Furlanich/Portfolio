@@ -90,6 +90,10 @@ The export and production-browser evidence is local only; CI runs neither `verif
 - **Legacy and distinct-hash verifier checks report under the first Founder file.** They are once-per-export checks with no natural page; the prefix keeps them observable by the existing fixture filter, as the plan required.
 - **Verifier keeps the page-level `href` substring check beside the new pairing check.** Removing it would change error text other consumers may match; the pairing check is the stricter addition.
 
+## Rollback
+
+The plan's rollback assumed the legacy PDF would be deleted by this PR. It was deleted by the owner's commits before it (`93ec6d72`; the localized files were replaced in `1bcc1748`), so reverting only this PR's merge restores the legacy anchors without their file and leaves both CV actions at 404. The correct rollback is a human-reviewed PR that (1) reverts the merge commit and (2) restores `public/Samuel-Furlanich-CV.pdf` from its last tracked revision (`git show 93ec6d72^:public/Samuel-Furlanich-CV.pdf`: blob `de15b7ff`, 194,201 bytes, SHA-256 `adcb9accf74f55b02c77894a2fcd4f5c7c3fc69cc6290f007daad2700312cff9`). It must not revert `93ec6d72` or `1bcc1748`, and the recovered download must be validated at root and `/Portfolio`. The blob and hash above were read from the repository on 2026-10-20.
+
 ## Not done, and why
 
 - **Visual baselines (plan step 6).** Replacement Windows baselines need owner approval of the new renderings, and Linux files need a same-head CI run. Neither exists, so the eight Founder PNGs are untouched and the visual gate stays OPEN.
