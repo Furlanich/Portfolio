@@ -388,6 +388,12 @@ function assertFounderArtifact(artifact, html) {
     failures.push(artifact.file + ': Founder CV file is missing from the export: ' + requirement.cv.slice(1));
   } else if (readFileSync(cvFile).subarray(0, 5).toString('latin1') !== '%PDF-') {
     failures.push(artifact.file + ': Founder CV file is not a PDF: ' + requirement.cv.slice(1));
+  } else {
+    // The repository's public/ file is the independent source for this locale; two valid but exchanged PDFs must not pass.
+    const sourceFile = join(projectRoot, '..', 'public', requirement.cv.slice(1));
+    if (!existsSync(sourceFile) || !readFileSync(sourceFile).equals(readFileSync(cvFile))) {
+      failures.push(artifact.file + ': Founder CV file must match public/' + requirement.cv.slice(1));
+    }
   }
 
   if (countMatches(html, /<li\b[^>]*data-founder-experience-entry/g) !== 3) {

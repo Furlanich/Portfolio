@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { runVerifier } from './export-test-support.mjs';
@@ -22,9 +22,10 @@ const literalCv = {
 };
 const employer = 'CleverSoft S.A.';
 
+// The owner-supplied files in public/ are the independent oracle for which bytes each locale must ship.
 const pdfBytes = {
-  es: Buffer.from('%PDF-1.7\nSpanish Founder CV fixture'),
-  en: Buffer.from('%PDF-1.7\nEnglish Founder CV fixture'),
+  es: readFileSync(new URL('../public/' + literalCv.es.file, import.meta.url)),
+  en: readFileSync(new URL('../public/' + literalCv.en.file, import.meta.url)),
 };
 
 const contents = {};
@@ -190,6 +191,17 @@ for (const [locale, definition] of Object.entries(modules)) {
   test(`${locale} Founder export rejects the same CV bytes behind both locales`, () => {
     const files = founderFiles(locale, {}, { [literalCv.es.file]: pdfBytes.es, [literalCv.en.file]: pdfBytes.es });
     assertRejects(founderMessages(files), 'Founder CV files must differ between locales');
+  });
+
+  test(`${locale} Founder export rejects the two valid locale PDFs exchanged`, () => {
+    const files = founderFiles(locale, {}, { [literalCv.es.file]: pdfBytes.en, [literalCv.en.file]: pdfBytes.es });
+    const messages = founderMessages(files);
+    assertRejects(messages, 'Founder CV file must match public/' + cv.file);
+  });
+
+  test(`${locale} Founder export rejects a valid PDF that is not the locale's public source`, () => {
+    const files = founderFiles(locale, {}, { [cv.file]: Buffer.concat([pdfBytes[locale], Buffer.from('\n%tampered')]) });
+    assertRejects(founderMessages(files), 'Founder CV file must match public/' + cv.file);
   });
 
   test(`${locale} Founder export rejects a surviving legacy CV file`, () => {

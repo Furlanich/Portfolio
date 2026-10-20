@@ -244,12 +244,18 @@ const founderLocalized = [
   },
 ] as const;
 
+// The repository's public/ files are the independent source for each locale: every comparison below is against them,
+// never against the export being served, so exchanged but valid PDFs in `out/` fail.
+const publicCv = (file: string): Buffer => fs.readFileSync(path.join(process.cwd(), 'public', file));
+
 test.describe('Founder localized profile in the static export', () => {
-  test('ships two distinct PDFs and no legacy CV', () => {
+  test('ships each locale its own public PDF, distinct from the other, and no legacy CV', () => {
     const es = fs.readFileSync(path.join(outDir, 'Samuel-Furlanich-CV-ES.pdf'));
     const en = fs.readFileSync(path.join(outDir, 'Samuel-Furlanich-CV-EN.pdf'));
     expect(es.subarray(0, 5).toString('latin1')).toBe('%PDF-');
     expect(en.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+    expect(es.equals(publicCv('Samuel-Furlanich-CV-ES.pdf'))).toBe(true);
+    expect(en.equals(publicCv('Samuel-Furlanich-CV-EN.pdf'))).toBe(true);
     expect(es.equals(en)).toBe(false);
     expect(fs.existsSync(path.join(outDir, 'Samuel-Furlanich-CV.pdf'))).toBe(false);
   });
@@ -258,7 +264,7 @@ test.describe('Founder localized profile in the static export', () => {
     test(`${founder.locale} Founder downloads its own CV by click and keyboard and the legacy URL is gone`, async ({ browser, baseURL }) => {
       const context = await browser.newContext({ baseURL, viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' });
       const page = await context.newPage();
-      const source = fs.readFileSync(path.join(outDir, founder.cvFile));
+      const source = publicCv(founder.cvFile);
       try {
         await page.goto(appUrl(founder.pathname));
 
@@ -297,7 +303,7 @@ test.describe('Founder localized profile in the static export', () => {
     test(`${founder.locale} Founder keeps the CleverSoft S.A. entry, the profile and the native download without JavaScript`, async ({ browser, baseURL }) => {
       const context = await browser.newContext({ baseURL, viewport: { width: 1280, height: 900 }, javaScriptEnabled: false });
       const page = await context.newPage();
-      const source = fs.readFileSync(path.join(outDir, founder.cvFile));
+      const source = publicCv(founder.cvFile);
       try {
         await page.goto(appUrl(founder.pathname));
         const main = page.getByRole('main');

@@ -62,7 +62,7 @@ Discovery inspected `main` at **`550c953b6d0ef9580d2e1b5605684c9611559af4`** (me
 | Content ownership | `app/(es)/_content/founder.ts` and `app/(en)/en/_content/founder.ts` satisfy `FounderPageContent` (`components/founder/content-types.ts`). Experience entries have `period`, `role`, `context`, `summary`; `FounderProfessionalHistory.tsx` renders them in an `<ol>` with `data-founder-experience-entry` / `data-founder-period` hooks and the React key `period-role`. |
 | Current download | Both locales point to `/Samuel-Furlanich-CV.pdf`. `FounderProfessionalLinks.tsx` renders a native anchor with `withBasePath(content.cv.path)` and a hard-coded `download="Samuel-Furlanich-CV.pdf"`. Shared `DocumentLink` (`components/foundation/content-types.ts`) has only `label` and `path`; Founder is its only consumer. |
 | Legacy asset | `public/Samuel-Furlanich-CV.pdf` (194,201 bytes) is tracked on `main`. It is an English CV with no CleverSoft entry. Nothing outside the two Founder content files and `FounderProfessionalLinks.tsx` references it in `app/`, `components/` or `lib/`. Retained `data/about.json` (read by `lib/data.ts`) is migration input, not current public copy. |
-| Current experience | Two entries: independent practice since 2024, then the 2021 IT Technician internship. Biography paragraph 3 names `Software Developer at Clever Soft SA`. |
+| Current experience (at discovery; the independent-work year is now 2023 by OD-5) | Two entries: independent practice since 2024, then the 2021 IT Technician internship. Biography paragraph 3 names `Software Developer at Clever Soft SA`. |
 | Superseded rules | PAGE-FOUNDER (lines on biography-only employer, "two source-backed experience entries", preserved CV asset/download name), PORTFOLIO-MIGRATION, DESIGN-SFC-V1 ("Preserve `/Samuel-Furlanich-CV.pdf`, its download filename") and the status register's Founder facts encode the old contract. These are contract changes, not copy edits. |
 | Verifier contract | `scripts/verify-static-export.mjs` `assertFounderArtifact` requires exactly two entries and the literal `Clever Soft SA` outside headings (line 385), and checks the CV only as an `href` substring through `expectedPageLinkHref` (no trailing slash for files). **It never checks that a referenced PDF exists in `out/`, never reads the `download` attribute, and its text scan skips `.pdf` files.** New contracts must be added, not assumed. |
 | Fixture tests | `scripts/founder-export.test.mjs` builds two-entry fixtures with `Clever Soft SA` and filters verifier output to lines that start with `- <Founder HTML file>:` and match `/Founder\|portrait\|main landmark\|approved visible H1/`; new verifier messages must follow that format to be observable. Its HTTP test serves a temporary `Samuel-Furlanich-CV.pdf` fixture. |
@@ -123,7 +123,7 @@ Applied Skills: `writing-plans`, `architecture-governance`, `project-knowledge-m
 
 - Authoring, editing, translating, redesigning, compressing, tagging or redacting CV contents (the owner supplies final bytes).
 - A redirect, compatibility page or `Content-Disposition` header for the removed legacy URL (static export on GitHub Pages cannot provide one).
-- Changing the 2024 independent-work fact, the education wording, capabilities, MPC, Projects/Contact bridges, LinkedIn/GitHub URLs, layout, typography, styling or motion.
+- Changing the independent-work start year beyond OD-5 (2023), the education wording, capabilities, MPC, Projects/Contact bridges, LinkedIn/GitHub URLs, layout, typography, styling or motion.
 - Employer technology stack, seniority, customers, metrics, logos, links or any FURLANICH delivery claim drawn from CleverSoft work.
 - CI or deploy workflow changes (the CI coverage gap is recorded under Risks as follow-up input).
 - Editing retained `data/`, immutable ADR history, completed plans/reviews or Skill files.
@@ -144,11 +144,11 @@ Only the URL gains `/Portfolio`, exactly once; the asset location and download b
 
 ### Legacy CV removal (OD-2)
 
-Delete `public/Samuel-Furlanich-CV.pdf` in the same PR that adds both localized files, never before. After the change, no current source, test expectation, export artifact or current-requirement document references `/Samuel-Furlanich-CV.pdf` (the substring `Samuel-Furlanich-CV.pdf` does not match the localized names). Historical records keep their wording. Previously shared links return GitHub Pages' 404; this is the owner's accepted outcome, not a defect. Rollback restores the file through a revert of the merge commit.
+Delete `public/Samuel-Furlanich-CV.pdf` in the same PR that adds both localized files, never before. After the change, no current source, test expectation, export artifact or current-requirement document references `/Samuel-Furlanich-CV.pdf` (the substring `Samuel-Furlanich-CV.pdf` does not match the localized names). Historical records keep their wording. Previously shared links return GitHub Pages' 404; this is the owner's accepted outcome, not a defect. Rollback needs more than a revert of the merge commit: the owner removed the legacy file before this PR, so the rollback PR must also restore it (see step 8).
 
 ### Professional experience amendment
 
-Add **one entry first**, followed by the two existing entries unchanged and in their existing order. With OD-1 the list is ordered by start date, newest first: June 2026, 2024, 2021. Reuse the existing schema and renderer.
+Add **one entry first**, followed by the two existing entries unchanged and in their existing order. With OD-1 the list is ordered by start date, newest first: June 2026, 2023 (independent work, OD-5), 2021. Reuse the existing schema and renderer.
 
 | Field | Spanish | English |
 | --- | --- | --- |
@@ -168,7 +168,7 @@ Each condition below has a Task 1 test or an explicit gate:
 - **Same file behind two names:** literal locale URLs plus distinct source and download bytes catch accidental remapping; the owner confirms the actual language.
 - **Subpath handling:** exactly one `/Portfolio` prefix and no trailing slash on PDFs; the build and the browser server use the same base path.
 - **Legacy removal:** no file, link or payload reference survives, and nothing silently re-adds it.
-- **Corrected chronology:** June 2026 is the CleverSoft joining date; no role-change date is invented; independent work since 2024 is untouched.
+- **Corrected chronology:** June 2026 is the CleverSoft joining date; no role-change date is invented; independent work starts in 2023 (OD-5), matching both CVs.
 - **Longer list:** every previous fact and link survives; 320px reflow, 200% text growth, keyboard reachability and controlled Founder image diffs cover the added height.
 - **Publication:** the PDFs go public on merge. G1–G7 are closed before readiness.
 
@@ -236,7 +236,7 @@ Re-measure after GREEN. Any default count above 3200 requires the owner's record
 
 - [ ] **7. Regression and PR readiness.** Run the verification matrix from focused to broad, including clean root and `/Portfolio` builds, the artifact verifier and real exported browser downloads. Re-measure the case budget. Record fresh commands, results, warnings, SHA/base/environment, the final PDF hashes, the G1–G7 dispositions and the owner approvals in the receipt; state explicitly that the export and production-browser evidence is local only (CI does not run it). Self-review the whole diff from the frozen base with `pr-readiness`, then obtain the independent review and the human PR review. Focused commits; one Implementation PR to `main`; never merge or push to `main`. **Expected:** every acceptance criterion has evidence and every blocker is closed. The receipt and PR body include `Agent usage: primary claude-sonnet-5-5 (high); subagents 0/0; independent reviewer <actual resolved model, separate session>`.
 
-- [ ] **8. Publication, closeout and rollback.** In the same PR, following the PLAN-SPF-V1 Task 10 precedent, move this plan to `completed/` with `plan_status: COMPLETED` and wording that it **completes on the owner's merge of this PR**, and update the plan index and links. The PR body lists the owner's post-merge check: after the GitHub Pages deployment, open both Founder routes on the deployed site, download each CV, and confirm the locale, filename and file, and that `/Portfolio/Samuel-Furlanich-CV.pdf` returns 404. **Rollback:** if the deployed check fails, revert the merge commit (this restores the legacy file and the old contracts together) and reopen the work through a new bounded PR; never hot-fix `main` directly. **Expected:** the closeout claims nothing about the deployment that has not happened; any failure is recorded by the follow-up PR.
+- [ ] **8. Publication, closeout and rollback.** In the same PR, following the PLAN-SPF-V1 Task 10 precedent, move this plan to `completed/` with `plan_status: COMPLETED` and wording that it **completes on the owner's merge of this PR**, and update the plan index and links. The PR body lists the owner's post-merge check: after the GitHub Pages deployment, open both Founder routes on the deployed site, download each CV, and confirm the locale, filename and file, and that `/Portfolio/Samuel-Furlanich-CV.pdf` returns 404. **Rollback:** if the deployed check fails, revert the merge commit **and restore `public/Samuel-Furlanich-CV.pdf` from its last tracked revision** (`git show 93ec6d72^:public/Samuel-Furlanich-CV.pdf`: blob `de15b7ff`, 194,201 bytes, SHA-256 `adcb9accf74f55b02c77894a2fcd4f5c7c3fc69cc6290f007daad2700312cff9`) in the same human-reviewed rollback PR. The owner's commits `93ec6d72` and `1bcc1748` already removed that file and supplied the localized PDFs before this PR, so this PR's revert alone restores the legacy anchors without their file and leaves the CV actions at 404. Do not revert those owner commits, and validate the recovered download at root and `/Portfolio` (the revert alone restores the old contracts, not the legacy file) and reopen the work through a new bounded PR; never hot-fix `main` directly. **Expected:** the closeout claims nothing about the deployment that has not happened; any failure is recorded by the follow-up PR.
 
 ### RED/GREEN behavior table
 
@@ -313,12 +313,12 @@ Inspect `docs/index.md`, `docs/design/visual-language.md`, `docs/design/interact
 
 ## Risks and edge cases
 
-- **Inputs not yet publishable:** G1 (employer-targeted ES profile), G2 (embedded Content Credentials) and G4 (2023 vs 2024) block readiness. Never edit the PDFs, map both locales to one file or ship a draft to unblock.
-- **Merge is publication:** GitHub Pages deploys `main` with no verifier, so a wrong file or broken link is public at once. Local root and `/Portfolio` export evidence, the owner's post-merge check and the revert path are the controls.
+- **Inputs not yet publishable (history; dispositioned 2026-10-20, see the receipt):** G1 (employer-targeted ES profile), G2 (embedded Content Credentials) and G4 (2023 vs 2024) blocked readiness. Never edit the PDFs, map both locales to one file or ship a draft to unblock.
+- **Merge is publication:** GitHub Pages deploys `main` with no verifier, so a wrong file or broken link is public at once. Local root and `/Portfolio` export evidence, the owner's post-merge check and the revert-plus-restore path in step 8 are the controls.
 - **CI does not cover the export:** neither `verify:static-export` nor the production family runs in CI, so a later regression in PDF emission or download pairing would not be caught there. Recorded as follow-up input; adding a CI step is outside this plan.
 - **Case budget:** the default list sits five cases under its 3200 envelope. Fold assertions into existing cases; an increase needs recorded owner approval.
 - **Legacy link breakage:** external links to `/Portfolio/Samuel-Furlanich-CV.pdf` 404 after merge (OD-2, accepted). No redirect is possible.
-- **Chronology:** June 2026 is now the joining date (OD-1). No role-change month is invented; independent work since 2024 stays as approved, even though both CVs say 2023 (G4).
+- **Chronology:** June 2026 is now the joining date (OD-1). No role-change month is invented; independent work starts in 2023 (OD-5), which resolves G4 and matches both CVs.
 - **Stale contract enforcement:** content alone would fail the old count and spelling checks, while the old `role`-only employer test would wrongly pass. Update the owning requirements and their consumers together, keeping the other protections.
 - **Native download variance:** response bytes, suggested filename and Enter activation across three engines are the evidence; an `href` check is insufficient, and a PDF signature never proves content or language.
 - **Build contamination and URL normalization:** separate clean builds are required; route helpers append `/` to paths. Never double the base prefix or make assets relative to the nested route.

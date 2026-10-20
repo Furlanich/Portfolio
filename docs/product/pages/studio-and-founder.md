@@ -724,7 +724,7 @@ This revision changes role framing only. It does not change dates, experience, e
 
 **Owner request and decisions of 2026-10-20**, executed by [PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE](../../plans/active/founder-localized-cv-and-experience.md). This amendment is the current authority for the Founder CV downloads and the CleverSoft S.A. experience entry. It supersedes, and labels as history, the biography-only employer rule, the "two source-backed experience entries" contract and the preserved `public/Samuel-Furlanich-CV.pdf` asset and download name. Every other approved fact, the deferred portrait scope and the deferred CV-redesign scope are unchanged (the owner supplies the CV files; this is not a redesign).
 
-**Corrected fact (OD-1).** Samuel joined CleverSoft S.A. in **June 2026** as a Support Analyst and later moved into the Software Developer role. The date of the role change is not stated and must not be invented. The independent-work fact (since 2024) is unchanged.
+**Corrected fact (OD-1).** Samuel joined CleverSoft S.A. in **June 2026** as a Support Analyst and later moved into the Software Developer role. The date of the role change is not stated and must not be invented. The independent-work fact is governed by OD-5 below (since 2023).
 
 **Independent-work start year (OD-5).** The owner corrected the start of FURLANICH / independent work to **2023** so the site matches the CVs. The Spanish biography says `Trabaja de forma independiente desde 2023`, the English biography `He has worked independently since 2023`, and the first existing experience entry's period is `Desde 2023` / `Since 2023`. Nothing else in either text changes.
 
@@ -739,7 +739,7 @@ Labels stay `Descargar CV` / `Download CV`; the order stays CV, LinkedIn, GitHub
 
 **Legacy CV removal (OD-2).** `public/Samuel-Furlanich-CV.pdf` is removed. The legacy URL returns the GitHub Pages 404 (a static export cannot redirect); this is the owner's accepted outcome. No current source, test expectation or export artifact references `/Samuel-Furlanich-CV.pdf`.
 
-**Experience entry (OD-3).** One entry is added first; the two existing entries follow unchanged and in order (June 2026, 2024, 2021).
+**Experience entry (OD-3).** One entry is added first; the two existing entries follow in order and unchanged except that the independent-work period is `Desde 2023` / `Since 2023` (OD-5). The list is June 2026, 2023, 2021.
 
 | Field | Spanish | English |
 | --- | --- | --- |
