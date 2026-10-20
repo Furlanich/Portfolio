@@ -50,6 +50,7 @@ last_verified: 2026-10-20
 | OD-2 | **Remove `public/Samuel-Furlanich-CV.pdf`** once the two localized files are in the repository. | The legacy URL becomes a 404 on GitHub Pages (static export cannot redirect). Supersedes revision 1's "keep the legacy PDF unchanged". |
 | OD-3 | **The new summary matches the voice of the existing entries** (impersonal, noun-phrase Spanish; subjectless English). | Replaces revision 1's third-person narrative copy. |
 | OD-4 | Revise this plan and push it to PR #177. | Authorizes this documentation revision only; implementation still awaits plan acceptance. |
+| OD-5 | **Independent work and FURLANICH start in 2023** (owner, 2026-10-20, during implementation). | Supersedes the 2024 start year in the biography paragraph and the independent-work entry (`Desde 2023` / `Since 2023`); resolves G4. Supersedes the Non-goal that kept the 2024 fact. |
 
 ## Current-state findings
 
@@ -82,7 +83,7 @@ During plan review the owner's main checkout (`D:/Projects/NextJS/Portfolio`, br
 | `public/Samuel-Furlanich-CV-ES.pdf` | 195,961 | `a9a6611486af5311b59557785d0c56ff328ac3c94e4d239efbe24e584b250120` | Spanish, one page. CleverSoft S.A. "Desarrollador de Software y Analista de Soporte, 2026 - Actualidad"; FURLANICH "2023 - Actualidad"; UBA "Graduado · 2022 - 2025". | `%PDF-1.7`; document `/Lang(en-US)`; **one embedded file named "Content Credentials"** (a C2PA provenance manifest); no local paths found. |
 | `public/Samuel-Furlanich-CV-EN.pdf` | 194,212 | `02f5b438d3e28f6f164856da90ac12aa281c780e9a3d8afdc77be518c3565625` | English, one page. CleverSoft SA "Software Developer, 2026 - Today" and "Support Analyst, 2026 - Today"; FURLANICH "2023 – Today"; UBA "Bachelor Degree 2022 – 2025". | `%PDF-1.5`; pdfTeX/hyperref; empty Author/Title; no embedded files, JavaScript, forms or local paths found. |
 
-**Input gate findings. The owner disposes of each before Task 1 can be declared ready:**
+**Input gate findings. The owner disposes of each before Task 1 can be declared ready.** *Dispositions given 2026-10-20 (history; see the [receipt](../../reviews/founder-localized-cv-and-experience.md)): G1, G6 and G7 addressed by replacement files; G2, G3 and G5 dismissed as not relevant; G4 resolved by OD-5 (the site now says 2023). The files in the table below are the superseded drafts; the final hashes are in the receipt.*
 
 | ID | Finding | Required disposition |
 | --- | --- | --- |
@@ -326,7 +327,7 @@ Inspect `docs/index.md`, `docs/design/visual-language.md`, `docs/design/interact
 
 ## Progress
 
-Implementation of Task 1 ran on 2026-10-20 in an isolated worktree on `codex/founder-localized-cv-experience` (Claude Sonnet 5.5, 0 subagents) and is recorded in the [receipt](../../reviews/founder-localized-cv-and-experience.md): documentation amendment, failing-first tests, implementation, and local root and `/Portfolio` verification. **Not complete.** Gates G1, G2 and G4 on the owner's PDFs, owner approval of the four Founder visual baselines, the independent Codex review and CI remain open, and the plan stays `active`. Revision 2 recorded OD-1 to OD-4 and the received PDF drafts (G1–G7).
+Implementation of Task 1 ran on 2026-10-20 (OD-5 and the owner's gate dispositions applied the same day) in an isolated worktree on `codex/founder-localized-cv-experience` (Claude Sonnet 5.5, 0 subagents) and is recorded in the [receipt](../../reviews/founder-localized-cv-and-experience.md): documentation amendment, failing-first tests, implementation, and local root and `/Portfolio` verification. **Not complete.** Owner approval of the four Founder visual baselines, the independent Codex review and CI remain open, and the plan stays `active`. Revision 2 recorded OD-1 to OD-4 and the received PDF drafts (G1–G7).
 
 **Authorized first implementation task (after plan acceptance): Task 1 / PR 1 – Localize Founder CV downloads and add CleverSoft experience.** This is the only implementation handoff: Claude Sonnet 5.5 High in one isolated worktree on a `codex/` branch, starting at step 1 and following the TDD sequence. There is no Task 2, parallel packet, delegated work, separate governance PR or merge authority. G1–G7 and the baseline approval are completion gates, not permission to substitute content.
 
@@ -342,3 +343,4 @@ Implementation of Task 1 ran on 2026-10-20 in an isolated worktree on `codex/fou
 - The legacy PDF deletion and the two PDF additions were already on `main` (`93ec6d72`), so Task 1 step 1 imported nothing and the PR carries no binary changes; the legacy-absence contract is asserted by tests instead.
 - No pre-change `/Portfolio` production RED run; see the receipt's Rulings.
 - The plan was not moved to `completed/` (step 8) because completion gates are open.
+- OD-5 changed the 2024 independent-work fact during execution; the Non-goal that kept it is superseded.

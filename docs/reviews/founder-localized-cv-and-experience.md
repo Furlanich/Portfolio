@@ -4,7 +4,7 @@ Evidence record, not a requirements owner: [PAGE-FOUNDER](../product/pages/studi
 
 ## Status
 
-Implementation and local verification are complete on branch `codex/founder-localized-cv-experience`. **The branch is not ready to merge**: input gates G1, G2 and G4 are unresolved blockers, visual-baseline approval is open, the independent Codex review has not run and CI has not run. Merging publishes both PDFs.
+Implementation and local verification are complete on branch `codex/founder-localized-cv-experience`. The owner dispositioned the PDF input gates on 2026-10-20 (below) and decided OD-5 (independent work starts in 2023). **Open before merge:** owner approval and adoption of the four Founder visual baselines, the independent Codex review and the CI run. Merging publishes both PDFs.
 
 ## Identity
 
@@ -12,36 +12,40 @@ Implementation and local verification are complete on branch `codex/founder-loca
 | --- | --- |
 | Primary agent | Anthropic Claude Code, Claude Sonnet 5.5 (`claude-sonnet-5-5`), single session, no subagents (0/0). The effort level was not selectable from inside the session and is not asserted here. |
 | Independent reviewer | Not yet run. Required: a fresh top-level OpenAI Codex review through the `codex` plugin; record its resolved model here. |
-| Frozen base | `main` at `93ec6d72` (after PR #177 and the owner's CV commit). |
+| Frozen base | `main` at `1bcc1748` ("Updated CVs", the owner's replacement PDFs, after `93ec6d72` and PR #177). The branch was rebased onto it before the final verification. |
 | Checkout | `D:/Projects/NextJS/Portfolio/.worktrees/founder-cv`, branch `codex/founder-localized-cv-experience`. |
-| Commits | `2dd8d309` documentation amendment; `5de64f0b` failing-first tests; `3cef8c7f` implementation; later commits record documentation and this receipt. |
+| Commits | Documentation amendment; failing-first tests; implementation; implementation receipt; removal of generated files; the 2023 start-year change (tests first, then content and documentation). `git log 1bcc1748..HEAD` lists them. |
 
 ## PDF provenance
 
-The owner committed both files to `main` in `93ec6d72` (which also deleted the legacy PDF) before implementation started. Their hashes equal the drafts recorded in the plan. This session did not edit, regenerate, translate or redact any PDF byte.
+The owner committed the final localized PDFs to `main` in `1bcc1748`, replacing the drafts of `93ec6d72` that the plan recorded. This session did not edit, regenerate, translate or redact any PDF byte. The legacy `public/Samuel-Furlanich-CV.pdf` was already deleted on `main` by `93ec6d72`.
 
 | File | Bytes | SHA-256 |
 | --- | --- | --- |
-| `public/Samuel-Furlanich-CV-ES.pdf` | 195,961 | `a9a6611486af5311b59557785d0c56ff328ac3c94e4d239efbe24e584b250120` |
-| `public/Samuel-Furlanich-CV-EN.pdf` | 194,212 | `02f5b438d3e28f6f164856da90ac12aa281c780e9a3d8afdc77be518c3565625` |
+| `public/Samuel-Furlanich-CV-ES.pdf` | 567,743 | `03cba5de1384a196a3f963e3fec4b531c45aa4685ab8576815ef439944278308` |
+| `public/Samuel-Furlanich-CV-EN.pdf` | 88,517 | `25e62e977c770baf5df6233cbb7ac24692e76d0ab92493236728b5258d064aee` |
 
-The exported copies in both the root and `/Portfolio` builds hash identically. The legacy `public/Samuel-Furlanich-CV.pdf` is absent from the repository and from `out/`.
+The exported copies in both the root and `/Portfolio` builds hash identically to these files, and the export contains no legacy CV. Extracted text confirms a Spanish ES file and an English EN file, each one page, with the CleverSoft S.A. role, FURLANICH from 2023 and the University of Buenos Aires degree.
 
 ## Input gate dispositions
 
-No owner disposition has been given in this session. Committing the files to `main` is not treated as one.
+Owner dispositions, given in chat on 2026-10-20 after the first implementation pass.
 
-| ID | Finding | Re-observed in the committed files | Disposition |
-| --- | --- | --- | --- |
-| G1 | The ES profile addresses one employer. | Yes: the ES summary says Samuel seeks to contribute to "Grupo Andreoli" in the agricultural sector. | **OPEN, BLOCKER.** |
-| G2 | The ES file embeds a "Content Credentials" attachment. | Yes: the marker appears twice in the ES bytes. Its content was not inspected. | **OPEN, BLOCKER.** |
-| G3 | The ES file declares `/Lang(en-US)`. | Yes (`/Lang(en-US)` in the ES file). | **OPEN** (SHOULD). |
-| G4 | Both CVs start FURLANICH in 2023; the site says 2024. | Yes: both PDFs print `2023`. The site fact is unchanged. | **OPEN, BLOCKER.** |
-| G5 | CV says `Graduado` / `Bachelor Degree`; the site says `Estudios completados` / `Studies completed`. | Yes. | **OPEN**: owner to confirm. |
-| G6 | EN CV spells `CleverSoft SA`; the site uses `CleverSoft S.A.`. | Yes. | **OPEN**: cosmetic, owner choice. |
-| G7 | Both files publish email and phone. | Not re-checked; the plan records it. | **OPEN**: owner to confirm. |
+| ID | Finding | Disposition |
+| --- | --- | --- |
+| G1 | The first ES draft addressed one employer. | **Addressed by the owner**: the replacement ES file's profile no longer names an employer (re-read in this session). |
+| G2 | The ES file embeds a "Content Credentials" attachment. | **Dismissed by the owner** as not relevant. The marker is still present in the ES bytes. |
+| G3 | The ES file declares `/Lang(en-US)`. | **Dismissed by the owner** as not relevant. The declaration is still present. |
+| G4 | The CVs start FURLANICH in 2023; the site said 2024. | **Resolved by changing the site** (OD-5): the biographies and the independent-work entry now start in 2023. The CVs are unchanged. |
+| G5 | The CVs say `Graduado` / `Bachelor Degree`; the site says `Estudios completados` / `Studies completed`. | **Dismissed by the owner** as not relevant. The site wording is unchanged. |
+| G6 | The EN CV spelled the employer `CleverSoft SA`. | **Addressed by the owner**: both replacement files print `CleverSoft S.A.`. |
+| G7 | Both files publish email and phone. | **Addressed by the owner.** The replacement files still print an email address and a phone number. |
 
-The owner's language confirmation (ES file is Spanish, EN file is English) is also still pending; a PDF signature never proves language, and the text extracted in this session shows a Spanish ES file and an English EN file.
+The owner has not separately confirmed the language of each file; the text extraction in this session shows Spanish for ES and English for EN.
+
+## OD-5: independent work starts in 2023
+
+Owner instruction of 2026-10-20: change the biography paragraph and the professional experience to start FURLANICH / independent work in 2023. Test expectations changed first (`founder-content.test.mjs` failed 1 of 4 against the old content, then passed), then `Trabaja de forma independiente desde 2023`, `He has worked independently since 2023`, `Desde 2023` and `Since 2023` replaced the 2024 values. PAGE-FOUNDER, PORTFOLIO-MIGRATION and the status register mark the 2024 statements as superseded. No other text changed.
 
 ## RED to GREEN
 
@@ -72,13 +76,15 @@ The pre-change `/Portfolio` production run was not repeated: the base-path logic
 | Root clean build, `verify:static-export`, production Founder cases (chromium, firefox, webkit) | verifier passed, 15/15. |
 | `/Portfolio` clean build, same | verifier passed ("base path /Portfolio"), 15/15. |
 | Default case count | 3195 before and after (envelope 3200, unchanged). No net new default cases. |
+
+The table above was re-run in full after the rebase onto `1bcc1748` and the OD-5 change (Node 61/61, Founder browser 14/14, responsive 48/48, axe 4/4, both exports and 15/15 production cases each, `validate`, `skills:check`, `diff --check`, visual 4 failed), with the same results.
 | `npm run test:e2e -- tests/e2e/visual/founder.visual.spec.ts --project=visual-chromium` | **4 failed, as expected**: the added entry changes page height. Baselines were not updated. |
 
 The export and production-browser evidence is local only; CI runs neither `verify:static-export` nor the production family.
 
 ## Rulings
 
-- **PDFs and legacy deletion arrived on `main` first.** The plan said to delete the legacy file in the same PR as the additions. The owner's commit `93ec6d72` already did both, so the PR does not contain those binary changes. The plan's intent (no legacy file, no references, both localized files present) is asserted by tests and by the verifier. Cost if wrong: none for the end state; the interim `main` served a dead CV link between that commit and this PR.
+- **PDFs and legacy deletion arrived on `main` first.** The plan said to delete the legacy file in the same PR as the additions. The owner's commits `93ec6d72` and `1bcc1748` already did both, so the PR does not contain those binary changes. The plan's intent (no legacy file, no references, both localized files present) is asserted by tests and by the verifier. Cost if wrong: none for the end state; the interim `main` served a dead CV link between that commit and this PR.
 - **No pre-change `/Portfolio` production run.** One pre-change RED run at the root base was enough to witness the failures; the base path adds no distinct code path to the Founder anchor. The `/Portfolio` base is covered by the fixture tests (accepted profile and doubled prefix at `/Portfolio`) and by the post-change run. Cost if wrong: a base-specific RED not witnessed.
 - **Plan not moved to `completed/`.** Step 8 asked for this in the same PR. Gates G1, G2 and G4, the visual approval and the independent review are open, so the plan stays `active` and claims nothing. Cost if wrong: one follow-up documentation change after the owner's merge.
 - **Legacy and distinct-hash verifier checks report under the first Founder file.** They are once-per-export checks with no natural page; the prefix keeps them observable by the existing fixture filter, as the plan required.
