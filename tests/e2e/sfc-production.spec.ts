@@ -3,13 +3,17 @@ import path from 'node:path';
 import { expect, test, type Browser, type Page } from '@playwright/test';
 import { buildRouteClosure, chunkImports, CONNECTED_HOST_MARKERS, findOptionalCodeInCriticalChunks, OPTIONAL_ENGINE_MARKERS } from '../../lib/connected-studio/measurement';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
+import { setConnectedTestHook } from './support/connected-studio-test-hooks';
 
 // PLAN-SFC-V1 Task 14: the Studio, Founder and Contact pages as the clean static export ships them. This spec runs
 // only in the `sfc-production-{chromium,firefox,webkit}` projects (PLAYWRIGHT_SERVE_EXPORT=1), against `out/` served
-// by scripts/serve-static-export.mjs. Both live tiers are off in every merged build, so these pages are complete
-// static pages: their own matched poster (the responsive variant only), no host, no canvas, no optional engine
-// request and no engine-only code in anything they load. The production build compiles the diagnostics hook out, so
-// everything here is the public DOM, the network and the emitted files.
+// by scripts/serve-static-export.mjs. Since Task 18 the shipped policy is { wide: true, compact: false }: the host is
+// attached to the three pages through the live-host seam and goes live for an eligible wide visitor, while every other
+// visitor (compact, reduced motion, Save-Data, no hardware WebGL2) keeps a complete static page: their own matched poster
+// (the responsive variant only), no canvas, no optional engine request and no engine-only code in anything they load.
+// The production build compiles the diagnostics hook out, so everything here is the public DOM, the network and the
+// emitted files; the live cases open the software-renderer gate through the controlled test hook (SwiftShader) and are
+// functional evidence, never hardware acceptance.
 
 test.describe.configure({ timeout: 90_000 });
 
@@ -47,8 +51,12 @@ const assetPath = (file: string): string => appPathname('/').slice(0, -1) + file
 
 type Observed = { posters: string[]; scripts: string[] };
 
+/**
+ * Reduced motion is how the static page is reached on a wide viewport in every engine: since Task 18 a wide visitor whose browser reports
+ * a hardware WebGL2 renderer goes live, and whether a headless engine reports one depends on the machine. The compact tier is static by policy.
+ */
 async function load(browser: Browser, baseURL: string | undefined, viewport: { width: number; height: number }, pathname: string): Promise<{ page: Page; observed: Observed; close: () => Promise<void> }> {
-  const context = await browser.newContext({ baseURL, viewport });
+  const context = await browser.newContext({ baseURL, viewport, reducedMotion: 'reduce' });
   const page = await context.newPage();
   const observed: Observed = { posters: [], scripts: [] };
   page.on('request', (request) => {
@@ -72,7 +80,7 @@ test.describe('the Atlas pages in the static export', () => {
   ] as const;
 
   for (const { route, locale, pathname } of atlasPages) {
-    test(`${route}/${locale} ships its own matching poster, no host, no canvas and no optional engine request`, async ({ browser, baseURL }) => {
+    test(`${route}/${locale} ships its own matching poster, no canvas and no engine request to an ineligible visitor`, async ({ browser, baseURL }) => {
       const engine = engineChunkNames();
       expect(engine.length, 'the engine closure was found in the export').toBeGreaterThan(0);
 
@@ -112,24 +120,79 @@ test.describe('the Atlas pages in the static export', () => {
     });
   }
 
-  // The Task 14 finding, fixed in Task 16: Studio, Founder and Contact used a Ground that imported the host for Services and
-  // Projects, so a policy-disabled page referenced the whole host chunk (about 13.7 KiB Brotli, 42 KB raw, about 90 ms of
-  // desktop startup CPU). They now use a Ground that cannot reach it (scripts/sfc-contracts.test.mjs walks the import graph).
-  test('a policy-disabled Atlas page references no connected host code', async () => {
+  // The Task 14 finding, fixed in Task 16 and resolved the other way in Task 18: the host chunk (about 13.7 KiB Brotli) reaches
+  // an Atlas page only through the live-host seam (scripts/sfc-contracts.test.mjs walks the import graph). Now that the wide
+  // tier is qualified the seam is filled, so every Atlas page references the host and names the optional engine entry the host
+  // loads on demand, while the engine itself stays out of everything the page references.
+  test('every Atlas page references the host through the seam and keeps the engine optional', async () => {
     for (const { route, locale, pathname } of atlasPages) {
       const closure = emittedClosure(pathname);
-      expect(closure.entries, `${route}/${locale}: the page names no optional entry chunk (the shipped host names the engine loader)`).toEqual([]);
+      expect(closure.entries.length, `${route}/${locale}: the host names the optional engine entry`).toBeGreaterThan(0);
       const scripts = closure.referenced.filter((item) => item.endsWith('.js'));
-      expect(
-        findOptionalCodeInCriticalChunks({ chunks: scripts.map((item) => ({ path: item, text: fs.readFileSync(path.join(outDir, '_next', 'static', item), 'utf8') })), markers: CONNECTED_HOST_MARKERS }),
-        `${route}/${locale}: no referenced script carries the host`,
-      ).toEqual([]);
+      const chunks = scripts.map((item) => ({ path: item, text: fs.readFileSync(path.join(outDir, '_next', 'static', item), 'utf8') }));
+      expect(findOptionalCodeInCriticalChunks({ chunks, markers: CONNECTED_HOST_MARKERS }).length, `${route}/${locale}: a referenced script carries the host`).toBeGreaterThan(0);
+      expect(findOptionalCodeInCriticalChunks({ chunks, markers: OPTIONAL_ENGINE_MARKERS }), `${route}/${locale}: no referenced script carries engine-only code`).toEqual([]);
     }
   });
 
+  // Controlled functional evidence on SwiftShader (Chromium only): the hook opens the software-renderer gate and nothing else, so the
+  // policy under test is the one the build ships.
+  for (const { route, locale, pathname } of atlasPages) {
+    test(`${route}/${locale}: the shipped policy takes an eligible wide visitor live and keeps compact and ineligible visitors static`, async ({ browser, baseURL, browserName }) => {
+      test.skip(browserName !== 'chromium', 'WebGL2 on SwiftShader is exercised in Chromium only');
+      const engine = engineChunkNames();
+      const open = async (viewport: { width: number; height: number }, arrange?: (page: Page) => Promise<void>) => {
+        const context = await browser.newContext({ baseURL, viewport });
+        const page = await context.newPage();
+        const requested: string[] = [];
+        page.on('request', (request) => {
+          const chunk = decodeURIComponent(new URL(request.url()).pathname).match(/_next\/static\/(chunks\/[A-Za-z0-9._-]+\.js)$/)?.[1];
+          if (chunk && engine.includes(chunk)) requested.push(chunk);
+        });
+        await setConnectedTestHook(page, { allowSoftwareRenderer: true });
+        await arrange?.(page);
+        await page.goto(appUrl(pathname));
+        return { page, requested, close: () => context.close() };
+      };
+
+      const wide = await open({ width: 1440, height: 900 });
+      try {
+        await expect(wide.page.locator('main [data-connected-ground]')).toHaveAttribute('data-connected-live', 'true', { timeout: 45_000 });
+        await expect(wide.page.locator('main [data-connected-ground] canvas')).toHaveCount(1);
+        await expect(wide.page.locator(`#connected-pause-${route} button`)).toHaveCount(1);
+        expect(wide.requested.length, 'the engine was requested for the eligible visitor').toBeGreaterThan(0);
+      } finally {
+        await wide.close();
+      }
+
+      const ineligible: Array<{ name: string; viewport: { width: number; height: number }; arrange?: (page: Page) => Promise<void> }> = [
+        { name: 'the unqualified compact tier', viewport: { width: 390, height: 844 } },
+        { name: 'reduced motion', viewport: { width: 1440, height: 900 }, arrange: async (page) => { await page.emulateMedia({ reducedMotion: 'reduce' }); } },
+        {
+          name: 'Save-Data',
+          viewport: { width: 1440, height: 900 },
+          arrange: async (page) => {
+            await page.addInitScript(() => Object.defineProperty(navigator, 'connection', { configurable: true, value: { saveData: true, addEventListener() {}, removeEventListener() {} } }));
+          },
+        },
+      ];
+      for (const gate of ineligible) {
+        const stayed = await open(gate.viewport, gate.arrange);
+        try {
+          await stayed.page.waitForTimeout(2_000);
+          await expect(stayed.page.locator('canvas'), `${gate.name}: no canvas`).toHaveCount(0);
+          await expect(stayed.page.locator('main [data-connected-ground]'), `${gate.name}: not live`).not.toHaveAttribute('data-connected-live', 'true');
+          expect(stayed.requested, `${gate.name}: no engine chunk was requested`).toEqual([]);
+        } finally {
+          await stayed.close();
+        }
+      }
+    });
+  }
+
   test('a failed poster leaves the reading page complete on the CSS chart in every engine', async ({ browser, baseURL }) => {
     for (const { route, pathname } of [atlasPages[0], atlasPages[2], atlasPages[4]]) {
-      const context = await browser.newContext({ baseURL, viewport: { width: 1440, height: 900 } });
+      const context = await browser.newContext({ baseURL, viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
       const page = await context.newPage();
       const errors: string[] = [];
       page.on('pageerror', (error) => errors.push(error.message));

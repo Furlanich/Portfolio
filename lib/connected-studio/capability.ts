@@ -3,10 +3,12 @@ import { getQualityForTier, isConnectedTier } from './model.ts';
 import type { ConnectedLivePolicy, ConnectedMode, SceneGateInput } from './types';
 
 /**
- * Per-tier live policy (OD-2/OD-4). `wide` covers the wide and tablet tiers. Every merged build
- * ships both false; only a bounded follow-up PR carrying passing hardware evidence turns a tier on.
+ * Per-tier live policy (OD-2/OD-4). `wide` covers the wide and tablet tiers. A tier is turned on only by a bounded
+ * enablement PR that carries its qualification: PLAN-SFC-V1 Task 18 enabled `wide` on the owner's acceptance of the
+ * wide tier (docs/reviews/studio-founder-contact-acceptance-v1/task-15.md). `compact` has no qualification and stays
+ * off, so a constrained phone keeps the complete static page until a later numbered packet enables it.
  */
-export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object.freeze({ wide: false, compact: false });
+export const CONNECTED_LIVE_POLICY: ConnectedLivePolicy = Object.freeze({ wide: true, compact: false });
 
 /**
  * Fail-closed gate: the live scene only runs when every condition is the exact expected boolean.

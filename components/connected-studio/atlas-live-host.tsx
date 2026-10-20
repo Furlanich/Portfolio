@@ -1,5 +1,6 @@
 import type { ConnectedWordBinding, ProfileConnectedRoute } from '@/lib/connected-studio/types';
 import type { Locale } from '@/lib/locales';
+import { ConnectedStudioEnhancement } from './ConnectedStudioEnhancement';
 
 type AtlasLiveHostProps = {
   route: ProfileConnectedRoute;
@@ -8,18 +9,18 @@ type AtlasLiveHostProps = {
 };
 
 /**
- * The Studio, Founder and Contact live-host seam. Every merged build ships it empty: it imports nothing, so
- * a policy-disabled page carries no host code, no session keys and no engine reference (PLAN-SFC-V1 Task 16;
- * the production check "a policy-disabled Atlas page references no connected host code" holds this).
+ * The Studio, Founder and Contact live-host seam, and the only place the connected host attaches to an Atlas page.
+ * Until PLAN-SFC-V1 Task 18 it was empty, so a policy-disabled build carried no host code; the Task 18 enablement PR
+ * made the two-file change together: the wide tier in `lib/connected-studio/capability.ts` and this body, which
+ * renders `ConnectedStudioEnhancement` with these props. The host gates itself: it requests no engine and draws
+ * nothing unless the visitor, the device and the policy all allow it, so a compact phone, a reduced-motion or
+ * Save-Data visitor and a software renderer keep the complete static page.
  *
- * Enabling a qualified tier is a bounded change of two files, made together in the Task 18 enablement PR:
- * `lib/connected-studio/capability.ts` (the per-tier policy) and this module, whose body then imports
- * `ConnectedStudioEnhancement` and renders it with these props. `tests/fixtures/sfc/live-policy.patch` does
- * exactly that for the controlled runtime candidate. The empty seam cannot be enabled by a flag alone, which is
- * intended: a flag cannot make a bundler drop an import, and shipping the host to disabled pages cost
- * 27 to 144 ms of startup CPU in the Task 14 measurement.
+ * It stays the single import path (scripts/sfc-contracts.test.mjs walks the module graph): the shared static
+ * ground never imports the host, and the host chunk (about 13.7 KiB Brotli) reaches the three Atlas pages only here.
+ * Next ships a client component's chunk with every page that can reach it, whether or not the tier is enabled for the
+ * visitor, which is why the compact tier pays the host's bytes and startup cost while it stays static (Task 18 receipt).
  */
-export function AtlasLiveHost(props: AtlasLiveHostProps): null {
-  void props;
-  return null;
+export function AtlasLiveHost({ route, locale, wordBindings }: AtlasLiveHostProps) {
+  return <ConnectedStudioEnhancement route={route} locale={locale} wordBindings={wordBindings} />;
 }

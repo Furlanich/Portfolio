@@ -23,11 +23,28 @@ test('an eligible visitor on a policy-enabled tier gets the live scene', () => {
   for (const tier of ['wide', 'tablet', 'compact']) assert.equal(gate({ tier }), 'webgl', tier);
 });
 
-test('the shipped live policy keeps every tier static until hardware evidence enables it', () => {
-  assert.deepEqual({ ...CONNECTED_LIVE_POLICY }, { wide: false, compact: false });
+test('the shipped live policy enables the qualified wide tier and leaves the unqualified compact tier static (PLAN-SFC-V1 Task 18)', () => {
+  assert.deepEqual({ ...CONNECTED_LIVE_POLICY }, { wide: true, compact: false });
   assert.ok(Object.isFrozen(CONNECTED_LIVE_POLICY), 'the shipped policy is immutable');
-  for (const tier of ['wide', 'tablet', 'compact']) {
-    assert.equal(gate({ tier, livePolicy: CONNECTED_LIVE_POLICY }), 'static', `${tier} must stay static under the shipped policy`);
+  for (const tier of ['wide', 'tablet']) {
+    assert.equal(gate({ tier, livePolicy: CONNECTED_LIVE_POLICY }), 'webgl', `${tier} is live under the shipped policy for an eligible visitor`);
+  }
+  assert.equal(gate({ tier: 'compact', livePolicy: CONNECTED_LIVE_POLICY }), 'static', 'compact has no qualification and stays static');
+});
+
+test('under the shipped policy every failed gate still keeps the qualified tiers static (preference, Save-Data, WebGL2, software renderer, context loss, load, visibility)', () => {
+  for (const tier of ['wide', 'tablet']) {
+    for (const overrides of [
+      { reducedMotion: true },
+      { saveData: true },
+      { webgl2: false },
+      { softwareRenderer: true },
+      { sessionContextLost: true },
+      { loaded: false },
+      { visible: false },
+    ]) {
+      assert.equal(gate({ tier, livePolicy: CONNECTED_LIVE_POLICY, ...overrides }), 'static', `${tier} ${JSON.stringify(overrides)}`);
+    }
   }
 });
 

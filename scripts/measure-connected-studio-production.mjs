@@ -26,7 +26,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { chromium } from 'playwright';
-import { buildRouteClosure, chunkImports, findOptionalCodeInCriticalChunks, OPTIONAL_CLOSURE_LIMIT_BYTES } from '../lib/connected-studio/measurement.ts';
+import { buildRouteClosure, CONNECTED_HOST_MARKERS, chunkImports, findOptionalCodeInCriticalChunks, OPTIONAL_CLOSURE_LIMIT_BYTES, OPTIONAL_ENGINE_MARKERS } from '../lib/connected-studio/measurement.ts';
 import { createExportServer, normalizeBasePath } from './serve-static-export.mjs';
 
 const root = process.cwd();
@@ -47,9 +47,9 @@ const DESTINATIONS = [
 ];
 const POSTER_CEILINGS = { wide: 150 * KIB, compact: 80 * KIB };
 const POSTER_ROUTES = ['services', 'projects', 'studio', 'founder', 'contact'];
-// PLAN-SFC-V1 Task 14: the Atlas pages ship policy-disabled, so their static release must carry the poster, no host
-// and no optional request: nothing of the optional closure may be referenced by their HTML or requested by the page,
-// and no script they request may carry engine-only code.
+// PLAN-SFC-V1 Task 14 and Task 18: the Atlas pages carry the poster and, since the wide tier was enabled, the host through the
+// live-host seam. The optional engine closure stays lazy: nothing of it may be referenced by their HTML or requested by an
+// ineligible visitor's page, no script they reference may carry engine-only code, and the closure is gated like Services' and Projects'.
 const ATLAS_DESTINATIONS = [
   { route: 'studio', locale: 'es', pathname: '/estudio/' },
   { route: 'studio', locale: 'en', pathname: '/en/about/' },
@@ -199,7 +199,7 @@ try {
       if (bytes > POSTER_CEILINGS[quality]) failures.push(`poster ${route}-${quality} is ${bytes} bytes, above ${POSTER_CEILINGS[quality]}`);
     }
   }
-  // The Atlas pages: poster present, the host and the optional closure absent, whatever the preference path.
+  // The Atlas pages: poster and host present, the optional closure and engine code absent from the page and from a static visitor's requests.
   const closureUnion = new Set(report.destinations.flatMap((item) => item.closure.chunks.map((chunk) => chunk.path)));
   for (const destination of ATLAS_DESTINATIONS) {
     const tag = `${destination.route}/${destination.locale}`;
@@ -208,7 +208,9 @@ try {
     const html = fs.readFileSync(path.join(outDir, ...destination.pathname.split('/').filter(Boolean), 'index.html'), 'utf8');
     const posterRefs = [...html.matchAll(/brand\/connected-studio\/([a-z]+)-(wide|compact)\.webp/g)].map((match) => `${match[1]}-${match[2]}`);
     const scripts = referenced.filter((item) => item.endsWith('.js')).map((item) => ({ path: item, text: fs.readFileSync(path.join(outDir, '_next/static', item), 'utf8') }));
-    const hidden = findOptionalCodeInCriticalChunks({ chunks: scripts });
+    const hidden = findOptionalCodeInCriticalChunks({ chunks: scripts, markers: OPTIONAL_ENGINE_MARKERS });
+    const hostCarried = findOptionalCodeInCriticalChunks({ chunks: scripts, markers: CONNECTED_HOST_MARKERS });
+    const analysis = analyse(destination);
     const shipped = await observe(destination);
     const requestedClosure = shipped.requested.filter((item) => closureUnion.has(item));
     const record = {
@@ -216,12 +218,16 @@ try {
       referencedChunks: referenced.length,
       closureChunksInHtml: inClosure,
       optionalCodeInReferencedScripts: hidden,
+      hostInReferencedScripts: hostCarried,
+      optionalClosure: { entries: analysis.entries.length, brotliKiB: +(analysis.closure.brotliBytes / KIB).toFixed(1), limitKiB: OPTIONAL_CLOSURE_LIMIT_BYTES / KIB },
       posterReferences: [...new Set(posterRefs)].sort(),
       shipped: { closureRequests: requestedClosure, canvases: shipped.canvases, requestedChunkCount: shipped.requested.length },
       preferences: {},
     };
     if (inClosure.length) failures.push(`${tag}: its HTML references optional closure chunks: ${inClosure.join(', ')}`);
-    if (hidden.length) failures.push(`${tag}: optional engine or connected host code in referenced scripts: ${hidden.map((item) => `${item.path} (${item.marker})`).join(', ')}`);
+    if (hidden.length) failures.push(`${tag}: optional engine code in referenced scripts: ${hidden.map((item) => `${item.path} (${item.marker})`).join(', ')}`);
+    if (!hostCarried.length) failures.push(`${tag}: no referenced script carries the connected host: the live-host seam is not attached`);
+    for (const violation of analysis.violations) failures.push(`${tag}: ${violation}`);
     const expectedPosters = [`${destination.route}-compact`, `${destination.route}-wide`].sort();
     if (JSON.stringify(record.posterReferences) !== JSON.stringify(expectedPosters)) failures.push(`${tag}: the HTML names posters ${JSON.stringify(record.posterReferences)}, expected only ${JSON.stringify(expectedPosters)}`);
     if (requestedClosure.length || shipped.canvases) failures.push(`${tag}: the shipped (static) policy fetched the optional closure or drew a canvas`);

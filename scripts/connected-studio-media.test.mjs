@@ -163,8 +163,8 @@ test('poster URLs resolve at the root and at the /Portfolio base path', async ()
   }
 });
 
-test('merged builds keep both live tiers off while posters ship', () => {
-  assert.deepEqual({ ...CONNECTED_LIVE_POLICY }, { wide: false, compact: false });
+test('merged builds ship the posters beside the qualified wide tier; compact stays off (PLAN-SFC-V1 Task 18)', () => {
+  assert.deepEqual({ ...CONNECTED_LIVE_POLICY }, { wide: true, compact: false });
 });
 
 const illustrations = [
