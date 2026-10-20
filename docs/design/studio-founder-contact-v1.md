@@ -22,7 +22,7 @@ related:
   - ADR-CONNECTED-STUDIO-PAGE-RUNTIME
   - GOV-AGENT-USAGE
   - TEST-STRATEGY
-last_verified: 2026-10-18
+last_verified: 2026-10-20
 ---
 
 # Studio, Founder, Contact and legal — Atlas v1

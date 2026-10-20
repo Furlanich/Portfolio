@@ -1,6 +1,6 @@
 # Task 23 / PR 23 — Dispose the live scene when Save-Data changes at runtime
 
-**Status: implemented and verified; Reviewer R's finding SFC-18-22-02 is repaired.** Independent review and the human merge are OPEN. The packet number 23 is assumed (the owner told me to proceed on Reviewer R's findings in [PR #167](https://github.com/Furlanich/Portfolio/pull/167)); the planning authority may renumber it. The other finding of that review, SFC-18-22-01 (Contact's 0.35 opacity), is **not** part of this packet: it needs the owner's design decision and poster recapture and is proposed separately as Task 24.
+**Status: MERGED ([PR #168](https://github.com/Furlanich/Portfolio/pull/168) at `416f8fb3`) and DEPLOYED; Reviewer R's finding SFC-18-22-02 is repaired and was independently verified in [PR #170](https://github.com/Furlanich/Portfolio/pull/170).** The deployed behavior is recorded under "Deployed receipt" below. The packet number 23 is assumed (the owner told me to proceed on Reviewer R's findings in [PR #167](https://github.com/Furlanich/Portfolio/pull/167)); the planning authority may renumber it. The other finding of that review, SFC-18-22-01 (Contact's 0.35 opacity), is **not** part of this packet: it needs the owner's design decision and poster recapture and is proposed separately as Task 24.
 
 Agent usage: primary Claude Sonnet 5.5 (`claude-sonnet-5-5`; the session does not expose reasoning effort); subagents 0/0 (none). Self-review only; Reviewer R remains a separate session.
 
@@ -34,6 +34,18 @@ Fresh, 2026-10-19, `.worktrees/sfc-23` after `npm ci`:
 - Hardware: all ten pages go from one canvas to zero on the Save-Data event (above).
 - Not run: the visual projects (no rendering changed for any visitor), the served-export family (no emitted-file change beyond the host chunk's bytes), Firefox and WebKit.
 
+## Deployed receipt (read-only, 2026-10-20)
+
+The public site `https://furlanich.github.io/Portfolio/` after the deploy of `8c86d4d5` (`gh-pages` head `deploy: 8c86d4d5…`). Headed Chromium on the owner's RTX 2060, no test hook, 1440×900; each page gets a `navigator.connection` that fires `change`. Nothing was sent.
+
+| Step | Result on all ten route and locale pairs |
+| --- | --- |
+| Page goes live | One canvas on every page. |
+| Save-Data turns on | Zero canvases within 1.2 s, no live flag. |
+| Save-Data turns off | Still zero canvases: nothing restarts. |
+
+So the repair behaves on the released build as it did in the local export (Reviewer R's report asked for this because a local reproduction is not a deployed receipt).
+
 ## Rulings
 
 - Ruling: the repair uses the existing `fallBack('static')` path rather than a new one, so Save-Data and reduced motion cannot drift apart. Cost if wrong: a Save-Data-specific fallback copy.
@@ -43,5 +55,5 @@ Fresh, 2026-10-19, `.worktrees/sfc-23` after `npm ci`:
 
 ## Not done
 
-- SFC-18-22-01 (Contact's 0.35 scene and label opacity): Task 24, pending the owner's decision between applying the specified multiplier (which also means recapturing both Contact posters and approving changed visual baselines) and recording full brightness as the intended design.
+- **Task 24 was never created.** SFC-18-22-01 (Contact's 0.35 scene and label opacity) is resolved by the owner's decision of 2026-10-20 that Contact keeps full brightness ([PR #169](https://github.com/Furlanich/Portfolio/pull/169), merged at `8c86d4d5`), which retires the multiplier, so the prospective Task 24 named earlier in this receipt (and the "Task 24's" remark on the validation line) is obsolete and must not be scheduled. The earlier text is kept as history.
 - No physical-phone, screen-reader or Firefox/WebKit check of the change event: Chromium only. To my knowledge Firefox and Safari do not expose `navigator.connection`, so the event matters for Chromium-based browsers; that was not re-checked here.
