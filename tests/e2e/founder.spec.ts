@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { expect, test } from '@playwright/test';
 import { expectShortMonoOnly } from './support/editorial';
 import { appPathname, appUrl, stableRoutes } from './support/paths';
@@ -18,10 +20,20 @@ const founderCases = [
     biography: [
       'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
       'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.',
-      'También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
+      'También se desempeña como Software Developer en CleverSoft S.A., experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
     ],
     projectsDescription: 'Los proyectos públicos permiten explorar código, contexto y límites.',
     cvLabel: 'Descargar CV',
+    cvPath: '/Samuel-Furlanich-CV-ES.pdf',
+    cvFile: 'Samuel-Furlanich-CV-ES.pdf',
+    firstEntry: {
+      period: 'Desde junio de 2026',
+      role: 'Software Developer',
+      context: 'CleverSoft S.A.',
+      summary:
+        'Ingreso como analista de soporte (Support Analyst) y posterior paso a Software Developer. Mantenimiento y desarrollo de soluciones ERP y de software para la resolución de pagos.',
+    },
+    periods: ['Desde junio de 2026', 'Desde 2024', '2021'],
     projectsLabel: 'Ver proyectos seleccionados',
     contactLabel: 'Iniciar una consulta',
     contactRoute: '/contacto/',
@@ -42,10 +54,20 @@ const founderCases = [
     biography: [
       'Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations.',
       'He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor.',
-      'He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
+      'He also works as a Software Developer at CleverSoft S.A., experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.',
     ],
     projectsDescription: 'The public projects let you explore code, context and limitations.',
     cvLabel: 'Download CV',
+    cvPath: '/Samuel-Furlanich-CV-EN.pdf',
+    cvFile: 'Samuel-Furlanich-CV-EN.pdf',
+    firstEntry: {
+      period: 'Since June 2026',
+      role: 'Software Developer',
+      context: 'CleverSoft S.A.',
+      summary:
+        'Joined as a Support Analyst and later moved into the Software Developer role. Maintenance and development of ERP and payment-resolution software.',
+    },
+    periods: ['Since June 2026', 'Since 2024', '2021'],
     projectsLabel: 'View selected work',
     contactLabel: 'Start an enquiry',
     contactRoute: '/en/contact/',
@@ -119,10 +141,19 @@ for (const founderCase of founderCases) {
       'href',
       appPathname(founderCase.contactRoute),
     );
-    await expect(page.getByRole('main').getByRole('link', { name: founderCase.cvLabel })).toHaveAttribute(
-      'href',
-      appPathname('/Samuel-Furlanich-CV.pdf').replace(/\/$/, ''),
-    );
+    const cvLink = page.getByRole('main').getByRole('link', { name: founderCase.cvLabel });
+    await expect(cvLink).toHaveAttribute('href', appPathname(founderCase.cvPath).replace(/\/$/, ''));
+    await expect(cvLink).toHaveAttribute('download', founderCase.cvFile);
+
+    const entries = experience.getByRole('listitem');
+    await expect(entries).toHaveCount(3);
+    await expect(entries.locator('[data-founder-period]')).toHaveText([...founderCase.periods]);
+    const first = entries.first();
+    await expect(first.locator('[data-founder-period]')).toHaveText(founderCase.firstEntry.period);
+    await expect(first.getByRole('heading', { level: 3, name: founderCase.firstEntry.role, exact: true })).toBeVisible();
+    await expect(first).toContainText(founderCase.firstEntry.context);
+    await expect(first).toContainText(founderCase.firstEntry.summary);
+    await expect(first.getByRole('heading')).not.toContainText(founderCase.firstEntry.context);
     await expect(page.getByRole('main').getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
       'href',
       'https://www.linkedin.com/in/samuel-furlanich/',
@@ -150,6 +181,10 @@ for (const founderCase of founderCases) {
     await expect(actions).toHaveCount(3);
     await actions.nth(0).focus();
     await expect(actions.nth(0)).toBeFocused();
+    const [keyboardDownload] = await Promise.all([page.waitForEvent('download'), page.keyboard.press('Enter')]);
+    expect(keyboardDownload.suggestedFilename()).toBe(founderCase.cvFile);
+    await expect(page).toHaveURL(appUrl(founderCase.route));
+    await expect(actions.nth(0)).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(actions.nth(1)).toBeFocused();
     await page.keyboard.press('Tab');
@@ -159,18 +194,34 @@ for (const founderCase of founderCases) {
     await expect(page).toHaveURL((url) => url.pathname === appPathname(founderCase.alternateRoute));
   });
 
-  test(`${founderCase.locale} Founder downloads the unchanged CV as a valid PDF`, async ({ page }) => {
+  test(`${founderCase.locale} Founder downloads its own localized CV as a valid PDF`, async ({ page }) => {
+    const otherCase = founderCases.find((candidate) => candidate !== founderCase)!;
+    const source = (file: string) => readFileSync(path.join(process.cwd(), 'public', file));
+
+    async function downloadCv(current: typeof founderCase) {
+      const cv = page.getByRole('main').getByRole('link', { name: current.cvLabel, exact: true });
+      await expect(cv).toHaveAttribute('download', current.cvFile);
+      const response = await page.request.get(new URL(appPathname(current.cvPath).replace(/\/$/, ''), page.url()).toString());
+      expect(response.ok()).toBe(true);
+      expect(response.headers()['content-type']).toContain('application/pdf');
+      const served = await response.body();
+      expect(served.subarray(0, 5).toString()).toBe('%PDF-');
+      expect(served.equals(source(current.cvFile))).toBe(true);
+
+      const [download] = await Promise.all([page.waitForEvent('download'), cv.click()]);
+      expect(download.suggestedFilename()).toBe(current.cvFile);
+      expect(await download.failure()).toBeNull();
+      expect(readFileSync((await download.path())!).equals(source(current.cvFile))).toBe(true);
+    }
+
     await page.goto(appUrl(founderCase.route));
+    await downloadCv(founderCase);
+    expect(source(founderCase.cvFile).equals(source(otherCase.cvFile))).toBe(false);
 
-    const cv = page.getByRole('main').getByRole('link', { name: founderCase.cvLabel, exact: true });
-    await expect(cv).toHaveAttribute('download', 'Samuel-Furlanich-CV.pdf');
-    const response = await page.request.get(new URL(appPathname('/Samuel-Furlanich-CV.pdf'), page.url()).toString());
-    expect(response.ok()).toBe(true);
-    expect(response.headers()['content-type']).toContain('application/pdf');
-    expect((await response.body()).subarray(0, 5).toString()).toBe('%PDF-');
-
-    const [download] = await Promise.all([page.waitForEvent('download'), cv.click()]);
-    expect(download.suggestedFilename()).toBe('Samuel-Furlanich-CV.pdf');
+    // The other locale supplies its own file with no stale state from this one.
+    await page.getByRole('banner').locator('a[hreflang="' + founderCase.alternateLocale + '"]').click();
+    await expect(page).toHaveURL((url) => url.pathname === appPathname(founderCase.alternateRoute));
+    await downloadCv(otherCase);
   });
 
   test(founderCase.locale + ' Founder keeps periods attached to their experience entries on compact layout', async ({ page }) => {
@@ -178,7 +229,7 @@ for (const founderCase of founderCases) {
     await page.goto(appUrl(founderCase.route));
 
     const entries = page.getByRole('region', { name: founderCase.experienceHeading }).getByRole('listitem');
-    await expect(entries).toHaveCount(2);
+    await expect(entries).toHaveCount(3);
     for (const entry of await entries.all()) {
       const period = entry.locator('[data-founder-period]');
       const role = entry.getByRole('heading', { level: 3 });
@@ -284,7 +335,7 @@ for (const founderCase of founderEditorialCases) {
     }
 
     const periods = main.locator('[data-founder-period]');
-    await expect(periods).toHaveCount(2);
+    await expect(periods).toHaveCount(3);
     for (const period of await periods.all()) {
       expect(await period.evaluate((element) => getComputedStyle(element).fontFamily)).toMatch(/plexMono/i);
     }

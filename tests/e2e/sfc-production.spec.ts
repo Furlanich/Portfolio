@@ -218,3 +218,107 @@ test.describe('the Atlas pages in the static export', () => {
     }
   });
 });
+
+// PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE: each Founder locale's native CV download and the CleverSoft S.A. entry, as the
+// clean export ships them. Literal values keep this independent of the production content modules.
+const founderLocalized = [
+  {
+    locale: 'es',
+    pathname: stableRoutes.founder.es,
+    cvLabel: 'Descargar CV',
+    cvPath: '/Samuel-Furlanich-CV-ES.pdf',
+    cvFile: 'Samuel-Furlanich-CV-ES.pdf',
+    alternate: { language: 'en', pathname: stableRoutes.founder.en, cvPath: '/Samuel-Furlanich-CV-EN.pdf' },
+    entry: { period: 'Desde junio de 2026', role: 'Software Developer', context: 'CleverSoft S.A.' },
+    periods: ['Desde junio de 2026', 'Desde 2024', '2021'],
+  },
+  {
+    locale: 'en',
+    pathname: stableRoutes.founder.en,
+    cvLabel: 'Download CV',
+    cvPath: '/Samuel-Furlanich-CV-EN.pdf',
+    cvFile: 'Samuel-Furlanich-CV-EN.pdf',
+    alternate: { language: 'es-AR', pathname: stableRoutes.founder.es, cvPath: '/Samuel-Furlanich-CV-ES.pdf' },
+    entry: { period: 'Since June 2026', role: 'Software Developer', context: 'CleverSoft S.A.' },
+    periods: ['Since June 2026', 'Since 2024', '2021'],
+  },
+] as const;
+
+test.describe('Founder localized profile in the static export', () => {
+  test('ships two distinct PDFs and no legacy CV', () => {
+    const es = fs.readFileSync(path.join(outDir, 'Samuel-Furlanich-CV-ES.pdf'));
+    const en = fs.readFileSync(path.join(outDir, 'Samuel-Furlanich-CV-EN.pdf'));
+    expect(es.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+    expect(en.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+    expect(es.equals(en)).toBe(false);
+    expect(fs.existsSync(path.join(outDir, 'Samuel-Furlanich-CV.pdf'))).toBe(false);
+  });
+
+  for (const founder of founderLocalized) {
+    test(`${founder.locale} Founder downloads its own CV by click and keyboard and the legacy URL is gone`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' });
+      const page = await context.newPage();
+      const source = fs.readFileSync(path.join(outDir, founder.cvFile));
+      try {
+        await page.goto(appUrl(founder.pathname));
+
+        const cv = page.getByRole('main').getByRole('link', { name: founder.cvLabel, exact: true });
+        await expect(cv).toHaveAttribute('href', assetPath(founder.cvPath));
+        await expect(cv).toHaveAttribute('download', founder.cvFile);
+
+        const response = await page.request.get(new URL(assetPath(founder.cvPath), page.url()).toString());
+        expect(response.status()).toBe(200);
+        expect(response.headers()['content-type']).toContain('application/pdf');
+        expect((await response.body()).equals(source)).toBe(true);
+
+        const [clicked] = await Promise.all([page.waitForEvent('download'), cv.click()]);
+        expect(clicked.suggestedFilename()).toBe(founder.cvFile);
+        expect(await clicked.failure()).toBeNull();
+        expect(fs.readFileSync((await clicked.path())!).equals(source)).toBe(true);
+
+        await cv.focus();
+        const [keyed] = await Promise.all([page.waitForEvent('download'), page.keyboard.press('Enter')]);
+        expect(keyed.suggestedFilename()).toBe(founder.cvFile);
+        expect(await keyed.failure()).toBeNull();
+        await expect(page).toHaveURL(appUrl(founder.pathname));
+
+        const legacy = await page.request.get(new URL(assetPath('/Samuel-Furlanich-CV.pdf'), page.url()).toString());
+        expect(legacy.status()).toBe(404);
+
+        // The other locale supplies its own file: no stale state after a switch.
+        await page.getByRole('banner').locator(`a[hreflang="${founder.alternate.language}"]`).click();
+        await expect(page).toHaveURL((url) => url.pathname === appPathname(founder.alternate.pathname));
+        await expect(page.getByRole('main').locator('a[download]')).toHaveAttribute('href', assetPath(founder.alternate.cvPath));
+      } finally {
+        await context.close();
+      }
+    });
+
+    test(`${founder.locale} Founder keeps the CleverSoft S.A. entry, the profile and the native download without JavaScript`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, viewport: { width: 1280, height: 900 }, javaScriptEnabled: false });
+      const page = await context.newPage();
+      const source = fs.readFileSync(path.join(outDir, founder.cvFile));
+      try {
+        await page.goto(appUrl(founder.pathname));
+        const main = page.getByRole('main');
+
+        const entries = main.locator('[data-founder-experience-entry]');
+        await expect(entries).toHaveCount(3);
+        await expect(entries.locator('[data-founder-period]')).toHaveText([...founder.periods]);
+        await expect(entries.first().getByRole('heading', { level: 3, name: founder.entry.role, exact: true })).toBeVisible();
+        await expect(entries.first()).toContainText(founder.entry.context);
+        await expect(main.getByRole('heading').filter({ hasText: founder.entry.context })).toHaveCount(0);
+        await expect(main.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/samuel-furlanich/');
+        await expect(main.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/Furlanich');
+
+        const cv = main.getByRole('link', { name: founder.cvLabel, exact: true });
+        await expect(cv).toHaveAttribute('href', assetPath(founder.cvPath));
+        const [download] = await Promise.all([page.waitForEvent('download'), cv.click()]);
+        expect(download.suggestedFilename()).toBe(founder.cvFile);
+        expect(fs.readFileSync((await download.path())!).equals(source)).toBe(true);
+      } finally {
+        await context.close();
+      }
+    });
+  }
+});
