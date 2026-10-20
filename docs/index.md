@@ -3,6 +3,7 @@ id: DOCS-INDEX
 type: documentation-index
 status: APPROVED
 related:
+  - REVIEW-SFC-T23-BRIGHTNESS-2026-10-20
   - ADR-CONTACT-DIRECT-CHANNELS
   - REVIEW-SFC-PLAN-2026-10-14
   - PLAN-SFC-V1
@@ -51,7 +52,7 @@ related:
   - PROJECT-EVIDENCE
   - TEST-STRATEGY
   - SUPERPOWERS-README
-last_verified: 2026-10-18
+last_verified: 2026-10-20
 ---
 
 # FURLANICH project knowledge
@@ -91,6 +92,8 @@ Front matter records the overall governance status of a document. In mixed-statu
 - [Domain glossary](../CONTEXT.md): canonical project-specific terminology.
 
 ## Independent implementation reviews
+
+The [Task 23 and Contact brightness review](reviews/studio-founder-contact-task-23-brightness-review-2026-10-20.md) reviews PRs [#168](https://github.com/Furlanich/Portfolio/pull/168) and [#169](https://github.com/Furlanich/Portfolio/pull/169). It verifies the Save-Data repair and the recorded owner supersession of the Contact opacity requirement, with one nonblocking **P3** verification-date correction and no new specification finding. Human merges, deployed verification and planning-authority closeout remain separate; the report links the earlier findings in PR #167.
 
 The [Task 8 / PR #132 independent review](reviews/services-projects-footer-task-8-review-2026-10-12/index.md) pinned head 07d1c927 and recommended corrections for two live handoff defects and one approval-status inconsistency. They were corrected in [PR #133](https://github.com/Furlanich/Portfolio/pull/133) and the Task 8 gates closed on 2026-10-13 (dated entry: 2026-10-14; see the [acceptance record](reviews/services-projects-footer-acceptance-v1/index.md#independent-implementation-reviews)).
 
