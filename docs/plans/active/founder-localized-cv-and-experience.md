@@ -326,7 +326,7 @@ Inspect `docs/index.md`, `docs/design/visual-language.md`, `docs/design/interact
 
 ## Progress
 
-Planning only. Product source, assets and implementation commits are untouched; no implementation test result is claimed. Revision 2 recorded OD-1 to OD-4 and the received PDF drafts (G1–G7).
+Implementation of Task 1 ran on 2026-10-20 in an isolated worktree on `codex/founder-localized-cv-experience` (Claude Sonnet 5.5, 0 subagents) and is recorded in the [receipt](../../reviews/founder-localized-cv-and-experience.md): documentation amendment, failing-first tests, implementation, and local root and `/Portfolio` verification. **Not complete.** Gates G1, G2 and G4 on the owner's PDFs, owner approval of the four Founder visual baselines, the independent Codex review and CI remain open, and the plan stays `active`. Revision 2 recorded OD-1 to OD-4 and the received PDF drafts (G1–G7).
 
 **Authorized first implementation task (after plan acceptance): Task 1 / PR 1 – Localize Founder CV downloads and add CleverSoft experience.** This is the only implementation handoff: Claude Sonnet 5.5 High in one isolated worktree on a `codex/` branch, starting at step 1 and following the TDD sequence. There is no Task 2, parallel packet, delegated work, separate governance PR or merge authority. G1–G7 and the baseline approval are completion gates, not permission to substitute content.
 
@@ -335,7 +335,10 @@ Planning only. Product source, assets and implementation commits are untouched; 
 | Date | Decision | Source |
 | --- | --- | --- |
 | 2026-10-20 | OD-1 to OD-4 (joining date, legacy removal, entry voice, plan revision). | Owner, plan review |
+| 2026-10-20 | The owner committed both localized PDFs and the legacy deletion to `main` (`93ec6d72`) before implementation; the plan's input gates were not dispositioned by that commit. | Owner commit, observed at implementation start |
 
 ## Deviations discovered during execution
 
-None recorded; execution has not begun.
+- The legacy PDF deletion and the two PDF additions were already on `main` (`93ec6d72`), so Task 1 step 1 imported nothing and the PR carries no binary changes; the legacy-absence contract is asserted by tests instead.
+- No pre-change `/Portfolio` production RED run; see the receipt's Rulings.
+- The plan was not moved to `completed/` (step 8) because completion gates are open.
