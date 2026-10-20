@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { observeUnexpectedBrowserErrors } from './support/console-errors';
 import { allowSoftwareRenderer, expectActive } from './support/sky-chart';
 import { setConnectedTestHook } from './support/connected-studio-test-hooks';
@@ -185,6 +185,50 @@ test('a stored Home context loss keeps connected routes static (read-only, PC-5)
     await gotoConnected(page, 'services', 'en');
     await expectStatic(page, 'services');
   });
+
+  // PLAN-SFC-V1 Task 23 (Reviewer R, SFC-18-22-02): DESIGN-SFC-V1 says a runtime preference change cancels and disposes live
+  // resources. The Network Information API announces Save-Data with a `change` event on `navigator.connection`, so the page
+  // gets a connection that fires it; only the software gate is opened, and the policy is the one the build ships.
+  const installSaveDataConnection = (page: Page) =>
+    page.addInitScript(() => {
+      const connection = new EventTarget() as EventTarget & { saveData: boolean };
+      connection.saveData = false;
+      Object.defineProperty(navigator, 'connection', { configurable: true, value: connection });
+      (window as unknown as { __setSaveData(value: boolean): void }).__setSaveData = (value) => {
+        connection.saveData = value;
+        connection.dispatchEvent(new Event('change'));
+      };
+    });
+  const setSaveData = (page: Page, value: boolean) => page.evaluate((next) => (window as unknown as { __setSaveData(value: boolean): void }).__setSaveData(next), value);
+
+  for (const { route, path, next } of [
+    { route: 'services', path: stableRoutes.services.es, next: stableRoutes.projects.es },
+    { route: 'studio', path: stableRoutes.studio.es, next: stableRoutes.services.es },
+  ] as const) {
+    test(`a live scene on ${route} is disposed when Save-Data turns on at runtime, and the next route stays static`, async ({ page }) => {
+      await installSaveDataConnection(page);
+      await setConnectedTestHook(page, { allowSoftwareRenderer: true });
+      await page.goto(appUrl(path));
+      await expectLive(page);
+
+      await setSaveData(page, true);
+      await expect(page.locator('canvas'), 'the live canvas is disposed').toHaveCount(0, { timeout: 5_000 });
+      await expect.poll(async () => (await readConnected(page))?.mode).toBe('static');
+      await expect(pauseSlot(page, route).getByRole('button'), 'no live Pause control is left behind').toHaveCount(0);
+
+      await setSaveData(page, false);
+      await page.waitForTimeout(1_500);
+      await expect(page.locator('canvas'), 'turning Save-Data off never restarts the scene').toHaveCount(0);
+
+      // The next route reads the preference at its own activation: Save-Data is on again, so it stays static.
+      await setSaveData(page, true);
+      await navigateInApp(page, next);
+      await expect.poll(() => readConnected(page), { timeout: 30_000 }).not.toBeNull();
+      await page.waitForTimeout(2_000);
+      await expect(page.locator('canvas')).toHaveCount(0);
+      expect((await readConnected(page))?.mode).toBe('static');
+    });
+  }
 
   for (const scenario of [
     { name: 'wide off, compact on', policy: { wide: false, compact: true }, width: 1440, height: 900, live: false },
