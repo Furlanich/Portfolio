@@ -14,7 +14,7 @@ export function FounderProfessionalLinks({ content }: FounderProfessionalLinksPr
         <li>
           <a
             href={withBasePath(content.cv.path)}
-            download="Samuel-Furlanich-CV.pdf"
+            download={content.cv.downloadName}
             className={styles.textAction}
           >
             {content.cv.label}
