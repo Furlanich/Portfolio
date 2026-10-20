@@ -4,7 +4,7 @@ Evidence record, not a requirements owner: [PAGE-FOUNDER](../product/pages/studi
 
 ## Status
 
-Implementation and local verification are complete on branch `codex/founder-localized-cv-experience`. The owner dispositioned the PDF input gates on 2026-10-20 (below) and decided OD-5 (independent work starts in 2023). **Open before merge:** owner approval and adoption of the four Founder visual baselines, the independent Codex review and the CI run. Merging publishes both PDFs.
+Implementation and local verification are complete on branch `codex/founder-localized-cv-experience`. The owner dispositioned the PDF input gates on 2026-10-20 (below), decided OD-5 (independent work starts in 2023), confirmed each PDF is in its intended language, and approved the new Founder renderings and visual baselines, which are adopted below. The independent Codex review ([PR #178 review](https://github.com/Furlanich/Portfolio/pull/178#pullrequestreview-5592924475)) found three issues, all fixed. **Open before merge:** the CI run on the final head and the owner's merge; the plan closeout (step 8) is conditional on them. Merging publishes both PDFs.
 
 ## Identity
 
@@ -41,7 +41,7 @@ Owner dispositions, given in chat on 2026-10-20 after the first implementation p
 | G6 | The EN CV spelled the employer `CleverSoft SA`. | **Addressed by the owner**: both replacement files print `CleverSoft S.A.`. |
 | G7 | Both files publish email and phone. | **Addressed by the owner.** The replacement files still print an email address and a phone number. |
 
-The owner has not separately confirmed the language of each file; the text extraction in this session shows Spanish for ES and English for EN.
+The owner confirmed in chat on 2026-10-20 that each PDF is in the intended language (ES is Spanish, EN is English); the text extraction in this session agrees.
 
 ## OD-5: independent work starts in 2023
 
@@ -78,7 +78,7 @@ The pre-change `/Portfolio` production run was not repeated: the base-path logic
 | Default case count | 3195 before and after (envelope 3200, unchanged). No net new default cases. |
 
 The table above was re-run in full after the rebase onto `1bcc1748` and the OD-5 change (Node 61/61, Founder browser 14/14, responsive 48/48, axe 4/4, both exports and 15/15 production cases each, `validate`, `skills:check`, `diff --check`, visual 4 failed), with the same results.
-| `npm run test:e2e -- tests/e2e/visual/founder.visual.spec.ts --project=visual-chromium` | **4 failed, as expected**: the added entry changes page height. Baselines were not updated. |
+| `npm run test:e2e -- tests/e2e/visual/founder.visual.spec.ts --project=visual-chromium` | Before adoption: 4 failed, as expected (the added entry changes page height). After owner-approved Windows regeneration: 4/4 pass in normal comparison mode. Linux: see Visual baselines. |
 
 The export and production-browser evidence is local only; CI runs neither `verify:static-export` nor the production family.
 
@@ -90,14 +90,46 @@ The export and production-browser evidence is local only; CI runs neither `verif
 - **Legacy and distinct-hash verifier checks report under the first Founder file.** They are once-per-export checks with no natural page; the prefix keeps them observable by the existing fixture filter, as the plan required.
 - **Verifier keeps the page-level `href` substring check beside the new pairing check.** Removing it would change error text other consumers may match; the pairing check is the stricter addition.
 
+## Independent review response
+
+The Codex review of head `b86ed380` (PR #178, review 5592924475) raised three findings. Each was validated against the code and fixed in `cb874fe0` and `b27eeb71`.
+
+| Finding | Validation | Fix |
+| --- | --- | --- |
+| [P2] Rollback ignored that the owner removed the legacy PDF before this PR. | Confirmed: the PR has no `public/` changes, so a revert alone restores anchors without their file. | Rollback section below, plan step 8 and the PR body now require restoring the legacy file. |
+| [P3] Current PAGE-FOUNDER and plan text still said 2024. | Confirmed in the amendment's OD-1 paragraph and entry ordering, and in plan chronology, Non-goals and risks. | Current text says 2023 (OD-5); 2024 remains only as labeled history. |
+| [P2] No independent check that each locale ships its own PDF. | Confirmed: the production cases and the verifier read expected bytes from `out/`; exchanging the two valid PDFs in a copy of the export passed the real verifier. | Fixtures use the real `public/` files; new negatives for exchanged and tampered PDFs failed against the old verifier (4 failed of 43), then passed (65/65 across the three Node files). The verifier and the production cases compare each exported CV with its `public/` source, including the JavaScript-disabled case. On a real root build, exchanging the two PDFs in `out/` made the verifier name both files and failed 5 of 5 production cases on Chromium; the restored export passed. |
+
+The review's other points (visual gate, five-width inspection, language confirmation, closeout) are recorded in this receipt. The source `public/` files themselves being exchanged is not detectable by content here; the owner's language confirmation above covers it.
+
+## Visual baselines
+
+The owner approved the new Founder renderings and visual baselines in chat on 2026-10-20. Only the four Founder images per platform changed.
+
+- **Windows:** regenerated locally with `--update-snapshots` on `founder.visual.spec.ts` only, inspected, then 4/4 in normal comparison mode.
+- **Linux:** adopted byte for byte from the `*-actual.png` files of the failed browser shard 4 in Quality run [39514217770](https://github.com/Furlanich/Portfolio/actions/runs/39514217770) at head `b27eeb71` (artifact `playwright-report-shard-4-39514217770-1`). The first run and its retry produced identical images, and the image sizes match the Windows captures at wide width. No other job failed (validate, candidate and browser shards 1 to 3 passed).
+
+| Image | Platform | SHA-256 |
+| --- | --- | --- |
+| `founder-spanish-wide-visual-chromium` | win32 | `4163211a57cfcc034f32c502277762c46d11baa908af4b7c655e659c5298de70` |
+| `founder-spanish-compact-visual-chromium` | win32 | `ab123966d59551bc62ab08f0f4d5aea36c4519c2f7103d9e2e8343b0af53fc00` |
+| `founder-english-wide-visual-chromium` | win32 | `fba9a94faf6f846f6e088485f6ea3fd2d4ea6d6c4f50e1496e761e3f1b2fc7fe` |
+| `founder-english-compact-visual-chromium` | win32 | `1f23419046a8ace29181a0a4ea3714d95ebac91c7e34c79956e3015306f1997d` |
+| `founder-spanish-wide-visual-chromium` | linux | `6620fa75b418b098cb268832a698ab735d4404abe71e837dff44218731dc51aa` |
+| `founder-spanish-compact-visual-chromium` | linux | `bcae43976f58484f167c99d75de7f12bfb1e82973a1a883fb40efc5a3263e35c` |
+| `founder-english-wide-visual-chromium` | linux | `efd7b785745d0ea7608661f57396c386e1cdea7cc2de931a56c04889774eb504` |
+| `founder-english-compact-visual-chromium` | linux | `8bbb18d6352470aecd3fedb006d7309087440600504990ddc61446167f6c674f` |
+
+The adoption commit changes only these four files, so the rendered pages at the adoption head are the pages the run at `b27eeb71` captured. The normal-comparison CI result at the adoption head is recorded by that run, not here.
+
 ## Rollback
 
 The plan's rollback assumed the legacy PDF would be deleted by this PR. It was deleted by the owner's commits before it (`93ec6d72`; the localized files were replaced in `1bcc1748`), so reverting only this PR's merge restores the legacy anchors without their file and leaves both CV actions at 404. The correct rollback is a human-reviewed PR that (1) reverts the merge commit and (2) restores `public/Samuel-Furlanich-CV.pdf` from its last tracked revision (`git show 93ec6d72^:public/Samuel-Furlanich-CV.pdf`: blob `de15b7ff`, 194,201 bytes, SHA-256 `adcb9accf74f55b02c77894a2fcd4f5c7c3fc69cc6290f007daad2700312cff9`). It must not revert `93ec6d72` or `1bcc1748`, and the recovered download must be validated at root and `/Portfolio`. The blob and hash above were read from the repository on 2026-10-20.
 
 ## Not done, and why
 
-- **Visual baselines (plan step 6).** Replacement Windows baselines need owner approval of the new renderings, and Linux files need a same-head CI run. Neither exists, so the eight Founder PNGs are untouched and the visual gate stays OPEN.
+- **Visual baselines (plan step 6).** Adopted; see the Visual baselines section.
 - **Broad `npm run test:e2e` (full default matrix).** Started locally and stopped after about 80 of 3195 cases (no failures observed in those) because it ran far too slowly to finish. The default matrix is left to the four-shard CI run; only the focused Founder, responsive, accessibility and visual gates above ran here.
-- **Manual rendered inspection at 320, 390, 768, 1024 and 1440px.** The automated responsive and axe gates pass; a human visual review of the added entry has not been recorded.
+- **Implementer manual inspection at 320, 390, 768, 1024 and 1440px.** Not performed as a separate pass. The automated responsive and axe gates pass at those widths, and the owner approved the new renderings on 2026-10-20.
 - **Plan closeout (step 8).** The plan stays in `active/`. Moving it to `completed/` before the gates above close would claim completion that has not happened.
-- **Independent Codex review and CI.** Not run.
+- **CI on the final head.** The browser shard that runs the visual specs must pass after the Linux adoption commit; that result is not recorded here.
