@@ -722,7 +722,7 @@ This revision changes role framing only. It does not change dates, experience, e
 
 ## FOUNDER-CV-EXPERIENCE-AMENDMENT — APPROVED 2026-10-20
 
-**Owner request and decisions of 2026-10-20**, executed by [PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE](../../plans/active/founder-localized-cv-and-experience.md). This amendment is the current authority for the Founder CV downloads and the CleverSoft S.A. experience entry. It supersedes, and labels as history, the biography-only employer rule, the "two source-backed experience entries" contract and the preserved `public/Samuel-Furlanich-CV.pdf` asset and download name. Every other approved fact, the deferred portrait scope and the deferred CV-redesign scope are unchanged (the owner supplies the CV files; this is not a redesign).
+**Owner request and decisions of 2026-10-20**, executed by [PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE](../../plans/completed/founder-localized-cv-and-experience.md). This amendment is the current authority for the Founder CV downloads and the CleverSoft S.A. experience entry. It supersedes, and labels as history, the biography-only employer rule, the "two source-backed experience entries" contract and the preserved `public/Samuel-Furlanich-CV.pdf` asset and download name. Every other approved fact, the deferred portrait scope and the deferred CV-redesign scope are unchanged (the owner supplies the CV files; this is not a redesign).
 
 **Corrected fact (OD-1).** Samuel joined CleverSoft S.A. in **June 2026** as a Support Analyst and later moved into the Software Developer role. The date of the role change is not stated and must not be invented. The independent-work fact is governed by OD-5 below (since 2023).
 
