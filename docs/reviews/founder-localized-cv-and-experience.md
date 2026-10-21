@@ -1,10 +1,10 @@
 # PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE Task 1 — implementation receipt
 
-Evidence record, not a requirements owner: [PAGE-FOUNDER](../product/pages/studio-and-founder.md#founder-cv-experience-amendment-approved-2026-10-20) owns the contract and the [plan](../plans/active/founder-localized-cv-and-experience.md) owns the sequence.
+Evidence record, not a requirements owner: [PAGE-FOUNDER](../product/pages/studio-and-founder.md#founder-cv-experience-amendment-approved-2026-10-20) owns the contract and the [plan](../plans/completed/founder-localized-cv-and-experience.md) owns the sequence.
 
 ## Status
 
-Implementation and local verification are complete on branch `codex/founder-localized-cv-experience`. The owner dispositioned the PDF input gates on 2026-10-20 (below), decided OD-5 (independent work starts in 2023), confirmed each PDF is in its intended language, and approved the new Founder renderings and visual baselines, which are adopted below. The independent Codex review ([PR #178 review](https://github.com/Furlanich/Portfolio/pull/178#pullrequestreview-5592924475)) found three issues, all fixed. **Open before merge:** the CI run on the final head and the owner's merge; the plan closeout (step 8) is conditional on them. Merging publishes both PDFs.
+Complete. The owner dispositioned the PDF input gates on 2026-10-20 (below), decided OD-5 (independent work starts in 2023), confirmed each PDF is in its intended language and approved the new Founder renderings and visual baselines. The independent Codex review ([PR #178 review](https://github.com/Furlanich/Portfolio/pull/178#pullrequestreview-5592924475)) found three issues, all fixed. Quality run [39517613495](https://github.com/Furlanich/Portfolio/actions/runs/39517613495) passed on the final head `1c28eeb7` and the owner merged [PR #178](https://github.com/Furlanich/Portfolio/pull/178) as `1863e92a` on 2026-10-21. See Merge, deployment and closeout.
 
 ## Identity
 
@@ -122,6 +122,17 @@ The owner approved the new Founder renderings and visual baselines in chat on 20
 
 The adoption commit changes only these four files, so the rendered pages at the adoption head are the pages the run at `b27eeb71` captured. The normal-comparison CI result at the adoption head is recorded by that run, not here.
 
+## Merge, deployment and closeout
+
+| Item | Result |
+| --- | --- |
+| Final head | `1c28eeb7` (the four Linux baselines adopted on `b27eeb71`'s actuals). |
+| CI at the final head | Quality run [39517613495](https://github.com/Furlanich/Portfolio/actions/runs/39517613495): success, which includes the Founder visual specs in normal comparison mode. The earlier runs at `b86ed380` and `b27eeb71` failed only on the four Founder baseline comparisons, as recorded above. |
+| Merge | Owner, 2026-10-21, merge commit `1863e92a`. |
+| Deployment | The GitHub Pages deploy of `1863e92a` (run 39520989812) completed successfully. |
+| Deployed-site check (read-only, by the implementer, 2026-10-21) | Both `/Portfolio/Samuel-Furlanich-CV-ES.pdf` and `/Portfolio/Samuel-Furlanich-CV-EN.pdf` return 200 `application/pdf` with 567,743 and 88,517 bytes, the sizes of the committed files. `/Portfolio/Samuel-Furlanich-CV.pdf` returns 404. The Spanish Founder page links `/Portfolio/Samuel-Furlanich-CV-ES.pdf` with `download="Samuel-Furlanich-CV-ES.pdf"` and the English page the EN equivalents; both pages contain `CleverSoft S.A.` and the 2023 start year and none contain the legacy spelling. This used HEAD requests and page reads; no file was downloaded. The owner's own browser download of each CV remains the owner's check. |
+| Closeout | PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE moved to `completed/` with `plan_status: COMPLETED`; the plan index and links were updated in a follow-up documentation PR. |
+
 ## Rollback
 
 The plan's rollback assumed the legacy PDF would be deleted by this PR. It was deleted by the owner's commits before it (`93ec6d72`; the localized files were replaced in `1bcc1748`), so reverting only this PR's merge restores the legacy anchors without their file and leaves both CV actions at 404. The correct rollback is a human-reviewed PR that (1) reverts the merge commit and (2) restores `public/Samuel-Furlanich-CV.pdf` from its last tracked revision (`git show 93ec6d72^:public/Samuel-Furlanich-CV.pdf`: blob `de15b7ff`, 194,201 bytes, SHA-256 `adcb9accf74f55b02c77894a2fcd4f5c7c3fc69cc6290f007daad2700312cff9`). It must not revert `93ec6d72` or `1bcc1748`, and the recovered download must be validated at root and `/Portfolio`. The blob and hash above were read from the repository on 2026-10-20.
@@ -131,5 +142,5 @@ The plan's rollback assumed the legacy PDF would be deleted by this PR. It was d
 - **Visual baselines (plan step 6).** Adopted; see the Visual baselines section.
 - **Broad `npm run test:e2e` (full default matrix).** Started locally and stopped after about 80 of 3195 cases (no failures observed in those) because it ran far too slowly to finish. The default matrix is left to the four-shard CI run; only the focused Founder, responsive, accessibility and visual gates above ran here.
 - **Implementer manual inspection at 320, 390, 768, 1024 and 1440px.** Not performed as a separate pass. The automated responsive and axe gates pass at those widths, and the owner approved the new renderings on 2026-10-20.
-- **Plan closeout (step 8).** The plan stays in `active/`. Moving it to `completed/` before the gates above close would claim completion that has not happened.
-- **CI on the final head.** The browser shard that runs the visual specs must pass after the Linux adoption commit; that result is not recorded here.
+- **Plan closeout (step 8).** Applied in a follow-up documentation PR, because the owner merged PR #178 before it was added.
+- **CI on the final head.** Passed: see Merge, deployment and closeout.
