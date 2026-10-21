@@ -109,7 +109,7 @@ for (const founderCase of founderCases) {
         expect(history!.width).toBeCloseTo(layout!.width, 0);
       }
 
-      await expect(main.locator('[data-founder-experience-entry]')).toHaveCount(2);
+      await expect(main.locator('[data-founder-experience-entry]')).toHaveCount(3);
       await expect(main.locator('[data-founder-education-project]')).toBeVisible();
       await expect(main.locator('[data-founder-capability-group]')).toHaveCount(4);
       await expect(main.locator('img')).toHaveCount(0);

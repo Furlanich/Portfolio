@@ -54,7 +54,7 @@ export type FounderPageContent = {
   biography: FounderBiographyContent;
   professionalLinks: {
     heading: string;
-    cv: DocumentLink;
+    cv: DocumentLink & { downloadName: string };
     linkedin: ExternalLink;
     github: ExternalLink;
   };

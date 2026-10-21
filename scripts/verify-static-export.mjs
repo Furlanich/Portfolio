@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, extname, join, relative, resolve } from 'node:path';
@@ -372,8 +374,30 @@ function assertFounderArtifact(artifact, html) {
     }
   }
 
-  if (countMatches(html, /<li\b[^>]*data-founder-experience-entry/g) !== 2) {
-    failures.push(artifact.file + ': expected exactly two Founder experience entries');
+  // PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE: the CV is one native anchor whose href and download belong to the same element,
+  // backed by a real PDF in the export.
+  const expectedCvHref = expectedPageLinkHref(requirement.cv);
+  const cvAnchorPaired = [...html.matchAll(/<a\b[^>]*>/g)].some(([tag]) =>
+    tag.match(/\bhref="([^"]*)"/)?.[1] === expectedCvHref && tag.match(/\bdownload="([^"]*)"/)?.[1] === requirement.cvDownloadName,
+  );
+  if (!cvAnchorPaired) {
+    failures.push(artifact.file + ': Founder CV link must pair ' + expectedCvHref + ' with download="' + requirement.cvDownloadName + '"');
+  }
+  const cvFile = join(outputRoot, requirement.cv.slice(1));
+  if (!existsSync(cvFile)) {
+    failures.push(artifact.file + ': Founder CV file is missing from the export: ' + requirement.cv.slice(1));
+  } else if (readFileSync(cvFile).subarray(0, 5).toString('latin1') !== '%PDF-') {
+    failures.push(artifact.file + ': Founder CV file is not a PDF: ' + requirement.cv.slice(1));
+  } else {
+    // The repository's public/ file is the independent source for this locale; two valid but exchanged PDFs must not pass.
+    const sourceFile = join(projectRoot, '..', 'public', requirement.cv.slice(1));
+    if (!existsSync(sourceFile) || !readFileSync(sourceFile).equals(readFileSync(cvFile))) {
+      failures.push(artifact.file + ': Founder CV file must match public/' + requirement.cv.slice(1));
+    }
+  }
+
+  if (countMatches(html, /<li\b[^>]*data-founder-experience-entry/g) !== 3) {
+    failures.push(artifact.file + ': expected exactly three Founder experience entries');
   }
   if (countMatches(html, /<section\b[^>]*data-founder-capability-group/g) !== 4) {
     failures.push(artifact.file + ': expected exactly four Founder capability groups');
@@ -382,8 +406,15 @@ function assertFounderArtifact(artifact, html) {
   if (capabilityReferences.length !== 4 || new Set(capabilityReferences).size !== 4 || capabilityReferences.some((reference) => /\s/.test(reference))) {
     failures.push(artifact.file + ': Founder capability groups must use unique whitespace-free aria-labelledby references');
   }
-  if (!html.includes('Clever Soft SA') || /<h[1-6]\b[^>]*>[^<]*Clever Soft SA/i.test(html)) {
-    failures.push(artifact.file + ': Clever Soft SA must remain narrative-only');
+  if (html.includes('Clever Soft SA')) {
+    failures.push(artifact.file + ': Founder employer must be spelled ' + requirement.employer);
+  }
+  const firstExperienceEntry = html.match(/<li\b[^>]*data-founder-experience-entry[^>]*>([\s\S]*?)<\/li>/)?.[1] ?? '';
+  if (!firstExperienceEntry.includes(requirement.employer)) {
+    failures.push(artifact.file + ': Founder employer must appear inside the first experience entry');
+  }
+  if (new RegExp('<h[1-6]\\b[^>]*>[^<]*' + escapeRegExp(requirement.employer), 'i').test(html)) {
+    failures.push(artifact.file + ': Founder employer must not be a heading');
   }
   if (!html.includes(requirement.mpc) || !html.includes('href="' + mpcSource + '"') || !html.includes('>' + requirement.mpcAction + '<')) {
     failures.push(artifact.file + ': missing Founder-owned MPC source action');
@@ -765,6 +796,25 @@ for (const artifact of artifacts) {
   const href = expectedHref(artifact.route);
   if (!normalizedReferences.has(href)) {
     failures.push(`missing internal route link: ${href}`);
+  }
+}
+
+// PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE (OD-2): the localized CVs must differ and the legacy single CV must stay
+// gone. These are once-per-export checks, reported under the first Founder file so the Founder fixture tests see them.
+const [founderOwnerFile] = Object.keys(founderRequirements);
+const localizedCvFiles = Object.values(founderRequirements).map(({ cv }) => join(outputRoot, cv.slice(1)));
+if (localizedCvFiles.every((file) => existsSync(file))) {
+  const digests = localizedCvFiles.map((file) => createHash('sha256').update(readFileSync(file)).digest('hex'));
+  if (new Set(digests).size !== localizedCvFiles.length) {
+    failures.push(founderOwnerFile + ': Founder CV files must differ between locales');
+  }
+}
+if (existsSync(join(outputRoot, 'Samuel-Furlanich-CV.pdf'))) {
+  failures.push(founderOwnerFile + ': Founder legacy CV file must not be exported: Samuel-Furlanich-CV.pdf');
+}
+for (const file of await collectTextFiles(outputRoot)) {
+  if ((await readFile(file, 'utf8')).includes('Samuel-Furlanich-CV.pdf')) {
+    failures.push(founderOwnerFile + ': Founder legacy CV path must not be referenced in ' + relative(outputRoot, file));
   }
 }
 

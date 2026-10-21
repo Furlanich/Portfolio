@@ -16,14 +16,18 @@ export const founderContent = {
   biography: {
     heading: 'Biografía profesional',
     paragraphs: [
-      'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2024, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
+      'Samuel Furlanich es ingeniero de software y fundador de FURLANICH. Trabaja de forma independiente desde 2023, diseñando y manteniendo aplicaciones web y de escritorio, sistemas de gestión y automatizaciones.',
       'Completó sus estudios de Ciencias de la Computación en la Universidad de Buenos Aires y cuenta además con formación como Técnico Informático en la E.E.S.T. N.º 1 de Chivilcoy. Su práctica se especializa en backend con .NET y se complementa con interfaces construidas con React, Next.js y Blazor.',
-      'También se desempeña como Software Developer en Clever Soft SA, experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
+      'También se desempeña como Software Developer en CleverSoft S.A., experiencia que complementa su trabajo al frente de FURLANICH. Lidera personalmente cada proyecto e incorpora colaboradores especializados cuando el alcance lo requiere.',
     ],
   },
   professionalLinks: {
     heading: 'Perfil profesional',
-    cv: { label: 'Descargar CV', path: '/Samuel-Furlanich-CV.pdf' },
+    cv: {
+      label: 'Descargar CV',
+      path: '/Samuel-Furlanich-CV-ES.pdf',
+      downloadName: 'Samuel-Furlanich-CV-ES.pdf',
+    },
     linkedin: { label: 'LinkedIn', href: 'https://www.linkedin.com/in/samuel-furlanich/' },
     github: { label: 'GitHub', href: 'https://github.com/Furlanich' },
   },
@@ -31,7 +35,14 @@ export const founderContent = {
     heading: 'Experiencia profesional',
     entries: [
       {
-        period: 'Desde 2024',
+        period: 'Desde junio de 2026',
+        role: 'Software Developer',
+        context: 'CleverSoft S.A.',
+        summary:
+          'Ingreso como analista de soporte (Support Analyst) y posterior paso a Software Developer. Mantenimiento y desarrollo de soluciones ERP y de software para la resolución de pagos.',
+      },
+      {
+        period: 'Desde 2023',
         role: 'Desarrollo de software independiente',
         context: 'Práctica profesional',
         summary:

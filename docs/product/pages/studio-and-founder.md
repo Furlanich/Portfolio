@@ -85,14 +85,14 @@ Preserve the professional depth of the personal portfolio without making it the 
 ## Approved founder facts
 
 - Samuel Furlanich uses the public professional descriptor Software Engineer and is the founder of FURLANICH.
-- Independent work began in 2024.
+- Independent work began in 2024. *(Superseded 2026-10-20 (OD-5): the start year is now 2023; see [FOUNDER-CV-EXPERIENCE-AMENDMENT](#founder-cv-experience-amendment-approved-2026-10-20).)*
 - Computer Science studies at the University of Buenos Aires were completed.
 - Technical education was completed at E.E.S.T. N.º 1 in Chivilcoy.
-- He began work as a Software Developer at Clever Soft SA in June 2026.
+- He began work as a Software Developer at Clever Soft SA in June 2026. *(Superseded 2026-10-20; see [FOUNDER-CV-EXPERIENCE-AMENDMENT](#founder-cv-experience-amendment-approved-2026-10-20).)* Corrected: he joined CleverSoft S.A. in June 2026 as a Support Analyst and later moved into the Software Developer role; the role-change date is not stated.
 - His technical emphasis includes .NET backend development and React, Next.js, and Blazor interfaces.
 - He leads FURLANICH projects and may incorporate specialist collaborators according to scope.
 
-Clever Soft SA appears in narrative biography only, not as a résumé-style fact list or experience-timeline item.
+Clever Soft SA appears in narrative biography only, not as a résumé-style fact list or experience-timeline item. *(Superseded 2026-10-20; see [FOUNDER-CV-EXPERIENCE-AMENDMENT](#founder-cv-experience-amendment-approved-2026-10-20).)*
 
 ## Approved detailed biography
 
@@ -102,7 +102,7 @@ Clever Soft SA appears in narrative biography only, not as a résumé-style fact
 
 > Samuel Furlanich is a Software Engineer and the founder of FURLANICH. He has worked independently since 2024, designing and maintaining web and desktop applications, management systems, and automations. He completed his Computer Science studies at the University of Buenos Aires and also trained as an IT Technician at E.E.S.T. No. 1 in Chivilcoy. His practice focuses on .NET backend development, complemented by interfaces built with React, Next.js, and Blazor. He also works as a Software Developer at Clever Soft SA, experience that complements his work leading FURLANICH. He personally leads each project and brings in specialist collaborators when the scope requires them.
 
-Both biographies are **APPROVED**. Clever Soft SA remains part of the narrative rather than a résumé-style timeline entry.
+Both biographies are **APPROVED**; the first paragraph's "desde 2024" / "since 2024" is now "desde 2023" / "since 2023" (OD-5, 2026-10-20). Clever Soft SA remains part of the narrative rather than a résumé-style timeline entry. *(Superseded 2026-10-20; see [FOUNDER-CV-EXPERIENCE-AMENDMENT](#founder-cv-experience-amendment-approved-2026-10-20).)*
 
 ## Homepage-foundation minimum Founder destination — APPROVED
 
@@ -112,7 +112,7 @@ The minimum localized profile contains:
 
 1. Samuel's name and role as founder and Software Engineer.
 2. The approved biography in the active language.
-3. Concise, fact-checked experience and education content migrated from the current portfolio; Clever Soft SA remains inside the biography only.
+3. Concise, fact-checked experience and education content migrated from the current portfolio; Clever Soft SA remains inside the biography only. *(Superseded 2026-10-20; see [FOUNDER-CV-EXPERIENCE-AMENDMENT](#founder-cv-experience-amendment-approved-2026-10-20).)*
 4. Outcome-oriented system capabilities, with detailed technology kept secondary.
 5. Downloadable CV access plus LinkedIn and GitHub links.
 6. A path to the localized Contact destination.
@@ -424,7 +424,7 @@ The context line, H1, and approved detailed biography form the complete text-led
 
 Use one strong action followed by two secondary actions:
 
-- “Descargar CV” / “Download CV” → /Samuel-Furlanich-CV.pdf
+- “Descargar CV” / “Download CV” → /Samuel-Furlanich-CV.pdf *(Superseded 2026-10-20; see [FOUNDER-CV-EXPERIENCE-AMENDMENT](#founder-cv-experience-amendment-approved-2026-10-20).)* Current destinations: `/Samuel-Furlanich-CV-ES.pdf` and `/Samuel-Furlanich-CV-EN.pdf`.
 - “LinkedIn” → https://www.linkedin.com/in/samuel-furlanich/
 - “GitHub” → https://github.com/Furlanich
 
@@ -432,7 +432,7 @@ The CV action is visually primary. LinkedIn and GitHub share a quieter secondary
 
 The asset exists at public/Samuel-Furlanich-CV.pdf. The Homepage Foundation record reports PDF-signature and pdfinfo validation, successful normal and /Portfolio static builds, and HTTP 200 for GitHub on 2026-09-04. The owner supplied and confirmed the LinkedIn destination; anonymous automated access reaches LinkedIn's authentication wall, so implementation must recheck the intended profile in an interactive browser without changing the URL merely to satisfy automation.
 
-The current CV's content currency has not been approved in this initiative. A CV content audit or redesign is **DEFERRED** as separate work. Implementation preserves the existing asset and download name, verifies both root and configured base-path downloads, and does not silently rewrite the document.
+The current CV's content currency has not been approved in this initiative. A CV content audit or redesign is **DEFERRED** as separate work. Implementation preserves the existing asset and download name *(Superseded 2026-10-20; see [FOUNDER-CV-EXPERIENCE-AMENDMENT](#founder-cv-experience-amendment-approved-2026-10-20).)*, verifies both root and configured base-path downloads, and does not silently rewrite the document.
 
 ### FOUNDER-EXPERIENCE Spanish — APPROVED
 
@@ -442,7 +442,7 @@ The current CV's content currency has not been approved in this initiative. A CV
 
 **Entry 1**
 
-- Periodo: “Desde 2024”
+- Periodo: “Desde 2024” *(now “Desde 2023”, OD-5, 2026-10-20)*
 - Rol: “Desarrollo de software independiente”
 - Contexto: “Práctica profesional”
 - Resumen: “Diseño, desarrollo y mantenimiento de aplicaciones web y de escritorio, sistemas de gestión y automatizaciones. El trabajo abarca backend con .NET, interfaces web, integraciones, mejora de rendimiento y soporte técnico acordado.”
@@ -462,7 +462,7 @@ The current CV's content currency has not been approved in this initiative. A CV
 
 **Entry 1**
 
-- Period: “Since 2024”
+- Period: “Since 2024” *(now “Since 2023”, OD-5, 2026-10-20)*
 - Role: “Independent software development”
 - Context: “Professional practice”
 - Summary: “Designing, building, and maintaining web and desktop applications, management systems, and automations. The work spans .NET backends, web interfaces, integrations, performance improvements, and agreed technical support.”
@@ -474,7 +474,7 @@ The current CV's content currency has not been approved in this initiative. A CV
 - Context: “E.E.S.T. No. 1, Chivilcoy”
 - Summary: “Developed and supported management applications with .NET and ASP.NET Razor Pages, while also maintaining development environments, local networks, user accounts, and permissions.”
 
-Clever Soft SA remains only in the approved narrative biography. It is not a timeline entry, logo, endorsement, client relationship, or FURLANICH proof point.
+Clever Soft SA remains only in the approved narrative biography. It is not a timeline entry, logo, endorsement, client relationship, or FURLANICH proof point. *(Superseded 2026-10-20; see [FOUNDER-CV-EXPERIENCE-AMENDMENT](#founder-cv-experience-amendment-approved-2026-10-20).)* The timeline entry is now approved; it remains not a logo, endorsement, client relationship or FURLANICH proof point.
 
 ### FOUNDER-EDUCATION — APPROVED
 
@@ -663,7 +663,7 @@ No RFC or new ADR is required. Implementation is substantial and must use a vers
 - Both locales use the exact approved copy above.
 - Studio navigation points to Studio, while Founder remains reachable through the approved professional contexts.
 - Studio contains no invented metrics, team scale, client claims, stock team imagery, or duplicated résumé content.
-- Founder preserves the approved biography, two source-backed experience entries, factual education, grouped capabilities, one Projects bridge, CV, LinkedIn, GitHub, and a final Contact bridge.
+- Founder preserves the approved biography, two source-backed experience entries *(Superseded 2026-10-20; see [FOUNDER-CV-EXPERIENCE-AMENDMENT](#founder-cv-experience-amendment-approved-2026-10-20).)* (three entries now), factual education, grouped capabilities, one Projects bridge, CV, LinkedIn, GitHub, and a final Contact bridge.
 - No portrait placeholder or generated portrait is introduced.
 - The page-specific visual, responsive, accessibility, and motion rules in DESIGN-VISUAL and DESIGN-IX-A11Y are satisfied.
 - CV download and professional destinations are reverified in normal and /Portfolio modes before integration.
@@ -701,7 +701,7 @@ Source order: global demo notice → short header → complete existing experien
 | Projects action | Ver proyectos | Explore projects | Existing localized index |
 | Final commercial invitation | Contactanos por WhatsApp, correo o teléfono. | Explore the contact options and the form demonstration. | Removes review/response promise during demo |
 
-Keep independent practice since 2024, every approved employment/internship date, completed studies wording, exact institutions and current employment narrative. Splitting biography paragraphs must not change its facts or imply an unverified qualification. Group IDs must be valid and stable independently of localized titles; that is a correctness repair, not new public copy.
+Keep independent practice since 2024 *(now 2023, OD-5, 2026-10-20)*, every approved employment/internship date, completed studies wording, exact institutions and current employment narrative. Splitting biography paragraphs must not change its facts or imply an unverified qualification. Group IDs must be valid and stable independently of localized titles; that is a correctness repair, not new public copy.
 
 Professional links move below substantive background. CV, LinkedIn and GitHub are ordinary secondary links, with the same existing destinations and accessible external/download behavior; CV loses solid primary-button prominence. No CV asset redesign is included. The MPC teaser and detail link use only [MKT-D04-MPC](../projects/mpc-administracion.md#mkt-d04-mpc-editorial-candidate-approved-revision-1), placed with education and labeled educational group work. No new Founder-only repository is published.
 
@@ -719,3 +719,35 @@ This wording supersedes “desarrollador de software”, “software developer�
 The descriptor does not assert a specific engineering degree, professional license, seniority level or protected credential. The education wording remains the factual statement that Samuel completed Computer Science studies at the University of Buenos Aires. The recorded employment title at Clever Soft SA remains exactly **Software Developer** because it is an employer-specific fact, not the site's general professional label.
 
 This revision changes role framing only. It does not change dates, experience, education, technologies, evidence permissions, employer relationship, biography scope or founder-led accountability.
+
+## FOUNDER-CV-EXPERIENCE-AMENDMENT — APPROVED 2026-10-20
+
+**Owner request and decisions of 2026-10-20**, executed by [PLAN-FOUNDER-LOCALIZED-CV-EXPERIENCE](../../plans/active/founder-localized-cv-and-experience.md). This amendment is the current authority for the Founder CV downloads and the CleverSoft S.A. experience entry. It supersedes, and labels as history, the biography-only employer rule, the "two source-backed experience entries" contract and the preserved `public/Samuel-Furlanich-CV.pdf` asset and download name. Every other approved fact, the deferred portrait scope and the deferred CV-redesign scope are unchanged (the owner supplies the CV files; this is not a redesign).
+
+**Corrected fact (OD-1).** Samuel joined CleverSoft S.A. in **June 2026** as a Support Analyst and later moved into the Software Developer role. The date of the role change is not stated and must not be invented. The independent-work fact is governed by OD-5 below (since 2023).
+
+**Independent-work start year (OD-5).** The owner corrected the start of FURLANICH / independent work to **2023** so the site matches the CVs. The Spanish biography says `Trabaja de forma independiente desde 2023`, the English biography `He has worked independently since 2023`, and the first existing experience entry's period is `Desde 2023` / `Since 2023`. Nothing else in either text changes.
+
+**Localized CV downloads.** Each locale downloads its own CV through a native same-origin anchor. Only the URL gains the configured base path (`/Portfolio` on the project site), exactly once; document URLs have no trailing slash.
+
+| Locale / route | Repository asset | Content path | Download name |
+| --- | --- | --- | --- |
+| Spanish `/estudio/samuel-furlanich/` | `public/Samuel-Furlanich-CV-ES.pdf` | `/Samuel-Furlanich-CV-ES.pdf` | `Samuel-Furlanich-CV-ES.pdf` |
+| English `/en/about/samuel-furlanich/` | `public/Samuel-Furlanich-CV-EN.pdf` | `/Samuel-Furlanich-CV-EN.pdf` | `Samuel-Furlanich-CV-EN.pdf` |
+
+Labels stay `Descargar CV` / `Download CV`; the order stays CV, LinkedIn, GitHub.
+
+**Legacy CV removal (OD-2).** `public/Samuel-Furlanich-CV.pdf` is removed. The legacy URL returns the GitHub Pages 404 (a static export cannot redirect); this is the owner's accepted outcome. No current source, test expectation or export artifact references `/Samuel-Furlanich-CV.pdf`.
+
+**Experience entry (OD-3).** One entry is added first; the two existing entries follow in order and unchanged except that the independent-work period is `Desde 2023` / `Since 2023` (OD-5). The list is June 2026, 2023, 2021.
+
+| Field | Spanish | English |
+| --- | --- | --- |
+| Period | `Desde junio de 2026` | `Since June 2026` |
+| Role | `Software Developer` | `Software Developer` |
+| Context | `CleverSoft S.A.` | `CleverSoft S.A.` |
+| Summary | `Ingreso como analista de soporte (Support Analyst) y posterior paso a Software Developer. Mantenimiento y desarrollo de soluciones ERP y de software para la resolución de pagos.` | `Joined as a Support Analyst and later moved into the Software Developer role. Maintenance and development of ERP and payment-resolution software.` |
+
+The employer is spelled `CleverSoft S.A.` everywhere, including biography paragraph 3 (only the spelling changes there). The exact employment title `Software Developer` stays distinct from the general `Ingeniero de software` / `Software Engineer` descriptor. The entry conveys employment only: no technology stack, seniority, customers, metrics, logo, link, endorsement or FURLANICH delivery claim.
+
+**Publication.** The CV files become public on merge. The input-gate dispositions are recorded in the plan and its receipt.
